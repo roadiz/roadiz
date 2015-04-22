@@ -29,12 +29,16 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Pimple\Container;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Log\Logger;
+use RZ\Roadiz\Core\Log\DoctrineHandler;
+use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
+use RZ\Roadiz\Utils\LogProcessors\SecurityContextProcessor;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -96,7 +100,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['session'] = function ($c) {
             $session = new Session($c['session.storage']);
-            Kernel::getInstance()->getRequest()->setSession($session);
+            $c['request']->setSession($session);
             return $session;
         };
 
@@ -108,10 +112,26 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['logger'] = function ($c) {
-            $logger = new Logger();
-            $logger->setSecurityContext($c['securityContext']);
+            $log = new Logger('roadiz');
+            $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
 
-            return $logger;
+            if (null !== $c['em'] &&
+                true !== $c['config']['install']) {
+                $log->pushHandler(new DoctrineHandler(
+                    $c['em'],
+                    $c['securityContext'],
+                    $c['request'],
+                    Logger::INFO
+                ));
+            }
+
+            /*
+             * Add processors
+             */
+            $log->pushProcessor(new RequestProcessor($c['request']));
+            $log->pushProcessor(new SecurityContextProcessor($c['securityContext']));
+
+            return $log;
         };
 
         $container['contextListener'] = function ($c) {
@@ -190,7 +210,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewallMap'] = function ($c) {
-            return new FirewallMap();
+            $map = new FirewallMap();
+
+            return $map;
         };
 
         $container['firewallExceptionListener'] = function ($c) {
@@ -231,16 +253,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewall'] = function ($c) {
-            // Register back-end security scheme
-            $beClass = $c['backendClass'];
-            $beClass::setupDependencyInjection($c);
-
-            // Register front-end security scheme
-            foreach ($c['frontendThemes'] as $theme) {
-                $feClass = $theme->getClassName();
-                $feClass::setupDependencyInjection($c);
-            }
-            $c['stopwatch']->stop('initThemes');
             $c['stopwatch']->start('firewall');
             $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
             $c['stopwatch']->stop('firewall');

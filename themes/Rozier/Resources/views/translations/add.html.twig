@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global add-translation">
@@ -9,7 +9,7 @@
     </header>
 
     <article class="content content-add-translation">
-    	{% form_theme form 'forms.html.twig' %}
+    	{% form_theme form '@Rozier/forms.html.twig' %}
         <form id="add-translation-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
@@ -22,6 +22,6 @@
        		</fieldset>
     	</form>
     </article>
-    {% include 'translations/actionsMenu.html.twig' %}
+    {% include '@Rozier/translations/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

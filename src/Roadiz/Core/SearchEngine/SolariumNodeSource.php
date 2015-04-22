@@ -32,9 +32,8 @@ namespace RZ\Roadiz\Core\SearchEngine;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
-use RZ\Roadiz\Core\Kernel;
+use Solarium\Client;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
 
@@ -60,14 +59,12 @@ class SolariumNodeSource
      * @param NodesSources     $nodeSource
      * @param \Solarium_Client $client
      *
-     * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException If Solr server does not respond.
+     * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException If Solr server does not respond.
      */
-    public function __construct($nodeSource, \Solarium\Client $client = null)
+    public function __construct($nodeSource, Client $client = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
-        } elseif (false === Kernel::getInstance()->pingSolrServer()) {
-            throw new SolrServerNotAvailableException("No Solr server available", 1);
         }
 
         $this->client = $client;

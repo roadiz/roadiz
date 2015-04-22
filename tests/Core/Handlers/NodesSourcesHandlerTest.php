@@ -4,6 +4,8 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 
 class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
 {
@@ -12,7 +14,8 @@ class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetUrl($nodeSource, $expectedUrl)
     {
-        $this->assertEquals($nodeSource->getHandler()->getUrl(), $expectedUrl);
+        $generator = new NodesSourcesUrlGenerator(Kernel::getInstance()->getRequest(), $nodeSource);
+        $this->assertEquals($generator->getUrl(), $expectedUrl);
     }
 
     public static function getUrlProvider()

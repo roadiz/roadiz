@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -100,12 +99,7 @@ class RolesController extends RozierApp
                 $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('rolesHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('rolesHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -147,12 +141,7 @@ class RolesController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('rolesHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('rolesHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -199,12 +188,7 @@ class RolesController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('rolesHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('rolesHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -223,14 +207,13 @@ class RolesController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new Regex([
                                     'pattern' => '#^ROLE_([A-Z\_]+)$#',
-                                    'message' => $this->getTranslator()->trans('role.name.must_comply_with_standard'),
+                                    'message' => 'role.name.must_comply_with_standard',
                                 ]),
                             ],
                         ]);
@@ -247,8 +230,7 @@ class RolesController extends RozierApp
      */
     protected function buildDeleteForm(Role $role)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('roleId', 'hidden', [
                             'data' => $role->getId(),
                             'constraints' => [
@@ -271,8 +253,7 @@ class RolesController extends RozierApp
         $defaults = [
             'name' => $role->getName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('roleId', 'hidden', [
                             'data' => $role->getId(),
                             'constraints' => [
@@ -281,11 +262,11 @@ class RolesController extends RozierApp
                         ])
                         ->add('name', 'text', [
                             'data' => $role->getName(),
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new Regex([
                                     'pattern' => '#^ROLE_([A-Z\_]+)$#',
-                                    'message' => $this->getTranslator()->trans('role.name.must_comply_with_standard'),
+                                    'message' => 'role.name.must_comply_with_standard',
                                 ]),
                             ],
                         ]);
@@ -313,7 +294,7 @@ class RolesController extends RozierApp
             $this->getService('em')->flush();
 
             // Clear result cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
@@ -351,7 +332,7 @@ class RolesController extends RozierApp
             $this->getService('em')->flush();
 
             // Clear result cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }

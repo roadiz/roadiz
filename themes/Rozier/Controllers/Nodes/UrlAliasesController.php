@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -103,15 +102,10 @@ class UrlAliasesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditSEOPage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditSEOPage',
+                    ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                ));
             }
 
             /*
@@ -136,15 +130,10 @@ class UrlAliasesController extends RozierApp
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSEOPage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSEOPage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                    ));
                 }
 
                 // Match delete
@@ -158,15 +147,10 @@ class UrlAliasesController extends RozierApp
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSEOPage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSEOPage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                    ));
                 }
 
                 $this->assignation['aliases'][] = [
@@ -200,15 +184,10 @@ class UrlAliasesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditSEOPage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditSEOPage',
+                    ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -367,8 +346,7 @@ class UrlAliasesController extends RozierApp
         $defaults = [
             'nodeId' => $node->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -376,10 +354,10 @@ class UrlAliasesController extends RozierApp
                             ],
                         ])
                         ->add('alias', 'text', [
-                            'label' => $this->getTranslator()->trans('urlAlias'),
+                            'label' => 'urlAlias',
                         ])
                         ->add('translationId', new \RZ\Roadiz\CMS\Forms\TranslationsType(), [
-                            'label' => $this->getTranslator()->trans('translation'),
+                            'label' => 'translation',
                         ]);
 
         return $builder->getForm();
@@ -396,8 +374,7 @@ class UrlAliasesController extends RozierApp
             'urlaliasId' => $ua->getId(),
             'alias' => $ua->getAlias(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('urlaliasId', 'hidden', [
                             'data' => $ua->getId(),
                             'constraints' => [
@@ -427,8 +404,7 @@ class UrlAliasesController extends RozierApp
             'metaKeywords' => $ns->getMetaKeywords(),
             'metaDescription' => $ns->getMetaDescription(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('id', 'hidden', [
                             'data' => $ns->getId(),
                             'constraints' => [
@@ -436,15 +412,15 @@ class UrlAliasesController extends RozierApp
                             ],
                         ])
                         ->add('metaTitle', 'text', [
-                            'label' => $this->getTranslator()->trans('metaTitle'),
+                            'label' => 'metaTitle',
                             'required' => false,
                         ])
                         ->add('metaKeywords', 'text', [
-                            'label' => $this->getTranslator()->trans('metaKeywords'),
+                            'label' => 'metaKeywords',
                             'required' => false,
                         ])
                         ->add('metaDescription', 'textarea', [
-                            'label' => $this->getTranslator()->trans('metaDescription'),
+                            'label' => 'metaDescription',
                             'required' => false,
                         ]);
 
@@ -461,8 +437,7 @@ class UrlAliasesController extends RozierApp
         $defaults = [
             'urlaliasId' => $ua->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('urlaliasId', 'hidden', [
                             'data' => $ua->getId(),
                             'constraints' => [

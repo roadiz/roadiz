@@ -29,10 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * {@inheritdoc}
@@ -51,7 +50,7 @@ class DocumentRepository extends EntityRepository
             if (is_array($criteria['folders'])) {
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
-                    $documents = static::getDocumentIdsByFolderExcl($criteria['folders']);
+                    $documents = $this->getDocumentIdsByFolderExcl($criteria['folders']);
                     $criteria["id"] = $documents;
                     unset($criteria["folderExclusive"]);
                     unset($criteria['folders']);
@@ -80,22 +79,21 @@ class DocumentRepository extends EntityRepository
      * @param  array     $folders
      * @return array
      */
-
-    public static function getDocumentIdsByFolderExcl($folders)
+    public function getDocumentIdsByFolderExcl($folders)
     {
-        $qb = Kernel::getInstance()->getService('em')->createQueryBuilder();
+        $qb = $this->_em->createQueryBuilder();
 
         $qb->select("d.id")
            ->addSelect("COUNT(fd.id) as num")
            ->from("RZ\Roadiz\Core\Entities\Folder", "fd")
            ->leftJoin("fd.documents", "d");
         foreach ($folders as $key => $folder) {
-            $qb->orWhere($qb->expr()->eq('fd.id', ':folder'.$key));
+            $qb->orWhere($qb->expr()->eq('fd.id', ':folder' . $key));
         }
         $qb->groupBy("d.id");
         $query = $qb->getQuery();
         foreach ($folders as $key => $folder) {
-            $query->setParameter("folder".$key, $folder);
+            $query->setParameter("folder" . $key, $folder);
         }
         $results = $query->getResult();
         $count = count($folders);
@@ -170,15 +168,15 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
-    * Create a Criteria object from a search pattern and additionnal fields.
-    *
-    * @param string                  $pattern  Search pattern
-    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-    * @param array                   $criteria Additionnal criteria
-    * @param string                  $alias    SQL query table alias
-    *
-    * @return \Doctrine\ORM\QueryBuilder
-    */
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string                  $pattern  Search pattern
+     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+     * @param array                   $criteria Additionnal criteria
+     * @param string                  $alias    SQL query table alias
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
@@ -191,7 +189,7 @@ class DocumentRepository extends EntityRepository
         /*
          * Search in translations
          */
-        $qb->leftJoin($alias.'.documentTranslations', 'dt');
+        $qb->leftJoin($alias . '.documentTranslations', 'dt');
         $criteriaFields = [];
         $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\DocumentTranslation');
         $cols = $metadatas->getColumnNames();
@@ -199,11 +197,11 @@ class DocumentRepository extends EntityRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like('dt.' .$key, $qb->expr()->literal($value)));
+            $qb->orWhere($qb->expr()->like('dt.' . $key, $qb->expr()->literal($value)));
         }
 
         $qb = $this->directComparison($criteria, $qb, $alias);
@@ -343,7 +341,7 @@ class DocumentRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('d.'.$key, $value);
+                $qb->addOrderBy('d.' . $key, $value);
             }
         }
 
@@ -487,7 +485,6 @@ class DocumentRepository extends EntityRepository
         }
     }
 
-
     /**
      * @param RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
      * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
@@ -506,9 +503,9 @@ class DocumentRepository extends EntityRepository
                 WITH nsf.nodeSource = :nodeSource
             WHERE nsf.field = :field
             ORDER BY nsf.position ASC')
-                        ->setParameter('field', $field)
-                        ->setParameter('nodeSource', $nodeSource)
-                        ->setParameter('translation', $nodeSource->getTranslation());
+                      ->setParameter('field', $field)
+                      ->setParameter('nodeSource', $nodeSource)
+                      ->setParameter('translation', $nodeSource->getTranslation());
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -535,9 +532,9 @@ class DocumentRepository extends EntityRepository
             INNER JOIN nsf.field f
                 WITH f.name = :name
             ORDER BY nsf.position ASC')
-                        ->setParameter('name', (string) $fieldName)
-                        ->setParameter('nodeSource', $nodeSource)
-                        ->setParameter('translation', $nodeSource->getTranslation());
+                      ->setParameter('name', (string) $fieldName)
+                      ->setParameter('nodeSource', $nodeSource)
+                      ->setParameter('translation', $nodeSource->getTranslation());
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {

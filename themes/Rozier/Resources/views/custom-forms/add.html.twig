@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global manage-custom-forms">
@@ -10,7 +10,7 @@
     </header>
 
     <article class="content content-custom-forms-edit">
-        {% form_theme form 'forms.html.twig' %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="add-custom-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
@@ -24,6 +24,6 @@
         </form>
     </article>
 
-    {% include 'custom-forms/actionsMenu.html.twig' %}
+    {% include '@Rozier/custom-forms/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

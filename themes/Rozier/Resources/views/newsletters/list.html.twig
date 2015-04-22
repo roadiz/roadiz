@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
@@ -7,7 +7,7 @@
         <h1 class="content-title">
             {% trans %}newsletter{% endtrans %}
         </h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         {# Add node control #}
         {% if nodeTypes|length %}
         <div class="content-header-action-menu">
@@ -25,7 +25,7 @@
         {% endif %}
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu">
         <div class="content-table-cont">

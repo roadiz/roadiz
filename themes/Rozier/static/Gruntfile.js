@@ -13,12 +13,14 @@ module.exports = function(grunt) {
 				'src': [
 					'bower_components/uikit/js/uikit.js',
 					'js/vendor/addons/sortable.js',
+					'bower_components/uikit/js/components/datepicker.js',
 					'bower_components/uikit/js/components/nestable.js',
 					'bower_components/uikit/js/components/pagination.js',
 					'bower_components/uikit/js/components/notify.js',
 					'bower_components/uikit/js/components/tooltip.js',
 					'bower_components/jquery-ui/jquery-ui.js',
-					'bower_components/gsap/src/uncompressed/TweenMax.js',
+					'bower_components/gsap/src/minified/TweenMax.min.js',
+					'bower_components/gsap/src/minified/plugins/ScrollToPlugin.min.js',
 					'bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
 					'bower_components/jquery-minicolors/jquery.minicolors.js',
 					'bower_components/mousetrap/mousetrap.js',
@@ -29,13 +31,13 @@ module.exports = function(grunt) {
 					'bower_components/codemirror/mode/gfm/gfm.js',
 					'bower_components/marked/lib/marked.js',
 					'bower_components/dropzone/dist/dropzone.js',
-					'js/vendor/ScrollToPlugin.js',
 					'js/vendor/addons/htmleditor.js'
 				],
 				dest: 'dist/<%= pkg.name %>-vendor.js',
 			},
 			rezozero:{
 				'src': [
+					'js/auto-update/auto-update.js',
 					'js/trees/nodeTreeContextActions.js',
 					'js/bulk-edits/documentsBulk.js',
 					'js/bulk-edits/nodesBulk.js',

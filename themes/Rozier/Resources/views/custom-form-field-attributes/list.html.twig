@@ -1,11 +1,11 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
     <header class="content-header header-node-types header-node-types-list">
         <h1 class="content-title nodes-node-types-title">{% trans %}customFormFieldAttribute{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormAnswersHomePage', {'customFormId': customFormId}) }}" title="{% trans %}back_to.customFormAnswers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
     </header>
 

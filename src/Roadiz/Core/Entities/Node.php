@@ -43,13 +43,15 @@ use RZ\Roadiz\Utils\StringHandler;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeRepository")
  * @ORM\Table(name="nodes", indexes={
- *     @ORM\Index(name="visible_node_idx",       columns={"visible"}),
- *     @ORM\Index(name="status_node_idx",        columns={"status"}),
- *     @ORM\Index(name="locked_node_idx",        columns={"locked"}),
- *     @ORM\Index(name="sterile_node_idx",       columns={"sterile"}),
- *     @ORM\Index(name="position_node_idx",      columns={"position"}),
- *     @ORM\Index(name="hide_children_node_idx", columns={"hide_children"}),
- *     @ORM\Index(name="home_node_idx",          columns={"home"})
+ *     @ORM\Index(columns={"visible"}),
+ *     @ORM\Index(columns={"status"}),
+ *     @ORM\Index(columns={"locked"}),
+ *     @ORM\Index(columns={"sterile"}),
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"}),
+ *     @ORM\Index(columns={"hide_children"}),
+ *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks
  */

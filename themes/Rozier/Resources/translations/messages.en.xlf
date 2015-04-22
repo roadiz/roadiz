@@ -1138,6 +1138,10 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+        <source>child_node.%name%.created</source>
+        <target xml:lang="en" state="translated">Child node %name% has been created.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="107" approved="yes">
         <source>node.%name%.deleted</source>
         <target xml:lang="en">Node %name% has been deleted.</target>
@@ -1521,6 +1525,10 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
           <context context-type="linenumber">370</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.woff2File" approved="yes">
+        <source>font.woff2File</source>
+        <target xml:lang="en">WOFF2 font file</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="145" approved="yes">
         <source>font.otfFile</source>
@@ -4268,6 +4276,10 @@
         <source>date-time.type</source>
         <target xml:lang="en">Date and time</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type">
+        <source>date.type</source>
+        <target xml:lang="en" state="translated">Date</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="435" approved="yes">
         <source>text.type</source>
         <target xml:lang="en">Basic text</target>
@@ -5413,13 +5425,9 @@
           <source>User credentials have expired.</source>
           <target xml:lang="en">User credentials have expired.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="User account is disabled.">
+      <trans-unit xml:space="preserve" id="User account is disabled." approved="yes">
           <source>User account is disabled.</source>
-          <target xml:lang="en" state="translated">User account is disabled.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="change.status.nodes" approved="yes">
-          <source>change.status.nodes</source>
-          <target xml:lang="en">Change selected nodes status</target>
+          <target xml:lang="en">User account is disabled.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
@@ -5473,273 +5481,273 @@
           <source>node.dynamicNodeName</source>
           <target xml:lang="en">Dynamic node name</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.status">
+      <trans-unit xml:space="preserve" id="nodeType.status" approved="yes">
           <source>nodeType.status</source>
-          <target xml:lang="en" state="translated">Status</target>
+          <target xml:lang="en">Status</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.not_visible">
           <source>nodeType.not_visible</source>
           <target xml:lang="en" state="translated">Invisible node-type</target>
       <alt-trans><target xml:lang="en">Unvisible node-type</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+      <trans-unit xml:space="preserve" id="newsletter.nodeType" approved="yes">
           <source>newsletter.nodeType</source>
-          <target xml:lang="en" state="translated">Newsletters reserved type</target>
+          <target xml:lang="en">Newsletters reserved type</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
+      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes" approved="yes">
           <source>nodeType.hiding_nodes</source>
-          <target xml:lang="en" state="translated">This type hides its node-tree</target>
+          <target xml:lang="en">This type hides its node-tree</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.%name%.created">
+      <trans-unit xml:space="preserve" id="newsletter.%name%.created" approved="yes">
           <source>newsletter.%name%.created</source>
-          <target xml:lang="en" state="translated">Newsletter “%name%” created.</target>
+          <target xml:lang="en">Newsletter “%name%” created.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%">
+      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%" approved="yes">
           <source>newsletter.%newsletter%.updated.%translation%</source>
-          <target xml:lang="en" state="translated">Newsletter “%newsletter%” has been updated for %translation% translation</target>
+          <target xml:lang="en">Newsletter “%newsletter%” has been updated for %translation% translation</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%">
+      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%" approved="yes">
           <source>duplicated.newsletter.%name%</source>
-          <target xml:lang="en" state="translated">Newsletter “%name%” duplicated.</target>
+          <target xml:lang="en">Newsletter “%name%” duplicated.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%">
+      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%" approved="yes">
           <source>impossible.duplicate.newsletter.%name%</source>
-          <target xml:lang="en" state="translated">Impossible to duplicate newsletter “%name%”</target>
+          <target xml:lang="en">Impossible to duplicate newsletter “%name%”</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="see.newsletter">
+      <trans-unit xml:space="preserve" id="see.newsletter" approved="yes">
           <source>see.newsletter</source>
-          <target xml:lang="en" state="translated">See newsletter</target>
+          <target xml:lang="en">See newsletter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="add.a.newsletter">
+      <trans-unit xml:space="preserve" id="add.a.newsletter" approved="yes">
           <source>add.a.newsletter</source>
-          <target xml:lang="en" state="translated">Add a newsletter</target>
+          <target xml:lang="en">Add a newsletter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
+      <trans-unit xml:space="preserve" id="edit.newsletter.%name%" approved="yes">
           <source>edit.newsletter.%name%</source>
-          <target xml:lang="en" state="translated">Edit newsletter “%name%”</target>
+          <target xml:lang="en">Edit newsletter “%name%”</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter">
+      <trans-unit xml:space="preserve" id="newsletter" approved="yes">
           <source>newsletter</source>
-          <target xml:lang="en" state="translated">Newsletter</target>
+          <target xml:lang="en">Newsletter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="newsletter.type">
+      <trans-unit xml:space="preserve" id="newsletter.type" approved="yes">
           <source>newsletter.type</source>
-          <target xml:lang="en" state="translated">Newsletter type</target>
+          <target xml:lang="en">Newsletter type</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="back_to.newsletter">
+      <trans-unit xml:space="preserve" id="back_to.newsletter" approved="yes">
           <source>back_to.newsletter</source>
-          <target xml:lang="en" state="translated">Back to newsletter</target>
+          <target xml:lang="en">Back to newsletter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="create.a.newsletter">
+      <trans-unit xml:space="preserve" id="create.a.newsletter" approved="yes">
           <source>create.a.newsletter</source>
-          <target xml:lang="en" state="translated">Create a newsletter</target>
+          <target xml:lang="en">Create a newsletter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="export.html">
+      <trans-unit xml:space="preserve" id="export.html" approved="yes">
           <source>export.html</source>
-          <target xml:lang="en" state="translated">Export HTML</target>
+          <target xml:lang="en">Export HTML</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="export.html.inline">
+      <trans-unit xml:space="preserve" id="export.html.inline" approved="yes">
           <source>export.html.inline</source>
-          <target xml:lang="en" state="translated">Export HTML (inline CSS)</target>
+          <target xml:lang="en">Export HTML (inline CSS)</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="start.test.user.right">
+      <trans-unit xml:space="preserve" id="start.test.user.right" approved="yes">
           <source>start.test.user.right</source>
-          <target xml:lang="en" state="translated">Take user privileges</target>
+          <target xml:lang="en">Take user privileges</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="stop.test.user.right">
+      <trans-unit xml:space="preserve" id="stop.test.user.right" approved="yes">
           <source>stop.test.user.right</source>
-          <target xml:lang="en" state="translated">Go back to your user</target>
+          <target xml:lang="en">Go back to your user</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="overwrite.document">
+      <trans-unit xml:space="preserve" id="overwrite.document" approved="yes">
           <source>overwrite.document</source>
-          <target xml:lang="en" state="translated">Overwrite document file</target>
+          <target xml:lang="en">Overwrite document file</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.file.%name%.updated">
+      <trans-unit xml:space="preserve" id="document.file.%name%.updated" approved="yes">
           <source>document.file.%name%.updated</source>
-          <target xml:lang="en" state="translated">File “%name%” has been updated</target>
+          <target xml:lang="en">File “%name%” has been updated</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource">
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource" approved="yes">
           <source>are_you_sure.delete.nodeSource</source>
-          <target xml:lang="en" state="translated">Are you sure you want to delete this node source?</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted">
+          <target xml:lang="en">Are you sure you want to delete this node source?</target>
+      <alt-trans><target xml:lang="en">Are you sure to delete this node source?</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted" approved="yes">
           <source>node_source.%node_source%.%translation%.cant.deleted</source>
-          <target xml:lang="en" state="translated">“%node_source%” %translation% translation can not be deleted</target>
+          <target xml:lang="en">“%node_source%” %translation% translation can not be deleted</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node_source.%node_source%.deleted.%translation%">
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.deleted.%translation%" approved="yes">
           <source>node_source.%node_source%.deleted.%translation%</source>
-          <target xml:lang="en" state="translated">“%node_source%” %translation% translation has been deleted</target>
+          <target xml:lang="en">“%node_source%” %translation% translation has been deleted</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="delete.nodesource">
+      <trans-unit xml:space="preserve" id="delete.nodesource" approved="yes">
           <source>delete.nodesource</source>
-          <target xml:lang="en" state="translated">Delete node source</target>
+          <target xml:lang="en">Delete node source</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="latest.node-sources.updates">
+      <trans-unit xml:space="preserve" id="latest.node-sources.updates" approved="yes">
           <source>latest.node-sources.updates</source>
-          <target xml:lang="en" state="translated">Latest updated node-sources</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.%name%.updated">
+          <target xml:lang="en">Latest updated node sources</target>
+      <alt-trans><target xml:lang="en">Latest updated node-sources</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.updated" approved="yes">
           <source>customForm.%name%.updated</source>
-          <target xml:lang="en" state="translated">Custom form “%name%” has been updated.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.%name%.created">
+          <target xml:lang="en">Custom form “%name%” has been updated</target>
+      <alt-trans><target xml:lang="en">Custom form “%name%” has been updated.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.created" approved="yes">
           <source>customForm.%name%.created</source>
-          <target xml:lang="en" state="translated">Custom form “%name%” has been created.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
+          <target xml:lang="en">Custom form “%name%” has been created</target>
+      <alt-trans><target xml:lang="en">Custom form “%name%” has been created.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.deleted" approved="yes">
           <source>customForm.%name%.deleted</source>
-          <target xml:lang="en" state="translated">Custom form “%name%” has been deleted.</target>
+          <target xml:lang="en">Custom form “%name%” has been deleted.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
+      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists" approved="yes">
           <source>customForm.%name%.cannot_rename_already_exists</source>
-          <target xml:lang="en" state="translated">Custom form “%name%” cannot be renamed, another one already exists.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
+          <target xml:lang="en">Custom form “%name%” can not be renamed, another one already exists</target>
+      <alt-trans><target xml:lang="en">Custom form “%name%” cannot be renamed, another one already exists.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists" approved="yes">
           <source>customForm.%name%.already_exists</source>
-          <target xml:lang="en" state="translated">Custom form “%name%” already exists.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="select.all">
+          <target xml:lang="en">Custom form “%name%” already exists</target>
+      <alt-trans><target xml:lang="en">Custom form “%name%” already exists.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="select.all" approved="yes">
           <source>select.all</source>
-          <target xml:lang="en" state="translated">Select all</target>
+          <target xml:lang="en">Select all</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="deselect.all">
+      <trans-unit xml:space="preserve" id="deselect.all" approved="yes">
           <source>deselect.all</source>
-          <target xml:lang="en" state="translated">Deselect all</target>
+          <target xml:lang="en">Deselect all</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="edit.user.%name%.roles">
+      <trans-unit xml:space="preserve" id="edit.user.%name%.roles" approved="yes">
           <source>edit.user.%name%.roles</source>
-          <target xml:lang="en" state="translated">%name% roles</target>
+          <target xml:lang="en">%name% roles</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="history.for.%name%">
+      <trans-unit xml:space="preserve" id="history.for.%name%" approved="yes">
           <source>history.for.%name%</source>
-          <target xml:lang="en" state="translated">%name% history</target>
+          <target xml:lang="en">%name% history</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="admin_image">
+      <trans-unit xml:space="preserve" id="admin_image" approved="yes">
           <source>admin_image</source>
-          <target xml:lang="en" state="translated">Back-office main picture or brand</target>
+          <target xml:lang="en">Back-office main picture or brand</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="chroot.limited.one">
+      <trans-unit xml:space="preserve" id="chroot.limited.one" approved="yes">
           <source>chroot.limited.one</source>
-          <target xml:lang="en" state="translated">You can only choose one root node</target>
+          <target xml:lang="en">You can only choose one root node</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="chroot">
+      <trans-unit xml:space="preserve" id="chroot" approved="yes">
           <source>chroot</source>
-          <target xml:lang="en" state="translated">Root node</target>
+          <target xml:lang="en">Root node</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists">
+      <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists" approved="yes">
           <source>node.noCreation.alreadyExists</source>
-          <target xml:lang="en" state="translated">Node can't be created, a node already exists with its name.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="maps_style">
+          <target xml:lang="en">Node can not be created, a node already exists with its name</target>
+      <alt-trans><target xml:lang="en">Node can't be created, a node already exists with its name.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="maps_style" approved="yes">
           <source>maps_style</source>
-          <target xml:lang="en" state="translated">Default Google Maps styles</target>
+          <target xml:lang="en">Default Google Maps styles</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.status">
+      <trans-unit xml:space="preserve" id="user.status" approved="yes">
           <source>user.status</source>
-          <target xml:lang="en" state="translated">Status</target>
+          <target xml:lang="en">Status</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.enabled">
+      <trans-unit xml:space="preserve" id="user.enabled" approved="yes">
           <source>user.enabled</source>
-          <target xml:lang="en" state="translated">Enabled account</target>
+          <target xml:lang="en">Enabled account</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.disabled">
+      <trans-unit xml:space="preserve" id="user.disabled" approved="yes">
           <source>user.disabled</source>
-          <target xml:lang="en" state="translated">Disabled account</target>
+          <target xml:lang="en">Disabled account</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.locked">
+      <trans-unit xml:space="preserve" id="user.locked" approved="yes">
           <source>user.locked</source>
-          <target xml:lang="en" state="translated">Locked account</target>
+          <target xml:lang="en">Locked account</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.expired">
+      <trans-unit xml:space="preserve" id="user.expired" approved="yes">
           <source>user.expired</source>
-          <target xml:lang="en" state="translated">Expired account</target>
+          <target xml:lang="en">Expired account</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.expiresAt">
+      <trans-unit xml:space="preserve" id="user.expiresAt" approved="yes">
           <source>user.expiresAt</source>
-          <target xml:lang="en" state="translated">Account will expire at:</target>
+          <target xml:lang="en">Account will expire at:</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.force.expired">
+      <trans-unit xml:space="preserve" id="user.force.expired" approved="yes">
           <source>user.force.expired</source>
-          <target xml:lang="en" state="translated">Force account expiration</target>
+          <target xml:lang="en">Force account expiration</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt" approved="yes">
           <source>user.credentialsExpiresAt</source>
-          <target xml:lang="en" state="translated">Account credentials will expire at:</target>
+          <target xml:lang="en">Account credentials will expire at:</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired" approved="yes">
           <source>user.force.credentialsExpired</source>
-          <target xml:lang="en" state="translated">Force account credential expiration</target>
+          <target xml:lang="en">Force account credential expiration</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security" approved="yes">
           <source>edit.user.%name%.security</source>
-          <target xml:lang="en" state="translated">“%name%” security</target>
+          <target xml:lang="en">“%name%” security</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated" approved="yes">
           <source>user.%name%.security.updated</source>
-          <target xml:lang="en" state="translated">“%name%” security settings have been updated.</target>
+          <target xml:lang="en">“%name%” security settings have been updated.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.account.has-expired">
+      <trans-unit xml:space="preserve" id="user.account.has-expired" approved="yes">
           <source>user.account.has-expired</source>
-          <target xml:lang="en" state="translated">User account has expired.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <target xml:lang="en">User account has expired</target>
+      <alt-trans><target xml:lang="en">User account has expired.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired" approved="yes">
           <source>user.crendentials.has-expired</source>
-          <target xml:lang="en" state="translated">User account credentials have expired.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="user.last-login">
+          <target xml:lang="en">User account credentials have expired</target>
+      <alt-trans><target xml:lang="en">User account credentials have expired.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login" approved="yes">
           <source>user.last-login</source>
-          <target xml:lang="en" state="translated">Last login date</target>
+          <target xml:lang="en">Last login date</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.password-requested-at">
+      <trans-unit xml:space="preserve" id="user.password-requested-at" approved="yes">
           <source>user.password-requested-at</source>
-          <target xml:lang="en" state="translated">Last password request date</target>
+          <target xml:lang="en">Last password request date</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="never.requested">
           <source>never.requested</source>
           <target xml:lang="en" state="translated">Never</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="year">
+      <trans-unit xml:space="preserve" id="year" approved="yes">
           <source>year</source>
-          <target xml:lang="en" state="translated">Year</target>
+          <target xml:lang="en">Year</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="month">
+      <trans-unit xml:space="preserve" id="month" approved="yes">
           <source>month</source>
-          <target xml:lang="en" state="translated">Month</target>
+          <target xml:lang="en">Month</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="day">
+      <trans-unit xml:space="preserve" id="day" approved="yes">
           <source>day</source>
-          <target xml:lang="en" state="translated">Day</target>
+          <target xml:lang="en">Day</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="hour">
+      <trans-unit xml:space="preserve" id="hour" approved="yes">
           <source>hour</source>
-          <target xml:lang="en" state="translated">Hour</target>
+          <target xml:lang="en">Hour</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="minute">
           <source>minute</source>
           <target xml:lang="en" state="translated">Min.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.security">
+      <trans-unit xml:space="preserve" id="user.security" approved="yes">
           <source>user.security</source>
-          <target xml:lang="en" state="translated">Security</target>
+          <target xml:lang="en">Security</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="your.account.email">
           <source>your.account.email</source>
-          <target xml:lang="en" state="translated">Your account email</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <target xml:lang="en" state="translated">Your email account</target>
+      <alt-trans><target xml:lang="en">Your account email</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database" approved="yes">
           <source>%email%.email.does.not.exist.in.user.account.database</source>
-          <target xml:lang="en" state="translated">“%email%” email does not exist in users database.</target>
+          <target xml:lang="en">“%email%” email does not exist in users database.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email" approved="yes">
           <source>to.get.new.password.enter.your.account.email</source>
-          <target xml:lang="en" state="translated">In order to request a new password, just enter the email linked to your account.</target>
+          <target xml:lang="en">In order to request a new password, just enter the email linked to your account.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="request.new.password">
+      <trans-unit xml:space="preserve" id="request.new.password" approved="yes">
           <source>request.new.password</source>
-          <target xml:lang="en" state="translated">Request a new password</target>
+          <target xml:lang="en">Request a new password</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="back_to.login">
+      <trans-unit xml:space="preserve" id="back_to.login" approved="yes">
           <source>back_to.login</source>
-          <target xml:lang="en" state="translated">Back to login</target>
+          <target xml:lang="en">Back to login</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
           <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
@@ -5903,17 +5911,126 @@
           <target xml:lang="en" state="translated">Duplicate</target>
       </trans-unit>
       <!-- Some constraints messages -->
-      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters" approved="yes">
           <source>string.should.only.contain.latin.characters</source>
-          <target xml:lang="en" state="translated">String should only contain simple latin characters</target>
+          <target xml:lang="en">String should only contain simple latin characters</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word" approved="yes">
           <source>string.should.not.be.a.sql.reserved.word</source>
-          <target xml:lang="en" state="translated">String should not be a SQL reserved word</target>
+          <target xml:lang="en">String should not be a SQL reserved word</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="This value should not be blank.">
+      <trans-unit xml:space="preserve" id="This value should not be blank." approved="yes">
           <source>This value should not be blank.</source>
-          <target xml:lang="en" state="translated">This value should not be blank.</target>
+          <target xml:lang="en">This value should not be blank</target>
+      <alt-trans><target xml:lang="en">This value should not be blank.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="This value is not valid." approved="yes">
+          <source>This value is not valid.</source>
+          <target xml:lang="en">This value is not valid.</target>
+      </trans-unit>
+      <!-- Font variantes -->
+      <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
+          <source>font_variant.regular</source>
+          <target xml:lang="en">Regular</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic" approved="yes">
+          <source>font_variant.italic</source>
+          <target xml:lang="en">Italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold" approved="yes">
+          <source>font_variant.bold</source>
+          <target xml:lang="en">Bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic" approved="yes">
+          <source>font_variant.bold.italic</source>
+          <target xml:lang="en">Bold italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light" approved="yes">
+          <source>font_variant.light</source>
+          <target xml:lang="en">Light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light.italic" approved="yes">
+          <source>font_variant.light.italic</source>
+          <target xml:lang="en">Light italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.roadiz">
+          <source>update.roadiz</source>
+          <target xml:lang="en" state="translated">Update Roadiz</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.please_wait">
+          <source>update.please_wait</source>
+          <target xml:lang="en" state="translated">Update on going… please wait</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.done.back_to_home">
+          <source>update.done.back_to_home</source>
+          <target xml:lang="en" state="translated">Back to backoffice home</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.download_archive">
+          <source>update_roadiz.download_archive</source>
+          <target xml:lang="en" state="translated">Roadiz is downloading lastest archive file…</target>
+      <alt-trans><target xml:lang="en">Roadiz is downloading last version archive…</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.unarchive">
+          <source>update_roadiz.unarchive</source>
+          <target xml:lang="en" state="translated">Roadiz is unpacking latest archive file…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files">
+          <source>update_roadiz.move_new_files</source>
+          <target xml:lang="en" state="translated">Roadiz is moving around files to update your favorite CMS…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache">
+          <source>update_roadiz.clear_cache</source>
+          <target xml:lang="en" state="translated">Roadiz is clearing its cache…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_schema">
+          <source>update_roadiz.update_schema</source>
+          <target xml:lang="en" state="translated">Roadiz is updating your database schema…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_complete">
+          <source>update_roadiz.update_complete</source>
+          <target xml:lang="en" state="translated">Roadiz update is now complete!</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="automatic.upgrade">
+          <source>automatic.upgrade</source>
+          <target xml:lang="en" state="translated">Automatic upgrade</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade">
+          <source>always.make.a.database.backup.before.upgrade</source>
+          <target xml:lang="en" state="translated">You should always make a database backup before using the automatic upgrade tool.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git">
+          <source>cannot_update_roadiz.using_git</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, you are using a Git based setup. Update manually…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink">
+          <source>cannot_update_roadiz.using_symlink</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, you are using symbolic links. Update manually…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available">
+          <source>cannot_update_roadiz.no_release_available</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, no available release was found…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download">
+          <source>cannot_update_roadiz.no_archive_to_download</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, there is no available archive file to download…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist">
+          <source>cannot_update_roadiz.temp_archive_does_not_exist</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, it can’t find the downloaded archive file…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive">
+          <source>cannot_update_roadiz.cant_open_archive</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, archive file can’t be extracted…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir">
+          <source>cannot_update_roadiz.cant_create_temp_dir</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, it’s impossible to create a temporary directory…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist">
+          <source>cannot_update_roadiz.destination_folder_does_not_exist</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, your destination folder does not exist…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
+          <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
+          <target xml:lang="en" state="translated">Roadiz can’t update itself, your destination folder is not writable…</target>
       </trans-unit>
     </body>
   </file>

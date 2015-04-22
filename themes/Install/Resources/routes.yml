@@ -79,6 +79,9 @@ installDonePage:
 installFailedPage:
     path:     /install/failed
     defaults: { _controller: Themes\Install\InstallApp::failedAction }
+installClearCacheSchema:
+    path:     /install/clear-cache
+    defaults: { _controller: Themes\Install\Controllers\DatabaseController::clearDoctrineCacheAction }
 installUpdateSchema:
     path:     /install/update
     defaults: { _controller: Themes\Install\Controllers\DatabaseController::updateSchemaAction }

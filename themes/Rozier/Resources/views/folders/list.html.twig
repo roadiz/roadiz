@@ -1,17 +1,17 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
 	<header class="content-header header-folder header-folder-list">
         <h1 class="content-title folder-list-title">{% trans %}folders{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('foldersAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.folder{% endtrans %}</a>
         </div>
     </header>
 
-	{% include 'widgets/filtersBar.html.twig' %}
+	{% include '@Rozier/widgets/filtersBar.html.twig' %}
 
 	<article class="content content-no-action-menu">
 		<div class="content-table-cont">

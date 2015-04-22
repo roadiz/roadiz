@@ -1,17 +1,17 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global edit-tag">
 
     <header class="content-header header-tag header-tag-edit">
         <h1 class="content-title tag-edit-title">{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName })|truncate(25, true, '[…]') }}</h1>
-        {% include 'tags/navBack.html.twig' with {} only %}
-        {% include 'tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} only %}
-        {% include 'tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
+        {% include '@Rozier/tags/navBack.html.twig' with {} only %}
+        {% include '@Rozier/tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} only %}
+        {% include '@Rozier/tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
     </header>
 
     <article class="content content-tag-edit">
-    	{% form_theme form 'forms.html.twig' %}
+    	{% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-tag-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
     	    <fieldset data-uk-margin>
@@ -25,6 +25,6 @@
     	</form>
     </article>
 
-    {% include 'tags/actionsMenu.html.twig' %}
+    {% include '@Rozier/tags/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

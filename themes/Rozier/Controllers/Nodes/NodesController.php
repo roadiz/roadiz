@@ -33,9 +33,10 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -173,15 +174,10 @@ class NodesController extends RozierApp
                         $this->publishErrorMessage($request, $e->getMessage());
                     }
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSourcePage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translationForm->getData()['translationId']]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSourcePage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translationForm->getData()['translationId']]
+                    ));
                 }
                 $this->assignation['translationForm'] = $translationForm->createView();
             }
@@ -209,15 +205,10 @@ class NodesController extends RozierApp
                         $this->publishErrorMessage($request, $e->getMessage());
                     }
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditPage',
-                            ['nodeId' => $node->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditPage',
+                        ['nodeId' => $node->getId()]
+                    ));
                 }
 
                 $this->assignation['stackTypesForm'] = $stackTypesForm->createView();
@@ -232,6 +223,12 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->editNode($form->getData(), $node);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+
                     $msg = $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%' => $node->getNodeName(),
                     ]);
@@ -240,15 +237,10 @@ class NodesController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditPage',
-                        ['nodeId' => $node->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditPage',
+                    ['nodeId' => $node->getId()]
+                ));
             }
             $this->assignation['form'] = $form->createView();
             $this->assignation['securityContext'] = $this->getService("securityContext");
@@ -300,6 +292,11 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $node = $this->createNode($form->getData(), $type, $translation);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans(
                         'node.%name%.created',
@@ -307,27 +304,17 @@ class NodesController extends RozierApp
                     );
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditPage',
-                            ['nodeId' => $node->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditPage',
+                        ['nodeId' => $node->getId()]
+                    ));
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesAddPage',
-                            ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesAddPage',
+                        ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
+                    ));
                 }
             }
 
@@ -383,34 +370,29 @@ class NodesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $node = $this->createChildNode($form->getData(), $parentNode, $translation);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans(
-                        'node.%name%.created',
+                        'child_node.%name%.created',
                         ['%name%' => $node->getNodeName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditPage',
-                            ['nodeId' => $node->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditPage',
+                        ['nodeId' => $node->getId()]
+                    ));
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesAddChildPage',
-                            ['nodeId' => $nodeId, 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesAddChildPage',
+                        ['nodeId' => $nodeId, 'translationId' => $translationId]
+                    ));
                 }
             }
 
@@ -450,20 +432,14 @@ class NodesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_DELETED, $event);
+
                 $node->getHandler()->softRemoveWithChildren();
                 $this->getService('em')->flush();
-
-                // Update Solr Search engine if setup
-                if (true === $this->getKernel()->pingSolrServer()) {
-                    foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                            $nodeSource,
-                            $this->getService('solr')
-                        );
-                        $solrSource->getDocumentFromIndex();
-                        $solrSource->updateAndCommit();
-                    }
-                }
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.deleted',
@@ -473,12 +449,7 @@ class NodesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('nodesHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('nodesHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -521,12 +492,7 @@ class NodesController extends RozierApp
             $msg = $this->getTranslator()->trans('node.trash.emptied');
             $this->publishConfirmMessage($request, $msg);
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('nodesHomeDeletedPage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('nodesHomeDeletedPage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -557,20 +523,14 @@ class NodesController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UNDELETED, $event);
+
                 $node->getHandler()->softUnremoveWithChildren();
                 $this->getService('em')->flush();
-
-                // Update Solr Search engine if setup
-                if (true === $this->getKernel()->pingSolrServer()) {
-                    foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                            $nodeSource,
-                            $this->getService('solr')
-                        );
-                        $solrSource->getDocumentFromIndex();
-                        $solrSource->updateAndCommit();
-                    }
-                }
 
                 $msg = $this->getTranslator()->trans(
                     'node.%name%.undeleted',
@@ -580,14 +540,9 @@ class NodesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('nodesEditPage', [
-                        'nodeId' => $node->getId(),
-                    ])
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('nodesEditPage', [
+                    'nodeId' => $node->getId(),
+                ]));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -638,15 +593,16 @@ class NodesController extends RozierApp
                 try {
                     $source = static::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, null);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSourcePage',
-                            ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
-                        )
-                    );
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($source->getNode());
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
-                    $response->prepare($request);
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSourcePage',
+                        ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
+                    ));
 
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');

@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
@@ -9,16 +9,16 @@
 		{% else %}
 		<h1 class="content-title manage-history-title">{% trans %}history{% endtrans %}</h1>
 		{% endif %}
-		{% include 'widgets/countFiltersBar.html.twig' %}
+		{% include '@Rozier/widgets/countFiltersBar.html.twig' %}
 
 		{% if user %}
-		{% include 'users/navBar.html.twig' with {'user':user, current:'history'} %}
+		{% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'history'} %}
 		{% else %}
-		{% include 'dashboard/navBar.html.twig' with {'current':'history'} %}
+		{% include '@Rozier/dashboard/navBar.html.twig' with {'current':'history'} %}
 		{% endif %}
 	</header>
 
-	{% include 'widgets/filtersBar.html.twig' %}
+	{% include '@Rozier/widgets/filtersBar.html.twig' %}
 
 	<article class="content content-no-action-menu content-manage-history">
 		{% spaceless %}

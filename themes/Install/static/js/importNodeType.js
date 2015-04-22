@@ -8,15 +8,14 @@ var ImportNodeType = function ( routesArray ) {
 
 ImportNodeType.prototype.routes = null;
 ImportNodeType.prototype.score = 0;
-
-ImportNodeType.prototype.always = function( index) {
+ImportNodeType.prototype.always = function(index) {
     var _this = this;
 
     if(_this.routes.length > index) {
-        if (typeof _this.routes[index].update != "undefined") {
+        if (typeof _this.routes[index].update !== "undefined") {
             $.ajax({
                 url:_this.routes[index].update,
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 complete: function() {
                     console.log("updateSchema");
@@ -54,6 +53,47 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-check');
             $row.addClass('uk-badge-success');
+
+            /*
+             * Call post-update route
+             */
+            if (typeof _this.routes[index].postUpdate !== "undefined") {
+                if(_this.routes[index].postUpdate instanceof Array &&
+                    _this.routes[index].postUpdate.length > 1){
+                    /*
+                     * Call clear cache before updating schema
+                     */
+                    $.ajax({
+                        url:_this.routes[index].postUpdate[0],
+                        type: 'POST',
+                        dataType: 'json',
+                        complete: function() {
+                            /*
+                             * Update schema
+                             */
+                            $.ajax({
+                                url:_this.routes[index].postUpdate[1],
+                                type: 'POST',
+                                dataType: 'json',
+                                complete: function() {
+                                    _this.always(index + 1);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url:_this.routes[index].postUpdate,
+                        type: 'POST',
+                        dataType: 'json',
+                        complete: function() {
+                            _this.always(index + 1);
+                        }
+                    });
+                }
+            } else {
+                _this.always(index + 1);
+            }
         },
         error: function(data) {
             console.log(data);
@@ -70,8 +110,6 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
             console.log("complete");
             console.log(index);
             $icon.removeClass('uk-icon-spin');
-            _this.always(index + 1);
         }
     });
-    //}
 };

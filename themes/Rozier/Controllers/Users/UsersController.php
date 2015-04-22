@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -86,9 +85,9 @@ class UsersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
-            throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
+        if (!($this->isGranted('ROLE_ACCESS_USERS')
+            || $this->getUser()->getId() == $userId)) {
+            throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
         $user = $this->getService('em')
@@ -116,15 +115,10 @@ class UsersController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'usersEditPage',
-                        ['userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'usersEditPage',
+                    ['userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -162,12 +156,7 @@ class UsersController extends RozierApp
                     $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate('usersHomePage')
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl('usersHomePage'));
                 } catch (FacebookUsernameNotFoundException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (EntityAlreadyExistsException $e) {
@@ -221,12 +210,7 @@ class UsersController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('usersHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('usersHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -369,14 +353,12 @@ class UsersController extends RozierApp
      */
     private function buildAddForm(User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         $this->buildCommonFormFields($builder, $user);
 
         return $builder->getForm();
     }
-
 
     /**
      * @param RZ\Roadiz\Core\Entities\User $user
@@ -412,53 +394,53 @@ class UsersController extends RozierApp
     private function buildCommonFormFields(&$builder, User $user)
     {
         $builder->add('email', 'email', [
-                    'label' => $this->getTranslator()->trans('email'),
+                    'label' => 'email',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
                 ->add('username', 'text', [
-                    'label' => $this->getTranslator()->trans('username'),
+                    'label' => 'username',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
                 ->add('plainPassword', 'repeated', [
                     'type' => 'password',
-                    'invalid_message' => $this->getTranslator()->trans('password.must.match'),
+                    'invalid_message' => 'password.must.match',
                     'first_options' => [
-                        'label' => $this->getTranslator()->trans('password'),
+                        'label' => 'password',
                     ],
                     'second_options' => [
-                        'label' => $this->getTranslator()->trans('passwordVerify'),
+                        'label' => 'passwordVerify',
                     ],
                     'required' => false,
                 ])
                 ->add('firstName', 'text', [
-                    'label' => $this->getTranslator()->trans('firstName'),
+                    'label' => 'firstName',
                     'required' => false,
                 ])
                 ->add('lastName', 'text', [
-                    'label' => $this->getTranslator()->trans('lastName'),
+                    'label' => 'lastName',
                     'required' => false,
                 ])
                 ->add('facebookName', 'text', [
-                    'label' => $this->getTranslator()->trans('facebookName'),
+                    'label' => 'facebookName',
                     'required' => false,
                     'constraints' => [
                         new ValidFacebookName(),
                     ],
                 ])
                 ->add('company', 'text', [
-                    'label' => $this->getTranslator()->trans('company'),
+                    'label' => 'company',
                     'required' => false,
                 ])
                 ->add('job', 'text', [
-                    'label' => $this->getTranslator()->trans('job'),
+                    'label' => 'job',
                     'required' => false,
                 ])
                 ->add('birthday', 'date', [
-                    'label' => $this->getTranslator()->trans('birthday'),
+                    'label' => 'birthday',
                     'required' => false,
                     'years' => range(1920, date('Y') - 6),
                 ]);
@@ -473,8 +455,7 @@ class UsersController extends RozierApp
      */
     private function buildDeleteForm(User $user)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

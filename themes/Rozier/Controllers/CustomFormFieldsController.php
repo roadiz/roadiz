@@ -34,7 +34,6 @@ use \RZ\Roadiz\CMS\Forms\MarkdownType;
 use \RZ\Roadiz\Core\Entities\CustomForm;
 use \RZ\Roadiz\Core\Entities\CustomFormField;
 use \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\Validator\Constraints\NotBlank;
 use \Themes\Rozier\RozierApp;
@@ -48,7 +47,7 @@ class CustomFormFieldsController extends RozierApp
      * List every node-type-fields.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
+     * @param int $customFormId
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -101,17 +100,12 @@ class CustomFormFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormFieldsListPage',
-                        [
-                            'customFormId' => $field->getCustomForm()->getId(),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormFieldsListPage',
+                    [
+                        'customFormId' => $field->getCustomForm()->getId(),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -158,14 +152,12 @@ class CustomFormFieldsController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormFieldsListPage',
-                            [
-                                'customFormId' => $customFormId,
-                            ]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'customFormFieldsListPage',
+                        [
+                            'customFormId' => $customFormId,
+                        ]
+                    ));
 
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
@@ -174,16 +166,11 @@ class CustomFormFieldsController extends RozierApp
                     /*
                      * Redirect to add page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'customFormFieldsAddPage',
-                            ['customFormId' => $customFormId]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'customFormFieldsAddPage',
+                        ['customFormId' => $customFormId]
+                    ));
                 }
-
-                $response->prepare($request);
-                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
@@ -233,17 +220,12 @@ class CustomFormFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormFieldsListPage',
-                        [
-                            'customFormId' => $customFormId,
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormFieldsListPage',
+                    [
+                        'customFormId' => $customFormId,
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -321,10 +303,9 @@ class CustomFormFieldsController extends RozierApp
             'required' => $field->isRequired(),
             'defaultValues' => $field->getDefaultValues(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
@@ -332,32 +313,32 @@ class CustomFormFieldsController extends RozierApp
                             ],
                         ])
                         ->add('label', 'text', [
-                            'label' => $this->getTranslator()->trans('label'),
+                            'label' => 'label',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('description', new MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('type', 'choice', [
-                            'label' => $this->getTranslator()->trans('type'),
+                            'label' => 'type',
                             'required' => true,
                             'choices' => CustomFormField::$typeToHuman,
                         ])
                         ->add('required', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('required'),
+                            'label' => 'required',
                             'required' => false,
                         ])
                         ->add(
                             'defaultValues',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('defaultValues'),
+                                'label' => 'defaultValues',
                                 'required' => false,
                                 'attr' => [
-                                    'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated'),
+                                    'placeholder' => 'enter_values_comma_separated',
                                 ],
                             ]
                         );
@@ -372,8 +353,7 @@ class CustomFormFieldsController extends RozierApp
      */
     private function buildDeleteForm(CustomFormField $field)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('customFormFieldId', 'hidden', [
                             'data' => $field->getId(),
                             'constraints' => [

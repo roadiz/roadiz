@@ -31,14 +31,12 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
-use Themes\Rozier\RozierApp;
-
+use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -61,20 +59,18 @@ class GroupsUtilsController extends RozierApp
                               ->findAll();
         $group = GroupCollectionJsonSerializer::serialize($existingGroup);
 
-        $response =  new Response(
+        $response = new Response(
             $group,
             Response::HTTP_OK,
             []
         );
-
         $response->headers->set(
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-all-' . date("YmdHis")  . '.rzt'
+                'group-all-' . date("YmdHis") . '.rzt'
             )
         ); // Rezo-Zero Type
-
         $response->prepare($request);
 
         return $response;
@@ -97,7 +93,7 @@ class GroupsUtilsController extends RozierApp
 
         $group = GroupCollectionJsonSerializer::serialize([$existingGroup]);
 
-        $response =  new Response(
+        $response = new Response(
             $group,
             Response::HTTP_OK,
             []
@@ -107,10 +103,9 @@ class GroupsUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-' . $existingGroup->getName() . '-' . date("YmdHis")  . '.rzt'
+                'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.rzt'
             )
         ); // Rezo-Zero Type
-
         $response->prepare($request);
 
         return $response;
@@ -144,15 +139,10 @@ class GroupsUtilsController extends RozierApp
                     $msg = $this->getTranslator()->trans('group.imported.updated');
                     $this->publishConfirmMessage($request, $msg);
 
-                     // redirect even if its null
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'groupsHomePage'
-                        )
-                    );
-                     $response->prepare($request);
-
-                     return $response->send();
+                    // redirect even if its null
+                    return $this->redirect($this->generateUrl(
+                        'groupsHomePage'
+                    ));
 
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
@@ -160,14 +150,9 @@ class GroupsUtilsController extends RozierApp
                     $this->getService('logger')->error($msg);
 
                     // redirect even if its null
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'groupsImportPage'
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'groupsImportPage'
+                    ));
                 }
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
@@ -186,11 +171,10 @@ class GroupsUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('group_file', 'file', [
-                'label' => $this->getTranslator()->trans('group.file')
-            ]);
+        $builder = $this->createFormBuilder()
+                        ->add('group_file', 'file', [
+                            'label' => 'group.file',
+                        ]);
 
         return $builder->getForm();
     }

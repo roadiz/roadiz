@@ -40,7 +40,7 @@
 	 # We will have to check after OR inside drag status
 	 #}
 	{% for subNode in folderTree.getChildrenFolders(folder) %}
-		{% include 'widgets/folderTree/singleFolder.html.twig' with {"folder":subNode, "parent":folder, "folderTree":folderTree} %}
+		{% include '@Rozier/widgets/folderTree/singleFolder.html.twig' with {"folder":subNode, "parent":folder, "folderTree":folderTree} %}
 	{% endfor %}
 	</ul>
 </li>

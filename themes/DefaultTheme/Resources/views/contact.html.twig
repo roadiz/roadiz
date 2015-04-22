@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '@DefaultTheme/base.html.twig' %}
 {% block content %}
 
 <h1>{% trans %}contact.us{% endtrans %}</h1>
@@ -20,7 +20,7 @@
     {#
      # Display contact form
      #}
-    {% form_theme contactForm 'forms.html.twig' %}
+    {% form_theme contactForm '@DefaultTheme/forms.html.twig' %}
     {{ form(contactForm) }}
 </article>
 

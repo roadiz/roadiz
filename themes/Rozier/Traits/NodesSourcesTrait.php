@@ -39,7 +39,6 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\Type;
-use \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 
 trait NodesSourcesTrait
 {
@@ -88,16 +87,6 @@ trait NodesSourcesTrait
         }
 
         $this->getService('em')->flush();
-
-        // Update Solr Serach engine if setup
-        if (true === $this->getKernel()->pingSolrServer()) {
-            $solrSource = new SolariumNodeSource(
-                $nodeSource,
-                $this->getService('solr')
-            );
-            $solrSource->getDocumentFromIndex();
-            $solrSource->updateAndCommit();
-        }
     }
 
     /**
@@ -230,20 +219,30 @@ trait NodesSourcesTrait
                 ];
             case NodeTypeField::DATETIME_T:
                 return [
+                    'date_widget' => 'single_text',
+                    'date_format' => 'yyyy-MM-dd',
                     'label' => $field->getLabel(),
-                    'years' => range(date('Y') - 10, date('Y') + 10),
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
                         'class' => 'rz-datetime-field',
                     ],
                     'empty_value' => [
-                        'year' =>   $translator->trans('year'),
-                        'month' =>  $translator->trans('month'),
-                        'day' =>    $translator->trans('day'),
-                        'hour' =>   $translator->trans('hour'),
-                        'minute' => $translator->trans('minute')
-                    ]
+                        'hour' => $translator->trans('hour'),
+                        'minute' => $translator->trans('minute'),
+                    ],
+                ];
+            case NodeTypeField::DATE_T:
+                return [
+                    'widget' => 'single_text',
+                    'format' => 'yyyy-MM-dd',
+                    'label' => $field->getLabel(),
+                    'required' => false,
+                    'attr' => [
+                        'data-desc' => $field->getDescription(),
+                        'class' => 'rz-date-field',
+                    ],
+                    'empty_value' => '',
                 ];
             case NodeTypeField::INTEGER_T:
                 return [

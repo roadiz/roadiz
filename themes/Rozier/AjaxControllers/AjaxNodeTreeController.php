@@ -86,7 +86,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                  );
 
                     $this->assignation['nodeTree'] = new NodeTreeWidget(
-                        $this->getKernel()->getRequest(),
+                        $this->getRequest(),
                         $this,
                         $node,
                         $translation
@@ -118,7 +118,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
              */
             case 'requestMainNodeTree':
                 $this->assignation['nodeTree'] = new NodeTreeWidget(
-                    $this->getKernel()->getRequest(),
+                    $this->getRequest(),
                     $this,
                     null,
                     $translation

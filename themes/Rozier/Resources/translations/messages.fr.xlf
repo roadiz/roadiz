@@ -1138,6 +1138,10 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="child_node.%name%.created" approved="yes">
+        <source>child_node.%name%.created</source>
+        <target xml:lang="fr">Le nœud enfant «%name%» a été créé.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="107" approved="yes">
         <source>node.%name%.deleted</source>
         <target xml:lang="fr">Le nœud «%name%» a été supprimé.</target>
@@ -1521,6 +1525,10 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
           <context context-type="linenumber">370</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.woff2File" approved="yes">
+        <source>font.woff2File</source>
+        <target xml:lang="fr">Fichier WOFF2</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="145" approved="yes">
         <source>font.otfFile</source>
@@ -4268,6 +4276,10 @@
         <source>date-time.type</source>
         <target xml:lang="fr">Date et heure</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type" approved="yes">
+        <source>date.type</source>
+        <target xml:lang="fr">Date</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="435" approved="yes">
         <source>text.type</source>
         <target xml:lang="fr">Texte</target>
@@ -5417,10 +5429,6 @@
           <source>User account is disabled.</source>
           <target xml:lang="fr">Votre compte utilisateur est désactivé.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="change.status.nodes" approved="yes">
-          <source>change.status.nodes</source>
-          <target xml:lang="fr">Changement de statut groupé</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
           <target xml:lang="fr">Changement de statut groupé</target>
@@ -5882,38 +5890,147 @@
           <target xml:lang="fr">Déplacer en fin de liste</target>
       </trans-unit>
       <!-- Node tree contextual menu commands -->
-      <trans-unit xml:space="preserve" id="node.hide">
+      <trans-unit xml:space="preserve" id="node.hide" approved="yes">
           <source>node.hide</source>
-          <target xml:lang="fr" state="translated">Cacher</target>
+          <target xml:lang="fr">Cacher</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.show">
+      <trans-unit xml:space="preserve" id="node.show" approved="yes">
           <source>node.show</source>
-          <target xml:lang="fr" state="translated">Rendre visible</target>
+          <target xml:lang="fr">Rendre visible</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.publish">
+      <trans-unit xml:space="preserve" id="node.publish" approved="yes">
           <source>node.publish</source>
-          <target xml:lang="fr" state="translated">Publier</target>
+          <target xml:lang="fr">Publier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.unpublish">
+      <trans-unit xml:space="preserve" id="node.unpublish" approved="yes">
           <source>node.unpublish</source>
-          <target xml:lang="fr" state="translated">Dépublier</target>
+          <target xml:lang="fr">Dépublier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.duplicate">
+      <trans-unit xml:space="preserve" id="node.duplicate" approved="yes">
           <source>node.duplicate</source>
-          <target xml:lang="fr" state="translated">Dupliquer</target>
+          <target xml:lang="fr">Dupliquer</target>
       </trans-unit>
       <!-- Some constraints messages -->
-      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters" approved="yes">
           <source>string.should.only.contain.latin.characters</source>
-          <target xml:lang="fr" state="translated">La chaîne de caractère ne devrait contenir que des caractères latin non-accentués</target>
+          <target xml:lang="fr">La chaîne de caractères ne devrait contenir que des caractères latins non-accentués</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word" approved="yes">
           <source>string.should.not.be.a.sql.reserved.word</source>
-          <target xml:lang="fr" state="translated">La chaîne de caractères ne devrait pas être un mot réservé pour SQL</target>
+          <target xml:lang="fr">La chaîne de caractères ne devrait pas être un mot réservé pour SQL</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="This value should not be blank.">
+      <trans-unit xml:space="preserve" id="This value should not be blank." approved="yes">
           <source>This value should not be blank.</source>
-          <target xml:lang="fr" state="translated">Cette valeur ne devrait pas être vide.</target>
+          <target xml:lang="fr">Cette valeur ne devrait pas être vide.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="This value is not valid.">
+          <source>This value is not valid.</source>
+          <target xml:lang="fr" state="translated">Cette valeur n'est pas valide.</target>
+      </trans-unit>
+      <!-- Font variantes -->
+      <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
+          <source>font_variant.regular</source>
+          <target xml:lang="fr">Normal</target>
+      <alt-trans><target xml:lang="fr">Regular</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic" approved="yes">
+          <source>font_variant.italic</source>
+          <target xml:lang="fr">Italique</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold" approved="yes">
+          <source>font_variant.bold</source>
+          <target xml:lang="fr">Gras</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic" approved="yes">
+          <source>font_variant.bold.italic</source>
+          <target xml:lang="fr">Gras italique</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light" approved="yes">
+          <source>font_variant.light</source>
+          <target xml:lang="fr">Light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light.italic" approved="yes">
+          <source>font_variant.light.italic</source>
+          <target xml:lang="fr">Light italique</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.roadiz">
+          <source>update.roadiz</source>
+          <target xml:lang="fr" state="translated">Mettre à jour Roadiz</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.please_wait">
+          <source>update.please_wait</source>
+          <target xml:lang="fr" state="translated">Mise à jour en cours, veuillez patienter…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.done.back_to_home">
+          <source>update.done.back_to_home</source>
+          <target xml:lang="fr" state="translated">Revenir à l’accueil</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.download_archive">
+          <source>update_roadiz.download_archive</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de télécharger la dernière archive disponible…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.unarchive">
+          <source>update_roadiz.unarchive</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de décompresser l’archive de mise à jour…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files">
+          <source>update_roadiz.move_new_files</source>
+          <target xml:lang="fr" state="translated">Roadiz jongle avec ses fichiers pour mettre à jour votre CMS favori…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache">
+          <source>update_roadiz.clear_cache</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de vider son cache…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_schema">
+          <source>update_roadiz.update_schema</source>
+          <target xml:lang="fr" state="translated">Roadiz est en train de migrer le schéma de sa base de données…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_complete">
+          <source>update_roadiz.update_complete</source>
+          <target xml:lang="fr" state="translated">La mise à jour de Roadiz est maintenant terminée !</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="automatic.upgrade">
+          <source>automatic.upgrade</source>
+          <target xml:lang="fr" state="translated">Mise à jour automatisée</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade">
+          <source>always.make.a.database.backup.before.upgrade</source>
+          <target xml:lang="fr" state="translated">Vous devriez toujours effectuer une sauvegarde de la base de donnée avant d’utiliser la mise à jour automatisée.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git">
+          <source>cannot_update_roadiz.using_git</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, vous l’avez installé avec Git. Veuillez mettre à jour manuellement…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink">
+          <source>cannot_update_roadiz.using_symlink</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, vous l’avez installé avec des liens symboliques. Veuillez mettre à jour manuellement…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available">
+          <source>cannot_update_roadiz.no_release_available</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, aucune mise à jour n’est disponible…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download">
+          <source>cannot_update_roadiz.no_archive_to_download</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, il n’y a aucune archive à télécharger…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist">
+          <source>cannot_update_roadiz.temp_archive_does_not_exist</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, l’archive temporaire est introuvable…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive">
+          <source>cannot_update_roadiz.cant_open_archive</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, l’archive ne peut pas être décompressée…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir">
+          <source>cannot_update_roadiz.cant_create_temp_dir</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, il ne peut pas créer de dossier temporaire…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist">
+          <source>cannot_update_roadiz.destination_folder_does_not_exist</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’existe pas…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
+          <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’est pas inscriptible…</target>
       </trans-unit>
     </body>
   </file>

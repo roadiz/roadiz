@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\XlsxExporter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -216,8 +215,7 @@ class SearchController extends RozierApp
         $nodeTypeForm->handleRequest();
 
         if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
-            $response->prepare($request);
-            return $response->send();
+            return $response;
         }
 
         if ($form->isValid()) {
@@ -326,15 +324,15 @@ class SearchController extends RozierApp
             "nodetype",
             new \RZ\Roadiz\CMS\Forms\NodeTypesType,
             [
-                                'empty_value' => "",
-                                'required' => false,
-                                'data' => $nodetypeId,
-                            ]
+                'empty_value' => "",
+                'required' => false,
+                'data' => $nodetypeId,
+            ]
         )
-                        ->add("nodetypeSubmit", "submit", [
-                            "label" => $this->getTranslator()->trans("select.nodetype"),
-                            "attr" => ["class" => "uk-button uk-button-primary"],
-                        ]);
+        ->add("nodetypeSubmit", "submit", [
+            "label" => "select.nodetype",
+            "attr" => ["class" => "uk-button uk-button-primary"],
+        ]);
 
         return $builderNodeType;
     }
@@ -343,18 +341,14 @@ class SearchController extends RozierApp
     {
         if ($nodeTypeForm->isValid()) {
             if (empty($nodeTypeForm->getData()['nodetype'])) {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('searchNodePage')
-                );
+                return $this->redirect($this->generateUrl('searchNodePage'));
             } else {
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'searchNodeSourcePage',
-                        [
-                            "nodetypeId" => $nodeTypeForm->getData()['nodetype'],
-                        ]
-                    )
-                );
+                return $this->redirect($this->generateUrl(
+                    'searchNodeSourcePage',
+                    [
+                        "nodetypeId" => $nodeTypeForm->getData()['nodetype'],
+                    ]
+                ));
             }
 
             return $response;
@@ -372,57 +366,57 @@ class SearchController extends RozierApp
                             ["method" => "get"]
                         )
                         ->add($prefix . 'status', new NodeStatesType(), [
-                            'label' => $this->getTranslator()->trans('node.status'),
+                            'label' => 'node.status',
                             'required' => false,
                         ])
                         ->add($prefix . 'visible', 'choice', [
-                            'label' => $this->getTranslator()->trans('visible'),
-                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'label' => 'visible',
+                            'choices' => [true => 'true', false => 'false'],
+                            'empty_value' => 'ignore',
                             'required' => false,
                             'expanded' => true,
                         ])
                         ->add($prefix . 'locked', 'choice', [
-                            'label' => $this->getTranslator()->trans('locked'),
-                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'label' => 'locked',
+                            'choices' => [true => 'true', false => 'false'],
+                            'empty_value' => 'ignore',
                             'required' => false,
                             'expanded' => true,
                         ])
                         ->add($prefix . 'sterile', 'choice', [
-                            'label' => $this->getTranslator()->trans('sterile-status'),
-                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'label' => 'sterile-status',
+                            'choices' => [true => 'true', false => 'false'],
+                            'empty_value' => 'ignore',
                             'required' => false,
                             'expanded' => true,
                         ])
                         ->add($prefix . 'hideChildren', 'choice', [
-                            'label' => $this->getTranslator()->trans('hiding-children'),
-                            'choices' => [true => $this->getTranslator()->trans('true'), false => $this->getTranslator()->trans('false')],
-                            'empty_value' => $this->getTranslator()->trans('ignore'),
+                            'label' => 'hiding-children',
+                            'choices' => [true => 'true', false => 'false'],
+                            'empty_value' => 'ignore',
                             'required' => false,
                             'expanded' => true,
                         ])
                         ->add($prefix . 'nodeName', 'text', [
-                            'label' => $this->getTranslator()->trans('nodeName'),
+                            'label' => 'nodeName',
                             'required' => false,
                         ])
                         ->add($prefix . 'parent', 'text', [
-                            'label' => $this->getTranslator()->trans('node.id.parent'),
+                            'label' => 'node.id.parent',
                             'required' => false,
                         ])
                         ->add($prefix . "createdAt", new CompareDatetimeType($this->getTranslator()), [
-                            'label' => $this->getTranslator()->trans('created.at'),
+                            'label' => 'created.at',
                             'virtual' => false,
                             'required' => false,
                         ])
                         ->add($prefix . "updatedAt", new CompareDatetimeType($this->getTranslator()), [
-                            'label' => $this->getTranslator()->trans('updated.at'),
+                            'label' => 'updated.at',
                             'virtual' => false,
                             'required' => false,
                         ])
                         ->add($prefix . "limitResult", "number", [
-                            'label' => $this->getTranslator()->trans('node.limit.result'),
+                            'label' => 'node.limit.result',
                             'required' => false,
                             'constraints' => [
                                 new GreaterThan(0),
@@ -430,13 +424,13 @@ class SearchController extends RozierApp
                         ])
                         // No need to prefix tags
                         ->add('tags', 'text', [
-                            'label' => $this->getTranslator()->trans('node.tags'),
+                            'label' => 'node.tags',
                             'required' => false,
                             'attr' => ["class" => "rz-tag-autocomplete"],
                         ])
                         // No need to prefix tags
                         ->add('tagExclusive', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('node.tag.exclusive'),
+                            'label' => 'node.tag.exclusive',
                             'required' => false,
                         ]);
 

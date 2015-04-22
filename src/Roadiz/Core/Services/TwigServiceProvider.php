@@ -30,8 +30,11 @@
 namespace RZ\Roadiz\Core\Services;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use RZ\Roadiz\Core\Kernel;
 use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
@@ -110,6 +113,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             /*
              * Extensions
              */
+            $twig->addExtension(new TranslationExtension($c['translator']));
             $twig->addExtension(new \Twig_Extensions_Extension_Intl());
             $twig->addExtension($c['twig.routingExtension']);
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
@@ -158,12 +162,25 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 if ($mixed instanceof Document) {
                     return $mixed->getViewer()->getDocumentUrlByArray($criteria);
                 } elseif ($mixed instanceof NodesSources) {
+                    $urlGenerator = new NodesSourcesUrlGenerator(
+                        Kernel::getService('request'),
+                        $mixed
+                    );
                     if (isset($criteria['absolute'])) {
-                        return $mixed->getHandler()->getUrl((boolean) $criteria['absolute']);
+                        return $urlGenerator->getUrl((boolean) $criteria['absolute']);
                     }
-                    return $mixed->getHandler()->getUrl(false);
+                    return $urlGenerator->getUrl(false);
+                } elseif ($mixed instanceof Node) {
+                    $urlGenerator = new NodesSourcesUrlGenerator(
+                        Kernel::getService('request'),
+                        $mixed->getNodeSources()->first()
+                    );
+                    if (isset($criteria['absolute'])) {
+                        return $urlGenerator->getUrl((boolean) $criteria['absolute']);
+                    }
+                    return $urlGenerator->getUrl(false);
                 } else {
-                    throw new \RunException("Twig “url” filter can be only used with a Document or a NodesSources", 1);
+                    throw new \RuntimeException("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
                 }
             });
         };

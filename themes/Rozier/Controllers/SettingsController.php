@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -133,23 +132,15 @@ class SettingsController extends RozierApp
                 }
 
                 if (null !== $settingGroup) {
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'settingGroupsSettingsPage',
-                            ['settingGroupId' => $settingGroup->getId()]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'settingGroupsSettingsPage',
+                        ['settingGroupId' => $settingGroup->getId()]
+                    ));
                 } else {
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'settingsHomePage'
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'settingsHomePage'
+                    ));
                 }
-
-                $response->prepare($request);
-
-                return $response;
             }
 
             $document = null;
@@ -199,15 +190,10 @@ class SettingsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'settingsEditPage',
-                        ['settingId' => $setting->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'settingsEditPage',
+                    ['settingId' => $setting->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -250,12 +236,7 @@ class SettingsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('settingsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('settingsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -297,12 +278,7 @@ class SettingsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('settingsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('settingsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -348,7 +324,7 @@ class SettingsController extends RozierApp
                 $this->getService('em')->flush();
 
                 // Clear result cache
-                $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+                $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
                 if ($cacheDriver !== null) {
                     $cacheDriver->deleteAll();
                 }
@@ -465,24 +441,23 @@ class SettingsController extends RozierApp
             'type' => $setting->getType(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('value', NodeTypeField::$typeToForm[$setting->getType()], [
-                            'label' => $this->getTranslator()->trans('value'),
+                            'label' => 'value',
                             'required' => false,
                         ])
                         ->add('visible', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('visible'),
+                            'label' => 'visible',
                             'required' => false,
                         ])
                         ->add('type', 'choice', [
-                            'label' => $this->getTranslator()->trans('type'),
+                            'label' => 'type',
                             'required' => true,
                             'choices' => Setting::$typeToHuman,
                         ])
@@ -490,7 +465,7 @@ class SettingsController extends RozierApp
                             'settingGroup',
                             new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
                             [
-                                'label' => $this->getTranslator()->trans('setting.group'),
+                                'label' => 'setting.group',
                             ]
                         );
 
@@ -520,13 +495,12 @@ class SettingsController extends RozierApp
             $defaults['settingGroup'] = $setting->getSettingGroup()->getId();
         }
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'name',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('name'),
+                                'label' => 'name',
                                 'constraints' => [new NotBlank()],
                             ]
                         )
@@ -547,7 +521,7 @@ class SettingsController extends RozierApp
                             'visible',
                             'checkbox',
                             [
-                                'label' => $this->getTranslator()->trans('visible'),
+                                'label' => 'visible',
                                 'required' => false,
                             ]
                         )
@@ -555,7 +529,7 @@ class SettingsController extends RozierApp
                             'type',
                             'choice',
                             [
-                                'label' => $this->getTranslator()->trans('type'),
+                                'label' => 'type',
                                 'required' => true,
                                 'choices' => Setting::$typeToHuman,
                             ]
@@ -564,7 +538,7 @@ class SettingsController extends RozierApp
                             'settingGroup',
                             new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
                             [
-                                'label' => $this->getTranslator()->trans('setting.group'),
+                                'label' => 'setting.group',
                             ]
                         );
 
@@ -586,8 +560,7 @@ class SettingsController extends RozierApp
         if ($setting->getType() == NodeTypeField::DOCUMENTS_T) {
             $defaults['value'] = null;
         }
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('id', 'hidden', [
                             'data' => $setting->getId(),
                             'required' => true,
@@ -608,8 +581,7 @@ class SettingsController extends RozierApp
      */
     private function buildDeleteForm(Setting $setting)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('settingId', 'hidden', [
                             'data' => $setting->getId(),
                             'constraints' => [

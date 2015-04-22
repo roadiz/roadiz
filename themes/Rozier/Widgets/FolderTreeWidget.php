@@ -30,27 +30,27 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Folder;
-use Themes\Rozier\Widgets\AbstractWidget;
-
 use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\Widgets\AbstractWidget;
 
 /**
  * Prepare a Folder tree according to Folder hierarchy and given options.
  */
 class FolderTreeWidget extends AbstractWidget
 {
-    protected $parentFolder =  null;
-    protected $folders =       null;
+    protected $parentFolder = null;
+    protected $folders = null;
 
     /**
-     * @param Request                    $request
-     * @param AppController              $refereeController
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController
      * @param RZ\Roadiz\Core\Entities\Folder $parent
      */
     public function __construct(
         Request $request,
-        $refereeController,
+        Controller $refereeController,
         Folder $parent = null
     ) {
         parent::__construct($request, $refereeController);
@@ -65,11 +65,11 @@ class FolderTreeWidget extends AbstractWidget
     protected function getFolderTreeAssignationForParent()
     {
         $this->folders = $this->getController()->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                ->findBy(
-                    ['parent'=>$this->parentFolder],
-                    ['position'=>'ASC']
-                );
+             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+             ->findBy(
+                 ['parent' => $this->parentFolder],
+                 ['position' => 'ASC']
+             );
     }
 
     /**
@@ -81,7 +81,7 @@ class FolderTreeWidget extends AbstractWidget
     {
         return $this->folders = $this->getController()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                    ->findBy(['parent'=>$parent], ['position'=>'ASC']);
+                    ->findBy(['parent' => $parent], ['position' => 'ASC']);
     }
     /**
      * @return RZ\Roadiz\Core\Entities\Folder

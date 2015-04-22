@@ -32,7 +32,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Utils\DomHandler;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -72,16 +71,14 @@ class NewslettersUtilsController extends RozierApp
 
             $this->publishConfirmMessage($request, $msg);
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')
-                     ->generate(
-                         'newslettersEditPage',
-                         [
-                             "newsletterId" => $newNewsletter->getId(),
-                             "translationId" => $translation->getId(),
-                         ]
-                     )
-            );
+            return $this->redirect($this->getService('urlGenerator')
+                                            ->generate(
+                                                'newslettersEditPage',
+                                                [
+                                                    "newsletterId" => $newNewsletter->getId(),
+                                                    "translationId" => $translation->getId(),
+                                                ]
+                                            ));
 
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
@@ -92,19 +89,15 @@ class NewslettersUtilsController extends RozierApp
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')
-                     ->generate(
-                         'newslettersEditPage',
-                         [
-                             "newsletterId" => $existingNewsletter->getId(),
-                             "translationId" => $translation->getId(),
-                         ]
-                     )
-            );
+            return $this->redirect($this->getService('urlGenerator')
+                                            ->generate(
+                                                'newslettersEditPage',
+                                                [
+                                                    "newsletterId" => $existingNewsletter->getId(),
+                                                    "translationId" => $translation->getId(),
+                                                ]
+                                            ));
         }
-        $response->prepare($request);
-        return $response->send();
     }
 
     private function getBaseNamespace()
@@ -138,6 +131,7 @@ class NewslettersUtilsController extends RozierApp
         // get html from the controller
         $front = new $classname();
         $front->setKernel($this->kernel);
+        $front->setContainer($this->kernel->getContainer());
         $front->prepareBaseAssignation();
         return $front->makeHtml($request, $newsletter);
     }

@@ -36,7 +36,10 @@ use Doctrine\ORM\Mapping as ORM;
  * Log Entity
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="log")
+ * @ORM\Table(name="log", indexes={
+ *     @ORM\Index(columns={"datetime"}),
+ *     @ORM\Index(columns={"level"})
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 class Log extends AbstractEntity
@@ -54,9 +57,8 @@ class Log extends AbstractEntity
     /**
      * @param mixed  $level
      * @param string $message
-     * @param array  $context
      */
-    public function __construct($level, $message, array $context = [])
+    public function __construct($level, $message)
     {
         $this->level = $level;
         $this->message = $message;

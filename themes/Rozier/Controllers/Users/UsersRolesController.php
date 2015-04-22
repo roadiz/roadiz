@@ -32,7 +32,6 @@ namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -75,15 +74,10 @@ class UsersRolesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'usersEditRolesPage',
-                        ['userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'usersEditRolesPage',
+                    ['userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -130,15 +124,10 @@ class UsersRolesController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'usersEditRolesPage',
-                        ['userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'usersEditRolesPage',
+                    ['userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -203,8 +192,7 @@ class UsersRolesController extends RozierApp
         $defaults = [
             'userId' => $user->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'userId',
                             'hidden',
@@ -232,8 +220,7 @@ class UsersRolesController extends RozierApp
      */
     private function buildRemoveRoleForm(User $user, Role $role)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

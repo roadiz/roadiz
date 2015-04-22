@@ -30,9 +30,9 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CustomFormField entities are used to create CustomForms with
@@ -54,15 +54,16 @@ class CustomFormField extends AbstractField
      * @var array
      */
     public static $typeToHuman = [
-        AbstractField::STRING_T =>   'string.type',
+        AbstractField::STRING_T => 'string.type',
         AbstractField::DATETIME_T => 'date-time.type',
-        AbstractField::TEXT_T =>     'text.type',
+        AbstractField::DATE_T => 'date.type',
+        AbstractField::TEXT_T => 'text.type',
         AbstractField::MARKDOWN_T => 'markdown.type',
-        AbstractField::BOOLEAN_T =>  'boolean.type',
-        AbstractField::INTEGER_T =>  'integer.type',
-        AbstractField::DECIMAL_T =>  'decimal.type',
-        AbstractField::EMAIL_T =>    'email.type',
-        AbstractField::ENUM_T =>     'single-choice.type',
+        AbstractField::BOOLEAN_T => 'boolean.type',
+        AbstractField::INTEGER_T => 'integer.type',
+        AbstractField::DECIMAL_T => 'decimal.type',
+        AbstractField::EMAIL_T => 'email.type',
+        AbstractField::ENUM_T => 'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
     ];
 
@@ -156,6 +157,6 @@ class CustomFormField extends AbstractField
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getName()." — ".$this->getLabel().PHP_EOL;
+        return $this->getId() . " — " . $this->getName() . " — " . $this->getLabel() . PHP_EOL;
     }
 }

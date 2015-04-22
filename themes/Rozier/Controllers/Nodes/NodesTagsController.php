@@ -33,7 +33,8 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -88,20 +89,21 @@ class NodesTagsController extends RozierApp
                 if ($form->isValid()) {
                     $this->addNodeTag($form->getData(), $node);
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodeEvent($node);
+                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+
                     $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
                         '%node%' => $node->getNodeName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditTagsPage',
-                            ['nodeId' => $node->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditTagsPage',
+                        ['nodeId' => $node->getId()]
+                    ));
                 }
 
                 $this->assignation['form'] = $form->createView();
@@ -140,21 +142,23 @@ class NodesTagsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->removeNodeTag($form->getData(), $node, $tag);
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+
                 $msg = $this->getTranslator()->trans(
                     'tag.%name%.removed',
                     ['%name%' => $tag->getTranslatedTags()->first()->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodesEditTagsPage',
-                        ['nodeId' => $node->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodesEditTagsPage',
+                    ['nodeId' => $node->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -190,8 +194,6 @@ class NodesTagsController extends RozierApp
 
         $this->getService('em')->flush();
 
-        $this->updateSolrIndex($node);
-
         return $tag;
     }
 
@@ -209,8 +211,6 @@ class NodesTagsController extends RozierApp
             $node->removeTag($tag);
             $this->getService('em')->flush();
 
-            $this->updateSolrIndex($node);
-
             return $tag;
         }
     }
@@ -225,8 +225,7 @@ class NodesTagsController extends RozierApp
         $defaults = [
             'nodeId' => $node->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -234,11 +233,11 @@ class NodesTagsController extends RozierApp
                             ],
                         ])
                         ->add('tagPaths', 'text', [
-                            'label' => $this->getTranslator()->trans('list.tags.to_link'),
+                            'label' => 'list.tags.to_link',
                             'attr' => ['class' => 'rz-tag-autocomplete'],
                         ])
                         ->add('separator_1', new SeparatorType(), [
-                            'label' => $this->getTranslator()->trans('use.new_or_existing.tags_with_hierarchy'),
+                            'label' => 'use.new_or_existing.tags_with_hierarchy',
                             'attr' => ['class' => 'form-help-static uk-alert uk-alert-large'],
                         ]);
 
@@ -253,8 +252,7 @@ class NodesTagsController extends RozierApp
      */
     protected function buildRemoveTagForm(Node $node, Tag $tag)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [

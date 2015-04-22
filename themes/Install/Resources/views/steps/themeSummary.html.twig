@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '@Install/base.html.twig' %}
 
 {% block content %}
 
@@ -30,14 +30,14 @@
                         <th>{% trans %}theme.name{% endtrans %}</th>
                         <th>{% trans %}theme.version{% endtrans %}</th>
                         <th>{% trans %}cms.version{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                         <tr>
                             <td></td>
                             <td>{{theme.name}}</td>
                             <td>{{theme.version}}</td>
                             <td>{{cms.version}}</td>
-                            <td class="align-right">
+                            <td class="last-col align-center">
                                 {% if status.version == true %}
                                     <div class="uk-badge uk-badge-success uk-badge-notification" id="theme"><i class="uk-icon-check"></i></div>
                                 {% else %}
@@ -57,14 +57,14 @@
                         <th>{% trans %}theme.name{% endtrans %}</th>
                         <th>{% trans %}theme.supportedLocale{% endtrans %}</th>
                         <th>{% trans %}cms.locale{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                         <tr>
                             <td></td>
                             <td>{{theme.name}}</td>
                             <td>{{theme.supportedLocale|join(", ")}}</td>
                             <td>{{cms.locale}}</td>
-                            <td class="align-right">
+                            <td class="last-col align-center">
                                 {% if status.locale == true %}
                                     <div class="uk-badge uk-badge-success uk-badge-notification" id="theme"><i class="uk-icon-check"></i></div>
                                 {% else %}
@@ -84,7 +84,7 @@
                         <th></th>
                         <th>{% trans %}name{% endtrans %}</th>
                         <th>{% trans %}filename{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {# theme files #}
                     {% for name, filenames in theme.imports %}
@@ -93,7 +93,7 @@
                             <td></td>
                             <td>{{name}}</td>
                             <td>{{filename}}</td>
-                            <td class="align-right">
+                            <td class="last-col align-center">
                                 {% if status.import[filename] == true %}
                                     <div class="uk-badge uk-badge-success uk-badge-notification" id="theme"><i class="uk-icon-check"></i></div>
                                 {% else %}

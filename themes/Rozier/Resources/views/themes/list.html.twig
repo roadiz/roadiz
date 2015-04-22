@@ -1,11 +1,11 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
     <header class="content-header header-themes header-nodes-list">
         <h1 class="content-title themes-list-title">{% trans %}themes{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
 
         {# Add button will only appear if additional themes are available #}
         {% if availableThemesCount > 0 %}
@@ -17,7 +17,7 @@
         {% endif %}
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu content-themes-list">
         <div class="content-table-cont">

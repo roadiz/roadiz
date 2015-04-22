@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 use \Symfony\Component\Validator\Constraints\NotBlank;
@@ -101,20 +100,15 @@ class NodeTypeFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodeTypesFieldSchemaUpdate',
-                        [
-                            'nodeTypeId' => $field->getNodeType()->getId(),
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                static::SCHEMA_TOKEN_INTENTION
-                            ),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodeTypesFieldSchemaUpdate',
+                    [
+                        'nodeTypeId' => $field->getNodeType()->getId(),
+                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                            static::SCHEMA_TOKEN_INTENTION
+                        ),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -161,17 +155,15 @@ class NodeTypeFieldsController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodeTypesFieldSchemaUpdate',
-                            [
-                                'nodeTypeId' => $nodeTypeId,
-                                '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                    static::SCHEMA_TOKEN_INTENTION
-                                ),
-                            ]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'nodeTypesFieldSchemaUpdate',
+                        [
+                            'nodeTypeId' => $nodeTypeId,
+                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                                static::SCHEMA_TOKEN_INTENTION
+                            ),
+                        ]
+                    ));
 
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
@@ -180,16 +172,11 @@ class NodeTypeFieldsController extends RozierApp
                     /*
                      * Redirect to add page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodeTypeFieldsAddPage',
-                            ['nodeTypeId' => $nodeTypeId]
-                        )
-                    );
+                    return $this->redirect($this->generateUrl(
+                        'nodeTypeFieldsAddPage',
+                        ['nodeTypeId' => $nodeTypeId]
+                    ));
                 }
-
-                $response->prepare($request);
-                return $response->send();
             }
 
             $this->assignation['form'] = $form->createView();
@@ -244,20 +231,15 @@ class NodeTypeFieldsController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'nodeTypesFieldSchemaUpdate',
-                        [
-                            'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(
-                                static::SCHEMA_TOKEN_INTENTION
-                            ),
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'nodeTypesFieldSchemaUpdate',
+                    [
+                        'nodeTypeId' => $nodeTypeId,
+                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(
+                            static::SCHEMA_TOKEN_INTENTION
+                        ),
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -342,10 +324,9 @@ class NodeTypeFieldsController extends RozierApp
             'minLength' => $field->getMinLength(),
             'maxLength' => $field->getMaxLength(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                                 new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
@@ -353,36 +334,36 @@ class NodeTypeFieldsController extends RozierApp
                             ],
                         ])
                         ->add('label', 'text', [
-                            'label' => $this->getTranslator()->trans('label'),
+                            'label' => 'label',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('type', 'choice', [
-                            'label' => $this->getTranslator()->trans('type'),
+                            'label' => 'type',
                             'required' => true,
                             'choices' => NodeTypeField::$typeToHuman,
                         ])
                         ->add('description', 'text', [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('visible', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('visible'),
+                            'label' => 'visible',
                             'required' => false,
                         ])
                         ->add('indexed', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('indexed'),
+                            'label' => 'indexed',
                             'required' => false,
                         ])
                         ->add(
                             'defaultValues',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('defaultValues'),
+                                'label' => 'defaultValues',
                                 'required' => false,
                                 'attr' => [
-                                    'placeholder' => $this->getTranslator()->trans('enter_values_comma_separated'),
+                                    'placeholder' => 'enter_values_comma_separated',
                                 ],
                             ]
                         )
@@ -390,7 +371,7 @@ class NodeTypeFieldsController extends RozierApp
                             'minLength',
                             'integer',
                             [
-                                'label' => $this->getTranslator()->trans('nodeTypeField.minLength'),
+                                'label' => 'nodeTypeField.minLength',
                                 'required' => false,
                             ]
                         )
@@ -398,7 +379,7 @@ class NodeTypeFieldsController extends RozierApp
                             'maxLength',
                             'integer',
                             [
-                                'label' => $this->getTranslator()->trans('nodeTypeField.maxLength'),
+                                'label' => 'nodeTypeField.maxLength',
                                 'required' => false,
                             ]
                         );
@@ -413,8 +394,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     private function buildDeleteForm(NodeTypeField $field)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeTypeFieldId', 'hidden', [
                             'data' => $field->getId(),
                             'constraints' => [

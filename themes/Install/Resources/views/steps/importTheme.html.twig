@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '@Install/base.html.twig' %}
 
 {% block content %}
 
@@ -29,13 +29,13 @@
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for role in roles %}
                         <tr>
                             <td></td>
                             <td>{{ role|trans }}</td>
-                            <td>
+                            <td class="last-col">
                                 <div class="uk-badge uk-badge-notification" id="{{ role|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
@@ -48,13 +48,13 @@
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for group in groups %}
                         <tr>
                             <td></td>
                             <td>{{ group|trans }}</td>
-                            <td>
+                            <td class="last-col">
                                 <div class="uk-badge uk-badge-notification" id="{{ group|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
@@ -67,13 +67,13 @@
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for setting in settings %}
                         <tr>
                             <td></td>
                             <td>{{ setting|trans }}</td>
-                            <td>
+                            <td class="last-col">
                                 <div class="uk-badge uk-badge-notification" id="{{ setting|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
@@ -86,13 +86,13 @@
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for nodetype in nodetypes %}
                         <tr>
                             <td></td>
                             <td>{{ nodetype|trans }}</td>
-                            <td>
+                            <td class="last-col">
                                 <div class="uk-badge uk-badge-notification" id="{{ nodetype|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
@@ -105,13 +105,13 @@
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for tag in tags %}
                         <tr>
                             <td></td>
                             <td>{{ tag|trans }}</td>
-                            <td>
+                            <td class="last-col">
                                 <div class="uk-badge uk-badge-notification" id="{{ tag|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
@@ -124,13 +124,13 @@
                     <tr>
                         <th></th>
                         <th>{% trans %}step.name{% endtrans %}</th>
-                        <th>{% trans %}status{% endtrans %}</th>
+                        <th class="last-col">{% trans %}status{% endtrans %}</th>
                     </tr>
                     {% for node in nodes %}
                         <tr>
                             <td></td>
                             <td>{{ node|trans }}</td>
-                            <td>
+                            <td class="last-col">
                                 <div class="uk-badge uk-badge-notification" id="{{ node|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
                             </td>
                         </tr>
@@ -181,6 +181,7 @@
         {% endfor %}
         {% for nodetype in nodetypes %}
         Install.importNodeTypeRoutes.push({
+            'postUpdate': ["{{ path('installClearCacheSchema') }}", "{{ path('installUpdateSchema') }}"],
             'url': "{{ path('installImportNodeTypes', {'themeId': themeId}) }}",
             'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ nodetype }}'
@@ -195,7 +196,6 @@
         {% endfor %}
         {% for node in nodes %}
         Install.importNodeTypeRoutes.push({
-            'update': "{{ path('installUpdateSchema') }}",
             'url': "{{ path('installImportNodes', {'themeId': themeId}) }}",
             'id':'{{ node|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ node }}'

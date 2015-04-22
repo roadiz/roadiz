@@ -10,8 +10,12 @@
         <meta name="description" content="{{ pageMeta.description }}">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+        {% if translation %}
+        {% for id, key in translation.viewer.translationMenuAssignation(request, true) %}
+        <link rel="alternate" href="{{ key.url }}" hreflang="{{ id }}" />
+        {% endfor %}
+        {% endif %}
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
         <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.almost-flat.min.css" />
         <link rel="stylesheet" href="{{ path('FontFaceCSS', {"token": head.fontToken}) }}" />
 
@@ -31,7 +35,7 @@
         <header class="no-image">{# <i class="uk-icon-image"></i> #}</header>
         {% endblock %}
 
-        {% include 'modules/navigation.html.twig' %}
+        {% include '@DefaultTheme/modules/navigation.html.twig' %}
 
         <!-- Add your site or application content here -->
         <div id="main-content">{% block content %}{% endblock %}</div>

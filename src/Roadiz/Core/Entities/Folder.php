@@ -38,9 +38,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Folders entity represent a directory on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
- * @ORM\Table(name="folders", indexes={
- *     @ORM\Index(name="position_folder_idx", columns={"position"})
- * })
+ * @ORM\Table(name="folders")
  */
 class Folder extends AbstractDateTimedPositioned
 {

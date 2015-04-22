@@ -35,13 +35,12 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Finder\Finder;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -93,15 +92,10 @@ class DocumentsController extends RozierApp
 
             $this->publishConfirmMessage($request, $msg);
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'documentsHomePage',
-                    ['folderId' => $folderId]
-                )
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl(
+                'documentsHomePage',
+                ['folderId' => $folderId]
+            ));
         }
         $this->assignation['joinFolderForm'] = $joinFolderForm->createView();
 
@@ -176,15 +170,10 @@ class DocumentsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'documentsEditPage',
-                        ['documentId' => $document->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'documentsEditPage',
+                    ['documentId' => $document->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -256,12 +245,7 @@ class DocumentsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('documentsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('documentsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -308,12 +292,7 @@ class DocumentsController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('documentsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('documentsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -361,12 +340,7 @@ class DocumentsController extends RozierApp
                     $this->publishErrorMessage($request, $msg);
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('documentsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('documentsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -419,12 +393,7 @@ class DocumentsController extends RozierApp
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('documentsHomePage', ['folderId' => $folderId])
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -460,12 +429,7 @@ class DocumentsController extends RozierApp
         /*
          * Force redirect to avoid resending form when refreshing page
          */
-        $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate('documentsHomePage', ['folderId' => $folderId])
-        );
-        $response->prepare($request);
-
-        return $response->send();
+        return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
     }
 
     /**
@@ -592,8 +556,7 @@ class DocumentsController extends RozierApp
         $defaults = [
             'documentId' => $doc->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('documentId', 'hidden', [
                             'data' => $doc->getId(),
                             'constraints' => [
@@ -611,8 +574,7 @@ class DocumentsController extends RozierApp
     private function buildBulkDeleteForm($documentsIds)
     {
         $defaults = [];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('checksum', 'hidden', [
                             'data' => md5(serialize($documentsIds)),
                             'constraints' => [
@@ -631,8 +593,7 @@ class DocumentsController extends RozierApp
     private function buildBulkDownloadForm($documentsIds)
     {
         $defaults = [];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('checksum', 'hidden', [
                             'data' => md5(serialize($documentsIds)),
                             'constraints' => [
@@ -656,18 +617,17 @@ class DocumentsController extends RozierApp
             'newDocument' => null,
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('filename', 'text', [
-                            'label' => $this->getTranslator()->trans('filename'),
+                            'label' => 'filename',
                             'required' => false,
                         ])
                         ->add('private', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('private'),
+                            'label' => 'private',
                             'required' => false,
                         ])
                         ->add('newDocument', 'file', [
-                            'label' => $this->getTranslator()->trans('overwrite.document'),
+                            'label' => 'overwrite.document',
                             'required' => false,
                         ]);
 
@@ -684,10 +644,10 @@ class DocumentsController extends RozierApp
                             'csrf_protection' => false,
                             'csrf_field_name' => '_token',
                             // a unique key to help generate the secret token
-            'intention' => static::AJAX_TOKEN_INTENTION,
+                            'intention' => static::AJAX_TOKEN_INTENTION,
                         ])
                         ->add('attachment', 'file', [
-                            'label' => $this->getTranslator()->trans('choose.documents.to_upload'),
+                            'label' => 'choose.documents.to_upload',
                         ]);
 
         if (null !== $folderId &&
@@ -710,13 +670,12 @@ class DocumentsController extends RozierApp
             $services[$value] = ucwords($value);
         }
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('embedId', 'text', [
-                            'label' => $this->getTranslator()->trans('document.embedId'),
+                            'label' => 'document.embedId',
                         ])
                         ->add('embedPlatform', 'choice', [
-                            'label' => $this->getTranslator()->trans('document.platform'),
+                            'label' => 'document.platform',
                             'choices' => $services,
                         ]);
 
@@ -742,25 +701,25 @@ class DocumentsController extends RozierApp
                             'label' => false,
                             'attr' => [
                                 'class' => 'rz-folder-autocomplete',
-                                'placeholder' => $this->getTranslator()->trans('list.folders.to_link'),
+                                'placeholder' => 'list.folders.to_link',
                             ],
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
                         ->add('submitFolder', 'submit', [
-                            'label' => $this->getTranslator()->trans('link.folders'),
+                            'label' => 'link.folders',
                             'attr' => [
                                 'class' => 'uk-button uk-button-primary',
-                                'title' => $this->getTranslator()->trans('link.folders'),
+                                'title' => 'link.folders',
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ])
                         ->add('submitUnfolder', 'submit', [
-                            'label' => $this->getTranslator()->trans('unlink.folders'),
+                            'label' => 'unlink.folders',
                             'attr' => [
                                 'class' => 'uk-button',
-                                'title' => $this->getTranslator()->trans('unlink.folders'),
+                                'title' => 'unlink.folders',
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ]);
@@ -904,7 +863,7 @@ class DocumentsController extends RozierApp
             $finder = new $class($data['embedId']);
 
             if ($finder->exists()) {
-                $document = $finder->createDocumentFromFeed($this->getService());
+                $document = $finder->createDocumentFromFeed($this->getContainer());
 
                 if (null !== $document &&
                     null !== $folderId &&
@@ -935,7 +894,7 @@ class DocumentsController extends RozierApp
     public function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        $document = $finder->createDocumentFromFeed($this->getService());
+        $document = $finder->createDocumentFromFeed($this->getContainer());
 
         if (null !== $document &&
             null !== $folderId &&

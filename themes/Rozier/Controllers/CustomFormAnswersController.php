@@ -36,7 +36,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -109,15 +108,10 @@ class CustomFormAnswersController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'customFormAnswersHomePage',
-                        ["customFormId" => $customFormAnswer->getCustomForm()->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'customFormAnswersHomePage',
+                    ["customFormId" => $customFormAnswer->getCustomForm()->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -135,8 +129,7 @@ class CustomFormAnswersController extends RozierApp
      */
     private function buildDeleteForm(CustomFormAnswer $customFormAnswer)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('customFormAnswerId', 'hidden', [
                             'data' => $customFormAnswer->getId(),
                             'constraints' => [

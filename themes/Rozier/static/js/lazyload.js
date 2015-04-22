@@ -69,7 +69,7 @@ Lazyload.prototype.onClick = function(event) {
         !$link.hasClass('rz-no-ajax-link') &&
         href !== "" &&
         href != "#" &&
-        (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '?')) {
+        (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '/' || href.charAt(0) == '?')) {
         event.preventDefault();
 
         history.pushState({}, null, $link.attr('href'));
@@ -204,6 +204,7 @@ Lazyload.prototype.generalBind = function() {
     _this.$linksSelector.on('click', onClickProxy);
 
     new DocumentsBulk();
+    new AutoUpdate();
     new NodesBulk();
     new DocumentWidget();
     new NodeWidget();

@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use \InlineStyle\InlineStyle;
 
 /**
@@ -53,9 +52,6 @@ class UserViewer implements ViewableInterface
     public function __construct(User $user)
     {
         $this->user = $user;
-
-        Kernel::getService('twig.environment')->addExtension(new TranslationExtension(Kernel::getService('translator')));
-        Kernel::getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
     }
 
     /**
@@ -145,7 +141,7 @@ class UserViewer implements ViewableInterface
 
         $assignation = [
             'resetLink' => $urlGenerator->generate('loginResetPage', [
-                'token' => $this->user->getConfirmationToken()
+                'token' => $this->user->getConfirmationToken(),
             ]),
             'user' => $this->user,
             'site' => $siteName,

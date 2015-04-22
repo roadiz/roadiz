@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -99,12 +98,7 @@ class FoldersController extends RozierApp
                 $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('foldersHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('foldersHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -146,12 +140,7 @@ class FoldersController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('foldersHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('foldersHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -197,12 +186,7 @@ class FoldersController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('foldersHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('foldersHomePage'));
             }
 
             $this->assignation['folder'] = $folder;
@@ -235,10 +219,10 @@ class FoldersController extends RozierApp
             $zip->open($file, \ZipArchive::OVERWRITE);
 
             $documents = $this->getService('em')
-                       ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                       ->findBy([
-                            'folders' => [$folder]
-                        ]);
+                              ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                              ->findBy([
+                                  'folders' => [$folder],
+                              ]);
 
             foreach ($documents as $document) {
                 $zip->addFile($document->getAbsolutePath(), $document->getFilename());
@@ -247,7 +231,7 @@ class FoldersController extends RozierApp
             // Close and send to users
             $zip->close();
 
-            $filename = StringHandler::slugify($folder->getName()) .'.zip';
+            $filename = StringHandler::slugify($folder->getName()) . '.zip';
 
             $response = new Response(
                 file_get_contents($file),
@@ -273,10 +257,9 @@ class FoldersController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('folder.name'),
+                            'label' => 'folder.name',
                         ]);
 
         return $builder->getForm();
@@ -290,8 +273,7 @@ class FoldersController extends RozierApp
      */
     protected function buildDeleteForm(Folder $folder)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('folder_id', 'hidden', [
                             'data' => $folder->getId(),
                         ]);
@@ -310,13 +292,12 @@ class FoldersController extends RozierApp
         $defaults = [
             'name' => $folder->getName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('folder_id', 'hidden', [
                             'data' => $folder->getId(),
                         ])
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('folder.name'),
+                            'label' => 'folder.name',
                         ]);
 
         return $builder->getForm();

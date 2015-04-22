@@ -35,6 +35,8 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
@@ -222,24 +224,6 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     */
-    protected function updateSolrIndex(Node $node)
-    {
-        // Update Solr Search engine if available
-        if (true === $this->getKernel()->pingSolrServer()) {
-            foreach ($node->getNodeSources() as $nodeSource) {
-                $solrSource = new \RZ\Roadiz\Core\SearchEngine\SolariumNodeSource(
-                    $nodeSource,
-                    $this->getService('solr')
-                );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->updateAndCommit();
-            }
-        }
-    }
-
-    /**
      * Create a new node-source for given translation.
      *
      * @param array                        $data
@@ -267,6 +251,12 @@ trait NodesTrait
 
         $this->getService('em')->persist($source);
         $this->getService('em')->flush();
+
+        /*
+         * Dispatch event
+         */
+        $event = new FilterNodesSourcesEvent($source);
+        $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
     }
 
     /**
@@ -337,8 +327,7 @@ trait NodesTrait
     {
         $defaults = [];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('nodeName', 'text', [
                             'label' => $this->getTranslator()->trans('nodeName'),
                             'constraints' => [
@@ -374,8 +363,7 @@ trait NodesTrait
             'priority' => $node->getPriority(),
             'dynamicNodeName' => $node->isDynamicNodeName(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'nodeName',
                             'text',
@@ -421,8 +409,7 @@ trait NodesTrait
      */
     protected function buildDeleteForm(Node $node)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -438,8 +425,7 @@ trait NodesTrait
      */
     protected function buildEmptyTrashForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         return $builder->getForm();
     }

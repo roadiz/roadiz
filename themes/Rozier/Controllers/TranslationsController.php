@@ -36,7 +36,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -86,14 +85,9 @@ class TranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'translationsHomePage'
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'translationsHomePage'
+                ));
             }
 
             $this->assignation['translations'][] = [
@@ -138,15 +132,10 @@ class TranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'translationsEditPage',
-                        ['translationId' => $translation->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'translationsEditPage',
+                    ['translationId' => $translation->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -188,12 +177,7 @@ class TranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('translationsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('translationsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -238,12 +222,7 @@ class TranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('translationsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('translationsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -342,13 +321,12 @@ class TranslationsController extends RozierApp
             'locale' => $translation->getLocale(),
             'available' => $translation->isAvailable(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'name',
                             'text',
                             [
-                                'label' => $this->getTranslator()->trans('name'),
+                                'label' => 'name',
                                 'constraints' => [
                                     new NotBlank(),
                                 ],
@@ -358,7 +336,7 @@ class TranslationsController extends RozierApp
                             'locale',
                             'choice',
                             [
-                                'label' => $this->getTranslator()->trans('locale'),
+                                'label' => 'locale',
                                 'required' => true,
                                 'choices' => Translation::$availableLocales,
                             ]
@@ -367,7 +345,7 @@ class TranslationsController extends RozierApp
                             'available',
                             'checkbox',
                             [
-                                'label' => $this->getTranslator()->trans('available'),
+                                'label' => 'available',
                                 'required' => false,
                             ]
                         );
@@ -382,8 +360,7 @@ class TranslationsController extends RozierApp
      */
     private function buildDeleteForm(Translation $translation)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'translationId',
                             'hidden',
@@ -405,8 +382,7 @@ class TranslationsController extends RozierApp
      */
     private function buildMakeDefaultForm(Translation $translation)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'translationId',
                             'hidden',

@@ -42,9 +42,11 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="tags", indexes={
- *     @ORM\Index(name="visible_tag_idx",  columns={"visible"}),
- *     @ORM\Index(name="locked_tag_idx",   columns={"locked"}),
- *     @ORM\Index(name="position_tag_idx", columns={"position"})
+ *     @ORM\Index(columns={"visible"}),
+ *     @ORM\Index(columns={"locked"}),
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"})
  * })
  */
 class Tag extends AbstractDateTimedPositioned

@@ -29,10 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Pimple\Container;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Register Embed documents services for dependency injection container.
@@ -53,36 +52,40 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
          * been matched! Never before.
          */
         $container['translator.locale'] = function ($c) {
-
             if ($c['session']->get('_locale') != "") {
                 return $c['session']->get('_locale');
             } else {
-                return Kernel::getInstance()->getRequest()->getLocale();
+                return $c['request']->getLocale();
             }
         };
 
         $container['translator'] = function ($c) {
             $c['stopwatch']->start('initTranslations');
 
-            $translator = new Translator($c['translator.locale'], null, ROADIZ_ROOT.'/cache/translations', (boolean) $c['config']['devMode']);
+            $translator = new Translator(
+                $c['translator.locale'],
+                null,
+                ROADIZ_ROOT . '/cache/translations',
+                (boolean) $c['config']['devMode']
+            );
+
             $translator->addLoader('xlf', new XliffFileLoader());
 
-            $CMSMsgPath = ROADIZ_ROOT.'/src/Roadiz/CMS/Resources/translations/messages.'.$c['translator.locale'].'.xlf';
-            if (file_exists($CMSMsgPath)) {
-                $translator->addResource(
-                    'xlf',
-                    $CMSMsgPath,
-                    $c['translator.locale']
-                );
-            }
-            $installPath = ROADIZ_ROOT.'/themes/Install/Resources/translations/messages.'.$c['translator.locale'].'.xlf';
-            if (file_exists($installPath)) {
-                $translator->addResource(
-                    'xlf',
-                    $installPath,
-                    $c['translator.locale']
-                );
-            }
+            /*
+             * Chosen language translations
+             */
+            $this->addTranslatorResource(
+                $translator,
+                ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
+                'xlf',
+                $c['translator.locale']
+            );
+            $this->addTranslatorResource(
+                $translator,
+                ROADIZ_ROOT . '/themes/Install/Resources/translations',
+                'xlf',
+                $c['translator.locale']
+            );
 
             $classes = [$c['backendTheme']];
             $classes = array_merge($classes, $c['frontendThemes']);
@@ -91,14 +94,12 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
                 if (null !== $theme) {
                     $themeClass = $theme->getClassName();
 
-                    $msgPath = $themeClass::getResourcesFolder().'/translations/messages.'.$c['translator.locale'].'.xlf';
-                    if (file_exists($msgPath)) {
-                        $translator->addResource(
-                            'xlf',
-                            $msgPath,
-                            $c['translator.locale']
-                        );
-                    }
+                    $this->addTranslatorResource(
+                        $translator,
+                        $themeClass::getResourcesFolder() . '/translations',
+                        'xlf',
+                        $c['translator.locale']
+                    );
                 }
             }
 
@@ -107,7 +108,32 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
             return $translator;
         };
 
-
         return $container;
+    }
+
+    /**
+     * @param Translator $translator
+     * @param string     $path
+     * @param string     $extension
+     * @param string     $locale
+     */
+    protected function addTranslatorResource(Translator $translator, $path, $extension, $locale)
+    {
+        $completePath = $path . '/messages.' . $locale . '.' . $extension;
+        $fallbackPath = $path . '/messages.en.' . $extension;
+
+        if (file_exists($completePath)) {
+            $translator->addResource(
+                $extension,
+                $completePath,
+                $locale
+            );
+        } elseif (file_exists($fallbackPath)) {
+            $translator->addResource(
+                $extension,
+                $fallbackPath,
+                $locale
+            );
+        }
     }
 }

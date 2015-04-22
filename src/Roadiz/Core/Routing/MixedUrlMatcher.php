@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Translation;
-
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Extends compiled UrlMatcher to add a dynamic routing feature which deals
@@ -40,19 +38,27 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  */
 class MixedUrlMatcher extends \GlobalUrlMatcher
 {
+    protected $dynamicUrlMatcher;
+
+    /**
+     * @param RequestContext  $context
+     * @param DynamicUrlMatcher $dynamicUrlMatcher
+     */
+    public function __construct(RequestContext $context, DynamicUrlMatcher $dynamicUrlMatcher)
+    {
+        $this->context = $context;
+        $this->dynamicUrlMatcher = $dynamicUrlMatcher;
+    }
     /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
     {
-        Kernel::getService('stopwatch')->start('matchingRoute');
         if (isset($container['config']['install']) &&
             true === $container['config']['install']) {
             // No node controller matching in install mode
             return parent::match($pathinfo);
         }
-
-        $decodedUrl = rawurldecode($pathinfo);
 
         try {
             /*
@@ -62,251 +68,9 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 
         } catch (ResourceNotFoundException $e) {
             /*
-             * Try nodes routes
+             * Try dynamic routes
              */
-            if (false !== $ret = $this->matchNode($decodedUrl)) {
-                return $ret;
-            } else {
-                $theme = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                            ->findFirstAvailableNonStaticFrontend();
-
-                if (null !== $theme) {
-                    $ctrl = $theme->getClassName();
-                } else {
-                    $ctrl = 'RZ\Roadiz\CMS\Controllers\FrontendController';
-                }
-
-                return [
-                    '_controller' => $ctrl.'::throw404',
-                    'message'     => 'Unable to find any matching route nor matching node. '.
-                                     'Check your `Resources/routes.yml` file.',
-                    'node'        => null,
-                    'translation' => null
-                ];
-            }
+            return $this->dynamicUrlMatcher->match($pathinfo);
         }
-    }
-
-    /**
-     * @param string $decodedUrl
-     *
-     * @return array
-     */
-    private function matchNode($decodedUrl)
-    {
-        if (null !== $this->getThemeController()) {
-            $tokens = explode('/', $decodedUrl);
-            // Remove empty tokens (especially when a trailing slash is present)
-            $tokens = array_values(array_filter($tokens));
-
-            /*
-             * Try with URL Aliases
-             */
-            $node = $this->parseFromUrlAlias($tokens);
-
-            if ($node !== null) {
-                $translation = $node->getNodeSources()->first()->getTranslation();
-
-                if (!$translation->isAvailable()) {
-                    return false;
-                }
-
-                return [
-                    '_controller' => $this->getThemeController()->getClassName().'::indexAction',
-                    '_locale'     => $translation->getLocale(), //pass request locale to init translator
-                    'node'        => $node,
-                    'translation' => $translation
-                ];
-            } else {
-                /*
-                 * Try with node name
-                 */
-                $translation = $this->parseTranslation($tokens);
-
-                if ($translation === null) {
-                    return false;
-                }
-
-                $node = $this->parseNode($tokens, $translation);
-                if ($node !== null) {
-                    /*
-                     * Try with nodeName
-                     */
-                    $match = [
-                        '_controller' => $this->getThemeController()->getClassName().'::indexAction',
-                        'node'        => $node,
-                        'translation' => $translation
-                    ];
-
-                    if (null !== $translation) {
-                        $match['_locale'] = $translation->getLocale(); //pass request locale to init translator
-                    }
-
-                    return $match;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Get Theme front controller class FQN.
-     *
-     * @return RZ\Roadiz\Core\Entities\Theme
-     */
-    public function getThemeController()
-    {
-        $host = $this->context->getHost();
-        /*
-         * First we look for theme according to hostname.
-         */
-        $theme = Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                        ->findAvailableNonStaticFrontendWithHost($host);
-
-        /*
-         * If no theme for current host, we look for
-         * any frontend available theme.
-         */
-        if (null === $theme) {
-            $theme = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                            ->findFirstAvailableNonStaticFrontend();
-        }
-
-        if (null !== $theme) {
-            return $theme;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Parse URL searching nodeName.
-     *
-     * Cannot use securityContext here as firewall
-     * has not been hit yet.
-     *
-     * @param array       &$tokens
-     * @param Translation $translation
-     *
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    private function parseNode(array &$tokens, Translation $translation)
-    {
-        if (!empty($tokens[0])) {
-            /*
-             * If the only url token is for language, return Home page
-             */
-            if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
-                count($tokens) == 1) {
-                if ($this->getThemeController()->getHomeNode() !== null) {
-                    $node = $this->getThemeController()->getHomeNode();
-                    if ($translation !== null) {
-                        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                       ->findWithTranslation(
-                                                           $node->getId(),
-                                                           $translation
-                                                       );
-                    } else {
-                        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                       ->findWithDefaultTranslation(
-                                                           $node->getId()
-                                                       );
-                    }
-                }
-                return Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findHomeWithTranslation(
-                            $translation
-                        );
-            } else {
-                $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-
-                if ($identifier !== null &&
-                    $identifier != '') {
-                    return Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findByNodeNameWithTranslation(
-                            $identifier,
-                            $translation
-                        );
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Parse URL searching UrlAlias.
-     *
-     * @param array &$tokens [description]
-     *
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    private function parseFromUrlAlias(&$tokens)
-    {
-        if (!empty($tokens[0])) {
-            /*
-             * If the only url token if for language, return no url alias !
-             */
-            if (in_array($tokens[0], Translation::getAvailableLocalesShortcuts()) &&
-                count($tokens) == 1) {
-                return null;
-            } else {
-                $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-
-                if ($identifier != '') {
-                    $ua = Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-                        ->findOneBy(['alias'=>$identifier]);
-
-                    if ($ua !== null) {
-                        return Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findOneWithUrlAlias(
-                                $ua
-                            );
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Parse translation from URL tokens.
-     *
-     * @param array &$tokens
-     *
-     * @return RZ\Roadiz\Core\Entities\Translation
-     */
-    private function parseTranslation(&$tokens)
-    {
-        if (!empty($tokens[0])) {
-            $firstToken = $tokens[0];
-            /*
-             * First token is for language
-             */
-            if (in_array($firstToken, Translation::getAvailableLocales())) {
-                $locale = strip_tags($firstToken);
-
-                if ($locale !== null && $locale != '') {
-                    return Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findOneByLocaleAndAvailable($locale);
-                }
-            }
-        }
-
-        return Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findDefault();
     }
 }

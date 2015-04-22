@@ -29,21 +29,18 @@
  */
 namespace Themes\Install\Controllers;
 
-use Themes\Install\InstallApp;
-use Symfony\Component\HttpFoundation\Request;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Themes\Install\InstallApp;
 
 /**
  * ThemeController
  */
 class ThemeController extends InstallApp
 {
-
-
     /**
      * Import theme screen.
      *
@@ -120,29 +117,21 @@ class ThemeController extends InstallApp
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
                 $importFile = true;
-                break ;
+                break;
             }
         }
 
         if ($importFile === false) {
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'installUserPage',
-                    ["id" => $theme->getId()]
-                )
-            );
+            return $this->redirect($this->generateUrl(
+                'installUserPage',
+                ["id" => $theme->getId()]
+            ));
         } else {
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'installImportThemePage',
-                    ["id" => $theme->getId()]
-                )
-            );
+            return $this->redirect($this->generateUrl(
+                'installImportThemePage',
+                ["id" => $theme->getId()]
+            ));
         }
-
-        $response->prepare($request);
-
-        return $response->send();
     }
 
     /**
@@ -219,23 +208,13 @@ class ThemeController extends InstallApp
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'installThemeSummaryPage'
-                            ) . "?classname=" . urlencode($infosForm->getData()['className'])
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
+                        return $this->redirect($this->generateUrl(
+                            'installThemeSummaryPage'
+                        ) . "?classname=" . urlencode($infosForm->getData()['className']));
                     } else {
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'installUserPage'
-                            )
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
+                        return $this->redirect($this->generateUrl(
+                            'installUserPage'
+                        ));
                     }
 
                 } catch (\Exception $e) {

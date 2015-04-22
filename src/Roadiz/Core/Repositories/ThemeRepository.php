@@ -195,4 +195,28 @@ class ThemeRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * Cached query for find a theme with its class-name.
+     *
+     * @param  string $className
+     *
+     * @return RZ\Roadiz\Core\Entities\Theme|null
+     */
+    public function findOneByClassName($className)
+    {
+        $query = $this->_em->createQuery('
+            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
+            WHERE t.className = :className')
+                    ->setParameter('className', $className)
+                    ->setMaxResults(1);
+
+        $query->useResultCache(true, 3600, 'RZTheme_'.$className);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

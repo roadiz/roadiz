@@ -131,6 +131,13 @@ use Doctrine\ORM\Mapping as ORM;
 class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {
     '.implode('', $fieldsArray).'
+
+    public function __toString()
+    {
+        return \''.$this->nodeType->getSourceEntityClassName().' #\' . $this->getId() .
+        \' <\' . $this->getTitle() . \'>[\' . $this->getTranslation()->getLocale() .
+        \']\';
+    }
 }
 ';
             file_put_contents($file, $content);

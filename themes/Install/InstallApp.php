@@ -32,13 +32,13 @@ namespace Themes\Install;
 
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
+use RZ\Roadiz\Console\CacheCommand;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -60,16 +60,15 @@ class InstallApp extends AppController
     public function prepareBaseAssignation()
     {
         $this->assignation = [
-            'request' => $this->kernel->getRequest(),
+            'request' => $this->getRequest(),
             'head' => [
-                'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
+                'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
-                'baseUrl' => $this->kernel->getResolvedBaseUrl(),
-                'filesUrl' => $this->kernel
-                                   ->getRequest()
+                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
+                'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->getService('csrfProvider')
@@ -78,7 +77,7 @@ class InstallApp extends AppController
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
-                'id' => $this->kernel->getRequest()->getSession()->getId(),
+                'id' => $this->getRequest()->getSession()->getId(),
             ],
         ];
 
@@ -92,7 +91,7 @@ class InstallApp extends AppController
      */
     public function initializeTranslator()
     {
-        $this->getKernel()->getRequest()->setLocale(
+        $this->getRequest()->setLocale(
             $this->getService('session')->get('_locale', 'en')
         );
 
@@ -118,13 +117,9 @@ class InstallApp extends AppController
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'installHomePage'
-                )
-            );
-            $response->prepare($request);
-            return $response->send();
+            return $this->redirect($this->generateUrl(
+                'installHomePage'
+            ));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -141,15 +136,9 @@ class InstallApp extends AppController
      */
     public function redirectIndexAction(Request $request)
     {
-        $response = new RedirectResponse(
-            $this->getService('urlGenerator')->generate(
-                'installHomePage'
-            )
-        );
-
-        $response->prepare($request);
-
-        return $response->send();
+        return $this->redirect($this->generateUrl(
+            'installHomePage'
+        ));
     }
 
     /**
@@ -195,15 +184,10 @@ class InstallApp extends AppController
                                  ->getRepository('RZ\Roadiz\Core\Entities\User')
                                  ->findOneBy(['username' => $userForm->getData()['username']]);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'installUserSummaryPage',
-                            ["userId" => $user->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'installUserSummaryPage',
+                        ["userId" => $user->getId()]
+                    ));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage();
@@ -262,25 +246,18 @@ class InstallApp extends AppController
 
                     $config->writeConfiguration();
 
-                    \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
-                    \RZ\Roadiz\Console\CacheCommand::clearTranslations();
-
                     /*
                      * Close Session for security and temp translation
                      */
                     $this->getService('session')->invalidate();
 
+                    CacheCommand::clearDoctrine();
+                    CacheCommand::clearTranslations();
+                    CacheCommand::clearRouteCollections();
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'installHomePage'
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl('installHomePage'));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
@@ -302,12 +279,12 @@ class InstallApp extends AppController
      */
     protected function buildLanguageForm(Request $request)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('language', 'choice', [
                             'choices' => [
                                 'en' => 'English',
                                 'fr' => 'Français',
+                                'ru' => 'Русский язык',
                             ],
                             'constraints' => [
                                 new NotBlank(),
@@ -330,8 +307,7 @@ class InstallApp extends AppController
      */
     protected function buildUserForm(Request $request)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('username', 'text', [
                             'required' => true,
                             'label' => $this->getTranslator()->trans('username'),
@@ -385,8 +361,7 @@ class InstallApp extends AppController
             'install_frontend' => true,
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('site_name', 'text', [
                             'required' => true,
                             'label' => $this->getTranslator()->trans('site_name'),
@@ -453,8 +428,7 @@ class InstallApp extends AppController
      */
     protected function buildDoneForm(Request $request)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('action', 'hidden', [
                             'data' => 'quit_install',
                         ]);

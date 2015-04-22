@@ -14,7 +14,6 @@
     "Theme"
   ],
   "license": "MIT",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",

@@ -33,15 +33,12 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
-use Themes\Rozier\RozierApp;
-
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
-
+use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -60,11 +57,11 @@ class SettingsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $groups = $this->getService('em')
-                  ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                  ->findAll();
+                       ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+                       ->findAll();
         $lonelySettings = $this->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                          ->findBy(['settingGroup' => null]);
+                               ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                               ->findBy(['settingGroup' => null]);
 
         $tmpGroup = new SettingGroup();
         $tmpGroup->setName('__default__');
@@ -72,7 +69,7 @@ class SettingsUtilsController extends RozierApp
         $groups[] = $tmpGroup;
         $data = SettingCollectionJsonSerializer::serialize($groups);
 
-        $response =  new Response(
+        $response = new Response(
             $data,
             Response::HTTP_OK,
             []
@@ -82,10 +79,9 @@ class SettingsUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'setting-all-' . date("YmdHis")  . '.rzt'
+                'setting-all-' . date("YmdHis") . '.rzt'
             )
         ); // Rezo-Zero Type
-
         $response->prepare($request);
 
         return $response;
@@ -121,27 +117,18 @@ class SettingsUtilsController extends RozierApp
                         $this->getService('em')->flush();
 
                         // redirect even if its null
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'settingsHomePage'
-                            )
-                        );
-                        $response->prepare($request);
-                        return $response->send();
+                        return $this->redirect($this->generateUrl(
+                            'settingsHomePage'
+                        ));
                     } else {
                         $msg = $this->getTranslator()->trans('file.format.not_valid');
                         $request->getSession()->getFlashBag()->add('error', $msg);
                         $this->getService('logger')->error($msg);
 
                         // redirect even if its null
-                        $response = new RedirectResponse(
-                            $this->getService('urlGenerator')->generate(
-                                'settingsImportPage'
-                            )
-                        );
-                        $response->prepare($request);
-
-                        return $response->send();
+                        return $this->redirect($this->generateUrl(
+                            'settingsImportPage'
+                        ));
                     }
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
@@ -149,14 +136,9 @@ class SettingsUtilsController extends RozierApp
                     $this->getService('logger')->error($msg);
 
                     // redirect even if its null
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'settingsImportPage'
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'settingsImportPage'
+                    ));
                 }
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
@@ -175,11 +157,10 @@ class SettingsUtilsController extends RozierApp
      */
     private function buildImportJsonFileForm()
     {
-        $builder = $this->getService('formFactory')
-            ->createBuilder('form')
-            ->add('setting_file', 'file', [
-                'label' => $this->getTranslator()->trans('settingFile')
-            ]);
+        $builder = $this->createFormBuilder()
+                        ->add('setting_file', 'file', [
+                            'label' => 'settingFile',
+                        ]);
 
         return $builder->getForm();
     }

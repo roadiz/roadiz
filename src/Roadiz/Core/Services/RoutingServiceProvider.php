@@ -32,10 +32,14 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
+use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 
 /**
  * Register routing services for dependency injection container.
@@ -51,10 +55,28 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
             return new HttpKernel($c['dispatcher'], $c['resolver']);
         };
         $container['urlMatcher'] = function ($c) {
-            return new MixedUrlMatcher($c['requestContext']);
+            if (RouteCollectionSubscriber::needToDumpUrlTools()) {
+                return new UrlMatcher($c['routeCollection'], $c['requestContext']);
+            } else {
+                return new MixedUrlMatcher($c['requestContext'], $c['dynamicUrlMatcher']);
+            }
+        };
+        $container['dynamicUrlMatcher'] = function ($c) {
+            return new NodeUrlMatcher(
+                $c['requestContext'],
+                $c['em']
+            );
+        };
+        $container['urlGeneratorClass'] = function ($c) {
+            return '\\GlobalUrlGenerator';
         };
         $container['urlGenerator'] = function ($c) {
-            return new \GlobalUrlGenerator($c['requestContext']);
+            if (RouteCollectionSubscriber::needToDumpUrlTools()) {
+                return new UrlGenerator($c['routeCollection'], $c['requestContext'], $c['logger']);
+            } else {
+                $className = $c['urlGeneratorClass'];
+                return new $className($c['requestContext']);
+            }
         };
         $container['httpUtils'] = function ($c) {
             return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
@@ -71,6 +93,8 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 $feCollection = $installClassname::getRoutes();
                 $rCollection = new RouteCollection();
                 $rCollection->addCollection($feCollection);
+
+                $installClassname::setupDependencyInjection($c);
 
                 return $rCollection;
             };
@@ -114,6 +138,8 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                 foreach ($c['frontendThemes'] as $theme) {
                     $feClass = $theme->getClassName();
                     $feCollection = $feClass::getRoutes();
+                    $feBackendCollection = $feClass::getBackendRoutes();
+
                     if ($feCollection !== null) {
                         // set host pattern if defined
                         if ($theme->getHostname() != '*' &&
@@ -127,6 +153,12 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
                             $feCollection->addPrefix($theme->getRoutePrefix());
                         }
                         $rCollection->addCollection($feCollection);
+                    }
+                    if ($feBackendCollection !== null) {
+                        /*
+                         * Do not prefix or hostname admin routes.
+                         */
+                        $rCollection->addCollection($feBackendCollection);
                     }
                 }
 

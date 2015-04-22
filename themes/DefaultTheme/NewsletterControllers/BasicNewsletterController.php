@@ -53,6 +53,6 @@ class BasicNewsletterController extends DefaultThemeApp
         $this->prepareThemeAssignation($newsletter->getNode(), null);
         $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();
 
-        return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation);
+        return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation, null, static::getThemeDir());
     }
 }

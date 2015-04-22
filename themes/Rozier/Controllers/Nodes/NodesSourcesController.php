@@ -31,7 +31,8 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -95,6 +96,12 @@ class NodesSourcesController extends RozierApp
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodesSourcesEvent($source);
+                    $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
                     $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                         '%node_source%' => $source->getNode()->getNodeName(),
                         '%translation%' => $source->getTranslation()->getName(),
@@ -102,15 +109,10 @@ class NodesSourcesController extends RozierApp
 
                     $this->publishConfirmMessage($request, $msg, $source);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'nodesEditSourcePage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSourcePage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
+                    ));
                 }
 
                 $this->assignation['form'] = $form->createView();
@@ -135,8 +137,7 @@ class NodesSourcesController extends RozierApp
 
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('nodeId', 'hidden', [
                             'data' => $nodeSourceId,
                             'constraints' => [
@@ -158,6 +159,12 @@ class NodesSourcesController extends RozierApp
 
                 $this->publishErrorMessage($request, $msg);
             } else {
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodesSourcesEvent($ns);
+                $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
+
                 $this->getService("em")->remove($ns);
                 $this->getService("em")->flush();
 
@@ -170,16 +177,10 @@ class NodesSourcesController extends RozierApp
 
                 $this->publishConfirmMessage($request, $msg);
             }
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate(
-                    'nodesEditSourcePage',
-                    ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
-                )
-            );
-
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
+            ));
         }
 
         $this->assignation["nodeSource"] = $ns;

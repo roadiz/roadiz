@@ -31,95 +31,29 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Viewers\ViewableInterface;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\Translator;
 
 /**
  * Base class for Roadiz themes.
  */
-class AppController implements ViewableInterface
+class AppController extends Controller
 {
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
     const FONT_TOKEN_INTENTION = 'font_request';
-
-    protected $kernel = null;
-    /**
-     * Inject current Kernel into running controller.
-     *
-     * @param RZ\Roadiz\Core\Kernel $newKernel
-     */
-    public function setKernel(Kernel $newKernel)
-    {
-        $this->kernel = $newKernel;
-    }
-    /**
-     * Get current Roadiz Kernel instance.
-     *
-     * Prefer this methods instead of calling static getInstance
-     * method of RZ\Roadiz\Core\Kernel.
-     *
-     * @return RZ\Roadiz\Core\Kernel
-     */
-    public function getKernel()
-    {
-        return $this->kernel;
-    }
-    /**
-     * Get mixed object from Dependency Injection container.
-     *
-     * *Alias for `$this->kernel->container[$key]`*
-     *
-     * Return the container if no key defined.
-     *
-     * @param string|null $key
-     *
-     * @return mixed
-     */
-    public function getService($key = null)
-    {
-        if (null === $key) {
-            return $this->kernel->container;
-        } else {
-            return $this->kernel->container[$key];
-        }
-    }
-    /**
-     * Alias for `$this->kernel->getSecurityContext()`.
-     *
-     * @return Symfony\Component\Security\Core\SecurityContext
-     */
-    public function getSecurityContext()
-    {
-        return $this->kernel->container['securityContext'];
-    }
-    /**
-     * Alias for `$this->kernel->container['em']`.
-     *
-     * @return Doctrine\ORM\EntityManager
-     */
-    public function em()
-    {
-        return $this->kernel->container['em'];
-    }
 
     /**
      * Theme name.
@@ -217,41 +151,13 @@ class AppController implements ViewableInterface
     protected $assignation = [];
 
     /**
-     * @var Symfony\Component\Translation\Translator
-     */
-    protected $translator = null;
-    /**
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function getTranslator()
-    {
-        return $this->kernel->container['translator'];
-    }
-
-    /**
      * Initialize controller with its twig environment.
      *
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
     public function __init()
     {
-        $this->getTwigLoader()
-             ->prepareBaseAssignation();
-    }
-
-    /**
-     * Initialize controller with environment from an other controller
-     * in order to avoid initializing same componant again.
-     *
-     * @param Translator                                       $translator
-     * @param array                                            $baseAssignation
-     */
-    public function __initFromOtherController(
-        Translator $translator = null,
-        array $baseAssignation = null
-    ) {
-        $this->translator = $translator;
-        $this->assignation = $baseAssignation;
+        $this->prepareBaseAssignation();
     }
 
     /**
@@ -267,6 +173,25 @@ class AppController implements ViewableInterface
             $loader = new YamlFileLoader($locator);
 
             return $loader->load('routes.yml');
+        }
+
+        return null;
+    }
+    /**
+     * These routes are used to extend Roadiz back-office.
+     *
+     * @return RouteCollection
+     */
+    public static function getBackendRoutes()
+    {
+        $locator = new FileLocator([
+            static::getResourcesFolder(),
+        ]);
+
+        if (file_exists(static::getResourcesFolder() . '/backend-routes.yml')) {
+            $loader = new YamlFileLoader($locator);
+
+            return $loader->load('backend-routes.yml');
         }
 
         return null;
@@ -295,96 +220,17 @@ class AppController implements ViewableInterface
 
         if (!empty($staticDomain)) {
             return $this->kernel->getStaticBaseUrl() .
-                    '/themes/' . static::$themeDir . '/static/';
+            '/themes/' . static::$themeDir . '/static/';
         } else {
-            return $this->kernel->getRequest()->getBaseUrl() .
-                    '/themes/' . static::$themeDir . '/static/';
+            return $this->getRequest()->getBaseUrl() .
+            '/themes/' . static::$themeDir . '/static/';
         }
     }
 
-    /**
-     * Return every paths to search for twig templates.
-     *
-     * Extend this method in your custom theme if you need to
-     * search additionnal templates.
-     *
-     * @return $this
-     */
-    public function getTwigLoader()
-    {
-        $this->getService()->extend(
-            'twig.loaderFileSystem',
-            function (\Twig_Loader_Filesystem $loader, $c) {
-                $loader->prependPath(static::getViewsFolder());
-                return $loader;
-            }
-        );
-
-        $this->getService('twig.environment')->addExtension(new TranslationExtension($this->getService('translator')));
-        $this->getService('twig.environment')->addExtension(new \Twig_Extensions_Extension_Intl());
-
-        return $this;
-    }
-
-    /**
-     * Force current AppController twig templates compilation.
-     *
-     * @return boolean
-     */
-    public static function forceTwigCompilation()
-    {
-        if (file_exists(static::getViewsFolder())) {
-            $ctrl = new static();
-            $ctrl->setKernel(Kernel::getInstance());
-            $ctrl->getTwigLoader();
-
-            try {
-                $fs = new Filesystem();
-                $fs->remove([Kernel::getService('twig.cacheFolder')]);
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while deleting backend twig cache directory: " . $e->getPath();
-            }
-
-            /*
-             * Theme templates
-             */
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(static::getViewsFolder()),
-                \RecursiveIteratorIterator::LEAVES_ONLY
-            );
-            foreach ($iterator as $file) {
-                // force compilation
-                if ($file->isFile() &&
-                    $file->getExtension() == 'twig') {
-                    $ctrl->getTwig()->loadTemplate(str_replace(static::getViewsFolder() . '/', '', $file));
-                }
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
     /**
      * {@inheritdoc}
      */
-    public function getTwig()
-    {
-        return $this->getService('twig.environment');
-    }
-
-    /**
-     * Return a Response from a template string with its rendering assignation.
-     *
-     * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
-     *
-     * @param  string        $view       Template file path
-     * @param  array         $parameters Twig assigntion array
-     * @param  Response|null $response   Optional Response object to customize response parameters
-     *
-     * @return Response
-     */
-    public function render($view, array $parameters = [], Response $response = null)
+    public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
         if (null === $response) {
             $response = new Response(
@@ -394,7 +240,15 @@ class AppController implements ViewableInterface
             );
         }
 
-        $response->setContent($this->kernel->container['twig.environment']->render($view, $parameters));
+        if ($namespace !== "" && $namespace !== "/") {
+            $view = '@' . $namespace . '/' . $view;
+        } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
+            // when no namespace is used
+            // use current theme directory
+            $view = '@' . static::getThemeDir() . '/' . $view;
+        }
+
+        $response->setContent($this->container['twig.environment']->render($view, $parameters));
 
         return $response;
     }
@@ -429,36 +283,32 @@ class AppController implements ViewableInterface
     public function prepareBaseAssignation()
     {
         $this->assignation = [
-            'request' => $this->kernel->getRequest(),
+            'request' => $this->getRequest(),
             'head' => [
-                'ajax' => $this->kernel->getRequest()->isXmlHttpRequest(),
+                'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->kernel->container['config']['devMode'],
+                'devMode' => (boolean) $this->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->kernel->getResolvedBaseUrl(), //$this->kernel->getRequest()->getBaseUrl(),
-                'filesUrl' => $this->kernel
-                                   ->getRequest()
+                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
+                'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->getService('csrfProvider')
+                'ajaxToken' => $this->container['csrfProvider']
                                     ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->getService('csrfProvider')
+                'fontToken' => $this->container['csrfProvider']
                                     ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
-                'id' => $this->kernel->getRequest()->getSession()->getId(),
+                'id' => $this->getRequest()->getSession()->getId(),
+                'user' => $this->getUser(),
             ],
         ];
 
-        if ($this->getService('securityContext') !== null &&
-            $this->getService('securityContext')->getToken() !== null) {
-            $this->assignation['securityContext'] = $this->getService('securityContext');
-            $this->assignation['session']['user'] = $this->getService('securityContext')
-                 ->getToken()
-                 ->getUser();
+        if ($this->container['securityContext'] !== null) {
+            $this->assignation['securityContext'] = $this->container['securityContext'];
         }
 
         return $this;
@@ -473,6 +323,7 @@ class AppController implements ViewableInterface
      */
     public function throw404($message = "")
     {
+        $this->container['logger']->error($message);
         $this->assignation['errorMessage'] = $message;
 
         return new Response(
@@ -480,15 +331,6 @@ class AppController implements ViewableInterface
             Response::HTTP_NOT_FOUND,
             ['content-type' => 'text/html']
         );
-    }
-
-    public static function getCalledClass()
-    {
-        $className = get_called_class();
-        if (strpos($className, "\\") !== 0) {
-            $className = "\\" . $className;
-        }
-        return $className;
     }
 
     /**
@@ -511,73 +353,9 @@ class AppController implements ViewableInterface
         }
         $theme = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['className' => $className]);
+            ->findOneByClassName($className);
         return $theme;
     }
-
-    /**
-     * Setup current theme class into database.
-     *
-     * @return boolean
-     */
-    public static function setup()
-    {
-        $theme = static::getTheme();
-
-        $className = static::getCalledClass();
-
-        if ($theme === null) {
-            $theme = new Theme();
-            $theme->setClassName($className);
-            $theme->setBackendTheme(static::isBackendTheme());
-            $theme->setAvailable(true);
-
-            Kernel::getService('em')->persist($theme);
-            Kernel::getService('em')->flush();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Enable theme.
-     *
-     * @return boolean
-     */
-    public static function enable()
-    {
-        $theme = static::getTheme();
-
-        if ($theme !== null) {
-            $theme->setAvailable(true);
-            Kernel::getService('em')->flush();
-
-            return true;
-        }
-
-        return false;
-    }
-    /**
-     * Disable theme.
-     *
-     * @return boolean
-     */
-    public static function disable()
-    {
-        $theme = static::getTheme();
-
-        if ($theme !== null) {
-            $theme->setAvailable(false);
-            Kernel::getService('em')->flush();
-
-            return true;
-        }
-
-        return false;
-    }
-
 
     /**
      * Append objects to the global dependency injection container.
@@ -586,7 +364,13 @@ class AppController implements ViewableInterface
      */
     public static function setupDependencyInjection(Container $container)
     {
-
+        /*
+         * Enable theme templates in main namespace and in its own theme namespace.
+         */
+        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder());
+        // Add path into a namespaced loader to enable using same template name
+        // over different static themes.
+        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder(), static::getThemeDir());
     }
 
     protected function getHome(Translation $translation = null)
@@ -597,30 +381,30 @@ class AppController implements ViewableInterface
             $home = $theme->getHomeNode();
             if ($home !== null) {
                 if ($translation !== null) {
-                    return $this->getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                   ->findWithTranslation(
-                                                       $home->getId(),
-                                                       $translation,
-                                                       $this->getService("securityContext")
-                                                   );
+                    return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                ->findWithTranslation(
+                                    $home->getId(),
+                                    $translation,
+                                    $this->container['securityContext']
+                                );
                 } else {
-                    return $this->getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                                   ->findWithDefaultTranslation(
-                                                       $home->getId(),
-                                                       $this->getService("securityContext")
-                                                   );
+                    return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                                ->findWithDefaultTranslation(
+                                    $home->getId(),
+                                    $this->container['securityContext']
+                                );
                 }
             }
         }
         if ($translation !== null) {
-            return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                           ->findHomeWithTranslation(
-                                               $translation,
-                                               $this->getService("securityContext")
-                                           );
+            return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                        ->findHomeWithTranslation(
+                            $translation,
+                            $this->container['securityContext']
+                        );
         } else {
-            return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                           ->findHomeWithDefaultTranslation($this->getService("securityContext"));
+            return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                        ->findHomeWithDefaultTranslation($this->container['securityContext']);
         }
     }
 
@@ -645,10 +429,10 @@ class AppController implements ViewableInterface
 
         switch ($level) {
             case 'error':
-                $this->getService('logger')->error($msg, [], $source);
+                $this->container['logger']->error($msg, ['source' => $source]);
                 break;
             default:
-                $this->getService('logger')->info($msg, [], $source);
+                $this->container['logger']->info($msg, ['source' => $source]);
                 break;
         }
     }
@@ -679,40 +463,6 @@ class AppController implements ViewableInterface
     }
 
     /**
-     * Custom route for redirecting routes with a trailing slash.
-     *
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    public function removeTrailingSlashAction(Request $request)
-    {
-        $pathInfo = $request->getPathInfo();
-        $requestUri = $request->getRequestUri();
-
-        $url = str_replace($pathInfo, rtrim($pathInfo, ' /'), $requestUri);
-
-        $response = new RedirectResponse($url, 301);
-        $response->prepare($request);
-
-        return $response->send();
-    }
-
-    /**
-     * Validate a request against a given ROLE_* and throws
-     * an AccessDeniedException exception.
-     *
-     * @param string $role
-     *
-     * @throws AccessDeniedException
-     */
-    public function validateAccessForRole($role)
-    {
-        if (!$this->getService('securityContext')->isGranted($role)) {
-            throw new AccessDeniedException("You don't have access to this page:" . $role);
-        }
-    }
-
-    /**
      * Validate a request against a given ROLE_*
      * and check chroot and newsletter type/accces
      * and throws an AccessDeniedException exception.
@@ -725,12 +475,12 @@ class AppController implements ViewableInterface
      */
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
-        $user = $this->getService("securityContext")->getToken()->getUser();
-        $node = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $user = $this->container['securityContext']->getToken()->getUser();
+        $node = $this->container['em']
+                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
-            $this->getService('em')->refresh($node);
+            $this->container['em']->refresh($node);
             $parents = $node->getHandler()->getParents();
 
             if ($includeChroot) {
@@ -742,12 +492,11 @@ class AppController implements ViewableInterface
             $isNewsletterFriend = false;
         }
 
-
         if ($isNewsletterFriend &&
-            !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+            !$this->container['securityContext']->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
         } elseif (!$isNewsletterFriend) {
-            if (!$this->getService('securityContext')->isGranted($role)) {
+            if (!$this->container['securityContext']->isGranted($role)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }
 

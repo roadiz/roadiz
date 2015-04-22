@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="ru">
+    <body>
+      <!-- welcome.user.email -->
+      <trans-unit id="welcome.user.email.%site%">
+        <source>welcome.user.email.%site%</source>
+        <target xml:lang="ru" state="translated">Учетная запись была создана для вас на сайте %site%.</target>
+        <alt-trans>
+          <target xml:lang="ru">добро пожаловать.пользователь.почтовый ящик.%site%</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="your.user.account">
+        <source>your.user.account</source>
+        <target xml:lang="ru" state="translated">Ваша учетная запись</target>
+        <alt-trans>
+          <target xml:lang="ru">ваш.пользовательский.аккаунт</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="username">
+        <source>username</source>
+        <target xml:lang="ru" state="translated">Имя пользователя</target>
+        <alt-trans>
+          <target xml:lang="ru">имя пользователя</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="email">
+        <source>email</source>
+        <target xml:lang="ru" state="translated">Электронная почта</target>
+        <alt-trans>
+          <target xml:lang="ru">почтовый ящик</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="password">
+        <source>password</source>
+        <target xml:lang="ru" state="translated">Пароль</target>
+        <alt-trans>
+          <target xml:lang="ru">пароль</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="for.questions.email">
+        <source>for.questions.email</source>
+        <target xml:lang="ru" state="translated">Остались вопросы? Отправьте нам письмо:</target>
+        <alt-trans>
+          <target xml:lang="ru">почтовый ящик.для.вопросов</target>
+        </alt-trans>
+      </trans-unit>
+      <!-- Contact forms -->
+      <trans-unit id="contact.form">
+        <source>contact.form</source>
+        <target xml:lang="ru" state="translated">Контактная информация</target>
+        <alt-trans>
+          <target xml:lang="ru">форма.обращения</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="new.contact.form.%site%">
+        <source>new.contact.form.%site%</source>
+        <target xml:lang="ru" state="translated">новая.форма.обращения.%site%</target>
+      </trans-unit>
+      <trans-unit id="form.successfully.sent">
+        <source>form.successfully.sent</source>
+        <target xml:lang="ru" state="translated">форма.успешно.отправлена</target>
+      </trans-unit>
+      <trans-unit id="%field%.is.mandatory">
+        <source>%field%.is.mandatory</source>
+        <target xml:lang="ru" state="translated">Поле %field% не заполнено</target>
+        <alt-trans>
+          <target xml:lang="ru">%field%.является.обязательным</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="email.not.valid">
+        <source>email.not.valid</source>
+        <target xml:lang="ru" state="translated">Адрес электронной почты указан не верно</target>
+        <alt-trans>
+          <target xml:lang="ru">почтовый ящик.не.действителен</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="date">
+        <source>date</source>
+        <target xml:lang="ru" state="translated">Дата</target>
+        <alt-trans>
+          <target xml:lang="ru">дата</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="ip.address">
+        <source>ip.address</source>
+        <target xml:lang="ru" state="translated">IP адрес</target>
+        <alt-trans>
+          <target xml:lang="ru">ip.адрес</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="submittedAt">
+        <source>submittedAt</source>
+        <target xml:lang="ru" state="translated">оправленоВ</target>
+      </trans-unit>
+      <trans-unit id="form.submit">
+        <source>form.submit</source>
+        <target xml:lang="ru" state="translated">Отправить</target>
+        <alt-trans>
+          <target xml:lang="ru">отправить.форму</target>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form">
+                <source>answer.form</source>
+                <target xml:lang="ru" state="translated">Форма для ответа</target>
+            <alt-trans><target xml:lang="ru">ответить.на форму</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+                <source>customForm.%name%.send</source>
+                <target xml:lang="ru" state="translated">пользовательскаяФорма.%name%.отправлена</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+                <source>new.answer.form.%site%</source>
+                <target xml:lang="ru" state="translated">новый.ответ.от.%site%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target xml:lang="ru" state="translated">Прикрепленный файл не может быть принят</target>
+            <alt-trans><target xml:lang="ru">файл.не.принят</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target xml:lang="ru" state="translated">Ваш овет успешно отправлен</target>
+            <alt-trans><target xml:lang="ru">отправить.ответь.наПользовательскуюФорму</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target xml:lang="ru" state="translated">(нет)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target xml:lang="ru" state="translated">Запрос на сброс пароля</target>
+            <alt-trans><target xml:lang="ru">запрос.на.восстановление.пароля</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+              <source>you.asked.for.a.password.reset.on.%site%</source>
+              <target xml:lang="ru" state="translated">Вы запрашивали сброс пароля на %site%</target>
+            <alt-trans><target xml:lang="ru">вы.запросили.восстановление.пароля.на.%site%</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+              <source>you.need.to.choose.a.new.password.using.following.link</source>
+              <target xml:lang="ru" state="translated">Вам нужно создать новый пароль к вашей учетной записи используя ссылку указаную ниже.</target>
+            <alt-trans><target xml:lang="ru">вы.должны.выбрать.новый.пароль.используя.следующую.ссылку</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+              <source>as.a.reminder.here.are.your.credentials</source>
+              <target xml:lang="ru" state="translated">В качестве напоминания, вот ваши учетные данные.</target>
+            <alt-trans><target xml:lang="ru">в.напоминание.вот.ваши.полномочия</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+              <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+              <target xml:lang="ru" state="translated">Если вы не запрашивали смену пароля, просто проигнорируйте это письмо</target>
+            <alt-trans><target xml:lang="ru">если.вы.не.отправляли.заявку.на.восстановление.пароля.игнорируйте.это.письмо</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target xml:lang="ru" state="translated">Это поле необходимо заполнить</target>
+            <alt-trans><target xml:lang="ru">необходимо.заполнить.это.поле</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target xml:lang="ru" state="translated">* Обязательное поле</target>
+            <alt-trans><target xml:lang="ru">*.необходимых.полей</target></alt-trans></trans-unit>
+    </body>
+  </file>
+</xliff>

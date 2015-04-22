@@ -38,7 +38,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-
+use Symfony\Component\Filesystem\Filesystem;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 /**
@@ -69,18 +69,18 @@ class Fixtures
      */
     public function createFolders()
     {
+        $fs = new Filesystem();
+
         $folders = [
             ROADIZ_ROOT . '/cache',
-            ROADIZ_ROOT . '/sources/Compiled',
-            ROADIZ_ROOT . '/sources/Proxies',
-            ROADIZ_ROOT . '/sources/GeneratedNodeSources',
+            ROADIZ_ROOT . '/gen-src/Compiled',
+            ROADIZ_ROOT . '/gen-src/Proxies',
+            ROADIZ_ROOT . '/gen-src/GeneratedNodeSources',
         ];
 
         foreach ($folders as $folder) {
-            if (!file_exists($folder)) {
-                if (!mkdir($folder, 0755, true)) {
-                    throw(new \Exception('Impossible to create “'.$folder.'” folder.'));
-                }
+            if (!$fs->exists($folder)) {
+                $fs->mkdir($folder, 0755, true);
             }
         }
     }

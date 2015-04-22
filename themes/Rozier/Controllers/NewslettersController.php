@@ -31,21 +31,15 @@
 
 namespace Themes\Rozier\Controllers;
 
-use Themes\Rozier\Controllers\NewsController;
-
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Entities\Newsletter;
-
-use Themes\Rozier\RozierApp;
-
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesSourcesTrait;
 use Themes\Rozier\Traits\NodesTrait;
-
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 /**
  * Newsletter controller
@@ -62,8 +56,8 @@ class NewslettersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
         $translation = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findDefault();
+                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                            ->findDefault();
         $listManager = new EntityListManager(
             $request,
             $this->getService('em'),
@@ -76,8 +70,8 @@ class NewslettersController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['newsletters'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy(['newsletterType' => true]);
+             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+             ->findBy(['newsletterType' => true]);
         $this->assignation['translation'] = $translation;
 
         return $this->render('newsletters/list.html.twig', $this->assignation);
@@ -97,28 +91,28 @@ class NewslettersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
         $type = $this->getService('em')
-            ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+                     ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
         $trans = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findDefault();
+                      ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                      ->findDefault();
 
         if ($translationId !== null) {
             $trans = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                          ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if ($type !== null &&
             $trans !== null) {
             $form = $this->getService('formFactory')
-                ->createBuilder()
-                ->add('nodeName', 'text', [
-                    'label' => $this->getTranslator()->trans('nodeName'),
-                    'constraints' => [
-                        new NotBlank()
-                    ]
-                ])
-                ->getForm();
+                         ->createBuilder()
+                         ->add('nodeName', 'text', [
+                             'label' => $this->getTranslator()->trans('nodeName'),
+                             'constraints' => [
+                                 new NotBlank(),
+                             ],
+                         ])
+                         ->getForm();
             $form->handleRequest();
 
             if ($form->isValid()) {
@@ -134,30 +128,20 @@ class NewslettersController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'newsletter.%name%.created',
-                        ['%name%'=>$node->getNodeName()]
+                        ['%name%' => $node->getNodeName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'newslettersIndexPage'
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'newslettersIndexPage'
+                    ));
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'newsletterAddPage',
-                            ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'newsletterAddPage',
+                        ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
+                    ));
                 }
             }
 
@@ -172,7 +156,7 @@ class NewslettersController extends RozierApp
         }
     }
 
-     /**
+    /**
      * Return an edition form for requested newsletter.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -186,7 +170,7 @@ class NewslettersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
         $translation = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
             /*
@@ -195,11 +179,11 @@ class NewslettersController extends RozierApp
              * that is initialized before calling route method.
              */
             $newsletter = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+                               ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
 
             $source = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->findOneBy(['translation'=>$translation, 'node'=>$newsletter->getNode()]);
+                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->findOneBy(['translation' => $translation, 'node' => $newsletter->getNode()]);
 
             if (null !== $source) {
                 $node = $source->getNode();
@@ -220,21 +204,16 @@ class NewslettersController extends RozierApp
                     $this->editNodeSource($form->getData(), $source);
 
                     $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', [
-                        '%newsletter%'=>$source->getNode()->getNodeName(),
-                        '%translation%'=>$source->getTranslation()->getName()
+                        '%newsletter%' => $source->getNode()->getNodeName(),
+                        '%translation%' => $source->getTranslation()->getName(),
                     ]);
 
                     $this->publishConfirmMessage($request, $msg);
 
-                    $response = new RedirectResponse(
-                        $this->getService('urlGenerator')->generate(
-                            'newslettersEditPage',
-                            ['newsletterId' => $newsletterId, 'translationId'=>$translationId]
-                        )
-                    );
-                    $response->prepare($request);
-
-                    return $response->send();
+                    return $this->redirect($this->generateUrl(
+                        'newslettersEditPage',
+                        ['newsletterId' => $newsletterId, 'translationId' => $translationId]
+                    ));
                 }
 
                 $this->assignation['form'] = $form->createView();

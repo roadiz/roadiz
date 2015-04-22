@@ -31,13 +31,12 @@ namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * Event dispatched after a route has been matched.
  */
-class ControllerMatchedEvent extends Event
+class ControllerMatchedEvent
 {
     private $kernel;
 
@@ -50,7 +49,7 @@ class ControllerMatchedEvent extends Event
     }
     /**
      * After a controller has been matched. We need to inject current
-     * Kernel instance and securityContext.
+     * Kernel instance and main DI container.
      *
      * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
      */
@@ -81,6 +80,7 @@ class ControllerMatchedEvent extends Event
          */
         if ($matchedCtrl instanceof AppController) {
             $matchedCtrl->setKernel($this->kernel);
+            $matchedCtrl->setContainer($this->kernel->getContainer());
             $matchedCtrl->__init();
         }
     }

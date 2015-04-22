@@ -33,7 +33,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -102,18 +101,13 @@ class DocumentTranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'documentsMetaPage',
-                        [
-                            'documentId' => $document->getId(),
-                            'translationId' => $translationId,
-                        ]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'documentsMetaPage',
+                    [
+                        'documentId' => $document->getId(),
+                        'translationId' => $translationId,
+                    ]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -185,15 +179,10 @@ class DocumentTranslationsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'documentsEditPage',
-                        ['documentId' => $document->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'documentsEditPage',
+                    ['documentId' => $document->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -214,8 +203,7 @@ class DocumentTranslationsController extends RozierApp
         $defaults = [
             'documentTranslationId' => $doc->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('documentTranslationId', 'hidden', [
                             'data' => $doc->getId(),
                             'constraints' => [
@@ -238,18 +226,17 @@ class DocumentTranslationsController extends RozierApp
             'copyright' => $document->getCopyright(),
         ];
 
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('name'),
+                            'label' => 'name',
                             'required' => false,
                         ])
                         ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
-                            'label' => $this->getTranslator()->trans('description'),
+                            'label' => 'description',
                             'required' => false,
                         ])
                         ->add('copyright', 'text', [
-                            'label' => $this->getTranslator()->trans('copyright'),
+                            'label' => 'copyright',
                             'required' => false,
                         ]);
 

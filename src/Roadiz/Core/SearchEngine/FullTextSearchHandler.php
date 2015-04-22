@@ -29,18 +29,26 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Kernel;
+use Solarium\Client;
 
 class FullTextSearchHandler
 {
     protected $client = null;
+    protected $em = null;
 
-    public function __construct($client)
+    /**
+     *
+     * @param Solarium\Client $client
+     * @param Doctrine\ORM\EntityManager $em
+     */
+    public function __construct(Client $client, EntityManager $em)
     {
         $this->client = $client;
+        $this->em = $em;
     }
 
     private function solrSearch($q, $args = [])
@@ -67,14 +75,14 @@ class FullTextSearchHandler
                 function ($n) use ($reponse) {
                     if (isset($reponse["highlighting"])) {
                         return [
-                            "nodeSource" => Kernel::getInstance()->getService('em')->find(
+                            "nodeSource" => $this->em->find(
                                 'RZ\Roadiz\Core\Entities\NodesSources',
                                 (int) $n["node_source_id_i"]
                             ),
                             "highlighting" => $reponse["highlighting"][$n['id']],
                         ];
                     }
-                    return Kernel::getInstance()->getService('em')->find(
+                    return $this->em->find(
                         'RZ\Roadiz\Core\Entities\NodesSources',
                         $n["node_source_id_i"]
                     );

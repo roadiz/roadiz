@@ -47,14 +47,27 @@ use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
 {
-    public static $themeDir = 'Rozier';
-
     /**
      * @return string
      */
     public static function getResourcesFolder()
     {
         return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
+    }
+    /**
+     * @return string
+     */
+    public function getStaticResourcesUrl()
+    {
+        $staticDomain = SettingsBag::get('static_domain_name');
+
+        if (!empty($staticDomain)) {
+            return $this->kernel->getStaticBaseUrl() .
+            '/themes/Rozier/static/';
+        } else {
+            return $this->getRequest()->getBaseUrl() .
+            '/themes/Rozier/static/';
+        }
     }
 
     /**
@@ -97,7 +110,7 @@ class CustomFormController extends AppController
                 $this->getService('mailer'),
                 $this->getService('translator'),
                 new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
+                    $this->generateUrl(
                         'customFormSentAction',
                         ["customFormId" => $customFormId]
                     )
@@ -110,7 +123,7 @@ class CustomFormController extends AppController
                 return $mixed->send();
             } else {
                 $this->assignation = array_merge($this->assignation, $mixed);
-                $this->assignation['grunt'] = include(ROADIZ_ROOT.'/themes/Rozier/static/public/config/assets.config.php');
+                $this->assignation['grunt'] = include ROADIZ_ROOT . '/themes/Rozier/static/public/config/assets.config.php';
 
                 return $this->render('forms/customForm.html.twig', $this->assignation);
             }
@@ -132,7 +145,7 @@ class CustomFormController extends AppController
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
-            $this->assignation['grunt'] = include(ROADIZ_ROOT.'/themes/Rozier/static/public/config/assets.config.php');
+            $this->assignation['grunt'] = include ROADIZ_ROOT . '/themes/Rozier/static/public/config/assets.config.php';
 
             return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }
@@ -350,6 +363,7 @@ class CustomFormController extends AppController
                  */
                 static::sendAnswer(
                     [
+                        'mailContact' => $assignation['mailContact'],
                         'fields' => $assignation["emailFields"],
                         'customForm' => $customFormsEntity,
                         'title' => $translator->trans(

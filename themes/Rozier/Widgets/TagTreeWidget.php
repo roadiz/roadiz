@@ -30,28 +30,28 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Tag;
-use Themes\Rozier\Widgets\AbstractWidget;
-
 use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\Widgets\AbstractWidget;
 
 /**
  * Prepare a Tag tree according to Tag hierarchy and given options.
  */
 class TagTreeWidget extends AbstractWidget
 {
-    protected $parentTag =  null;
-    protected $tags =       null;
+    protected $parentTag = null;
+    protected $tags = null;
     protected $translation = null;
 
     /**
      * @param Request                    $request
-     * @param AppController              $refereeController
+     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController
      * @param RZ\Roadiz\Core\Entities\Tag $parent
      */
     public function __construct(
         Request $request,
-        $refereeController,
+        Controller $refereeController,
         Tag $parent = null
     ) {
         parent::__construct($request, $refereeController);
@@ -67,16 +67,16 @@ class TagTreeWidget extends AbstractWidget
     {
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(['defaultTranslation'=>true]);
+                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                 ->findOneBy(['defaultTranslation' => true]);
         }
 
         $this->tags = $this->getController()->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                ->findBy(
-                    ['parent'=>$this->parentTag, 'translation'=>$this->translation],
-                    ['position'=>'ASC']
-                );
+             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+             ->findBy(
+                 ['parent' => $this->parentTag, 'translation' => $this->translation],
+                 ['position' => 'ASC']
+             );
     }
 
     /**
@@ -88,13 +88,13 @@ class TagTreeWidget extends AbstractWidget
     {
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(['defaultTranslation'=>true]);
+                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                 ->findOneBy(['defaultTranslation' => true]);
         }
         if ($parent !== null) {
             return $this->tags = $this->getController()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findBy(['parent'=>$parent], ['position'=>'ASC']);
+                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                        ->findBy(['parent' => $parent], ['position' => 'ASC']);
         }
 
         return null;

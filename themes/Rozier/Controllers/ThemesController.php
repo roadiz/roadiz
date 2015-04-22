@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Type;
 use Themes\Rozier\RozierApp;
@@ -89,7 +88,8 @@ class ThemesController extends RozierApp
 
         if ($form->isValid()) {
             try {
-                $this->addTheme($request, $form->getData(), $theme);
+                $data = $form->getData();
+                $this->addTheme($request, $data, $theme);
                 $msg = $this->getTranslator()->trans(
                     'theme.%name%.created',
                     ['%name%' => $theme->getClassName()]
@@ -100,12 +100,7 @@ class ThemesController extends RozierApp
                 $this->publishErrorMessage($request, $e->getMessage());
             }
 
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('themesHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('themesHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -147,12 +142,7 @@ class ThemesController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('themesHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('themesHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -199,12 +189,7 @@ class ThemesController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('themesHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('themesHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -234,7 +219,7 @@ class ThemesController extends RozierApp
             'className',
             new \RZ\Roadiz\CMS\Forms\ThemesType(),
             [
-                'label' => $this->getTranslator()->trans('themeClass'),
+                'label' => 'themeClass',
                 'required' => true,
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\NotNull(),
@@ -282,43 +267,43 @@ class ThemesController extends RozierApp
         $builder = $this->getService('formFactory')
                         ->createNamedBuilder('source', 'form', $defaults)
                         ->add('available', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('available'),
+                            'label' => 'available',
                             'required' => false,
                         ])
                         ->add(
                             'staticTheme',
                             'checkbox',
                             [
-                                'label' => $this->getTranslator()->trans('staticTheme'),
+                                'label' => 'staticTheme',
                                 'required' => false,
                                 'attr' => [
-                                    'data-desc' => $this->getTranslator()->trans('staticTheme.does_not.allow.node_url_routes'),
+                                    'data-desc' => 'staticTheme.does_not.allow.node_url_routes',
                                 ],
                             ]
                         )
                         ->add('hostname', 'text', [
-                            'label' => $this->getTranslator()->trans('hostname'),
+                            'label' => 'hostname',
                         ])
                         ->add('routePrefix', 'text', [
-                            'label' => $this->getTranslator()->trans('routePrefix'),
+                            'label' => 'routePrefix',
                             'required' => false,
                         ])
                         ->add('backendTheme', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('backendTheme'),
+                            'label' => 'backendTheme',
                             'required' => false,
                         ]);
 
         $d = ($n !== null) ? [$n] : [];
 
         $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
-            'label' => $this->getTranslator()->trans('homeNode'),
+            'label' => 'homeNode',
             'required' => false,
         ]);
 
         $d = ($r !== null) ? [$r] : [];
 
         $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
-            'label' => $this->getTranslator()->trans('themeRoot'),
+            'label' => 'themeRoot',
             'required' => false,
         ]);
 
@@ -334,8 +319,7 @@ class ThemesController extends RozierApp
      */
     protected function buildDeleteForm(Theme $theme)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('themeId', 'hidden', [
                             'data' => $theme->getId(),
                         ]);
@@ -395,7 +379,7 @@ class ThemesController extends RozierApp
         $this->getService('em')->flush();
 
         // Clear result cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }
@@ -415,7 +399,7 @@ class ThemesController extends RozierApp
         $this->getService('em')->flush();
 
         // Clear result cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }

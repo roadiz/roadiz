@@ -140,6 +140,23 @@ class EntityListManager
         return $this;
     }
 
+    /**
+     * Configure a custom current page.
+     *
+     * @param integer $page
+     *
+     * @return $this
+     */
+    public function setPage($page)
+    {
+        if ($page < 1) {
+            throw new \RuntimeException("Page cannot be lesser than 1.", 1);
+        }
+        $this->currentPage = (int) $page;
+
+        return $this;
+    }
+
     public function enablePagination()
     {
         $this->pagination = true;
@@ -248,8 +265,10 @@ class EntityListManager
                 $this->itemPerPage = (int) $this->request->query->get('item_per_page');
             }
 
-            $this->currentPage = $this->request->query->get('page');
-            if (!($this->currentPage > 1)) {
+            if ($this->request->query->has('page') &&
+                $this->request->query->get('page') > 1) {
+                $this->currentPage = $this->request->query->get('page');
+            } else {
                 $this->currentPage = 1;
             }
         } else {

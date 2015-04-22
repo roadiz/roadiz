@@ -86,7 +86,12 @@ body {
 .footer a {
   color: #999;
 }
-.footer p, .footer a, .footer unsubscribe, .footer td {
+.footer p,
+.footer a,
+.footer em,
+.footer strong,
+.footer unsubscribe,
+.footer td {
   font-size: 12px;
 }
 
@@ -110,20 +115,24 @@ code {
   color: #333;
 }
 
-h1 {
+h1,
+h1 em {
   font-size: 32px;
   font-weight: 500;
 }
 
-h2 {
+h2,
+h2 em {
   font-size: 24px;
 }
 
-h3 {
+h3,
+h3 em {
   font-size: 18px;
 }
 
-h4 {
+h4,
+h4 em {
   font-size: 14px;
   font-weight: 600;
 }
@@ -252,15 +261,18 @@ a {
     margin: 20px 0 5px !important;
   }
 
-  h1 {
+  h1,
+  h1 em {
     font-size: 22px !important;
   }
 
-  h2 {
+  h2,
+  h2 em {
     font-size: 18px !important;
   }
 
-  h3 {
+  h3,
+  h3 em {
     font-size: 16px !important;
   }
 

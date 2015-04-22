@@ -30,12 +30,12 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use Themes\Rozier\Widgets\AbstractWidget;
-use Symfony\Component\HttpFoundation\Request;
-
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\Widgets\AbstractWidget;
 
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
@@ -44,23 +44,23 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
  */
 class NodeTreeWidget extends AbstractWidget
 {
-    protected $parentNode =            null;
-    protected $nodes =                 null;
-    protected $tag =                   null;
-    protected $translation =           null;
+    protected $parentNode = null;
+    protected $nodes = null;
+    protected $tag = null;
+    protected $translation = null;
     protected $availableTranslations = null;
-    protected $stackTree =             false;
-    protected $filters =               null;
+    protected $stackTree = false;
+    protected $filters = null;
 
     /**
      * @param Request                            $request           Current kernel request
-     * @param AppController                      $refereeController Calling controller
+     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController Calling controller
      * @param RZ\Roadiz\Core\Entities\Node        $parent            Entry point of NodeTreeWidget, set null if it's root
      * @param RZ\Roadiz\Core\Entities\Translation $translation       NodeTree translation
      */
     public function __construct(
         Request $request,
-        $refereeController,
+        Controller $refereeController,
         Node $parent = null,
         Translation $translation = null
     ) {
@@ -71,15 +71,14 @@ class NodeTreeWidget extends AbstractWidget
 
         if ($this->translation === null) {
             $this->translation = $this->getController()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findDefault();
+                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                 ->findDefault();
         }
 
         $this->availableTranslations = $this->getController()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findAll();
+             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+             ->findAll();
     }
-
 
     /**
      * @return RZ\Roadiz\Core\Entities\Tag
@@ -128,9 +127,9 @@ class NodeTreeWidget extends AbstractWidget
     protected function getListManager(Node $parent = null)
     {
         $criteria = [
-            'parent' =>      $parent,
+            'parent' => $parent,
             'translation' => $this->translation,
-            'status' =>      ['<=', Node::PUBLISHED]
+            'status' => ['<=', Node::PUBLISHED],
         ];
 
         if (null !== $this->tag) {
@@ -145,7 +144,7 @@ class NodeTreeWidget extends AbstractWidget
             $this->controller->getService('em'),
             'RZ\Roadiz\Core\Entities\Node',
             $criteria,
-            ['position'=>'ASC']
+            ['position' => 'ASC']
         );
 
         if (true === $this->stackTree) {

@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global">
@@ -7,12 +7,12 @@
     	<h1 class="content-title">{% trans %}add.a.newsletter{% endtrans %}</h1>
     	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
     	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
-        {% include 'newsletters/navBack.html.twig' %}
+        {% include '@Rozier/newsletters/navBack.html.twig' %}
     </header>
 
     <article class="content content-no-action-menu">
         {% if nodeTypesCount %}
-        	{% form_theme form 'forms.html.twig' %}
+        	{% form_theme form '@Rozier/forms.html.twig' %}
         	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         	    {{ form_widget(form) }}
                 {% spaceless %}

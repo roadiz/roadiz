@@ -69,9 +69,8 @@ class DefaultThemeApp extends FrontendController
         try {
             $translation = $this->bindLocaleFromRoute($request, $_locale);
             $home = $this->getHome($translation);
-            $this->prepareThemeAssignation($home, $translation);
 
-            return $this->handle($request);
+            return $this->handle($request, $home, $translation);
         } catch (NoTranslationAvailableException $e) {
             return $this->throw404();
         }
@@ -167,11 +166,11 @@ class DefaultThemeApp extends FrontendController
     public function throw404($message = "")
     {
         $this->prepareThemeAssignation(null, null);
-
+        $this->getService('logger')->error($message);
         $this->assignation['errorMessage'] = $message;
 
         return new Response(
-            $this->getTwig()->render('404.html.twig', $this->assignation),
+            $this->getTwig()->render('@DefaultTheme/404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
             ['content-type' => 'text/html']
         );
@@ -184,7 +183,7 @@ class DefaultThemeApp extends FrontendController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        FrontendController::setupDependencyInjection($container);
+        parent::setupDependencyInjection($container);
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 

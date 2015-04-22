@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Security\Core\SecurityContext;
-use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 
 /**
  * Handle operations with nodes entities.
@@ -196,21 +195,6 @@ class NodeHandler
     }
 
     /**
-     * Alias for NodesSourcesHandler::getUrl.
-     *
-     * @return string
-     * @see RZ\Roadiz\Core\Handlers\NodesSourcesHandler::getUrl
-     */
-    public function getUrl()
-    {
-        return $this->node
-                    ->getNodeSources()
-                    ->first()
-                    ->getHandler()
-                    ->getUrl();
-    }
-
-    /**
      * Get node source by translation.
      *
      * @param RZ\Roadiz\Core\Entities\Translation $translation
@@ -244,23 +228,7 @@ class NodeHandler
      */
     public function removeAssociations()
     {
-        $ping = Kernel::getInstance()->pingSolrServer();
-
         foreach ($this->node->getNodeSources() as $ns) {
-            // Update Solr Search engine if setup
-            if (true === $ping) {
-                try {
-                    $solrSource = new SolariumNodeSource(
-                        $ns,
-                        Kernel::getService('solr')
-                    );
-                    $solrSource->getDocumentFromIndex();
-                    $solrSource->cleanAndCommit();
-                } catch (\Exception $e) {
-                    // Do nothing
-                }
-            }
-
             Kernel::getService('em')->remove($ns);
         }
 

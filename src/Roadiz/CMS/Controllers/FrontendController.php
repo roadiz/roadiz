@@ -34,13 +34,10 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
@@ -82,65 +79,30 @@ class FrontendController extends AppController
     ];
 
     protected $node = null;
+    protected $nodeSource = null;
     protected $translation = null;
     protected $themeContainer = null;
-
-    /**
-     * Make translation variable with the good localization.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $_locale
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     * @throws RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException
-     */
-    protected function bindLocaleFromRoute(Request $request, $_locale = null)
-    {
-        /*
-         * If you use a static route for Home page
-         * we need to grab manually language.
-         *
-         * Get language from static route
-         */
-        if (null !== $_locale) {
-            $request->setLocale($_locale);
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneBy(
-                                    [
-                                        'locale' => $_locale,
-                                        'available' => true,
-                                    ]
-                                );
-            if ($translation === null) {
-                throw new NoTranslationAvailableException();
-            }
-        } else {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
-            $request->setLocale($translation->getLocale());
-        }
-        return $translation;
-    }
 
     /**
      * Default action for any node URL.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node              $node
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
+     * @param RZ\Roadiz\Core\Entities\Node             $node
+     * @param RZ\Roadiz\Core\Entities\Translation      $translation
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request, Node $node = null, Translation $translation = null)
-    {
-        Kernel::getService('stopwatch')->start('handleNodeController');
+    public function indexAction(
+        Request $request,
+        Node $node = null,
+        Translation $translation = null
+    ) {
+        $this->getService('stopwatch')->start('handleNodeController');
         $this->node = $node;
         $this->translation = $translation;
 
         //  Main node based routing method
-        return $this->handle($request);
+        return $this->handle($request, $this->node, $this->translation);
     }
 
     /**
@@ -159,26 +121,12 @@ class FrontendController extends AppController
          *
          * Get language from static route
          */
-        if (null !== $_locale) {
-            $request->setLocale($_locale);
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneBy(
-                                    [
-                                        'locale' => $_locale,
-                                    ]
-                                );
-        } else {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
-        }
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
 
         /*
          * Grab home flagged node
          */
         $node = $this->getHome($translation);
-
         $this->prepareThemeAssignation($node, $translation);
 
         return $this->render('home.html.twig', $this->assignation);
@@ -205,11 +153,12 @@ class FrontendController extends AppController
         $this->node = $node;
         $this->translation = $translation;
 
-        $this->assignation['translation'] = $translation;
+        $this->assignation['translation'] = $this->translation;
 
-        if ($node !== null) {
-            $this->assignation['node'] = $node;
-            $this->assignation['nodeSource'] = $node->getNodeSources()->first();
+        if (null !== $this->node) {
+            $this->nodeSource = $this->node->getNodeSources()->first();
+            $this->assignation['node'] = $this->node;
+            $this->assignation['nodeSource'] = $this->nodeSource;
         }
 
         $this->assignation['pageMeta'] = $this->getNodeSEO();
@@ -232,13 +181,13 @@ class FrontendController extends AppController
          * Determine if we look for a node-type named controller or
          * a node-named controller.
          */
-        if (in_array($this->getRequestedNode()->getNodeName(), static::$specificNodesControllers)) {
+        if (in_array($node->getNodeName(), static::$specificNodesControllers)) {
             return $namespace . '\\' .
-            StringHandler::classify($this->getRequestedNode()->getNodeName()) .
+            StringHandler::classify($node->getNodeName()) .
             'Controller';
         } else {
             return $namespace . '\\' .
-            StringHandler::classify($this->getRequestedNode()->getNodeType()->getName()) .
+            StringHandler::classify($node->getNodeType()->getName()) .
             'Controller';
         }
     }
@@ -274,6 +223,21 @@ class FrontendController extends AppController
     }
 
     /**
+     * Initialize controller with environment from an other controller
+     * in order to avoid initializing same componant again.
+     *
+     * @param Translator                                       $translator
+     * @param array                                            $baseAssignation
+     */
+    public function __initFromOtherController(
+        array &$baseAssignation = null,
+        Container $themeContainer = null
+    ) {
+        $this->assignation = $baseAssignation;
+        $this->themeContainer = $themeContainer;
+    }
+
+    /**
      * Handle node based routing, returns a Response object
      * for a node-based request.
      *
@@ -283,14 +247,17 @@ class FrontendController extends AppController
      *
      * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
-    protected function handle(Request $request)
-    {
-        Kernel::getService('stopwatch')->start('handleNodeController');
+    protected function handle(
+        Request $request,
+        Node $node = null,
+        Translation $translation = null
+    ) {
+        $this->getService('stopwatch')->start('handleNodeController');
 
-        if ($this->getRequestedNode() !== null) {
+        if ($node !== null) {
             if (true !== $resp = $this->validateAccessForNodeWithStatus(
-                $this->getRequestedNode(),
-                $this->getSecurityContext()
+                $node,
+                $this->getService('securityContext')
             )) {
                 return $resp;
             }
@@ -299,7 +266,7 @@ class FrontendController extends AppController
              * Determine if we look for a node-type named controller or
              * a node-named controller.
              */
-            $controllerPath = $this->getControllerForNode($this->getRequestedNode());
+            $controllerPath = $this->getControllerForNode($node);
 
             if (class_exists($controllerPath) &&
                 method_exists($controllerPath, 'indexAction')) {
@@ -307,7 +274,7 @@ class FrontendController extends AppController
             } else {
                 return $this->throw404(
                     "No front-end controller found for '" .
-                    $this->getRequestedNode()->getNodeName() .
+                    $node->getNodeName() .
                     "' node. You need to create a " . $controllerPath . "."
                 );
             }
@@ -316,7 +283,8 @@ class FrontendController extends AppController
              * Inject current Kernel to the matched Controller
              */
             if ($ctrl instanceof AppController) {
-                $ctrl->setKernel($this->getKernel());
+                $ctrl->setKernel($this->kernel);
+                $ctrl->setContainer($this->container);
 
                 /*
                  * As we are creating an other controller
@@ -324,34 +292,19 @@ class FrontendController extends AppController
                  * environment to the next level.
                  */
                 $ctrl->__initFromOtherController(
-                    $this->translator,
-                    $this->assignation
+                    $this->assignation,
+                    $this->themeContainer
                 );
             }
-            Kernel::getService('stopwatch')->stop('handleNodeController');
+            $this->getService('stopwatch')->stop('handleNodeController');
             return $ctrl->indexAction(
                 $request,
-                $this->getRequestedNode(),
-                $this->getRequestedTranslation()
+                $node,
+                $translation
             );
         } else {
             return $this->throw404("No front-end controller found");
         }
-    }
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    public function getRequestedNode()
-    {
-        return $this->node;
-    }
-    /**
-     * @return RZ\Roadiz\Core\Entities\Translation
-     */
-    public function getRequestedTranslation()
-    {
-        return $this->translation;
     }
 
     /**
@@ -410,12 +363,8 @@ class FrontendController extends AppController
      */
     public function getNodeSEO($fallbackNodeSource = null)
     {
-        if (null !== $this->node) {
-            $ns = $this->node->getNodeSources()->first();
-
-            if (null !== $ns) {
-                return $ns->getHandler()->getSEO();
-            }
+        if (null !== $this->nodeSource) {
+            return $this->nodeSource->getHandler()->getSEO();
         }
 
         if (null !== $fallbackNodeSource) {
@@ -435,35 +384,24 @@ class FrontendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
-
-        $container->extend('firewallMap', function (FirewallMap $map, Container $c) {
-            /*
-             * Prepare app firewall
-             */
-            $requestMatcher = new RequestMatcher('^/');
-
-            $listeners = [
-                // manages the SecurityContext persistence through a session
-                $c['contextListener'],
-                // automatically adds a Token if none is already present.
-                new AnonymousAuthenticationListener($c['securityContext'], ''), // $key
-                $c["switchUser"],
-            ];
-            /*
-             * Inject a new firewall map element
-             */
-            $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
-
-            return $map;
-        });
+        parent::setupDependencyInjection($container);
 
         /*
-         * Enable frontend theme to extends backoffice and using FrontendTheme twig templates.
+         * Prepare app firewall
          */
-        $container->extend('twig.loaderFileSystem', function (\Twig_Loader_Filesystem $loader, $c) {
-            $loader->addPath(static::getViewsFolder());
+        $requestMatcher = new RequestMatcher('^/');
 
-            return $loader;
-        });
+        $listeners = [
+            // manages the SecurityContext persistence through a session
+            $container['contextListener'],
+            // automatically adds a Token if none is already present.
+            new AnonymousAuthenticationListener($container['securityContext'], ''), // $key
+            $container["switchUser"],
+        ];
+
+        /*
+         * Inject a new firewall map element
+         */
+        $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
     }
 }

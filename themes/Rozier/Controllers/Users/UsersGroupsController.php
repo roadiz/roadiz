@@ -32,7 +32,6 @@ namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -73,15 +72,10 @@ class UsersGroupsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'usersEditGroupsPage',
-                        ['userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'usersEditGroupsPage',
+                    ['userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -129,15 +123,10 @@ class UsersGroupsController extends RozierApp
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate(
-                        'usersEditGroupsPage',
-                        ['userId' => $user->getId()]
-                    )
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl(
+                    'usersEditGroupsPage',
+                    ['userId' => $user->getId()]
+                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -204,8 +193,7 @@ class UsersGroupsController extends RozierApp
         $defaults = [
             'userId' => $user->getId(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'userId',
                             'hidden',
@@ -233,8 +221,7 @@ class UsersGroupsController extends RozierApp
      */
     private function buildRemoveGroupForm(User $user, Group $group)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
                             'hidden',

@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\AccessMap;
-use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
@@ -60,82 +59,79 @@ class BackendController extends AppController
      */
     public static function setupDependencyInjection(Container $container)
     {
-        $container->extend('firewallMap', function (FirewallMap $map, $c) {
+        parent::setupDependencyInjection($container);
 
-            /*
-             * Prepare app firewall
-             */
-            $requestMatcher = new RequestMatcher('^/rz-admin');
-            // allows configuration of different access control rules for specific parts of the website.
-            $accessMap = new AccessMap($requestMatcher, [
-                Role::ROLE_BACKEND_USER,
-                Role::ROLE_SUPERADMIN,
-            ]);
+        /*
+         * Prepare app firewall
+         */
+        $requestMatcher = new RequestMatcher('^/rz-admin');
+        // allows configuration of different access control rules for specific parts of the website.
+        $accessMap = new AccessMap($requestMatcher, [
+            Role::ROLE_BACKEND_USER,
+            Role::ROLE_SUPERADMIN,
+        ]);
 
-            /*
-             * Listener
-             */
-            $logoutListener = new LogoutListener(
-                $c['securityContext'],
-                $c['httpUtils'],
-                new DefaultLogoutSuccessHandler($c['httpUtils'], '/login'),
-                [
-                    'logout_path' => '/rz-admin/logout',
-                ]
-            );
-            //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
-            $logoutListener->addHandler(new SessionLogoutHandler());
+        /*
+         * Listener
+         */
+        $logoutListener = new LogoutListener(
+            $container['securityContext'],
+            $container['httpUtils'],
+            new DefaultLogoutSuccessHandler($container['httpUtils'], '/login'),
+            [
+                'logout_path' => '/rz-admin/logout',
+            ]
+        );
+        //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
+        $logoutListener->addHandler(new SessionLogoutHandler());
 
-            $listeners = [
-                // manages the SecurityContext persistence through a session
-                $c['contextListener'],
-                // logout users
-                $logoutListener,
-                // authentication via a simple form composed of a username and a password
-                new UsernamePasswordFormAuthenticationListener(
-                    $c['securityContext'],
-                    $c['authentificationManager'],
-                    new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
-                    $c['httpUtils'],
-                    Kernel::SECURITY_DOMAIN,
-                    new AuthenticationSuccessHandler($c['httpUtils'], [
-                        'always_use_default_target_path' => false,
-                        'default_target_path' => '/rz-admin',
-                        'login_path' => '/login',
-                        'target_path_parameter' => '_target_path',
-                        'use_referer' => true,
-                    ]),
-                    new AuthenticationFailureHandler(
-                        $c['httpKernel'],
-                        $c['httpUtils'],
-                        [
-                            'failure_path' => '/login',
-                            'failure_forward' => false,
-                            'login_path' => '/login',
-                            'failure_path_parameter' => '_failure_path',
-                        ],
-                        $c['logger']
-                    ),
+        $listeners = [
+            // manages the SecurityContext persistence through a session
+            $container['contextListener'],
+            // logout users
+            $logoutListener,
+            // authentication via a simple form composed of a username and a password
+            new UsernamePasswordFormAuthenticationListener(
+                $container['securityContext'],
+                $container['authentificationManager'],
+                new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
+                $container['httpUtils'],
+                Kernel::SECURITY_DOMAIN,
+                new AuthenticationSuccessHandler($container['httpUtils'], [
+                    'always_use_default_target_path' => false,
+                    'default_target_path' => '/rz-admin',
+                    'login_path' => '/login',
+                    'target_path_parameter' => '_target_path',
+                    'use_referer' => true,
+                ]),
+                new AuthenticationFailureHandler(
+                    $container['httpKernel'],
+                    $container['httpUtils'],
                     [
-                        'check_path' => '/rz-admin/login_check',
+                        'failure_path' => '/login',
+                        'failure_forward' => false,
+                        'login_path' => '/login',
+                        'failure_path_parameter' => '_failure_path',
                     ],
-                    $c['logger'], // A LoggerInterface instance
-                    $c['dispatcher'],
-                    null //$c['csrfProvider']//csrfTokenManager
+                    $container['logger']
                 ),
-                // enforces access control rules
-                new AccessListener(
-                    $c['securityContext'],
-                    $c['accessDecisionManager'],
-                    $accessMap,
-                    $c['authentificationManager']
-                ),
-                $c["switchUser"],
-            ];
+                [
+                    'check_path' => '/rz-admin/login_check',
+                ],
+                $container['logger'], // A LoggerInterface instance
+                $container['dispatcher'],
+                null//$container['csrfProvider']//csrfTokenManager
+            ),
+            // enforces access control rules
+            new AccessListener(
+                $container['securityContext'],
+                $container['accessDecisionManager'],
+                $accessMap,
+                $container['authentificationManager']
+            ),
+            $container["switchUser"],
+        ];
 
-            $map->add($requestMatcher, $listeners, $c['firewallExceptionListener']);
-
-            return $map;
-        });
+        $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
     }
 }

@@ -1,11 +1,11 @@
-{% if not head.ajax %}{% set baseTemplate = 'base.html.twig' %}{% else %}{% set baseTemplate = 'ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
     <header class="content-header header-custom-forms header-custom-forms-list">
         <h1 class="content-title custom-forms-title">{% trans %}customForm{% endtrans %}</h1>
-        {% include 'widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
             	<a class="uk-button" href="{{ path('customFormsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.a.customForm{% endtrans %}</a>
@@ -13,7 +13,7 @@
         </div>
     </header>
 
-    {% include 'widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu content-custom-forms-list">
         <div class="content-table-cont">

@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -100,12 +99,7 @@ class FontsController extends RozierApp
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            $response = new RedirectResponse(
-                $this->getService('urlGenerator')->generate('fontsHomePage')
-            );
-            $response->prepare($request);
-
-            return $response->send();
+            return $this->redirect($this->generateUrl('fontsHomePage'));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -147,12 +141,7 @@ class FontsController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('fontsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('fontsHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -198,12 +187,7 @@ class FontsController extends RozierApp
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                $response = new RedirectResponse(
-                    $this->getService('urlGenerator')->generate('fontsHomePage')
-                );
-                $response->prepare($request);
-
-                return $response->send();
+                return $this->redirect($this->generateUrl('fontsHomePage'));
             }
 
             $this->assignation['font'] = $font;
@@ -280,8 +264,7 @@ class FontsController extends RozierApp
      */
     protected function buildAddForm()
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form');
+        $builder = $this->createFormBuilder();
 
         $this->buildCommonFormFields($builder);
 
@@ -296,8 +279,7 @@ class FontsController extends RozierApp
      */
     protected function buildDeleteForm(Font $font)
     {
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form')
+        $builder = $this->createFormBuilder()
                         ->add('fontId', 'hidden', [
                             'data' => $font->getId(),
                         ]);
@@ -317,8 +299,7 @@ class FontsController extends RozierApp
             'name' => $font->getName(),
             'variant' => $font->getVariant(),
         ];
-        $builder = $this->getService('formFactory')
-                        ->createBuilder('form', $defaults)
+        $builder = $this->createFormBuilder($defaults)
                         ->add('fontId', 'hidden', [
                             'data' => $font->getId(),
                         ]);
@@ -336,33 +317,33 @@ class FontsController extends RozierApp
     private function buildCommonFormFields(&$builder)
     {
         $builder->add('name', 'text', [
-                    'label' => $this->getTranslator()->trans('font.name'),
+                    'label' => 'font.name',
                 ])
                 ->add('eotFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.eotFile'),
+                    'label' => 'font.eotFile',
                     'required' => false,
                 ])
                 ->add('svgFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.svgFile'),
+                    'label' => 'font.svgFile',
                     'required' => false,
                 ])
                 ->add('otfFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.otfFile'),
+                    'label' => 'font.otfFile',
                     'required' => false,
                 ])
                 ->add('woffFile', 'file', [
-                    'label' => $this->getTranslator()->trans('font.woffFile'),
+                    'label' => 'font.woffFile',
                     'required' => false,
                 ])
                 ->add('woff2File', 'file', [
-                    'label' => $this->getTranslator()->trans('font.woff2File'),
+                    'label' => 'font.woff2File',
                     'required' => false,
                 ])
                 ->add(
                     'variant',
                     new \RZ\Roadiz\CMS\Forms\FontVariantsType(),
                     [
-                        'label' => $this->getTranslator()->trans('font.variant'),
+                        'label' => 'font.variant',
                     ]
                 );
 

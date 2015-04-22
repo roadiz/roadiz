@@ -33,7 +33,9 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
@@ -43,9 +45,8 @@ use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Yaml\Parser;
@@ -53,18 +54,17 @@ use Symfony\Component\Yaml\Parser;
 /**
  * Main roadiz CMS entry point.
  */
-class Kernel implements \Pimple\ServiceProviderInterface
+class Kernel implements ServiceProviderInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.7.1";
+    public static $cmsVersion = "0.8.0";
     private static $instance = null;
 
     public $container = null;
-    protected $request = null;
     protected $response = null;
 
     /**
@@ -75,7 +75,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     final private function __construct()
     {
         $this->container = new Container();
-        $this->request = Request::createFromGlobals();
     }
 
     /**
@@ -90,6 +89,8 @@ class Kernel implements \Pimple\ServiceProviderInterface
          */
         $this->container->register($this);
         $this->container['stopwatch']->openSection();
+
+        $this->initEvents();
     }
 
     /**
@@ -115,25 +116,21 @@ class Kernel implements \Pimple\ServiceProviderInterface
             return new Stopwatch();
         };
 
+        $container['debugPanel'] = function ($c) {
+            return new DebugPanel($c['twig.environment'], $c['stopwatch']);
+        };
+
         $container['dispatcher'] = function ($c) {
+            return new EventDispatcher();
+        };
 
-            $dispatcher = new EventDispatcher();
-            $dispatcher->addSubscriber(new RouterListener($c['urlMatcher']));
-            $dispatcher->addListener(
-                KernelEvents::CONTROLLER,
-                [
-                    new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
-                    'onControllerMatched',
-                ]
-            );
-
-            return $dispatcher;
+        $container['request'] = function ($c) {
+            return Request::createFromGlobals();
         };
 
         $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($this->getResolvedBaseUrl());
-            $rc->setHost($this->request->server->get('HTTP_HOST'));
-            $rc->setHttpPort((int) $this->request->server->get('SERVER_PORT'));
+            $rc = new RequestContext($c['request']->getResolvedBasePath());
+            $rc->setHost($c['request']->server->get('HTTP_HOST'));
 
             return $rc;
         };
@@ -218,13 +215,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     public function runApp()
     {
         try {
-            if ($this->isDebug() ||
-                !file_exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-                !file_exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php')) {
-                $this->container['stopwatch']->start('dumpUrlUtils');
-                $this->dumpUrlUtils();
-                $this->container['stopwatch']->stop('dumpUrlUtils');
-            }
             /*
              * Define a request wide timezone
              */
@@ -234,16 +224,12 @@ class Kernel implements \Pimple\ServiceProviderInterface
                 date_default_timezone_set("Europe/Paris");
             }
 
-            if (!$this->isInstallMode()) {
-                $this->prepareRequestHandling();
-            }
-
             /*
              * ----------------------------
              * Main Framework handle call
              * ----------------------------
              */
-            $this->response = $this->container['httpKernel']->handle($this->request);
+            $this->response = $this->container['httpKernel']->handle($this->container['request']);
 
         } catch (\RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException $e) {
             $this->response = $this->getEmergencyResponse($e);
@@ -255,10 +241,9 @@ class Kernel implements \Pimple\ServiceProviderInterface
             $this->response = $this->getEmergencyResponse($e);
         }
 
-        $this->response->setCharset('UTF-8');
-        $this->response->prepare($this->request);
+        $this->response->prepare($this->container['request']);
         $this->response->send();
-        $this->container['httpKernel']->terminate($this->request, $this->response);
+        $this->container['httpKernel']->terminate($this->container['request'], $this->response);
 
         return $this;
     }
@@ -272,7 +257,17 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getEmergencyResponse($e)
     {
-        if ($this->request->isXmlHttpRequest()) {
+        /*
+         * Log error before displaying a fallback page.
+         */
+        if (isset($this->container['logger'])) {
+            $this->container['logger']->emerg($e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'exception' => get_class($e),
+            ]);
+        }
+
+        if ($this->container['request']->isXmlHttpRequest()) {
             return new \Symfony\Component\HttpFoundation\JsonResponse(
                 [
                     'message' => $e->getMessage(),
@@ -285,8 +280,13 @@ class Kernel implements \Pimple\ServiceProviderInterface
         } else {
             $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
             $html = str_replace('{{ message }}', $e->getMessage(), $html);
-            $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
-            $html = str_replace('{{ details }}', $trace, $html);
+
+            if ($this->isDebug()) {
+                $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+                $html = str_replace('{{ details }}', $trace, $html);
+            } else {
+                $html = str_replace('{{ details }}', '', $html);
+            }
 
             return new Response(
                 $html,
@@ -297,50 +297,44 @@ class Kernel implements \Pimple\ServiceProviderInterface
     }
 
     /**
-     * Save a compiled version of UrlMatcher and UrlGenerator.
-     */
-    protected function dumpUrlUtils()
-    {
-        if (!file_exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
-            mkdir(ROADIZ_ROOT . '/gen-src/Compiled', 0755, true);
-        }
-
-        /*
-         * Generate custom UrlMatcher
-         */
-        $dumper = new PhpMatcherDumper($this->container['routeCollection']);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlMatcher',
-        ]);
-        file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
-
-        /*
-         * Generate custom UrlGenerator
-         */
-        $dumper = new PhpGeneratorDumper($this->container['routeCollection']);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlGenerator',
-        ]);
-        file_put_contents(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
-    }
-
-    /**
      * Prepare Translation generation tools.
      */
-    private function prepareTranslation()
+    public function onKernelRequest()
     {
         /*
-         * set default locale
+         * Register Themes dependency injection
          */
-        $translation = $this->container['em']
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        if (!$this->isInstallMode()) {
+            // Register back-end security scheme
+            $beClass = $this->container['backendClass'];
+            $beClass::setupDependencyInjection($this->container);
 
-        if ($translation !== null) {
-            $shortLocale = $translation->getLocale();
-            $this->request->setLocale($shortLocale);
-            \Locale::setDefault($shortLocale);
+            /*
+             * Set default locale
+             */
+            $translation = $this->container['em']
+                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->findDefault();
+
+            if ($translation !== null) {
+                $shortLocale = $translation->getLocale();
+                $this->container['request']->setLocale($shortLocale);
+                \Locale::setDefault($shortLocale);
+            }
         }
+
+        // Register front-end security scheme
+        foreach ($this->container['frontendThemes'] as $theme) {
+            $feClass = $theme->getClassName();
+            $feClass::setupDependencyInjection($this->container);
+        }
+    }
+
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        $response->setCharset('UTF-8');
+        $event->setResponse($response);
     }
 
     /**
@@ -348,13 +342,15 @@ class Kernel implements \Pimple\ServiceProviderInterface
      *
      * @return boolean
      */
-    private function prepareRequestHandling()
+    private function initEvents()
     {
-        $this->container['stopwatch']->start('prepareTranslation');
-        $this->prepareTranslation();
-        $this->container['stopwatch']->stop('prepareTranslation');
+        if ($this->isDebug() || RouteCollectionSubscriber::needToDumpUrlTools()) {
+            $this->container['dispatcher']->addSubscriber(
+                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
+            );
+        }
 
-        $this->container['stopwatch']->start('initThemes');
+        $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
 
         /*
          * Events
@@ -363,7 +359,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
             KernelEvents::REQUEST,
             [
                 $this,
-                'onStartKernelRequest',
+                'onKernelRequest',
             ]
         );
         $this->container['dispatcher']->addListener(
@@ -373,21 +369,18 @@ class Kernel implements \Pimple\ServiceProviderInterface
                 'onKernelRequest',
             ]
         );
-        /*
-         * Register after controller matched listener
-         */
         $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
             [
-                $this,
+                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
                 'onControllerMatched',
             ]
         );
         $this->container['dispatcher']->addListener(
-            KernelEvents::TERMINATE,
+            KernelEvents::RESPONSE,
             [
                 $this,
-                'onKernelTerminate',
+                'onKernelResponse',
             ]
         );
 
@@ -395,103 +388,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
-            $this->container['dispatcher']->addSubscriber(new DebugPanel($this->container));
-        }
-    }
-    /**
-     * Start a stopwatch event when a kernel start handling.
-     */
-    public function onStartKernelRequest()
-    {
-        $this->container['stopwatch']->start('requestHandling');
-    }
-    /**
-     * Stop request-handling stopwatch event and
-     * start a new stopwatch event when a controller is instanciated.
-     */
-    public function onControllerMatched()
-    {
-        $this->container['stopwatch']->stop('matchingRoute');
-        $this->container['stopwatch']->stop('requestHandling');
-        $this->container['stopwatch']->start('controllerHandling');
-    }
-    /**
-     * Stop controller handling stopwatch event.
-     */
-    public function onKernelTerminate()
-    {
-        if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-            $this->container['stopwatch']->stop('controllerHandling');
-        }
-    }
-
-    /**
-     * Ping current Solr server.
-     *
-     * @return boolean
-     */
-    public function pingSolrServer()
-    {
-        if ($this->isSolrAvailable()) {
-            // create a ping query
-            $ping = $this->container['solr']->createPing();
-            // execute the ping query
-            try {
-                $this->container['solr']->ping($ping);
-
-                return true;
-            } catch (\Exception $e) {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Resolve current front controller URL.
-     *
-     * This method is the base of every URL building methods in RZ-CMS.
-     * Be careful with handling it.
-     *
-     * @return string
-     */
-    public function getResolvedBaseUrl()
-    {
-        if ($this->request->server->get('SERVER_NAME')) {
-            // Remove everything after index.php in php_self
-            // when using PHP dev servers
-            $url = pathinfo(substr(
-                $this->request->server->get('PHP_SELF'),
-                0,
-                strpos($this->request->server->get('PHP_SELF'), '.php')
-            ));
-
-            // Protocol
-            $pageURL = 'http';
-            if ($this->request->server->get('HTTPS') &&
-                $this->request->server->get('HTTPS') == "on") {
-                $pageURL .= "s";
-            }
-            $pageURL .= "://";
-            // Port
-            if ($this->request->server->get('SERVER_PORT') &&
-                $this->request->server->get('SERVER_PORT') != "80") {
-                $pageURL .= $this->request->server->get('SERVER_NAME') .
-                ":" .
-                $this->request->server->get('SERVER_PORT');
-            } else {
-                $pageURL .= $this->request->server->get('SERVER_NAME');
-            }
-            // Non root folder
-            if (!empty($url["dirname"]) &&
-                $url["dirname"] != '/') {
-                $pageURL .= $url["dirname"];
-            }
-
-            return $pageURL;
-        } else {
-            return false;
+            $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
         }
     }
 
@@ -506,7 +403,7 @@ class Kernel implements \Pimple\ServiceProviderInterface
      */
     public function getStaticBaseUrl()
     {
-        return $this->convertUrlToStaticDomainUrl($this->getResolvedBaseUrl());
+        return $this->convertUrlToStaticDomainUrl($this->container['request']->getResolvedBaseUrl());
     }
 
     /**
@@ -525,11 +422,19 @@ class Kernel implements \Pimple\ServiceProviderInterface
     }
 
     /**
+     * @return Pimple\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * @return Symfony\Component\HttpFoundation\Request
      */
     public function getRequest()
     {
-        return $this->request;
+        return $this->container['request'];
     }
 
     /**
@@ -541,17 +446,6 @@ class Kernel implements \Pimple\ServiceProviderInterface
     {
         return (boolean) $this->container['config']['devMode'] ||
         (boolean) $this->container['config']['install'];
-    }
-
-    /**
-     * Tell if an Apache Solr server is available,
-     * for advanced search engine.
-     *
-     * @return boolean
-     */
-    public function isSolrAvailable()
-    {
-        return isset($this->container['solr']) && null !== $this->container['solr'];
     }
 
     /**
