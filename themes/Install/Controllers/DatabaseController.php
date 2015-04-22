@@ -199,6 +199,7 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
+        CacheCommand::clearDoctrine();
         SchemaCommand::updateSchema();
 
         return new Response(
