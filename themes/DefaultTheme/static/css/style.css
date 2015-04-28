@@ -1024,6 +1024,17 @@ body {
   font-size: 14px;
   font-family: 'Roadiz', Helvetica, sans-serif;
 }
+.basic-block {
+  font-size: 12px;
+  line-height: 18px;
+  color: #666666;
+}
+.basic-block .block-title {
+  font-size: 14px;
+}
+.basic-block .block-content {
+  text-align: left;
+}
 #rz-debug-panel {
   width: 200px;
   font-size: 11px;

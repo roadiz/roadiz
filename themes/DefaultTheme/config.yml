@@ -14,6 +14,7 @@ importFiles:
     nodetypes:
         - "Resources/import/nodetype/Page.rzt"
         - "Resources/import/nodetype/Neutral.rzt"
+        - "Resources/import/nodetype/BasicBlock.rzt"
     tags: []
     nodes:
         - "Resources/import/node/node-home.rzn"

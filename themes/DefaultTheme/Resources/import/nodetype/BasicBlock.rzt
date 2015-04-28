@@ -1,0 +1,20 @@
+{
+    "name": "BasicBlock",
+    "displayName": "Basic Block",
+    "description": null,
+    "visible": false,
+    "newsletterType": false,
+    "hidingNodes": false,
+    "fields": [
+        {
+            "name": "content",
+            "label": "Content",
+            "description": null,
+            "visible": true,
+            "type": 4,
+            "indexed": false,
+            "virtual": false,
+            "default_values": null
+        }
+    ]
+}
