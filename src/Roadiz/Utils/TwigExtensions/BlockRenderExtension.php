@@ -70,7 +70,6 @@ class BlockRenderExtension extends \Twig_Extension
     public function blockRender(NodesSources $nodeSource, $themeName = "DefaultTheme", $assignation = [])
     {
         if (null !== $nodeSource) {
-
             if (!empty($themeName)) {
                 $class = '\\Themes\\' . $themeName .
                 '\\Controllers\\Blocks\\' .
