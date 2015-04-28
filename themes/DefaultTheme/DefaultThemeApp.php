@@ -108,6 +108,18 @@ class DefaultThemeApp extends FrontendController
         $this->themeContainer['navigation'] = function ($c) {
             return $this->assignMainNavigation();
         };
+        $this->themeContainer['basicBlockType'] = function ($c) {
+            return $this->getService('nodeTypeApi')
+                        ->getOneBy([
+                            'name' => 'BasicBlock'
+                        ]);
+        };
+        $this->themeContainer['pageType'] = function ($c) {
+            return $this->getService('nodeTypeApi')
+                        ->getOneBy([
+                            'name' => 'Page'
+                        ]);
+        };
 
         $this->themeContainer['useGrunt'] = function ($c) {
             return static::USE_GRUNT;

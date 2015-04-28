@@ -29,19 +29,20 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use RZ\Roadiz\Core\Kernel;
 use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Pimple\Container;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use \Parsedown;
@@ -117,6 +118,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(new \Twig_Extensions_Extension_Intl());
             $twig->addExtension($c['twig.routingExtension']);
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
+            $twig->addExtension(new BlockRenderExtension($c, Kernel::getInstance()));
 
             if (null !== $c['twig.cacheExtension']) {
                 $twig->addExtension($c['twig.cacheExtension']);
@@ -146,7 +148,6 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 
             return new RoutingExtension($c['urlGenerator']);
         };
-
 
         /*
          * Document extensions
