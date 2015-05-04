@@ -35,7 +35,9 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
+use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
@@ -231,6 +233,12 @@ class Kernel implements ServiceProviderInterface
              */
             $this->response = $this->container['httpKernel']->handle($this->container['request']);
 
+        } catch (MaintenanceModeException $e) {
+            if (null !== $ctrl = $e->getController()) {
+                $this->response = $ctrl->maintenanceAction($this->container['request']);
+            } else {
+                $this->response = $this->getEmergencyResponse($e);
+            }
         } catch (\RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException $e) {
             $this->response = $this->getEmergencyResponse($e);
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
@@ -349,7 +357,6 @@ class Kernel implements ServiceProviderInterface
                 new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
             );
         }
-
         $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
 
         /*
@@ -383,6 +390,8 @@ class Kernel implements ServiceProviderInterface
                 'onKernelResponse',
             ]
         );
+
+        $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view

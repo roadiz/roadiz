@@ -35,7 +35,9 @@
         <header class="no-image">{# <i class="uk-icon-image"></i> #}</header>
         {% endblock %}
 
+        {% block mainavigation %}
         {% include '@DefaultTheme/modules/navigation.html.twig' %}
+        {% endblock %}
 
         <!-- Add your site or application content here -->
         <div id="main-content">{% block content %}{% endblock %}</div>

@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
@@ -403,5 +404,21 @@ class FrontendController extends AppController
          * Inject a new firewall map element
          */
         $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function maintenanceAction(Request $request)
+    {
+        $translation = $this->bindLocaleFromRoute($request, $request->getLocale());
+        $this->prepareThemeAssignation(null, $translation);
+
+        return new Response(
+            $this->renderView('maintenance.html.twig', $this->assignation),
+            Response::HTTP_SERVICE_UNAVAILABLE,
+            ['content-type' => 'text/html']
+        );
     }
 }
