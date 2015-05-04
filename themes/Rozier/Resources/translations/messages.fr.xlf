@@ -272,7 +272,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="21" approved="yes">
         <source>role.%role%.linked_group.%group%</source>
-        <target xml:lang="fr">Le rôle «%role%» a été ajouté au groupe «%group».</target>
+        <target xml:lang="fr">Le rôle «%role%» a été ajouté au groupe «%group%».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
           <context context-type="linenumber">251</context>
@@ -280,7 +280,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="22" approved="yes">
         <source>role.%role%.removed_from_group.%group%</source>
-        <target xml:lang="fr">Le rôle «%role%» a été retiré du groupe «%group».</target>
+        <target xml:lang="fr">Le rôle «%role%» a été retiré du groupe «%group%».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/GroupsController.php</context>
           <context context-type="linenumber">311</context>
