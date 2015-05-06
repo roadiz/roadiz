@@ -70,9 +70,9 @@ class ControllerMatchedEvent
          * Set request locale if _locale param
          * is present in Route.
          */
-        $routeParams = $this->kernel->getRequest()->get('_route_params');
+        $routeParams = $event->getRequest()->get('_route_params');
         if (!empty($routeParams["_locale"])) {
-            $this->kernel->getRequest()->setLocale($routeParams["_locale"]);
+            $event->getRequest()->setLocale($routeParams["_locale"]);
         }
 
         /*

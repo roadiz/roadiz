@@ -506,4 +506,22 @@ class AppController extends Controller
             }
         }
     }
+
+    /**
+     * Generate a simple view to inform visitors that website is
+     * currently unavailable.
+     *
+     * @param Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function maintenanceAction(Request $request)
+    {
+        $this->prepareBaseAssignation();
+
+        return new Response(
+            $this->renderView('maintenance.html.twig', $this->assignation),
+            Response::HTTP_SERVICE_UNAVAILABLE,
+            ['content-type' => 'text/html']
+        );
+    }
 }
