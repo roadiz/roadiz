@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
     <body>
@@ -93,20 +93,20 @@
               <target xml:lang="en">Reset password request</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%" approved="yes">
-              <source>you.asked.for.a.password.reset.on.%site%</source>
-              <target xml:lang="en">You asked for a password reset on “%site%”</target>
+                <source>you.asked.for.a.password.reset.on.%site%</source>
+                <target xml:lang="en">You asked for a password reset on &#x201C;%site%&#x201D;</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link" approved="yes">
-              <source>you.need.to.choose.a.new.password.using.following.link</source>
-              <target xml:lang="en">You need to create a new password for your account by using the following link.</target>
+                <source>you.need.to.choose.a.new.password.using.following.link</source>
+                <target xml:lang="en">You need to create a new password for your account by using the following link.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials" approved="yes">
-              <source>as.a.reminder.here.are.your.credentials</source>
-              <target xml:lang="en">As a reminder, here are your public credentials.</target>
+                <source>as.a.reminder.here.are.your.credentials</source>
+                <target xml:lang="en">As a reminder, here are your public credentials.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
-              <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-              <target xml:lang="en">If you didn’t ask for this email, just ignore it and your password won’t be changed.</target>
+                <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+                <target xml:lang="en">If you didn&#x2019;t ask for this email, just ignore it and your password won&#x2019;t be changed.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>
@@ -115,6 +115,14 @@
       <trans-unit xml:space="preserve" id="*.required.fields" approved="yes">
                 <source>*.required.fields</source>
                 <target xml:lang="en">* Required fields</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance" approved="yes">
+                <source>website.is.under.maintenance</source>
+                <target xml:lang="en">Website is under maintenance</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon" approved="yes">
+                <source>website.is.under.maintenance.we.will.be.back.soon</source>
+                <target xml:lang="en">Website is currently under maintenance, it will be back soon!</target>
             </trans-unit>
     </body>
   </file>
