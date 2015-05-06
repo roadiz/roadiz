@@ -2,7 +2,7 @@
 
 {% set blocks = nodeSource|children({
     'node.nodeType': themeServices.basicBlockType
-}, [], securityContext) %}
+}) %}
 
 {% block header %}
     {% if nodeSource.headerImage|length > 0 %}
