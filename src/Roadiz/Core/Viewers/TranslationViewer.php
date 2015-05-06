@@ -93,12 +93,12 @@ class TranslationViewer implements ViewableInterface
             $node = null;
         }
 
-        if ($node === null) {
+        if ($node === null && !empty($attr["_route"])) {
             $translations = Kernel::getService('em')
                 ->getRepository("RZ\Roadiz\Core\Entities\Translation")
                 ->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
-        } else {
+        } elseif (null !== $node) {
             $translations = $node->getHandler()->getAvailableTranslations();
             $translations = array_filter(
                 $translations,
@@ -110,6 +110,8 @@ class TranslationViewer implements ViewableInterface
                 }
             );
             $name = "node";
+        } else {
+            return [];
         }
 
         $return = [];
