@@ -89,7 +89,7 @@ class NodesSourcesExtension extends \Twig_Extension
 
     public function getParent(NodesSources $ns)
     {
-        return $ns->getHandler()->getParent($criteria);
+        return $ns->getHandler()->getParent();
     }
 
     public function getParents(NodesSources $ns, array $criteria = [])
