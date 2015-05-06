@@ -60,7 +60,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
         if ('loginPage' != $event->getRequest()->get('_route') &&
             (boolean) SettingsBag::get('maintenance_mode') === true) {
             if (!$this->container['securityContext']->isGranted('ROLE_BACKEND_USER')) {
-
                 $matchedCtrl = $event->getController()[0];
                 if ($matchedCtrl instanceof AppController) {
                     throw new MaintenanceModeException($matchedCtrl);

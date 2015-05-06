@@ -30,7 +30,6 @@
 
 namespace RZ\Roadiz\Core\Exceptions;
 
-
 use RZ\Roadiz\CMS\Controllers\AppController;
 
 class MaintenanceModeException extends \Exception
