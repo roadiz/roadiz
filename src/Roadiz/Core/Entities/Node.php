@@ -360,7 +360,7 @@ class Node extends AbstractDateTimedPositioned
     /**
      * @ORM\Column(type="string", name="children_order")
      */
-    private $childrenOrder = 'order';
+    private $childrenOrder = 'position';
 
     /**
      * @return string
