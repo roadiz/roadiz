@@ -83,6 +83,30 @@ class NodeType extends AbstractType
                     'required' => false,
                     'attr' => ['class' => 'rz-boolean-checkbox'],
                 ]
+            )
+            ->add(
+                'childrenOrder',
+                'choice',
+                [
+                    'label' => 'node.childrenOrder',
+                    'choices' => [
+                        'position' => 'node.position',
+                        'nodeName' => 'node.nodeName',
+                        'createdAt' => 'node.createdAt',
+                        'updatedAt' => 'node.updatedAt',
+                    ],
+                ]
+            )
+            ->add(
+                'childrenOrderDirection',
+                'choice',
+                [
+                    'label' => 'node.childrenOrderDirection',
+                    'choices' => [
+                        'ASC' => 'ascendent',
+                        'DESC' => 'descendant',
+                    ],
+                ]
             );
     }
 
