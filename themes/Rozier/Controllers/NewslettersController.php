@@ -40,6 +40,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesSourcesTrait;
 use Themes\Rozier\Traits\NodesTrait;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 
 /**
  * Newsletter controller
@@ -107,9 +108,12 @@ class NewslettersController extends RozierApp
             $form = $this->getService('formFactory')
                          ->createBuilder()
                          ->add('nodeName', 'text', [
-                             'label' => $this->getTranslator()->trans('nodeName'),
+                             'label' => 'nodeName',
                              'constraints' => [
                                  new NotBlank(),
+                                 new UniqueNodeName([
+                                    'entityManager' => $this->getService('em')
+                                 ])
                              ],
                          ])
                          ->getForm();

@@ -1150,42 +1150,6 @@
           <context context-type="linenumber">634</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="108" approved="yes">
-        <source>node.%name%.noCreation.urlAlias.alreadyExists</source>
-        <target xml:lang="en">Node %name% can't be created, an url-alias already exists with this name.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">671</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="109" approved="yes">
-        <source>node.%name%.noCreation.alreadyExists</source>
-        <target xml:lang="en">Node %name% can't be created, a node already exists with this name.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">690</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">737</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="110" approved="yes">
-        <source>node.%name%.no_creation.url_alias.already_exists</source>
-        <target xml:lang="en">Node %name% can't be created, an url-alias already exists with this name.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">705</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="111" approved="yes">
-        <source>node.%name%.noUpdate.alreadyExists</source>
-        <target xml:lang="en">Node %name% can't be updated, a node with the same name already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">780</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="112" approved="yes">
         <source>nodeName</source>
         <target xml:lang="en">Node name</target>
@@ -6031,6 +5995,18 @@
       <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
           <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
           <target xml:lang="en" state="translated">Roadiz can’t update itself, your destination folder is not writable…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists">
+          <source>nodeName.alreadyExists</source>
+          <target xml:lang="en" state="translated">This node name is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias">
+          <source>nodeName.alreadyExists.as.urlAlias</source>
+          <target xml:lang="en" state="translated">This node name is already used as an Url alias</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.available">
+          <source>new.version.available</source>
+          <target xml:lang="en" state="translated">A new version is available</target>
       </trans-unit>
     </body>
   </file>

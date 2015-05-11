@@ -1150,42 +1150,6 @@
           <context context-type="linenumber">634</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="108" approved="yes">
-        <source>node.%name%.noCreation.urlAlias.alreadyExists</source>
-        <target xml:lang="fr">Le nœud «%name%» n’a pas été créé car son alias d’Url existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">671</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="109" approved="yes">
-        <source>node.%name%.noCreation.alreadyExists</source>
-        <target xml:lang="fr">Le nœud «%name%» n’a pas été créé car il existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">690</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">737</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="110" approved="yes">
-        <source>node.%name%.no_creation.url_alias.already_exists</source>
-        <target xml:lang="fr">Le nœud «%name%» n’a pas été créé car son alias d’Url existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">705</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="111" approved="yes">
-        <source>node.%name%.noUpdate.alreadyExists</source>
-        <target xml:lang="fr">Le nœud «%name%» n’a pas été mis à jour car le nom utilisé existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">780</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="112" approved="yes">
         <source>nodeName</source>
         <target xml:lang="fr">Nom du nœud</target>
@@ -6031,6 +5995,18 @@
       <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
           <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
           <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’est pas inscriptible…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists">
+          <source>nodeName.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Ce nom de nœud est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias">
+          <source>nodeName.alreadyExists.as.urlAlias</source>
+          <target xml:lang="fr" state="translated">Ce nom de nœud est déjà utilisé en tant qu’alias d’url</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.available">
+          <source>new.version.available</source>
+          <target xml:lang="fr" state="translated">Nouvelle version disponible</target>
       </trans-unit>
     </body>
   </file>

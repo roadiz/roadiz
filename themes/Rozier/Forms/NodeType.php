@@ -43,9 +43,9 @@ class NodeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-                'nodeName',
-                'text',
-                [
+            'nodeName',
+            'text',
+            [
                     'label' => 'nodeName',
                     'constraints' => [
                         new NotBlank(),
@@ -55,7 +55,7 @@ class NodeType extends AbstractType
                         ]),
                     ],
                 ]
-            )
+        )
             ->add(
                 'priority',
                 'number',
