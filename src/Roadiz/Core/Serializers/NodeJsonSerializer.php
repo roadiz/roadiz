@@ -128,7 +128,8 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             foreach ($fields as $field) {
                 if (!$field->isVirtual()) {
-                    if ($field->getType() == NodeTypeField::DATETIME_T) {
+                    if ($field->getType() == NodeTypeField::DATETIME_T
+                        || $field->getType() == NodeTypeField::DATE_T) {
                         $date = new \DateTime(
                             $source[$field->getName()]['date'],
                             new \DateTimeZone($source[$field->getName()]['timezone'])
