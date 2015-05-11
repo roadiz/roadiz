@@ -114,7 +114,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                  */
                 if ($node !== null &&
                     !$node->isHome() &&
-                    $this->theme->getHomeNode() !== $node ) {
+                    $this->theme->getHomeNode() !== $node) {
                     /*
                      * Try with nodeName
                      */
