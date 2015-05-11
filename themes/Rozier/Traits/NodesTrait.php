@@ -31,18 +31,16 @@
 
 namespace Themes\Rozier\Traits;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 
 trait NodesTrait
 {
@@ -240,16 +238,16 @@ trait NodesTrait
                             'constraints' => [
                                 new NotBlank(),
                                 new UniqueNodeName([
-                                    'entityManager' => $this->getService('em')
+                                    'entityManager' => $this->getService('em'),
                                 ]),
                             ],
                         ])
-                        ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
-                            'label' => 'nodeType',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
+                'label' => 'nodeType',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         if (null !== $parentNode) {
             $builder->add('parentId', 'hidden', [
