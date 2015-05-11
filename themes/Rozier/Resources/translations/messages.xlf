@@ -6123,6 +6123,30 @@
           <source>new.version.available</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
+          <source>node.childrenOrder</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
+          <source>node.childrenOrderDirection</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="createdAt">
+          <source>createdAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="updatedAt">
+          <source>updatedAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ascendant">
+          <source>ascendant</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="descendant">
+          <source>descendant</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -90,10 +90,10 @@ class NodeType extends AbstractType
                 [
                     'label' => 'node.childrenOrder',
                     'choices' => [
-                        'position' => 'node.position',
-                        'nodeName' => 'node.nodeName',
-                        'createdAt' => 'node.createdAt',
-                        'updatedAt' => 'node.updatedAt',
+                        'position' => 'position',
+                        'nodeName' => 'nodeName',
+                        'createdAt' => 'createdAt',
+                        'updatedAt' => 'updatedAt',
                     ],
                 ]
             )
@@ -103,7 +103,7 @@ class NodeType extends AbstractType
                 [
                     'label' => 'node.childrenOrderDirection',
                     'choices' => [
-                        'ASC' => 'ascendent',
+                        'ASC' => 'ascendant',
                         'DESC' => 'descendant',
                     ],
                 ]

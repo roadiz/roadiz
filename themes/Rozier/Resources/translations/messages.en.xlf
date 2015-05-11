@@ -6008,6 +6008,30 @@
           <source>new.version.available</source>
           <target xml:lang="en" state="translated">A new version is available</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
+          <source>node.childrenOrder</source>
+          <target xml:lang="en" state="translated">Children nodes are ordered by</target>
+      <alt-trans><target xml:lang="en">Children nodes ordering by</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
+          <source>node.childrenOrderDirection</source>
+          <target xml:lang="en" state="translated">Children nodes order direction</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="createdAt">
+          <source>createdAt</source>
+          <target xml:lang="en" state="translated">Creation date</target>
+      <alt-trans><target xml:lang="en">Created at</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="updatedAt">
+          <source>updatedAt</source>
+          <target xml:lang="en" state="translated">Update date</target>
+      <alt-trans><target xml:lang="en">Updated at</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="ascendant">
+          <source>ascendant</source>
+          <target xml:lang="en" state="translated">Ascendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="descendant">
+          <source>descendant</source>
+          <target xml:lang="en" state="translated">Descendant</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

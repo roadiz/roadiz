@@ -6008,6 +6008,30 @@
           <source>new.version.available</source>
           <target xml:lang="fr" state="translated">Nouvelle version disponible</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
+          <source>node.childrenOrder</source>
+          <target xml:lang="fr" state="translated">Les nœuds enfant sont ordonnés par</target>
+      <alt-trans><target xml:lang="fr">Children nodes ordering by</target></alt-trans><alt-trans><target xml:lang="fr">Children nodes ordering</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
+          <source>node.childrenOrderDirection</source>
+          <target xml:lang="fr" state="translated">Direction de l’ordre des nœuds enfants</target>
+      <alt-trans><target xml:lang="fr">Children nodes order direction</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="createdAt">
+          <source>createdAt</source>
+          <target xml:lang="fr" state="translated">Date de création</target>
+      <alt-trans><target xml:lang="fr">Créé le</target></alt-trans><alt-trans><target xml:lang="fr">Created at</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="updatedAt">
+          <source>updatedAt</source>
+          <target xml:lang="fr" state="translated">Date de mise à jour</target>
+      <alt-trans><target xml:lang="fr">Mis à jour le</target></alt-trans><alt-trans><target xml:lang="fr">Updated at</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="ascendant">
+          <source>ascendant</source>
+          <target xml:lang="fr" state="translated">Ascendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="descendant">
+          <source>descendant</source>
+          <target xml:lang="fr" state="translated">Descendant</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
