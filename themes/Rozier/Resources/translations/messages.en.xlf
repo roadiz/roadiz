@@ -478,30 +478,6 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="44" approved="yes">
-        <source>user.%name%.cannot_update.name_already_exists</source>
-        <target xml:lang="en">User %name% can't be updated, its username already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">496</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="45" approved="yes">
-        <source>user.%name%.cannot_update.email_already_exists</source>
-        <target xml:lang="en">User %name% can't be updated, its email address already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">509</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="46" approved="yes">
-        <source>user.%name%.cannot_create_already_exists</source>
-        <target xml:lang="en">User %name% can't be created, it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">540</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="47" approved="yes">
         <source>user.facebook_name.%name%._does_not_exist</source>
         <target xml:lang="en">Facebook profile name (%name%) does not exist.</target>
@@ -6031,6 +6007,14 @@
       <trans-unit xml:space="preserve" id="descendant">
           <source>descendant</source>
           <target xml:lang="en" state="translated">Descendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email.alreadyExists">
+          <source>email.alreadyExists</source>
+          <target xml:lang="en" state="translated">Email address is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="username.alreadyExists">
+          <source>username.alreadyExists</source>
+          <target xml:lang="en" state="translated">Username is already used</target>
       </trans-unit>
     </body>
   </file>

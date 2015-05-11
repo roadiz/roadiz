@@ -478,30 +478,6 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="44" approved="yes">
-        <source>user.%name%.cannot_update.name_already_exists</source>
-        <target xml:lang="fr">Le compte utilisateur «%name%» ne peut pas être mis à jour avec ce nom, car il existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">496</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="45" approved="yes">
-        <source>user.%name%.cannot_update.email_already_exists</source>
-        <target xml:lang="fr">Le compte utilisateur «%name%» ne peut pas être à jour avec cet email, car il existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">509</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="46" approved="yes">
-        <source>user.%name%.cannot_create_already_exists</source>
-        <target xml:lang="fr">Le compte utilisateur «%name%» ne peut pas être créé, car il existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">540</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="47" approved="yes">
         <source>user.facebook_name.%name%._does_not_exist</source>
         <target xml:lang="fr">Le profil Facebook «%name%» n’existe pas.</target>
@@ -6031,6 +6007,14 @@
       <trans-unit xml:space="preserve" id="descendant">
           <source>descendant</source>
           <target xml:lang="fr" state="translated">Descendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email.alreadyExists">
+          <source>email.alreadyExists</source>
+          <target xml:lang="fr" state="translated">L’adresse email est déjà utilisée</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="username.alreadyExists">
+          <source>username.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Le nom d’utilisateur est déjà utilisé</target>
       </trans-unit>
     </body>
   </file>

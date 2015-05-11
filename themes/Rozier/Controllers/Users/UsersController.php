@@ -196,7 +196,6 @@ class UsersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['userId'] == $user->getId()) {
-
                 $this->deleteUser($form->getData(), $user);
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.deleted',
