@@ -770,30 +770,6 @@
           <context context-type="linenumber">408</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="74" approved="yes">
-        <source>tag.%name%.no_update.already_exists</source>
-        <target xml:lang="en">Tag %name% could not be updated, it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">539</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="75" approved="yes">
-        <source>tag.%name%.no_creation.already_exists</source>
-        <target xml:lang="en">Tag %name% could not be created, it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">567</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="76" approved="yes">
-        <source>tag.%name%.already_added</source>
-        <target xml:lang="en">Tag %name% already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">632</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="77" approved="yes">
         <source>locked</source>
         <target xml:lang="en">Locked</target>
@@ -6015,6 +5991,10 @@
       <trans-unit xml:space="preserve" id="username.alreadyExists">
           <source>username.alreadyExists</source>
           <target xml:lang="en" state="translated">Username is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
+          <source>tagName.alreadyExists</source>
+          <target xml:lang="en" state="translated">This tag name is already used</target>
       </trans-unit>
     </body>
   </file>

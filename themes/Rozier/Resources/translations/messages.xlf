@@ -770,30 +770,6 @@
           <context context-type="linenumber">408</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="74">
-        <source>tag.%name%.no_update.already_exists</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">539</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="75">
-        <source>tag.%name%.no_creation.already_exists</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">567</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="76">
-        <source>tag.%name%.already_added</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">632</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="77">
         <source>locked</source>
         <target></target>
@@ -6129,6 +6105,10 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="username.alreadyExists">
           <source>username.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
+          <source>tagName.alreadyExists</source>
           <target></target>
       </trans-unit>
     </body>

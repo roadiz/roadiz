@@ -150,5 +150,7 @@ class TagTranslation extends AbstractEntity
     {
         $this->setTag($original);
         $this->setTranslation($translation);
+
+        $this->name = $this->getTag()->getTagName();
     }
 }

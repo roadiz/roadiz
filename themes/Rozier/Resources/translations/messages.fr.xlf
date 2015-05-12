@@ -770,30 +770,6 @@
           <context context-type="linenumber">408</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="74" approved="yes">
-        <source>tag.%name%.no_update.already_exists</source>
-        <target xml:lang="fr">L’étiquette «%name%» n’a pas été mise à jour car le nom utilisé existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">539</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="75" approved="yes">
-        <source>tag.%name%.no_creation.already_exists</source>
-        <target xml:lang="fr">L’étiquette «%name%» n’a pas été créée car le nom utilisé existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">567</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="76" approved="yes">
-        <source>tag.%name%.already_added</source>
-        <target xml:lang="fr">L’étiquette %name% a déjà été créée.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">632</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="77" approved="yes">
         <source>locked</source>
         <target xml:lang="fr">Verrouillé</target>
@@ -6015,6 +5991,10 @@
       <trans-unit xml:space="preserve" id="username.alreadyExists">
           <source>username.alreadyExists</source>
           <target xml:lang="fr" state="translated">Le nom d’utilisateur est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
+          <source>tagName.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Ce nom d‘étiquette est déjà utilisé</target>
       </trans-unit>
     </body>
   </file>
