@@ -126,7 +126,7 @@ class ThemeInstallCommand extends Command
         $themeFile .= ".php";
 
         if (file_exists($themeFile)) {
-            $fixtures = new Fixtures();
+            $fixtures = new Fixtures($this->entityManager);
             $fixtures->installFrontendTheme($classname);
             $text .= '<info>Theme class “' . $themeFile . '” has been installed…</info>' . PHP_EOL;
 

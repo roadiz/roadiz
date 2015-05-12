@@ -178,7 +178,7 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    $fixtures = new Fixtures();
+                    $fixtures = new Fixtures($this->getService("em"));
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page

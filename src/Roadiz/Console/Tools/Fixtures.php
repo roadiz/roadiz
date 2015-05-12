@@ -30,22 +30,28 @@
 
 namespace RZ\Roadiz\Console\Tools;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\User;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 /**
-* Fixtures class
-*/
+ * Fixtures class
+ */
 class Fixtures
 {
+    protected $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * @return void
@@ -55,10 +61,10 @@ class Fixtures
         $this->installDefaultTranslation();
         $this->installBackofficeTheme();
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         // Clear result cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }
@@ -90,9 +96,9 @@ class Fixtures
      */
     protected function installBackofficeTheme()
     {
-        $existing = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneBy(['backendTheme'=>true, 'available'=>true]);
+        $existing = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                         ->findOneBy(['backendTheme' => true, 'available' => true]);
 
         if (null === $existing) {
             $beTheme = new Theme();
@@ -100,7 +106,7 @@ class Fixtures
             $beTheme->setAvailable(true);
             $beTheme->setBackendTheme(true);
 
-            Kernel::getService('em')->persist($beTheme);
+            $this->entityManager->persist($beTheme);
         }
     }
 
@@ -109,9 +115,9 @@ class Fixtures
      */
     protected function installDefaultTranslation()
     {
-        $existing = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findOneBy(['defaultTranslation'=>true, 'available'=>true]);
+        $existing = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                         ->findOneBy(['defaultTranslation' => true, 'available' => true]);
 
         if (null === $existing) {
             $translation = new Translation();
@@ -133,7 +139,7 @@ class Fixtures
             $translation->setName(Translation::$availableLocales[$translation->getLocale()]);
             $translation->setAvailable(true);
 
-            Kernel::getService('em')->persist($translation);
+            $this->entityManager->persist($translation);
         }
     }
 
@@ -144,9 +150,9 @@ class Fixtures
      */
     public function createDefaultUser($data)
     {
-        $existing = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->findOneBy(['username'=>$data['username'], 'email'=>$data['email']]);
+        $existing = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\User')
+                         ->findOneBy(['username' => $data['username'], 'email' => $data['email']]);
 
         if ($existing === null) {
             $user = new User();
@@ -154,19 +160,19 @@ class Fixtures
             $user->setPlainPassword($data['password']);
             $user->setEmail($data['email']);
 
-            $url = "http://www.gravatar.com/avatar/".
-                    md5(strtolower(trim($user->getEmail()))).
-                    "?d=identicon&s=200";
+            $url = "http://www.gravatar.com/avatar/" .
+            md5(strtolower(trim($user->getEmail()))) .
+            "?d=identicon&s=200";
 
             $user->setPictureUrl($url);
 
-            $existingGroup = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Group')
-                ->findOneByName('Admin');
+            $existingGroup = $this->entityManager
+                                  ->getRepository('RZ\Roadiz\Core\Entities\Group')
+                                  ->findOneByName('Admin');
             $user->addGroup($existingGroup);
 
-            Kernel::getService('em')->persist($user);
-            Kernel::getService('em')->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
         }
 
         return true;
@@ -180,14 +186,14 @@ class Fixtures
      */
     protected function getRole($roleName = Role::ROLE_SUPER_ADMIN)
     {
-        $role = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                ->findOneBy(['name'=>$roleName]);
+        $role = $this->entityManager
+                     ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                     ->findOneBy(['name' => $roleName]);
 
         if ($role === null) {
             $role = new Role($roleName);
-            Kernel::getService('em')->persist($role);
-            Kernel::getService('em')->flush();
+            $this->entityManager->persist($role);
+            $this->entityManager->flush();
         }
 
         return $role;
@@ -200,15 +206,15 @@ class Fixtures
      */
     protected function getSetting($name)
     {
-        $setting = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-            ->findOneBy(['name'=>$name]);
+        $setting = $this->entityManager
+                        ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                        ->findOneBy(['name' => $name]);
 
         if (null === $setting) {
             $setting = new Setting();
             $setting->setName($name);
-            Kernel::getService('em')->persist($setting);
-            Kernel::getService('em')->flush();
+            $this->entityManager->persist($setting);
+            $this->entityManager->flush();
         }
 
         return $setting;
@@ -244,7 +250,7 @@ class Fixtures
         $set2->setValue(false);
         $set2->setType(NodeTypeField::BOOLEAN_T);
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         /*
          * Update timezone
@@ -277,9 +283,9 @@ class Fixtures
      */
     public function installFrontendTheme($classname)
     {
-        $existing = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneByClassName($classname);
+        $existing = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                         ->findOneByClassName($classname);
 
         if (null === $existing) {
             $feTheme = new Theme();
@@ -287,11 +293,11 @@ class Fixtures
             $feTheme->setAvailable(true);
             $feTheme->setBackendTheme(false);
 
-            Kernel::getService('em')->persist($feTheme);
-            Kernel::getService('em')->flush();
+            $this->entityManager->persist($feTheme);
+            $this->entityManager->flush();
 
             // Clear result cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }

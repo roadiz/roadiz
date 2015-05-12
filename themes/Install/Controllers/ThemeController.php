@@ -85,7 +85,7 @@ class ThemeController extends InstallApp
 
         $data = $yaml->getConfiguration();
 
-        $fix = new Fixtures();
+        $fix = new Fixtures($this->getService("em"));
         $data["className"] = $request->get("classname");
         $fix->installTheme($data);
         $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")
@@ -201,7 +201,7 @@ class ThemeController extends InstallApp
                  * Save informations
                  */
                 try {
-                    $fixtures = new Fixtures();
+                    $fixtures = new Fixtures($this->getService("em"));
                     $fixtures->saveInformations($infosForm->getData());
 
                     if (!empty($infosForm->getData()["install_theme"])) {
