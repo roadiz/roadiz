@@ -70,7 +70,9 @@ class DocumentsType extends AbstractType
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
-                    if (null !== $value && null === $documents[$key]) {
+                    if (isset($documents[$key]) &&
+                        null !== $value &&
+                        null === $documents[$key]) {
                         $context->addViolationAt(
                             null,
                             'Document #'.$value.' does not exists',
