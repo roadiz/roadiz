@@ -24,55 +24,56 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesCommand.php
+ * @file SolrHelper.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Console;
+namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use Solarium\Client;
+use Symfony\Component\Console\Helper\Helper;
 
 /**
- * Command line utils for managing node-types from terminal.
+ * SolrHelper.
  */
-class NodesSourcesCommand extends Command
+class SolrHelper extends Helper
 {
-    private $entityManager;
+    private $solr;
 
-    protected function configure()
+    public function __construct(Client $solr)
     {
-        $this->setName('core:sources')
-             ->setDescription('Manage node-sources')
-             ->addOption(
-                 'regenerate',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Delete and re-generate every nodes-sources entity classes'
-             );
+        $this->solr = $solr;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @return Solarium\Client
+     */
+    public function getSolr()
     {
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $text = "";
+        return $this->solr;
+    }
 
-        $nodetypes = $this->entityManager
-                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                          ->findAll();
+    public function getName()
+    {
+        return 'solr';
+    }
 
-        if (count($nodetypes) > 0) {
-            if ($input->getOption('regenerate')) {
-                foreach ($nodetypes as $nt) {
-                    $nt->getHandler()->removeSourceEntityClass();
-                    $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
-                }
+    /**
+     * @return boolean
+     */
+    public function ready()
+    {
+        if (null !== $this->solr) {
+            // create a ping query
+            $ping = $this->solr->createPing();
+            // execute the ping query
+            try {
+                $this->solr->ping($ping);
+                return true;
+            } catch (\Exception $e) {
+                return false;
             }
         } else {
-            $text = '<info>No available node-types…</info>' . PHP_EOL;
+            return false;
         }
-
-        $output->writeln($text);
     }
 }

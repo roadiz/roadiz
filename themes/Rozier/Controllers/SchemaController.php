@@ -32,6 +32,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -93,7 +94,8 @@ class SchemaController extends RozierApp
 
         if ($this->getService('csrfProvider')
             ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+            $updater = new SchemaUpdater($this->getService('em'));
+            $updater->updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $this->publishConfirmMessage($request, $msg);

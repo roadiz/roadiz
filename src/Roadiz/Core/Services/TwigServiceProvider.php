@@ -109,7 +109,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
             $twig->addExtension(new BlockRenderExtension($c, Kernel::getInstance()));
             if (true !== $c['config']['install']) {
-              $twig->addExtension(new NodesSourcesExtension($c['securityContext']));
+                $twig->addExtension(new NodesSourcesExtension($c['securityContext']));
             }
             $twig->addExtension(new DocumentExtension());
             $twig->addExtension(new UrlExtension($c['request']));

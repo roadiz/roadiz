@@ -42,6 +42,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 
 class AboutController extends RozierApp
 {
@@ -366,10 +370,15 @@ class AboutController extends RozierApp
         $this->validateAccessForRole('ROLE_SUPERADMIN');
         $this->canAutomaticUpdate();
 
-        CacheCommand::clearDoctrine();
-        CacheCommand::clearRouteCollections();
-        CacheCommand::clearTranslations();
-        CacheCommand::clearTemplates();
+        $clearers = [
+            new DoctrineCacheClearer($this->getService('em')),
+            new TranslationsCacheClearer(),
+            new RoutingCacheClearer(),
+            new TemplatesCacheClearer(),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
 
         return new JsonResponse([
             'progress' => (100 / static::UPDATE_STEPS) * 4,

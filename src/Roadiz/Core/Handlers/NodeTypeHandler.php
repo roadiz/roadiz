@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 
 /**
  * Handle operations with node-type entities.
@@ -157,7 +158,12 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
      */
     public function updateSchema()
     {
-        \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
+        $clearers = [
+            new DoctrineCacheClearer(Kernel::getService('em')),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
         $this->removeSourceEntityClass();
         $this->generateSourceEntityClass();
 
@@ -180,7 +186,12 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     public function deleteSchema()
     {
         $this->removeSourceEntityClass();
-        \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
+        $clearers = [
+            new DoctrineCacheClearer(Kernel::getService('em')),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
 
         return $this;
     }

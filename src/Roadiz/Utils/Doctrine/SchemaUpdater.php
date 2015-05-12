@@ -24,55 +24,60 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesCommand.php
+ * @file SchemaUpdater.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Console;
+namespace RZ\Roadiz\Utils\Doctrine;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\SchemaTool;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 
 /**
- * Command line utils for managing node-types from terminal.
+ * SchemaUpdater.
  */
-class NodesSourcesCommand extends Command
+class SchemaUpdater
 {
     private $entityManager;
 
-    protected function configure()
+    public function __construct(EntityManager $entityManager)
     {
-        $this->setName('core:sources')
-             ->setDescription('Manage node-sources')
-             ->addOption(
-                 'regenerate',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Delete and re-generate every nodes-sources entity classes'
-             );
+        $this->entityManager = $entityManager;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * Update database schema.
+     *
+     * @param boolean $delete Enable DELETE and DROP statements
+     *
+     * @return boolean
+     */
+    public function updateSchema($delete = false)
     {
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $text = "";
+        $clearer = new DoctrineCacheClearer($this->entityManager);
+        $clearer->clear();
 
-        $nodetypes = $this->entityManager
-                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                          ->findAll();
+        $tool = new SchemaTool($this->entityManager);
+        $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        if (count($nodetypes) > 0) {
-            if ($input->getOption('regenerate')) {
-                foreach ($nodetypes as $nt) {
-                    $nt->getHandler()->removeSourceEntityClass();
-                    $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
-                }
+        $sql = $tool->getUpdateSchemaSql($meta, true);
+        $deletions = [];
+
+        foreach ($sql as $statement) {
+            if (substr($statement, 0, 6) == 'DELETE' ||
+                strpos($statement, 'DROP')) {
+                $deletions[] = $statement;
+            } else {
+                $this->entityManager->getConnection()->exec($statement);
             }
-        } else {
-            $text = '<info>No available node-types…</info>' . PHP_EOL;
         }
 
-        $output->writeln($text);
+        if (true === $delete) {
+            foreach ($deletions as $statement) {
+                $this->entityManager->getConnection()->exec($statement);
+            }
+        }
+
+        return true;
     }
 }

@@ -29,11 +29,11 @@
  */
 namespace Themes\Install\Controllers;
 
-use RZ\Roadiz\Console\CacheCommand;
-use RZ\Roadiz\Console\SchemaCommand;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -137,8 +137,8 @@ class DatabaseController extends InstallApp
                  * Use updateSchema instead of create to enable upgrading
                  * Roadiz database using Install theme.
                  */
-                SchemaCommand::updateSchema();
-                CacheCommand::clearDoctrine();
+                $updater = new SchemaUpdater($this->getService('em'));
+                $updater->updateSchema();
 
                 /*
                  * Force redirect to install fixtures
@@ -199,8 +199,8 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        CacheCommand::clearDoctrine();
-        SchemaCommand::updateSchema();
+        $updater = new SchemaUpdater($this->getService('em'));
+        $updater->updateSchema();
 
         return new JsonResponse(['status' => true]);
     }
@@ -212,7 +212,8 @@ class DatabaseController extends InstallApp
      */
     public function clearDoctrineCacheAction(Request $request)
     {
-        CacheCommand::clearDoctrine();
+        $doctrineClearer = new DoctrineCacheClearer($this->getService('em'));
+        $doctrineClearer->clear();
 
         return new JsonResponse(['status' => true]);
     }

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,44 +39,45 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ThemesCommand extends Command
 {
+    private $entityManager;
+
     protected function configure()
     {
         $this->setName('core:themes')
-            ->setDescription('Manage themes')
-            ->addArgument(
-                'classname',
-                InputArgument::OPTIONAL,
-                'Main theme classname'
-            );
+             ->setDescription('Manage themes')
+             ->addArgument(
+                 'classname',
+                 InputArgument::OPTIONAL,
+                 'Main theme classname'
+             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text="";
+        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $text = "";
         $name = $input->getArgument('classname');
 
         if ($name) {
-            $theme = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                ->findOneBy(['className'=>$name]);
+            $theme = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                          ->findOneBy(['className' => $name]);
 
         } else {
-            $text = '<info>Installed theme…</info>'.PHP_EOL;
-            $themes = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                ->findAll();
+            $text = '<info>Installed theme…</info>' . PHP_EOL;
+            $themes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                           ->findAll();
 
             if (count($themes) > 0) {
-                $text .= ' | '.PHP_EOL;
+                $text .= ' | ' . PHP_EOL;
                 foreach ($themes as $theme) {
                     $text .=
-                        ' |_ '.$theme->getClassName()
-                        .' — <info>'.($theme->isAvailable()?'enabled':'disabled').'</info>'
-                        .' — <comment>'.($theme->isBackendTheme()?'Backend':'Frontend').'</comment>'
-                        .PHP_EOL;
+                    ' |_ ' . $theme->getClassName()
+                    . ' — <info>' . ($theme->isAvailable() ? 'enabled' : 'disabled') . '</info>'
+                    . ' — <comment>' . ($theme->isBackendTheme() ? 'Backend' : 'Frontend') . '</comment>'
+                    . PHP_EOL;
                 }
             } else {
-                $text = '<info>No available themes</info>'.PHP_EOL;
+                $text = '<info>No available themes</info>' . PHP_EOL;
             }
         }
 

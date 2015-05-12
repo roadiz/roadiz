@@ -42,6 +42,9 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 
 /**
  * Installation application
@@ -251,9 +254,15 @@ class InstallApp extends AppController
                      */
                     $this->getService('session')->invalidate();
 
-                    CacheCommand::clearDoctrine();
-                    CacheCommand::clearTranslations();
-                    CacheCommand::clearRouteCollections();
+                    $clearers = [
+                        new DoctrineCacheClearer($this->getService('em')),
+                        new TranslationsCacheClearer(),
+                        new RoutingCacheClearer(),
+                    ];
+                    foreach ($clearers as $clearer) {
+                        $clearer->clear();
+                    }
+
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
