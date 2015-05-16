@@ -30,14 +30,13 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Console\CacheCommand;
-use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\RozierApp;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}

@@ -29,20 +29,15 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
-
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command line utils for managing Cache from terminal.
@@ -54,55 +49,55 @@ class CacheCommand extends Command
     protected function configure()
     {
         $this->setName('cache')
-            ->setDescription('Manage cache and compiled data.')
-            ->addOption(
-                'infos',
-                null,
-                InputOption::VALUE_NONE,
-                'Get informations about caches.'
-            )
-            ->addOption(
-                'clear-doctrine',
-                null,
-                InputOption::VALUE_NONE,
-                'Clear doctrine metadata cache and entities proxies.'
-            )
-            ->addOption(
-                'clear-routes',
-                null,
-                InputOption::VALUE_NONE,
-                'Clear compiled route collections.'
-            )
-            ->addOption(
-                'clear-assets',
-                null,
-                InputOption::VALUE_NONE,
-                'Clear compiled route collections'
-            )
-            ->addOption(
-                'clear-templates',
-                null,
-                InputOption::VALUE_NONE,
-                'Clear compiled Twig templates.'
-            )
-            ->addOption(
-                'clear-translations',
-                null,
-                InputOption::VALUE_NONE,
-                'Clear compiled translations catalogues.'
-            )
-            ->addOption(
-                'clear-all',
-                null,
-                InputOption::VALUE_NONE,
-                'Clear all caches (Doctrine, proxies, routes, templates, assets and translations)'
-            )
-            ;
+             ->setDescription('Manage cache and compiled data.')
+             ->addOption(
+                 'infos',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Get informations about caches.'
+             )
+             ->addOption(
+                 'clear-doctrine',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear doctrine metadata cache and entities proxies.'
+             )
+             ->addOption(
+                 'clear-routes',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear compiled route collections.'
+             )
+             ->addOption(
+                 'clear-assets',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear compiled route collections'
+             )
+             ->addOption(
+                 'clear-templates',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear compiled Twig templates.'
+             )
+             ->addOption(
+                 'clear-translations',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear compiled translations catalogues.'
+             )
+             ->addOption(
+                 'clear-all',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear all caches (Doctrine, proxies, routes, templates, assets and translations)'
+             )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text="";
+        $text = "";
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
 
         $assetsClearer = new AssetsClearer();
@@ -127,7 +122,7 @@ class CacheCommand extends Command
                 $text .= $clearer->getOutput();
             }
 
-            $text .= '<info>All caches have been been purged…</info>'.PHP_EOL;
+            $text .= '<info>All caches have been been purged…</info>' . PHP_EOL;
         } else {
             if ($input->getOption('clear-doctrine')) {
                 $doctrineClearer->clear();
@@ -163,16 +158,16 @@ class CacheCommand extends Command
         $text = '';
 
         $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-        $text .= "Result cache driver: ".get_class($cacheDriver).PHP_EOL;
+        $text .= "Result cache driver: " . get_class($cacheDriver) . PHP_EOL;
 
         $cacheDriver = $this->entityManager->getConfiguration()->getHydrationCacheImpl();
-        $text .= "Hydratation cache driver: ".get_class($cacheDriver).PHP_EOL;
+        $text .= "Hydratation cache driver: " . get_class($cacheDriver) . PHP_EOL;
 
         $cacheDriver = $this->entityManager->getConfiguration()->getQueryCacheImpl();
-        $text .= "Query cache driver: ".get_class($cacheDriver).PHP_EOL;
+        $text .= "Query cache driver: " . get_class($cacheDriver) . PHP_EOL;
 
         $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-        $text .= "Metadata cache driver: ".get_class($cacheDriver).PHP_EOL;
+        $text .= "Metadata cache driver: " . get_class($cacheDriver) . PHP_EOL;
 
         return $text;
     }

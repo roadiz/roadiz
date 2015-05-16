@@ -29,14 +29,13 @@
  */
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
+use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
-use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 
 /**
  *
@@ -46,64 +45,64 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', 'email', [
-                    'label' => 'email',
-                    'constraints' => [
-                        new NotBlank(),
-                        new UniqueEmail([
-                            'entityManager' => $options['em'],
-                            'currentValue' => $options['email']
-                        ])
-                    ],
-                ])
-                ->add('username', 'text', [
-                    'label' => 'username',
-                    'constraints' => [
-                        new NotBlank(),
-                        new UniqueUsername([
-                            'entityManager' => $options['em'],
-                            'currentValue' => $options['username']
-                        ])
-                    ],
-                ])
-                ->add('plainPassword', 'repeated', [
-                    'type' => 'password',
-                    'invalid_message' => 'password.must.match',
-                    'first_options' => [
-                        'label' => 'password',
-                    ],
-                    'second_options' => [
-                        'label' => 'passwordVerify',
-                    ],
-                    'required' => false,
-                ])
-                ->add('firstName', 'text', [
-                    'label' => 'firstName',
-                    'required' => false,
-                ])
-                ->add('lastName', 'text', [
-                    'label' => 'lastName',
-                    'required' => false,
-                ])
-                ->add('facebookName', 'text', [
-                    'label' => 'facebookName',
-                    'required' => false,
-                    'constraints' => [
-                        new ValidFacebookName(),
-                    ],
-                ])
-                ->add('company', 'text', [
-                    'label' => 'company',
-                    'required' => false,
-                ])
-                ->add('job', 'text', [
-                    'label' => 'job',
-                    'required' => false,
-                ])
-                ->add('birthday', 'date', [
-                    'label' => 'birthday',
-                    'required' => false,
-                    'years' => range(1920, date('Y') - 6),
-                ]);
+                'label' => 'email',
+                'constraints' => [
+                    new NotBlank(),
+                    new UniqueEmail([
+                        'entityManager' => $options['em'],
+                        'currentValue' => $options['email'],
+                    ]),
+                ],
+            ])
+            ->add('username', 'text', [
+                'label' => 'username',
+                'constraints' => [
+                    new NotBlank(),
+                    new UniqueUsername([
+                        'entityManager' => $options['em'],
+                        'currentValue' => $options['username'],
+                    ]),
+                ],
+            ])
+            ->add('plainPassword', 'repeated', [
+                'type' => 'password',
+                'invalid_message' => 'password.must.match',
+                'first_options' => [
+                    'label' => 'password',
+                ],
+                'second_options' => [
+                    'label' => 'passwordVerify',
+                ],
+                'required' => false,
+            ])
+            ->add('firstName', 'text', [
+                'label' => 'firstName',
+                'required' => false,
+            ])
+            ->add('lastName', 'text', [
+                'label' => 'lastName',
+                'required' => false,
+            ])
+            ->add('facebookName', 'text', [
+                'label' => 'facebookName',
+                'required' => false,
+                'constraints' => [
+                    new ValidFacebookName(),
+                ],
+            ])
+            ->add('company', 'text', [
+                'label' => 'company',
+                'required' => false,
+            ])
+            ->add('job', 'text', [
+                'label' => 'job',
+                'required' => false,
+            ])
+            ->add('birthday', 'date', [
+                'label' => 'birthday',
+                'required' => false,
+                'years' => range(1920, date('Y') - 6),
+            ]);
     }
 
     public function getName()
