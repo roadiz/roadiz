@@ -5996,6 +5996,10 @@
           <source>tagName.alreadyExists</source>
           <target xml:lang="fr" state="translated">Ce nom d‘étiquette est déjà utilisé</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
+          <source>nodeTypeField.name.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Le nom du champ de type de nœud est déjà utilisé</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

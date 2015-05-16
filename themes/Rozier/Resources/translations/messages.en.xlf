@@ -5996,6 +5996,10 @@
           <source>tagName.alreadyExists</source>
           <target xml:lang="en" state="translated">This tag name is already used</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
+          <source>nodeTypeField.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Node-type field name already exists</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
