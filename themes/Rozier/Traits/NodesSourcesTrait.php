@@ -80,9 +80,9 @@ trait NodesSourcesTrait
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
         foreach ($fields as $field) {
             if (isset($data[$field->getName()])) {
-                static::setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
+                $this->setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
             } else {
-                static::setValueFromFieldType(null, $nodeSource, $field);
+                $this->setValueFromFieldType(null, $nodeSource, $field);
             }
         }
 
@@ -129,14 +129,15 @@ trait NodesSourcesTrait
                                       'required' => false,
                                       'attr' => [
                                           'data-desc' => '',
+                                          'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
                                       ],
                                   ]
                               );
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),
-                static::getFormTypeFromFieldType($source, $field, $this),
-                static::getFormOptionsFromFieldType($source, $field, $this->getTranslator())
+                $this->getFormTypeFromFieldType($source, $field, $this),
+                $this->getFormOptionsFromFieldType($source, $field)
             );
         }
 
@@ -152,7 +153,7 @@ trait NodesSourcesTrait
      *
      * @return AbstractType
      */
-    public static function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, $controller)
+    public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, $controller)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
@@ -198,122 +199,133 @@ trait NodesSourcesTrait
      *
      * @param  NodesSources  $nodeSource
      * @param  NodeTypeField $field
-     * @param  Translator    $translator
      *
      * @return array
      */
-    public static function getFormOptionsFromFieldType(
+    public function getFormOptionsFromFieldType(
         NodesSources $nodeSource,
-        NodeTypeField $field,
-        Translator $translator
+        NodeTypeField $field
     ) {
+        $label = $field->getLabel();
+        $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+
         switch ($field->getType()) {
             case NodeTypeField::ENUM_T:
                 return [
-                    'label' => $field->getLabel(),
-                    'empty_value' => $translator->trans('choose.value'),
+                    'label' => $label,
+                    'empty_value' => 'choose.value',
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::DATETIME_T:
                 return [
                     'date_widget' => 'single_text',
                     'date_format' => 'yyyy-MM-dd',
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'rz-datetime-field',
                     ],
                     'empty_value' => [
-                        'hour' => $translator->trans('hour'),
-                        'minute' => $translator->trans('minute'),
+                        'hour' => 'hour',
+                        'minute' => 'minute',
                     ],
                 ];
             case NodeTypeField::DATE_T:
                 return [
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'rz-date-field',
                     ],
                     'empty_value' => '',
                 ];
             case NodeTypeField::INTEGER_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'constraints' => [
                         new Type('integer'),
                     ],
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::EMAIL_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'constraints' => [
                         new \Symfony\Component\Validator\Constraints\Email(),
                     ],
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::DECIMAL_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'constraints' => [
                         new Type('double'),
                     ],
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::COLOUR_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'colorpicker-input',
                     ],
                 ];
             case NodeTypeField::GEOTAG_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'rz-geotag-field',
                     ],
                 ];
             case NodeTypeField::MARKDOWN_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'class' => 'markdown_textarea',
                         'data-desc' => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             default:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
         }
@@ -328,7 +340,7 @@ trait NodesSourcesTrait
      *
      * @return void
      */
-    public static function setValueFromFieldType($dataValue, NodesSources $nodeSource, NodeTypeField $field)
+    public function setValueFromFieldType($dataValue, NodesSources $nodeSource, NodeTypeField $field)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:

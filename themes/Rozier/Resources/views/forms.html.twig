@@ -29,7 +29,7 @@
 
 {% block documents_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget>
+    <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -66,7 +66,7 @@
 
 {% block nodes_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top nodes-widget" data-node-widget>
+    <div class="uk-form-row uk-margin-small-top nodes-widget" data-node-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -100,7 +100,7 @@
 
 {% block custom_forms_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top custom-forms-widget" data-custom-form-widget>
+    <div class="uk-form-row uk-margin-small-top custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -173,7 +173,7 @@
 {# Children node tree field #}
 {% block childrennodes_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top children-nodes-widget" data-children-nodes-widget>
+    <div class="uk-form-row uk-margin-small-top children-nodes-widget" data-children-nodes-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}

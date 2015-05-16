@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Markdown editor form field type.
@@ -49,5 +50,15 @@ class MarkdownType extends AbstractType
     public function getName()
     {
         return 'markdown';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'required' => false,
+            'attr' => [
+                'class' => 'markdown_textarea',
+            ],
+        ]);
     }
 }
