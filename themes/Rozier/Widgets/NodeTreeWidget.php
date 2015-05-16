@@ -51,6 +51,7 @@ class NodeTreeWidget extends AbstractWidget
     protected $availableTranslations = null;
     protected $stackTree = false;
     protected $filters = null;
+    protected $canReorder = true;
 
     /**
      * @param Request                            $request           Current kernel request
@@ -136,6 +137,20 @@ class NodeTreeWidget extends AbstractWidget
             $criteria['tags'] = $this->tag;
         }
 
+        $ordering = [
+            'position' => 'ASC',
+        ];
+
+        if (null !== $parent &&
+            $parent->getChildrenOrder() !== 'order' &&
+            $parent->getChildrenOrder() !== 'position') {
+            $ordering = [
+                $parent->getChildrenOrder() => $parent->getChildrenOrderDirection(),
+            ];
+
+            $this->canReorder = false;
+        }
+
         /*
          * Manage get request to filter list
          */
@@ -144,7 +159,7 @@ class NodeTreeWidget extends AbstractWidget
             $this->controller->getService('em'),
             'RZ\Roadiz\Core\Entities\Node',
             $criteria,
-            ['position' => 'ASC']
+            $ordering
         );
 
         if (true === $this->stackTree) {
@@ -204,5 +219,15 @@ class NodeTreeWidget extends AbstractWidget
         }
 
         return $this->nodes;
+    }
+
+    /**
+     * Gets the value of canReorder.
+     *
+     * @return boolean
+     */
+    public function getCanReorder()
+    {
+        return $this->canReorder;
     }
 }

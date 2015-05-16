@@ -240,19 +240,4 @@ class Tag extends AbstractDateTimedPositioned
     {
         return new TagHandler($this);
     }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        parent::prePersist();
-
-        /*
-         * If no plain password is present, we must generate one
-         */
-        if ($this->getTranslatedTags()->count() === 0) {
-            throw new \Exception("Cannot create a tag without a tag-translation", 1);
-        }
-    }
 }

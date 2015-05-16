@@ -30,14 +30,13 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
-use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -94,23 +93,25 @@ class UsersController extends RozierApp
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-            $form = $this->buildEditForm($user);
+
+            $form = $this->createForm(new UserType(), $user, [
+                'em' => $this->getService('em'),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+            ]);
 
             $form->handleRequest();
 
             if ($form->isValid()) {
-                try {
-                    $this->editUser($form->getData(), $user, $request);
-                    $msg = $this->getTranslator()->trans(
-                        'user.%name%.updated',
-                        ['%name%' => $user->getUsername()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                } catch (FacebookUsernameNotFoundException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
+                $this->updateProfileImage($user);
+                $this->getService('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'user.%name%.updated',
+                    ['%name%' => $user->getUsername()]
+                );
+                $this->publishConfirmMessage($request, $msg);
+
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -143,24 +144,24 @@ class UsersController extends RozierApp
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-            $form = $this->buildAddForm($user);
+
+            $form = $this->createForm(new UserType(), $user, [
+                'em' => $this->getService('em'),
+            ]);
 
             $form->handleRequest();
 
             if ($form->isValid()) {
-                try {
-                    $this->addUser($form->getData(), $user);
-                    $user->getViewer()->sendSignInConfirmation();
+                $this->updateProfileImage($user);
+                $this->getService('em')->persist($user);
+                $this->getService('em')->flush();
 
-                    $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
-                    $this->publishConfirmMessage($request, $msg);
+                $user->getViewer()->sendSignInConfirmation();
 
-                    return $this->redirect($this->generateUrl('usersHomePage'));
-                } catch (FacebookUsernameNotFoundException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
+                $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
+                $this->publishConfirmMessage($request, $msg);
+
+                return $this->redirect($this->generateUrl('usersHomePage'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -195,17 +196,12 @@ class UsersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['userId'] == $user->getId()) {
-                try {
-                    $this->deleteUser($form->getData(), $user);
-
-                    $msg = $this->getTranslator()->trans(
-                        'user.%name%.deleted',
-                        ['%name%' => $user->getUsername()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
+                $this->deleteUser($form->getData(), $user);
+                $msg = $this->getTranslator()->trans(
+                    'user.%name%.deleted',
+                    ['%name%' => $user->getUsername()]
+                );
+                $this->publishConfirmMessage($request, $msg);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -219,91 +215,6 @@ class UsersController extends RozierApp
             return $this->throw404();
         }
     }
-    /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
-     */
-    private function editUser($data, User $user, Request $request)
-    {
-        if ($data['username'] != $user->getUsername() &&
-            $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->usernameExists($data['username'])
-        ) {
-            throw new EntityAlreadyExistsException(
-                $this->getTranslator()->trans(
-                    'user.%name%.cannot_update.name_already_exists',
-                    ['%name%' => $data['username']]
-                ),
-                1
-            );
-        }
-        if ($data['email'] != $user->getEmail() &&
-            $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->emailExists($data['email'])) {
-            throw new EntityAlreadyExistsException(
-                $this->getTranslator()->trans(
-                    'user.%name%.cannot_update.email_already_exists',
-                    ['%email%' => $data['email']]
-                ),
-                1
-            );
-        }
-
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            if ($key == "chroot") {
-                if (count($value) > 1) {
-                    $msg = $this->getTranslator()->trans('chroot.limited.one');
-                    $this->publishErrorMessage($request, $msg);
-                }
-                if ($value !== null) {
-                    $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
-                    $user->$setter($n);
-                } else {
-                    $user->$setter(null);
-                }
-            } else {
-                $user->$setter($value);
-            }
-        }
-
-        $this->updateProfileImage($user);
-        $this->getService('em')->flush();
-    }
-
-    /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
-     */
-    private function addUser($data, User $user)
-    {
-        if ($this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->usernameExists($data['username']) ||
-            $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->emailExists($data['email'])) {
-            throw new EntityAlreadyExistsException(
-                $this->getTranslator()->trans(
-                    'user.%name%.cannot_create_already_exists',
-                    ['%name%' => $data['username']]
-                ),
-                1
-            );
-        }
-
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            $user->$setter($value);
-        }
-
-        $this->updateProfileImage($user);
-        $this->getService('em')->persist($user);
-        $this->getService('em')->flush();
-    }
-
     /**
      * @param RZ\Roadiz\Core\Entities\User $user
      */
@@ -343,108 +254,6 @@ class UsersController extends RozierApp
     {
         $this->getService('em')->remove($user);
         $this->getService('em')->flush();
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\User $user
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildAddForm(User $user)
-    {
-        $builder = $this->createFormBuilder();
-
-        $this->buildCommonFormFields($builder, $user);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\User $user
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildEditForm(User $user)
-    {
-        $defaults = [
-            'email' => $user->getEmail(),
-            'username' => $user->getUsername(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'company' => $user->getCompany(),
-            'job' => $user->getJob(),
-            'birthday' => $user->getBirthday(),
-            'facebookName' => $user->getFacebookName(),
-        ];
-
-        $builder = $this->getService('formFactory')
-                        ->createNamedBuilder('source', 'form', $defaults);
-        $this->buildCommonFormFields($builder, $user);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * Build common fields between add and edit user forms.
-     *
-     * @param FormBuilder $builder
-     * @param RZ\Roadiz\Core\Entities\User $user
-     */
-    private function buildCommonFormFields(&$builder, User $user)
-    {
-        $builder->add('email', 'email', [
-                    'label' => 'email',
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])
-                ->add('username', 'text', [
-                    'label' => 'username',
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])
-                ->add('plainPassword', 'repeated', [
-                    'type' => 'password',
-                    'invalid_message' => 'password.must.match',
-                    'first_options' => [
-                        'label' => 'password',
-                    ],
-                    'second_options' => [
-                        'label' => 'passwordVerify',
-                    ],
-                    'required' => false,
-                ])
-                ->add('firstName', 'text', [
-                    'label' => 'firstName',
-                    'required' => false,
-                ])
-                ->add('lastName', 'text', [
-                    'label' => 'lastName',
-                    'required' => false,
-                ])
-                ->add('facebookName', 'text', [
-                    'label' => 'facebookName',
-                    'required' => false,
-                    'constraints' => [
-                        new ValidFacebookName(),
-                    ],
-                ])
-                ->add('company', 'text', [
-                    'label' => 'company',
-                    'required' => false,
-                ])
-                ->add('job', 'text', [
-                    'label' => 'job',
-                    'required' => false,
-                ])
-                ->add('birthday', 'date', [
-                    'label' => 'birthday',
-                    'required' => false,
-                    'years' => range(1920, date('Y') - 6),
-                ]);
-
-        return $builder;
     }
 
     /**

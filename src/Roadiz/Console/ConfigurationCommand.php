@@ -29,12 +29,11 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
@@ -80,7 +79,7 @@ class ConfigurationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text="";
+        $text = "";
 
         $configuration = new YamlConfiguration();
         if (false === $configuration->load()) {
@@ -91,14 +90,14 @@ class ConfigurationCommand extends Command
             $configuration->setDevMode(true);
             $configuration->writeConfiguration();
 
-            $text .= '<info>Dev mode has been changed to true</info>'.PHP_EOL;
+            $text .= '<info>Dev mode has been changed to true</info>' . PHP_EOL;
         }
         if ($input->getOption('disable-devmode')) {
             $configuration->setDevMode(false);
             $configuration->writeConfiguration();
 
-            $text .= '<info>Dev mode has been changed to false</info>'.PHP_EOL;
-            $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.'.PHP_EOL;
+            $text .= '<info>Dev mode has been changed to false</info>' . PHP_EOL;
+            $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.' . PHP_EOL;
         }
 
         if ($input->getOption('enable-install')) {
@@ -107,18 +106,18 @@ class ConfigurationCommand extends Command
 
             $configuration->writeConfiguration();
 
-            $text .= '<info>Install mode has been changed to true</info>'.PHP_EOL;
+            $text .= '<info>Install mode has been changed to true</info>' . PHP_EOL;
         }
         if ($input->getOption('disable-install')) {
             $configuration->setInstall(false);
             $configuration->writeConfiguration();
 
-            $text .= '<info>Install mode has been changed to false</info>'.PHP_EOL;
-            $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.'.PHP_EOL;
+            $text .= '<info>Install mode has been changed to false</info>' . PHP_EOL;
+            $text .= 'Do not forget to empty all cache and purge XCache/APC caches manually.' . PHP_EOL;
         }
 
         if ($input->getOption('generate-htaccess')) {
-            $text .= '<info>Generating .htaccess files…</info>'.PHP_EOL;
+            $text .= '<info>Generating .htaccess files…</info>' . PHP_EOL;
             // Simple deny access files
             $paths = [
                 "/conf",
@@ -137,10 +136,10 @@ class ConfigurationCommand extends Command
                 $filePath = ROADIZ_ROOT . $path . "/.htaccess";
                 if (file_exists(ROADIZ_ROOT . $path) &&
                     !file_exists($filePath)) {
-                    file_put_contents($filePath, "deny from all".PHP_EOL);
-                    $text .= '    — '.$filePath.PHP_EOL;
+                    file_put_contents($filePath, "deny from all" . PHP_EOL);
+                    $text .= '    — ' . $filePath . PHP_EOL;
                 } else {
-                    $text .= '    — Can’t write '.$filePath.", file already exists or folder is absent.".PHP_EOL;
+                    $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
                 }
             }
 
@@ -181,13 +180,12 @@ class ConfigurationCommand extends Command
 
             if (file_exists(ROADIZ_ROOT) &&
                 !file_exists($filePath)) {
-                file_put_contents($filePath, $mainHtaccess.PHP_EOL);
-                $text .= '    — '.$filePath.PHP_EOL;
+                file_put_contents($filePath, $mainHtaccess . PHP_EOL);
+                $text .= '    — ' . $filePath . PHP_EOL;
             } else {
-                $text .= '    — Can’t write '.$filePath.", file already exists or folder is absent.".PHP_EOL;
+                $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
             }
         }
-
 
         $output->writeln($text);
     }

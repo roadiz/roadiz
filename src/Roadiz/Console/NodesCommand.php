@@ -29,11 +29,9 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,62 +44,64 @@ use Symfony\Component\Console\Output\OutputInterface;
 class NodesCommand extends Command
 {
     private $dialog;
+    private $entityManager;
 
     protected function configure()
     {
         $this->setName('core:nodes')
-            ->setDescription('Manage nodes')
-            ->addArgument(
-                'node-name',
-                InputArgument::OPTIONAL,
-                'Node name'
-            )
-            ->addArgument(
-                'node-type',
-                InputArgument::OPTIONAL,
-                'Node-type name'
-            )
-            ->addArgument(
-                'locale',
-                InputArgument::OPTIONAL,
-                'Translation locale'
-            )
-            ->addOption(
-                'create',
-                null,
-                InputOption::VALUE_NONE,
-                'Create a node'
-            )
-            ->addOption(
-                'delete',
-                null,
-                InputOption::VALUE_NONE,
-                'Delete requested node'
-            )
-            ->addOption(
-                'update',
-                null,
-                InputOption::VALUE_NONE,
-                'Update requested node'
-            )
-            ->addOption(
-                'hide',
-                null,
-                InputOption::VALUE_NONE,
-                'Hide requested node'
-            )
-            ->addOption(
-                'show',
-                null,
-                InputOption::VALUE_NONE,
-                'Show requested node'
-            );
+             ->setDescription('Manage nodes')
+             ->addArgument(
+                 'node-name',
+                 InputArgument::OPTIONAL,
+                 'Node name'
+             )
+             ->addArgument(
+                 'node-type',
+                 InputArgument::OPTIONAL,
+                 'Node-type name'
+             )
+             ->addArgument(
+                 'locale',
+                 InputArgument::OPTIONAL,
+                 'Translation locale'
+             )
+             ->addOption(
+                 'create',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Create a node'
+             )
+             ->addOption(
+                 'delete',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Delete requested node'
+             )
+             ->addOption(
+                 'update',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Update requested node'
+             )
+             ->addOption(
+                 'hide',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Hide requested node'
+             )
+             ->addOption(
+                 'show',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Show requested node'
+             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->dialog = $this->getHelperSet()->get('dialog');
-        $text="";
+        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $text = "";
         $nodeName = $input->getArgument('node-name');
         $typeName = $input->getArgument('node-type');
         $locale = $input->getArgument('locale');
@@ -110,21 +110,21 @@ class NodesCommand extends Command
             $typeName &&
             $input->getOption('create')
         ) {
-            $type = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->findOneBy(['name'=>$typeName]);
+            $type = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                         ->findOneBy(['name' => $typeName]);
             $translation = null;
 
             if ($locale) {
-                $translation = Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy(['locale'=>$locale]);
+                $translation = $this->entityManager
+                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                    ->findOneBy(['locale' => $locale]);
             }
 
             if ($translation === null) {
-                $translation = Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneBy([], ['id'=> 'ASC']);
+                $translation = $this->entityManager
+                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                    ->findOneBy([], ['id' => 'ASC']);
             }
 
             if ($type !== null &&
@@ -135,19 +135,19 @@ class NodesCommand extends Command
             }
 
         } elseif ($nodeName) {
-            $node = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findOneBy(['nodeName'=>$nodeName]);
+            $node = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                         ->findOneBy(['nodeName' => $nodeName]);
 
             if ($node !== null) {
-                $text .= $node->getOneLineSummary().$node->getOneLineSourceSummary();
+                $text .= $node->getOneLineSummary() . $node->getOneLineSourceSummary();
             } else {
-                $text = '<info>Node “'.$nodeName.'” does not exists…</info>'.PHP_EOL;
+                $text = '<info>Node “' . $nodeName . '” does not exists…</info>' . PHP_EOL;
             }
         } else {
-            $nodes = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findAll();
+            $nodes = $this->entityManager
+                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->findAll();
 
             foreach ($nodes as $key => $node) {
                 $text .= $node->getOneLineSummary();
@@ -174,10 +174,10 @@ class NodesCommand extends Command
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
         $node->setNodeName($nodeName);
-        Kernel::getService('em')->persist($node);
+        $this->entityManager->persist($node);
 
         // Source
-        $sourceClass = "GeneratedNodeSources\\".$type->getSourceEntityClassName();
+        $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
 
         $fields = $type->getFields();
@@ -185,16 +185,16 @@ class NodesCommand extends Command
         foreach ($fields as $field) {
             $fValue = $this->dialog->ask(
                 $output,
-                '<question>[Field '.$field->getLabel().']</question> : ',
+                '<question>[Field ' . $field->getLabel() . ']</question> : ',
                 ''
             );
-            $setterName = 'set'.ucwords($field->getName());
+            $setterName = 'set' . ucwords($field->getName());
             $source->$setterName($fValue);
         }
 
-        Kernel::getService('em')->persist($source);
-        Kernel::getService('em')->flush();
-        $text = '<info>Node “'.$nodeName.'” created…</info>'.PHP_EOL;
+        $this->entityManager->persist($source);
+        $this->entityManager->flush();
+        $text = '<info>Node “' . $nodeName . '” created…</info>' . PHP_EOL;
 
         return $text;
     }

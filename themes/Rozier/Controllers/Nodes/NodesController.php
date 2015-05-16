@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
+use Themes\Rozier\Forms;
 
 /**
  * Nodes controller
@@ -217,12 +218,15 @@ class NodesController extends RozierApp
             /*
              * Handle main form
              */
-            $form = $this->buildEditForm($node);
+            $form = $this->createForm(new Forms\NodeType(), $node, [
+                'em' => $this->getService('em'),
+                'nodeName' => $node->getNodeName()
+            ]);
             $form->handleRequest();
 
             if ($form->isValid()) {
                 try {
-                    $this->editNode($form->getData(), $node);
+                    $this->getService('em')->flush();
                     /*
                      * Dispatch event
                      */

@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Bags\RolesBag;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -47,160 +46,162 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UsersCommand extends Command
 {
     private $dialog;
+    private $entityManager;
 
     protected function configure()
     {
         $this->setName('core:users')
-            ->setDescription('Manage users')
-            ->addArgument(
-                'username',
-                InputArgument::OPTIONAL,
-                'User name'
-            )
-            ->addOption(
-                'create',
-                null,
-                InputOption::VALUE_NONE,
-                'Create a new user'
-            )
-            ->addOption(
-                'delete',
-                null,
-                InputOption::VALUE_NONE,
-                'Delete an user'
-            )
-            ->addOption(
-                'add-roles',
-                null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Add roles to a user'
-            )
-            ->addOption(
-                'regenerate',
-                null,
-                InputOption::VALUE_NONE,
-                'Regenerate user’s password'
-            )
-            ->addOption(
-                'picture',
-                null,
-                InputOption::VALUE_NONE,
-                'Try to grab user picture from facebook'
-            )
-            ->addOption(
-                'disable',
-                null,
-                InputOption::VALUE_NONE,
-                'Disable user'
-            )
-            ->addOption(
-                'enable',
-                null,
-                InputOption::VALUE_NONE,
-                'Enable user'
-            );
+             ->setDescription('Manage users')
+             ->addArgument(
+                 'username',
+                 InputArgument::OPTIONAL,
+                 'User name'
+             )
+             ->addOption(
+                 'create',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Create a new user'
+             )
+             ->addOption(
+                 'delete',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Delete an user'
+             )
+             ->addOption(
+                 'add-roles',
+                 null,
+                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                 'Add roles to a user'
+             )
+             ->addOption(
+                 'regenerate',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Regenerate user’s password'
+             )
+             ->addOption(
+                 'picture',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Try to grab user picture from facebook'
+             )
+             ->addOption(
+                 'disable',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Disable user'
+             )
+             ->addOption(
+                 'enable',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Enable user'
+             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->dialog = $this->getHelperSet()->get('dialog');
-        $text="";
+        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $text = "";
         $name = $input->getArgument('username');
 
         if ($name) {
-            $user = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
-                ->findOneBy(['username'=>$name]);
+            $user = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\User')
+                         ->findOneBy(['username' => $name]);
 
             if ($user !== null) {
                 if ($input->getOption('enable')) {
                     if ($user !== null && $user->setEnabled(true)) {
-                        Kernel::getService('em')->flush();
-                        $text = '<info>User enabled…</info>'.PHP_EOL;
+                        $this->entityManager->flush();
+                        $text = '<info>User enabled…</info>' . PHP_EOL;
                     } else {
-                        $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
+                        $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('disable')) {
                     if ($user !== null && $user->setEnabled(false)) {
-                        Kernel::getService('em')->flush();
-                        $text = '<info>User disabled…</info>'.PHP_EOL;
+                        $this->entityManager->flush();
+                        $text = '<info>User disabled…</info>' . PHP_EOL;
                     } else {
-                        $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
+                        $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('delete')) {
                     if ($user !== null && $this->dialog->askConfirmation(
                         $output,
-                        '<question>Do you really want to delete user “'.$user->getUsername().'”?</question> : ',
+                        '<question>Do you really want to delete user “' . $user->getUsername() . '”?</question> : ',
                         false
                     )) {
-                        Kernel::getService('em')->remove($user);
-                        Kernel::getService('em')->flush();
-                        $text = '<info>User deleted…</info>'.PHP_EOL;
+                        $this->entityManager->remove($user);
+                        $this->entityManager->flush();
+                        $text = '<info>User deleted…</info>' . PHP_EOL;
                     } else {
-                        $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
+                        $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('picture')) {
                     if ($user !== null) {
                         $facebook = new FacebookPictureFinder($user->getFacebookName());
                         if (false !== $url = $facebook->getPictureUrl()) {
                             $user->setPictureUrl($url);
-                            Kernel::getService('em')->flush();
-                            $text = '<info>User profile pciture updated…</info>'.PHP_EOL;
+                            $this->entityManager->flush();
+                            $text = '<info>User profile pciture updated…</info>' . PHP_EOL;
                         }
                     } else {
-                        $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
+                        $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('regenerate')) {
                     if ($user !== null && $this->dialog->askConfirmation(
                         $output,
-                        '<question>Do you really want to regenerate user “'.$user->getUsername().'” password?</question> : ',
+                        '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question> : ',
                         false
                     )) {
                         $user->setPlainPassword(UserHandler::generatePassword());
 
-                        Kernel::getService('em')->flush();
-                        $text = '<info>User password regenerated…</info>'.PHP_EOL;
-                        $text .= '<info>Password “'.$user->getPlainPassword().'”.</info>'.PHP_EOL;
+                        $this->entityManager->flush();
+                        $text = '<info>User password regenerated…</info>' . PHP_EOL;
+                        $text .= '<info>Password “' . $user->getPlainPassword() . '”.</info>' . PHP_EOL;
 
                     } else {
-                        $text = '<error>Requested user is not setup yet…</error>'.PHP_EOL;
+                        $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('add-roles') && $user !== null) {
-                    $text = '<info>Adding roles to '.$user->getUsername().'</info>'.PHP_EOL;
+                    $text = '<info>Adding roles to ' . $user->getUsername() . '</info>' . PHP_EOL;
 
                     foreach ($input->getOption('add-roles') as $role) {
                         $user->addRole(RolesBag::get($role));
-                        $text .= '<info>Role: '.$role.'</info>'.PHP_EOL;
+                        $text .= '<info>Role: ' . $role . '</info>' . PHP_EOL;
                     }
 
-                    Kernel::getService('em')->flush();
+                    $this->entityManager->flush();
                 } else {
-                    $text = '<info>'.$user.'</info>'.PHP_EOL;
+                    $text = '<info>' . $user . '</info>' . PHP_EOL;
                 }
             } else {
                 if ($input->getOption('create')) {
                     $this->executeUserCreation($name, $input, $output);
                 } else {
-                    $text = '<error>User “'.$name.'” does not exist… use --create to add a new user.</error>'.PHP_EOL;
+                    $text = '<error>User “' . $name . '” does not exist… use --create to add a new user.</error>' . PHP_EOL;
                 }
             }
         } else {
-            $text = '<info>Installed users…</info>'.PHP_EOL;
-            $users = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
-                ->findAll();
+            $text = '<info>Installed users…</info>' . PHP_EOL;
+            $users = $this->entityManager
+                          ->getRepository('RZ\Roadiz\Core\Entities\User')
+                          ->findAll();
 
             if (count($users) > 0) {
-                $text .= ' | '.PHP_EOL;
+                $text .= ' | ' . PHP_EOL;
                 foreach ($users as $user) {
                     $text .=
-                        ' |_ '.$user->getUsername()
-                        .' — <info>'.($user->isEnabled()?'enabled':'disabled').'</info>'
-                        .' — <comment>'.implode(', ', $user->getRoles()).'</comment>'
-                        .PHP_EOL;
+                    ' |_ ' . $user->getUsername()
+                    . ' — <info>' . ($user->isEnabled() ? 'enabled' : 'disabled') . '</info>'
+                    . ' — <comment>' . implode(', ', $user->getRoles()) . '</comment>'
+                    . PHP_EOL;
                 }
             } else {
-                $text = '<info>No available users</info>'.PHP_EOL;
+                $text = '<info>No available users</info>' . PHP_EOL;
             }
         }
 
@@ -229,7 +230,7 @@ class UsersCommand extends Command
                 ''
             );
         } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
-            Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
+            $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
         );
 
         $user->setEmail($email);
@@ -251,12 +252,12 @@ class UsersCommand extends Command
 
         $user->setPlainPassword(UserHandler::generatePassword());
 
-        Kernel::getService('em')->persist($user);
+        $this->entityManager->persist($user);
         $user->getViewer()->sendSignInConfirmation();
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
-        $text = '<info>User “'.$username.'”<'.$email.'> created…</info>'.PHP_EOL;
-        $text .= '<info>Password “'.$user->getPlainPassword().'”.</info>'.PHP_EOL;
+        $text = '<info>User “' . $username . '”<' . $email . '> created…</info>' . PHP_EOL;
+        $text .= '<info>Password “' . $user->getPlainPassword() . '”.</info>' . PHP_EOL;
         $output->writeln($text);
 
         return $user;
@@ -271,14 +272,14 @@ class UsersCommand extends Command
      */
     public function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
-        $role = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                ->findOneBy(['name'=>$roleName]);
+        $role = $this->entityManager
+                     ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                     ->findOneBy(['name' => $roleName]);
 
         if ($role === null) {
             $role = new Role($roleName);
-            Kernel::getService('em')->persist($role);
-            Kernel::getService('em')->flush();
+            $this->entityManager->persist($role);
+            $this->entityManager->flush();
         }
 
         return $role;

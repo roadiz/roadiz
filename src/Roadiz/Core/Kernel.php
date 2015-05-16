@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DialogHelper;
@@ -170,6 +171,7 @@ class Kernel implements ServiceProviderInterface
             'em' => new EntityManagerHelper($this->container['em']),
             'dialog' => new DialogHelper(),
             'progress' => new ProgressHelper(),
+            'solr' => new SolrHelper($this->container['solr']),
         ]);
         $application->setHelperSet($helperSet);
 
@@ -184,6 +186,7 @@ class Kernel implements ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\SolrCommand);
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
         $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
+        $application->add(new \RZ\Roadiz\Console\ThemeInstallCommand);
 
         // Use default Doctrine commands
         ConsoleRunner::addCommands($application);

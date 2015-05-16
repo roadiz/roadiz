@@ -478,30 +478,6 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="44" approved="yes">
-        <source>user.%name%.cannot_update.name_already_exists</source>
-        <target xml:lang="en">User %name% can't be updated, its username already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">496</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="45" approved="yes">
-        <source>user.%name%.cannot_update.email_already_exists</source>
-        <target xml:lang="en">User %name% can't be updated, its email address already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">509</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="46" approved="yes">
-        <source>user.%name%.cannot_create_already_exists</source>
-        <target xml:lang="en">User %name% can't be created, it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">540</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="47" approved="yes">
         <source>user.facebook_name.%name%._does_not_exist</source>
         <target xml:lang="en">Facebook profile name (%name%) does not exist.</target>
@@ -792,30 +768,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
           <context context-type="linenumber">408</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="74" approved="yes">
-        <source>tag.%name%.no_update.already_exists</source>
-        <target xml:lang="en">Tag %name% could not be updated, it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">539</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="75" approved="yes">
-        <source>tag.%name%.no_creation.already_exists</source>
-        <target xml:lang="en">Tag %name% could not be created, it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">567</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="76" approved="yes">
-        <source>tag.%name%.already_added</source>
-        <target xml:lang="en">Tag %name% already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">632</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="77" approved="yes">
@@ -1148,42 +1100,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">634</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="108" approved="yes">
-        <source>node.%name%.noCreation.urlAlias.alreadyExists</source>
-        <target xml:lang="en">Node %name% can't be created, an url-alias already exists with this name.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">671</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="109" approved="yes">
-        <source>node.%name%.noCreation.alreadyExists</source>
-        <target xml:lang="en">Node %name% can't be created, a node already exists with this name.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">690</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">737</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="110" approved="yes">
-        <source>node.%name%.no_creation.url_alias.already_exists</source>
-        <target xml:lang="en">Node %name% can't be created, an url-alias already exists with this name.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">705</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="111" approved="yes">
-        <source>node.%name%.noUpdate.alreadyExists</source>
-        <target xml:lang="en">Node %name% can't be updated, a node with the same name already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">780</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="112" approved="yes">
@@ -6031,6 +5947,54 @@
       <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
           <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
           <target xml:lang="en" state="translated">Roadiz can’t update itself, your destination folder is not writable…</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists">
+          <source>nodeName.alreadyExists</source>
+          <target xml:lang="en" state="translated">This node name is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias">
+          <source>nodeName.alreadyExists.as.urlAlias</source>
+          <target xml:lang="en" state="translated">This node name is already used as an Url alias</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.available">
+          <source>new.version.available</source>
+          <target xml:lang="en" state="translated">A new version is available</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
+          <source>node.childrenOrder</source>
+          <target xml:lang="en" state="translated">Children nodes are ordered by</target>
+      <alt-trans><target xml:lang="en">Children nodes ordering by</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
+          <source>node.childrenOrderDirection</source>
+          <target xml:lang="en" state="translated">Children nodes order direction</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="createdAt">
+          <source>createdAt</source>
+          <target xml:lang="en" state="translated">Creation date</target>
+      <alt-trans><target xml:lang="en">Created at</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="updatedAt">
+          <source>updatedAt</source>
+          <target xml:lang="en" state="translated">Update date</target>
+      <alt-trans><target xml:lang="en">Updated at</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="ascendant">
+          <source>ascendant</source>
+          <target xml:lang="en" state="translated">Ascendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="descendant">
+          <source>descendant</source>
+          <target xml:lang="en" state="translated">Descendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email.alreadyExists">
+          <source>email.alreadyExists</source>
+          <target xml:lang="en" state="translated">Email address is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="username.alreadyExists">
+          <source>username.alreadyExists</source>
+          <target xml:lang="en" state="translated">Username is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
+          <source>tagName.alreadyExists</source>
+          <target xml:lang="en" state="translated">This tag name is already used</target>
       </trans-unit>
     </body>
   </file>

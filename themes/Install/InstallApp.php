@@ -32,13 +32,15 @@ namespace Themes\Install;
 
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\Console\CacheCommand;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -175,7 +177,7 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    $fixtures = new Fixtures();
+                    $fixtures = new Fixtures($this->getService("em"));
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -251,9 +253,15 @@ class InstallApp extends AppController
                      */
                     $this->getService('session')->invalidate();
 
-                    CacheCommand::clearDoctrine();
-                    CacheCommand::clearTranslations();
-                    CacheCommand::clearRouteCollections();
+                    $clearers = [
+                        new DoctrineCacheClearer($this->getService('em')),
+                        new TranslationsCacheClearer(),
+                        new RoutingCacheClearer(),
+                    ];
+                    foreach ($clearers as $clearer) {
+                        $clearer->clear();
+                    }
+
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */

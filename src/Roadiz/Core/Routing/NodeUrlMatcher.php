@@ -109,7 +109,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 }
 
                 $node = $this->parseNode($tokens, $translation);
-                if ($node !== null) {
+                /*
+                 * Prevent displaying home node using its nodeName
+                 */
+                if ($node !== null &&
+                    !$node->isHome() &&
+                    $this->theme->getHomeNode() !== $node) {
                     /*
                      * Try with nodeName
                      */

@@ -31,21 +31,19 @@
 
 namespace Themes\Rozier\Traits;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
 {
-
     /**
      * @param array                              $data
      * @param RZ\Roadiz\Core\Entities\NodeType    $type
@@ -55,43 +53,18 @@ trait NodesTrait
      */
     protected function createNode($data, NodeType $type, Translation $translation)
     {
-        if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
-            $msg = $this->getTranslator()->trans(
-                'node.%name%.no_creation.urlAlias.alreadyExists',
-                ['%name%' => $data['nodeName']]
-            );
+        $node = new Node($type);
+        $node->setNodeName($data['nodeName']);
+        $this->getService('em')->persist($node);
 
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
-        if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
-            $msg = $this->getTranslator()->trans(
-                'node.%name%.no_creation.already_exists',
-                ['%name%' => $data['nodeName']]
-            );
+        $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
+        $source = new $sourceClass($node, $translation);
+        $source->setTitle($data['nodeName']);
 
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
+        $this->getService('em')->persist($source);
+        $this->getService('em')->flush();
 
-        try {
-            $node = new Node($type);
-            $node->setNodeName($data['nodeName']);
-            $this->getService('em')->persist($node);
-
-            $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
-            $source = new $sourceClass($node, $translation);
-            $source->setTitle($data['nodeName']);
-
-            $this->getService('em')->persist($source);
-            $this->getService('em')->flush();
-
-            return $node;
-        } catch (\Exception $e) {
-            $msg = $this->getTranslator()->trans(
-                'node.%name%.noCreation.alreadyExists',
-                ['%name%' => $node->getNodeName()]
-            );
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
+        return $node;
     }
 
     /**
@@ -103,31 +76,12 @@ trait NodesTrait
      */
     protected function createChildNode($data, Node $parentNode = null, Translation $translation = null)
     {
-        if ($this->urlAliasExists(StringHandler::slugify($data['nodeName']))) {
-            $msg = $this->getTranslator()->trans(
-                'node.%name%.no_creation.url_alias.already_exists',
-                ['%name%' => $data['nodeName']]
-            );
+        $type = $this->getService('em')
+                     ->find(
+                         'RZ\Roadiz\Core\Entities\NodeType',
+                         (int) $data['nodeTypeId']
+                     );
 
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
-        if ($this->nodeNameExists(StringHandler::slugify($data['nodeName']))) {
-            $msg = $this->getTranslator()->trans(
-                'node.%name%.no_creation.already_exists',
-                ['%name%' => $data['nodeName']]
-            );
-
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
-        $type = null;
-
-        if (!empty($data['nodeTypeId'])) {
-            $type = $this->getService('em')
-                         ->find(
-                             'RZ\Roadiz\Core\Entities\NodeType',
-                             (int) $data['nodeTypeId']
-                         );
-        }
         if (null === $type) {
             throw new \Exception("Cannot create a node without a valid node-type", 1);
         }
@@ -147,58 +101,6 @@ trait NodesTrait
         $this->getService('em')->flush();
 
         return $node;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return boolean
-     */
-    protected function urlAliasExists($name)
-    {
-        return (boolean) $this->getService('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-                              ->exists($name);
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return boolean
-     */
-    protected function nodeNameExists($name)
-    {
-        return (boolean) $this->getService('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                              ->exists($name);
-    }
-
-    /**
-     * Edit node base parameters.
-     *
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     */
-    protected function editNode($data, Node $node)
-    {
-        $testingNodeName = StringHandler::slugify($data['nodeName']);
-        if ($testingNodeName != $node->getNodeName() &&
-            ($this->nodeNameExists($testingNodeName) ||
-                $this->urlAliasExists($testingNodeName))) {
-            $msg = $this->getTranslator()->trans('node.%name%.noUpdate.alreadyExists', ['%name%' => $data['nodeName']]);
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
-        foreach ($data as $key => $value) {
-            if ($key == 'home' &&
-                true === (boolean) $value) {
-                $node->getHandler()->makeHome();
-            } else {
-                $setter = 'set' . ucwords($key);
-                $node->$setter($value);
-            }
-        }
-
-        $this->getService('em')->flush();
     }
 
     /**
@@ -283,7 +185,7 @@ trait NodesTrait
                                 ],
                             ])
                             ->add('translationId', 'choice', [
-                                'label' => $this->getTranslator()->trans('translation'),
+                                'label' => 'translation',
                                 'choices' => $choices,
                                 'required' => true,
                             ]);
@@ -309,7 +211,10 @@ trait NodesTrait
                                 'data' => (int) $node->getId(),
                             ])
                             ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
-                                'label' => $this->getTranslator()->trans('nodeType'),
+                                'label' => 'nodeType',
+                                'constraints' => [
+                                    new NotBlank(),
+                                ],
                             ]);
 
             return $builder->getForm();
@@ -329,14 +234,20 @@ trait NodesTrait
 
         $builder = $this->createFormBuilder($defaults)
                         ->add('nodeName', 'text', [
-                            'label' => $this->getTranslator()->trans('nodeName'),
+                            'label' => 'nodeName',
                             'constraints' => [
                                 new NotBlank(),
+                                new UniqueNodeName([
+                                    'entityManager' => $this->getService('em'),
+                                ]),
                             ],
                         ])
-                        ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
-                            'label' => $this->getTranslator()->trans('nodeType'),
-                        ]);
+            ->add('nodeTypeId', new \RZ\Roadiz\CMS\Forms\NodeTypesType(), [
+                'label' => 'nodeType',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         if (null !== $parentNode) {
             $builder->add('parentId', 'hidden', [
@@ -346,58 +257,6 @@ trait NodesTrait
                 ],
             ]);
         }
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\Node  $node
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditForm(Node $node)
-    {
-        $defaults = [
-            'nodeName' => $node->getNodeName(),
-            'home' => $node->isHome(),
-            'priority' => $node->getPriority(),
-            'dynamicNodeName' => $node->isDynamicNodeName(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add(
-                            'nodeName',
-                            'text',
-                            [
-                                'label' => $this->getTranslator()->trans('nodeName'),
-                                'constraints' => [new NotBlank()],
-                            ]
-                        )
-                        ->add(
-                            'priority',
-                            'number',
-                            [
-                                'label' => $this->getTranslator()->trans('priority'),
-                                'constraints' => [new NotBlank()],
-                            ]
-                        )
-                        ->add(
-                            'home',
-                            'checkbox',
-                            [
-                                'label' => $this->getTranslator()->trans('node.isHome'),
-                                'required' => false,
-                                'attr' => ['class' => 'rz-boolean-checkbox'],
-                            ]
-                        )
-                        ->add(
-                            'dynamicNodeName',
-                            'checkbox',
-                            [
-                                'label' => $this->getTranslator()->trans('node.dynamicNodeName'),
-                                'required' => false,
-                                'attr' => ['class' => 'rz-boolean-checkbox'],
-                            ]
-                        );
 
         return $builder->getForm();
     }

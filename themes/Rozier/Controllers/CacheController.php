@@ -30,7 +30,11 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Console\CacheCommand;
+use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -52,10 +56,15 @@ class CacheController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-            CacheCommand::clearDoctrine();
-            CacheCommand::clearRouteCollections();
-            CacheCommand::clearTranslations();
-            CacheCommand::clearTemplates();
+            $clearers = [
+                new DoctrineCacheClearer($this->getService('em')),
+                new TranslationsCacheClearer(),
+                new RoutingCacheClearer(),
+                new TemplatesCacheClearer(),
+            ];
+            foreach ($clearers as $clearer) {
+                $clearer->clear();
+            }
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
@@ -109,7 +118,8 @@ class CacheController extends RozierApp
         $form->handleRequest();
 
         if ($form->isValid()) {
-            CacheCommand::clearCachedAssets();
+            $clearer = new AssetsClearer();
+            $clearer->clear();
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
