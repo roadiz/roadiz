@@ -29,15 +29,14 @@
  */
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueFontVariant;
 use RZ\Roadiz\CMS\Forms\FontVariantsType;
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\All;
 
 /**
  * FontType.
@@ -87,7 +86,7 @@ class FontType extends AbstractType
                                 'application/font-otf',
                                 'application/x-font-otf',
                                 'application/font-ttf',
-                                'application/x-font-ttf'
+                                'application/x-font-ttf',
                             ],
                             'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
                         ]),
@@ -102,7 +101,7 @@ class FontType extends AbstractType
                             'mimeTypes' => [
                                 'application/font-woff',
                                 'application/x-font-woff',
-                                "application/octet-stream"
+                                "application/octet-stream",
                             ],
                             'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
                         ]),
@@ -116,7 +115,7 @@ class FontType extends AbstractType
                         new File([
                             'mimeTypes' => [
                                 'application/font-woff2',
-                                "application/octet-stream"
+                                "application/octet-stream",
                             ],
                             'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
                         ]),

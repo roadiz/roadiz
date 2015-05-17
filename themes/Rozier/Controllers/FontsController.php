@@ -33,16 +33,15 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFontVariant;
-use Themes\Rozier\Forms\FontType;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\Form;
+use Themes\Rozier\Forms\FontType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -192,9 +191,9 @@ class FontsController extends RozierApp
                     new UniqueFontVariant([
                         'entityManager' => $this->getService('em'),
                         'currentName' => $font->getName(),
-                        'currentVariant' => $font->getVariant()
+                        'currentVariant' => $font->getVariant(),
                     ]),
-                ]
+                ],
             ]);
             $form->handleRequest($request);
 
