@@ -491,7 +491,7 @@ class Font extends AbstractDateTimed
      *
      * @return self
      */
-    public function setEotFile( /*File */$eotFile)
+    public function setEotFile(File $eotFile)
     {
         $this->eotFile = $eotFile;
 
