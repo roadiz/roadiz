@@ -24,49 +24,23 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueTagNameValidator.php
+ * @file UniqueFontVariant.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueTagNameValidator extends ConstraintValidator
+class UniqueFontVariant extends Constraint
 {
-    public function validate($value, Constraint $constraint)
+    public $entityManager = null;
+    public $currentName = null;
+    public $currentVariant = null;
+
+    public $message = 'font.variant.alreadyExists';
+
+    public function getTargets()
     {
-        $value = StringHandler::slugify($value);
-
-
-        /*
-         * If value is already the node name
-         * do nothing.
-         */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
-            return;
-        }
-
-        if (null !== $constraint->entityManager) {
-            if (true === $this->tagNameExists($value, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
-            }
-        } else {
-            $this->context->addViolation('UniqueTagNameValidator constraint requires a valid EntityManager');
-        }
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return boolean
-     */
-    protected function tagNameExists($name, $entityManager)
-    {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                             ->findOneByTagName($name);
-
-        return (null !== $entity);
+        return Constraint::CLASS_CONSTRAINT;
     }
 }

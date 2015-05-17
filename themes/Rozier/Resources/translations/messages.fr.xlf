@@ -1178,22 +1178,6 @@
           <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="120" approved="yes">
-        <source>nodeType.%name%.cannot_rename_already_exists</source>
-        <target xml:lang="fr">Le type de nœud «%name%» ne peut pas être renommé, car il existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">265</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="121" approved="yes">
-        <source>nodeType.%name%.already_exists</source>
-        <target xml:lang="fr">Le type de nœud «%name%» existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">294</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="122" approved="yes">
         <source>nodeType.displayName</source>
         <target xml:lang="fr">Nom affiché</target>
@@ -1468,22 +1452,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
           <context context-type="linenumber">378</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="147" approved="yes">
-        <source>font.variant.already_exists</source>
-        <target xml:lang="fr">La variante de fonte existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">401</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="148" approved="yes">
-        <source>font.name.already_exists</source>
-        <target xml:lang="fr">La famille de fonte existe déjà.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">537</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="149" approved="yes">
@@ -4257,10 +4225,6 @@
         <source>document.embedId</source>
         <target xml:lang="fr">Identifiant du média</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="%field%.already_exists" approved="yes">
-        <source>%field%.already_exists</source>
-        <target xml:lang="fr">Le champ «%field%» existe déjà.</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="fr">Le nom «%field%» est un mot réservé.</target>
@@ -5995,6 +5959,38 @@
       <trans-unit xml:space="preserve" id="tagName.alreadyExists">
           <source>tagName.alreadyExists</source>
           <target xml:lang="fr" state="translated">Ce nom d‘étiquette est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
+          <source>nodeTypeField.name.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Le nom du champ de type de nœud est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
+          <source>nodeType.name.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Le nom du type de nœud est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
+          <source>color.should.be.formatted.in.hexadecimal</source>
+          <target xml:lang="fr" state="translated">La couleur doit être écrite en notation hexadécimale</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
+          <source>customFormField.name.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Le nom du champ de formulaire personnalisé est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
+          <source>customForm.name.alreadyExists</source>
+          <target xml:lang="fr" state="translated">Le nom du formulaire personnalisé est déjà utilisé</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ip">
+          <source>ip</source>
+          <target xml:lang="fr" state="translated">IP</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.variant.alreadyExists">
+          <source>font.variant.alreadyExists</source>
+          <target xml:lang="fr" state="translated">La variant de fonte est existe déjà</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file">
+          <source>file.is_not_a.valid.font.file</source>
+          <target xml:lang="fr" state="translated">Ce fichier n’est pas un fichier de fonte valide</target>
       </trans-unit>
     </body>
   </file>

@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueTagNameValidator.php
+ * @file UniqueCustomFormFieldNameValidator.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
@@ -33,12 +33,11 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueTagNameValidator extends ConstraintValidator
+class UniqueCustomFormFieldNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $value = StringHandler::slugify($value);
-
+        $value = StringHandler::variablize($value);
 
         /*
          * If value is already the node name
@@ -48,12 +47,13 @@ class UniqueTagNameValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== $constraint->entityManager) {
-            if (true === $this->tagNameExists($value, $constraint->entityManager)) {
+        if (null !== $constraint->entityManager &&
+            null !== $constraint->customForm) {
+            if (true === $this->nameExists($value, $constraint->customForm, $constraint->entityManager)) {
                 $this->context->addViolation($constraint->message);
             }
         } else {
-            $this->context->addViolation('UniqueTagNameValidator constraint requires a valid EntityManager');
+            $this->context->addViolation('UniqueCustomFormFieldNameValidator constraint requires a valid EntityManager');
         }
     }
 
@@ -62,10 +62,13 @@ class UniqueTagNameValidator extends ConstraintValidator
      *
      * @return boolean
      */
-    protected function tagNameExists($name, $entityManager)
+    protected function nameExists($name, $customForm, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                             ->findOneByTagName($name);
+        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\CustomFormField')
+                             ->findOneBy([
+                                 'name' => $name,
+                                 'customForm' => $customForm,
+                             ]);
 
         return (null !== $entity);
     }

@@ -1178,22 +1178,6 @@
           <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="120" approved="yes">
-        <source>nodeType.%name%.cannot_rename_already_exists</source>
-        <target xml:lang="en">Can't rename node-type "%name%", it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">265</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="121" approved="yes">
-        <source>nodeType.%name%.already_exists</source>
-        <target xml:lang="en">Node-type "%name%" already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">294</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="122" approved="yes">
         <source>nodeType.displayName</source>
         <target xml:lang="en">Display name</target>
@@ -1468,22 +1452,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
           <context context-type="linenumber">378</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="147" approved="yes">
-        <source>font.variant.already_exists</source>
-        <target xml:lang="en">Font style variant already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">401</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="148" approved="yes">
-        <source>font.name.already_exists</source>
-        <target xml:lang="en">Font name already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">537</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="149" approved="yes">
@@ -4257,10 +4225,6 @@
         <source>document.embedId</source>
         <target xml:lang="en">Platform media identifier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="%field%.already_exists" approved="yes">
-        <source>%field%.already_exists</source>
-        <target xml:lang="en">Field “%field%” already exists.</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="en">“%field%” name is a reserved word, please choose another one.</target>
@@ -5995,6 +5959,38 @@
       <trans-unit xml:space="preserve" id="tagName.alreadyExists">
           <source>tagName.alreadyExists</source>
           <target xml:lang="en" state="translated">This tag name is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
+          <source>nodeTypeField.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Node-type field name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
+          <source>nodeType.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Node-type name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
+          <source>color.should.be.formatted.in.hexadecimal</source>
+          <target xml:lang="en" state="translated">Color should be formatted using hexadecimal notation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
+          <source>customFormField.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Custom-form field name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
+          <source>customForm.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Custom form name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ip">
+          <source>ip</source>
+          <target xml:lang="en" state="translated">IP</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.variant.alreadyExists">
+          <source>font.variant.alreadyExists</source>
+          <target xml:lang="en" state="translated">Font variant already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file">
+          <source>file.is_not_a.valid.font.file</source>
+          <target xml:lang="en" state="translated">This file is not a valid font file</target>
       </trans-unit>
     </body>
   </file>

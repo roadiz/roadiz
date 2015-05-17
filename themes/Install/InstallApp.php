@@ -110,7 +110,7 @@ class InstallApp extends AppController
     public function indexAction(Request $request)
     {
         $form = $this->buildLanguageForm($request);
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $locale = $form->getData()['language'];
@@ -170,7 +170,7 @@ class InstallApp extends AppController
         $userForm = $this->buildUserForm($request);
 
         if ($userForm !== null) {
-            $userForm->handleRequest();
+            $userForm->handleRequest($request);
 
             if ($userForm->isValid()) {
                 /*
@@ -230,7 +230,7 @@ class InstallApp extends AppController
         $doneForm = $this->buildDoneForm($request);
 
         if ($doneForm !== null) {
-            $doneForm->handleRequest();
+            $doneForm->handleRequest($request);
 
             if ($doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {

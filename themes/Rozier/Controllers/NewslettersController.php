@@ -117,7 +117,7 @@ class NewslettersController extends RozierApp
                              ],
                          ])
                          ->getForm();
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -202,7 +202,7 @@ class NewslettersController extends RozierApp
                  * Form
                  */
                 $form = $this->buildEditSourceForm($node, $source);
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);

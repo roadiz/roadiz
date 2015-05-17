@@ -82,7 +82,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $form = $this->buildAddForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -123,7 +123,7 @@ class RolesController extends RozierApp
                      ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
             $form = $this->buildDeleteForm($role);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {
@@ -170,7 +170,7 @@ class RolesController extends RozierApp
         if ($role !== null &&
             !$role->required()) {
             $form = $this->buildEditForm($role);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {

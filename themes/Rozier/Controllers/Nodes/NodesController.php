@@ -162,7 +162,7 @@ class NodesController extends RozierApp
              */
             $translationForm = $this->buildTranslateForm($node);
             if (null !== $translationForm) {
-                $translationForm->handleRequest();
+                $translationForm->handleRequest($request);
 
                 if ($translationForm->isValid()) {
                     try {
@@ -188,7 +188,7 @@ class NodesController extends RozierApp
              */
             $stackTypesForm = $this->buildStackTypesForm($node);
             if (null !== $stackTypesForm) {
-                $stackTypesForm->handleRequest();
+                $stackTypesForm->handleRequest($request);
 
                 if ($stackTypesForm->isValid()) {
                     try {
@@ -222,7 +222,7 @@ class NodesController extends RozierApp
                 'em' => $this->getService('em'),
                 'nodeName' => $node->getNodeName()
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -291,7 +291,7 @@ class NodesController extends RozierApp
                              ],
                          ])
                          ->getForm();
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -369,7 +369,7 @@ class NodesController extends RozierApp
 
         if (null !== $translation) {
             $form = $this->buildAddChildForm($parentNode, $translation);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -432,7 +432,7 @@ class NodesController extends RozierApp
             $this->assignation['node'] = $node;
 
             $form = $this->buildDeleteForm($node);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
@@ -476,7 +476,7 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
 
         $form = $this->buildEmptyTrashForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $this->getService("securityContext")->getToken()->getUser();
@@ -523,7 +523,7 @@ class NodesController extends RozierApp
             $this->assignation['node'] = $node;
 
             $form = $this->buildDeleteForm($node);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {

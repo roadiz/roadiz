@@ -97,7 +97,7 @@ class CustomFormAnswersController extends RozierApp
 
             $form = $this->buildDeleteForm($customFormAnswer);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId()) {

@@ -24,36 +24,35 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueTagNameValidator.php
+ * @file UniqueFontVariantValidator.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueTagNameValidator extends ConstraintValidator
+class UniqueFontVariantValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $value = StringHandler::slugify($value);
-
-
         /*
          * If value is already the node name
          * do nothing.
          */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
+        if (null !== $constraint->currentName &&
+            null !== $constraint->currentVariant &&
+            $value->getVariant() == $constraint->currentVariant) {
             return;
         }
 
         if (null !== $constraint->entityManager) {
-            if (true === $this->tagNameExists($value, $constraint->entityManager)) {
+            if (true === $this->variantExists($value, $constraint->entityManager)) {
                 $this->context->addViolation($constraint->message);
             }
         } else {
-            $this->context->addViolation('UniqueTagNameValidator constraint requires a valid EntityManager');
+            $this->context->addViolation('UniqueFontVariantValidator constraint requires a valid EntityManager');
         }
     }
 
@@ -62,10 +61,13 @@ class UniqueTagNameValidator extends ConstraintValidator
      *
      * @return boolean
      */
-    protected function tagNameExists($name, $entityManager)
+    protected function variantExists(Font $font, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                             ->findOneByTagName($name);
+        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Font')
+                             ->findOneBy([
+                                 'name' => $font->getName(),
+                                 'variant' => $font->getVariant(),
+                             ]);
 
         return (null !== $entity);
     }

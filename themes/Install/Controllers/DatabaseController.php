@@ -61,7 +61,7 @@ class DatabaseController extends InstallApp
         $databaseForm = $this->buildDatabaseForm($request, $config);
 
         if ($databaseForm !== null) {
-            $databaseForm->handleRequest();
+            $databaseForm->handleRequest($request);
 
             if ($databaseForm->isValid()) {
                 try {

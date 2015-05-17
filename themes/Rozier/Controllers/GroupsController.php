@@ -81,7 +81,7 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $form = $this->buildAddForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -121,7 +121,7 @@ class GroupsController extends RozierApp
 
         if ($group !== null) {
             $form = $this->buildDeleteForm($group);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
@@ -166,7 +166,7 @@ class GroupsController extends RozierApp
             $this->assignation['group'] = $group;
 
             $form = $this->buildEditForm($group);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
@@ -213,7 +213,7 @@ class GroupsController extends RozierApp
         if ($group !== null) {
             $this->assignation['group'] = $group;
             $form = $this->buildEditRolesForm($group);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $role = $this->addRole($form->getData(), $group);
@@ -260,7 +260,7 @@ class GroupsController extends RozierApp
             $this->assignation['role'] = $role;
 
             $form = $this->buildRemoveRoleForm($group, $role);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->removeRole($form->getData(), $group, $role);
@@ -300,7 +300,7 @@ class GroupsController extends RozierApp
         if ($group !== null) {
             $this->assignation['group'] = $group;
             $form = $this->buildEditUsersForm($group);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $user = $this->addUser($form->getData(), $group);
@@ -347,7 +347,7 @@ class GroupsController extends RozierApp
             $this->assignation['user'] = $user;
 
             $form = $this->buildRemoveUserForm($group, $user);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->removeUser($form->getData(), $group, $user);

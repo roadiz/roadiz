@@ -194,7 +194,7 @@ class ThemeController extends InstallApp
         $infosForm = $this->buildInformationsForm($request);
 
         if ($infosForm !== null) {
-            $infosForm->handleRequest();
+            $infosForm->handleRequest($request);
 
             if ($infosForm->isValid()) {
                 /*

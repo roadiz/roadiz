@@ -48,7 +48,7 @@ class LoginResetController extends RozierApp
 
         if (null !== $user) {
             $form = $this->buildLoginResetForm($token);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $user->setConfirmationToken(null);

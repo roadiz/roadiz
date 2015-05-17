@@ -145,12 +145,12 @@ class SearchController extends RozierApp
             "label" => $this->getTranslator()->trans("search.a.node"),
             "attr" => ["class" => "uk-button uk-button-primary"],
         ])->getForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         $builderNodeType = $this->buildNodeTypeForm();
 
         $nodeTypeForm = $builderNodeType->getForm();
-        $nodeTypeForm->handleRequest();
+        $nodeTypeForm->handleRequest($request);
 
         if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
             $response->prepare($request);
@@ -207,12 +207,12 @@ class SearchController extends RozierApp
             "attr" => ["class" => "uk-button rz-no-ajax"],
         ]);
         $form = $builder->getForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         $builderNodeType = $this->buildNodeTypeForm($nodetypeId);
 
         $nodeTypeForm = $builderNodeType->getForm();
-        $nodeTypeForm->handleRequest();
+        $nodeTypeForm->handleRequest($request);
 
         if (null !== $response = $this->handleNodeTypeForm($nodeTypeForm)) {
             return $response;

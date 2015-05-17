@@ -84,7 +84,7 @@ class ThemesController extends RozierApp
 
         $form = $this->buildAddForm($theme);
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -126,7 +126,7 @@ class ThemesController extends RozierApp
 
         if ($theme !== null) {
             $form = $this->buildEditForm($theme);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -171,7 +171,7 @@ class ThemesController extends RozierApp
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['themeId'] == $theme->getId()) {

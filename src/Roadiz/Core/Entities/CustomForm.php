@@ -87,6 +87,7 @@ class CustomForm extends AbstractDateTimed
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+        $this->setName($displayName);
 
         return $this;
     }

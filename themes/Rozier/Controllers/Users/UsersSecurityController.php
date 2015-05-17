@@ -56,7 +56,7 @@ class UsersSecurityController extends RozierApp
             $this->assignation['user'] = $user;
             $form = $this->buildEditSecurityForm($user);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->editUserSecurity($form->getData(), $user, $request);

@@ -59,7 +59,7 @@ class UsersRolesController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
             $form = $this->buildEditRolesForm($user);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $role = $this->addUserRole($form->getData(), $user);
@@ -111,7 +111,7 @@ class UsersRolesController extends RozierApp
             $this->assignation['role'] = $role;
 
             $form = $this->buildRemoveRoleForm($user, $role);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->removeUserRole($form->getData(), $user);
