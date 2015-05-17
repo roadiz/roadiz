@@ -32,7 +32,6 @@ namespace Themes\Rozier\Forms;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
-use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

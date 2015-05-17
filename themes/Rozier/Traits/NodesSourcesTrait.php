@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\Type;
 
 trait NodesSourcesTrait
@@ -137,7 +136,7 @@ trait NodesSourcesTrait
             $sourceBuilder->add(
                 $field->getName(),
                 $this->getFormTypeFromFieldType($source, $field, $this),
-                $this->getFormOptionsFromFieldType($source, $field)
+                $this->getFormOptionsFromFieldType($field)
             );
         }
 
@@ -203,7 +202,6 @@ trait NodesSourcesTrait
      * @return array
      */
     public function getFormOptionsFromFieldType(
-        NodesSources $nodeSource,
         NodeTypeField $field
     ) {
         $label = $field->getLabel();

@@ -56,6 +56,12 @@ class AppController extends Controller
     const FONT_TOKEN_INTENTION = 'font_request';
 
     /**
+     * Theme entity.
+     *
+     * @var RZ\Roadiz\Core\Entities\Theme;
+     */
+    protected $theme = null;
+    /**
      * Theme name.
      *
      * @var string
@@ -338,23 +344,25 @@ class AppController extends Controller
      *
      * @return \RZ\Roadiz\Core\Entities\Theme
      */
-    public static function getTheme()
+    public function getTheme()
     {
-        $className = static::getCalledClass();
-        while (!StringHandler::endsWith($className, "App")) {
-            $className = get_parent_class($className);
-            if ($className === false) {
-                $className = "";
-                break;
+        if (null === $this->theme) {
+            $className = static::getCalledClass();
+            while (!StringHandler::endsWith($className, "App")) {
+                $className = get_parent_class($className);
+                if ($className === false) {
+                    $className = "";
+                    break;
+                }
+                if (strpos($className, "\\") !== 0) {
+                    $className = "\\" . $className;
+                }
             }
-            if (strpos($className, "\\") !== 0) {
-                $className = "\\" . $className;
-            }
+            $this->theme = $this->getService('em')
+                                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                                ->findOneByClassName($className);
         }
-        $theme = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneByClassName($className);
-        return $theme;
+        return $this->theme;
     }
 
     /**
@@ -375,7 +383,7 @@ class AppController extends Controller
 
     protected function getHome(Translation $translation = null)
     {
-        $theme = static::getTheme();
+        $theme = $this->getTheme();
 
         if ($theme !== null) {
             $home = $theme->getHomeNode();
@@ -410,7 +418,7 @@ class AppController extends Controller
 
     protected function getRoot()
     {
-        $theme = static::getTheme();
+        $theme = $this->getTheme();
         return $theme->getRoot();
     }
 
