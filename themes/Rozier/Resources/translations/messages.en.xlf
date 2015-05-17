@@ -1454,22 +1454,6 @@
           <context context-type="linenumber">378</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="147" approved="yes">
-        <source>font.variant.already_exists</source>
-        <target xml:lang="en">Font style variant already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">401</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="148" approved="yes">
-        <source>font.name.already_exists</source>
-        <target xml:lang="en">Font name already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">537</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="149" approved="yes">
         <source>setting.imported</source>
         <target xml:lang="en">Setting has been successfully imported.</target>
@@ -5999,6 +5983,14 @@
       <trans-unit xml:space="preserve" id="ip">
           <source>ip</source>
           <target xml:lang="en" state="translated">IP</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.variant.alreadyExists">
+          <source>font.variant.alreadyExists</source>
+          <target xml:lang="en" state="translated">Font variant already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file">
+          <source>file.is_not_a.valid.font.file</source>
+          <target xml:lang="en" state="translated">This file is not a valid font file</target>
       </trans-unit>
     </body>
   </file>

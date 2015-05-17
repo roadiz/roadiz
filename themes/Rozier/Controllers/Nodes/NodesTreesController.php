@@ -95,7 +95,7 @@ class NodesTreesController extends RozierApp
              * Handle bulk tag form
              */
             $tagNodesForm = $this->buildBulkTagForm();
-            $tagNodesForm->handleRequest();
+            $tagNodesForm->handleRequest($request);
             if ($tagNodesForm->isValid()) {
                 $data = $tagNodesForm->getData();
 
@@ -163,7 +163,7 @@ class NodesTreesController extends RozierApp
                     $request->get('deleteForm')['referer'],
                     $nodesIds
                 );
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $msg = $this->bulkDeleteNodes($form->getData());
@@ -219,7 +219,7 @@ class NodesTreesController extends RozierApp
                     false
                 );
 
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $msg = $this->bulkStatusNodes($form->getData());

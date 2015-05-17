@@ -88,7 +88,7 @@ class UrlAliasesController extends RozierApp
              */
             $seoForm = $this->buildEditSEOForm($source);
             $this->assignation['seoForm'] = $seoForm->createView();
-            $seoForm->handleRequest();
+            $seoForm->handleRequest($request);
 
             if ($seoForm->isValid()) {
                 if ($this->editSEO($seoForm->getData(), $source)) {
@@ -116,7 +116,7 @@ class UrlAliasesController extends RozierApp
                 $deleteForm = $this->buildDeleteUrlAliasForm($alias);
 
                 // Match edit
-                $editForm->handleRequest();
+                $editForm->handleRequest($request);
                 if ($editForm->isValid() &&
                     $editForm->getData()['urlaliasId'] == $alias->getId()) {
                     if ($this->editUrlAlias($editForm->getData(), $alias)) {
@@ -137,7 +137,7 @@ class UrlAliasesController extends RozierApp
                 }
 
                 // Match delete
-                $deleteForm->handleRequest();
+                $deleteForm->handleRequest($request);
 
                 if ($deleteForm->isValid() &&
                     $deleteForm->getData()['urlaliasId'] == $alias->getId()) {
@@ -165,7 +165,7 @@ class UrlAliasesController extends RozierApp
              * Main ADD url alias form
              */
             $form = $this->buildAddUrlAliasForm($node);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {

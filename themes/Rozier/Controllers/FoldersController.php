@@ -80,7 +80,7 @@ class FoldersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $form = $this->buildAddForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -122,7 +122,7 @@ class FoldersController extends RozierApp
 
         if (null !== $folder) {
             $form = $this->buildDeleteForm($folder);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['folderId'] == $folder->getId()) {
@@ -168,7 +168,7 @@ class FoldersController extends RozierApp
 
         if ($folder !== null) {
             $form = $this->buildEditForm($folder);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['folderId'] == $folder->getId()) {

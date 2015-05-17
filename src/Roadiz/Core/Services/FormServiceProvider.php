@@ -33,6 +33,7 @@ use Pimple\Container;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
 
@@ -56,6 +57,7 @@ class FormServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['formFactory'] = function ($c) {
             return Forms::createFormFactoryBuilder()
+                        ->addExtension(new HttpFoundationExtension())
                         ->addExtension(new CsrfExtension($c['csrfProvider']))
                         ->addExtension(new ValidatorExtension($c['formValidator']))
                         ->getFormFactory();

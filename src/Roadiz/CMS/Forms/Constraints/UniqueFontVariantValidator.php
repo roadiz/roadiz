@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,42 +24,51 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FontVariantsType.php
+ * @file UniqueFontVariantValidator.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\CMS\Forms;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
 use RZ\Roadiz\Core\Entities\Font;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * Font variants selector form field type.
- */
-class FontVariantsType extends AbstractType
+class UniqueFontVariantValidator extends ConstraintValidator
 {
-    /**
-     * {@inheritdoc}
-     * @param OptionsResolverInterface $resolver [description]
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function validate($value, Constraint $constraint)
     {
-        $resolver->setDefaults([
-            'choices' => Font::$variantToHuman,
-        ]);
+        /*
+         * If value is already the node name
+         * do nothing.
+         */
+        if (null !== $constraint->currentName &&
+            null !== $constraint->currentVariant &&
+            $value->getVariant() == $constraint->currentVariant) {
+            return;
+        }
+
+        if (null !== $constraint->entityManager) {
+            if (true === $this->variantExists($value, $constraint->entityManager)) {
+                $this->context->addViolation($constraint->message);
+            }
+        } else {
+            $this->context->addViolation('UniqueFontVariantValidator constraint requires a valid EntityManager');
+        }
     }
+
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return boolean
      */
-    public function getParent()
+    protected function variantExists(Font $font, $entityManager)
     {
-        return 'choice';
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'fontVariants';
+        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Font')
+                             ->findOneBy([
+                                 'name' => $font->getName(),
+                                 'variant' => $font->getVariant(),
+                             ]);
+
+        return (null !== $entity);
     }
 }

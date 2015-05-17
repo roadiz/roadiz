@@ -92,7 +92,7 @@ class CustomFormsController extends RozierApp
                 'em' => $this->getService('em'),
                 'name' => $customForm->getName(),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -143,7 +143,7 @@ class CustomFormsController extends RozierApp
             $form = $this->createForm(new CustomFormType(), $customForm, [
                 'em' => $this->getService('em'),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 try {
                     $this->getService('em')->persist($customForm);
@@ -194,7 +194,7 @@ class CustomFormsController extends RozierApp
 
             $form = $this->buildDeleteForm($customForm);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['customFormId'] == $customForm->getId()) {

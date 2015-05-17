@@ -53,7 +53,7 @@ class CacheController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
         $form = $this->buildDeleteDoctrineForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $clearers = [
@@ -115,7 +115,7 @@ class CacheController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
         $form = $this->buildDeleteSLIRForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $clearer = new AssetsClearer();

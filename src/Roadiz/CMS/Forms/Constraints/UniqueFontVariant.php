@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,42 +24,23 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FontVariantsType.php
+ * @file UniqueFontVariant.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\CMS\Forms;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use RZ\Roadiz\Core\Entities\Font;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraint;
 
-/**
- * Font variants selector form field type.
- */
-class FontVariantsType extends AbstractType
+class UniqueFontVariant extends Constraint
 {
-    /**
-     * {@inheritdoc}
-     * @param OptionsResolverInterface $resolver [description]
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public $entityManager = null;
+    public $currentName = null;
+    public $currentVariant = null;
+
+    public $message = 'font.variant.alreadyExists';
+
+    public function getTargets()
     {
-        $resolver->setDefaults([
-            'choices' => Font::$variantToHuman,
-        ]);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'choice';
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'fontVariants';
+        return Constraint::CLASS_CONSTRAINT;
     }
 }

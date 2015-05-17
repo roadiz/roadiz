@@ -89,7 +89,7 @@ class SettingGroupsController extends RozierApp
             $this->assignation['settingGroup'] = $settingGroup;
 
             $form = $this->buildEditForm($settingGroup);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -136,7 +136,7 @@ class SettingGroupsController extends RozierApp
 
             $form = $this->buildAddForm($settingGroup);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -184,7 +184,7 @@ class SettingGroupsController extends RozierApp
 
             $form = $this->buildDeleteForm($settingGroup);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['settingGroupId'] == $settingGroup->getId()) {

@@ -91,7 +91,7 @@ class NodesSourcesController extends RozierApp
                  * Form
                  */
                 $form = $this->buildEditSourceForm($node, $source);
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
@@ -147,7 +147,7 @@ class NodesSourcesController extends RozierApp
 
         $form = $builder->getForm();
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $node = $ns->getNode();

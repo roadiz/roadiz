@@ -32,6 +32,8 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueFontVariant;
+use Themes\Rozier\Forms\FontType;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
@@ -40,6 +42,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Form;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -80,12 +83,23 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
-        $form = $this->buildAddForm();
-        $form->handleRequest();
+        $font = new Font();
+
+        $form = $this->createForm(new FontType(), $font, [
+            'em' => $this->getService('em'),
+            'constraints' => [
+                new UniqueFontVariant([
+                    'entityManager' => $this->getService('em'),
+                ]),
+            ],
+        ]);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
-                $font = $this->addFont($form); // only pass form for file handling
+                $font->setHash($this->getService('config')['security']['secret']);
+                $this->getService('em')->persist($font);
+                $this->getService('em')->flush();
 
                 $msg = $this->getTranslator()->trans('font.%name%.created', ['%name%' => $font->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -123,12 +137,14 @@ class FontsController extends RozierApp
 
         if (null !== $font) {
             $form = $this->buildDeleteForm($font);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['fontId'] == $font->getId()) {
                 try {
-                    $this->deleteFont($form->getData(), $font);
+                    $this->getService('em')->remove($font);
+                    $this->getService('em')->flush();
+
                     $msg = $this->getTranslator()->trans(
                         'font.%name%.deleted',
                         ['%name%' => $font->getName()]
@@ -168,13 +184,25 @@ class FontsController extends RozierApp
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
-            $form = $this->buildEditForm($font);
-            $form->handleRequest();
+            $form = $this->createForm(new FontType(), $font, [
+                'em' => $this->getService('em'),
+                'name' => $font->getName(),
+                'variant' => $font->getVariant(),
+                'constraints' => [
+                    new UniqueFontVariant([
+                        'entityManager' => $this->getService('em'),
+                        'currentName' => $font->getName(),
+                        'currentVariant' => $font->getVariant()
+                    ]),
+                ]
+            ]);
+            $form->handleRequest($request);
 
-            if ($form->isValid() &&
-                $form->getData()['fontId'] == $font->getId()) {
+            if ($form->isValid()) {
                 try {
-                    $this->editFont($form, $font); // only pass form for file handling
+                    $font->setHash($this->getService('config')['security']['secret']);
+                    $this->getService('em')->flush();
+
                     $msg = $this->getTranslator()->trans(
                         'font.%name%.updated',
                         ['%name%' => $font->getName()]
@@ -258,20 +286,6 @@ class FontsController extends RozierApp
     }
 
     /**
-     * Build add font form with name constraint.
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildAddForm()
-    {
-        $builder = $this->createFormBuilder();
-
-        $this->buildCommonFormFields($builder);
-
-        return $builder->getForm();
-    }
-
-    /**
      * Build delete font form with name constraint.
      * @param RZ\Roadiz\Core\Entities\Font $font
      *
@@ -285,269 +299,5 @@ class FontsController extends RozierApp
                         ]);
 
         return $builder->getForm();
-    }
-
-    /**
-     * Build edit font form with name constraint.
-     * @param RZ\Roadiz\Core\Entities\Font $font
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditForm(Font $font)
-    {
-        $defaults = [
-            'name' => $font->getName(),
-            'variant' => $font->getVariant(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('fontId', 'hidden', [
-                            'data' => $font->getId(),
-                        ]);
-
-        $this->buildCommonFormFields($builder);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * Build common fields between add and edit font forms.
-     *
-     * @param FormBuilder $builder
-     */
-    private function buildCommonFormFields(&$builder)
-    {
-        $builder->add('name', 'text', [
-                    'label' => 'font.name',
-                ])
-                ->add('eotFile', 'file', [
-                    'label' => 'font.eotFile',
-                    'required' => false,
-                ])
-                ->add('svgFile', 'file', [
-                    'label' => 'font.svgFile',
-                    'required' => false,
-                ])
-                ->add('otfFile', 'file', [
-                    'label' => 'font.otfFile',
-                    'required' => false,
-                ])
-                ->add('woffFile', 'file', [
-                    'label' => 'font.woffFile',
-                    'required' => false,
-                ])
-                ->add('woff2File', 'file', [
-                    'label' => 'font.woff2File',
-                    'required' => false,
-                ])
-                ->add(
-                    'variant',
-                    new \RZ\Roadiz\CMS\Forms\FontVariantsType(),
-                    [
-                        'label' => 'font.variant',
-                    ]
-                );
-
-        return $builder;
-    }
-
-    /**
-     * @param \Symfony\Component\Form\Form $rawData
-     *
-     * @return RZ\Roadiz\Core\Entities\Font
-     */
-    protected function addFont(\Symfony\Component\Form\Form $rawData)
-    {
-
-        $data = $rawData->getData();
-
-        if (isset($data['name'])) {
-            $existing = $this->getService('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Font')
-                             ->findOneBy(['name' => $data['name'], 'variant' => $data['variant']]);
-
-            if ($existing !== null) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.variant.already_exists"), 1);
-            }
-
-            $font = new Font();
-            $font->setName($data['name']);
-            $font->setHash($this->getService('config')['security']['secret']);
-            $font->setVariant($data['variant']);
-
-            $this->uploadFontFiles($rawData, $font);
-
-            $this->getService('em')->persist($font);
-            $this->getService('em')->flush();
-
-            return $font;
-        } else {
-            throw new \RuntimeException("Font name is not defined", 1);
-        }
-
-        return null;
-    }
-
-    /**
-     * Process font file uploads.
-     * @param \Symfony\Component\Form\Form $data
-     * @param RZ\Roadiz\Core\Entities\Font  $font
-     *
-     * @return
-     */
-    protected function uploadFontFiles(\Symfony\Component\Form\Form $data, Font $font)
-    {
-        try {
-            if (!empty($data['eotFile'])) {
-                $eotFile = $data['eotFile']->getData();
-                $uploadedEOTFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $eotFile['tmp_name'],
-                    $eotFile['name'],
-                    $eotFile['type'],
-                    $eotFile['size'],
-                    $eotFile['error']
-                );
-                if ($uploadedEOTFile !== null &&
-                    $uploadedEOTFile->getError() == UPLOAD_ERR_OK &&
-                    $uploadedEOTFile->isValid()) {
-                    $font->setEOTFilename($uploadedEOTFile->getClientOriginalName());
-                    $uploadedEOTFile->move(Font::getFilesFolder() . '/' . $font->getFolder(), $font->getEOTFilename());
-                }
-            }
-        } catch (FileNotFoundException $e) {
-            // When empty file do nothing
-        }
-        try {
-            if (!empty($data['woffFile'])) {
-                $woffFile = $data['woffFile']->getData();
-                $uploadedWOFFFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $woffFile['tmp_name'],
-                    $woffFile['name'],
-                    $woffFile['type'],
-                    $woffFile['size'],
-                    $woffFile['error']
-                );
-                if ($uploadedWOFFFile !== null &&
-                    $uploadedWOFFFile->getError() == UPLOAD_ERR_OK &&
-                    $uploadedWOFFFile->isValid()) {
-                    $font->setWOFFFilename($uploadedWOFFFile->getClientOriginalName());
-                    $uploadedWOFFFile->move(Font::getFilesFolder() . '/' . $font->getFolder(), $font->getWOFFFilename());
-                }
-            }
-        } catch (FileNotFoundException $e) {
-            // When empty file do nothing
-        }
-        try {
-            if (!empty($data['woff2File'])) {
-                $woff2File = $data['woff2File']->getData();
-                $uploadedWOFF2File = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $woff2File['tmp_name'],
-                    $woff2File['name'],
-                    $woff2File['type'],
-                    $woff2File['size'],
-                    $woff2File['error']
-                );
-                if ($uploadedWOFF2File !== null &&
-                    $uploadedWOFF2File->getError() == UPLOAD_ERR_OK &&
-                    $uploadedWOFF2File->isValid()) {
-                    $font->setWOFF2Filename($uploadedWOFF2File->getClientOriginalName());
-                    $uploadedWOFF2File->move(
-                        Font::getFilesFolder() . '/' . $font->getFolder(),
-                        $font->getWOFF2Filename()
-                    );
-                }
-            }
-        } catch (FileNotFoundException $e) {
-            // When empty file do nothing
-        }
-        try {
-            if (!empty($data['otfFile'])) {
-                $otfFile = $data['otfFile']->getData();
-                $uploadedOTFFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $otfFile['tmp_name'],
-                    $otfFile['name'],
-                    $otfFile['type'],
-                    $otfFile['size'],
-                    $otfFile['error']
-                );
-                if (null !== $uploadedOTFFile &&
-                    $uploadedOTFFile->getError() == UPLOAD_ERR_OK &&
-                    $uploadedOTFFile->isValid()) {
-                    $font->setOTFFilename($uploadedOTFFile->getClientOriginalName());
-                    $uploadedOTFFile->move(Font::getFilesFolder() . '/' . $font->getFolder(), $font->getOTFFilename());
-                }
-            }
-        } catch (FileNotFoundException $e) {
-            // When empty file do nothing
-        }
-        try {
-            if (!empty($data['svgFile'])) {
-                $svgFile = $data['svgFile']->getData();
-                $uploadedSVGFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $svgFile['tmp_name'],
-                    $svgFile['name'],
-                    $svgFile['type'],
-                    $svgFile['size'],
-                    $svgFile['error']
-                );
-                if (null !== $uploadedSVGFile &&
-                    $uploadedSVGFile->getError() == UPLOAD_ERR_OK &&
-                    $uploadedSVGFile->isValid()) {
-                    $font->setSVGFilename($uploadedSVGFile->getClientOriginalName());
-                    $uploadedSVGFile->move(Font::getFilesFolder() . '/' . $font->getFolder(), $font->getSVGFilename());
-                }
-            }
-        } catch (FileNotFoundException $e) {
-            // When empty file do nothing
-        }
-    }
-
-    /**
-     * @param \Symfony\Component\Form\Form $rawData
-     * @param RZ\Roadiz\Core\Entities\Font  $font
-     *
-     * @return RZ\Roadiz\Core\Entities\Font
-     */
-    protected function editFont(\Symfony\Component\Form\Form $rawData, Font $font)
-    {
-        $data = $rawData->getData();
-
-        if (isset($data['name'])) {
-            $existing = $this->getService('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Font')
-                             ->findOneBy([
-                                 'name' => $data['name'],
-                                 'variant' => $data['variant'],
-                             ]);
-            if ($existing !== null &&
-                $existing->getId() != $font->getId()) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans("font.name.already_exists"), 1);
-            }
-
-            $font->setName($data['name']);
-            $font->setHash($this->getService('config')['security']['secret']);
-            $font->setVariant($data['variant']);
-
-            $this->uploadFontFiles($rawData, $font);
-
-            $this->getService('em')->flush();
-
-            return $font;
-        } else {
-            throw new \RuntimeException("Font name is not defined", 1);
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Font $font
-     *
-     * @return void
-     */
-    protected function deleteFont(array $data, Font $font)
-    {
-        $this->getService('em')->remove($font);
-        $this->getService('em')->flush();
     }
 }

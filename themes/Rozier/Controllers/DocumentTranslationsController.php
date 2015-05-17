@@ -90,7 +90,7 @@ class DocumentTranslationsController extends RozierApp
              * Handle main form
              */
             $form = $this->buildEditForm($documentTr);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->editDocument($form->getData(), $documentTr);
@@ -160,7 +160,7 @@ class DocumentTranslationsController extends RozierApp
             $this->assignation['documentTr'] = $documentTr;
             $this->assignation['document'] = $document;
             $form = $this->buildDeleteForm($documentTr);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['documentId'] == $documentTr->getId()) {

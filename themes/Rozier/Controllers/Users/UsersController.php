@@ -100,7 +100,7 @@ class UsersController extends RozierApp
                 'email' => $user->getEmail(),
             ]);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->updateProfileImage($user);
@@ -149,7 +149,7 @@ class UsersController extends RozierApp
                 'em' => $this->getService('em'),
             ]);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->updateProfileImage($user);
@@ -192,7 +192,7 @@ class UsersController extends RozierApp
 
             $form = $this->buildDeleteForm($user);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['userId'] == $user->getId()) {

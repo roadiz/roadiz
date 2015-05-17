@@ -92,7 +92,7 @@ class CustomFormFieldsController extends RozierApp
                 'customForm' => $field->getCustomForm(),
                 'fieldName' => $field->getName(),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->getService('em')->flush();
@@ -144,7 +144,7 @@ class CustomFormFieldsController extends RozierApp
                 'em' => $this->getService('em'),
                 'customForm' => $customForm,
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -207,7 +207,7 @@ class CustomFormFieldsController extends RozierApp
         if ($field !== null) {
             $this->assignation['field'] = $field;
             $form = $this->buildDeleteForm($field);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['customFormFieldId'] == $field->getId()) {

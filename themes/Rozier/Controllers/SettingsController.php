@@ -117,7 +117,7 @@ class SettingsController extends RozierApp
 
         foreach ($settings as $setting) {
             $form = $this->buildShortEditForm($setting);
-            $form->handleRequest();
+            $form->handleRequest($request);
             if ($form->isValid() &&
                 $form->getData()['id'] == $setting->getId()) {
                 try {
@@ -177,7 +177,7 @@ class SettingsController extends RozierApp
             $this->assignation['setting'] = $setting;
 
             $form = $this->buildEditForm($setting);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -221,7 +221,7 @@ class SettingsController extends RozierApp
 
             $form = $this->buildAddForm($setting);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -266,7 +266,7 @@ class SettingsController extends RozierApp
 
             $form = $this->buildDeleteForm($setting);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['settingId'] == $setting->getId()) {

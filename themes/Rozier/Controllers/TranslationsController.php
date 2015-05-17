@@ -75,7 +75,7 @@ class TranslationsController extends RozierApp
         foreach ($translations as $translation) {
             // Make default forms
             $form = $this->buildMakeDefaultForm($translation);
-            $form->handleRequest();
+            $form->handleRequest($request);
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
                 $translation->getHandler()->makeDefault();
@@ -117,7 +117,7 @@ class TranslationsController extends RozierApp
             $this->assignation['translation'] = $translation;
 
             $form = $this->buildEditForm($translation);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -163,7 +163,7 @@ class TranslationsController extends RozierApp
 
             $form = $this->buildEditForm($translation);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -207,7 +207,7 @@ class TranslationsController extends RozierApp
 
             $form = $this->buildDeleteForm($translation);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {

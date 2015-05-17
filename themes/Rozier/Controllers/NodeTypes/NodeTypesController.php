@@ -92,7 +92,7 @@ class NodeTypesController extends RozierApp
                 'name' => $nodeType->getName(),
             ]);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -145,7 +145,7 @@ class NodeTypesController extends RozierApp
                 'em' => $this->getService('em'),
             ]);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 try {
                     $this->getService('em')->persist($nodeType);
@@ -200,7 +200,7 @@ class NodeTypesController extends RozierApp
 
             $form = $this->buildDeleteForm($nodeType);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['nodeTypeId'] == $nodeType->getId()) {

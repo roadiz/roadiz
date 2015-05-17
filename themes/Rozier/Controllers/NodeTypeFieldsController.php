@@ -94,7 +94,7 @@ class NodeTypeFieldsController extends RozierApp
                 'fieldName' => $field->getName(),
                 'nodeType' => $field->getNodeType(),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->getService('em')->flush();
@@ -151,7 +151,7 @@ class NodeTypeFieldsController extends RozierApp
                 'em' => $this->getService('em'),
                 'nodeType' => $field->getNodeType(),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -220,7 +220,7 @@ class NodeTypeFieldsController extends RozierApp
         if ($field !== null) {
             $this->assignation['field'] = $field;
             $form = $this->buildDeleteForm($field);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['nodeTypeFieldId'] == $field->getId()) {

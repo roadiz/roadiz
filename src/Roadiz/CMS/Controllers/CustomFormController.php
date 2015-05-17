@@ -319,7 +319,7 @@ class CustomFormController extends AppController
             $forceExpanded
         );
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {

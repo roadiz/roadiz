@@ -125,7 +125,7 @@ class TagsController extends RozierApp
                 $form = $this->createForm(new TagTranslationType(), $tt, [
                     'em' => $this->getService('em'),
                 ]);
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $this->getService('em')->flush();
@@ -218,7 +218,7 @@ class TagsController extends RozierApp
             $form = $this->createForm(new TagType(), $tag, [
                 'em' => $this->getService('em'),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->getService('em')->persist($tag);
@@ -275,7 +275,7 @@ class TagsController extends RozierApp
                 'tagName' => $tag->getTagName(),
             ]);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->getService('em')->flush();
@@ -361,7 +361,7 @@ class TagsController extends RozierApp
             $this->assignation['tag'] = $tag;
 
             $form = $this->buildDeleteForm($tag);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
@@ -421,7 +421,7 @@ class TagsController extends RozierApp
             $form = $this->createForm(new TagType(), $tag, [
                 'em' => $this->getService('em'),
             ]);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
