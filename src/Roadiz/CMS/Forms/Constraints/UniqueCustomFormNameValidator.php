@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueNodeTypeFieldNameValidator.php
+ * @file UniqueCustomFormNameValidator.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
@@ -33,11 +33,11 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
+class UniqueCustomFormNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $value = StringHandler::variablize($value);
+        $value = StringHandler::slugify($value);
 
         /*
          * If value is already the node name
@@ -47,13 +47,12 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== $constraint->entityManager &&
-            null !== $constraint->nodeType) {
-            if (true === $this->nameExists($value, $constraint->nodeType, $constraint->entityManager)) {
+        if (null !== $constraint->entityManager) {
+            if (true === $this->nameExists($value, $constraint->entityManager)) {
                 $this->context->addViolation($constraint->message);
             }
         } else {
-            $this->context->addViolation('UniqueNodeTypeFieldNameValidator constraint requires a valid EntityManager');
+            $this->context->addViolation('UniqueCustomFormNameValidator constraint requires a valid EntityManager');
         }
     }
 
@@ -62,12 +61,11 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
      *
      * @return boolean
      */
-    protected function nameExists($name, $nodeType, $entityManager)
+    protected function nameExists($name, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
                              ->findOneBy([
                                  'name' => $name,
-                                 'nodeType' => $nodeType,
                              ]);
 
         return (null !== $entity);

@@ -37,10 +37,9 @@ use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\CustomFormType;
 use Themes\Rozier\RozierApp;
-use \RZ\Roadiz\CMS\Forms\MarkdownType;
 
 /**
  * CustomForm controller
@@ -89,13 +88,15 @@ class CustomFormsController extends RozierApp
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            $form = $this->buildForm($customForm);
-
+            $form = $this->createForm(new CustomFormType(), $customForm, [
+                'em' => $this->getService('em'),
+                'name' => $customForm->getName(),
+            ]);
             $form->handleRequest();
 
             if ($form->isValid()) {
                 try {
-                    $this->editCustomForm($form->getData(), $customForm);
+                    $this->getService('em')->flush();
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -139,11 +140,14 @@ class CustomFormsController extends RozierApp
             /*
              * form
              */
-            $form = $this->buildForm($customForm);
+            $form = $this->createForm(new CustomFormType(), $customForm, [
+                'em' => $this->getService('em'),
+            ]);
             $form->handleRequest();
             if ($form->isValid()) {
                 try {
-                    $this->addCustomForm($form->getData(), $customForm);
+                    $this->getService('em')->persist($customForm);
+                    $this->getService('em')->flush();
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -212,106 +216,6 @@ class CustomFormsController extends RozierApp
         } else {
             return $this->throw404();
         }
-    }
-
-    /**
-     * @param array                           $data
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     *
-     * @return boolean
-     */
-    private function editCustomForm($data, CustomForm $customForm)
-    {
-        foreach ($data as $key => $value) {
-            if (isset($data['name'])) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.cannot_rename_already_exists', ['%name%' => $customForm->getName()]), 1);
-            }
-            $setter = 'set' . ucwords($key);
-            $customForm->$setter($value);
-        }
-
-        $this->getService('em')->flush();
-
-        return true;
-    }
-
-    /**
-     * @param array                           $data
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     *
-     * @return boolean
-     */
-    private function addCustomForm($data, CustomForm $customForm)
-    {
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            if ($key == "displayName") {
-                $customForm->setName($value);
-            }
-            $customForm->$setter($value);
-        }
-
-        $existing = $this->getService('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
-                         ->findOneBy(['name' => $customForm->getName()]);
-        if ($existing !== null) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans('customForm.%name%.already_exists', ['%name%' => $customForm->getName()]), 1);
-        }
-
-        $this->getService('em')->persist($customForm);
-        $this->getService('em')->flush();
-
-        return true;
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildForm(CustomForm $customForm)
-    {
-        $defaults = [
-            'displayName' => $customForm->getDisplayName(),
-            'description' => $customForm->getDescription(),
-            'email' => $customForm->getEmail(),
-            'open' => $customForm->isOpen(),
-            'closeDate' => $customForm->getCloseDate(),
-            'color' => $customForm->getColor(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('displayName', 'text', [
-                            'label' => 'customForm.displayName',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('description', new MarkdownType(), [
-                            'label' => 'description',
-                            'required' => false,
-                        ])
-                        ->add('email', 'email', [
-                            'label' => 'email',
-                            'required' => false,
-                            'constraints' => [
-                                new Email(),
-                            ],
-                        ])
-                        ->add('open', 'checkbox', [
-                            'label' => 'customForm.open',
-                            'required' => false,
-                        ])
-                        ->add('closeDate', 'datetime', [
-                            'label' => 'customForm.closeDate',
-                            'required' => false,
-                        ])
-                        ->add('color', 'text', [
-                            'label' => 'customForm.color',
-                            'required' => false,
-                            'attr' => ['class' => 'colorpicker-input'],
-                        ]);
-
-        return $builder->getForm();
     }
 
     /**

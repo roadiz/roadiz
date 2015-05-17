@@ -1178,22 +1178,6 @@
           <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="120">
-        <source>nodeType.%name%.cannot_rename_already_exists</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">265</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="121">
-        <source>nodeType.%name%.already_exists</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">294</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="122">
         <source>nodeType.displayName</source>
         <target></target>
@@ -4269,12 +4253,6 @@
         <source>document.embedId</source>
         <target></target>
       </trans-unit>
-
-
-      <trans-unit xml:space="preserve" id="%field%.already_exists">
-        <source>%field%.already_exists</source>
-        <target></target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word">
         <source>%field%.is.reserved.word</source>
         <target></target>
@@ -6115,7 +6093,26 @@
           <source>nodeTypeField.name.alreadyExists</source>
           <target></target>
       </trans-unit>
-
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
+          <source>nodeType.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
+          <source>color.should.be.formatted.in.hexadecimal</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
+          <source>customFormField.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
+          <source>customForm.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ip">
+          <source>ip</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

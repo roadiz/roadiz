@@ -30,13 +30,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use \RZ\Roadiz\CMS\Forms\MarkdownType;
-use \RZ\Roadiz\Core\Entities\CustomForm;
-use \RZ\Roadiz\Core\Entities\CustomFormField;
-use \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\Validator\Constraints\NotBlank;
-use \Themes\Rozier\RozierApp;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\CustomFormFieldType;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -88,11 +87,15 @@ class CustomFormFieldsController extends RozierApp
         if ($field !== null) {
             $this->assignation['customForm'] = $field->getCustomForm();
             $this->assignation['field'] = $field;
-            $form = $this->buildEditForm($field);
+            $form = $this->createForm(new CustomFormFieldType(), $field, [
+                'em' => $this->getService('em'),
+                'customForm' => $field->getCustomForm(),
+                'fieldName' => $field->getName(),
+            ]);
             $form->handleRequest();
 
             if ($form->isValid()) {
-                $this->editCustomFormField($form->getData(), $field);
+                $this->getService('em')->flush();
 
                 $msg = $this->getTranslator()->trans('customFormField.%name%.updated', ['%name%' => $field->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -130,18 +133,23 @@ class CustomFormFieldsController extends RozierApp
 
         $field = new CustomFormField();
         $customForm = $this->getService('em')
-                           ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                           ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
+        $field->setCustomForm($customForm);
 
         if ($customForm !== null &&
             $field !== null) {
             $this->assignation['customForm'] = $customForm;
             $this->assignation['field'] = $field;
-            $form = $this->buildEditForm($field);
+            $form = $this->createForm(new CustomFormFieldType(), $field, [
+                'em' => $this->getService('em'),
+                'customForm' => $customForm,
+            ]);
             $form->handleRequest();
 
             if ($form->isValid()) {
                 try {
-                    $this->addCustomFormField($form->getData(), $field, $customForm);
+                    $this->getService('em')->persist($field);
+                    $this->getService('em')->flush();
 
                     $msg = $this->getTranslator()->trans(
                         'customFormField.%name%.created',
@@ -234,116 +242,6 @@ class CustomFormFieldsController extends RozierApp
         } else {
             return $this->throw404();
         }
-    }
-
-    /**
-     * @param array                                $data
-     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
-     */
-    private function editCustomFormField($data, CustomFormField $field)
-    {
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            $field->$setter($value);
-        }
-
-        $this->getService('em')->flush();
-    }
-
-    /**
-     * @param array                                  $data
-     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
-     * @param RZ\Roadiz\Core\Entities\CustomForm      $customForm
-     */
-    private function addCustomFormField(
-        $data,
-        CustomFormField $field,
-        CustomForm $customForm
-    ) {
-        /*
-         * Check existing
-         */
-        $existing = $this->getService('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\CustomFormField')
-                         ->findOneBy([
-                             'name' => $data['name'],
-                             'customForm' => $customForm,
-                         ]);
-        if (null !== $existing) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans(
-                "%field%.already_exists",
-                ['%field%' => $data['name']]
-            ), 1);
-        }
-
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            $field->$setter($value);
-        }
-
-        $field->setCustomForm($customForm);
-        $this->getService('em')->persist($field);
-
-        $customForm->addField($field);
-        $this->getService('em')->flush();
-    }
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildEditForm(CustomFormField $field)
-    {
-        $defaults = [
-            'name' => $field->getName(),
-            'label' => $field->getLabel(),
-            'type' => $field->getType(),
-            'description' => $field->getDescription(),
-            'required' => $field->isRequired(),
-            'defaultValues' => $field->getDefaultValues(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('name', 'text', [
-                            'label' => 'name',
-                            'constraints' => [
-                                new NotBlank(),
-                                new \RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord(),
-                                new \RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString(),
-                            ],
-                        ])
-                        ->add('label', 'text', [
-                            'label' => 'label',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('description', new MarkdownType(), [
-                            'label' => 'description',
-                            'required' => false,
-                        ])
-                        ->add('type', 'choice', [
-                            'label' => 'type',
-                            'required' => true,
-                            'choices' => CustomFormField::$typeToHuman,
-                        ])
-                        ->add('required', 'checkbox', [
-                            'label' => 'required',
-                            'required' => false,
-                        ])
-                        ->add(
-                            'defaultValues',
-                            'text',
-                            [
-                                'label' => 'defaultValues',
-                                'required' => false,
-                                'attr' => [
-                                    'placeholder' => 'enter_values_comma_separated',
-                                ],
-                            ]
-                        );
-
-        return $builder->getForm();
     }
 
     /**

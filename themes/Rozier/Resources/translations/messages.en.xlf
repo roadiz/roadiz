@@ -1178,22 +1178,6 @@
           <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="120" approved="yes">
-        <source>nodeType.%name%.cannot_rename_already_exists</source>
-        <target xml:lang="en">Can't rename node-type "%name%", it already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">265</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="121" approved="yes">
-        <source>nodeType.%name%.already_exists</source>
-        <target xml:lang="en">Node-type "%name%" already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">294</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="122" approved="yes">
         <source>nodeType.displayName</source>
         <target xml:lang="en">Display name</target>
@@ -4257,10 +4241,6 @@
         <source>document.embedId</source>
         <target xml:lang="en">Platform media identifier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="%field%.already_exists" approved="yes">
-        <source>%field%.already_exists</source>
-        <target xml:lang="en">Field “%field%” already exists.</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="en">“%field%” name is a reserved word, please choose another one.</target>
@@ -5999,6 +5979,26 @@
       <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
           <source>nodeTypeField.name.alreadyExists</source>
           <target xml:lang="en" state="translated">Node-type field name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
+          <source>nodeType.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Node-type name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
+          <source>color.should.be.formatted.in.hexadecimal</source>
+          <target xml:lang="en" state="translated">Color should be formatted using hexadecimal notation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
+          <source>customFormField.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Custom-form field name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
+          <source>customForm.name.alreadyExists</source>
+          <target xml:lang="en" state="translated">Custom form name already exists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ip">
+          <source>ip</source>
+          <target xml:lang="en" state="translated">IP</target>
       </trans-unit>
     </body>
   </file>

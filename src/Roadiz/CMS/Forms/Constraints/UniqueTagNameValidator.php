@@ -64,9 +64,9 @@ class UniqueTagNameValidator extends ConstraintValidator
      */
     protected function tagNameExists($name, $entityManager)
     {
-        $tag = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag')
+        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag')
                              ->findOneByTagName($name);
 
-        return (null !== $tag);
+        return (null !== $entity);
     }
 }

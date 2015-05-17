@@ -24,52 +24,17 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueNodeTypeFieldNameValidator.php
+ * @file UniqueCustomFormName.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
+class UniqueCustomFormName extends Constraint
 {
-    public function validate($value, Constraint $constraint)
-    {
-        $value = StringHandler::variablize($value);
+    public $entityManager = null;
+    public $currentValue = null;
 
-        /*
-         * If value is already the node name
-         * do nothing.
-         */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
-            return;
-        }
-
-        if (null !== $constraint->entityManager &&
-            null !== $constraint->nodeType) {
-            if (true === $this->nameExists($value, $constraint->nodeType, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
-            }
-        } else {
-            $this->context->addViolation('UniqueNodeTypeFieldNameValidator constraint requires a valid EntityManager');
-        }
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return boolean
-     */
-    protected function nameExists($name, $nodeType, $entityManager)
-    {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-                             ->findOneBy([
-                                 'name' => $name,
-                                 'nodeType' => $nodeType,
-                             ]);
-
-        return (null !== $entity);
-    }
+    public $message = 'customForm.name.alreadyExists';
 }

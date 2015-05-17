@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueNodeTypeFieldNameValidator.php
+ * @file UniqueCustomFormFieldNameValidator.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
@@ -33,7 +33,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
+class UniqueCustomFormFieldNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
@@ -48,12 +48,12 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
         }
 
         if (null !== $constraint->entityManager &&
-            null !== $constraint->nodeType) {
-            if (true === $this->nameExists($value, $constraint->nodeType, $constraint->entityManager)) {
+            null !== $constraint->customForm) {
+            if (true === $this->nameExists($value, $constraint->customForm, $constraint->entityManager)) {
                 $this->context->addViolation($constraint->message);
             }
         } else {
-            $this->context->addViolation('UniqueNodeTypeFieldNameValidator constraint requires a valid EntityManager');
+            $this->context->addViolation('UniqueCustomFormFieldNameValidator constraint requires a valid EntityManager');
         }
     }
 
@@ -62,12 +62,12 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
      *
      * @return boolean
      */
-    protected function nameExists($name, $nodeType, $entityManager)
+    protected function nameExists($name, $customForm, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\CustomFormField')
                              ->findOneBy([
                                  'name' => $name,
-                                 'nodeType' => $nodeType,
+                                 'customForm' => $customForm,
                              ]);
 
         return (null !== $entity);
