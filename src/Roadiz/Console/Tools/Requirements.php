@@ -202,9 +202,9 @@ class Requirements
         $intValue = (int) (str_replace(['s', 'K', 'M', 'G'], ['', '', '', ''], ini_get($name)));
 
         /*
-         * O value means no limitations
+         * 0 value means no limitations
          */
-        if ($intValue === O) {
+        if ($intValue === 0) {
             return true;
         } elseif ($intValue < $expected) {
             return false;
