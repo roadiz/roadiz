@@ -348,24 +348,16 @@ class SettingsController extends RozierApp
 
             case NodeTypeField::DOCUMENTS_T:
 
-                $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $value['tmp_name'],
-                    $value['name'],
-                    $value['type'],
-                    $value['size'],
-                    $value['error']
-                );
-
-                if ($uploadedFile !== null &&
-                    $uploadedFile->getError() == UPLOAD_ERR_OK &&
-                    $uploadedFile->isValid()) {
+                if ($value !== null &&
+                    $value->getError() == UPLOAD_ERR_OK &&
+                    $value->isValid()) {
                     $document = new Document();
-                    $document->setFilename($uploadedFile->getClientOriginalName());
-                    $document->setMimeType($uploadedFile->getMimeType());
+                    $document->setFilename($value->getClientOriginalName());
+                    $document->setMimeType($value->getMimeType());
                     $this->getService('em')->persist($document);
                     $this->getService('em')->flush();
 
-                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+                    $value->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
 
                     $setting->setValue($document->getId());
                 }
