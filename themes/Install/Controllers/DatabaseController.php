@@ -77,9 +77,8 @@ class DatabaseController extends InstallApp
                      * Test connexion
                      */
                     try {
-                        $fixtures = new Fixtures($this->getService('em'));
+                        $fixtures = new Fixtures($this->getService('em'), $request);
                         $fixtures->createFolders();
-
                         $config->writeConfiguration();
 
                         /*
@@ -175,7 +174,7 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-        $fixtures = new Fixtures($this->getService('em'));
+        $fixtures = new Fixtures($this->getService('em'), $request);
         $fixtures->installFixtures();
 
         /*

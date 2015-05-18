@@ -30,6 +30,7 @@
 
 namespace Themes\Install;
 
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Console\Tools\Fixtures;
@@ -57,6 +58,20 @@ class InstallApp extends AppController
     protected static $backendTheme = false;
 
     /**
+     * Append objects to the global dependency injection container.
+     *
+     * @param Pimple\Container $container
+     */
+    public static function setupDependencyInjection(Container $container)
+    {
+        parent::setupDependencyInjection($container);
+
+        $locale = $container['session']->get('_locale', 'en');
+        $container['request']->setLocale($locale);
+        \Locale::setDefault($locale);
+    }
+
+    /**
      * @return array $assignation
      */
     public function prepareBaseAssignation()
@@ -64,6 +79,7 @@ class InstallApp extends AppController
         $this->assignation = [
             'request' => $this->getRequest(),
             'head' => [
+                'siteTitle' => 'welcome.title',
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
@@ -80,24 +96,13 @@ class InstallApp extends AppController
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
+                'locale' => $this->getRequest()->getSession()->get('_locale', 'en'),
             ],
         ];
 
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-        $this->getRequest()->setLocale(
-            $this->getService('session')->get('_locale', 'en')
-        );
-
-        return parent::initializeTranslator();
     }
 
     /**
@@ -177,7 +182,7 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    $fixtures = new Fixtures($this->getService("em"));
+                    $fixtures = new Fixtures($this->getService("em"), $request);
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page

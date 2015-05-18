@@ -38,8 +38,8 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Fixtures class
@@ -47,10 +47,12 @@ use Symfony\Component\Filesystem\Filesystem;
 class Fixtures
 {
     protected $entityManager;
+    protected $request;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, Request $request = null)
     {
         $this->entityManager = $entityManager;
+        $this->request = $request;
     }
 
     /**
@@ -126,13 +128,10 @@ class Fixtures
              * Create a translation according to
              * current language
              */
-            switch (Kernel::getInstance()->getRequest()->getLocale()) {
-                case 'fr':
-                    $translation->setLocale('fr');
-                    break;
-                default:
-                    $translation->setLocale('en');
-                    break;
+            if (null !== $this->request) {
+                $translation->setLocale($this->request->getLocale());
+            } else {
+                $translation->setLocale('en');
             }
 
             $translation->setDefaultTranslation(true);

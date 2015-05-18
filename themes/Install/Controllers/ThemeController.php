@@ -85,7 +85,7 @@ class ThemeController extends InstallApp
 
         $data = $yaml->getConfiguration();
 
-        $fix = new Fixtures($this->getService("em"));
+        $fix = new Fixtures($this->getService("em"), $request);
         $data["className"] = $request->get("classname");
         $fix->installTheme($data);
         $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")

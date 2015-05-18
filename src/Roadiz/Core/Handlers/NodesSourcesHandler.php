@@ -195,11 +195,15 @@ class NodesSourcesHandler
      * @return array
      */
     public function getParents(
-        array $criteria = [],
+        array $criteria = null,
         SecurityContext $securityContext = null
     ) {
         if (null === $this->parentsNodeSources) {
             $this->parentsNodeSources = [];
+
+            if (null === $criteria) {
+                $criteria = [];
+            }
 
             $parent = $this->nodeSource;
 
