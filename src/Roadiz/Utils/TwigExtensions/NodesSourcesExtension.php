@@ -62,27 +62,27 @@ class NodesSourcesExtension extends \Twig_Extension
         ];
     }
 
-    public function getChildren(NodesSources $ns, array $criteria = [], array $order = [])
+    public function getChildren(NodesSources $ns, array $criteria = null, array $order = null)
     {
         return $ns->getHandler()->getChildren($criteria, $order, $this->securityContext);
     }
 
-    public function getNext(NodesSources $ns, array $criteria = [], array $order = [])
+    public function getNext(NodesSources $ns, array $criteria = null, array $order = null)
     {
         return $ns->getHandler()->getNext($criteria, $order, $this->securityContext);
     }
 
-    public function getPrevious(NodesSources $ns, array $criteria = [], array $order = [])
+    public function getPrevious(NodesSources $ns, array $criteria = null, array $order = null)
     {
         return $ns->getHandler()->getPrevious($criteria, $order, $this->securityContext);
     }
 
-    public function getLastSibling(NodesSources $ns, array $criteria = [], array $order = [])
+    public function getLastSibling(NodesSources $ns, array $criteria = null, array $order = null)
     {
         return $ns->getHandler()->getLastSibling($criteria, $order, $this->securityContext);
     }
 
-    public function getFirstSibling(NodesSources $ns, array $criteria = [], array $order = [])
+    public function getFirstSibling(NodesSources $ns, array $criteria = null, array $order = null)
     {
         return $ns->getHandler()->getFirstSibling($criteria, $order, $this->securityContext);
     }
@@ -92,7 +92,7 @@ class NodesSourcesExtension extends \Twig_Extension
         return $ns->getHandler()->getParent();
     }
 
-    public function getParents(NodesSources $ns, array $criteria = [])
+    public function getParents(NodesSources $ns, array $criteria = null)
     {
         return $ns->getHandler()->getParents($criteria, $this->securityContext);
     }
