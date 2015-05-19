@@ -28,7 +28,7 @@
 {% if node.isHome %}{% set innerClasses = innerClasses|merge(['home-node']) %}{% endif %}
 {% if node.isHidingChildren %}{% set innerClasses = innerClasses|merge(['stack-node']) %}{% endif %}
 {% if not node.isVisible %}{% set innerClasses = innerClasses|merge(['hidden-node']) %}{% endif %}
-{% if not node.isPublished %}{% set innerClasses = innerClasses|merge(['hunpublished-node']) %}{% endif %}
+{% if not node.isPublished %}{% set innerClasses = innerClasses|merge(['unpublished-node']) %}{% endif %}
 {% if not node.isArchived %}{% set innerClasses = innerClasses|merge(['archived-node']) %}{% endif %}
 {% if not node.isLocked %}{% set innerClasses = innerClasses|merge(['locked-node']) %}{% endif %}
 
