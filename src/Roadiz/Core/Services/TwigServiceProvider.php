@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
+use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
@@ -113,6 +114,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             }
             $twig->addExtension(new DocumentExtension());
             $twig->addExtension(new UrlExtension($c['request']));
+            $twig->addExtension(new RoadizTranslationExtension($c['request']));
 
             if (null !== $c['twig.cacheExtension']) {
                 $twig->addExtension($c['twig.cacheExtension']);

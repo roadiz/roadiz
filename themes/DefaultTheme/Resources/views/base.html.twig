@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {% if translation %}
-        {% for id, key in translation.viewer.translationMenuAssignation(request, true) %}
+        {% for id, key in translation|menu(true) %}
         <link rel="alternate" href="{{ key.url }}" hreflang="{{ id }}" />
         {% endfor %}
         {% endif %}

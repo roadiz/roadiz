@@ -59,6 +59,7 @@ class NodesSourcesExtension extends \Twig_Extension
             new \Twig_SimpleFilter('firstSibling', [$this, 'getFirstSibling']),
             new \Twig_SimpleFilter('parent', [$this, 'getParent']),
             new \Twig_SimpleFilter('parents', [$this, 'getParents']),
+            new \Twig_SimpleFilter('tags', [$this, 'getTags']),
         ];
     }
 
@@ -95,5 +96,10 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getParents(NodesSources $ns, array $criteria = null)
     {
         return $ns->getHandler()->getParents($criteria, $this->securityContext);
+    }
+
+    public function getTags(NodesSources $ns)
+    {
+        return $ns->getHandler()->getTags();
     }
 }
