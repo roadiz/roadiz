@@ -107,3 +107,10 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Vagrant
+.vagrant
+Vagrantfile
+
+# IDE
+.idea
