@@ -136,11 +136,18 @@ class AssetsController extends AppController
                 }
 
                 if ("" != $fontpath) {
-                    return new Response(
+                    $response = new Response(
                         file_get_contents($fontpath),
                         Response::HTTP_OK,
                         ['content-type' => $mime]
                     );
+                    $date = new \DateTime();
+                    $date->modify('+2 hours');
+                    $response->setExpires($date);
+                    $response->setPrivate(true);
+                    $response->setMaxAge(60*60*2);
+
+                    return $response;
                 }
             } else {
                 return new Response(
@@ -179,9 +186,8 @@ class AssetsController extends AppController
         );
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
-            'max_age' => 1800,
-            's_maxage' => 600,
-            'public' => true,
+            'max_age' => 60*60*2,
+            'public' => false,
         ]);
 
         if ($response->isNotModified($request)) {
