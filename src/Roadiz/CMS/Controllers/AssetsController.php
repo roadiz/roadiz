@@ -33,6 +33,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use AM\InterventionRequest\Configuration;
+use AM\InterventionRequest\InterventionRequest;
+use AM\InterventionRequest\ShortUrlExpander;
 
 /**
  * Special controller app file for assets managment with SLIR.
@@ -74,19 +79,37 @@ class AssetsController extends AppController
     }
 
     /**
-     * Handle images resize with SLIR vendor.
      *
-     * @param string $queryString
-     * @param string $filename
+     * @param  Request $request
+     * @param  string  $queryString
+     * @param  string  $filename
+     * @return Response
      */
-    public function slirAction($queryString, $filename)
+    public function interventionRequestAction(Request $request, $queryString, $filename)
     {
-        define('SLIR_CONFIG_CLASSNAME', '\RZ\Roadiz\CMS\Utils\SLIRConfig');
+        $log = new Logger('InterventionRequest');
+        $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/interventionRequest.log', Logger::INFO));
 
-        $slir = new \SLIR\SLIR();
-        $slir->processRequestFromURL();
+        $cacheDir = ROADIZ_ROOT.'/cache/rendered';
+        if (!file_exists($cacheDir)) {
+            mkdir($cacheDir);
+        }
+        $conf = new Configuration();
+        $conf->setCachePath($cacheDir);
+        $conf->setImagesPath(ROADIZ_ROOT.'/files');
 
-        // SLIR handle response by itself
+        /*
+         * Handle short url with Url rewriting
+         */
+        $expander = new ShortUrlExpander($request);
+        $expander->injectParamsToRequest($queryString, $filename);
+
+        /*
+         * Handle main image request
+         */
+        $iRequest = new InterventionRequest($conf, $request, $log);
+        $iRequest->handle();
+        return $iRequest->getResponse();
     }
 
     /**

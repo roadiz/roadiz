@@ -307,7 +307,7 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            $url = Kernel::getService('urlGenerator')->generate('SLIRProcess', [
+            $url = Kernel::getService('urlGenerator')->generate('interventionRequestProcess', [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl(),
             ], UrlGenerator::ABSOLUTE_PATH);

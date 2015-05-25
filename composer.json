@@ -45,7 +45,6 @@
     },
     "require": {
         "php":                         ">=5.4.3",
-        "rezozero/slir":               "2.1.*",
         "doctrine/orm":                "2.*",
         "symfony/yaml":                "2.*",
         "symfony/console":             "2.*",
@@ -74,13 +73,20 @@
         "guzzlehttp/cache-subscriber": "0.1.*",
         "asm89/twig-cache-extension":  "~1.0",
         "wikimedia/composer-merge-plugin": "~1.0",
-        "monolog/monolog":"~1.13"
+        "monolog/monolog":"~1.13",
+        "ambroisemaupate/intervention-request":"dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
         "satooshi/php-coveralls": "dev-master",
         "squizlabs/php_codesniffer": "@stable"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ambroisemaupate/intervention-request"
+        }
+    ],
     "autoload": {
         "psr-4": {
         	"RZ\\":                   "src/",
