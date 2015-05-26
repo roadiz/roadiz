@@ -56,6 +56,7 @@ if (php_sapi_name() == 'cli') {
         ) {
             $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
             $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
+            $response->prepare($request);
             $response->send();
         } else {
             /*

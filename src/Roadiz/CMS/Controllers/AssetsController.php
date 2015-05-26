@@ -29,15 +29,15 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use AM\InterventionRequest\Configuration;
+use AM\InterventionRequest\InterventionRequest;
+use AM\InterventionRequest\ShortUrlExpander;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use AM\InterventionRequest\Configuration;
-use AM\InterventionRequest\InterventionRequest;
-use AM\InterventionRequest\ShortUrlExpander;
 
 /**
  * Special controller app file for assets managment with SLIR.
@@ -90,26 +90,37 @@ class AssetsController extends AppController
         $log = new Logger('InterventionRequest');
         $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/interventionRequest.log', Logger::INFO));
 
-        $cacheDir = ROADIZ_ROOT.'/cache/rendered';
-        if (!file_exists($cacheDir)) {
-            mkdir($cacheDir);
+        try {
+            $cacheDir = ROADIZ_ROOT . '/cache/rendered';
+            if (!file_exists($cacheDir)) {
+                mkdir($cacheDir);
+            }
+            $conf = new Configuration();
+            $conf->setCachePath($cacheDir);
+            $conf->setImagesPath(ROADIZ_ROOT . '/files');
+
+            /*
+             * Handle short url with Url rewriting
+             */
+            $expander = new ShortUrlExpander($request);
+            $expander->injectParamsToRequest($queryString, $filename);
+
+            /*
+             * Handle main image request
+             */
+            $iRequest = new InterventionRequest($conf, $request, $log);
+            $iRequest->handle();
+            return $iRequest->getResponse();
+        } catch (\Exception $e) {
+            if (null !== $log) {
+                $log->error($e->getMessage());
+            }
+            return new Response(
+                $e->getMessage(),
+                Response::HTTP_NOT_FOUND,
+                ['content-type' => 'text/plain']
+            );
         }
-        $conf = new Configuration();
-        $conf->setCachePath($cacheDir);
-        $conf->setImagesPath(ROADIZ_ROOT.'/files');
-
-        /*
-         * Handle short url with Url rewriting
-         */
-        $expander = new ShortUrlExpander($request);
-        $expander->injectParamsToRequest($queryString, $filename);
-
-        /*
-         * Handle main image request
-         */
-        $iRequest = new InterventionRequest($conf, $request, $log);
-        $iRequest->handle();
-        return $iRequest->getResponse();
     }
 
     /**
@@ -168,7 +179,7 @@ class AssetsController extends AppController
                     $date->modify('+2 hours');
                     $response->setExpires($date);
                     $response->setPrivate(true);
-                    $response->setMaxAge(60*60*2);
+                    $response->setMaxAge(60 * 60 * 2);
 
                     return $response;
                 }
@@ -209,7 +220,7 @@ class AssetsController extends AppController
         );
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
-            'max_age' => 60*60*2,
+            'max_age' => 60 * 60 * 2,
             'public' => false,
         ]);
 
