@@ -6105,6 +6105,27 @@
           <source>file.is_not_a.valid.font.file</source>
           <target></target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="folder.%name%.updated">
+          <source>folder.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.alreadyExists">
+          <source>folder.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.%name%.deleted">
+          <source>folder.%name%.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.folder.found">
+          <source>no.folder.found</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.does_not_exist">
+          <source>folder.does_not_exist</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

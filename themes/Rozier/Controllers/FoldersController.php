@@ -33,12 +33,11 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\Forms\FolderType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -79,12 +78,25 @@ class FoldersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $form = $this->buildAddForm();
+        $folder = new Folder();
+
+        if (null !== $parentFolderId) {
+            $parentFolder = $this->getService('em')
+                                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parentFolderId);
+            if (null !== $parentFolder) {
+                $folder->setParent($parentFolder);
+            }
+        }
+
+        $form = $this->createForm(new FolderType(), $folder, [
+            'em' => $this->getService('em'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
-                $folder = $this->addFolder($form); // only pass form for file handling
+                $this->getService('em')->persist($folder);
+                $this->getService('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
                     'folder.%name%.created',
@@ -92,8 +104,6 @@ class FoldersController extends RozierApp
                 );
                 $this->publishConfirmMessage($request, $msg);
 
-            } catch (EntityAlreadyExistsException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -127,15 +137,13 @@ class FoldersController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['folder_id'] == $folder->getId()) {
                 try {
-                    $this->deleteFolder($form->getData(), $folder);
+                    $this->deleteFolder($folder);
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.deleted',
                         ['%name%' => $folder->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
-                } catch (EntityRequiredException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -167,26 +175,27 @@ class FoldersController extends RozierApp
                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
-            $form = $this->buildEditForm($folder);
+            $form = $this->createForm(new FolderType(), $folder, [
+                'em' => $this->getService('em'),
+                'name' => $folder->getName(),
+            ]);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
-                $form->getData()['folder_id'] == $folder->getId()) {
+            if ($form->isValid()) {
                 try {
-                    $this->editFolder($form, $folder); // only pass form for file handling
+                    $this->getService('em')->flush();
+
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.updated',
                         ['%name%' => $folder->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
 
-                } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
-                return $this->redirect($this->generateUrl('foldersHomePage'));
+                return $this->redirect($this->generateUrl('foldersEditPage', ['folderId' => $folderId]));
             }
 
             $this->assignation['folder'] = $folder;
@@ -251,21 +260,6 @@ class FoldersController extends RozierApp
     }
 
     /**
-     * Build add folder form with name constraint.
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildAddForm()
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('name', 'text', [
-                            'label' => 'folder.name',
-                        ]);
-
-        return $builder->getForm();
-    }
-
-    /**
      * Build delete folder form with name constraint.
      * @param RZ\Roadiz\Core\Entities\Folder $folder
      *
@@ -282,98 +276,12 @@ class FoldersController extends RozierApp
     }
 
     /**
-     * Build edit folder form with name constraint.
-     * @param RZ\Roadiz\Core\Entities\Folder $folder
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditForm(Folder $folder)
-    {
-        $defaults = [
-            'name' => $folder->getName(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('folder_id', 'hidden', [
-                            'data' => $folder->getId(),
-                        ])
-                        ->add('name', 'text', [
-                            'label' => 'folder.name',
-                        ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param \Symfony\Component\Form\Form $rawData
-     *
-     * @return RZ\Roadiz\Core\Entities\Folder
-     */
-    protected function addFolder(\Symfony\Component\Form\Form $rawData)
-    {
-
-        $data = $rawData->getData();
-
-        if (isset($data['name'])) {
-            $existing = $this->getService('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                             ->findOneBy(['name' => $data['name']]);
-
-            if ($existing !== null) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans("folder.already_exists"), 1);
-            }
-
-            $folder = new Folder();
-            $folder->setName($data['name']);
-
-            $this->getService('em')->persist($folder);
-            $this->getService('em')->flush();
-
-            return $folder;
-        } else {
-            throw new \RuntimeException("Folder name is not defined", 1);
-        }
-
-        return null;
-    }
-
-    /**
-     * @param \Symfony\Component\Form\Form  $rawData
-     * @param RZ\Roadiz\Core\Entities\Folder $folder
-     *
-     * @return RZ\Roadiz\Core\Entities\Folder
-     */
-    protected function editFolder(\Symfony\Component\Form\Form $rawData, Folder $folder)
-    {
-        $data = $rawData->getData();
-
-        if (isset($data['name'])) {
-            $existing = $this->getService('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                             ->findOneBy(['name' => $data['name']]);
-            if ($existing !== null &&
-                $existing->getId() != $folder->getId()) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans("folder.name.already_exists"), 1);
-            }
-
-            $folder->setName($data['name']);
-
-            $this->getService('em')->flush();
-
-            return $folder;
-        } else {
-            throw new \RuntimeException("Folder name is not defined", 1);
-        }
-
-        return null;
-    }
-
-    /**
      * @param array                       $data
      * @param RZ\Roadiz\Core\Entities\Folder $folder
      *
      * @return void
      */
-    protected function deleteFolder(array $data, Folder $folder)
+    protected function deleteFolder(Folder $folder)
     {
         $this->getService('em')->remove($folder);
         $this->getService('em')->flush();

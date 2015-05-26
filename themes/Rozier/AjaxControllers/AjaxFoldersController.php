@@ -85,7 +85,9 @@ class AjaxFoldersController extends AbstractAjaxController
                 $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
-                    'responseText' => ('Folder '.$folderId.' edited ')
+                    'responseText' => $this->getTranslator()->trans('folder.%name%.updated', [
+                        '%name%' => $folder->getName(),
+                    ])
                 ];
             }
 
@@ -100,7 +102,7 @@ class AjaxFoldersController extends AbstractAjaxController
         $responseArray = [
             'statusCode' => '403',
             'status'    => 'danger',
-            'responseText' => 'Folder '.$folderId.' does not exists'
+            'responseText' => $this->getTranslator()->trans('folder.does_not_exist')
         ];
 
         return new Response(
@@ -128,7 +130,7 @@ class AjaxFoldersController extends AbstractAjaxController
         $responseArray = [
             'statusCode' => Response::HTTP_NOT_FOUND,
             'status'    => 'danger',
-            'responseText' => 'No tags found'
+            'responseText' => $this->getTranslator()->trans('no.folder.found')
         ];
 
         if ($request->get('search') != "") {
@@ -175,7 +177,7 @@ class AjaxFoldersController extends AbstractAjaxController
             if ($parent !== null) {
                 $folder->setParent($parent);
             }
-        } elseif ($parameters['newParent'] === null) {
+        } else {
             $folder->setParent(null);
         }
 
