@@ -29,9 +29,10 @@
  */
 namespace RZ\Roadiz\Utils\Clearer;
 
-use Symfony\Component\Finder\Finder;
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * DoctrineCacheClearer.
@@ -47,38 +48,28 @@ class DoctrineCacheClearer extends Clearer
 
     public function clear()
     {
-        // Empty result cache
-        $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
+        $conf = $this->entityManager->getConfiguration();
+        $this->clearCacheDriver($conf->getResultCacheImpl(), 'result');
+        $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
+        $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
+        $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
+
+        $this->recreateProxies();
+
+        return true;
+    }
+
+    protected function clearCacheDriver(CacheProvider $cacheDriver = null, $description = "")
+    {
         if ($cacheDriver !== null) {
-            $this->output .= 'Doctrine result cache: '.$cacheDriver->getNamespace().' — ';
+            $this->output .= 'Doctrine ' . $description . ' cache: ' . $cacheDriver->getNamespace() . ' — ';
             $this->output .= $cacheDriver->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
             $this->output .= PHP_EOL;
         }
+    }
 
-        // Empty hydratation cache
-        $cacheDriver = $this->entityManager->getConfiguration()->getHydrationCacheImpl();
-        if ($cacheDriver !== null) {
-            $this->output .= 'Doctrine hydratation cache: '.$cacheDriver->getNamespace().' — ';
-            $this->output .= $cacheDriver->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
-            $this->output .= PHP_EOL;
-        }
-
-        // Empty query cache
-        $cacheDriver = $this->entityManager->getConfiguration()->getQueryCacheImpl();
-        if ($cacheDriver !== null) {
-            $this->output .= 'Doctrine query cache: '.$cacheDriver->getNamespace().' — ';
-            $this->output .= $cacheDriver->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
-            $this->output .= PHP_EOL;
-        }
-
-        // Empty metadata cache
-        $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-        if ($cacheDriver !== null) {
-            $this->output .= 'Doctrine metadata cache: '.$cacheDriver->getNamespace().' — ';
-            $this->output .= $cacheDriver->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
-            $this->output .= PHP_EOL;
-        }
-
+    protected function recreateProxies()
+    {
         /*
          * Recreate proxies files
          */
@@ -90,8 +81,6 @@ class DoctrineCacheClearer extends Clearer
         $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $proxyFactory = $this->entityManager->getProxyFactory();
         $proxyFactory->generateProxyClasses($meta, ROADIZ_ROOT . '/gen-src/Proxies');
-        $this->output .= 'Doctrine proxy classes has been purged.'.PHP_EOL;
-
-        return true;
+        $this->output .= 'Doctrine proxy classes has been purged.' . PHP_EOL;
     }
 }

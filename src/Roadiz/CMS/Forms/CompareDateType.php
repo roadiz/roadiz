@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,51 +24,52 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeStatesType.php
- * @author Maxime Constantinian
+ * @file CompareDateType.php
+ * @author Ambroise Maupate
  */
-
 namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use RZ\Roadiz\Core\Entities\Node;
 
-/**
- * Node state selector form field type.
- */
-class NodeStatesType extends AbstractType
+class CompareDateType extends AbstractType
 {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('compareOp', 'choice', [
+            'label' => false,
+            'choices' => [
+                '<' => '<',
+                '>' => '>',
+                '<=' => '<=',
+                '>=' => '>=',
+                '=' => '='
+            ]
+        ])
+        ->add('compareDate', 'date', [
+            'label' => false,
+            'required' => false,
+            'widget' => 'single_text',
+            'format' => 'yyyy-MM-dd',
+            'attr' => [
+                'class' => 'rz-datetime-field',
+            ],
+        ]);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $choices = [];
-
-        $choices[Node::DRAFT] = "draft";
-        $choices[Node::PENDING] = "pending";
-        $choices[Node::PUBLISHED] = "published";
-        $choices[Node::ARCHIVED] = "archived";
-        $choices[Node::DELETED] = "deleted";
-
         $resolver->setDefaults([
-            'choices' => $choices,
-            'empty_value' => 'ignore',
+            'required' => false,
         ]);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'choice';
-    }
-    /**
-     * {@inheritdoc}
-     */
+
     public function getName()
     {
-        return 'nodeStates';
+        return 'comparedate';
     }
 }

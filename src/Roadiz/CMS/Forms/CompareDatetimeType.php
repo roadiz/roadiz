@@ -31,29 +31,53 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CompareDatetimeType extends AbstractType
 {
-    private $translator;
-
-    public function __construct($translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('compareOp', 'choice', [
-            'label' => $this->translator->trans('node.datetime.operator'),
-            'choices' => ['<' => '<', '>' => '>', '<=' => '<=', '>=' => '>=', '=' => '=']
-        ])->add('compareDatetime', 'datetime', [
-            'label' => $this->translator->trans('node.datetime.value'),
-            'required' => false
+            'label' => false,
+            'choices' => [
+                '<' => '<',
+                '>' => '>',
+                '<=' => '<=',
+                '>=' => '>=',
+                '=' => '='
+            ]
+        ])
+        ->add('compareDatetime', 'datetime', [
+            'label' => false,
+            'required' => false,
+            'date_widget' => 'single_text',
+            'date_format' => 'yyyy-MM-dd',
+            'attr' => [
+                'class' => 'rz-datetime-field',
+            ],
+            'empty_value' => [
+                'hour' => 'hour',
+                'minute' => 'minute',
+            ],
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'attr' => [
+                'class' => 'rz-compare-datetype',
+            ],
+            'virtual' => false,
+            'required' => false,
         ]);
     }
 
     public function getName()
     {
-        return 'CompareDatetime';
+        return 'comparedatetime';
     }
 }

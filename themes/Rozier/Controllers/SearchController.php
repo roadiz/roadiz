@@ -31,6 +31,8 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
+use RZ\Roadiz\CMS\Forms\CompareDateType;
+use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -108,7 +110,7 @@ class SearchController extends RozierApp
         return $data;
     }
 
-    public function processCriteriaNodetype($data, $nodetype)
+    public function processCriteriaNodetype($data, NodeType $nodetype)
     {
         $fields = $nodetype->getFields();
         foreach ($data as $key => $value) {
@@ -119,17 +121,19 @@ class SearchController extends RozierApp
                         || $field->getType() === NodeTypeField::TEXT_T
                         || $field->getType() === NodeTypeField::EMAIL_T) {
                         $data[$key] = ["LIKE", "%" . $value . "%"];
-                    }
-                    if ($field->getType() === NodeTypeField::BOOLEAN_T) {
+                    } elseif ($field->getType() === NodeTypeField::BOOLEAN_T) {
                         $data[$key] = (bool) $value;
-                    }
-                    if ($field->getType() === NodeTypeField::MULTIPLE_T) {
+                    } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
                         $data[$key] = implode(",", $value);
-                    }
-                    if ($field->getType() == NodeTypeField::DATETIME_T) {
+                    } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
                         $data[$key] = [
                             $data[$key]['compareOp'],
                             $data[$key]['compareDatetime'],
+                        ];
+                    } elseif ($field->getType() === NodeTypeField::DATE_T) {
+                        $data[$key] = [
+                            $data[$key]['compareOp'],
+                            $data[$key]['compareDate'],
                         ];
                     }
                 }
@@ -192,25 +196,23 @@ class SearchController extends RozierApp
 
     public function searchNodeSourceAction(Request $request, $nodetypeId)
     {
-
         $nodetype = $this->getService('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
         $builder = $this->extendForm($builder, $nodetype);
         $builder->add("searchANode", "submit", [
-            "label" => $this->getTranslator()->trans("search.a.node"),
+            "label" => "search.a.node",
             "attr" => ["class" => "uk-button uk-button-primary"],
         ]);
         $builder->add("exportNodesSources", "submit", [
-            "label" => $this->getTranslator()->trans("export.all.nodesSource"),
+            "label" => "export.all.nodesSource",
             "attr" => ["class" => "uk-button rz-no-ajax"],
         ]);
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         $builderNodeType = $this->buildNodeTypeForm($nodetypeId);
-
         $nodeTypeForm = $builderNodeType->getForm();
         $nodeTypeForm->handleRequest($request);
 
@@ -218,84 +220,8 @@ class SearchController extends RozierApp
             return $response;
         }
 
-        if ($form->isValid()) {
-            $data = [];
-            foreach ($form->getData() as $key => $value) {
-                if ((!is_array($value) && $this->notBlank($value))
-                    || (is_array($value) && isset($value["compareDatetime"]))
-                    || (is_array($value) && $value != [] && !isset($value["compareOp"]))) {
-                    if (strstr($key, "__node__") == 0) {
-                        $data[str_replace("__node__", "node.", $key)] = $value;
-                    } else {
-                        $data[$key] = $value;
-                    }
-                }
-            }
-
-            $data = $this->processCriteria($data, "node.");
-            $data = $this->processCriteriaNodetype($data, $nodetype);
-
-            $listManager = new EntityListManager(
-                $request,
-                $this->getService('em'),
-                NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
-                $data
-            );
-            if ($this->pagination === false) {
-                $listManager->setItemPerPage($this->itemPerPage);
-                $listManager->disablePagination();
-            }
-            $listManager->handle();
-            $this->assignation['filters'] = $listManager->getAssignation();
-            $this->assignation['nodesSources'] = $listManager->getEntities();
-            $nodes = [];
-            foreach ($listManager->getEntities() as $nodesSource) {
-                $nodes[] = $nodesSource->getNode();
-            }
-            $this->assignation['nodes'] = $nodes;
-
-            if ($form->get('exportNodesSources')->isClicked()) {
-                $fields = $nodetype->getFields();
-                $keys = [];
-                $answers = [];
-                $keys[] = "title";
-                foreach ($fields as $field) {
-                    if (!$field->isVirtual()) {
-                        $keys[] = $field->getName();
-                    }
-                }
-                foreach ($listManager->getEntities() as $idx => $nodesSource) {
-                    $array = [];
-                    foreach ($keys as $key) {
-                        $getter = 'get' . str_replace('_', '', ucwords($key));
-                        $tmp = $nodesSource->$getter();
-                        if (is_array($tmp)) {
-                            $tmp = implode(',', $tmp);
-                        }
-                        $array[] = $tmp;
-                    }
-                    $answers[$idx] = $array;
-                }
-                $xlsx = XlsxExporter::exportXlsx($answers, $keys);
-
-                $response = new Response(
-                    $xlsx,
-                    Response::HTTP_OK,
-                    []
-                );
-
-                $response->headers->set(
-                    'Content-Disposition',
-                    $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                        'search.xlsx'
-                    )
-                );
-
-                $response->prepare($request);
-
-                return $response;
-            }
+        if (null !== $response = $this->handleNodeForm($form, $nodetype)) {
+            return $response;
         }
 
         $this->assignation['form'] = $form->createView();
@@ -321,18 +247,18 @@ class SearchController extends RozierApp
                                     ["method" => "get"]
                                 );
         $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            [
-                'empty_value' => "",
-                'required' => false,
-                'data' => $nodetypeId,
-            ]
-        )
-        ->add("nodetypeSubmit", "submit", [
-            "label" => "select.nodetype",
-            "attr" => ["class" => "uk-button uk-button-primary"],
-        ]);
+                            "nodetype",
+                            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+                            [
+                                'empty_value' => "",
+                                'required' => false,
+                                'data' => $nodetypeId,
+                            ]
+                        )
+                        ->add("nodetypeSubmit", "submit", [
+                            "label" => "select.nodetype",
+                            "attr" => ["class" => "uk-button uk-button-primary"],
+                        ]);
 
         return $builderNodeType;
     }
@@ -357,6 +283,97 @@ class SearchController extends RozierApp
         return null;
     }
 
+    protected function handleNodeForm($form, NodeType $nodetype)
+    {
+        if ($form->isValid()) {
+            $data = [];
+            foreach ($form->getData() as $key => $value) {
+                if ((!is_array($value) && $this->notBlank($value))
+                    || (is_array($value) && isset($value["compareDatetime"]))
+                    || (is_array($value) && isset($value["compareDate"]))
+                    || (is_array($value) && $value != [] && !isset($value["compareOp"]))) {
+                    if (strstr($key, "__node__") == 0) {
+                        $data[str_replace("__node__", "node.", $key)] = $value;
+                    } else {
+                        $data[$key] = $value;
+                    }
+                }
+            }
+            $data = $this->processCriteria($data, "node.");
+            $data = $this->processCriteriaNodetype($data, $nodetype);
+
+            $listManager = new EntityListManager(
+                $this->getService('request'),
+                $this->getService('em'),
+                NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
+                $data
+            );
+            if ($this->pagination === false) {
+                $listManager->setItemPerPage($this->itemPerPage);
+                $listManager->disablePagination();
+            }
+            $listManager->handle();
+            $entities = $listManager->getEntities();
+            $nodes = [];
+            foreach ($entities as $nodesSource) {
+                if (!in_array($nodesSource->getNode(), $nodes)) {
+                    $nodes[] = $nodesSource->getNode();
+                }
+            }
+
+            if ($form->get('exportNodesSources')->isClicked()) {
+                $response = new Response(
+                    $this->getXlsxResults($nodetype, $entities),
+                    Response::HTTP_OK,
+                    []
+                );
+
+                $response->headers->set(
+                    'Content-Disposition',
+                    $response->headers->makeDisposition(
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                        'search.xlsx'
+                    )
+                );
+
+                return $response;
+            }
+
+            $this->assignation['filters'] = $listManager->getAssignation();
+            $this->assignation['nodesSources'] = $entities;
+            $this->assignation['nodes'] = $nodes;
+        }
+
+        return null;
+    }
+
+    protected function getXlsxResults(NodeType $nodetype, array $entities = [])
+    {
+        $fields = $nodetype->getFields();
+        $keys = [];
+        $answers = [];
+        $keys[] = "title";
+        foreach ($fields as $field) {
+            if (!$field->isVirtual()) {
+                $keys[] = $field->getName();
+            }
+        }
+        foreach ($entities as $idx => $nodesSource) {
+            $array = [];
+            foreach ($keys as $key) {
+                $getter = 'get' . str_replace('_', '', ucwords($key));
+                $tmp = $nodesSource->$getter();
+                if (is_array($tmp)) {
+                    $tmp = implode(',', $tmp);
+                }
+                $array[] = $tmp;
+            }
+            $answers[$idx] = $array;
+        }
+
+        return XlsxExporter::exportXlsx($answers, $keys);
+    }
+
     public function buildSimpleForm($prefix)
     {
         $builder = $this->getService('formFactory')
@@ -369,33 +386,17 @@ class SearchController extends RozierApp
                             'label' => 'node.status',
                             'required' => false,
                         ])
-                        ->add($prefix . 'visible', 'choice', [
+                        ->add($prefix . 'visible', new ExtendedBooleanType(), [
                             'label' => 'visible',
-                            'choices' => [true => 'true', false => 'false'],
-                            'empty_value' => 'ignore',
-                            'required' => false,
-                            'expanded' => true,
                         ])
-                        ->add($prefix . 'locked', 'choice', [
+                        ->add($prefix . 'locked', new ExtendedBooleanType(), [
                             'label' => 'locked',
-                            'choices' => [true => 'true', false => 'false'],
-                            'empty_value' => 'ignore',
-                            'required' => false,
-                            'expanded' => true,
                         ])
-                        ->add($prefix . 'sterile', 'choice', [
+                        ->add($prefix . 'sterile', new ExtendedBooleanType(), [
                             'label' => 'sterile-status',
-                            'choices' => [true => 'true', false => 'false'],
-                            'empty_value' => 'ignore',
-                            'required' => false,
-                            'expanded' => true,
                         ])
-                        ->add($prefix . 'hideChildren', 'choice', [
+                        ->add($prefix . 'hideChildren', new ExtendedBooleanType(), [
                             'label' => 'hiding-children',
-                            'choices' => [true => 'true', false => 'false'],
-                            'empty_value' => 'ignore',
-                            'required' => false,
-                            'expanded' => true,
                         ])
                         ->add($prefix . 'nodeName', 'text', [
                             'label' => 'nodeName',
@@ -405,12 +406,12 @@ class SearchController extends RozierApp
                             'label' => 'node.id.parent',
                             'required' => false,
                         ])
-                        ->add($prefix . "createdAt", new CompareDatetimeType($this->getTranslator()), [
+                        ->add($prefix . "createdAt", new CompareDatetimeType(), [
                             'label' => 'created.at',
                             'virtual' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "updatedAt", new CompareDatetimeType($this->getTranslator()), [
+                        ->add($prefix . "updatedAt", new CompareDatetimeType(), [
                             'label' => 'updated.at',
                             'virtual' => false,
                             'required' => false,
@@ -445,7 +446,7 @@ class SearchController extends RozierApp
             "nodetypefield",
             new \RZ\Roadiz\CMS\Forms\SeparatorType(),
             [
-                'label' => $this->getTranslator()->trans('nodetypefield'),
+                'label' => 'nodetypefield',
                 'attr' => ["class" => "label-separator"],
             ]
         );
@@ -458,31 +459,33 @@ class SearchController extends RozierApp
                 continue;
             }
 
-            if (NodeTypeField::$typeToForm[$field->getType()] == "enumeration") {
+            if ($field->getType() === NodeTypeField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
-                $option['empty_value'] = $this->getTranslator()->trans('ignore');
+                $option['empty_value'] = 'ignore';
                 $option['required'] = false;
                 $option["expanded"] = false;
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
                 $option["choices"] = $choices;
-            } elseif (NodeTypeField::$typeToForm[$field->getType()] == "multiple_enumeration") {
+            } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["choices"] = $choices;
-                $option['empty_value'] = $this->getTranslator()->trans('ignore');
+                $option['empty_value'] = 'ignore';
                 $option['required'] = false;
                 $option["multiple"] = true;
                 $option["expanded"] = false;
                 if (count($choices) < 4) {
                     $option["expanded"] = true;
                 }
-            } elseif (NodeTypeField::$typeToForm[$field->getType()] == "datetime") {
-                $type = new CompareDatetimeType($this->getTranslator());
+            } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
+                $type = new CompareDatetimeType();
+            } elseif ($field->getType() === NodeTypeField::DATE_T) {
+                $type = new CompareDateType();
             } else {
                 $type = NodeTypeField::$typeToForm[$field->getType()];
             }
