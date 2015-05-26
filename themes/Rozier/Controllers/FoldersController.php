@@ -125,7 +125,7 @@ class FoldersController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid() &&
-                $form->getData()['folderId'] == $folder->getId()) {
+                $form->getData()['folder_id'] == $folder->getId()) {
                 try {
                     $this->deleteFolder($form->getData(), $folder);
                     $msg = $this->getTranslator()->trans(
@@ -171,7 +171,7 @@ class FoldersController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid() &&
-                $form->getData()['folderId'] == $folder->getId()) {
+                $form->getData()['folder_id'] == $folder->getId()) {
                 try {
                     $this->editFolder($form, $folder); // only pass form for file handling
                     $msg = $this->getTranslator()->trans(
