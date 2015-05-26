@@ -49,9 +49,8 @@ use Themes\Rozier\RozierApp;
 class DocumentsController extends RozierApp
 {
     protected $thumbnailFormat = [
-        'width' => 128,
         'quality' => 50,
-        'crop' => '1x1',
+        'fit' => '128x128',
     ];
 
     /**
@@ -201,7 +200,6 @@ class DocumentsController extends RozierApp
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
                 'width' => 500,
-                'quality' => 70,
                 'controls' => true,
             ];
 

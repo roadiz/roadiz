@@ -49,7 +49,7 @@ if (php_sapi_name() == 'cli') {
         $request = Kernel::getInstance()->getRequest();
 
         /*
-         * Bypass Roadiz kernel to directly serve SLIR assets
+         * Bypass Roadiz kernel to directly serve images assets
          */
         if (0 === strpos($request->getPathInfo(), '/assets') &&
             preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)

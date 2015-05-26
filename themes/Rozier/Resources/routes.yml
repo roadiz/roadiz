@@ -24,9 +24,9 @@ ajaxSessionMessages:
 deleteDoctrineCache:
     path:     /rz-admin/cache/delete-doctrine-cache
     defaults: { _controller: Themes\Rozier\Controllers\CacheController::deleteDoctrineCache }
-deleteSLIRCache:
+deleteAssetsCache:
     path:     /rz-admin/cache/delete-assets-cache
-    defaults: { _controller: Themes\Rozier\Controllers\CacheController::deleteSLIRCache }
+    defaults: { _controller: Themes\Rozier\Controllers\CacheController::deleteAssetsCache }
 
 # NODES
 nodesHomePage:

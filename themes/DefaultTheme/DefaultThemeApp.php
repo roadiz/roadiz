@@ -96,8 +96,7 @@ class DefaultThemeApp extends FrontendController
                 'width' => 1600
             ];
             $array['thumbnail'] = [
-                "width" => 200,
-                "crop" => "1:1",
+                "fit" => "200x200",
                 "controls" => true,
                 "embed" => true,
             ];

@@ -110,11 +110,11 @@ class CacheController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteSLIRCache(Request $request)
+    public function deleteAssetsCache(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
-        $form = $this->buildDeleteSLIRForm();
+        $form = $this->buildDeleteAssetsForm();
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -132,13 +132,13 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return $this->render('cache/deleteSLIR.html.twig', $this->assignation);
+        return $this->render('cache/deleteAssets.html.twig', $this->assignation);
     }
 
     /**
      * @return Symfony\Component\Form\Form
      */
-    private function buildDeleteSLIRForm()
+    private function buildDeleteAssetsForm()
     {
         $builder = $this->createFormBuilder();
 
