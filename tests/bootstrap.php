@@ -36,3 +36,4 @@ define('ROADIZ_ROOT', dirname(__FILE__) . '/..');
 require ROADIZ_ROOT . "/vendor/autoload.php";
 
 Kernel::getInstance()->boot();
+Kernel::getInstance()->initEvents();

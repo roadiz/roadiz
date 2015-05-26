@@ -92,8 +92,6 @@ class Kernel implements ServiceProviderInterface
          */
         $this->container->register($this);
         $this->container['stopwatch']->openSection();
-
-        $this->initEvents();
     }
 
     /**
@@ -353,7 +351,7 @@ class Kernel implements ServiceProviderInterface
      *
      * @return boolean
      */
-    private function initEvents()
+    public function initEvents()
     {
         if ($this->isDebug() || RouteCollectionSubscriber::needToDumpUrlTools()) {
             $this->container['dispatcher']->addSubscriber(
