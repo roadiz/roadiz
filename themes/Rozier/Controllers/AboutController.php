@@ -80,8 +80,6 @@ class AboutController extends RozierApp
 
     protected static $filesToUpgrade = [
         'index.php',
-        'bootstrap.php',
-        'cli-config.php',
         'vendor',
         'src',
         'bin',
