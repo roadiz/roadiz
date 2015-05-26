@@ -5992,6 +5992,26 @@
           <source>file.is_not_a.valid.font.file</source>
           <target xml:lang="en" state="translated">This file is not a valid font file</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.%name%.updated">
+          <source>folder.%name%.updated</source>
+          <target xml:lang="en" state="translated">Folder “%name%” has been updated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.alreadyExists">
+          <source>folder.alreadyExists</source>
+          <target xml:lang="en" state="translated">Folder already exists.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.%name%.deleted">
+          <source>folder.%name%.deleted</source>
+          <target xml:lang="en" state="translated">Folder “%name%” has been deleted.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.folder.found">
+          <source>no.folder.found</source>
+          <target xml:lang="en" state="translated">No folder found</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.does_not_exist">
+          <source>folder.does_not_exist</source>
+          <target xml:lang="en" state="translated">Folder does not exist</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
