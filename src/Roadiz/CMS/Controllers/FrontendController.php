@@ -399,12 +399,12 @@ class FrontendController extends AppController
     /**
      * Store basic informations for your theme from a NodesSources object.
      *
-     * @param RZ\Roadiz\Core\Entities\NodesSource $nodeSource
+     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return void
      */
-    protected function prepareNodeSourceAssignation(NodesSource $nodeSource = null, Translation $translation = null)
+    protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
     {
         $this->storeNodeSourceAndTranslation($nodeSource, $translation);
         $this->assignation['home'] = $this->getHome($translation);
