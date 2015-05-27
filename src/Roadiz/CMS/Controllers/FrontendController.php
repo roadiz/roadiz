@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
@@ -161,6 +162,45 @@ class FrontendController extends AppController
             $this->nodeSource = $this->node->getNodeSources()->first();
             $this->assignation['node'] = $this->node;
             $this->assignation['nodeSource'] = $this->nodeSource;
+        }
+
+        $this->assignation['pageMeta'] = $this->getNodeSEO();
+    }
+
+    /**
+     * Store current nodeSource and translation into controller.
+     *
+     * It makes following fields available into template assignation:
+     *
+     * * node
+     * * nodeSource
+     * * translation
+     * * pageMeta
+     *     * title
+     *     * description
+     *     * keywords
+     *
+     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     */
+    public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
+    {
+        $this->nodeSource = $nodeSource;
+
+        if (null !== $this->nodeSource) {
+            $this->node = $this->nodeSource->getNode();
+            $this->translation = $this->nodeSource->getTranslation();
+
+            $this->getService('request')->attributes->set('translation', $this->translation);
+            $this->getService('request')->attributes->set('node', $this->node);
+
+            $this->assignation['translation'] = $this->translation;
+            $this->assignation['node'] = $this->node;
+            $this->assignation['nodeSource'] = $this->nodeSource;
+        } else {
+            $this->translation = $translation;
+            $this->assignation['translation'] = $this->translation;
+            $this->getService('request')->attributes->set('translation', $this->translation);
         }
 
         $this->assignation['pageMeta'] = $this->getNodeSEO();
@@ -339,7 +379,7 @@ class FrontendController extends AppController
     }
 
     /**
-     * Store basic informations for your theme.
+     * Store basic informations for your theme from a Node object.
      *
      * @param RZ\Roadiz\Core\Entities\Node        $node
      * @param RZ\Roadiz\Core\Entities\Translation $translation
@@ -349,6 +389,24 @@ class FrontendController extends AppController
     protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
     {
         $this->storeNodeAndTranslation($node, $translation);
+        $this->assignation['home'] = $this->getHome($translation);
+        /*
+         * Use a DI container to delay API requuests
+         */
+        $this->themeContainer = new Container();
+    }
+
+    /**
+     * Store basic informations for your theme from a NodesSources object.
+     *
+     * @param RZ\Roadiz\Core\Entities\NodesSource $nodeSource
+     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     *
+     * @return void
+     */
+    protected function prepareNodeSourceAssignation(NodesSource $nodeSource = null, Translation $translation = null)
+    {
+        $this->storeNodeSourceAndTranslation($nodeSource, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
          * Use a DI container to delay API requuests
