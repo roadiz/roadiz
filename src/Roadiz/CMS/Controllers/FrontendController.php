@@ -394,6 +394,8 @@ class FrontendController extends AppController
          * Use a DI container to delay API requuests
          */
         $this->themeContainer = new Container();
+
+        $this->extendAssignation();
     }
 
     /**
@@ -412,6 +414,19 @@ class FrontendController extends AppController
          * Use a DI container to delay API requuests
          */
         $this->themeContainer = new Container();
+
+        $this->extendAssignation();
+    }
+
+    /**
+     * Extends theme assignation with custom data.
+     *
+     * Override this method in your theme to add your own service
+     * and data.
+     */
+    protected function extendAssignation()
+    {
+
     }
 
     /**

@@ -77,14 +77,11 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node        $node
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
+    protected function extendAssignation()
     {
-        parent::prepareThemeAssignation($node, $translation);
+        parent::extendAssignation();
 
         $this->themeContainer['imageFormats'] = function ($c) {
             $array = [];
@@ -131,7 +128,7 @@ class DefaultThemeApp extends FrontendController
             return include dirname(__FILE__) . '/static/public/config/assets.config.php';
         };
 
-        $this->assignation['home'] = $this->getHome($translation);
+        $this->assignation['home'] = $this->getHome($this->translation);
         $this->assignation['themeServices'] = $this->themeContainer;
         // Get session messages
         $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
@@ -168,11 +165,7 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * Return a Response with default backend 404 error page.
-     *
-     * @param string $message Additionnal message to describe 404 error.
-     *
-     * @return Symfony\Component\HttpFoundation\Response
+     * {@inheritdoc}
      */
     public function throw404($message = "")
     {
@@ -188,9 +181,7 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * Append objects to global container.
-     *
-     * @param Pimple\Container $container
+     * {@inheritdoc}
      */
     public static function setupDependencyInjection(Container $container)
     {

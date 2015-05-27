@@ -40,7 +40,7 @@ class BasicBlockController extends DefaultThemeApp
 {
     public function blockAction(Request $request, NodesSources $source, $assignation = [])
     {
-        $this->prepareThemeAssignation($source->getNode(), $source->getTranslation());
+        $this->prepareNodeSourceAssignation($source, $source->getTranslation());
 
         $this->assignation = array_merge($this->assignation, $assignation);
 
