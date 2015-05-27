@@ -126,14 +126,13 @@ class AssetsController extends AppController
     /**
      * Request a single protected font file from Roadiz.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
      * @param string                                   $filename
      * @param string                                   $extension
      * @param string                                   $token
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
+    public function fontFileAction($filename, $variant, $extension, $token)
     {
         $font = $this->getService('em')
                      ->getRepository('RZ\Roadiz\Core\Entities\Font')
@@ -178,7 +177,7 @@ class AssetsController extends AppController
                     $date = new \DateTime();
                     $date->modify('+2 hours');
                     $response->setExpires($date);
-                    $response->setPrivate(true);
+                    $response->setPrivate();
                     $response->setMaxAge(60 * 60 * 2);
 
                     return $response;
@@ -204,11 +203,10 @@ class AssetsController extends AppController
      * Request the font-face CSS file listing available fonts.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $token
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFacesAction(Request $request, $token)
+    public function fontFacesAction(Request $request)
     {
         $repository = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();

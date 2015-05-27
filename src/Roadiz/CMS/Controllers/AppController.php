@@ -158,8 +158,6 @@ class AppController extends Controller
 
     /**
      * Initialize controller with its twig environment.
-     *
-     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
     public function __init()
     {

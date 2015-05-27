@@ -41,6 +41,7 @@ use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
 use RZ\Roadiz\Utils\LogProcessors\SecurityContextProcessor;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
@@ -149,6 +150,10 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
+        $container['accessMap'] = function ($c) {
+            return new AccessMap();
+        };
+
         $container['userProvider'] = function ($c) {
             return new UserProvider();
         };
@@ -216,7 +221,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewallExceptionListener'] = function ($c) {
-
             return new ExceptionListener(
                 $c['securityContext'],
                 new AuthenticationTrustResolver('', ''),

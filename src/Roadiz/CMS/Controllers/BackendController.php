@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
@@ -66,7 +65,7 @@ class BackendController extends AppController
          */
         $requestMatcher = new RequestMatcher('^/rz-admin');
         // allows configuration of different access control rules for specific parts of the website.
-        $accessMap = new AccessMap($requestMatcher, [
+        $container['accessMap']->add($requestMatcher, [
             Role::ROLE_BACKEND_USER,
             Role::ROLE_SUPERADMIN,
         ]);
@@ -126,7 +125,7 @@ class BackendController extends AppController
             new AccessListener(
                 $container['securityContext'],
                 $container['accessDecisionManager'],
-                $accessMap,
+                $container['accessMap'],
                 $container['authentificationManager']
             ),
             $container["switchUser"],
