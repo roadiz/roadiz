@@ -91,7 +91,6 @@ class SchemaController extends RozierApp
     {
         if ($this->getService('csrfProvider')
             ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-
             $updater = new SchemaUpdater($this->getService('em'));
             $updater->updateSchema();
 
