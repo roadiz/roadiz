@@ -90,7 +90,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         return $array;
     }
 
-    private static function makeNodeRec($data)
+    protected static function makeNodeRec($data)
     {
         $nodetype = Kernel::getInstance()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
@@ -144,7 +144,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             }
 
             foreach ($source['url_aliases'] as $url) {
-                $alias = new UrlAlias();
+                $alias = new UrlAlias($nodeSource);
                 $alias->setAlias($url['alias']);
                 $nodeSource->addUrlAlias($alias);
             }

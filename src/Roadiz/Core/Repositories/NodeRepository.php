@@ -823,8 +823,6 @@ class NodeRepository extends EntityRepository
         Node $parent = null,
         SecurityContext $securityContext = null
     ) {
-        $query = null;
-
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
                      INNER JOIN n.nodeSources ns
                      INNER JOIN ns.translation t';
@@ -872,8 +870,6 @@ class NodeRepository extends EntityRepository
         Node $parent = null,
         SecurityContext $securityContext = null
     ) {
-        $query = null;
-
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
                      INNER JOIN n.nodeSources ns
                      INNER JOIN ns.translation t';

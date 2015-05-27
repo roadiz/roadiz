@@ -453,7 +453,6 @@ class SearchController extends RozierApp
 
         foreach ($fields as $field) {
             $option = ["label" => $field->getLabel()];
-            $type = null;
             $option['required'] = false;
             if ($field->isVirtual()) {
                 continue;

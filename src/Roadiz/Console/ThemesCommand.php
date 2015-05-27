@@ -61,6 +61,11 @@ class ThemesCommand extends Command
         if ($name) {
             $theme = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
                           ->findOneBy(['className' => $name]);
+            $text .=
+            ' |_ ' . $theme->getClassName()
+            . ' — <info>' . ($theme->isAvailable() ? 'enabled' : 'disabled') . '</info>'
+            . ' — <comment>' . ($theme->isBackendTheme() ? 'Backend' : 'Frontend') . '</comment>'
+            . PHP_EOL;
 
         } else {
             $text = '<info>Installed theme…</info>' . PHP_EOL;

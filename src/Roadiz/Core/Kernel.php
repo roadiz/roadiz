@@ -65,7 +65,7 @@ class Kernel implements ServiceProviderInterface
 
     public static $cmsBuild = null;
     public static $cmsVersion = "0.8.1";
-    private static $instance = null;
+    protected static $instance = null;
 
     public $container = null;
     protected $response = null;

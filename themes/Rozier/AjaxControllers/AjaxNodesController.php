@@ -217,8 +217,6 @@ class AjaxNodesController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $responseArray = null;
-
         $availableStatuses = [
             'visible' => 'setVisible',
             'status' => 'setStatus',

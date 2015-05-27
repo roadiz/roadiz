@@ -91,7 +91,6 @@ class SchemaController extends RozierApp
 
     protected function updateSchema(Request $request, $_token)
     {
-
         if ($this->getService('csrfProvider')
             ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
             $updater = new SchemaUpdater($this->getService('em'));
@@ -101,7 +100,7 @@ class SchemaController extends RozierApp
             $this->publishConfirmMessage($request, $msg);
         } else {
             $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $this->publishErrorMessage($request, $e->getMessage());
+            $this->publishErrorMessage($request, $msg);
         }
     }
 }

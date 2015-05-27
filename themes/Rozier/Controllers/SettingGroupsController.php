@@ -233,14 +233,8 @@ class SettingGroupsController extends RozierApp
             }
             try {
                 foreach ($data as $key => $value) {
-                    if ($key != 'group') {
-                        $setter = 'set' . ucwords($key);
-                        $settingGroup->$setter($value);
-                    } else {
-                        $group = $this->getService('em')
-                                      ->find('RZ\Roadiz\Core\Entities\SettingGroupGroup', (int) $value);
-                        $settingGroup->setSettingGroupGroup($group);
-                    }
+                    $setter = 'set' . ucwords($key);
+                    $settingGroup->$setter($value);
                 }
 
                 $this->getService('em')->flush();

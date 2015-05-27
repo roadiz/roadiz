@@ -127,8 +127,7 @@ class DatabaseController extends InstallApp
          */
         if (null === $this->getService('em')) {
             $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $c['session']->getFlashBag()->all();
-
+            $this->assignation['errorMessage'] = $this->getService('session')->getFlashBag()->all();
         } else {
             try {
                 /*
@@ -147,7 +146,6 @@ class DatabaseController extends InstallApp
                 ));
 
             } catch (\PDOException $e) {
-                $message = "";
                 if (strstr($e->getMessage(), 'SQLSTATE[')) {
                     preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
                     $message = $matches[3];

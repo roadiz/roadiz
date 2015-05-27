@@ -425,7 +425,7 @@ class Node extends AbstractDateTimedPositioned
      *
      * @return $this
      */
-    public function setNodeType($nodeType = null)
+    public function setNodeType(NodeType $nodeType = null)
     {
         $this->nodeType = $nodeType;
 
@@ -452,7 +452,7 @@ class Node extends AbstractDateTimedPositioned
      *
      * @return $this
      */
-    public function setParent($parent)
+    public function setParent(Node $parent = null)
     {
         $this->parent = $parent;
 

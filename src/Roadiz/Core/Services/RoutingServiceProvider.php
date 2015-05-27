@@ -58,7 +58,11 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
             if (RouteCollectionSubscriber::needToDumpUrlTools()) {
                 return new UrlMatcher($c['routeCollection'], $c['requestContext']);
             } else {
-                return new MixedUrlMatcher($c['requestContext'], $c['dynamicUrlMatcher']);
+                return new MixedUrlMatcher(
+                    $c['requestContext'],
+                    $c['dynamicUrlMatcher'],
+                    (boolean) $c['config']['install']
+                );
             }
         };
         $container['dynamicUrlMatcher'] = function ($c) {

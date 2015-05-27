@@ -39,23 +39,28 @@ use Symfony\Component\Routing\RequestContext;
 class MixedUrlMatcher extends \GlobalUrlMatcher
 {
     protected $dynamicUrlMatcher;
+    protected $installMode;
 
     /**
      * @param RequestContext  $context
      * @param DynamicUrlMatcher $dynamicUrlMatcher
+     * @param boolean $installMode
      */
-    public function __construct(RequestContext $context, DynamicUrlMatcher $dynamicUrlMatcher)
-    {
+    public function __construct(
+        RequestContext $context,
+        DynamicUrlMatcher $dynamicUrlMatcher,
+        $installMode = false
+    ) {
         $this->context = $context;
         $this->dynamicUrlMatcher = $dynamicUrlMatcher;
+        $this->installMode = $installMode;
     }
     /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
     {
-        if (isset($container['config']['install']) &&
-            true === $container['config']['install']) {
+        if (true === $this->installMode) {
             // No node controller matching in install mode
             return parent::match($pathinfo);
         }

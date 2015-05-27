@@ -334,11 +334,16 @@ class ThemesController extends RozierApp
             if ($key == "homeNode" || $key == "root") {
                 if (count($value) > 1) {
                     if ($key == "root") {
-                        $msg = $this->getTranslator()->trans('theme.root.limited.one');
+                        $this->publishErrorMessage(
+                            $request,
+                            $this->getTranslator()->trans('theme.root.limited.one')
+                        );
                     } elseif ($key == "homeNode") {
-                        $msg = $this->getTranslator()->trans('home.node.limited.one');
+                        $this->publishErrorMessage(
+                            $request,
+                            $this->getTranslator()->trans('home.node.limited.one')
+                        );
                     }
-                    $this->publishErrorMessage($request, $msg);
                 }
                 if ($value !== null && !empty($value[0])) {
                     $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);

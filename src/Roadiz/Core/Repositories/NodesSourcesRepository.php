@@ -322,8 +322,6 @@ class NodesSourcesRepository extends EntityRepository
         $offset = null,
         SecurityContext $securityContext = null
     ) {
-
-        $joinedNode = false;
         $joinedNodeType = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'ns')
@@ -380,8 +378,6 @@ class NodesSourcesRepository extends EntityRepository
         array &$criteria,
         SecurityContext $securityContext = null
     ) {
-
-        $joinedNode = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(ns.id)')
            ->add('from', $this->getEntityName() . ' ns');

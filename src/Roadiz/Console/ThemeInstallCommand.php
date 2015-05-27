@@ -114,7 +114,7 @@ class ThemeInstallCommand extends Command
                 }
             }
         } else {
-            $text .= '<info>Theme class “' . $themeFile . '” has no data to import.</info>' . PHP_EOL;
+            $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;
         }
     }
 

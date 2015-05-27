@@ -174,8 +174,6 @@ class NodesTagsController extends RozierApp
      *
      * @param array                       $data
      * @param RZ\Roadiz\Core\Entities\Node $node
-     *
-     * @return RZ\Roadiz\Core\Entities\Tag $linkedTag
      */
     protected function addNodeTag($data, Node $node)
     {
@@ -193,8 +191,6 @@ class NodesTagsController extends RozierApp
         }
 
         $this->getService('em')->flush();
-
-        return $tag;
     }
 
     /**
@@ -210,9 +206,9 @@ class NodesTagsController extends RozierApp
             $data['tagId'] == $tag->getId()) {
             $node->removeTag($tag);
             $this->getService('em')->flush();
-
-            return $tag;
         }
+
+        return $tag;
     }
 
     /**

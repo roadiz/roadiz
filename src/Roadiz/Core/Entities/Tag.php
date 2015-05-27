@@ -154,7 +154,7 @@ class Tag extends AbstractDateTimedPositioned
      *
      * @return $this
      */
-    public function setParent($parent)
+    public function setParent(Tag $parent = null)
     {
         $this->parent = $parent;
 
@@ -229,7 +229,7 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function getOneLineSummary()
     {
-        return $this->getId() . " — " . $this->getName() . " — " . $this->getNodeType()->getName() .
+        return $this->getId() . " — " . $this->getTagName() .
         " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
 

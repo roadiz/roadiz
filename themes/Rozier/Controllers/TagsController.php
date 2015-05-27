@@ -320,7 +320,6 @@ class TagsController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
         $this->getService('em')->refresh($tag);
 
-        $translation = null;
         if (null !== $translationId) {
             $translation = $this->getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')

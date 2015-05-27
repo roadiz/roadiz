@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Bags\RolesBag;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Handlers\UserHandler;
+use RZ\Roadiz\Utils\Security\PasswordGenerator;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -157,11 +157,13 @@ class UsersCommand extends Command
                         '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question> : ',
                         false
                     )) {
-                        $user->setPlainPassword(UserHandler::generatePassword());
+                        $passwordGenerator = new PasswordGenerator();
+                        $user->setPlainPassword($passwordGenerator->generatePassword(12));
+                        $user->getHandler()->encodePassword();
 
                         $this->entityManager->flush();
                         $text = '<info>User password regenerated…</info>' . PHP_EOL;
-                        $text .= '<info>Password “' . $user->getPlainPassword() . '”.</info>' . PHP_EOL;
+                        $text .= 'Password: <info>' . $user->getPlainPassword() . '</info>' . PHP_EOL;
 
                     } else {
                         $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
@@ -249,8 +251,6 @@ class UsersCommand extends Command
         )) {
             $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
         }
-
-        $user->setPlainPassword(UserHandler::generatePassword());
 
         $this->entityManager->persist($user);
         $user->getViewer()->sendSignInConfirmation();

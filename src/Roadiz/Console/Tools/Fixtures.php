@@ -30,6 +30,7 @@
 
 namespace RZ\Roadiz\Console\Tools;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -65,9 +66,13 @@ class Fixtures
 
         $this->entityManager->flush();
 
-        // Clear result cache
+        $this->clearResultCache();
+    }
+
+    protected function clearResultCache()
+    {
         $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null) {
+        if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
             $cacheDriver->deleteAll();
         }
     }
@@ -295,11 +300,7 @@ class Fixtures
             $this->entityManager->persist($feTheme);
             $this->entityManager->flush();
 
-            // Clear result cache
-            $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-            if ($cacheDriver !== null) {
-                $cacheDriver->deleteAll();
-            }
+            $this->clearResultCache();
 
             return $feTheme->getId();
         }

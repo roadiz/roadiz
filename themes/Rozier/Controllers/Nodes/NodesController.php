@@ -577,8 +577,6 @@ class NodesController extends RozierApp
 
             if (null !== $nodeType &&
                 null !== $parent) {
-                $translation = null;
-
                 if ($request->get('translationId') > 0) {
                     $translation = $this->getService('em')->find(
                         'RZ\Roadiz\Core\Entities\Translation',

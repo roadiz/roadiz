@@ -53,7 +53,7 @@ abstract class AbstractApi
     /**
      * Return entity path for current API.
      *
-     * @return string
+     * @return Doctrine\ORM\EntityRepository
      */
     abstract public function getRepository();
 
