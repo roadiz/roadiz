@@ -114,40 +114,30 @@ class CacheCommand extends Command
             $translationsClearer,
         ];
 
-        if ($input->getOption('infos')) {
-            $text .= $this->getInformations();
-        } elseif ($input->getOption('clear-all')) {
+        if ($input->getOption('clear-all')) {
             foreach ($clearers as $clearer) {
                 $clearer->clear();
                 $text .= $clearer->getOutput();
             }
 
             $text .= '<info>All caches have been been purged…</info>' . PHP_EOL;
+        } elseif ($input->getOption('clear-doctrine')) {
+            $doctrineClearer->clear();
+            $text .= $doctrineClearer->getOutput();
+        } elseif ($input->getOption('clear-routes')) {
+            $routingClearer->clear();
+            $text .= $routingClearer->getOutput();
+        } elseif ($input->getOption('clear-assets')) {
+            $assetsClearer->clear();
+            $text .= $assetsClearer->getOutput();
+        } elseif ($input->getOption('clear-templates')) {
+            $templatesClearer->clear();
+            $text .= $templatesClearer->getOutput();
+        } elseif ($input->getOption('clear-translations')) {
+            $translationsClearer->clear();
+            $text .= $translationsClearer->getOutput();
         } else {
-            if ($input->getOption('clear-doctrine')) {
-                $doctrineClearer->clear();
-                $text .= $doctrineClearer->getOutput();
-            }
-
-            if ($input->getOption('clear-routes')) {
-                $routingClearer->clear();
-                $text .= $routingClearer->getOutput();
-            }
-
-            if ($input->getOption('clear-assets')) {
-                $assetsClearer->clear();
-                $text .= $assetsClearer->getOutput();
-            }
-
-            if ($input->getOption('clear-templates')) {
-                $templatesClearer->clear();
-                $text .= $templatesClearer->getOutput();
-            }
-
-            if ($input->getOption('clear-translations')) {
-                $translationsClearer->clear();
-                $text .= $translationsClearer->getOutput();
-            }
+            $text .= $this->getInformations();
         }
 
         $output->writeln($text);
@@ -158,16 +148,24 @@ class CacheCommand extends Command
         $text = '';
 
         $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-        $text .= "Result cache driver: " . get_class($cacheDriver) . PHP_EOL;
+        if (null !== $cacheDriver) {
+            $text .= "<info>Result cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+        }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getHydrationCacheImpl();
-        $text .= "Hydratation cache driver: " . get_class($cacheDriver) . PHP_EOL;
+        if (null !== $cacheDriver) {
+            $text .= "<info>Hydratation cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+        }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getQueryCacheImpl();
-        $text .= "Query cache driver: " . get_class($cacheDriver) . PHP_EOL;
+        if (null !== $cacheDriver) {
+            $text .= "<info>Query cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+        }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-        $text .= "Metadata cache driver: " . get_class($cacheDriver) . PHP_EOL;
+        if (null !== $cacheDriver) {
+            $text .= "<info>Metadata cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+        }
 
         return $text;
     }

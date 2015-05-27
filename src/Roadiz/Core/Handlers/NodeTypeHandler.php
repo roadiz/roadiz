@@ -143,6 +143,13 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 ';
             file_put_contents($file, $content);
 
+            /*
+             * Force Zend OPcache to reset file
+             */
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($file, true);
+            }
+
             return "Source class “".$this->nodeType->getSourceEntityClassName()."” has been created.".PHP_EOL;
         } else {
             return "Source class “".$this->nodeType->getSourceEntityClassName()."” already exists.".PHP_EOL;
@@ -152,7 +159,8 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     }
 
     /**
-     * Update database schema for current node-type.
+     * Clear doctrine metadata cache and
+     * regenerate entity class file.
      *
      * @return $this
      */
@@ -164,12 +172,15 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         foreach ($clearers as $clearer) {
             $clearer->clear();
         }
-        $this->removeSourceEntityClass();
-        $this->generateSourceEntityClass();
+
+        $this->regenerateEntityClass();
 
         return $this;
     }
 
+    /**
+     * Delete and recreate entity class file.
+     */
     public function regenerateEntityClass()
     {
         $this->removeSourceEntityClass();

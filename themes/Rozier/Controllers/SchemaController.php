@@ -60,7 +60,6 @@ class SchemaController extends RozierApp
     public function updateNodeTypesSchemaAction(Request $request, $_token)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-
         $this->updateSchema($request, $_token);
 
         return $this->redirect($this->generateUrl(
@@ -78,7 +77,6 @@ class SchemaController extends RozierApp
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-
         $this->updateSchema($request, $_token);
 
         return $this->redirect($this->generateUrl(
@@ -93,14 +91,14 @@ class SchemaController extends RozierApp
     {
         if ($this->getService('csrfProvider')
             ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+
             $updater = new SchemaUpdater($this->getService('em'));
             $updater->updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $this->publishConfirmMessage($request, $msg);
         } else {
-            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $this->publishErrorMessage($request, $msg);
+            throw new \RuntimeException($this->getTranslator()->trans('database.schema.cannot_updated'), 1);
         }
     }
 }

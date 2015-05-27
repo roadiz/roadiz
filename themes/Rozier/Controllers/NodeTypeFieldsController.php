@@ -157,9 +157,9 @@ class NodeTypeFieldsController extends RozierApp
                 try {
                     $this->getService('em')->persist($field);
                     $this->getService('em')->flush();
-
                     $this->getService('em')->refresh($nodeType);
-                    $nodeType->getHandler()->regenerateEntityClass();
+
+                    $nodeType->getHandler()->updateSchema();
 
                     $msg = $this->getTranslator()->trans(
                         'nodeTypeField.%name%.created',
@@ -225,7 +225,6 @@ class NodeTypeFieldsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['nodeTypeFieldId'] == $field->getId()) {
                 $nodeTypeId = $field->getNodeType()->getId();
-
                 $this->getService('em')->remove($field);
                 $this->getService('em')->flush();
 
@@ -235,7 +234,7 @@ class NodeTypeFieldsController extends RozierApp
                 $nodeType = $this->getService('em')
                                  ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
-                $nodeType->getHandler()->regenerateEntityClass();
+                $nodeType->getHandler()->updateSchema();
 
                 $msg = $this->getTranslator()->trans(
                     'nodeTypeField.%name%.deleted',

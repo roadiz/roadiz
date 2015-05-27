@@ -45,6 +45,12 @@ class SchemaUpdater
         $this->entityManager = $entityManager;
     }
 
+    public function clearMetadata()
+    {
+        $clearer = new DoctrineCacheClearer($this->entityManager);
+        $clearer->clear();
+    }
+
     /**
      * Update database schema.
      *
@@ -54,8 +60,7 @@ class SchemaUpdater
      */
     public function updateSchema($delete = false)
     {
-        $clearer = new DoctrineCacheClearer($this->entityManager);
-        $clearer->clear();
+        $this->clearMetadata();
 
         $tool = new SchemaTool($this->entityManager);
         $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
