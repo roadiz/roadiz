@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Handle operations with node-type entities.
@@ -141,7 +142,9 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     }
 }
 ';
-            file_put_contents($file, $content);
+            if (false === @file_put_contents($file, $content)) {
+                throw new IOException("Impossible to write entity class file (".$file.").", 1);
+            }
 
             /*
              * Force Zend OPcache to reset file

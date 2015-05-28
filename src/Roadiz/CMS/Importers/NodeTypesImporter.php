@@ -64,7 +64,7 @@ class NodeTypesImporter implements ImporterInterface
             $existingNodeType->getHandler()->diff($nodeType);
         }
         Kernel::getService('em')->flush();
-        $existingNodeType->getHandler()->updateSchema();
+        $existingNodeType->getHandler()->regenerateEntityClass();
         return $return;
     }
 }
