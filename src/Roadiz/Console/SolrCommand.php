@@ -36,13 +36,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing nodes from terminal.
  */
 class SolrCommand extends Command
 {
-    private $dialog;
+    private $questionHelper;
     private $entityManager;
     private $solr;
 
@@ -66,7 +67,7 @@ class SolrCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->solr = $this->getHelperSet()->get('solr')->getSolr();
 
@@ -75,10 +76,14 @@ class SolrCommand extends Command
         if (null !== $this->solr) {
             if (true === $this->getHelperSet()->get('solr')->ready()) {
                 if ($input->getOption('reset')) {
-                    if ($this->dialog->askConfirmation(
-                        $output,
-                        '<question>Are you sure to reset Solr index?</question> : ',
+                    $confirmation = new ConfirmationQuestion(
+                        '<question>Are you sure to reset Solr index?</question>',
                         false
+                    );
+                    if ($this->questionHelper->ask(
+                        $input,
+                        $output,
+                        $confirmation
                     )) {
                         $update = $this->solr->createUpdate();
                         $update->addDeleteQuery('*:*');
@@ -89,10 +94,14 @@ class SolrCommand extends Command
                     }
 
                 } elseif ($input->getOption('reindex')) {
-                    if ($this->dialog->askConfirmation(
-                        $output,
-                        '<question>Are you sure to reindex your Node database?</question> : ',
+                    $confirmation = new ConfirmationQuestion(
+                        '<question>Are you sure to reindex your Node database?</question>',
                         false
+                    );
+                    if ($this->questionHelper->ask(
+                        $input,
+                        $output,
+                        $confirmation
                     )) {
                         $stopwatch = new Stopwatch();
                         $stopwatch->start('global');

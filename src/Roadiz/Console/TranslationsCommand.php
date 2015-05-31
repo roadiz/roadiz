@@ -35,13 +35,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing translations from terminal.
  */
 class TranslationsCommand extends Command
 {
-    private $dialog;
+    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -92,7 +93,7 @@ class TranslationsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $this->questionHelper = $this->getHelperSet()->get('questionHelper');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $name = $input->getArgument('name');
@@ -106,11 +107,15 @@ class TranslationsCommand extends Command
             if ($translation !== null) {
                 $text = $translation->getOneLineSummary();
 
+                $confirmation = new ConfirmationQuestion(
+                    '<question>Are you sure to delete ' . $translation->getName() . ' translation?</question>',
+                    false
+                );
                 if ($input->getOption('delete')) {
-                    if ($this->dialog->askConfirmation(
+                    if ($this->questionHelper->ask(
+                        $input,
                         $output,
-                        '<question>Are you sure to delete ' . $translation->getName() . ' translation?</question> : ',
-                        false
+                        $confirmation
                     )) {
                         $this->entityManager->remove($translation);
                         $this->entityManager->flush();

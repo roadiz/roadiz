@@ -39,13 +39,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing users from terminal.
  */
 class UsersCommand extends Command
 {
-    private $dialog;
+    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -103,7 +104,7 @@ class UsersCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $this->questionHelper = $this->getHelperSet()->get('questionHelper');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $name = $input->getArgument('username');
@@ -129,10 +130,14 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('delete')) {
-                    if ($user !== null && $this->dialog->askConfirmation(
-                        $output,
-                        '<question>Do you really want to delete user “' . $user->getUsername() . '”?</question> : ',
+                    $confirmation = new ConfirmationQuestion(
+                        '<question>Do you really want to delete user “' . $user->getUsername() . '”?</question>',
                         false
+                    );
+                    if ($user !== null && $this->questionHelper->ask(
+                        $input,
+                        $output,
+                        $confirmation
                     )) {
                         $this->entityManager->remove($user);
                         $this->entityManager->flush();
@@ -152,7 +157,7 @@ class UsersCommand extends Command
                         $text = '<error>Requested user is not setup yet…</error>' . PHP_EOL;
                     }
                 } elseif ($input->getOption('regenerate')) {
-                    if ($user !== null && $this->dialog->askConfirmation(
+                    if ($user !== null && $this->questionHelper->askConfirmation(
                         $output,
                         '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question> : ',
                         false
@@ -226,7 +231,7 @@ class UsersCommand extends Command
         $user->setUsername($username);
 
         do {
-            $email = $this->dialog->ask(
+            $email = $this->questionHelper->ask(
                 $output,
                 '<question>Email</question> : ',
                 ''
@@ -237,14 +242,14 @@ class UsersCommand extends Command
 
         $user->setEmail($email);
 
-        if ($this->dialog->askConfirmation(
+        if ($this->questionHelper->askConfirmation(
             $output,
             '<question>Is user a backend user?</question> : ',
             false
         )) {
             $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
         }
-        if ($this->dialog->askConfirmation(
+        if ($this->questionHelper->askConfirmation(
             $output,
             '<question>Is user a super-admin user?</question> : ',
             false
