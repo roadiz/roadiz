@@ -146,7 +146,7 @@ class UsersSecurityController extends RozierApp
                     'required' => false,
                 ]);
 
-        if ($this->getService('securityContext')->isGranted("ROLE_SUPERADMIN")) {
+        if ($this->getService('securityAuthorizationChecker')->isGranted("ROLE_SUPERADMIN")) {
             $n = $user->getChroot();
             $n = ($n !== null) ? [$n] : [];
             $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n), [

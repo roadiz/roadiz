@@ -50,7 +50,7 @@
                     {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
                         "node":cnode,
                         "nodeTree":nodeTree,
-                        "securityContext":securityContext,
+                        "authorizationChecker":authorizationChecker,
                         "mainNodeTree":mainNodeTree,
                         "nodeStatuses":nodeStatuses
                     } only %}

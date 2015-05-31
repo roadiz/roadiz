@@ -77,7 +77,7 @@ class NodesSourcesController extends RozierApp
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
-            $this->assignation['securityContext'] = $this->getService("securityContext");
+            $this->assignation['securityAuthorizationChecker'] = $this->getService("securityAuthorizationChecker");
 
             if (null !== $source) {
                 $node = $source->getNode();

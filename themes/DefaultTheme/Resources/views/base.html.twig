@@ -53,7 +53,7 @@
         </footer>
         {% endblock %}
 
-        {% if securityContext.Granted('ROLE_PREVIOUS_ADMIN')%}
+        {% if authorizationChecker.Granted('ROLE_PREVIOUS_ADMIN')%}
             <a href="?_su=_exit">{% trans %}stop.test.user.right{% endtrans %}</a>
         {% endif %}
 

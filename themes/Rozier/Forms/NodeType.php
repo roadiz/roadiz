@@ -32,7 +32,7 @@ namespace Themes\Rozier\Forms;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -115,7 +115,7 @@ class NodeType extends AbstractType
         return 'node';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'compound' => true,
@@ -131,9 +131,7 @@ class NodeType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes([
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
-            'nodeName' => 'string',
-        ]);
+        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('nodeName', 'string');
     }
 }

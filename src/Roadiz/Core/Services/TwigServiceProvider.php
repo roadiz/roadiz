@@ -69,7 +69,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
             $vendorTwigBridgeDir =
-            $vendorDir . '/symfony/twig-bridge/Symfony/Bridge/Twig';
+            $vendorDir . '/symfony/twig-bridge';
 
             return new \Twig_Loader_Filesystem([
                 // Default Form extension templates
@@ -93,7 +93,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(
                 new FormExtension(new TwigRenderer(
                     $c['twig.formRenderer'],
-                    $c['csrfProvider']
+                    $c['csrfTokenManager']
                 ))
             );
 
@@ -110,7 +110,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
             $twig->addExtension(new BlockRenderExtension($c, Kernel::getInstance()));
             if (true !== $c['config']['install']) {
-                $twig->addExtension(new NodesSourcesExtension($c['securityContext']));
+                $twig->addExtension(new NodesSourcesExtension($c['securityAuthorizationChecker']));
             }
             $twig->addExtension(new DocumentExtension());
             $twig->addExtension(new UrlExtension($c['request']));

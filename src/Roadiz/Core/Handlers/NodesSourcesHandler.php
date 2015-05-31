@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Handle operations with node-sources entities.
@@ -190,13 +190,13 @@ class NodesSourcesHandler
      * Get every nodeSources parents from direct parent to farest ancestor.
      *
      * @param  array                $criteria
-     * @param  SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return array
      */
     public function getParents(
         array $criteria = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         if (null === $this->parentsNodeSources) {
             $this->parentsNodeSources = [];
@@ -220,7 +220,7 @@ class NodesSourcesHandler
                     ->findOneBy(
                         $criteria,
                         [],
-                        $securityContext
+                        $authorizationChecker
                     );
 
                 if (null !== $currentParent) {
@@ -239,14 +239,14 @@ class NodesSourcesHandler
      *
      * @param array|null                                      $criteria Additionnal criteria
      * @param array|null                                      $order Non default ordering
-     * @param Symfony\Component\Security\Core\SecurityContext $securityContext
+     * @param Symfony\Component\Security\Core\Authorization\AuthorizationChecker $authorizationChecker
      *
      * @return ArrayCollection NodesSources collection
      */
     public function getChildren(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
 
         $defaultCrit = [
@@ -267,8 +267,8 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        if (null === $securityContext) {
-            $securityContext = Kernel::getService('securityContext');
+        if (null === $authorizationChecker) {
+            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
         }
 
         return Kernel::getService('em')
@@ -278,7 +278,7 @@ class NodesSourcesHandler
                 $defaultOrder,
                 null,
                 null,
-                $securityContext
+                $authorizationChecker
             );
     }
 
@@ -289,14 +289,14 @@ class NodesSourcesHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getFirstChild(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
@@ -317,8 +317,8 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        if (null === $securityContext) {
-            $securityContext = Kernel::getService('securityContext');
+        if (null === $authorizationChecker) {
+            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
         }
 
         return Kernel::getService('em')
@@ -326,7 +326,7 @@ class NodesSourcesHandler
             ->findOneBy(
                 $defaultCrit,
                 $defaultOrder,
-                $securityContext
+                $authorizationChecker
             );
     }
     /**
@@ -336,14 +336,14 @@ class NodesSourcesHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getLastChild(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
@@ -364,8 +364,8 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        if (null === $securityContext) {
-            $securityContext = Kernel::getService('securityContext');
+        if (null === $authorizationChecker) {
+            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
         }
 
         return Kernel::getService('em')
@@ -373,7 +373,7 @@ class NodesSourcesHandler
             ->findOneBy(
                 $defaultCrit,
                 $defaultOrder,
-                $securityContext
+                $authorizationChecker
             );
     }
 
@@ -382,20 +382,20 @@ class NodesSourcesHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getFirstSibling(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $securityContext);
+            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $authorizationChecker);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getFirstChild($criteria, $order, $securityContext);
+            return $this->getFirstChild($criteria, $order, $authorizationChecker);
         }
     }
 
@@ -406,20 +406,20 @@ class NodesSourcesHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getLastSibling(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $securityContext);
+            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $authorizationChecker);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getLastChild($criteria, $order, $securityContext);
+            return $this->getLastChild($criteria, $order, $authorizationChecker);
         }
     }
 
@@ -430,14 +430,14 @@ class NodesSourcesHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getPrevious(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         if ($this->nodeSource->getNode()->getPosition() <= 1) {
             return null;
@@ -473,7 +473,7 @@ class NodesSourcesHandler
             ->findOneBy(
                 $defaultCrit,
                 $order,
-                $securityContext
+                $authorizationChecker
             );
     }
 
@@ -484,14 +484,14 @@ class NodesSourcesHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  SecurityContext|null $securityContext
+     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNext(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         $defaultCrit = [
             'node.nodeType.newsletterType' => false,
@@ -523,7 +523,7 @@ class NodesSourcesHandler
             ->findOneBy(
                 $defaultCrit,
                 $order,
-                $securityContext
+                $authorizationChecker
             );
     }
 

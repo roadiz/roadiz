@@ -38,6 +38,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Special controller app file for assets managment with InterventionRequest lib.
@@ -139,7 +140,8 @@ class AssetsController extends AppController
                      ->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
-            if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash() . $font->getVariant(), $token)) {
+            $token = new CsrfToken($font->getHash() . $font->getVariant(), $token);
+            if ($this->getService('csrfTokenManager')->isTokenValid($token)) {
                 switch ($extension) {
                     case 'eot':
                         $fontpath = $font->getEOTAbsolutePath();
@@ -208,7 +210,8 @@ class AssetsController extends AppController
      */
     public function fontFacesAction(Request $request)
     {
-        $repository = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $repository = $this->getService('em')
+                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(
@@ -231,7 +234,8 @@ class AssetsController extends AppController
         $fontOutput = [];
 
         foreach ($fonts as $font) {
-            $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
+            $fontOutput[] = $font->getViewer()
+                                 ->getCSSFontFace($this->getService('csrfTokenManager'));
         }
 
         $response->setContent(implode(PHP_EOL, $fontOutput));

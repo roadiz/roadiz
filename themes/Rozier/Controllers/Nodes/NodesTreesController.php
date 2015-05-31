@@ -118,12 +118,12 @@ class NodesTreesController extends RozierApp
             /*
              * Handle bulk status
              */
-            if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+            if ($this->getService('securityAuthorizationChecker')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
                 $statusBulkNodes = $this->buildBulkStatusForm($request->getRequestUri());
                 $this->assignation['statusNodesForm'] = $statusBulkNodes->createView();
             }
 
-            if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_DELETE')) {
+            if ($this->getService('securityAuthorizationChecker')->isGranted('ROLE_ACCESS_NODES_DELETE')) {
                 /*
                  * Handle bulk delete form
                  */

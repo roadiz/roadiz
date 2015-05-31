@@ -17,7 +17,7 @@
         {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
             "node":node,
             "nodeTree":null,
-            "securityContext":securityContext,
+            "authorizationChecker":authorizationChecker,
             "mainNodeTree":null,
             "nodeStatuses":nodeStatuses
         } only %}

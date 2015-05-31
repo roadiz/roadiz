@@ -292,11 +292,11 @@ trait NodesTrait
     /**
      * Generate node with given nodetype and translation
      *
-     * @param Symfony\Component\HttpFoundation\Request  $request
-     * @param RZ\Roadiz\Core\Entities\NodeType          $nodeType
-     * @param RZ\Roadiz\Core\Entities\Node              $parent
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
-     * @param RZ\Roadiz\Core\Entities\Tag               $tag
+     * @param Request  $request
+     * @param NodeType          $nodeType
+     * @param Node              $parent
+     * @param Translation       $translation
+     * @param Tag               $tag
      *
      * @return RZ\Roadiz\Core\Entities\NodeSource
      */

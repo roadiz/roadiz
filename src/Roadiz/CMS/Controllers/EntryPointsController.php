@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use \InlineStyle\InlineStyle;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Defines entry points for Roadiz.
@@ -94,8 +95,8 @@ class EntryPointsController extends AppController
                 'responseText' => 'Wrong request',
             ];
         }
-        if (!$this->getService('csrfProvider')
-            ->isCsrfTokenValid(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token'])) {
+        $token = new CsrfToken(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token']);
+        if (!$this->getService('csrfTokenManager')->isTokenValid($token)) {
             return [
                 'statusCode' => Response::HTTP_FORBIDDEN,
                 'status' => 'danger',
@@ -452,7 +453,6 @@ class EntryPointsController extends AppController
 
         $builder = Kernel::getService('formFactory')
             ->createBuilder('form', null, [
-                'csrf_provider' => Kernel::getService('csrfProvider'),
                 'intention' => static::CONTACT_FORM_TOKEN_INTENTION,
                 'attr' => [
                     'id' => 'contactForm',

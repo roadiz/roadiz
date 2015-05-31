@@ -98,8 +98,8 @@ class HistoryController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
+        if (!($this->getAuthorizationChecker()->isGranted('ROLE_ACCESS_USERS')
+            || (is_object($this->getUser()) && $this->getUser()->getId() == $userId))) {
             throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 

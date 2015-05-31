@@ -42,15 +42,12 @@ use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\ProgressHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Yaml\Parser;
 
@@ -64,7 +61,7 @@ class Kernel implements ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.8.1";
+    public static $cmsVersion = "0.8.2";
     protected static $instance = null;
 
     public $container = null;
@@ -124,18 +121,6 @@ class Kernel implements ServiceProviderInterface
         $container['dispatcher'] = function ($c) {
             return new EventDispatcher();
         };
-
-        $container['request'] = function ($c) {
-            return Request::createFromGlobals();
-        };
-
-        $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($c['request']->getResolvedBasePath());
-            $rc->setHost($c['request']->server->get('HTTP_HOST'));
-
-            return $rc;
-        };
-
         /*
          * Load service providers from conf/services.yml
          *
@@ -167,8 +152,7 @@ class Kernel implements ServiceProviderInterface
         $helperSet = new HelperSet([
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
-            'dialog' => new DialogHelper(),
-            'progress' => new ProgressHelper(),
+            'question' => new QuestionHelper(),
             'solr' => new SolrHelper($this->container['solr']),
         ]);
         $application->setHelperSet($helperSet);
@@ -358,7 +342,7 @@ class Kernel implements ServiceProviderInterface
                 new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
             );
         }
-        $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
+        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
 
         /*
          * Events

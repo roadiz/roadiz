@@ -68,7 +68,7 @@ class NodesController extends RozierApp
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findDefault();
 
-        $user = $this->getService("securityContext")->getToken()->getUser();
+        $user = $this->getUser();
 
         switch ($filter) {
             case 'draft':
@@ -247,7 +247,7 @@ class NodesController extends RozierApp
                 ));
             }
             $this->assignation['form'] = $form->createView();
-            $this->assignation['securityContext'] = $this->getService("securityContext");
+            $this->assignation['securityAuthorizationChecker'] = $this->getService("securityAuthorizationChecker");
 
             return $this->render('nodes/edit.html.twig', $this->assignation);
         }
@@ -479,7 +479,7 @@ class NodesController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $user = $this->getService("securityContext")->getToken()->getUser();
+            $user = $this->getUser();
             $chroot = $user->getChroot();
             $criteria = ['status' => Node::DELETED];
             if ($chroot !== null) {
@@ -593,7 +593,13 @@ class NodesController extends RozierApp
                 }
 
                 try {
-                    $source = static::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, null);
+                    $source = static::generateUniqueNodeWithTypeAndTranslation(
+                        $request,
+                        $nodeType,
+                        $parent,
+                        $translation,
+                        null
+                    );
 
                     /*
                      * Dispatch event

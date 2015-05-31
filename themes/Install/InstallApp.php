@@ -89,10 +89,8 @@ class InstallApp extends AppController
                 'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->getService('csrfProvider')
-                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->getService('csrfProvider')
-                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
+                'ajaxToken' => $this->getService('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->getService('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),

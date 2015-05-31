@@ -67,7 +67,7 @@ class NodeApi extends AbstractApi
                         $limit,
                         $offset,
                         null,
-                        $this->container['securityContext']
+                        $this->container['securityAuthorizationChecker']
                     );
     }
     /**
@@ -86,7 +86,7 @@ class NodeApi extends AbstractApi
                     ->countBy(
                         $criteria,
                         null,
-                        $this->container['securityContext']
+                        $this->container['securityAuthorizationChecker']
                     );
     }
     /**
@@ -106,7 +106,7 @@ class NodeApi extends AbstractApi
                         $criteria,
                         $order,
                         null,
-                        $this->container['securityContext']
+                        $this->container['securityAuthorizationChecker']
                     );
     }
 }

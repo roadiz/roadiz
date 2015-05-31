@@ -30,10 +30,8 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Themes\Install\InstallApp;
 
 /**
@@ -191,7 +189,7 @@ class ImportController extends InstallApp
                 $path = $pathFile;
             } else {
                 $theme = Kernel::getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
+                    ->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
 
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');

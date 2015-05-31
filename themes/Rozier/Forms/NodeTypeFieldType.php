@@ -35,7 +35,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -115,7 +115,7 @@ class NodeTypeFieldType extends AbstractType
         return 'nodetypefield';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'label' => false,
@@ -131,11 +131,8 @@ class NodeTypeFieldType extends AbstractType
             'nodeType',
             'em',
         ]);
-
-        $resolver->setAllowedTypes([
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
-            'fieldName' => 'string',
-            'nodeType' => 'RZ\Roadiz\Core\Entities\NodeType',
-        ]);
+        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('fieldName', 'string');
+        $resolver->setAllowedTypes('nodeType', 'RZ\Roadiz\Core\Entities\NodeType');
     }
 }

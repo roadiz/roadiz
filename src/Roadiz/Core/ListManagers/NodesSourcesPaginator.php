@@ -30,31 +30,31 @@
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\ListManagers\Paginator;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * A paginator class to filter node-sources entities with limit and search.
  *
- * This class add securityContext filters
+ * This class add authorizationChecker filters
  */
 class NodesSourcesPaginator extends Paginator
 {
-    protected $securityContext = null;
+    protected $authorizationChecker = null;
 
     /**
-     * @return Symfony\Component\Security\Core\SecurityContext
+     * @return AuthorizationChecker
      */
-    public function getSecurityContext()
+    public function getAuthorizationChecker()
     {
-        return $this->securityContext;
+        return $this->authorizationChecker;
     }
 
     /**
-     * @param Symfony\Component\Security\Core\SecurityContext $newsecurityContext
+     * @param AuthorizationChecker $authorizationChecker
      */
-    public function setSecurityContext(SecurityContext $newsecurityContext = null)
+    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
-        $this->securityContext = $newsecurityContext;
+        $this->authorizationChecker = $authorizationChecker;
 
         return $this;
     }
@@ -75,7 +75,7 @@ class NodesSourcesPaginator extends Paginator
             $total = $this->em->getRepository($this->entityName)
                                                    ->countBy(
                                                        $this->criteria,
-                                                       $this->securityContext
+                                                       $this->authorizationChecker
                                                    );
         }
 
@@ -101,7 +101,7 @@ class NodesSourcesPaginator extends Paginator
                                                      $order,
                                                      $this->getItemsPerPage(),
                                                      $this->getItemsPerPage() * ($page - 1),
-                                                     $this->securityContext
+                                                     $this->authorizationChecker
                                                  );
         }
     }

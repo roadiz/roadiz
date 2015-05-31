@@ -38,27 +38,33 @@ use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Log\DoctrineHandler;
 use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
-use RZ\Roadiz\Utils\LogProcessors\SecurityContextProcessor;
+use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
+use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * Register security services for dependency injection container.
@@ -105,11 +111,32 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             return $session;
         };
 
+        /*
+         * Deprecated
+         */
         $container['csrfProvider'] = function ($c) {
             return new SessionCsrfProvider(
                 $c['session'],
                 $c['config']["security"]['secret']
             );
+        };
+
+        $container['sessionTokenStorage'] = function ($c) {
+            return new SessionTokenStorage(
+                $c['session'],
+                $c['config']["security"]['secret']
+            );
+        };
+
+        $container['csrfTokenManager'] = function ($c) {
+            return new CsrfTokenManager(
+                new UriSafeTokenGenerator(),
+                $c['sessionTokenStorage']
+            );
+        };
+
+        $container['securityAuthenticationUtils'] = function ($c) {
+            return new AuthenticationUtils($c['requestStack']);
         };
 
         $container['logger'] = function ($c) {
@@ -120,7 +147,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 true !== $c['config']['install']) {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
-                    $c['securityContext'],
+                    $c['securityTokenStorage'],
                     $c['request'],
                     Logger::INFO
                 ));
@@ -130,7 +157,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
              * Add processors
              */
             $log->pushProcessor(new RequestProcessor($c['request']));
-            $log->pushProcessor(new SecurityContextProcessor($c['securityContext']));
+            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
 
             return $log;
         };
@@ -140,7 +167,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             $c['session']; //Force session handler
 
             return new ContextListener(
-                $c['securityContext'],
+                $c['securityTokenStorage'],
                 [
                     $c['userProvider'],
                 ],
@@ -185,6 +212,17 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
+        $container['securityAuthorizationChecker'] = function ($c) {
+            return new AuthorizationChecker(
+                $c['securityTokenStorage'],
+                $c['authentificationManager'],
+                $c['accessDecisionManager']
+            );
+        };
+        $container['securityTokenStorage'] = function ($c) {
+            return new TokenStorage();
+        };
+
         $container['roleHierarchy'] = function ($c) {
             return new RoleHierarchy([
                 Role::ROLE_SUPERADMIN => $c['allBasicRoles'],
@@ -202,7 +240,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container["switchUser"] = function ($c) {
             return new SwitchUserListener(
-                $c['securityContext'],
+                $c['securityTokenStorage'],
                 $c['userProvider'],
                 $c['userChecker'],
                 $c['config']["security"]['secret'],
@@ -222,7 +260,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['firewallExceptionListener'] = function ($c) {
             return new ExceptionListener(
-                $c['securityContext'],
+                $c['securityTokenStorage'],
                 new AuthenticationTrustResolver('', ''),
                 $c['httpUtils'],
                 Kernel::SECURITY_DOMAIN,
