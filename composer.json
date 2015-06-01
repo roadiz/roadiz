@@ -56,6 +56,7 @@
         "symfony/form":                "2.6.*",
         "symfony/validator":           "2.6.*",
         "symfony/security-csrf":       "2.6.*",
+        "symfony/options-resolver":     "2.6.*",
         "symfony/twig-bridge":         "2.6.*",
         "symfony/finder":              "2.6.*",
         "symfony/serializer":          "2.6.*",
