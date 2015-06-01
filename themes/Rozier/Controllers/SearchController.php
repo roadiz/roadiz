@@ -250,7 +250,7 @@ class SearchController extends RozierApp
             "nodetype",
             new \RZ\Roadiz\CMS\Forms\NodeTypesType,
             [
-                                'empty_value' => "",
+                                'placeholder' => "",
                                 'required' => false,
                                 'data' => $nodetypeId,
                             ]
@@ -462,7 +462,7 @@ class SearchController extends RozierApp
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
-                $option['empty_value'] = 'ignore';
+                $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["expanded"] = false;
                 if (count($choices) < 4) {
@@ -474,7 +474,7 @@ class SearchController extends RozierApp
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["choices"] = $choices;
-                $option['empty_value'] = 'ignore';
+                $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["multiple"] = true;
                 $option["expanded"] = false;

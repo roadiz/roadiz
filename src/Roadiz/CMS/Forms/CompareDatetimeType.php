@@ -55,7 +55,7 @@ class CompareDatetimeType extends AbstractType
             'attr' => [
                 'class' => 'rz-datetime-field',
             ],
-            'empty_value' => [
+            'placeholder' => [
                 'hour' => 'hour',
                 'minute' => 'minute',
             ],

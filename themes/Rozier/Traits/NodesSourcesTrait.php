@@ -211,7 +211,7 @@ trait NodesSourcesTrait
             case NodeTypeField::ENUM_T:
                 return [
                     'label' => $label,
-                    'empty_value' => 'choose.value',
+                    'placeholder' => 'choose.value',
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
@@ -229,7 +229,7 @@ trait NodesSourcesTrait
                         'data-dev-name' => $devName,
                         'class' => 'rz-datetime-field',
                     ],
-                    'empty_value' => [
+                    'placeholder' => [
                         'hour' => 'hour',
                         'minute' => 'minute',
                     ],
@@ -245,7 +245,7 @@ trait NodesSourcesTrait
                         'data-dev-name' => $devName,
                         'class' => 'rz-date-field',
                     ],
-                    'empty_value' => '',
+                    'placeholder' => '',
                 ];
             case NodeTypeField::INTEGER_T:
                 return [

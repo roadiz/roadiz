@@ -606,7 +606,7 @@ class SettingsController extends RozierApp
             case NodeTypeField::ENUM_T:
                 return [
                     'label' => $label,
-                    'empty_value' => $translator->trans('choose.value'),
+                    'placeholder' => $translator->trans('choose.value'),
                     'required' => false,
                 ];
             case NodeTypeField::DATETIME_T:

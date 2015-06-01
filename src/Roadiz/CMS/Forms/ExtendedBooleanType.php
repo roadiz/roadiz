@@ -44,7 +44,7 @@ class ExtendedBooleanType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [true => 'true', false => 'false'],
-            'empty_value' => 'ignore',
+            'placeholder' => 'ignore',
             'required' => false,
             'expanded' => true,
         ]);

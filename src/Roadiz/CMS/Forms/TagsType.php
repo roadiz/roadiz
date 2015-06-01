@@ -51,7 +51,7 @@ class TagsType extends AbstractType
     /**
      * Set every tags s default choices values.
      *
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {

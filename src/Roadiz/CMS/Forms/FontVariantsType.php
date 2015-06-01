@@ -40,7 +40,7 @@ class FontVariantsType extends AbstractType
 {
     /**
      * {@inheritdoc}
-     * @param OptionsResolverInterface $resolver [description]
+     * @param OptionsResolver $resolver [description]
      */
     public function configureOptions(OptionsResolver $resolver)
     {
