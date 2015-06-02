@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -558,63 +559,25 @@ class NodesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        if ($request->get('nodeTypeId') > 0 &&
-            $request->get('parentNodeId') > 0) {
-            $nodeType = $this->getService('em')
-                             ->find(
-                                 'RZ\Roadiz\Core\Entities\NodeType',
-                                 (int) $request->get('nodeTypeId')
-                             );
+        try {
+            $generator = new UniqueNodeGenerator($this->getService('em'));
+            $source = $generator->generateFromRequest($request);
 
-            $parent = $this->getService('em')
-                           ->find(
-                               'RZ\Roadiz\Core\Entities\Node',
-                               (int) $request->get('parentNodeId')
-                           );
+            /*
+             * Dispatch event
+             */
+            $event = new FilterNodeEvent($source->getNode());
+            $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
-            if (null !== $nodeType &&
-                null !== $parent) {
-                if ($request->get('translationId') > 0) {
-                    $translation = $this->getService('em')->find(
-                        'RZ\Roadiz\Core\Entities\Translation',
-                        (int) $request->get('translationId')
-                    );
-                } else {
-                    $translation = $parent->getNodeSources()->first()->getTranslation();
-                }
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
+            ));
 
-                if (null === $translation) {
-                    $translation = $this->getService('em')
-                                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                        ->findDefault();
-                }
+        } catch (\Exception $e) {
+            $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
 
-                try {
-                    $source = static::generateUniqueNodeWithTypeAndTranslation(
-                        $request,
-                        $nodeType,
-                        $parent,
-                        $translation,
-                        null
-                    );
-
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterNodeEvent($source->getNode());
-                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditSourcePage',
-                        ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
-                    ));
-
-                } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
-
-                    return $this->throw404($msg);
-                }
-            }
+            return $this->throw404($msg);
         }
 
         return $this->throw404($this->getTranslator()->trans('bad.request'));

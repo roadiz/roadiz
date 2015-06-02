@@ -288,45 +288,4 @@ trait NodesTrait
 
         return $builder->getForm();
     }
-
-    /**
-     * Generate node with given nodetype and translation
-     *
-     * @param Request  $request
-     * @param NodeType          $nodeType
-     * @param Node              $parent
-     * @param Translation       $translation
-     * @param Tag               $tag
-     *
-     * @return RZ\Roadiz\Core\Entities\NodeSource
-     */
-    public static function generateUniqueNodeWithTypeAndTranslation(
-        Request $request,
-        NodeType $nodeType,
-        Node $parent,
-        Translation $translation,
-        Tag $tag = null
-    ) {
-        $name = $nodeType->getDisplayName() . " " . uniqid();
-
-        $node = new Node($nodeType);
-        $node->setParent($parent);
-        $node->setNodeName($name);
-        if (null !== $tag) {
-            $node->addTag($tag);
-        }
-        Kernel::getService('em')->persist($node);
-
-        if ($request->get('pushTop') == 1) {
-            $node->setPosition(0.5);
-        }
-
-        $sourceClass = "GeneratedNodeSources\\" . $nodeType->getSourceEntityClassName();
-        $source = new $sourceClass($node, $translation);
-        $source->setTitle($name);
-        Kernel::getService('em')->persist($source);
-        Kernel::getService('em')->flush();
-
-        return $source;
-    }
 }
