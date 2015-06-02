@@ -37,9 +37,8 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
@@ -250,7 +249,7 @@ class FrontendController extends AppController
              */
             return $this->throw404();
         } elseif ($this->isGranted(Role::ROLE_BACKEND_USER) &&
-                  $node->getStatus() > Node::PUBLISHED) {
+            $node->getStatus() > Node::PUBLISHED) {
             /*
              * Not allowed to see deleted and archived nodes
              * even for Admins
@@ -475,7 +474,6 @@ class FrontendController extends AppController
         $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -489,5 +487,21 @@ class FrontendController extends AppController
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        $elm = parent::createEntityListManager($entity, $criteria, $ordering);
+
+        /*
+         * When using EntityListManager you need to manually set the
+         * security context
+         */
+        $elm->setAuthorizationChecker($this->getService('securityAuthorizationChecker'));
+
+        return $elm;
     }
 }

@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -196,6 +197,9 @@ abstract class Controller
         return new RedirectResponse($url, $status);
     }
 
+    /**
+     * @return mixed
+     */
     public static function getCalledClass()
     {
         $className = get_called_class();
@@ -392,6 +396,26 @@ abstract class Controller
     protected function createFormBuilder($data = null, array $options = array())
     {
         return $this->container['formFactory']->createBuilder('form', $data, $options);
+    }
+
+    /**
+     * Creates and returns an EntityListManager instance.
+     *
+     * @param mixed $entity Entity class path
+     * @param array $criteria
+     * @param array $ordering
+     *
+     * @return EntityListManager
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        return new EntityListManager(
+            $this->container['request'],
+            $this->container['em'],
+            $entity,
+            $criteria,
+            $ordering
+        );
     }
 
     /**

@@ -154,9 +154,7 @@ class NodeTreeWidget extends AbstractWidget
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $this->request,
-            $this->controller->getService('em'),
+        $listManager = $this->controller->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Node',
             $criteria,
             $ordering

@@ -37,7 +37,6 @@ use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -170,9 +169,7 @@ class SearchController extends RozierApp
                 }
             }
             $data = $this->processCriteria($data);
-            $listManager = new EntityListManager(
-                $request,
-                $this->getService('em'),
+            $listManager = $this->createEntityListManager(
                 'RZ\Roadiz\Core\Entities\Node',
                 $data
             );
@@ -247,14 +244,14 @@ class SearchController extends RozierApp
                                     ["method" => "get"]
                                 );
         $builderNodeType->add(
-            "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
-            [
+                            "nodetype",
+                            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+                            [
                                 'placeholder' => "",
                                 'required' => false,
                                 'data' => $nodetypeId,
                             ]
-        )
+                        )
                         ->add("nodetypeSubmit", "submit", [
                             "label" => "select.nodetype",
                             "attr" => ["class" => "uk-button uk-button-primary"],
@@ -302,9 +299,7 @@ class SearchController extends RozierApp
             $data = $this->processCriteria($data, "node.");
             $data = $this->processCriteriaNodetype($data, $nodetype);
 
-            $listManager = new EntityListManager(
-                $this->getService('request'),
-                $this->getService('em'),
+            $listManager = $this->createEntityListManager(
                 NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
                 $data
             );

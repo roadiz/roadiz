@@ -30,11 +30,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -66,9 +64,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Document',
             $arrayFilter
         );
@@ -81,9 +77,9 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         foreach ($documents as $doc) {
             $documentsArray[] = [
                 'id' => $doc->getId(),
-                'filename'=>$doc->getFilename(),
+                'filename' => $doc->getFilename(),
                 'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document'=>$doc]),
+                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $doc]),
             ];
         }
 
@@ -92,7 +88,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'statusCode' => 200,
             'documents' => $documentsArray,
             'documentsCount' => count($documents),
-            'filters' => $listManager->getAssignation()
+            'filters' => $listManager->getAssignation(),
         ];
 
         return new Response(
@@ -103,7 +99,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
     }
 }
 AjaxDocumentsExplorerController::$thumbnailArray = [
-    "width"=>40,
-    "crop"=>"1x1",
-    "quality"=>50
+    "width" => 40,
+    "crop" => "1x1",
+    "quality" => 50,
 ];

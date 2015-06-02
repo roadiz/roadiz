@@ -355,8 +355,8 @@ class AppController extends Controller
                 }
             }
             $this->theme = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                ->findOneByClassName($className);
+                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                 ->findOneByClassName($className);
         }
         return $this->theme;
     }
@@ -479,7 +479,7 @@ class AppController extends Controller
      */
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
-        $user = $this->container['securityTokenStorage']->getToken()->getUser();
+        $user = $this->getUser();
         $node = $this->container['em']
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 

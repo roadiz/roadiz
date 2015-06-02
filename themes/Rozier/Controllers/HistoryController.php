@@ -33,7 +33,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Log;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Themes\Rozier\RozierApp;
@@ -70,9 +69,7 @@ class HistoryController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->em(),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Log',
             [],
             ['datetime' => 'DESC']
@@ -110,9 +107,7 @@ class HistoryController extends RozierApp
             /*
              * Manage get request to filter list
              */
-            $listManager = new EntityListManager(
-                $request,
-                $this->em(),
+            $listManager = $this->createEntityListManager(
                 'RZ\Roadiz\Core\Entities\Log',
                 ['user' => $user],
                 ['datetime' => 'DESC']

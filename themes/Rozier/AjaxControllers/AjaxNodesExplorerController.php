@@ -30,11 +30,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Entities\Node;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -62,14 +61,12 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $arrayFilter = [
-            'node.status' => ['<', Node::DELETED]
+            'node.status' => ['<', Node::DELETED],
         ];
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\NodesSources',
             $arrayFilter
         );
@@ -83,10 +80,10 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             foreach ($nodesSources as $nodeSource) {
                 $nodesArray[] = [
                     'id' => $nodeSource->getNode()->getId(),
-                    'filename'=> $nodeSource->getNode()->getNodeName(),
+                    'filename' => $nodeSource->getNode()->getNodeName(),
                     'html' => $this->getTwig()->render('widgets/nodeSmallThumbnail.html.twig', [
-                        'nodeSource'=>$nodeSource,
-                        'node'=>$nodeSource->getNode()
+                        'nodeSource' => $nodeSource,
+                        'node' => $nodeSource->getNode(),
                     ]),
                 ];
             }
@@ -97,7 +94,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'statusCode' => 200,
             'nodes' => $nodesArray,
             'nodesCount' => count($nodesSources),
-            'filters' => $listManager->getAssignation()
+            'filters' => $listManager->getAssignation(),
         ];
 
         return new Response(

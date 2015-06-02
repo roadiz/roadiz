@@ -36,13 +36,12 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
-use Themes\Rozier\Forms;
 
 /**
  * Nodes controller
@@ -110,9 +109,7 @@ class NodesController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
@@ -220,7 +217,7 @@ class NodesController extends RozierApp
              */
             $form = $this->createForm(new Forms\NodeType(), $node, [
                 'em' => $this->getService('em'),
-                'nodeName' => $node->getNodeName()
+                'nodeName' => $node->getNodeName(),
             ]);
             $form->handleRequest($request);
 

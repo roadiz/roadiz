@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\TagTranslationType;
@@ -62,9 +61,7 @@ class TagsController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Tag'
         );
         $listManager->handle();
@@ -487,9 +484,7 @@ class TagsController extends RozierApp
             /*
              * Manage get request to filter list
              */
-            $listManager = new EntityListManager(
-                $request,
-                $this->getService('em'),
+            $listManager = $this->createEntityListManager(
                 'RZ\Roadiz\Core\Entities\Node',
                 [
                     'tags' => $tag,

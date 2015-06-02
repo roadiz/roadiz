@@ -30,11 +30,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -65,9 +63,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\CustomForm',
             $arrayFilter
         );
@@ -80,8 +76,8 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
         foreach ($customForms as $customForm) {
             $customFormsArray[] = [
                 'id' => $customForm->getId(),
-                'filename'=>$customForm->getName(),
-                'html' => $this->getTwig()->render('widgets/customFormSmallThumbnail.html.twig', ['customForm'=>$customForm]),
+                'filename' => $customForm->getName(),
+                'html' => $this->getTwig()->render('widgets/customFormSmallThumbnail.html.twig', ['customForm' => $customForm]),
             ];
         }
 
@@ -90,7 +86,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
             'statusCode' => 200,
             'customForms' => $customFormsArray,
             'customFormsCount' => count($customForms),
-            'filters' => $listManager->getAssignation()
+            'filters' => $listManager->getAssignation(),
         ];
 
         return new Response(
