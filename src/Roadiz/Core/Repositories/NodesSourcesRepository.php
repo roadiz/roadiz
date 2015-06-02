@@ -282,8 +282,11 @@ class NodesSourcesRepository extends EntityRepository
      * @param  AuthorizationChecker|null &$authorizationChecker
      * @return boolean Already Joined Node relation
      */
-    protected function filterByAuthorizationChecker(&$criteria, &$qb, AuthorizationChecker &$authorizationChecker = null)
-    {
+    protected function filterByAuthorizationChecker(
+        &$criteria,
+        &$qb,
+        AuthorizationChecker &$authorizationChecker = null
+    ) {
         if (null !== $authorizationChecker &&
             !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
             /*

@@ -497,10 +497,10 @@ class AppController extends Controller
         }
 
         if ($isNewsletterFriend &&
-            !$this->container['securityAuthorizationChecker']->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+            !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
         } elseif (!$isNewsletterFriend) {
-            if (!$this->container['securityAuthorizationChecker']->isGranted($role)) {
+            if (!$this->isGranted($role)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }
 

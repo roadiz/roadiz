@@ -230,7 +230,7 @@ class AjaxNodesController extends AbstractAjaxController
             // just verify role when updating status
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
-                !$this->getAuthorizationChecker()->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+                !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
                 $responseArray = [
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status' => 'danger',
@@ -250,7 +250,7 @@ class AjaxNodesController extends AbstractAjaxController
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
 
-                            if ($this->getAuthorizationChecker()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
+                            if ($this->isGranted('ROLE_ACCESS_NODES_STATUS') ||
                                 $request->get('statusName') != 'status') {
                                 $node->$setter($value);
 

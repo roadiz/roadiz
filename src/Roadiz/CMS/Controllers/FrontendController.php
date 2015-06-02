@@ -238,22 +238,19 @@ class FrontendController extends AppController
      * Return a 404 Response or TRUE if node is viewable.
      *
      * @param  Node $node
-     * @param  AuthorizationChecker|null $authorizationChecker
      *
      * @return boolean|Symfony\Component\HttpFoundation\Response
      */
-    public function validateAccessForNodeWithStatus(Node $node, AuthorizationChecker $authorizationChecker = null)
+    public function validateAccessForNodeWithStatus(Node $node)
     {
-        if (null !== $authorizationChecker &&
-            !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER) &&
+        if (!$this->isGranted(Role::ROLE_BACKEND_USER) &&
             !$node->isPublished()) {
             /*
              * Not allowed to see unpublished nodes
              */
             return $this->throw404();
-        } elseif (null !== $authorizationChecker &&
-            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER) &&
-            $node->getStatus() > Node::PUBLISHED) {
+        } elseif ($this->isGranted(Role::ROLE_BACKEND_USER) &&
+                  $node->getStatus() > Node::PUBLISHED) {
             /*
              * Not allowed to see deleted and archived nodes
              * even for Admins
