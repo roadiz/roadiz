@@ -33,7 +33,6 @@ namespace Themes\Rozier\Widgets;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\AbstractWidget;
 
