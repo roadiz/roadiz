@@ -114,18 +114,18 @@ class UniqueNodeGenerator
 
         if ($request->get('parentNodeId') > 0) {
             $parent = $this->entityManager->find(
-               'RZ\Roadiz\Core\Entities\Node',
-               (int) $request->get('parentNodeId')
-           );
+                'RZ\Roadiz\Core\Entities\Node',
+                (int) $request->get('parentNodeId')
+            );
         } else {
             $parent = null;
         }
 
         if ($request->get('nodeTypeId') > 0) {
             $nodeType = $this->entityManager->find(
-                                 'RZ\Roadiz\Core\Entities\NodeType',
-                                 (int) $request->get('nodeTypeId')
-                             );
+                'RZ\Roadiz\Core\Entities\NodeType',
+                (int) $request->get('nodeTypeId')
+            );
 
             if (null !== $nodeType) {
                 if ($request->get('translationId') > 0) {
