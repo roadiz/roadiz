@@ -828,12 +828,12 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="80" approved="yes">
         <source>tagName</source>
-        <target xml:lang="en">Tag name</target>
+        <target xml:lang="en">Unique tag identifier</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
           <context context-type="linenumber">792</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Tag name</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="81" approved="yes">
         <source>node.seo.updated</source>
         <target xml:lang="en">Node SEO data has been updated.</target>

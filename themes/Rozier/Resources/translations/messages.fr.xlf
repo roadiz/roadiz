@@ -828,12 +828,12 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="80" approved="yes">
         <source>tagName</source>
-        <target xml:lang="fr">Nom de l’étiquette</target>
+        <target xml:lang="fr">Identifiant unique de l’étiquette</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
           <context context-type="linenumber">792</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="fr">Nom de l’étiquette</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="81" approved="yes">
         <source>node.seo.updated</source>
         <target xml:lang="fr">Le référencement du nœud a été mis à jour.</target>
