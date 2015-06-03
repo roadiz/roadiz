@@ -629,18 +629,23 @@ class Font extends AbstractDateTimed
     {
         if (null !== $this->svgFile) {
             $this->svgFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getSVGFilename());
+            $this->svgFile = null;
         }
         if (null !== $this->otfFile) {
             $this->otfFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getOTFFilename());
+            $this->otfFile = null;
         }
         if (null !== $this->eotFile) {
             $this->eotFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getEOTFilename());
+            $this->eotFile = null;
         }
         if (null !== $this->woffFile) {
             $this->woffFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getWOFFFilename());
+            $this->woffFile = null;
         }
         if (null !== $this->woff2File) {
             $this->woff2File->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getWOFF2Filename());
+            $this->woff2File = null;
         }
     }
 

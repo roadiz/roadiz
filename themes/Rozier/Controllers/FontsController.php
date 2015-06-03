@@ -196,7 +196,13 @@ class FontsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $font->setHash($this->getService('config')['security']['secret']);
+                    /*
+                     * need to force font upload if no changes
+                     * has been made in entity fields
+                     */
+                    $font->preUpload();
                     $this->getService('em')->flush();
+                    $font->upload();
 
                     $msg = $this->getTranslator()->trans(
                         'font.%name%.updated',
