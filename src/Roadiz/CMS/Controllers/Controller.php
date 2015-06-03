@@ -115,16 +115,6 @@ abstract class Controller
     }
 
     /**
-     * Alias for `$this->container['securityContext']`.
-     *
-     * @return Symfony\Component\Security\Core\SecurityContext
-     */
-    public function getSecurityContext()
-    {
-        return $this->container['securityContext'];
-    }
-
-    /**
      * Alias for `$this->container['securityAuthorizationChecker']`.
      *
      * @return Symfony\Component\Security\Core\Authorization\AuthorizationChecker

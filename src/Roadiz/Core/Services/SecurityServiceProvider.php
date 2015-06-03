@@ -52,7 +52,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
@@ -203,12 +202,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 [
                     $c['roleHierarchyVoter'],
                 ]
-            );
-        };
-        $container['securityContext'] = function ($c) {
-            return new SecurityContext(
-                $c['authentificationManager'],
-                $c['accessDecisionManager']
             );
         };
 
