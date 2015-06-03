@@ -24,26 +24,26 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file SecurityContextProcessor.php
+ * @file TokenStorageProcessor.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Utils\LogProcessors;
 
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class SecurityContextProcessor
+class TokenStorageProcessor
 {
-    private $securityContext;
+    private $tokenStorage;
 
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function __invoke(array $record)
     {
-        if (null !== $this->securityContext->getToken() &&
-            null !== $user = $this->securityContext->getToken()->getUser()) {
+        if (null !== $this->tokenStorage->getToken() &&
+            null !== $user = $this->tokenStorage->getToken()->getUser()) {
             if (is_object($user)) {
                 $record['extra']['user'] = [];
                 $record['extra']['user']['username'] = $user->getUsername();

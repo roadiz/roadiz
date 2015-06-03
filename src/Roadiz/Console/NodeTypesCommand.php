@@ -36,13 +36,15 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing node-types from terminal.
  */
 class NodeTypesCommand extends Command
 {
-    private $dialog;
+    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -94,7 +96,7 @@ class NodeTypesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $name = $input->getArgument('name');
@@ -108,11 +110,16 @@ class NodeTypesCommand extends Command
                 $text = $nodetype->getOneLineSummary();
 
                 if ($input->getOption('delete')) {
-                    if ($this->dialog->askConfirmation(
-                        $output,
-                        '<question>Are you sure to delete ' . $nodetype->getName() . ' node-type?</question> : ',
+                    $question = new ConfirmationQuestion(
+                        'Are you sure to delete ' . $nodetype->getName() . ' node-type?',
                         false
+                    );
+                    if ($this->questionHelper->ask(
+                        $input,
+                        $output,
+                        $question
                     )) {
+                        $nodetype->getHandler()->removeSourceEntityClass();
                         $this->entityManager->remove($nodetype);
                         $this->entityManager->flush();
                         $text = '<info>Node-type deleted…</info>' . PHP_EOL;
@@ -160,63 +167,73 @@ class NodeTypesCommand extends Command
         $nt = new NodeType();
         $nt->setName($name);
 
-        $displayName = $this->dialog->ask(
+        $question0 = new Question('<question>Enter your node-type display name</question>: ', 'Neutral');
+        $displayName = $this->questionHelper->ask(
+            $input,
             $output,
-            '<question>Enter your node-type display name</question> : ',
-            'Neutral'
+            $question0
         );
         $nt->setDisplayName($displayName);
 
-        $description = $this->dialog->ask(
+        $question1 = new Question('<question>Enter your node-type description</question>: ', '');
+        $description = $this->questionHelper->ask(
+            $input,
             $output,
-            '<question>Enter your node-type description</question> : ',
-            ''
+            $question1
         );
         $nt->setDescription($description);
         $this->entityManager->persist($nt);
 
         $i = 1;
         while (true) {
-            // FIelds
+            // Fields
             $field = new NodeTypeField();
             $field->setPosition($i);
-            $fName = $this->dialog->ask(
+
+            $questionfName = new Question('<question>[Field ' . $i . '] Enter field name</question>: ', 'content');
+            $fName = $this->questionHelper->ask(
+                $input,
                 $output,
-                '<question>[Field ' . $i . '] Enter field name</question> (default:title): ',
-                'title'
+                $questionfName
             );
             $field->setName($fName);
-            $fLabel = $this->dialog->ask(
+
+            $questionfLabel = new Question('<question>[Field ' . $i . '] Enter field label</question>: ', 'Your content');
+            $fLabel = $this->questionHelper->ask(
+                $input,
                 $output,
-                '<question>[Field ' . $i . '] Enter field label</question> (default:Your title): ',
-                'Your title'
+                $questionfLabel
             );
             $field->setLabel($fLabel);
-            $fType = $this->dialog->ask(
+
+            $questionfType = new Question('<question>[Field ' . $i . '] Enter field type</question>: ', 'MARKDOWN_T');
+            $fType = $this->questionHelper->ask(
+                $input,
                 $output,
-                '<question>[Field ' . $i . '] Enter field type</question> (default:STRING_T): ',
-                'STRING_T'
+                $questionfType
             );
             $fType = constant('RZ\Roadiz\Core\Entities\NodeTypeField::' . $fType);
             $field->setType($fType);
 
-            if ($this->dialog->askConfirmation(
+            $questionIndexed = new ConfirmationQuestion('<question>[Field ' . $i . '] Must field be indexed?</question>: ', false);
+            if ($this->questionHelper->ask(
+                $input,
                 $output,
-                '<question>[Field ' . $i . '] Must field be indexed?</question> (yes|No): ',
-                false
+                $questionIndexed
             )) {
                 $field->setIndexed(true);
             }
+
             // Need to populate each side
             $nt->getFields()->add($field);
+            $this->entityManager->persist($field);
             $field->setNodeType($nt);
 
-            $this->entityManager->persist($field);
-
-            if (!$this->dialog->askConfirmation(
+            $questionAdd = new ConfirmationQuestion('<question>Do you want to add another field?</question>: ', true);
+            if (!$this->questionHelper->ask(
+                $input,
                 $output,
-                '<question>Do you want to add another field?</question> (Yes|no): ',
-                true
+                $questionAdd
             )) {
                 break;
             }
@@ -224,8 +241,10 @@ class NodeTypesCommand extends Command
             $i++;
         }
         $this->entityManager->flush();
-        $nt->getHandler()->updateSchema();
+        $nt->getHandler()->regenerateEntityClass();
 
-        return '<question>Node type ' . $nt->getName() . ' has been created.</question>';
+        $success = '<question>Node type ' . $nt->getName() . ' has been created.</question>'. PHP_EOL .
+                    '<info>Do not forget to update database schema!</info>';
+        return $success;
     }
 }

@@ -34,7 +34,6 @@ namespace Themes\Rozier\Controllers\NodeTypes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeType;
@@ -57,9 +56,7 @@ class NodeTypesController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\NodeType'
         );
         $listManager->handle();
@@ -110,7 +107,7 @@ class NodeTypesController extends RozierApp
                 return $this->redirect($this->generateUrl(
                     'nodeTypesSchemaUpdate',
                     [
-                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
+                        '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                     ]
                 ));
             }
@@ -161,7 +158,7 @@ class NodeTypesController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'nodeTypesSchemaUpdate',
                         [
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
+                            '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                         ]
                     ));
 
@@ -217,7 +214,7 @@ class NodeTypesController extends RozierApp
                 return $this->redirect($this->generateUrl(
                     'nodeTypesSchemaUpdate',
                     [
-                        '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
+                        '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                     ]
                 ));
             }

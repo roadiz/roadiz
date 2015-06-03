@@ -58,13 +58,24 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
     public function getUrl($absolute = false)
     {
         if (null !== $this->request) {
-            $host = $this->request->getBaseUrl();
+            $schemeAuthority = '';
 
             if ($absolute === true) {
-                $host = $this->request->getResolvedBaseUrl();
+                $port = '';
+                $scheme = $this->request->getScheme();
+                if ('http' === $scheme && 80 != $this->request->getPort()) {
+                    $port = ':' . $this->request->getPort();
+                } elseif ('https' === $scheme && 443 != $this->request->getPort()) {
+                    $port = ':' . $this->request->getHttpsPort();
+                }
+                $schemeAuthority = $scheme . '://';
+                $schemeAuthority .= $this->request->getHost() . $port;
             }
 
-            return $host . '/' . $this->getNonContextualUrl($this->request->getTheme());
+            return $schemeAuthority .
+            $this->request->getBaseUrl() .
+            '/' .
+            $this->getNonContextualUrl($this->request->getTheme());
         } else {
             return $this->getNonContextualUrl();
         }

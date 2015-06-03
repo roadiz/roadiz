@@ -31,9 +31,8 @@ namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\ListManagers\Paginator;
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
-
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\Node;
 
@@ -50,27 +49,23 @@ class EntityListManager
     protected $_em = null;
     protected $entityName;
     protected $paginator = null;
-
     protected $pagination = true;
-
     protected $orderingArray = null;
     protected $filteringArray = null;
     protected $queryArray = null;
     protected $searchPattern = null;
     protected $currentPage = null;
-
     protected $assignation = null;
     protected $itemPerPage = null;
-
     protected $translation = null;
-    protected $securityContext = null;
+    protected $authorizationChecker = null;
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param Doctrine\ORM\EntityManager               $_em
-     * @param string                                   $entityName
-     * @param array                                    $preFilters
-     * @param array                                    $preOrdering
+     * @param Request $request
+     * @param EntityManager $_em
+     * @param string $entityName
+     * @param array $preFilters
+     * @param array $preOrdering
      */
     public function __construct(
         Request $request,
@@ -169,14 +164,14 @@ class EntityListManager
 
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return Translation
      */
     public function getTranslation()
     {
         return $this->translation;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $newtranslation
+     * @param Translation $newtranslation
      */
     public function setTranslation(Translation $newtranslation = null)
     {
@@ -187,18 +182,18 @@ class EntityListManager
 
 
     /**
-     * @return Symfony\Component\Security\Core\SecurityContext
+     * @return AuthorizationChecker
      */
-    public function getSecurityContext()
+    public function getAuthorizationChecker()
     {
-        return $this->securityContext;
+        return $this->authorizationChecker;
     }
     /**
-     * @param Symfony\Component\Security\Core\SecurityContext $newsecurityContext
+     * @param AuthorizationChecker $authorizationChecker
      */
-    public function setSecurityContext(SecurityContext $newsecurityContext = null)
+    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
-        $this->securityContext = $newsecurityContext;
+        $this->authorizationChecker = $authorizationChecker;
 
         return $this;
     }
@@ -215,7 +210,7 @@ class EntityListManager
                 $this->filteringArray
             );
             $this->paginator->setTranslation($this->translation);
-            $this->paginator->setSecurityContext($this->securityContext);
+            $this->paginator->setAuthorizationChecker($this->authorizationChecker);
 
         } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
             $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
@@ -228,7 +223,7 @@ class EntityListManager
                 $this->filteringArray
             );
 
-            $this->paginator->setSecurityContext($this->securityContext);
+            $this->paginator->setAuthorizationChecker($this->authorizationChecker);
         } else {
             $this->paginator = new Paginator(
                 $this->_em,

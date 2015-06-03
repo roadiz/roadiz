@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
@@ -73,10 +74,10 @@ class GroupJsonSerializer extends AbstractJsonSerializer
             throw new \Exception('File is empty.');
         }
         $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes([
+        $nameConverter = new CamelCaseToSnakeCaseNameConverter([
             'name',
         ]);
+        $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
         $group = $serializer->deserialize($string, 'RZ\Roadiz\Core\Entities\Group', 'json');

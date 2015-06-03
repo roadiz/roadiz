@@ -31,16 +31,15 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesSourcesTrait;
 use Themes\Rozier\Traits\NodesTrait;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 
 /**
  * Newsletter controller
@@ -59,9 +58,7 @@ class NewslettersController extends RozierApp
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findDefault();
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Newsletter',
             [],
             ["id" => "DESC"]
@@ -112,11 +109,11 @@ class NewslettersController extends RozierApp
                              'constraints' => [
                                  new NotBlank(),
                                  new UniqueNodeName([
-                                    'entityManager' => $this->getService('em')
-                                 ])
+                                     'entityManager' => $this->getService('em'),
+                                 ]),
                              ],
                          ])
-                         ->getForm();
+                ->getForm();
             $form->handleRequest($request);
 
             if ($form->isValid()) {

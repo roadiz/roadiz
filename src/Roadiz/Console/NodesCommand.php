@@ -37,13 +37,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Command line utils for managing nodes from terminal.
  */
 class NodesCommand extends Command
 {
-    private $dialog;
+    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -99,8 +100,8 @@ class NodesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->questionHelper = $this->getHelper('question');
+        $this->entityManager = $this->getHelper('em')->getEntityManager();
         $text = "";
         $nodeName = $input->getArgument('node-name');
         $typeName = $input->getArgument('node-type');
@@ -183,13 +184,12 @@ class NodesCommand extends Command
         $fields = $type->getFields();
 
         foreach ($fields as $field) {
-            $fValue = $this->dialog->ask(
-                $output,
-                '<question>[Field ' . $field->getLabel() . ']</question> : ',
-                ''
-            );
-            $setterName = 'set' . ucwords($field->getName());
-            $source->$setterName($fValue);
+            if (!$field->isVirtual()) {
+                $question = new Question('<question>[Field ' . $field->getLabel() . ']</question> : ', null);
+                $fValue = $this->questionHelper->ask($input, $output, $question);
+                $setterName = $field->getSetterName();
+                $source->$setterName($fValue);
+            }
         }
 
         $this->entityManager->persist($source);

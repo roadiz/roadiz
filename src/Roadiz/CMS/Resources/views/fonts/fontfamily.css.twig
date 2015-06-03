@@ -2,12 +2,12 @@
 @font-face {
     font-family: "{{ font.hash }}";
 
-    src: url('{{ font.handler.downloadUrl("eot", csrfProvider.generateCsrfToken(variantHash)) }}');
-    src: url('{{ font.handler.downloadUrl("eot", csrfProvider.generateCsrfToken(variantHash)) }}?#iefix') format('embedded-opentype'),
-        {% if font.getWOFF2Filename %}url('{{ font.handler.downloadUrl("woff2", csrfProvider.generateCsrfToken(variantHash)) }}') format('woff2'),{% endif %}
-        {% if font.getWOFFFilename %}url('{{ font.handler.downloadUrl("woff", csrfProvider.generateCsrfToken(variantHash)) }}') format('woff'),{% endif %}
-        {% if font.getOTFFilename %}url('{{ font.handler.downloadUrl("otf", csrfProvider.generateCsrfToken(variantHash)) }}') format('opentype'),{% endif %}
-        {% if font.getSVGFilename %}url('{{ font.handler.downloadUrl("svg", csrfProvider.generateCsrfToken(variantHash)) }}') format('svg'){% endif %};
+    src: url('{{ font.handler.downloadUrl("eot", csrfTokenManager.getToken(variantHash)) }}');
+    src: url('{{ font.handler.downloadUrl("eot", csrfTokenManager.getToken(variantHash)) }}?#iefix') format('embedded-opentype'),
+        {% if font.getWOFF2Filename %}url('{{ font.handler.downloadUrl("woff2", csrfTokenManager.getToken(variantHash)) }}') format('woff2'),{% endif %}
+        {% if font.getWOFFFilename %}url('{{ font.handler.downloadUrl("woff", csrfTokenManager.getToken(variantHash)) }}') format('woff'),{% endif %}
+        {% if font.getOTFFilename %}url('{{ font.handler.downloadUrl("otf", csrfTokenManager.getToken(variantHash)) }}') format('opentype'),{% endif %}
+        {% if font.getSVGFilename %}url('{{ font.handler.downloadUrl("svg", csrfTokenManager.getToken(variantHash)) }}') format('svg'){% endif %};
 
     {% for key, value in font.fontVariantInfos %}
     font-{{ key }}: {{ value }};

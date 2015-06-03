@@ -37,9 +37,8 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
@@ -88,11 +87,11 @@ class FrontendController extends AppController
     /**
      * Default action for any node URL.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node             $node
-     * @param RZ\Roadiz\Core\Entities\Translation      $translation
+     * @param Request $request
+     * @param Node             $node
+     * @param Translation      $translation
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(
         Request $request,
@@ -110,7 +109,7 @@ class FrontendController extends AppController
     /**
      * Default action for default URL (homepage).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @param string|null                              $_locale
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -147,8 +146,8 @@ class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param RZ\Roadiz\Core\Entities\Node        $node
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Node        $node
+     * @param Translation $translation
      */
     public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
     {
@@ -180,8 +179,8 @@ class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param NodesSources $nodeSource
+     * @param Translation $translation
      */
     public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
     {
@@ -209,7 +208,7 @@ class FrontendController extends AppController
     /**
      * Get controller class path for a given node.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return string
      */
@@ -237,22 +236,19 @@ class FrontendController extends AppController
     /**
      * Return a 404 Response or TRUE if node is viewable.
      *
-     * @param  RZ\Roadiz\Core\Entities\Node $node
-     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     * @param  Node $node
      *
      * @return boolean|Symfony\Component\HttpFoundation\Response
      */
-    public function validateAccessForNodeWithStatus(Node $node, SecurityContext $securityContext = null)
+    public function validateAccessForNodeWithStatus(Node $node)
     {
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER) &&
+        if (!$this->isGranted(Role::ROLE_BACKEND_USER) &&
             !$node->isPublished()) {
             /*
              * Not allowed to see unpublished nodes
              */
             return $this->throw404();
-        } elseif (null !== $securityContext &&
-            $securityContext->isGranted(Role::ROLE_BACKEND_USER) &&
+        } elseif ($this->isGranted(Role::ROLE_BACKEND_USER) &&
             $node->getStatus() > Node::PUBLISHED) {
             /*
              * Not allowed to see deleted and archived nodes
@@ -283,10 +279,8 @@ class FrontendController extends AppController
      * Handle node based routing, returns a Response object
      * for a node-based request.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
+     * @param Request $request
+     * @return Response
      * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(
@@ -299,7 +293,7 @@ class FrontendController extends AppController
         if ($node !== null) {
             if (true !== $resp = $this->validateAccessForNodeWithStatus(
                 $node,
-                $this->getService('securityContext')
+                $this->getService('securityAuthorizationChecker')
             )) {
                 return $resp;
             }
@@ -381,8 +375,8 @@ class FrontendController extends AppController
     /**
      * Store basic informations for your theme from a Node object.
      *
-     * @param RZ\Roadiz\Core\Entities\Node        $node
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Node        $node
+     * @param Translation $translation
      *
      * @return void
      */
@@ -401,8 +395,8 @@ class FrontendController extends AppController
     /**
      * Store basic informations for your theme from a NodesSources object.
      *
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param NodesSources $nodeSource
+     * @param Translation $translation
      *
      * @return void
      */
@@ -452,7 +446,7 @@ class FrontendController extends AppController
     /**
      * Append objects to global container.
      *
-     * Add a request matcher on frontend to make securityContext
+     * Add a request matcher on frontend to make securityTokenStorage
      * available even when no user has logged in.
      *
      * @param Pimple\Container $container
@@ -467,10 +461,10 @@ class FrontendController extends AppController
         $requestMatcher = new RequestMatcher('^/');
 
         $listeners = [
-            // manages the SecurityContext persistence through a session
+            // manages the TokenStorage persistence through a session
             $container['contextListener'],
             // automatically adds a Token if none is already present.
-            new AnonymousAuthenticationListener($container['securityContext'], ''), // $key
+            new AnonymousAuthenticationListener($container['securityTokenStorage'], ''), // $key
             $container["switchUser"],
         ];
 
@@ -479,7 +473,6 @@ class FrontendController extends AppController
          */
         $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
     }
-
 
     /**
      * {@inheritdoc}
@@ -494,5 +487,21 @@ class FrontendController extends AppController
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        $elm = parent::createEntityListManager($entity, $criteria, $ordering);
+
+        /*
+         * When using EntityListManager you need to manually set the
+         * security context
+         */
+        $elm->setAuthorizationChecker($this->getService('securityAuthorizationChecker'));
+
+        return $elm;
     }
 }

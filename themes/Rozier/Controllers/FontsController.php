@@ -36,7 +36,6 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueFontVariant;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,9 +57,7 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Font'
         );
         $listManager->handle();

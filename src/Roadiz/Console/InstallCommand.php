@@ -35,13 +35,13 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
  */
 class InstallCommand extends Command
 {
-    private $dialog;
     private $entityManager;
 
     protected function configure()
@@ -53,18 +53,19 @@ class InstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $helper = $this->getHelper('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
 
+        $question = new ConfirmationQuestion(
+            'Before installing Roadiz, did you create database schema? ' . PHP_EOL .
+            'If not execute: <info>bin/roadiz orm:schema-tool:create</info>' . PHP_EOL .
+            '<question>Are you sure to perform installation?</question> : ',
+            false
+        );
+
         if ($input->getOption('no-interaction') ||
-            $this->dialog->askConfirmation(
-                $output,
-                'Before installing Roadiz, did you create database schema? ' . PHP_EOL .
-                'If not execute: <info>bin/roadiz orm:schema-tool:create</info>' . PHP_EOL .
-                '<question>Are you sure to perform installation?</question> : ',
-                false
-            )
+            $helper->ask($input, $output, $question)
         ) {
             /*
              * Create backend theme

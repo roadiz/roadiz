@@ -88,7 +88,7 @@ class NodeSourceApi extends AbstractApi
                         $order,
                         $limit,
                         $offset,
-                        $this->container['securityContext']
+                        $this->container['securityAuthorizationChecker']
                     );
     }
     /**
@@ -106,7 +106,7 @@ class NodeSourceApi extends AbstractApi
         return $this->getRepository()
                     ->countBy(
                         $criteria,
-                        $this->container['securityContext']
+                        $this->container['securityAuthorizationChecker']
                     );
     }
     /**
@@ -124,7 +124,7 @@ class NodeSourceApi extends AbstractApi
                     ->findOneBy(
                         $criteria,
                         $order,
-                        $this->container['securityContext']
+                        $this->container['securityAuthorizationChecker']
                     );
     }
 }

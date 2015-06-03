@@ -9,32 +9,32 @@
 {% block content %}
 <section class="content-global">
 
-	<header class="content-header header-node header-node-edit-source">
-		{% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "securityContext": securityContext} only %}
-		<h1 class="content-title node-edit-source-title">
-			{{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
+    <header class="content-header header-node header-node-edit-source">
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "authorizationChecker": authorizationChecker} only %}
+        <h1 class="content-title node-edit-source-title">
+            {{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
-		</h1>
-		{% include '@Rozier/nodes/navBack.html.twig' %}
-		{% include '@Rozier/nodes/navBar.html.twig' with {"current": 'source'} %}
-		{% include '@Rozier/nodes/translationBar.html.twig' with {"current": translation.getId} %}
-	</header>
+        </h1>
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'source'} %}
+        {% include '@Rozier/nodes/translationBar.html.twig' with {"current": translation.getId} %}
+    </header>
 
-	<article class="content content-node-edit-source">
-		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form id="edit-node-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	{% spaceless %}
-		    	<button data-action-save="#edit-node-source-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-		    		<span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
-			    	<span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
-		    	</button>
-		    	{% endspaceless %}
-	   		</fieldset>
-		</form>
-	</article>
+    <article class="content content-node-edit-source">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form id="edit-node-source-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-node-source-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+    </article>
 
-	{% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

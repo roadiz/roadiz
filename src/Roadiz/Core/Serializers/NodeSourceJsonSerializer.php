@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 /**
  * Json Serialization handler for NodeSource.
@@ -129,8 +130,8 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         }
 
         $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes($sourceDefaults);
+        $nameConverter = new CamelCaseToSnakeCaseNameConverter($sourceDefaults);
+        $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
         $node = $serializer->deserialize(

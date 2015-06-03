@@ -33,7 +33,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Log;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Themes\Rozier\RozierApp;
@@ -70,9 +69,7 @@ class HistoryController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->em(),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Log',
             [],
             ['datetime' => 'DESC']
@@ -98,8 +95,8 @@ class HistoryController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        if (!($this->getSecurityContext()->isGranted('ROLE_ACCESS_USERS')
-            || $this->getSecurityContext()->getToken()->getUser()->getId() == $userId)) {
+        if (!($this->isGranted('ROLE_ACCESS_USERS')
+            || (is_object($this->getUser()) && $this->getUser()->getId() == $userId))) {
             throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
@@ -110,9 +107,7 @@ class HistoryController extends RozierApp
             /*
              * Manage get request to filter list
              */
-            $listManager = new EntityListManager(
-                $request,
-                $this->em(),
+            $listManager = $this->createEntityListManager(
                 'RZ\Roadiz\Core\Entities\Log',
                 ['user' => $user],
                 ['datetime' => 'DESC']

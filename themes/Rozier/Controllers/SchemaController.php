@@ -35,6 +35,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Redirection controller use to update database schema.
@@ -89,8 +90,8 @@ class SchemaController extends RozierApp
 
     protected function updateSchema(Request $request, $_token)
     {
-        if ($this->getService('csrfProvider')
-            ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
+        $token = new CsrfToken(static::SCHEMA_TOKEN_INTENTION, $_token);
+        if ($this->getService('csrfTokenManager')->isTokenValid($token)) {
             $updater = new SchemaUpdater($this->getService('em'));
             $updater->updateSchema();
 

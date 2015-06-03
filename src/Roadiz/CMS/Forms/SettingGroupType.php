@@ -31,7 +31,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Group setting selector form field type.
@@ -43,7 +43,7 @@ class SettingGroupType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $groups = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
@@ -57,7 +57,7 @@ class SettingGroupType extends AbstractType
 
         $resolver->setDefaults([
             'choices' => $choices,
-            'empty_value' => '---------'
+            'placeholder' => '---------'
         ]);
     }
     /**

@@ -34,7 +34,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -55,16 +54,10 @@ class LoginController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        $session = $this->getService('session');
-        // get the login error if there is one
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-        } else {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
-        }
+        $helper = $this->getService('securityAuthenticationUtils');
 
-        $this->assignation['error'] = $error;
+        $this->assignation['last_username'] = $helper->getLastUsername();
+        $this->assignation['error'] = $helper->getLastAuthenticationError();
 
         return $this->render('login/login.html.twig', $this->assignation);
     }

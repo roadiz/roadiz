@@ -77,8 +77,8 @@ class RozierApp extends BackendController
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
 
         $this->themeContainer['nodeTree'] = function ($c) {
-            if (!empty($this->assignation['session']["user"])) {
-                $parent = $this->assignation['session']["user"]->getChroot();
+            if (is_object($this->getUser())) {
+                $parent = $this->getUser()->getChroot();
             } else {
                 $parent = null;
             }

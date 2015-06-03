@@ -34,7 +34,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -110,7 +110,7 @@ class UserType extends AbstractType
         return 'user';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'compound' => true,
@@ -127,10 +127,8 @@ class UserType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes([
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
-            'email' => 'string',
-            'username' => 'string',
-        ]);
+        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('email', 'string');
+        $resolver->setAllowedTypes('username', 'string');
     }
 }

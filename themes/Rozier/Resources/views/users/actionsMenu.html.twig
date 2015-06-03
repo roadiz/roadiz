@@ -2,7 +2,7 @@
     {% spaceless %}
     {# Delete current node #}
     {% if user.getId %}
-        {% if (securityContext.Granted('ROLE_ACCESS_USERS_DELETE')) %}
+        {% if (authorizationChecker.Granted('ROLE_ACCESS_USERS_DELETE')) %}
         <a class="uk-button uk-button-danger" href="{{ path('usersDeletePage', { userId: user.getId}) }}">
             <span class="icon-container"><i class="uk-icon-trash-o"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>

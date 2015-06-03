@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -102,9 +101,7 @@ class SettingsController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Setting',
             $criteria,
             ['name' => 'ASC']
@@ -606,7 +603,7 @@ class SettingsController extends RozierApp
             case NodeTypeField::ENUM_T:
                 return [
                     'label' => $label,
-                    'empty_value' => $translator->trans('choose.value'),
+                    'placeholder' => $translator->trans('choose.value'),
                     'required' => false,
                 ];
             case NodeTypeField::DATETIME_T:

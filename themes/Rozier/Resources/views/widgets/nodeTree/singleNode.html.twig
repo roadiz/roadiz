@@ -116,7 +116,7 @@
                                 <i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
                             </a>
                         </p>
-                        {% if (securityContext.Granted('ROLE_ACCESS_NODES_DELETE')) %}
+                        {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES_DELETE')) %}
                         <p>
                             <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
                                 <i class="uk-icon-rz-trash-o"></i> {% trans %}delete.node{% endtrans %}
@@ -133,7 +133,7 @@
                             <a data-action="show" data-status="visible" data-value="1" class="show-node" title="{% trans %}node.show{% endtrans %}" href="#"><i class="uk-icon-rz-visibility-mini"></i> {% trans %}node.show{% endtrans %}</a>
                             {% endif %}
                         </p>
-                        {% if securityContext.Granted('ROLE_ACCESS_NODES_STATUS')%}
+                        {% if authorizationChecker.Granted('ROLE_ACCESS_NODES_STATUS')%}
                         <p>
                             {% if not node.published %}
                             <a data-action="publish" data-status="status" data-value="{{ nodeStatuses.published }}" class="publish-node" title="{% trans %}node.publish{% endtrans %}" href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>
@@ -167,7 +167,7 @@
                 "parent":node,
                 "nodeTree":nodeTree,
                 "mainNodeTree":mainNodeTree,
-                "securityContext":securityContext,
+                "authorizationChecker":authorizationChecker,
                 "nodeStatuses":nodeStatuses
             } only %}
         {% endfor %}

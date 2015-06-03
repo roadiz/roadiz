@@ -30,18 +30,18 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Extension that allow to gather nodes-source from hierarchy
  */
 class NodesSourcesExtension extends \Twig_Extension
 {
-    protected $securityContext;
+    protected $securityAuthorizationChecker;
 
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(AuthorizationChecker $securityAuthorizationChecker)
     {
-        $this->securityContext = $securityContext;
+        $this->securityAuthorizationChecker = $securityAuthorizationChecker;
     }
 
     public function getName()
@@ -65,27 +65,27 @@ class NodesSourcesExtension extends \Twig_Extension
 
     public function getChildren(NodesSources $ns, array $criteria = null, array $order = null)
     {
-        return $ns->getHandler()->getChildren($criteria, $order, $this->securityContext);
+        return $ns->getHandler()->getChildren($criteria, $order, $this->securityAuthorizationChecker);
     }
 
     public function getNext(NodesSources $ns, array $criteria = null, array $order = null)
     {
-        return $ns->getHandler()->getNext($criteria, $order, $this->securityContext);
+        return $ns->getHandler()->getNext($criteria, $order, $this->securityAuthorizationChecker);
     }
 
     public function getPrevious(NodesSources $ns, array $criteria = null, array $order = null)
     {
-        return $ns->getHandler()->getPrevious($criteria, $order, $this->securityContext);
+        return $ns->getHandler()->getPrevious($criteria, $order, $this->securityAuthorizationChecker);
     }
 
     public function getLastSibling(NodesSources $ns, array $criteria = null, array $order = null)
     {
-        return $ns->getHandler()->getLastSibling($criteria, $order, $this->securityContext);
+        return $ns->getHandler()->getLastSibling($criteria, $order, $this->securityAuthorizationChecker);
     }
 
     public function getFirstSibling(NodesSources $ns, array $criteria = null, array $order = null)
     {
-        return $ns->getHandler()->getFirstSibling($criteria, $order, $this->securityContext);
+        return $ns->getHandler()->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker);
     }
 
     public function getParent(NodesSources $ns)
@@ -95,7 +95,7 @@ class NodesSourcesExtension extends \Twig_Extension
 
     public function getParents(NodesSources $ns, array $criteria = null)
     {
-        return $ns->getHandler()->getParents($criteria, $this->securityContext);
+        return $ns->getHandler()->getParents($criteria, $this->securityAuthorizationChecker);
     }
 
     public function getTags(NodesSources $ns)

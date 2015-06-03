@@ -32,8 +32,7 @@ namespace RZ\Roadiz\Core\Viewers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * FontViewer
@@ -70,17 +69,17 @@ class FontViewer implements ViewableInterface
     /**
      * Get CSS font-face properties for current font.
      *
-     * @param Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider $csrfProvider
+     * @param CsrfTokenManagerInterface $csrfTokenManager
      *
      * @return string CSS output
      */
-    public function getCSSFontFace(SessionCsrfProvider $csrfProvider)
+    public function getCSSFontFace(CsrfTokenManagerInterface $csrfTokenManager)
     {
         $assignation = [
             'font' => $this->font,
             'site' => SettingsBag::get('site_name'),
             'fontFolder' => '/'.Font::getFilesFolderName(),
-            'csrfProvider' => $csrfProvider
+            'csrfTokenManager' => $csrfTokenManager
         ];
 
         return $this->getTwig()->render('fonts/fontfamily.css.twig', $assignation);

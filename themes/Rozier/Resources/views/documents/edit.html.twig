@@ -27,7 +27,7 @@
         <dl class="document-paths">
             {% if not document.private %}
             <dt>{% trans %}document.public_url{% endtrans %}</dt>
-            <dd>{{ document.viewer.documentUrlByArray() }}</dd>
+            <dd>{{ document|url() }}</dd>
             {% endif %}
             <dt>{% trans %}document.filepath{% endtrans %}</dt>
             <dd>{{ document.absolutePath }}</dd>

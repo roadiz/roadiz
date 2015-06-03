@@ -32,7 +32,7 @@ namespace Themes\Rozier\Forms;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -59,7 +59,7 @@ class TagTranslationType extends AbstractType
         return 'tag_translation';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'label' => false,
@@ -73,8 +73,6 @@ class TagTranslationType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes([
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
-        ]);
+        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
     }
 }

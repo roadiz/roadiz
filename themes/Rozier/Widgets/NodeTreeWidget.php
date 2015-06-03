@@ -33,7 +33,6 @@ namespace Themes\Rozier\Widgets;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\AbstractWidget;
 
@@ -154,9 +153,7 @@ class NodeTreeWidget extends AbstractWidget
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $this->request,
-            $this->controller->getService('em'),
+        $listManager = $this->controller->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Node',
             $criteria,
             $ordering

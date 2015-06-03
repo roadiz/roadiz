@@ -37,7 +37,6 @@ use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -170,9 +169,7 @@ class SearchController extends RozierApp
                 }
             }
             $data = $this->processCriteria($data);
-            $listManager = new EntityListManager(
-                $request,
-                $this->getService('em'),
+            $listManager = $this->createEntityListManager(
                 'RZ\Roadiz\Core\Entities\Node',
                 $data
             );
@@ -250,7 +247,7 @@ class SearchController extends RozierApp
             "nodetype",
             new \RZ\Roadiz\CMS\Forms\NodeTypesType,
             [
-                                'empty_value' => "",
+                                'placeholder' => "",
                                 'required' => false,
                                 'data' => $nodetypeId,
                             ]
@@ -302,9 +299,7 @@ class SearchController extends RozierApp
             $data = $this->processCriteria($data, "node.");
             $data = $this->processCriteriaNodetype($data, $nodetype);
 
-            $listManager = new EntityListManager(
-                $this->getService('request'),
-                $this->getService('em'),
+            $listManager = $this->createEntityListManager(
                 NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
                 $data
             );
@@ -462,7 +457,7 @@ class SearchController extends RozierApp
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
-                $option['empty_value'] = 'ignore';
+                $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["expanded"] = false;
                 if (count($choices) < 4) {
@@ -474,7 +469,7 @@ class SearchController extends RozierApp
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["choices"] = $choices;
-                $option['empty_value'] = 'ignore';
+                $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["multiple"] = true;
                 $option["expanded"] = false;

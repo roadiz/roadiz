@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Serializers;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 /**
  * Serialization class for Role.
@@ -68,8 +69,8 @@ class RoleJsonSerializer extends AbstractJsonSerializer
             throw new \Exception('File is empty.');
         }
         $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes(['name']);
+        $nameConverter = new CamelCaseToSnakeCaseNameConverter(['name']);
+        $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
 

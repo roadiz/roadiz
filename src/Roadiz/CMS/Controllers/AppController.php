@@ -223,7 +223,7 @@ class AppController extends Controller
         $staticDomain = SettingsBag::get('static_domain_name');
 
         if (!empty($staticDomain)) {
-            return $this->kernel->getStaticBaseUrl() .
+            return $this->getRequest()->getStaticBaseUrl() .
             '/themes/' . static::$themeDir . '/static/';
         } else {
             return $this->getRequest()->getBaseUrl() .
@@ -280,7 +280,7 @@ class AppController extends Controller
      *     - messages
      *     - id
      *     - user
-     * - securityContext
+     * - securityAuthorizationChecker
      *
      * @return $this
      */
@@ -296,14 +296,12 @@ class AppController extends Controller
                 'devMode' => (boolean) $this->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
+                'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
                 'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->container['csrfProvider']
-                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->container['csrfProvider']
-                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
+                'ajaxToken' => $this->container['csrfTokenManager']->getToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->container['csrfTokenManager']->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
@@ -311,8 +309,8 @@ class AppController extends Controller
             ],
         ];
 
-        if ($this->container['securityContext'] !== null) {
-            $this->assignation['securityContext'] = $this->container['securityContext'];
+        if ($this->container['securityAuthorizationChecker'] !== null) {
+            $this->assignation['authorizationChecker'] = $this->container['securityAuthorizationChecker'];
         }
 
         return $this;
@@ -357,8 +355,8 @@ class AppController extends Controller
                 }
             }
             $this->theme = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                ->findOneByClassName($className);
+                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                 ->findOneByClassName($className);
         }
         return $this->theme;
     }
@@ -391,13 +389,13 @@ class AppController extends Controller
                                 ->findWithTranslation(
                                     $home->getId(),
                                     $translation,
-                                    $this->container['securityContext']
+                                    $this->container['securityAuthorizationChecker']
                                 );
                 } else {
                     return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
                                 ->findWithDefaultTranslation(
                                     $home->getId(),
-                                    $this->container['securityContext']
+                                    $this->container['securityAuthorizationChecker']
                                 );
                 }
             }
@@ -406,11 +404,11 @@ class AppController extends Controller
             return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
                         ->findHomeWithTranslation(
                             $translation,
-                            $this->container['securityContext']
+                            $this->container['securityAuthorizationChecker']
                         );
         } else {
             return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findHomeWithDefaultTranslation($this->container['securityContext']);
+                        ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
         }
     }
 
@@ -481,7 +479,7 @@ class AppController extends Controller
      */
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
-        $user = $this->container['securityContext']->getToken()->getUser();
+        $user = $this->getUser();
         $node = $this->container['em']
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -499,10 +497,10 @@ class AppController extends Controller
         }
 
         if ($isNewsletterFriend &&
-            !$this->container['securityContext']->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+            !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
         } elseif (!$isNewsletterFriend) {
-            if (!$this->container['securityContext']->isGranted($role)) {
+            if (!$this->isGranted($role)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }
 

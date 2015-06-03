@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\TagTranslation;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * {@inheritdoc}
@@ -243,7 +243,7 @@ class TagRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityContext
+     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
      *
      * @return QueryBuilder
      */
@@ -283,7 +283,7 @@ class TagRepository extends EntityRepository
      * This method allows to pre-filter Nodes with a given translation.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityContext
+     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
      *
      * @return QueryBuilder
      */
@@ -320,7 +320,7 @@ class TagRepository extends EntityRepository
         $limit = null,
         $offset = null,
         Translation $translation = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $securityAuthorizationChecker = null
     ) {
         $query = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -348,7 +348,7 @@ class TagRepository extends EntityRepository
      * @param array                                   $criteria
      * @param array|null                              $orderBy
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -356,7 +356,7 @@ class TagRepository extends EntityRepository
         array $criteria,
         array $orderBy = null,
         Translation $translation = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $securityAuthorizationChecker = null
     ) {
 
         $query = $this->getContextualQueryWithTranslation(
@@ -384,7 +384,7 @@ class TagRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return int
      */

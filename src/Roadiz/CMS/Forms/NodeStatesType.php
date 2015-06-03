@@ -31,7 +31,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use RZ\Roadiz\Core\Entities\Node;
 
 /**
@@ -42,7 +42,7 @@ class NodeStatesType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $choices = [];
 
@@ -54,7 +54,7 @@ class NodeStatesType extends AbstractType
 
         $resolver->setDefaults([
             'choices' => $choices,
-            'empty_value' => 'ignore',
+            'placeholder' => 'ignore',
         ]);
     }
     /**

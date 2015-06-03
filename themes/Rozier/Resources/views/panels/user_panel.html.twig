@@ -9,7 +9,7 @@
 
     <div id="company">
         {% if themeServices.adminImage %}
-            <a class="admin-image" href="{{ path('adminHomePage') }}">{{ themeServices.adminImage.viewer.getDocumentByArray({width:150})|raw }}</a>
+            <a class="admin-image" href="{{ path('adminHomePage') }}">{{ themeServices.adminImage|display({width:150}) }}</a>
         {% else %}
             <a class="uk-icon-rz-roadiz-icon" href="{{ path('adminHomePage') }}"></a>
         {% endif %}
@@ -19,14 +19,14 @@
         <h3>{{ "hello.%name%"|trans({'%name%': session.user.identifier}) }}</h3>
         <nav class="user-actions">
             <a class="uk-icon-button uk-icon-rz-earth" href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}" target="_blank"><span class="user-action-label">{% trans %}see.website{% endtrans %}</span></a>
-            {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
+            {% if (authorizationChecker.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
                 <a title="{% trans %}delete.caches{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-flash" href="{{ path('deleteDoctrineCache') }}"><span class="user-action-label">{% trans %}delete.caches{% endtrans %}</span></a>
             {% endif %}
-            {% if (securityContext.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
+            {% if (authorizationChecker.Granted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE')) %}
                 <a title="{% trans %}delete.generated_images.cache{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-flash-images" href="{{ path('deleteAssetsCache') }}"><span class="user-action-label">{% trans %}delete.generated_images.cache{% endtrans %}</span></a>
             {% endif %}
             <a class="uk-icon-button uk-icon-rz-user" href="{{ path('usersEditPage', {'userId':session.user.id }) }}"><span class="user-action-label">{% trans %}edit.account{% endtrans %}</span></a>
-            {% if securityContext.Granted('ROLE_PREVIOUS_ADMIN') %}
+            {% if authorizationChecker.Granted('ROLE_PREVIOUS_ADMIN') %}
                 <a title="{% trans %}stop.test.user.right{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="?_su=_exit"><span class="user-action-label">{% trans %}stop.test.user.right{% endtrans %}</span></a>
             {% else %}
                 <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"><span class="user-action-label">{% trans %}logout{% endtrans %}</span></a>

@@ -6,35 +6,35 @@
 
 {% spaceless %}
 <ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
-    {% for parent in node.handler.parents(securityContext) %}
+    {% for parent in node.nodeSources.first|parents|reverse %}
 
-        {% if parent.nodeSources.first.title %}
-            {% set title = parent.nodeSources.first.title %}
+        {% if parent.title %}
+            {% set title = parent.title %}
         {% else %}
-            {% set title = parent.nodeName %}
+            {% set title = parent.node.nodeName %}
         {% endif %}
 
         {# Change URL if root node is a newsletter #}
-        {% if loop.first and parent.nodeType.NewsletterType %}
+        {% if loop.first and parent.node.nodeType.NewsletterType %}
 
             {% set url = path('newslettersEditPage', {
-                'newsletterId' : parent.newsletter.id,
-                'translationId': parent.nodeSources.first.translation.id
+                'newsletterId' : parent.node.newsletter.id,
+                'translationId': parent.translation.id
             }) %}
         {% else %}
-            {% if parent.isHidingChildren %}
-                {% set url = path('nodesTreePage', { nodeId: parent.id }) %}
+            {% if parent.node.isHidingChildren %}
+                {% set url = path('nodesTreePage', { nodeId: parent.node.id }) %}
             {% else %}
                 {% set url = path('nodesEditSourcePage', {
-                    nodeId: parent.id,
-                    translationId: parent.nodeSources.first.translation.id
+                    nodeId: parent.node.id,
+                    translationId: parent.translation.id
                 }) %}
             {% endif %}
         {% endif %}
 
         <li class="node-breadcrumb-item">
             <a class="node-breadcrumb-link" href="{{ url }}">
-                {% if parent.isHome %}
+                {% if parent.node.isHome %}
                     <i class="uk-icon-rz-breadcrumb-home"></i>
                 {% else %}
                     {{ title|truncate(25, true, '[…]') }}

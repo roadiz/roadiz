@@ -34,7 +34,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -78,7 +78,7 @@ class CustomFormType extends AbstractType
                 'attr' => [
                     'class' => 'rz-datetime-field',
                 ],
-                'empty_value' => [
+                'placeholder' => [
                     'hour' => 'hour',
                     'minute' => 'minute',
                 ],
@@ -98,7 +98,7 @@ class CustomFormType extends AbstractType
         return 'customform';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'label' => false,
@@ -112,10 +112,7 @@ class CustomFormType extends AbstractType
         $resolver->setRequired([
             'em',
         ]);
-
-        $resolver->setAllowedTypes([
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
-            'name' => 'string',
-        ]);
+        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('name', 'string');
     }
 }

@@ -69,7 +69,7 @@
                         <td>
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('usersEditPage', { userId: user.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            {% if not (user.username == session.user.username or securityContext.Granted('ROLE_PREVIOUS_ADMIN')) %}
+                            {% if not (user.username == session.user.username or authorizationChecker.Granted('ROLE_PREVIOUS_ADMIN')) %}
                             <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('adminHomePage') }}?_su={{ user.username }}" title="{% trans %}start.test.user.right{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-sudo"></i></a>
                             {% endif %}
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersDeletePage', { userId: user.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>

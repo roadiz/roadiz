@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,6 +125,26 @@ abstract class Controller
     }
 
     /**
+     * Alias for `$this->container['securityAuthorizationChecker']`.
+     *
+     * @return Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     */
+    public function getAuthorizationChecker()
+    {
+        return $this->container['securityAuthorizationChecker'];
+    }
+
+    /**
+     * Alias for `$this->container['securityTokenStorage']`.
+     *
+     * @return Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     */
+    public function getTokenStorage()
+    {
+        return $this->container['securityTokenStorage'];
+    }
+
+    /**
      * Alias for `$this->container['em']`.
      *
      * @return Doctrine\ORM\EntityManager
@@ -176,6 +197,9 @@ abstract class Controller
         return new RedirectResponse($url, $status);
     }
 
+    /**
+     * @return mixed
+     */
     public static function getCalledClass()
     {
         $className = get_called_class();
@@ -375,20 +399,40 @@ abstract class Controller
     }
 
     /**
-     * Get a user from the securityContext.
+     * Creates and returns an EntityListManager instance.
+     *
+     * @param mixed $entity Entity class path
+     * @param array $criteria
+     * @param array $ordering
+     *
+     * @return EntityListManager
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        return new EntityListManager(
+            $this->container['request'],
+            $this->container['em'],
+            $entity,
+            $criteria,
+            $ordering
+        );
+    }
+
+    /**
+     * Get a user from the tokenStorage.
      *
      * @return mixed
      *
-     * @throws \LogicException If securityContext is not available
+     * @throws \LogicException If tokenStorage is not available
      *
      * @see TokenInterface::getUser()
      */
     protected function getUser()
     {
-        if (!isset($this->container['securityContext'])) {
-            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        if (!isset($this->container['securityTokenStorage'])) {
+            throw new \LogicException('No TokenStorage has been registered in your application.');
         }
-        if (null === $token = $this->container['securityContext']->getToken()) {
+        if (null === $token = $this->container['securityTokenStorage']->getToken()) {
             return;
         }
         if (!is_object($user = $token->getUser())) {
@@ -409,9 +453,9 @@ abstract class Controller
      */
     protected function isGranted($attributes, $object = null)
     {
-        if (!isset($this->container['securityContext'])) {
+        if (!isset($this->container['securityAuthorizationChecker'])) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
-        return $this->container['securityContext']->isGranted($attributes, $object);
+        return $this->container['securityAuthorizationChecker']->isGranted($attributes, $object);
     }
 }

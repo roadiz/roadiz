@@ -30,29 +30,51 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
+use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
 use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Security\Http\HttpUtils;
 
 /**
  * Register routing services for dependency injection container.
  */
-class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
+class RoutingServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        $container['request'] = function ($c) {
+            return Request::createFromGlobals();
+        };
+
+        $container['requestStack'] = function ($c) {
+            $stack = new RequestStack();
+            $stack->push($c['request']);
+            return $stack;
+        };
+
+        $container['requestContext'] = function ($c) {
+            $rc = new RequestContext();
+            $rc->fromRequest($c['request']);
+
+            return $rc;
+        };
+
         $container['resolver'] = function ($c) {
             return new ControllerResolver();
         };
         $container['httpKernel'] = function ($c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver']);
+            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
         };
         $container['urlMatcher'] = function ($c) {
             if (RouteCollectionSubscriber::needToDumpUrlTools()) {
@@ -84,6 +106,15 @@ class RoutingServiceProvider implements \Pimple\ServiceProviderInterface
         };
         $container['httpUtils'] = function ($c) {
             return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
+        };
+
+        $container['routeListener'] = function ($c) {
+            return new RouterListener(
+                $c['urlMatcher'],
+                $c['requestContext'],
+                $c['logger'],
+                $c['requestStack']
+            );
         };
 
         if (isset($container['config']['install']) &&
