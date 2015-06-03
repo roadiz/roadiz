@@ -142,23 +142,28 @@ class NodeJsonSerializer extends AbstractJsonSerializer
                     }
                 }
             }
-
-            foreach ($source['url_aliases'] as $url) {
-                $alias = new UrlAlias($nodeSource);
-                $alias->setAlias($url['alias']);
-                $nodeSource->addUrlAlias($alias);
+            if (!empty($source['url_aliases'])) {
+                foreach ($source['url_aliases'] as $url) {
+                    $alias = new UrlAlias($nodeSource);
+                    $alias->setAlias($url['alias']);
+                    $nodeSource->addUrlAlias($alias);
+                }
             }
             $node->getNodeSources()->add($nodeSource);
         }
-        foreach ($data["tags"] as $tag) {
-            $tmp = Kernel::getInstance()->getService('em')
-                                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                                        ->findOneBy(["tagName" => $tag]);
-            $node->getTags()->add($tmp);
+        if (!empty($data['tags'])) {
+            foreach ($data["tags"] as $tag) {
+                $tmp = Kernel::getInstance()->getService('em')
+                                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                                            ->findOneBy(["tagName" => $tag]);
+                $node->getTags()->add($tmp);
+            }
         }
-        foreach ($data['children'] as $child) {
-            $tmp = static::makeNodeRec($child);
-            $node->addChild($tmp);
+        if (!empty($data['children'])) {
+            foreach ($data['children'] as $child) {
+                $tmp = static::makeNodeRec($child);
+                $node->addChild($tmp);
+            }
         }
         return $node;
     }
