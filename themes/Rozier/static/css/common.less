@@ -75,12 +75,30 @@ background: #CCC;
 .uk-tooltip {
     padding: 7px 10px;
     margin-top: -1px;
-    background: #333;
+    background: #000;
     color: rgba(255, 255, 255, 0.6);
     font-size: 11px;
     line-height: 15px;
     .rounded(3px);
+    max-width: none;
 }
+.uk-tooltip-top-left:after,
+.uk-tooltip-top-right:after,
+.uk-tooltip-top:after {
+    border-top-color: #000;
+}
+.uk-tooltip-bottom-left:after,
+.uk-tooltip-bottom-right:after,
+.uk-tooltip-bottom:after {
+    border-bottom-color: #000;
+}
+.uk-tooltip-right:after {
+    border-right-color: #000;
+}
+.uk-tooltip-left:after {
+    border-left-color: #000;
+}
+
 .uk-thumbnail {
     display: inline-block;
     max-width: 100%;

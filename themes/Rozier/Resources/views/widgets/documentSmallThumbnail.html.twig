@@ -1,9 +1,19 @@
+{% set classes = [
+    document.getShortType ~'-document',
+    'uk-sortable-list-item',
+    'documents-widget-sortable-list-item'
+] %}
+{% if not document.isImage %}
+{% set classes = classes|merge(['not-image']) %}
+{% endif %}
+
 {% spaceless %}
-<li class="{% if not document.isImage %}not-image {% endif %}{{ document.getShortType }}-document uk-sortable-list-item documents-widget-sortable-list-item"
-    data-document-id="{{ document.getId }}">
+<li class="{{ classes|join(' ') }}"
+    data-document-id="{{ document.getId }}"
+    title="{{ document.getFilename }}"
+    data-uk-tooltip="{animation:true, pos:'bottom'}">
 
 	<div class="uk-sortable-handle"></div>
-
     <div class="document-border"></div>
 
 	{% if document.isImage and not document.private %}
