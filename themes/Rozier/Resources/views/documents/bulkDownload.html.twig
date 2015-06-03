@@ -15,7 +15,7 @@
                 <div class="document-border"></div>
                 <figure class="document-image">
                     {% if document.isImage %}
-                        {{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}
+                        {{ document|display(thumbnailFormat) }}
                     {% else %}
                         <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
                     {% endif %}

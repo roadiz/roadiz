@@ -64,8 +64,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($c['request']->getResolvedBasePath());
-            $rc->setHost($c['request']->server->get('HTTP_HOST'));
+            $rc = new RequestContext();
+            $rc->fromRequest($c['request']);
 
             return $rc;
         };

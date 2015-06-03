@@ -396,7 +396,7 @@ class Kernel implements ServiceProviderInterface
      */
     public function getStaticBaseUrl()
     {
-        return $this->convertUrlToStaticDomainUrl($this->container['request']->getResolvedBaseUrl());
+        return $this->convertUrlToStaticDomainUrl($this->container['request']->getAbsoluteBaseUrl());
     }
 
     /**

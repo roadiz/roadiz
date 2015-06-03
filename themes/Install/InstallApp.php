@@ -85,7 +85,7 @@ class InstallApp extends AppController
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
-                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
+                'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
                 'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),

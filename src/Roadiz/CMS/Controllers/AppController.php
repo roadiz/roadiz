@@ -296,7 +296,7 @@ class AppController extends Controller
                 'devMode' => (boolean) $this->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
+                'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
                 'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),

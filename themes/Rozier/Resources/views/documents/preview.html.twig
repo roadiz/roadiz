@@ -15,9 +15,9 @@
         <div class="content-inner">
             {% if not document.private %}
                 {% if document.image or document.video %}
-                <figure class="uk-thumbnail">{{ document.getViewer.getDocumentByArray(thumbnailFormat)|raw }}</figure>
+                <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                 {% endif %}
-                <div class="document-source"><code>{{ document.getViewer.getDocumentUrlByArray(thumbnailFormat) }}</code></div>
+                <div class="document-source"><code>{{ document|url(thumbnailFormat) }}</code></div>
 
                 {% if document.isEmbed and document.getViewer.getEmbedFinder %}
                 <hr />
