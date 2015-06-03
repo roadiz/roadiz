@@ -88,7 +88,8 @@ class DefaultThemeApp extends FrontendController
              * Common image format for pages headers
              */
             $array['headerImage'] = [
-                'width' => 1600
+                'width' => 1600,
+                'noProcess' => true,
             ];
             $array['thumbnail'] = [
                 "fit" => "200x200",

@@ -62,7 +62,7 @@ class CustomFormController extends AppController
         $staticDomain = SettingsBag::get('static_domain_name');
 
         if (!empty($staticDomain)) {
-            return $this->kernel->getStaticBaseUrl() .
+            return $this->getRequest()->getStaticBaseUrl() .
             '/themes/Rozier/static/';
         } else {
             return $this->getRequest()->getBaseUrl() .

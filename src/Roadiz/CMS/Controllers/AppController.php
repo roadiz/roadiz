@@ -223,7 +223,7 @@ class AppController extends Controller
         $staticDomain = SettingsBag::get('static_domain_name');
 
         if (!empty($staticDomain)) {
-            return $this->kernel->getStaticBaseUrl() .
+            return $this->getRequest()->getStaticBaseUrl() .
             '/themes/' . static::$themeDir . '/static/';
         } else {
             return $this->getRequest()->getBaseUrl() .

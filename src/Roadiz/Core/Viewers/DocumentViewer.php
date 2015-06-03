@@ -257,7 +257,7 @@ class DocumentViewer implements ViewableInterface
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
-                'url' => Kernel::getInstance()->getRequest()->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
+                'url' => Kernel::getService('request')->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
             ];
         }
 
@@ -290,7 +290,7 @@ class DocumentViewer implements ViewableInterface
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getInstance()->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
         } else {
             $slirArgs = [];
 
@@ -330,7 +330,7 @@ class DocumentViewer implements ViewableInterface
                 'filename' => $this->document->getRelativeUrl(),
             ], UrlGenerator::ABSOLUTE_PATH);
 
-            return Kernel::getInstance()->convertUrlToStaticDomainUrl($url);
+            return Kernel::getService('request')->convertUrlToStaticDomainUrl($url);
         }
     }
 }
