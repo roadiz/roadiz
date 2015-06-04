@@ -95,6 +95,13 @@ class NodeTreeType extends AbstractType
             $this->nodeSource->getNode(),
             $this->nodeSource->getTranslation()
         );
+        $view->vars['nodeStatuses'] = [
+            'draft' => Node::DRAFT,
+            'pending' => Node::PENDING,
+            'published' => Node::PUBLISHED,
+            'archived' => Node::ARCHIVED,
+            'deleted' => Node::DELETED,
+        ];
 
         /*
          * Linked types to create quick add buttons

@@ -54,7 +54,9 @@
                         'request':request
                     } only %}
                 </section>
-                {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES') or authorizationChecker.Granted('ROLE_ACCESS_DOCUMENTS') or authorizationChecker.Granted('ROLE_ACCESS_TAGS')) %}
+                {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES') or
+                       authorizationChecker.Granted('ROLE_ACCESS_DOCUMENTS') or
+                       authorizationChecker.Granted('ROLE_ACCESS_TAGS')) %}
                 <section id="main-trees" class="main-container-section">
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
