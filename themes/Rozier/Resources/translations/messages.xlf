@@ -5361,7 +5361,7 @@
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="Bad credentials">
-          <source>Bad credentials</source>
+          <source>Bad credentials.</source>
           <target></target>
       </trans-unit>
 
@@ -6124,6 +6124,10 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.does_not_exist">
           <source>folder.does_not_exist</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pinterest_url">
+          <source>pinterest_url</source>
           <target></target>
       </trans-unit>
     </body>

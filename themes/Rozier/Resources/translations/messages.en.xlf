@@ -5290,7 +5290,7 @@
           <target xml:lang="en">Custom form</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="Bad credentials" approved="yes">
-          <source>Bad credentials</source>
+          <source>Bad credentials.</source>
           <target xml:lang="en">Bad credentials</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
@@ -5741,9 +5741,9 @@
           <source>current.document.is.private.you.cannot.preview.it</source>
           <target xml:lang="en" state="translated">Current document is private, you can’t preview it.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.public_url">
+      <trans-unit xml:space="preserve" id="document.public_url" approved="yes">
           <source>document.public_url</source>
-          <target xml:lang="en" state="translated">Public URL</target>
+          <target xml:lang="en">Public URL</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="document.filepath">
           <source>document.filepath</source>
@@ -6011,6 +6011,10 @@
       <trans-unit xml:space="preserve" id="folder.does_not_exist">
           <source>folder.does_not_exist</source>
           <target xml:lang="en" state="translated">Folder does not exist</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pinterest_url" approved="yes">
+          <source>pinterest_url</source>
+          <target xml:lang="en">Pinterest URL</target>
       </trans-unit>
     </body>
   </file>

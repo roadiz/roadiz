@@ -5290,7 +5290,7 @@
           <target xml:lang="fr">Formulaire personnalisé</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="Bad credentials" approved="yes">
-          <source>Bad credentials</source>
+          <source>Bad credentials.</source>
           <target xml:lang="fr">Identifiants non reconnus</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
@@ -6011,6 +6011,10 @@
       <trans-unit xml:space="preserve" id="folder.does_not_exist">
           <source>folder.does_not_exist</source>
           <target xml:lang="fr" state="translated">Le dossier n’existe pas</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pinterest_url">
+          <source>pinterest_url</source>
+          <target xml:lang="fr" state="translated">Url Pinterest</target>
       </trans-unit>
     </body>
   </file>
