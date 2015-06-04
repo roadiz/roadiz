@@ -207,7 +207,7 @@ class NodeTypeFieldHandler
      */
     public function '.$this->nodeTypeField->getGetterName().'()
     {
-        return $this->getNode()->getHandler()->getNodesFromFieldName("'.$this->nodeTypeField->getName().'");
+        return $this->getHandler()->getNodesFromFieldName("'.$this->nodeTypeField->getName().'");
     }'.PHP_EOL;
         } elseif (AbstractField::CUSTOM_FORMS_T === $this->nodeTypeField->getType()) {
             return '

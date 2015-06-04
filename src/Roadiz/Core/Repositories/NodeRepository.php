@@ -277,7 +277,7 @@ class NodeRepository extends EntityRepository
              */
             $qb->andWhere($qb->expr()->eq('n.status', Node::PUBLISHED));
         } elseif (null !== $authorizationChecker &&
-                $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
             /*
              * Forbid deleted node for anonymous and not backend users.
              */
@@ -1068,6 +1068,67 @@ class NodeRepository extends EntityRepository
     }
 
     /**
+     * @param Node          $node
+     * @param NodeTypeField $field
+     * @param Translation $translation
+     *
+     * @return array
+     */
+    public function findByNodeAndFieldAndTranslation(
+        Node $node,
+        NodeTypeField $field,
+        Translation $translation
+    ) {
+        $query = $this->_em->createQuery('
+            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.aNodes ntn
+            INNER JOIN n.nodeSources ns
+            WHERE ntn.field = :field
+            AND ntn.nodeA = :nodeA
+            AND ns.translation = :translation
+            ORDER BY ntn.position ASC')
+                      ->setParameter('field', $field)
+                      ->setParameter('nodeA', $node)
+                      ->setParameter('translation', $translation);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param string $fieldName
+     * @param Translation $translation
+     *
+     * @return array
+     */
+    public function findByNodeAndFieldNameAndTranslation(
+        Node $node,
+        $fieldName,
+        Translation $translation
+    ) {
+        $query = $this->_em->createQuery('
+            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.aNodes ntn
+            INNER JOIN n.nodeSources ns
+            INNER JOIN ntn.field f
+            WHERE f.name = :name
+            AND ntn.nodeA = :nodeA
+            AND ns.translation = :translation
+            ORDER BY ntn.position ASC')
+                      ->setParameter('name', (string) $fieldName)
+                      ->setParameter('nodeA', $node)
+                      ->setParameter('translation', $translation);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * @param RZ\Roadiz\Core\Entities\Node $node
      *
      * @return array
@@ -1089,7 +1150,7 @@ class NodeRepository extends EntityRepository
 
             //For memory optimizations
             foreach ($result as $item) {
-                $in[] = (int)$item['id'];
+                $in[] = (int) $item['id'];
             }
         } while (!empty($in));
         return $theOffprings;

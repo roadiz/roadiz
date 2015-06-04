@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
@@ -302,7 +302,7 @@ class NodesSourcesHandler
             'node.parent' => $this->nodeSource->getNode(),
             'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
-            'node.nodeType.newsletterType' => false
+            'node.nodeType.newsletterType' => false,
         ];
 
         if (null !== $order) {
@@ -349,7 +349,7 @@ class NodesSourcesHandler
             'node.parent' => $this->nodeSource->getNode(),
             'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
-            'node.nodeType.newsletterType' => false
+            'node.nodeType.newsletterType' => false,
         ];
 
         if (null !== $order) {
@@ -456,7 +456,7 @@ class NodesSourcesHandler
                      ->getPosition(),
             ],
             'node.parent' => $this->nodeSource->getNode()->getParent(),
-            'translation' => $this->nodeSource->getTranslation()
+            'translation' => $this->nodeSource->getTranslation(),
         ];
         if (null !== $criteria) {
             $defaultCrit = array_merge($defaultCrit, $criteria);
@@ -506,7 +506,7 @@ class NodesSourcesHandler
                      ->getPosition(),
             ],
             'node.parent' => $this->nodeSource->getNode()->getParent(),
-            'translation' => $this->nodeSource->getTranslation()
+            'translation' => $this->nodeSource->getTranslation(),
         ];
         if (null !== $criteria) {
             $defaultCrit = array_merge($defaultCrit, $criteria);
@@ -558,5 +558,23 @@ class NodesSourcesHandler
             $this->nodeSource->getTitle() . ', ' . SettingsBag::get('seo_description'),
             'keywords' => $this->nodeSource->getMetaKeywords(),
         ];
+    }
+
+    /**
+     * Get nodes linked to current node for a given fieldname.
+     *
+     * @param string $fieldName Name of the node-type field
+     *
+     * @return ArrayCollection Collection of nodes
+     */
+    public function getNodesFromFieldName($fieldName)
+    {
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findByNodeAndFieldNameAndTranslation(
+                $this->nodeSource->getNode(),
+                $fieldName,
+                $this->nodeSource->getTranslation()
+            );
     }
 }
