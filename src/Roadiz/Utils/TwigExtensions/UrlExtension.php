@@ -42,10 +42,12 @@ use Symfony\Component\HttpFoundation\Request;
 class UrlExtension extends \Twig_Extension
 {
     protected $request;
+    protected $forceLocale;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, $forceLocale = false)
     {
         $this->request = $request;
+        $this->forceLocale = $forceLocale;
     }
 
     public function getName()
@@ -77,7 +79,8 @@ class UrlExtension extends \Twig_Extension
     {
         $urlGenerator = new NodesSourcesUrlGenerator(
             $this->request,
-            $ns
+            $ns,
+            $this->forceLocale
         );
         if (isset($criteria['absolute'])) {
             return $urlGenerator->getUrl((boolean) $criteria['absolute']);

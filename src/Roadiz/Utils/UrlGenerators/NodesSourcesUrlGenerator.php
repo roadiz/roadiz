@@ -37,16 +37,22 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
 {
     protected $request;
     protected $nodeSource;
+    protected $forceLocale;
 
     /**
      *
-     * @param RZ\Roadiz\Core\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param Request $request
+     * @param NodesSources $nodeSource
+     * @param boolear $forceLocale
      */
-    public function __construct(Request $request = null, NodesSources $nodeSource = null)
-    {
+    public function __construct(
+        Request $request = null,
+        NodesSources $nodeSource = null,
+        $forceLocale = false
+    ) {
         $this->request = $request;
         $this->nodeSource = $nodeSource;
+        $this->forceLocale = $forceLocale;
     }
     /**
      * Get a resource Url.
@@ -96,7 +102,9 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
         if (null !== $this->nodeSource) {
             if ($this->nodeSource->getNode()->isHome()
                 || (null !== $theme && $theme->getHomeNode() == $this->nodeSource->getNode())) {
-                if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
+
+                if ($this->nodeSource->getTranslation()->isDefaultTranslation() &&
+                    false === $this->forceLocale) {
                     return '';
                 } else {
                     return $this->nodeSource->getTranslation()->getLocale();
@@ -122,8 +130,9 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
              * If using node-name, we must use shortLocale when current
              * translation is not the default one.
              */
-            if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
-                !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
+            if (($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
+                 !$this->nodeSource->getTranslation()->isDefaultTranslation()) ||
+                  true === $this->forceLocale) {
                 $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
             }
 

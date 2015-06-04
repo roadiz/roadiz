@@ -6016,6 +6016,14 @@
           <source>pinterest_url</source>
           <target xml:lang="fr" state="translated">Url Pinterest</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="use_cdn">
+          <source>use_cdn</source>
+          <target xml:lang="fr" state="translated">Utiliser un CDN pour les ressources</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale">
+          <source>force_locale</source>
+          <target xml:lang="fr" state="translated">Forcer la locale dans les Url</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

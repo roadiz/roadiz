@@ -122,7 +122,8 @@ class TranslationViewer implements ViewableInterface
             if ($node) {
                 $urlGenerator = new NodesSourcesUrlGenerator(
                     $request,
-                    $node->getHandler()->getNodeSourceByTranslation($translation)
+                    $node->getHandler()->getNodeSourceByTranslation($translation),
+                    (boolean) \RZ\Roadiz\Core\Bags\SettingsBag::get('force_locale')
                 );
                 $url = $urlGenerator->getUrl($absolute);
                 if (!empty($query)) {

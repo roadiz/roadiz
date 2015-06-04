@@ -6016,6 +6016,14 @@
           <source>pinterest_url</source>
           <target xml:lang="en">Pinterest URL</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="use_cdn">
+          <source>use_cdn</source>
+          <target xml:lang="en" state="translated">Use a CDM for resources</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale">
+          <source>force_locale</source>
+          <target xml:lang="en" state="translated">Force locale in URL</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -113,7 +113,10 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $twig->addExtension(new NodesSourcesExtension($c['securityAuthorizationChecker']));
             }
             $twig->addExtension(new DocumentExtension());
-            $twig->addExtension(new UrlExtension($c['request']));
+            $twig->addExtension(new UrlExtension(
+                $c['request'],
+                (boolean) \RZ\Roadiz\Core\Bags\SettingsBag::get('force_locale')
+            ));
             $twig->addExtension(new RoadizTranslationExtension($c['request']));
 
             if (null !== $c['twig.cacheExtension']) {
