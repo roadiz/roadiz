@@ -76,9 +76,11 @@
         width: 220px;
     }
 
-    .uk-dropdown, .uk-dropdown-small {
+    .uk-dropdown,
+    .uk-dropdown-small {
         padding: 0 0 0 26px;
         background-color: @contextualdropdown-bg;
+        z-index: 1040; // quick add button is 1030
 
         .uk-nav {
             margin: 0px;

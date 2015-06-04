@@ -172,9 +172,9 @@ trait NodesSourcesTrait
                 return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
             case NodeTypeField::CHILDREN_T:
                 /*
-             * NodeTreeType is a virtual type which is only available
-             * with Rozier backend theme.
-             */
+                 * NodeTreeType is a virtual type which is only available
+                 * with Rozier backend theme.
+                 */
                 return new \Themes\Rozier\Forms\NodeTreeType(
                     $nodeSource,
                     $field,
