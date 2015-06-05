@@ -71,7 +71,7 @@ class CompareDatetimeType extends AbstractType
             'attr' => [
                 'class' => 'rz-compare-datetype',
             ],
-            'virtual' => false,
+            'inherit_data' => false,
             'required' => false,
         ]);
     }

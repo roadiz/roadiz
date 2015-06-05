@@ -403,12 +403,12 @@ class SearchController extends RozierApp
                         ])
                         ->add($prefix . "createdAt", new CompareDatetimeType(), [
                             'label' => 'created.at',
-                            'virtual' => false,
+                            'inherit_data' => false,
                             'required' => false,
                         ])
                         ->add($prefix . "updatedAt", new CompareDatetimeType(), [
                             'label' => 'updated.at',
-                            'virtual' => false,
+                            'inherit_data' => false,
                             'required' => false,
                         ])
                         ->add($prefix . "limitResult", "number", [
