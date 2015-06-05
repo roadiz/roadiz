@@ -102,7 +102,6 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
         if (null !== $this->nodeSource) {
             if ($this->nodeSource->getNode()->isHome()
                 || (null !== $theme && $theme->getHomeNode() == $this->nodeSource->getNode())) {
-
                 if ($this->nodeSource->getTranslation()->isDefaultTranslation() &&
                     false === $this->forceLocale) {
                     return '';
