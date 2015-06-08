@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
+use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -153,6 +154,7 @@ class Kernel implements ServiceProviderInterface
             'em' => new EntityManagerHelper($this->container['em']),
             'question' => new QuestionHelper(),
             'solr' => new SolrHelper($this->container['solr']),
+            'ns-cache' => new CacheProviderHelper($this->container['nodesSourcesUrlCacheProvider']),
         ]);
         $application->setHelperSet($helperSet);
 

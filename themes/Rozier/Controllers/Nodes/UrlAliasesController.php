@@ -38,6 +38,10 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
+use RZ\Roadiz\Core\Events\UrlAliasEvents;
 
 /**
  * {@inheritdoc}
@@ -94,6 +98,12 @@ class UrlAliasesController extends RozierApp
                 if ($this->editSEO($seoForm->getData(), $source)) {
                     $msg = $this->getTranslator()->trans('node.seo.updated');
                     $this->publishConfirmMessage($request, $msg, $source);
+
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodesSourcesEvent($source);
+                    $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
                 } else {
                     $msg = $this->getTranslator()->trans('node.seo.not.updated');
                     $this->publishErrorMessage($request, $msg, $source);
@@ -122,6 +132,12 @@ class UrlAliasesController extends RozierApp
                     if ($this->editUrlAlias($editForm->getData(), $alias)) {
                         $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
                         $this->publishConfirmMessage($request, $msg, $source);
+
+                        /*
+                         * Dispatch event
+                         */
+                        $event = new FilterUrlAliasEvent($alias);
+                        $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_UPDATED, $event);
                     } else {
                         $msg = $this->getTranslator()->trans('url_alias.%alias%.no_update.already_exists', ['%alias%' => $alias->getAlias()]);
                         $this->publishErrorMessage($request, $msg, $source);
@@ -144,6 +160,12 @@ class UrlAliasesController extends RozierApp
                     $this->deleteUrlAlias($editForm->getData(), $alias);
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', ['%alias%' => $alias->getAlias()]);
                     $this->publishConfirmMessage($request, $msg, $source);
+
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterUrlAliasEvent($alias);
+                    $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_DELETED, $event);
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -175,6 +197,11 @@ class UrlAliasesController extends RozierApp
                         '%translation%' => $ua->getNodeSource()->getTranslation()->getName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg, $source);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterUrlAliasEvent($ua);
+                    $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
 
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage(), $source);

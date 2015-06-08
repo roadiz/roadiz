@@ -35,6 +35,7 @@ use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -58,6 +59,7 @@ class CacheController extends RozierApp
         if ($form->isValid()) {
             $clearers = [
                 new DoctrineCacheClearer($this->getService('em')),
+                new NodesSourcesUrlsCacheClearer($this->getService('nodesSourcesUrlCacheProvider')),
                 new TranslationsCacheClearer(),
                 new RoutingCacheClearer(),
                 new TemplatesCacheClearer(),
@@ -82,6 +84,7 @@ class CacheController extends RozierApp
             'hydratationCache' => $this->getService('em')->getConfiguration()->getHydrationCacheImpl(),
             'queryCache' => $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
             'metadataCache' => $this->getService('em')->getConfiguration()->getMetadataCacheImpl(),
+            'nodeSourcesUrlsCache' => $this->getService('nodesSourcesUrlCacheProvider'),
         ];
 
         foreach ($this->assignation['cachesInfo'] as $key => $value) {
