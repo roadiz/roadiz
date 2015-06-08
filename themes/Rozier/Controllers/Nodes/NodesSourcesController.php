@@ -95,12 +95,16 @@ class NodesSourcesController extends RozierApp
 
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
-
                     /*
                      * Dispatch event
                      */
                     $event = new FilterNodesSourcesEvent($source);
                     $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
+                    /*
+                     * Update nodeName against source title.
+                     */
+                    $this->updateNodeName($source);
 
                     $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                         '%node_source%' => $source->getNode()->getNodeName(),

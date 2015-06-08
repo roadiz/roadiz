@@ -164,23 +164,9 @@ class NodesSourcesHandler
     public function getParent()
     {
         if (null === $this->parentNodeSource) {
-            $parent = $this->nodeSource->getNode()->getParent();
-            if ($parent !== null) {
-                $query = Kernel::getService('em')
-                    ->createQuery('SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
-                                               WHERE ns.node = :node
-                                               AND ns.translation = :translation')
-                    ->setParameter('node', $parent)
-                    ->setParameter('translation', $this->nodeSource->getTranslation());
-
-                try {
-                    $this->parentNodeSource = $query->getSingleResult();
-                } catch (\Doctrine\ORM\NoResultException $e) {
-                    $this->parentNodeSource = null;
-                }
-            } else {
-                $this->parentNodeSource = null;
-            }
+            $this->parentNodeSource = Kernel::getService('em')
+                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                 ->findParent($this->nodeSource);
         }
 
         return $this->parentNodeSource;

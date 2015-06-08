@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
@@ -642,6 +643,32 @@ class NodesSourcesRepository extends EntityRepository
 
             return $ns;
         } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get node-source parent according to its translation.
+     *
+     * @param  NodesSources $nodeSource
+     * @return NodesSources|null
+     */
+    public function findParent(NodesSources $nodeSource)
+    {
+        if (null !== $nodeSource->getNode()->getParent()) {
+            try {
+                $query = $this->_em->createQuery('
+                    SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
+                    WHERE ns.node = :node
+                    AND ns.translation = :translation')
+                        ->setParameter('node', $nodeSource->getNode()->getParent())
+                        ->setParameter('translation', $nodeSource->getTranslation());
+
+                return $query->getSingleResult();
+            } catch (NoResultException $e) {
+                return null;
+            }
+        } else {
             return null;
         }
     }

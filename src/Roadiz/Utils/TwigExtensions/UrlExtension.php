@@ -29,13 +29,13 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use Doctrine\Common\Cache\CacheProvider;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * Extension that allow render nodes, nodesSources and documents Url
@@ -44,14 +44,13 @@ class UrlExtension extends \Twig_Extension
 {
     protected $request;
     protected $forceLocale;
-    protected $nodeSourceUrlCache;
+    protected $cacheProvider;
 
-    public function __construct(Request $request, $forceLocale = false)
+    public function __construct(Request $request, CacheProvider $cacheProvider = null, $forceLocale = false)
     {
         $this->request = $request;
         $this->forceLocale = $forceLocale;
-        $this->nodeSourceUrlCache = new ArrayCache();
-        $this->nodeSourceUrlCache->setNamespace('nsurls_');
+        $this->cacheProvider = $cacheProvider;
     }
 
     public function getName()
@@ -66,9 +65,9 @@ class UrlExtension extends \Twig_Extension
         ];
     }
 
-    public function getCacheKey(NodesSources $ns, array $criteria = [])
+    public function getCacheKey(NodesSources $ns, $absolute = false)
     {
-        return md5($ns->getId() . serialize($criteria));
+        return ($ns->getId() . "_" . (int) $absolute);
     }
 
     public function getUrl(AbstractEntity $mixed, array $criteria = [])
@@ -86,10 +85,15 @@ class UrlExtension extends \Twig_Extension
 
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
     {
-        $cacheKey = $this->getCacheKey($ns, $criteria);
+        $absolute = false;
+        if (isset($criteria['absolute'])) {
+            $absolute = (boolean) $criteria['absolute'];
+        }
 
-        if ($this->nodeSourceUrlCache->contains($cacheKey)) {
-            return $this->nodeSourceUrlCache->fetch($cacheKey);
+        $cacheKey = $this->getCacheKey($ns, $absolute);
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
         } else {
             $urlGenerator = new NodesSourcesUrlGenerator(
                 $this->request,
@@ -97,13 +101,9 @@ class UrlExtension extends \Twig_Extension
                 $this->forceLocale
             );
 
-            if (isset($criteria['absolute'])) {
-                $url = $urlGenerator->getUrl((boolean) $criteria['absolute']);
-            } else {
-                $url = $urlGenerator->getUrl(false);
-            }
+            $url = $urlGenerator->getUrl($absolute);
 
-            $this->nodeSourceUrlCache->save($cacheKey, $url);
+            $this->cacheProvider->save($cacheKey, $url);
             return $url;
         }
     }

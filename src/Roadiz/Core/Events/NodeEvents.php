@@ -88,4 +88,26 @@ final class NodeEvents
      * @var string
      */
     const NODE_TAGGED = 'node.tagged';
+
+    /**
+     * Event node.visibilityChanged is triggered each time a node
+     * becomes visible or unvisible.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterNodeEvent instance
+     *
+     * @var string
+     */
+    const NODE_VISIBILITY_CHANGED = 'node.visibilityChanged';
+
+    /**
+     * Event node.statusChanged is triggered each time a node
+     * status changes.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterNodeEvent instance
+     *
+     * @var string
+     */
+    const NODE_STATUS_CHANGED = 'node.statusChanged';
 }

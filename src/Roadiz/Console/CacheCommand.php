@@ -34,6 +34,7 @@ use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -45,6 +46,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CacheCommand extends Command
 {
     private $entityManager;
+    private $nsCacheHelper;
 
     protected function configure()
     {
@@ -87,6 +89,12 @@ class CacheCommand extends Command
                  'Clear compiled translations catalogues.'
              )
              ->addOption(
+                 'clear-nsurls',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Clear cached node-sources Urls.'
+             )
+             ->addOption(
                  'clear-all',
                  null,
                  InputOption::VALUE_NONE,
@@ -99,12 +107,14 @@ class CacheCommand extends Command
     {
         $text = "";
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');
 
         $assetsClearer = new AssetsClearer();
         $doctrineClearer = new DoctrineCacheClearer($this->entityManager);
         $routingClearer = new RoutingCacheClearer();
         $templatesClearer = new TemplatesCacheClearer();
         $translationsClearer = new TranslationsCacheClearer();
+        $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
 
         $clearers = [
             $assetsClearer,
@@ -112,6 +122,7 @@ class CacheCommand extends Command
             $routingClearer,
             $templatesClearer,
             $translationsClearer,
+            $nodeSourcesUrlsClearer,
         ];
 
         if ($input->getOption('clear-all')) {
@@ -136,6 +147,9 @@ class CacheCommand extends Command
         } elseif ($input->getOption('clear-translations')) {
             $translationsClearer->clear();
             $text .= $translationsClearer->getOutput();
+        } elseif ($input->getOption('clear-nsurls')) {
+            $nodeSourcesUrlsClearer->clear();
+            $text .= $nodeSourcesUrlsClearer->getOutput();
         } else {
             $text .= $this->getInformations();
         }
@@ -165,6 +179,10 @@ class CacheCommand extends Command
         $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
         if (null !== $cacheDriver) {
             $text .= "<info>Metadata cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+        }
+
+        if (null !== $this->nsCacheHelper->getCacheProvider()) {
+            $text .= "<info>Node-sources URLs cache driver:</info> " . get_class($this->nsCacheHelper->getCacheProvider()) . PHP_EOL;
         }
 
         return $text;

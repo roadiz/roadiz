@@ -271,6 +271,13 @@ class AjaxNodesController extends AbstractAjaxController
                                 $event = new FilterNodeEvent($node);
                                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
+                                if ($request->get('statusName') == 'status') {
+                                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
+                                }
+                                if ($request->get('visible') == 'status') {
+                                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
+                                }
+
                                 $responseArray = [
                                     'statusCode' => Response::HTTP_OK,
                                     'status' => 'success',

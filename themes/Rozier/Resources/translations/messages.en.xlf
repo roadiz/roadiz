@@ -6024,6 +6024,10 @@
           <source>force_locale</source>
           <target xml:lang="en" state="translated">Force locale in URL</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
+          <source>nodeSourcesUrlsCache</source>
+          <target xml:lang="en" state="translated">Node-sources URL cache</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -29,12 +29,12 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
-use Pimple\Container;
-
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
-
+use Pimple\Container;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 
 /**
@@ -111,6 +111,36 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 }
             };
         }
+        /*
+         * logic from Doctrine setup method
+         *
+         * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
+         */
+        $container['nodesSourcesUrlCacheProvider'] = function ($c) {
+            if (extension_loaded('apc')) {
+                $cache = new \Doctrine\Common\Cache\ApcCache();
+            } elseif (extension_loaded('xcache')) {
+                $cache = new \Doctrine\Common\Cache\XcacheCache();
+            } elseif (extension_loaded('memcache')) {
+                $memcache = new \Memcache();
+                $memcache->connect('127.0.0.1');
+                $cache = new \Doctrine\Common\Cache\MemcacheCache();
+                $cache->setMemcache($memcache);
+            } elseif (extension_loaded('redis')) {
+                $redis = new \Redis();
+                $redis->connect('127.0.0.1');
+                $cache = new \Doctrine\Common\Cache\RedisCache();
+                $cache->setRedis($redis);
+            } else {
+                $cache = new ArrayCache();
+            }
+
+            if ($cache instanceof CacheProvider) {
+                $cache->setNamespace($c['config']["appNamespace"] . "_nsurls"); // to avoid collisions
+            }
+
+            return $cache;
+        };
 
         return $container;
     }
