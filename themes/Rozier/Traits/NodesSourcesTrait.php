@@ -38,6 +38,8 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\Type;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 
 trait NodesSourcesTrait
 {
@@ -53,24 +55,6 @@ trait NodesSourcesTrait
     {
         if (isset($data['title'])) {
             $nodeSource->setTitle($data['title']);
-
-            /*
-             * update node name if dynamic option enabled and
-             * default translation
-             */
-            if (true === $nodeSource->getNode()->isDynamicNodeName() &&
-                $nodeSource->getTranslation()->isDefaultTranslation()) {
-                $testingNodeName = StringHandler::slugify($data['title']);
-
-                /*
-                 * node name wont be updated if name already taken
-                 */
-                if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
-                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
-                    $nodeSource->getNode()->setNodeName($data['title']);
-                }
-            }
         } else {
             // empty title
             $nodeSource->setTitle("");
@@ -86,6 +70,44 @@ trait NodesSourcesTrait
         }
 
         $this->getService('em')->flush();
+    }
+
+    /**
+     * Update nodeName when title is available.
+     *
+     * @param  string       $title
+     * @param  NodesSources $nodeSource
+     */
+    protected function updateNodeName(NodesSources $nodeSource)
+    {
+        $title = $nodeSource->getTitle();
+
+        /*
+         * update node name if dynamic option enabled and
+         * default translation
+         */
+        if ("" != $title &&
+            true === $nodeSource->getNode()->isDynamicNodeName() &&
+            $nodeSource->getTranslation()->isDefaultTranslation()) {
+            $testingNodeName = StringHandler::slugify($title);
+
+            /*
+             * node name wont be updated if name already taken
+             */
+            if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
+                false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
+                $nodeSource->getNode()->setNodeName($title);
+
+                $this->getService('em')->flush();
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($nodeSource->getNode());
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            }
+        }
     }
 
     /**

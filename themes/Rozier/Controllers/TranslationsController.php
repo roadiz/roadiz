@@ -38,6 +38,8 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
+use RZ\Roadiz\Core\Events\FilterTranslationEvent;
+use RZ\Roadiz\Core\Events\TranslationEvents;
 
 /**
  * Translation's controller
@@ -79,6 +81,12 @@ class TranslationsController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('translation.%name%.made_default', ['%name%' => $translation->getName()]);
                 $this->publishConfirmMessage($request, $msg);
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterTranslationEvent($translation);
+                $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -122,6 +130,12 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.%name%.updated', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
+
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterTranslationEvent($translation);
+                    $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -168,6 +182,11 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.%name%.created', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterTranslationEvent($translation);
+                    $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_CREATED, $event);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -213,6 +232,11 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.%name%.deleted', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterTranslationEvent($translation);
+                    $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_DELETED, $event);
                 } catch (\Exception $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }

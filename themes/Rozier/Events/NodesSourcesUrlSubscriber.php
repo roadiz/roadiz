@@ -33,6 +33,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Events\UrlAliasEvents;
+use RZ\Roadiz\Core\Events\TranslationEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -52,6 +53,8 @@ class NodesSourcesUrlSubscriber implements EventSubscriberInterface
         return array(
             NodesSourcesEvents::NODE_SOURCE_CREATED => 'purgeNSUrlCache',
             NodesSourcesEvents::NODE_SOURCE_DELETED => 'purgeNSUrlCache',
+            TranslationEvents::TRANSLATION_UPDATED => 'purgeNSUrlCache',
+            TranslationEvents::TRANSLATION_DELETED => 'purgeNSUrlCache',
             NodeEvents::NODE_DELETED => 'purgeNSUrlCache',
             NodeEvents::NODE_UNDELETED => 'purgeNSUrlCache',
             NodeEvents::NODE_UPDATED => 'purgeNSUrlCache',
