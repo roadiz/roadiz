@@ -56,6 +56,7 @@ module.exports = function(grunt) {
 					'js/widgets/markdownEditor.js',
 					'js/widgets/tagAutocomplete.js',
 					'js/widgets/folderAutocomplete.js',
+                    'js/widgets/inputLengthWatcher.js',
 					'js/widgets/stackNodeTree.js',
 					'js/node-type-fields/nodeTypeFieldsPosition.js',
 					'js/node-type-fields/nodeTypeFieldEdit.js',

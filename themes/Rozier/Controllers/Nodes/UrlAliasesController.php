@@ -414,6 +414,9 @@ class UrlAliasesController extends RozierApp
                         ->add('metaTitle', 'text', [
                             'label' => 'metaTitle',
                             'required' => false,
+                            'attr' => [
+                                'data-max-length' => 55,
+                            ],
                         ])
                         ->add('metaKeywords', 'text', [
                             'label' => 'metaKeywords',
