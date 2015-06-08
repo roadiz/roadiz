@@ -277,6 +277,7 @@ class DocumentViewer implements ViewableInterface
      * - rotate (1-359 degrees, for example : 90)
      * - grayscale / greyscale (boolean)
      * - quality (1-100) - default: 90
+     * - blur (1-100)
      * - background (hexadecimal color without #)
      * - progressive (boolean)
      * - noProcess (boolean) : Disable image resample
@@ -302,6 +303,9 @@ class DocumentViewer implements ViewableInterface
             }
             if (!empty($args['crop'])) {
                 $slirArgs['c'] = 'c' . strip_tags($args['crop']);
+            }
+            if (!empty($args['blur'])) {
+                $slirArgs['l'] = 'l' . strip_tags($args['blur']);
             }
             if (!empty($args['fit'])) {
                 $slirArgs['f'] = 'f' . strip_tags($args['fit']);
