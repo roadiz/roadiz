@@ -112,7 +112,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new RouterListener(
                 $c['urlMatcher'],
                 $c['requestContext'],
-                $c['logger'],
+                null,
                 $c['requestStack']
             );
         };

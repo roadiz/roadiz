@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * Extension that allow render nodes, nodesSources and documents Url
@@ -43,11 +44,14 @@ class UrlExtension extends \Twig_Extension
 {
     protected $request;
     protected $forceLocale;
+    protected $nodeSourceUrlCache;
 
     public function __construct(Request $request, $forceLocale = false)
     {
         $this->request = $request;
         $this->forceLocale = $forceLocale;
+        $this->nodeSourceUrlCache = new ArrayCache();
+        $this->nodeSourceUrlCache->setNamespace('nsurls_');
     }
 
     public function getName()
@@ -60,6 +64,11 @@ class UrlExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('url', [$this, 'getUrl']),
         ];
+    }
+
+    public function getCacheKey(NodesSources $ns, array $criteria = [])
+    {
+        return md5($ns->getId() . serialize($criteria));
     }
 
     public function getUrl(AbstractEntity $mixed, array $criteria = [])
@@ -77,15 +86,26 @@ class UrlExtension extends \Twig_Extension
 
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
     {
-        $urlGenerator = new NodesSourcesUrlGenerator(
-            $this->request,
-            $ns,
-            $this->forceLocale
-        );
-        if (isset($criteria['absolute'])) {
-            return $urlGenerator->getUrl((boolean) $criteria['absolute']);
+        $cacheKey = $this->getCacheKey($ns, $criteria);
+
+        if ($this->nodeSourceUrlCache->contains($cacheKey)) {
+            return $this->nodeSourceUrlCache->fetch($cacheKey);
+        } else {
+            $urlGenerator = new NodesSourcesUrlGenerator(
+                $this->request,
+                $ns,
+                $this->forceLocale
+            );
+
+            if (isset($criteria['absolute'])) {
+                $url = $urlGenerator->getUrl((boolean) $criteria['absolute']);
+            } else {
+                $url = $urlGenerator->getUrl(false);
+            }
+
+            $this->nodeSourceUrlCache->save($cacheKey, $url);
+            return $url;
         }
-        return $urlGenerator->getUrl(false);
     }
 
     public function getNodeUrl(Node $node, array $criteria = [])
