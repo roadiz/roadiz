@@ -10,7 +10,7 @@
 
 Roadiz is a modern CMS based on a polymorphic node system which can handle many types of services and contents.
 Its back-office has been developed with a high sense of design and user experience.
-Its theming system is built to live independantly from back-office allowing easy switching
+Its theming system is built to live independently from back-office allowing easy switching
 and multiple themes for one content basis. For example, it allows you to create one theme
 for your desktop website and another one for your mobile, using the same node hierarchy.
 Roadiz is released under MIT license, so you can reuse
