@@ -23,7 +23,7 @@
                         class="rz-no-ajax-link"
                        {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}
                        data-children-parent-node="{{ nodeTree.rootNode.id }}"
-                       data-translation-id="{{ lang.id }}">{{ lang.locale|capitalize }}</a>
+                       data-translation-id="{{ lang.id }}">{{ lang.preferredLocale|capitalize }}</a>
                 </li>
                 {% endfor %}
                 {% endspaceless %}

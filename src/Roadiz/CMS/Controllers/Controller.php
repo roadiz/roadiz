@@ -242,6 +242,7 @@ abstract class Controller
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
+        $repository = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Translation');
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
@@ -249,24 +250,24 @@ abstract class Controller
          * Get language from static route
          */
         if (null !== $_locale) {
-            $request->setLocale($_locale);
-            $translation = $this->container['em']
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneBy(
-                                    [
-                                        'locale' => $_locale,
-                                        'available' => true,
-                                    ]
-                                );
+            /*
+             * First try with override locale
+             */
+            $translation = $repository->findOneByOverrideLocaleAndAvailable($_locale);
+
+            if ($translation === null) {
+                /*
+                 * Then with regular locale
+                 */
+                $translation = $repository->findOneByLocaleAndAvailable($_locale);
+            }
             if ($translation === null) {
                 throw new NoTranslationAvailableException();
             }
         } else {
-            $translation = $this->container['em']
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
-            $request->setLocale($translation->getLocale());
+            $translation = $repository->findDefault();
         }
+        $request->setLocale($translation->getLocale());
         return $translation;
     }
 

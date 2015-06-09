@@ -6,8 +6,7 @@ homePageLocale:
     path:     /{_locale}
     defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction }
     requirements:
-        # Use every 2 letter codes (quick and dirty)
-        _locale: "[a-z]{2}"
+        _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
 contactPage:
     path:     /contact
@@ -16,8 +15,7 @@ contactPageLocale:
     path:     /{_locale}/contact
     defaults: { _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction }
     requirements:
-        # Use every 2 letter codes (quick and dirty)
-        _locale: "[a-z]{2}"
+        _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
 feedRSS:
     path:     /feed

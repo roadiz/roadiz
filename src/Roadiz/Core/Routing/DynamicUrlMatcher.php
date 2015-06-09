@@ -90,23 +90,24 @@ class DynamicUrlMatcher extends UrlMatcher
      */
     protected function parseTranslation(&$tokens)
     {
+        $repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation');
+
         if (!empty($tokens[0])) {
             $firstToken = $tokens[0];
+            $locale = strip_tags($firstToken);
             /*
              * First token is for language
              */
-            if (in_array($firstToken, Translation::getAvailableLocales())) {
-                $locale = strip_tags($firstToken);
-
-                if ($locale !== null && $locale != '') {
-                    return $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneByLocaleAndAvailable($locale);
+            if ($locale !== null && $locale != '') {
+                if (in_array($firstToken, $repository->getAvailableOverrideLocales())) {
+                    return $repository->findOneByOverrideLocaleAndAvailable($locale);
+                } elseif (in_array($firstToken, $repository->getAvailableLocales())) {
+                    return $repository->findOneByLocaleAndAvailable($locale);
                 }
             }
         }
 
-        return $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findDefault();
+        return $repository->findDefault();
     }
 
     /**
@@ -119,11 +120,16 @@ class DynamicUrlMatcher extends UrlMatcher
     protected function parseUrlAlias(&$tokens)
     {
         if (!empty($tokens[0])) {
+            $locale = strip_tags($tokens[0]);
+
+            $transRepository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation');
             /*
              * If the only url token if for language, return no url alias !
              */
-            if (in_array($tokens[0], Translation::getAvailableLocales()) &&
-                count($tokens) == 1) {
+            if (count($tokens) === 1 &&
+                (in_array($locale, $transRepository->getAvailableOverrideLocales()) ||
+                    in_array($locale, $transRepository->getAvailableLocales()))
+            ) {
                 return null;
             } else {
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);

@@ -1502,22 +1502,6 @@
           <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="155">
-        <source>translation.%locale%.cannot_update_already_exists</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">290</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="156">
-        <source>translation.%locale%.cannot_create_already_exists</source>
-        <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">316</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="157">
         <source>translation.%name%.cannot_delete_default_translation</source>
         <target></target>
@@ -6141,6 +6125,18 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
           <source>nodeSourcesUrlsCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.locale.alreadyExists">
+          <source>translation.locale.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.override_locale.alreadyExists">
+          <source>translation.override_locale.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="overrideLocale">
+          <source>overrideLocale</source>
           <target></target>
       </trans-unit>
 

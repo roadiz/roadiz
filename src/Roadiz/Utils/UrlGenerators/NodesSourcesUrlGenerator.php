@@ -106,7 +106,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
                     false === $this->forceLocale) {
                     return '';
                 } else {
-                    return $this->nodeSource->getTranslation()->getLocale();
+                    return $this->nodeSource->getTranslation()->getPreferredLocale();
                 }
             }
 
@@ -132,7 +132,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             if (($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
                  !$this->nodeSource->getTranslation()->isDefaultTranslation()) ||
                   true === $this->forceLocale) {
-                $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
+                $urlTokens[] = $this->nodeSource->getTranslation()->getPreferredLocale();
             }
 
             $urlTokens = array_reverse($urlTokens);

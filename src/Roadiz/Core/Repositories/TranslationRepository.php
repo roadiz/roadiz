@@ -99,6 +99,48 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
+     * Get all available locales.
+     *
+     * @return array
+     */
+    public function getAvailableLocales()
+    {
+        $query = $this->_em->createQuery('
+        SELECT t.locale FROM RZ\Roadiz\Core\Entities\Translation t
+        WHERE t.available = true');
+
+        $query->useResultCache(true, 60, 'RZTranslationGetAvailableLocales');
+
+        try {
+            return array_map('current', $query->getScalarResult());
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get all available locales.
+     *
+     * @return array
+     */
+    public function getAvailableOverrideLocales()
+    {
+        $query = $this->_em->createQuery("
+        SELECT t.overrideLocale FROM RZ\Roadiz\Core\Entities\Translation t
+        WHERE t.available = true
+        AND t.overrideLocale IS NOT NULL
+        AND t.overrideLocale <> ''");
+
+        $query->useResultCache(true, 60, 'RZTranslationGetAvailableOverrideLocales');
+
+        try {
+            return array_map('current', $query->getScalarResult());
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
      * Get all available translations by locale.
      *
      * @return ArrayCollection
@@ -121,6 +163,28 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
+     * Get all available translations by overrideLocale.
+     *
+     * @return ArrayCollection
+     */
+    public function findByOverrideLocaleAndAvailable($overrideLocale)
+    {
+        $query = $this->_em->createQuery('
+        SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
+        WHERE t.available = true
+        AND t.overrideLocale = :overrideLocale
+        ')->setParameter('overrideLocale', $overrideLocale);
+
+        $query->useResultCache(true, 60, 'RZTranslationAllByOverrideAndAvailable-' . $overrideLocale);
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * Get one available translation by locale.
      *
      * @return RZ\Roadiz\Core\Entities\Translation
@@ -131,9 +195,33 @@ class TranslationRepository extends EntityRepository
         SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
         WHERE t.available = true
         AND t.locale = :locale
-        ')->setParameter('locale', $locale);
+        ')->setParameter('locale', $locale)
+        ->setMaxResults(1);
 
         $query->useResultCache(true, 60, 'RZTranslationOneByLocaleAndAvailable-' . $locale);
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get one available translation by overrideLocale.
+     *
+     * @return RZ\Roadiz\Core\Entities\Translation
+     */
+    public function findOneByOverrideLocaleAndAvailable($overrideLocale)
+    {
+        $query = $this->_em->createQuery('
+        SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
+        WHERE t.available = true
+        AND t.overrideLocale = :overrideLocale
+        ')->setParameter('overrideLocale', $overrideLocale)
+        ->setMaxResults(1);
+
+        $query->useResultCache(true, 60, 'RZTranslationOneByOverrideAndAvailable-' . $overrideLocale);
 
         try {
             return $query->getSingleResult();
