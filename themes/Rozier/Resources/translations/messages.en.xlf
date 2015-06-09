@@ -1502,22 +1502,6 @@
           <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="155" approved="yes">
-        <source>translation.%locale%.cannot_update_already_exists</source>
-        <target xml:lang="en">Translation "%locale%" can't be updated, an another one already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">290</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="156" approved="yes">
-        <source>translation.%locale%.cannot_create_already_exists</source>
-        <target xml:lang="en">Translation "%locale%" can't be created, an another one already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">316</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="157" approved="yes">
         <source>translation.%name%.cannot_delete_default_translation</source>
         <target xml:lang="en">Translation "%name%" can't be deleted, it is the default translation.</target>
@@ -6027,6 +6011,18 @@
       <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
           <source>nodeSourcesUrlsCache</source>
           <target xml:lang="en" state="translated">Node-sources URL cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.locale.alreadyExists">
+          <source>translation.locale.alreadyExists</source>
+          <target xml:lang="en" state="translated">This translation locale is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.override_locale.alreadyExists">
+          <source>translation.override_locale.alreadyExists</source>
+          <target xml:lang="en" state="translated">This translation override locale is already used</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="overrideLocale">
+          <source>overrideLocale</source>
+          <target xml:lang="en" state="translated">Override locale</target>
       </trans-unit>
     </body>
   </file>
