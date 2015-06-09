@@ -117,23 +117,29 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
          * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            if (extension_loaded('apc')) {
-                $cache = new \Doctrine\Common\Cache\ApcCache();
-            } elseif (extension_loaded('xcache')) {
-                $cache = new \Doctrine\Common\Cache\XcacheCache();
-            } elseif (extension_loaded('memcache')) {
-                $memcache = new \Memcache();
-                $memcache->connect('127.0.0.1');
-                $cache = new \Doctrine\Common\Cache\MemcacheCache();
-                $cache->setMemcache($memcache);
-            } elseif (extension_loaded('redis')) {
-                $redis = new \Redis();
-                $redis->connect('127.0.0.1');
-                $cache = new \Doctrine\Common\Cache\RedisCache();
-                $cache->setRedis($redis);
-            } else {
+
+            if (true === (boolean) $c['config']['devMode']) {
                 $cache = new ArrayCache();
+            } else {
+                if (extension_loaded('apc')) {
+                    $cache = new \Doctrine\Common\Cache\ApcCache();
+                } elseif (extension_loaded('xcache')) {
+                    $cache = new \Doctrine\Common\Cache\XcacheCache();
+                } elseif (extension_loaded('memcache')) {
+                    $memcache = new \Memcache();
+                    $memcache->connect('127.0.0.1');
+                    $cache = new \Doctrine\Common\Cache\MemcacheCache();
+                    $cache->setMemcache($memcache);
+                } elseif (extension_loaded('redis')) {
+                    $redis = new \Redis();
+                    $redis->connect('127.0.0.1');
+                    $cache = new \Doctrine\Common\Cache\RedisCache();
+                    $cache->setRedis($redis);
+                } else {
+                    $cache = new ArrayCache();
+                }
             }
+
 
             if ($cache instanceof CacheProvider) {
                 $cache->setNamespace($c['config']["appNamespace"] . "_nsurls"); // to avoid collisions

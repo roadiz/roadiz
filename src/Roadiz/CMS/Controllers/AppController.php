@@ -226,7 +226,7 @@ class AppController extends Controller
             return $this->getRequest()->getStaticBaseUrl() .
             '/themes/' . static::$themeDir . '/static/';
         } else {
-            return $this->getRequest()->getBaseUrl() .
+            return $this->getRequest()->getBasePath() .
             '/themes/' . static::$themeDir . '/static/';
         }
     }
@@ -297,8 +297,7 @@ class AppController extends Controller
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
-                'filesUrl' => $this->getRequest()
-                                   ->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->container['csrfTokenManager']->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->container['csrfTokenManager']->getToken(static::FONT_TOKEN_INTENTION),
