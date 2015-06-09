@@ -76,7 +76,7 @@ class Request extends BaseRequest
         $schemeAuthority = $scheme . '://';
         $schemeAuthority .= $this->getHost() . $port;
 
-        return $schemeAuthority . $this->getBaseUrl();
+        return $schemeAuthority . $this->getBasePath();
     }
 
     /**
@@ -112,7 +112,7 @@ class Request extends BaseRequest
         if (!empty($staticDomain)) {
             return $this->convertUrlToStaticDomainUrl($this->getAbsoluteBaseUrl());
         } else {
-            return $this->getBaseUrl();
+            return $this->getBasePath();
         }
     }
 }
