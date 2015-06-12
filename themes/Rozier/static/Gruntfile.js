@@ -295,5 +295,5 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['clean','jshint','concat','uglify','less:production','imagemin','versioning']);
+	grunt.registerTask('default', ['clean','jshint','concat','uglify','less:production','versioning']);
 };
