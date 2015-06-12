@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Utils\MediaFinders;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientErrorResponseException;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Util to grab a facebook profile picture from userAlias.
@@ -60,7 +60,7 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
                 return false;
             }
 
-        } catch (ClientErrorResponseException $e) {
+        } catch (ClientException $e) {
             $this->feed = false;
             return false;
         }

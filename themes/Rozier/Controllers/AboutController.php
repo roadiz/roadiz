@@ -35,8 +35,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
-use RZ\Roadiz\Console\CacheCommand;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,8 +80,6 @@ class AboutController extends RozierApp
 
     protected static $filesToUpgrade = [
         'index.php',
-        'bootstrap.php',
-        'cli-config.php',
         'vendor',
         'src',
         'bin',
@@ -366,10 +367,15 @@ class AboutController extends RozierApp
         $this->validateAccessForRole('ROLE_SUPERADMIN');
         $this->canAutomaticUpdate();
 
-        CacheCommand::clearDoctrine();
-        CacheCommand::clearRouteCollections();
-        CacheCommand::clearTranslations();
-        CacheCommand::clearTemplates();
+        $clearers = [
+            new DoctrineCacheClearer($this->getService('em')),
+            new TranslationsCacheClearer(),
+            new RoutingCacheClearer(),
+            new TemplatesCacheClearer(),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
 
         return new JsonResponse([
             'progress' => (100 / static::UPDATE_STEPS) * 4,

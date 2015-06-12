@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\Paginator;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * A paginator class to filter node entities with limit and search.
@@ -40,23 +40,23 @@ use Symfony\Component\Security\Core\SecurityContext;
  */
 class NodePaginator extends Paginator
 {
-    protected $securityContext = null;
+    protected $authorizationChecker = null;
     protected $translation = null;
 
     /**
-     * @return Symfony\Component\Security\Core\SecurityContext [description]
+     * @return AuthorizationChecker [description]
      */
-    public function getSecurityContext()
+    public function getAuthorizationChecker()
     {
-        return $this->securityContext;
+        return $this->authorizationChecker;
     }
 
     /**
-     * @param Symfony\Component\Security\Core\SecurityContext $newsecurityContext
+     * @param AuthorizationChecker $authorizationChecker
      */
-    public function setSecurityContext(SecurityContext $newsecurityContext = null)
+    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
-        $this->securityContext = $newsecurityContext;
+        $this->authorizationChecker = $authorizationChecker;
 
         return $this;
     }
@@ -99,7 +99,7 @@ class NodePaginator extends Paginator
                                                      $this->getItemsPerPage(),
                                                      $this->getItemsPerPage() * ($page - 1),
                                                      $this->translation,
-                                                     $this->securityContext
+                                                     $this->authorizationChecker
                                                  );
         }
     }
@@ -121,7 +121,7 @@ class NodePaginator extends Paginator
                                                    ->countBy(
                                                        $this->criteria,
                                                        $this->translation,
-                                                       $this->securityContext
+                                                       $this->authorizationChecker
                                                    );
         }
 

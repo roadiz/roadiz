@@ -58,7 +58,7 @@ class UsersGroupsController extends RozierApp
             $this->assignation['user'] = $user;
 
             $form = $this->buildEditGroupsForm($user);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $group = $this->addUserGroup($form->getData(), $user);
@@ -109,7 +109,7 @@ class UsersGroupsController extends RozierApp
             $this->assignation['group'] = $group;
 
             $form = $this->buildRemoveGroupForm($user, $group);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $group = $this->removeUserGroup($form->getData(), $user);

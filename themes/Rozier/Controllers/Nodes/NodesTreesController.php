@@ -58,7 +58,6 @@ class NodesTreesController extends RozierApp
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($node);
 
-        $translation = null;
         if (null !== $translationId) {
             $translation = $this->getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -95,7 +94,7 @@ class NodesTreesController extends RozierApp
              * Handle bulk tag form
              */
             $tagNodesForm = $this->buildBulkTagForm();
-            $tagNodesForm->handleRequest();
+            $tagNodesForm->handleRequest($request);
             if ($tagNodesForm->isValid()) {
                 $data = $tagNodesForm->getData();
 
@@ -119,12 +118,12 @@ class NodesTreesController extends RozierApp
             /*
              * Handle bulk status
              */
-            if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+            if ($this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
                 $statusBulkNodes = $this->buildBulkStatusForm($request->getRequestUri());
                 $this->assignation['statusNodesForm'] = $statusBulkNodes->createView();
             }
 
-            if ($this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_DELETE')) {
+            if ($this->isGranted('ROLE_ACCESS_NODES_DELETE')) {
                 /*
                  * Handle bulk delete form
                  */
@@ -163,7 +162,7 @@ class NodesTreesController extends RozierApp
                     $request->get('deleteForm')['referer'],
                     $nodesIds
                 );
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $msg = $this->bulkDeleteNodes($form->getData());
@@ -219,7 +218,7 @@ class NodesTreesController extends RozierApp
                     false
                 );
 
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $msg = $this->bulkStatusNodes($form->getData());

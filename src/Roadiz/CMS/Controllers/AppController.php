@@ -56,6 +56,12 @@ class AppController extends Controller
     const FONT_TOKEN_INTENTION = 'font_request';
 
     /**
+     * Theme entity.
+     *
+     * @var RZ\Roadiz\Core\Entities\Theme;
+     */
+    protected $theme = null;
+    /**
      * Theme name.
      *
      * @var string
@@ -152,8 +158,6 @@ class AppController extends Controller
 
     /**
      * Initialize controller with its twig environment.
-     *
-     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      */
     public function __init()
     {
@@ -219,10 +223,10 @@ class AppController extends Controller
         $staticDomain = SettingsBag::get('static_domain_name');
 
         if (!empty($staticDomain)) {
-            return $this->kernel->getStaticBaseUrl() .
+            return $this->getRequest()->getStaticBaseUrl() .
             '/themes/' . static::$themeDir . '/static/';
         } else {
-            return $this->getRequest()->getBaseUrl() .
+            return $this->getRequest()->getBasePath() .
             '/themes/' . static::$themeDir . '/static/';
         }
     }
@@ -276,7 +280,7 @@ class AppController extends Controller
      *     - messages
      *     - id
      *     - user
-     * - securityContext
+     * - securityAuthorizationChecker
      *
      * @return $this
      */
@@ -292,14 +296,11 @@ class AppController extends Controller
                 'devMode' => (boolean) $this->container['config']['devMode'],
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
-                'filesUrl' => $this->getRequest()
-                                   ->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
+                'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->container['csrfProvider']
-                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->container['csrfProvider']
-                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
+                'ajaxToken' => $this->container['csrfTokenManager']->getToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->container['csrfTokenManager']->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
@@ -307,8 +308,8 @@ class AppController extends Controller
             ],
         ];
 
-        if ($this->container['securityContext'] !== null) {
-            $this->assignation['securityContext'] = $this->container['securityContext'];
+        if ($this->container['securityAuthorizationChecker'] !== null) {
+            $this->assignation['authorizationChecker'] = $this->container['securityAuthorizationChecker'];
         }
 
         return $this;
@@ -338,23 +339,25 @@ class AppController extends Controller
      *
      * @return \RZ\Roadiz\Core\Entities\Theme
      */
-    public static function getTheme()
+    public function getTheme()
     {
-        $className = static::getCalledClass();
-        while (!StringHandler::endsWith($className, "App")) {
-            $className = get_parent_class($className);
-            if ($className === false) {
-                $className = "";
-                break;
+        if (null === $this->theme) {
+            $className = static::getCalledClass();
+            while (!StringHandler::endsWith($className, "App")) {
+                $className = get_parent_class($className);
+                if ($className === false) {
+                    $className = "";
+                    break;
+                }
+                if (strpos($className, "\\") !== 0) {
+                    $className = "\\" . $className;
+                }
             }
-            if (strpos($className, "\\") !== 0) {
-                $className = "\\" . $className;
-            }
+            $this->theme = $this->getService('em')
+                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                 ->findOneByClassName($className);
         }
-        $theme = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findOneByClassName($className);
-        return $theme;
+        return $this->theme;
     }
 
     /**
@@ -375,7 +378,7 @@ class AppController extends Controller
 
     protected function getHome(Translation $translation = null)
     {
-        $theme = static::getTheme();
+        $theme = $this->getTheme();
 
         if ($theme !== null) {
             $home = $theme->getHomeNode();
@@ -385,13 +388,13 @@ class AppController extends Controller
                                 ->findWithTranslation(
                                     $home->getId(),
                                     $translation,
-                                    $this->container['securityContext']
+                                    $this->container['securityAuthorizationChecker']
                                 );
                 } else {
                     return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
                                 ->findWithDefaultTranslation(
                                     $home->getId(),
-                                    $this->container['securityContext']
+                                    $this->container['securityAuthorizationChecker']
                                 );
                 }
             }
@@ -400,17 +403,17 @@ class AppController extends Controller
             return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
                         ->findHomeWithTranslation(
                             $translation,
-                            $this->container['securityContext']
+                            $this->container['securityAuthorizationChecker']
                         );
         } else {
             return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findHomeWithDefaultTranslation($this->container['securityContext']);
+                        ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
         }
     }
 
     protected function getRoot()
     {
-        $theme = static::getTheme();
+        $theme = $this->getTheme();
         return $theme->getRoot();
     }
 
@@ -475,7 +478,7 @@ class AppController extends Controller
      */
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
-        $user = $this->container['securityContext']->getToken()->getUser();
+        $user = $this->getUser();
         $node = $this->container['em']
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -493,10 +496,10 @@ class AppController extends Controller
         }
 
         if ($isNewsletterFriend &&
-            !$this->container['securityContext']->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+            !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
         } elseif (!$isNewsletterFriend) {
-            if (!$this->container['securityContext']->isGranted($role)) {
+            if (!$this->isGranted($role)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }
 
@@ -505,5 +508,23 @@ class AppController extends Controller
                 throw new AccessDeniedException("You don't have access to this page");
             }
         }
+    }
+
+    /**
+     * Generate a simple view to inform visitors that website is
+     * currently unavailable.
+     *
+     * @param Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function maintenanceAction(Request $request)
+    {
+        $this->prepareBaseAssignation();
+
+        return new Response(
+            $this->renderView('maintenance.html.twig', $this->assignation),
+            Response::HTTP_SERVICE_UNAVAILABLE,
+            ['content-type' => 'text/html']
+        );
     }
 }

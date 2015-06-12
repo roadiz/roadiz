@@ -30,7 +30,12 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Console\CacheCommand;
+use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -49,13 +54,19 @@ class CacheController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
         $form = $this->buildDeleteDoctrineForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
-            CacheCommand::clearDoctrine();
-            CacheCommand::clearRouteCollections();
-            CacheCommand::clearTranslations();
-            CacheCommand::clearTemplates();
+            $clearers = [
+                new DoctrineCacheClearer($this->getService('em')),
+                new NodesSourcesUrlsCacheClearer($this->getService('nodesSourcesUrlCacheProvider')),
+                new TranslationsCacheClearer(),
+                new RoutingCacheClearer(),
+                new TemplatesCacheClearer(),
+            ];
+            foreach ($clearers as $clearer) {
+                $clearer->clear();
+            }
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
@@ -73,6 +84,7 @@ class CacheController extends RozierApp
             'hydratationCache' => $this->getService('em')->getConfiguration()->getHydrationCacheImpl(),
             'queryCache' => $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
             'metadataCache' => $this->getService('em')->getConfiguration()->getMetadataCacheImpl(),
+            'nodeSourcesUrlsCache' => $this->getService('nodesSourcesUrlCacheProvider'),
         ];
 
         foreach ($this->assignation['cachesInfo'] as $key => $value) {
@@ -101,15 +113,16 @@ class CacheController extends RozierApp
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function deleteSLIRCache(Request $request)
+    public function deleteAssetsCache(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
-        $form = $this->buildDeleteSLIRForm();
-        $form->handleRequest();
+        $form = $this->buildDeleteAssetsForm();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
-            CacheCommand::clearCachedAssets();
+            $clearer = new AssetsClearer();
+            $clearer->clear();
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
@@ -122,13 +135,13 @@ class CacheController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        return $this->render('cache/deleteSLIR.html.twig', $this->assignation);
+        return $this->render('cache/deleteAssets.html.twig', $this->assignation);
     }
 
     /**
      * @return Symfony\Component\Form\Form
      */
-    private function buildDeleteSLIRForm()
+    private function buildDeleteAssetsForm()
     {
         $builder = $this->createFormBuilder();
 

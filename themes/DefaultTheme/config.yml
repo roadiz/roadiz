@@ -4,9 +4,10 @@ author: "Ambroise Maupate"
 copyright: "Ambroise Maupate and Julien Blanchet"
 themeDir: "DefaultTheme"
 supportedLocale:
-    - "en"
-    - "fr"
-versionRequire: "0.8.0"
+    - en
+    - fr
+    - ru
+versionRequire: "0.9.0"
 importFiles:
     roles: []
     groups: []
@@ -14,6 +15,7 @@ importFiles:
     nodetypes:
         - "Resources/import/nodetype/Page.rzt"
         - "Resources/import/nodetype/Neutral.rzt"
+        - "Resources/import/nodetype/BasicBlock.rzt"
     tags: []
     nodes:
         - "Resources/import/node/node-home.rzn"

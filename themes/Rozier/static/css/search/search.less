@@ -11,7 +11,7 @@
 /* -------- STYLES -------- */
 
 #nodeTypeForm{
-    
+
     .form-col-nodetype{
         display: inline-block; vertical-align: top;
         width:auto;
@@ -30,27 +30,33 @@
 
 // Status
 #search-node-form{
-
     .form-col-visible, .form-col-locked, .form-col-sterile, .form-col-hideChildren,
     .form-col-__node__visible, .form-col-__node__locked, .form-col-__node__sterile, .form-col-__node__hideChildren{
         display: inline-block; vertical-align: top;
         margin-right:20px;
     }
-
 }
 
 
 // Date
-#form_createdAt, #form_updatedAt, 
-#form___node__createdAt, #form___node__updatedAt{
+.form-col-comparedate,
+.form-col-comparedatetime {
     margin:0;
 
-   .form-col-compareOp, .form-col-compareDatetime{
+   .uk-form-row{
         display: inline-block; vertical-align: top;
         margin:0;
+        margin-bottom: 0px;
 
         .uk-form-label{
             display: none;
+        }
+    }
+    .data-uk-margin {
+        margin-bottom: 0px;
+
+        & > div {
+            margin-bottom: 0px;
         }
     }
 }

@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
@@ -66,7 +65,7 @@ class BackendController extends AppController
          */
         $requestMatcher = new RequestMatcher('^/rz-admin');
         // allows configuration of different access control rules for specific parts of the website.
-        $accessMap = new AccessMap($requestMatcher, [
+        $container['accessMap']->add($requestMatcher, [
             Role::ROLE_BACKEND_USER,
             Role::ROLE_SUPERADMIN,
         ]);
@@ -75,7 +74,7 @@ class BackendController extends AppController
          * Listener
          */
         $logoutListener = new LogoutListener(
-            $container['securityContext'],
+            $container['securityTokenStorage'],
             $container['httpUtils'],
             new DefaultLogoutSuccessHandler($container['httpUtils'], '/login'),
             [
@@ -86,13 +85,13 @@ class BackendController extends AppController
         $logoutListener->addHandler(new SessionLogoutHandler());
 
         $listeners = [
-            // manages the SecurityContext persistence through a session
+            // manages the AuthorizationChecker persistence through a session
             $container['contextListener'],
             // logout users
             $logoutListener,
             // authentication via a simple form composed of a username and a password
             new UsernamePasswordFormAuthenticationListener(
-                $container['securityContext'],
+                $container['securityTokenStorage'],
                 $container['authentificationManager'],
                 new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
                 $container['httpUtils'],
@@ -120,13 +119,13 @@ class BackendController extends AppController
                 ],
                 $container['logger'], // A LoggerInterface instance
                 $container['dispatcher'],
-                null//$container['csrfProvider']//csrfTokenManager
+                null
             ),
             // enforces access control rules
             new AccessListener(
-                $container['securityContext'],
+                $container['securityTokenStorage'],
                 $container['accessDecisionManager'],
-                $accessMap,
+                $container['accessMap'],
                 $container['authentificationManager']
             ),
             $container["switchUser"],

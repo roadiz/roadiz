@@ -77,7 +77,7 @@ class NodesSourcesController extends RozierApp
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
-            $this->assignation['securityContext'] = $this->getService("securityContext");
+            $this->assignation['securityAuthorizationChecker'] = $this->getService("securityAuthorizationChecker");
 
             if (null !== $source) {
                 $node = $source->getNode();
@@ -91,16 +91,20 @@ class NodesSourcesController extends RozierApp
                  * Form
                  */
                 $form = $this->buildEditSourceForm($node, $source);
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);
-
                     /*
                      * Dispatch event
                      */
                     $event = new FilterNodesSourcesEvent($source);
                     $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
+                    /*
+                     * Update nodeName against source title.
+                     */
+                    $this->updateNodeName($source);
 
                     $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                         '%node_source%' => $source->getNode()->getNodeName(),
@@ -147,7 +151,7 @@ class NodesSourcesController extends RozierApp
 
         $form = $builder->getForm();
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $node = $ns->getNode();

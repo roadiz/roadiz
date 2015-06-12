@@ -37,7 +37,8 @@ use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Handle operations with nodes entities.
@@ -434,18 +435,18 @@ class NodeHandler
 
     /**
      * Return every node’s parents
-     * @param SecurityContext|null                    $securityContext
+     * @param TokenStorageInterface|null $tokenStorage
      *
      * @return array
      */
-    public function getParents(SecurityContext $securityContext = null)
+    public function getParents(TokenStorageInterface $tokenStorage = null)
     {
         $parentsArray = [];
         $parent = $this->node;
         $user = null;
 
-        if ($securityContext !== null) {
-            $user = $securityContext->getToken()->getUser();
+        if ($tokenStorage !== null) {
+            $user = $tokenStorage->getToken()->getUser();
         }
 
         do {
@@ -628,14 +629,14 @@ class NodeHandler
      *
      * @param  array|null           $criteria        [description]
      * @param  array|null           $order           [description]
-     * @param  SecurityContext|null $securityContext [description]
+     * @param  AuthorizationChecker|null $authorizationChecker [description]
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getPrevious(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         if ($this->node->getPosition() <= 1) {
             return null;
@@ -665,7 +666,7 @@ class NodeHandler
             ->findOneBy(
                 $criteria,
                 $order,
-                $securityContext
+                $authorizationChecker
             );
     }
 
@@ -674,14 +675,14 @@ class NodeHandler
      *
      * @param  array|null           $criteria        [description]
      * @param  array|null           $order           [description]
-     * @param  SecurityContext|null $securityContext [description]
+     * @param  AuthorizationChecker|null $authorizationChecker [description]
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getNext(
         array $criteria = null,
         array $order = null,
-        SecurityContext $securityContext = null
+        AuthorizationChecker $authorizationChecker = null
     ) {
         if (null === $criteria) {
             $criteria = [];
@@ -707,7 +708,7 @@ class NodeHandler
             ->findOneBy(
                 $criteria,
                 $order,
-                $securityContext
+                $authorizationChecker
             );
     }
 }

@@ -10,9 +10,9 @@ FontFaceCSS:
     defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction }
     requirements: { token: "[a-zA-Z0-9\-_]+" }
 #
-# SLIR is now hard coded in before run app
+# InterventionRequest is hard coded before run app
 #
-SLIRProcess:
+interventionRequestProcess:
     path:     /assets/{queryString}/{filename}
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::slirAction }
+    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::interventionRequestAction }
     requirements: { queryString : "[a-zA-Z:0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }

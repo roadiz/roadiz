@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -55,9 +54,7 @@ class RolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Role',
             [],
             ['name' => 'ASC']
@@ -82,7 +79,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $form = $this->buildAddForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -123,7 +120,7 @@ class RolesController extends RozierApp
                      ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
             $form = $this->buildDeleteForm($role);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {
@@ -170,7 +167,7 @@ class RolesController extends RozierApp
         if ($role !== null &&
             !$role->required()) {
             $form = $this->buildEditForm($role);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {

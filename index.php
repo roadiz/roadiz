@@ -37,27 +37,32 @@ if (version_compare(phpversion(), '5.4.3', '<')) {
     exit(1);
 }
 
-require 'bootstrap.php';
+define('ROADIZ_ROOT', dirname(__FILE__));
+// Include Composer Autoload (relative to project root).
+require("vendor/autoload.php");
 
 if (php_sapi_name() == 'cli') {
     echo 'Use "bin/roadiz" as an executable instead of calling index.php' . PHP_EOL;
 } else {
     try {
         Kernel::getInstance()->boot();
-
         $request = Kernel::getInstance()->getRequest();
+
         /*
-         * Bypass Roadiz kernel to directly serve SLIR assets
+         * Bypass Roadiz kernel to directly serve images assets
          */
         if (0 === strpos($request->getPathInfo(), '/assets') &&
             preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
         ) {
             $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-            $ctrl->slirAction($matches['queryString'], $matches['filename']);
+            $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
+            $response->prepare($request);
+            $response->send();
         } else {
             /*
              * Start Roadiz App handling
              */
+            Kernel::getInstance()->initEvents();
             Kernel::getInstance()->runApp();
         }
     } catch (NoConfigurationFoundException $e) {

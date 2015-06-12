@@ -31,7 +31,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Translation selector form field type.
@@ -41,7 +41,7 @@ class TranslationsType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $translations = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')

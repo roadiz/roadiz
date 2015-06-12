@@ -224,7 +224,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="15">
         <source>private</source>
-        <target xml:lang="ru" state="needs-translation">private</target>
+        <target xml:lang="ru" state="translated">Скрытый</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
           <context context-type="linenumber">296</context>
@@ -476,31 +476,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">453</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="44">
-        <source>user.%name%.cannot_update.name_already_exists</source>
-        <target xml:lang="ru" state="translated">Не удалось сохранить пользователя "%name%", имя пользователя уже занято.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">496</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="45">
-        <source>user.%name%.cannot_update.email_already_exists</source>
-        <target xml:lang="ru" state="translated">Не удалось сохранить пользователя "%name%", указанный адрес электронной почты уже используется.
-</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">509</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="46">
-        <source>user.%name%.cannot_create_already_exists</source>
-        <target xml:lang="ru" state="translated">Пользователь "%name%" уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">540</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="47">
@@ -795,30 +770,6 @@
           <context context-type="linenumber">408</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="74">
-        <source>tag.%name%.no_update.already_exists</source>
-        <target xml:lang="ru" state="translated">Тег "%name%" не может быть обновлен. Тег с таким именем уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">539</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="75">
-        <source>tag.%name%.no_creation.already_exists</source>
-        <target xml:lang="ru" state="translated">Тег с именем "%name%" уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">567</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="76">
-        <source>tag.%name%.already_added</source>
-        <target xml:lang="ru" state="translated">Тег с именем "%name%" уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">632</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="77">
         <source>locked</source>
         <target xml:lang="ru" state="translated">Заблокирован</target>
@@ -833,7 +784,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="78">
         <source>visible</source>
-        <target xml:lang="ru" state="needs-translation">visible</target>
+        <target xml:lang="ru" state="translated">Видимый</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
           <context context-type="linenumber">699</context>
@@ -1139,48 +1090,16 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+        <source>child_node.%name%.created</source>
+        <target xml:lang="ru" state="needs-translation">child_node.%name%.created</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="107">
         <source>node.%name%.deleted</source>
         <target xml:lang="ru" state="translated">Узел "%name%" удален.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">634</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="108">
-        <source>node.%name%.noCreation.urlAlias.alreadyExists</source>
-        <target xml:lang="ru" state="translated">Узел "%name%" не может быть создан, такой синоним URL уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">671</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="109">
-        <source>node.%name%.noCreation.alreadyExists</source>
-        <target xml:lang="ru" state="translated">Узел "%name%" не может быть создан, узел с таким именем уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">690</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">737</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="110">
-        <source>node.%name%.no_creation.url_alias.already_exists</source>
-        <target xml:lang="ru" state="translated">Узел "%name%" не может быть создан, такой синоним URL уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">705</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="111">
-        <source>node.%name%.noUpdate.alreadyExists</source>
-        <target xml:lang="ru" state="translated">Узел "%name%" не может быть сохранен, узел с таким именем уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
-          <context context-type="linenumber">780</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="112">
@@ -1257,22 +1176,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
           <context context-type="linenumber">224</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="120">
-        <source>nodeType.%name%.cannot_rename_already_exists</source>
-        <target xml:lang="ru" state="translated">Не удалось переименовать тип узла "%name%", такой тип уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">265</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="121">
-        <source>nodeType.%name%.already_exists</source>
-        <target xml:lang="ru" state="translated">Тип узла "%name%" уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">294</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="122">
@@ -1525,7 +1428,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="font.woff2File">
         <source>font.woff2File</source>
-        <target xml:lang="ru" state="needs-translation">font.woff2File</target>
+        <target xml:lang="ru" state="translated">WOFF2 файл шрифта</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="145">
         <source>font.otfFile</source>
@@ -1549,22 +1452,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
           <context context-type="linenumber">378</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="147">
-        <source>font.variant.already_exists</source>
-        <target xml:lang="ru" state="translated">Стиль шрифта уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">401</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="148">
-        <source>font.name.already_exists</source>
-        <target xml:lang="ru" state="translated">Шрифт с таким именем уже существует.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/FontsController.php</context>
-          <context context-type="linenumber">537</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="149">
@@ -1613,22 +1500,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
           <context context-type="linenumber">242</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="155">
-        <source>translation.%locale%.cannot_update_already_exists</source>
-        <target xml:lang="ru" state="needs-translation">translation.%locale%.cannot_update_already_exists</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">290</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="156">
-        <source>translation.%locale%.cannot_create_already_exists</source>
-        <target xml:lang="ru" state="needs-translation">translation.%locale%.cannot_create_already_exists</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">316</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="157">
@@ -4274,6 +4145,10 @@
         <source>date-time.type</source>
         <target xml:lang="ru" state="translated">Дата и время</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type">
+        <source>date.type</source>
+        <target xml:lang="ru" state="needs-translation">date.type</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="435">
         <source>text.type</source>
         <target xml:lang="ru" state="translated">Простой текст</target>
@@ -4335,10 +4210,6 @@
         <source>document.embedId</source>
         <target xml:lang="ru" state="needs-translation">document.embedId</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="%field%.already_exists">
-        <source>%field%.already_exists</source>
-        <target xml:lang="ru" state="translated">Поле "%field%" уже существует.</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="ru" state="needs-translation">%field%.is.reserved.word</target>
@@ -4382,19 +4253,19 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="add.settingGroup">
         <source>add.settingGroup</source>
-        <target xml:lang="ru" state="needs-translation">add.settingGroup</target>
+        <target xml:lang="ru" state="translated">Добавить группу настроек</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="edit.settingGroup.%name%">
         <source>edit.settingGroup.%name%</source>
-        <target xml:lang="ru" state="needs-translation">edit.settingGroup.%name%</target>
+        <target xml:lang="ru" state="translated">%name%</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="save.settingGroup">
         <source>save.settingGroup</source>
-        <target xml:lang="ru" state="needs-translation">save.settingGroup</target>
+        <target xml:lang="ru" state="translated">Сохранить группу настроек</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.settingGroup">
         <source>are_you_sure.delete.settingGroup</source>
-        <target xml:lang="ru" state="needs-translation">are_you_sure.delete.settingGroup</target>
+        <target xml:lang="ru" state="translated">Действительно стереть эту группу настроек?</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="delete.settingGroup.%name%">
         <source>delete.settingGroup.%name%</source>
@@ -5404,8 +5275,8 @@
           <target xml:lang="ru" state="needs-translation">custom-forms.type</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="Bad credentials">
-          <source>Bad credentials</source>
-          <target xml:lang="ru" state="needs-translation">Bad credentials</target>
+          <source>Bad credentials.</source>
+          <target xml:lang="ru" state="needs-translation">Bad credentials.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>
@@ -5917,6 +5788,10 @@
           <source>This value should not be blank.</source>
           <target xml:lang="ru" state="needs-translation">This value should not be blank.</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="This value is not valid.">
+          <source>This value is not valid.</source>
+          <target xml:lang="ru" state="needs-translation">This value is not valid.</target>
+      </trans-unit>
       <!-- Font variantes -->
       <trans-unit xml:space="preserve" id="font_variant.regular">
           <source>font_variant.regular</source>
@@ -5941,6 +5816,214 @@
       <trans-unit xml:space="preserve" id="font_variant.light.italic">
           <source>font_variant.light.italic</source>
           <target xml:lang="ru" state="needs-translation">font_variant.light.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.roadiz">
+          <source>update.roadiz</source>
+          <target xml:lang="ru" state="needs-translation">update.roadiz</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.please_wait">
+          <source>update.please_wait</source>
+          <target xml:lang="ru" state="needs-translation">update.please_wait</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.done.back_to_home">
+          <source>update.done.back_to_home</source>
+          <target xml:lang="ru" state="needs-translation">update.done.back_to_home</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.download_archive">
+          <source>update_roadiz.download_archive</source>
+          <target xml:lang="ru" state="needs-translation">update_roadiz.download_archive</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.unarchive">
+          <source>update_roadiz.unarchive</source>
+          <target xml:lang="ru" state="needs-translation">update_roadiz.unarchive</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files">
+          <source>update_roadiz.move_new_files</source>
+          <target xml:lang="ru" state="needs-translation">update_roadiz.move_new_files</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache">
+          <source>update_roadiz.clear_cache</source>
+          <target xml:lang="ru" state="needs-translation">update_roadiz.clear_cache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_schema">
+          <source>update_roadiz.update_schema</source>
+          <target xml:lang="ru" state="needs-translation">update_roadiz.update_schema</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_complete">
+          <source>update_roadiz.update_complete</source>
+          <target xml:lang="ru" state="needs-translation">update_roadiz.update_complete</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="automatic.upgrade">
+          <source>automatic.upgrade</source>
+          <target xml:lang="ru" state="needs-translation">automatic.upgrade</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade">
+          <source>always.make.a.database.backup.before.upgrade</source>
+          <target xml:lang="ru" state="needs-translation">always.make.a.database.backup.before.upgrade</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git">
+          <source>cannot_update_roadiz.using_git</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.using_git</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink">
+          <source>cannot_update_roadiz.using_symlink</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.using_symlink</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available">
+          <source>cannot_update_roadiz.no_release_available</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.no_release_available</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download">
+          <source>cannot_update_roadiz.no_archive_to_download</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.no_archive_to_download</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist">
+          <source>cannot_update_roadiz.temp_archive_does_not_exist</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.temp_archive_does_not_exist</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive">
+          <source>cannot_update_roadiz.cant_open_archive</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.cant_open_archive</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir">
+          <source>cannot_update_roadiz.cant_create_temp_dir</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.cant_create_temp_dir</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist">
+          <source>cannot_update_roadiz.destination_folder_does_not_exist</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.destination_folder_does_not_exist</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
+          <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
+          <target xml:lang="ru" state="needs-translation">cannot_update_roadiz.destination_folder_is_not_writable</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists">
+          <source>nodeName.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">nodeName.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias">
+          <source>nodeName.alreadyExists.as.urlAlias</source>
+          <target xml:lang="ru" state="needs-translation">nodeName.alreadyExists.as.urlAlias</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.available">
+          <source>new.version.available</source>
+          <target xml:lang="ru" state="needs-translation">new.version.available</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
+          <source>node.childrenOrder</source>
+          <target xml:lang="ru" state="needs-translation">node.childrenOrder</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
+          <source>node.childrenOrderDirection</source>
+          <target xml:lang="ru" state="needs-translation">node.childrenOrderDirection</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="createdAt">
+          <source>createdAt</source>
+          <target xml:lang="ru" state="needs-translation">createdAt</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="updatedAt">
+          <source>updatedAt</source>
+          <target xml:lang="ru" state="needs-translation">updatedAt</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ascendant">
+          <source>ascendant</source>
+          <target xml:lang="ru" state="needs-translation">ascendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="descendant">
+          <source>descendant</source>
+          <target xml:lang="ru" state="needs-translation">descendant</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email.alreadyExists">
+          <source>email.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">email.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="username.alreadyExists">
+          <source>username.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">username.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
+          <source>tagName.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">tagName.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
+          <source>nodeTypeField.name.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">nodeTypeField.name.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
+          <source>nodeType.name.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">nodeType.name.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
+          <source>color.should.be.formatted.in.hexadecimal</source>
+          <target xml:lang="ru" state="needs-translation">color.should.be.formatted.in.hexadecimal</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
+          <source>customFormField.name.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">customFormField.name.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
+          <source>customForm.name.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">customForm.name.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ip">
+          <source>ip</source>
+          <target xml:lang="ru" state="needs-translation">ip</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.variant.alreadyExists">
+          <source>font.variant.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">font.variant.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file">
+          <source>file.is_not_a.valid.font.file</source>
+          <target xml:lang="ru" state="needs-translation">file.is_not_a.valid.font.file</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.%name%.updated">
+          <source>folder.%name%.updated</source>
+          <target xml:lang="ru" state="needs-translation">folder.%name%.updated</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.alreadyExists">
+          <source>folder.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">folder.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.%name%.deleted">
+          <source>folder.%name%.deleted</source>
+          <target xml:lang="ru" state="needs-translation">folder.%name%.deleted</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.folder.found">
+          <source>no.folder.found</source>
+          <target xml:lang="ru" state="needs-translation">no.folder.found</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.does_not_exist">
+          <source>folder.does_not_exist</source>
+          <target xml:lang="ru" state="needs-translation">folder.does_not_exist</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pinterest_url">
+          <source>pinterest_url</source>
+          <target xml:lang="ru" state="needs-translation">pinterest_url</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use_cdn">
+          <source>use_cdn</source>
+          <target xml:lang="ru" state="needs-translation">use_cdn</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale">
+          <source>force_locale</source>
+          <target xml:lang="ru" state="needs-translation">force_locale</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
+          <source>nodeSourcesUrlsCache</source>
+          <target xml:lang="ru" state="needs-translation">nodeSourcesUrlsCache</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.locale.alreadyExists">
+          <source>translation.locale.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">translation.locale.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.override_locale.alreadyExists">
+          <source>translation.override_locale.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">translation.override_locale.alreadyExists</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="overrideLocale">
+          <source>overrideLocale</source>
+          <target xml:lang="ru" state="needs-translation">overrideLocale</target>
       </trans-unit>
     </body>
   </file>

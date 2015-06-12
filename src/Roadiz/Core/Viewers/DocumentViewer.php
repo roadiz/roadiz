@@ -89,11 +89,16 @@ class DocumentViewer implements ViewableInterface
      * - width
      * - height
      * - crop ({w}x{h}, for example : 100x200)
+     * - fit ({w}x{h}, for example : 100x200)
+     * - rotate (1-359 degrees, for example : 90)
      * - grayscale / greyscale (boolean)
      * - quality (1-100)
+     * - blur (1-100)
+     * - sharpen (1-100)
+     * - contrast (1-100)
      * - background (hexadecimal color without #)
      * - progressive (boolean)
-     * - noProcess (boolean) : Disable SLIR resample
+     * - noProcess (boolean) : Disable image resample
      *
      * ## Audio / Video options
      *
@@ -116,6 +121,14 @@ class DocumentViewer implements ViewableInterface
         }
         if (!empty($args['height'])) {
             $assignation['height'] = (int) $args['height'];
+        }
+        /*
+         * Use fit value to set html width & height attributes
+         */
+        if (!empty($args['fit']) &&
+            1 === preg_match('#(?<width>[0-9]+)[x:\.](?<height>[0-9]+)#', $args['fit'], $matches)) {
+            $assignation['width'] = (int) $matches['width'];
+            $assignation['height'] = (int) $matches['height'];
         }
         if (!empty($args['identifier'])) {
             $assignation['identifier'] = $args['identifier'];
@@ -247,7 +260,7 @@ class DocumentViewer implements ViewableInterface
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
-                'url' => Kernel::getInstance()->getRequest()->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
+                'url' => Kernel::getService('request')->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
             ];
         }
 
@@ -263,11 +276,16 @@ class DocumentViewer implements ViewableInterface
      * - width
      * - height
      * - crop ({w}x{h}, for example : 100x200)
+     * - fit ({w}x{h}, for example : 100x200)
+     * - rotate (1-359 degrees, for example : 90)
      * - grayscale / greyscale (boolean)
      * - quality (1-100) - default: 90
+     * - blur (1-100)
+     * - sharpen (1-100)
+     * - contrast (1-100)
      * - background (hexadecimal color without #)
      * - progressive (boolean)
-     * - noProcess (boolean) : Disable SLIR resample
+     * - noProcess (boolean) : Disable image resample
      *
      * @param array $args
      *
@@ -278,7 +296,7 @@ class DocumentViewer implements ViewableInterface
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getInstance()->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
         } else {
             $slirArgs = [];
 
@@ -290,6 +308,21 @@ class DocumentViewer implements ViewableInterface
             }
             if (!empty($args['crop'])) {
                 $slirArgs['c'] = 'c' . strip_tags($args['crop']);
+            }
+            if (!empty($args['blur'])) {
+                $slirArgs['l'] = 'l' . strip_tags($args['blur']);
+            }
+            if (!empty($args['fit'])) {
+                $slirArgs['f'] = 'f' . strip_tags($args['fit']);
+            }
+            if (!empty($args['rotate'])) {
+                $slirArgs['r'] = 'r' . strip_tags($args['rotate']);
+            }
+            if (!empty($args['sharpen'])) {
+                $slirArgs['s'] = 's' . strip_tags($args['sharpen']);
+            }
+            if (!empty($args['contrast'])) {
+                $slirArgs['k'] = 'k' . strip_tags($args['contrast']);
             }
             if ((!empty($args['grayscale']) && $args['grayscale'] === true) ||
                 (!empty($args['greyscale']) && $args['greyscale'] === true)) {
@@ -307,12 +340,12 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            $url = Kernel::getService('urlGenerator')->generate('SLIRProcess', [
+            $url = Kernel::getService('urlGenerator')->generate('interventionRequestProcess', [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl(),
             ], UrlGenerator::ABSOLUTE_PATH);
 
-            return Kernel::getInstance()->convertUrlToStaticDomainUrl($url);
+            return Kernel::getService('request')->convertUrlToStaticDomainUrl($url);
         }
     }
 }

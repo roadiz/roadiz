@@ -209,6 +209,7 @@ Lazyload.prototype.generalBind = function() {
     new DocumentWidget();
     new NodeWidget();
     new CustomFormWidget();
+    new InputLengthWatcher();
     new DocumentUploader(Rozier.messages.dropzone);
     _this.childrenNodesFields = new ChildrenNodesField();
     new GeotagField();

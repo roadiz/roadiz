@@ -81,8 +81,7 @@ class NodeTypeFieldHandler
      */
     public function generateSourceField()
     {
-        return "    //".$this->nodeTypeField->getLabel().
-               $this->getORMAnnotation().
+        return $this->getORMAnnotation().
                $this->getFieldDeclaration().
                $this->generateSourceGetter().
                $this->generateSourceSetter().PHP_EOL;
@@ -105,6 +104,8 @@ class NodeTypeFieldHandler
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
             return '
     /**
+     * ' . $this->nodeTypeField->getLabel() .'
+     *
      * @ORM\Column(type="'.
             NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
             '", '.
@@ -112,7 +113,11 @@ class NodeTypeFieldHandler
             'nullable=true )
      */'.PHP_EOL;
         } else {
-            return '';
+            return '
+    /**
+     * ' . $this->nodeTypeField->getLabel() .'
+     * (Virtual field, this var is a buffer)
+     */'.PHP_EOL;
         }
     }
 
@@ -130,7 +135,10 @@ class NodeTypeFieldHandler
                 return '    private $'.$this->nodeTypeField->getName().';'.PHP_EOL;
             }
         } else {
-            return '';
+            /*
+             * Buffer var to get referenced entities (documents, nodes, cforms)
+             */
+            return '    private $'.$this->nodeTypeField->getName().' = null;'.PHP_EOL;
         }
     }
 
@@ -198,7 +206,10 @@ class NodeTypeFieldHandler
      */
     public function '.$this->nodeTypeField->getGetterName().'()
     {
-        return $this->getHandler()->getDocumentsFromFieldName("'.$this->nodeTypeField->getName().'");
+        if (null === $this->' . $this->nodeTypeField->getName() . ') {
+            $this->' . $this->nodeTypeField->getName() . ' = $this->getHandler()->getDocumentsFromFieldName("'.$this->nodeTypeField->getName().'");
+        }
+        return $this->' . $this->nodeTypeField->getName() . ';
     }'.PHP_EOL;
         } elseif (AbstractField::NODES_T === $this->nodeTypeField->getType()) {
             return '
@@ -207,7 +218,10 @@ class NodeTypeFieldHandler
      */
     public function '.$this->nodeTypeField->getGetterName().'()
     {
-        return $this->getNode()->getHandler()->getNodesFromFieldName("'.$this->nodeTypeField->getName().'");
+        if (null === $this->' . $this->nodeTypeField->getName() . ') {
+            $this->' . $this->nodeTypeField->getName() . ' = $this->getHandler()->getNodesFromFieldName("'.$this->nodeTypeField->getName().'");
+        }
+        return $this->' . $this->nodeTypeField->getName() . ';
     }'.PHP_EOL;
         } elseif (AbstractField::CUSTOM_FORMS_T === $this->nodeTypeField->getType()) {
             return '
@@ -216,7 +230,10 @@ class NodeTypeFieldHandler
      */
     public function '.$this->nodeTypeField->getGetterName().'()
     {
-        return $this->getNode()->getHandler()->getCustomFormsFromFieldName("'.$this->nodeTypeField->getName().'");
+        if (null === $this->' . $this->nodeTypeField->getName() . ') {
+            $this->' . $this->nodeTypeField->getName() . ' = $this->getNode()->getHandler()->getCustomFormsFromFieldName("'.$this->nodeTypeField->getName().'");
+        }
+        return $this->' . $this->nodeTypeField->getName() . ';
     }'.PHP_EOL;
         }
 

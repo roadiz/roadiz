@@ -34,10 +34,10 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-use Themes\Rozier\Controllers\Nodes\NodesController;
 
 /**
  * {@inheritdoc}
@@ -84,8 +84,8 @@ class AjaxNodesController extends AbstractAjaxController
                 case 'duplicate':
                     $newNode = $node->getHandler()->duplicate();
                     /*
-                     * Dispatch event
-                     */
+                 * Dispatch event
+                 */
                     $event = new FilterNodeEvent($newNode);
                     $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
@@ -217,8 +217,6 @@ class AjaxNodesController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $responseArray = null;
-
         $availableStatuses = [
             'visible' => 'setVisible',
             'status' => 'setStatus',
@@ -232,7 +230,7 @@ class AjaxNodesController extends AbstractAjaxController
             // just verify role when updating status
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
-                !$this->getService('securityContext')->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+                !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
                 $responseArray = [
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status' => 'danger',
@@ -252,7 +250,7 @@ class AjaxNodesController extends AbstractAjaxController
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
 
-                            if ($this->getSecurityContext()->isGranted('ROLE_ACCESS_NODES_STATUS') ||
+                            if ($this->isGranted('ROLE_ACCESS_NODES_STATUS') ||
                                 $request->get('statusName') != 'status') {
                                 $node->$setter($value);
 
@@ -272,6 +270,13 @@ class AjaxNodesController extends AbstractAjaxController
                                  */
                                 $event = new FilterNodeEvent($node);
                                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+
+                                if ($request->get('statusName') == 'status') {
+                                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
+                                }
+                                if ($request->get('visible') == 'status') {
+                                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
+                                }
 
                                 $responseArray = [
                                     'statusCode' => Response::HTTP_OK,
@@ -354,86 +359,34 @@ class AjaxNodesController extends AbstractAjaxController
 
         $responseArray = [];
 
-        if ($request->get('nodeTypeId') > 0 &&
-            $request->get('parentNodeId') > 0) {
-            $nodeType = $this->getService('em')
-                             ->find(
-                                 'RZ\Roadiz\Core\Entities\NodeType',
-                                 (int) $request->get('nodeTypeId')
-                             );
+        try {
+            $generator = new UniqueNodeGenerator($this->getService('em'));
+            $source = $generator->generateFromRequest($request);
 
-            $parent = $this->getService('em')
-                           ->find(
-                               'RZ\Roadiz\Core\Entities\Node',
-                               (int) $request->get('parentNodeId')
-                           );
+            /*
+             * Dispatch event
+             */
+            $event = new FilterNodeEvent($source->getNode());
+            $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
-            if (null !== $nodeType &&
-                null !== $parent) {
-                if ($request->get('translationId') > 0) {
-                    $translation = $this->getService('em')
-                                        ->find('RZ\Roadiz\Core\Entities\Translation', (int) $request->get('translationId'));
+            $responseArray = [
+                'statusCode' => Response::HTTP_OK,
+                'status' => 'success',
+                'responseText' => $this->getTranslator()->trans(
+                    'added.node.%name%',
+                    [
+                        '%name%' => $source->getTitle(),
+                    ]
+                ),
+            ];
 
-                } else {
-                    $translation = $parent->getNodeSources()->first()->getTranslation();
+        } catch (\Exception $e) {
+            $msg = $this->getTranslator()->trans($e->getMessage());
 
-                    if (null === $translation) {
-                        $translation = $this->getService('em')
-                                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                            ->findDefault();
-                    }
-                }
-
-                if ($request->get('tagId') > 0) {
-                    $tag = $this->getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $request->get('tagId'));
-                } else {
-                    $tag = null;
-                }
-
-                try {
-                    $source = NodesController::generateUniqueNodeWithTypeAndTranslation($request, $nodeType, $parent, $translation, $tag);
-
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterNodeEvent($source->getNode());
-                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
-
-                    $responseArray = [
-                        'statusCode' => Response::HTTP_OK,
-                        'status' => 'success',
-                        'responseText' => $this->getTranslator()->trans(
-                            'added.node.%name%',
-                            [
-                                '%name%' => $source->getTitle(),
-                            ]
-                        ),
-                    ];
-
-                } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
-
-                    $responseArray = [
-                        'statusCode' => Response::HTTP_FORBIDDEN,
-                        'status' => 'danger',
-                        'responseText' => $msg,
-                    ];
-                }
-
-            } else {
-                $responseArray = [
-                    'statusCode' => Response::HTTP_FORBIDDEN,
-                    'status' => 'danger',
-                    'responseText' => $this->getTranslator()->trans('bad.request'),
-                ];
-            }
-
-        } else {
             $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,
                 'status' => 'danger',
-                'responseText' => $this->getTranslator()->trans('bad.request'),
+                'responseText' => $msg,
             ];
         }
 

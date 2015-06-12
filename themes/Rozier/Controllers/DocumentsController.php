@@ -31,7 +31,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,9 +48,8 @@ use Themes\Rozier\RozierApp;
 class DocumentsController extends RozierApp
 {
     protected $thumbnailFormat = [
-        'width' => 128,
         'quality' => 50,
-        'crop' => '1x1',
+        'fit' => '128x128',
     ];
 
     /**
@@ -78,7 +76,7 @@ class DocumentsController extends RozierApp
          * Handle bulk folder form
          */
         $joinFolderForm = $this->buildLinkFoldersForm();
-        $joinFolderForm->handleRequest();
+        $joinFolderForm->handleRequest($request);
         if ($joinFolderForm->isValid()) {
             $data = $joinFolderForm->getData();
 
@@ -102,9 +100,7 @@ class DocumentsController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Document',
             $prefilters,
             ['createdAt' => 'DESC']
@@ -139,7 +135,7 @@ class DocumentsController extends RozierApp
              * Handle main form
              */
             $form = $this->buildEditForm($document);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -201,7 +197,6 @@ class DocumentsController extends RozierApp
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
                 'width' => 500,
-                'quality' => 70,
                 'controls' => true,
             ];
 
@@ -229,7 +224,7 @@ class DocumentsController extends RozierApp
         if ($document !== null) {
             $this->assignation['document'] = $document;
             $form = $this->buildDeleteForm($document);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['documentId'] == $document->getId()) {
@@ -280,7 +275,7 @@ class DocumentsController extends RozierApp
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDeleteForm($documentsIds);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 foreach ($documents as $document) {
@@ -329,7 +324,7 @@ class DocumentsController extends RozierApp
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDownloadForm($documentsIds);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -376,7 +371,7 @@ class DocumentsController extends RozierApp
          * Handle main form
          */
         $form = $this->buildEmbedForm();
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -476,7 +471,7 @@ class DocumentsController extends RozierApp
          * Handle main form
          */
         $form = $this->buildUploadForm($folderId);
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $document = $this->uploadDocument($form, $folderId);
@@ -961,15 +956,7 @@ class DocumentsController extends RozierApp
         $fs = new Filesystem();
 
         if (!empty($data['newDocument'])) {
-            $file = $data['newDocument'];
-
-            $uploadedFile = new UploadedFile(
-                $file['tmp_name'],
-                $file['name'],
-                $file['type'],
-                $file['size'],
-                $file['error']
-            );
+            $uploadedFile = $data['newDocument'];
 
             if ($uploadedFile !== null &&
                 $uploadedFile->getError() == UPLOAD_ERR_OK &&
@@ -1019,15 +1006,7 @@ class DocumentsController extends RozierApp
     private function uploadDocument($data, $folderId = null)
     {
         if (!empty($data['attachment'])) {
-            $file = $data['attachment']->getData();
-
-            $uploadedFile = new UploadedFile(
-                $file['tmp_name'],
-                $file['name'],
-                $file['type'],
-                $file['size'],
-                $file['error']
-            );
+            $uploadedFile = $data['attachment']->getData();
 
             if ($uploadedFile !== null &&
                 $uploadedFile->getError() == UPLOAD_ERR_OK &&

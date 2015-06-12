@@ -71,7 +71,7 @@
             </div>
         </nav>
         <div class="children-nodes-tree">
-            {% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':false, "securityContext":securityContext} only %}
+            {% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':false, "authorizationChecker":authorizationChecker} only %}
         </div>
     </div>
     {% endspaceless %}
@@ -120,14 +120,14 @@
 {%- endblock form_widget_compound %}
 
 {% block choice_widget_collapsed -%}
-    {% if required and empty_value is none and not empty_value_in_choices and not multiple -%}
+    {% if required and placeholder is none and not placeholder_in_choices and not multiple -%}
         {% set required = false %}
     {%- endif -%}
 
     {% if multiple %}
         <select {{ block('widget_attributes') }} multiple="multiple">
-            {% if empty_value is not none -%}
-                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+            {% if placeholder is not none -%}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain) }}</option>
             {%- endif %}
             {%- if preferred_choices|length > 0 -%}
                 {% set options = preferred_choices %}
@@ -142,8 +142,8 @@
     {% else %}
         <div class="rz-select">
             <select {{ block('widget_attributes') }}>
-                {% if empty_value is not none -%}
-                    <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+                {% if placeholder is not none -%}
+                    <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain) }}</option>
                 {%- endif %}
                 {%- if preferred_choices|length > 0 -%}
                     {% set options = preferred_choices %}

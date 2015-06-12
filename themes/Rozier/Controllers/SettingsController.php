@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -102,9 +101,7 @@ class SettingsController extends RozierApp
         /*
          * Manage get request to filter list
          */
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Setting',
             $criteria,
             ['name' => 'ASC']
@@ -117,7 +114,7 @@ class SettingsController extends RozierApp
 
         foreach ($settings as $setting) {
             $form = $this->buildShortEditForm($setting);
-            $form->handleRequest();
+            $form->handleRequest($request);
             if ($form->isValid() &&
                 $form->getData()['id'] == $setting->getId()) {
                 try {
@@ -177,7 +174,7 @@ class SettingsController extends RozierApp
             $this->assignation['setting'] = $setting;
 
             $form = $this->buildEditForm($setting);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -221,7 +218,7 @@ class SettingsController extends RozierApp
 
             $form = $this->buildAddForm($setting);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -266,7 +263,7 @@ class SettingsController extends RozierApp
 
             $form = $this->buildDeleteForm($setting);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['settingId'] == $setting->getId()) {
@@ -348,24 +345,16 @@ class SettingsController extends RozierApp
 
             case NodeTypeField::DOCUMENTS_T:
 
-                $uploadedFile = new \Symfony\Component\HttpFoundation\File\UploadedFile(
-                    $value['tmp_name'],
-                    $value['name'],
-                    $value['type'],
-                    $value['size'],
-                    $value['error']
-                );
-
-                if ($uploadedFile !== null &&
-                    $uploadedFile->getError() == UPLOAD_ERR_OK &&
-                    $uploadedFile->isValid()) {
+                if ($value !== null &&
+                    $value->getError() == UPLOAD_ERR_OK &&
+                    $value->isValid()) {
                     $document = new Document();
-                    $document->setFilename($uploadedFile->getClientOriginalName());
-                    $document->setMimeType($uploadedFile->getMimeType());
+                    $document->setFilename($value->getClientOriginalName());
+                    $document->setMimeType($value->getMimeType());
                     $this->getService('em')->persist($document);
                     $this->getService('em')->flush();
 
-                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+                    $value->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
 
                     $setting->setValue($document->getId());
                 }
@@ -614,7 +603,7 @@ class SettingsController extends RozierApp
             case NodeTypeField::ENUM_T:
                 return [
                     'label' => $label,
-                    'empty_value' => $translator->trans('choose.value'),
+                    'placeholder' => $translator->trans('choose.value'),
                     'required' => false,
                 ];
             case NodeTypeField::DATETIME_T:

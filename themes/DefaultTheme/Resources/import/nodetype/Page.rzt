@@ -17,6 +17,16 @@
             "default_values": null
         },
         {
+            "name": "children",
+            "label": "Nœuds enfants",
+            "description": null,
+            "visible": true,
+            "type": 16,
+            "indexed": false,
+            "virtual": true,
+            "default_values": "Page, BasicBlock"
+        },
+        {
             "name": "header_image",
             "label": "Header image",
             "description": null,

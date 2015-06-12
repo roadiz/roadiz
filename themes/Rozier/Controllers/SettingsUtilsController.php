@@ -100,14 +100,14 @@ class SettingsUtilsController extends RozierApp
 
         $form = $this->buildImportJsonFileForm();
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid() &&
             !empty($form['setting_file'])) {
             $file = $form['setting_file']->getData();
 
-            if (UPLOAD_ERR_OK == $file['error']) {
-                $serializedData = file_get_contents($file['tmp_name']);
+            if ($file->isValid()) {
+                $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
                     if (SettingsImporter::importJsonFile($serializedData)) {

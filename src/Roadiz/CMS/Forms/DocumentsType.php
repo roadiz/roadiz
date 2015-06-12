@@ -33,7 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -57,9 +57,9 @@ class DocumentsType extends AbstractType
     /**
      * {@inheritdoc}
      *
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $callback = function ($object, ExecutionContextInterface $context) {
 
@@ -70,7 +70,9 @@ class DocumentsType extends AbstractType
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
-                    if (null !== $value && null === $documents[$key]) {
+                    if (isset($documents[$key]) &&
+                        null !== $value &&
+                        null === $documents[$key]) {
                         $context->addViolationAt(
                             null,
                             'Document #'.$value.' does not exists',

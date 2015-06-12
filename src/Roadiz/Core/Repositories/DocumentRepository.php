@@ -307,7 +307,7 @@ class DocumentRepository extends EntityRepository
     }
     /**
      * Create a securized query with node.published = true if user is
-     * not a Backend user and if securityContext is defined.
+     * not a Backend user and if securityAuthorizationChecker is defined.
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
@@ -315,8 +315,8 @@ class DocumentRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityContext
-     * @param SecurityContext|null                    $securityContext
+     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return QueryBuilder
      */
@@ -356,13 +356,13 @@ class DocumentRepository extends EntityRepository
     }
     /**
      * Create a securized count query with node.published = true if user is
-     * not a Backend user and if securityContext is defined.
+     * not a Backend user and if securityAuthorizationChecker is defined.
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityContext
-     * @param SecurityContext|null                    $securityContext
+     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return QueryBuilder
      */
@@ -391,7 +391,7 @@ class DocumentRepository extends EntityRepository
      * @param integer|null                            $limit
      * @param integer|null                            $offset
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -427,7 +427,7 @@ class DocumentRepository extends EntityRepository
      * @param array                                   $criteria
      * @param array|null                              $orderBy
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -461,7 +461,7 @@ class DocumentRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param SecurityContext|null                    $securityContext
+     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return int
      */

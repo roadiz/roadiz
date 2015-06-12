@@ -90,13 +90,7 @@ class FolderTreeWidget extends AbstractWidget
     {
         return $this->parentFolder;
     }
-    /**
-     * @return RZ\Roadiz\Core\Entities\Translation
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
+
     /**
      * @return ArrayCollection
      */

@@ -33,7 +33,6 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -58,9 +57,7 @@ class CustomFormFieldAttributesController extends RozierApp
 
         $customFormAnswer = $this->getService("em")->find("RZ\Roadiz\Core\Entities\CustomFormAnswer", $customFormAnswerId);
 
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\CustomFormFieldAttribute',
             ["customFormAnswer" => $customFormAnswer]
         );

@@ -38,8 +38,9 @@
                 <section class="main-container-section" id="user-panel">
                     {% include '@Rozier/panels/user_panel.html.twig' with {
                         'session' : session,
-                        'securityContext' : securityContext,
                         'head' : head,
+                        'authorizationChecker' : authorizationChecker,
+                        'tokenStorage': tokenStorage,
                         'themeServices':themeServices,
                         'request':request
                     } only %}
@@ -47,17 +48,21 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include '@Rozier/panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
-                        'securityContext' : securityContext,
+                        'authorizationChecker' : authorizationChecker,
+                        'tokenStorage': tokenStorage,
                         'backofficeEntries':backofficeEntries,
                         'request':request
                     } only %}
                 </section>
-                {% if (securityContext.isGranted('ROLE_ACCESS_NODES') or securityContext.isGranted('ROLE_ACCESS_DOCUMENTS') or securityContext.isGranted('ROLE_ACCESS_TAGS')) %}
+                {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES') or
+                       authorizationChecker.Granted('ROLE_ACCESS_DOCUMENTS') or
+                       authorizationChecker.Granted('ROLE_ACCESS_TAGS')) %}
                 <section id="main-trees" class="main-container-section">
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
                         {% include '@Rozier/panels/tree_panel.html.twig' with {
-                            'securityContext': securityContext,
+                            'authorizationChecker': authorizationChecker,
+                            'tokenStorage': tokenStorage,
                             'themeServices': themeServices,
                             "nodeStatuses":nodeStatuses
                         } only %}
@@ -126,6 +131,7 @@
         <script src="{{ head.resourcesUrl }}js/widgets/tagAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/folderAutocomplete.js"></script>
         <script src="{{ head.resourcesUrl }}js/widgets/stackNodeTree.js"></script>
+        <script src="{{ head.resourcesUrl }}js/widgets/inputLengthWatcher.js"></script>
         <script src="{{ head.resourcesUrl }}js/node-type-fields/nodeTypeFieldEdit.js"></script>
         <script src="{{ head.resourcesUrl }}js/node-type-fields/nodeTypeFieldsPosition.js"></script>
         <script src="{{ head.resourcesUrl }}js/custom-form-fields/customFormFieldsPosition.js"></script>

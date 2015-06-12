@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Serializers;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 /**
  * Serialization class for NodeTypeField.
@@ -73,8 +74,8 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
     public static function deserialize($jsonString)
     {
         $encoder = new JsonEncoder();
-        $normalizer = new GetSetMethodNormalizer();
-        $normalizer->setCamelizedAttributes([
+
+        $nameConverter = new CamelCaseToSnakeCaseNameConverter([
             'name',
             'label',
             'description',
@@ -84,6 +85,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
             'virtual',
             'default_values'
         ]);
+        $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
 

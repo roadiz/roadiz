@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Fonts are entities which store each webfont file for a
@@ -40,6 +41,7 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
  * @ORM\Table(name="fonts",uniqueConstraints={
  *     @ORM\UniqueConstraint(columns={"name", "variant"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class Font extends AbstractDateTimed
 {
@@ -70,11 +72,11 @@ class Font extends AbstractDateTimed
      * @var array
      */
     public static $variantToHuman = [
-        Font::REGULAR      => 'font_variant.regular',
-        Font::ITALIC       => 'font_variant.italic',
-        Font::BOLD         => 'font_variant.bold',
-        Font::BOLD_ITALIC  => 'font_variant.bold.italic',
-        Font::LIGHT        => 'font_variant.light',
+        Font::REGULAR => 'font_variant.regular',
+        Font::ITALIC => 'font_variant.italic',
+        Font::BOLD => 'font_variant.bold',
+        Font::BOLD_ITALIC => 'font_variant.bold.italic',
+        Font::LIGHT => 'font_variant.light',
         Font::LIGHT_ITALIC => 'font_variant.light.italic',
     ];
 
@@ -160,6 +162,12 @@ class Font extends AbstractDateTimed
                 ];
         }
     }
+
+    protected $eotFile;
+    protected $woffFile;
+    protected $woff2File;
+    protected $otfFile;
+    protected $svgFile;
 
     /**
      * @ORM\Column(type="string", nullable=true, name="eot_filename")
@@ -464,5 +472,204 @@ class Font extends AbstractDateTimed
     public function getViewer()
     {
         return new \RZ\Roadiz\Core\Viewers\FontViewer($this);
+    }
+
+    /**
+     * Gets the value of eotFile.
+     *
+     * @return mixed
+     */
+    public function getEotFile()
+    {
+        return $this->eotFile;
+    }
+
+    /**
+     * Sets the value of eotFile.
+     *
+     * @param mixed $eotFile the eot file
+     *
+     * @return self
+     */
+    public function setEotFile(File $eotFile)
+    {
+        $this->eotFile = $eotFile;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of woffFile.
+     *
+     * @return mixed
+     */
+    public function getWoffFile()
+    {
+        return $this->woffFile;
+    }
+
+    /**
+     * Sets the value of woffFile.
+     *
+     * @param mixed $woffFile the woff file
+     *
+     * @return self
+     */
+    public function setWoffFile(File $woffFile)
+    {
+        $this->woffFile = $woffFile;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of woff2File.
+     *
+     * @return mixed
+     */
+    public function getWoff2File()
+    {
+        return $this->woff2File;
+    }
+
+    /**
+     * Sets the value of woff2File.
+     *
+     * @param mixed $woff2File the woff2 file
+     *
+     * @return self
+     */
+    public function setWoff2File(File $woff2File)
+    {
+        $this->woff2File = $woff2File;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of otfFile.
+     *
+     * @return mixed
+     */
+    public function getOtfFile()
+    {
+        return $this->otfFile;
+    }
+
+    /**
+     * Sets the value of otfFile.
+     *
+     * @param mixed $otfFile the otf file
+     *
+     * @return self
+     */
+    public function setOtfFile(File $otfFile)
+    {
+        $this->otfFile = $otfFile;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of svgFile.
+     *
+     * @return mixed
+     */
+    public function getSvgFile()
+    {
+        return $this->svgFile;
+    }
+
+    /**
+     * Sets the value of svgFile.
+     *
+     * @param mixed $svgFile the svg file
+     *
+     * @return self
+     */
+    public function setSvgFile(File $svgFile)
+    {
+        $this->svgFile = $svgFile;
+
+        return $this;
+    }
+
+    /**
+     * Called before saving the entity
+     *
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->svgFile) {
+            $this->setSVGFilename($this->svgFile->getClientOriginalName());
+        }
+        if (null !== $this->otfFile) {
+            $this->setOTFFilename($this->otfFile->getClientOriginalName());
+        }
+        if (null !== $this->eotFile) {
+            $this->setEOTFilename($this->eotFile->getClientOriginalName());
+        }
+        if (null !== $this->woffFile) {
+            $this->setWOFFFilename($this->woffFile->getClientOriginalName());
+        }
+        if (null !== $this->woff2File) {
+            $this->setWOFF2Filename($this->woff2File->getClientOriginalName());
+        }
+    }
+
+    /**
+     * Called after entity persistence
+     *
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null !== $this->svgFile) {
+            $this->svgFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getSVGFilename());
+            $this->svgFile = null;
+        }
+        if (null !== $this->otfFile) {
+            $this->otfFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getOTFFilename());
+            $this->otfFile = null;
+        }
+        if (null !== $this->eotFile) {
+            $this->eotFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getEOTFilename());
+            $this->eotFile = null;
+        }
+        if (null !== $this->woffFile) {
+            $this->woffFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getWOFFFilename());
+            $this->woffFile = null;
+        }
+        if (null !== $this->woff2File) {
+            $this->woff2File->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getWOFF2Filename());
+            $this->woff2File = null;
+        }
+    }
+
+    /**
+     * Called before entity removal
+     *
+     * @ORM\PreRemove()
+     */
+    public function removeUpload()
+    {
+        if (null !== $this->svgFilename) {
+            unlink($this->getSVGAbsolutePath());
+        }
+        if (null !== $this->otfFilename) {
+            unlink($this->getOTFAbsolutePath());
+        }
+        if (null !== $this->eotFilename) {
+            unlink($this->getEOTAbsolutePath());
+        }
+        if (null !== $this->woffFilename) {
+            unlink($this->getWOFFAbsolutePath());
+        }
+        if (null !== $this->woff2Filename) {
+            unlink($this->getWOFF2AbsolutePath());
+        }
     }
 }

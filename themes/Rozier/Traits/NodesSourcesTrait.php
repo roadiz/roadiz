@@ -37,8 +37,9 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\Type;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 
 trait NodesSourcesTrait
 {
@@ -54,24 +55,6 @@ trait NodesSourcesTrait
     {
         if (isset($data['title'])) {
             $nodeSource->setTitle($data['title']);
-
-            /*
-             * update node name if dynamic option enabled and
-             * default translation
-             */
-            if (true === $nodeSource->getNode()->isDynamicNodeName() &&
-                $nodeSource->getTranslation()->isDefaultTranslation()) {
-                $testingNodeName = StringHandler::slugify($data['title']);
-
-                /*
-                 * node name wont be updated if name already taken
-                 */
-                if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
-                    false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
-                    $nodeSource->getNode()->setNodeName($data['title']);
-                }
-            }
         } else {
             // empty title
             $nodeSource->setTitle("");
@@ -80,13 +63,51 @@ trait NodesSourcesTrait
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
         foreach ($fields as $field) {
             if (isset($data[$field->getName()])) {
-                static::setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
+                $this->setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
             } else {
-                static::setValueFromFieldType(null, $nodeSource, $field);
+                $this->setValueFromFieldType(null, $nodeSource, $field);
             }
         }
 
         $this->getService('em')->flush();
+    }
+
+    /**
+     * Update nodeName when title is available.
+     *
+     * @param  string       $title
+     * @param  NodesSources $nodeSource
+     */
+    protected function updateNodeName(NodesSources $nodeSource)
+    {
+        $title = $nodeSource->getTitle();
+
+        /*
+         * update node name if dynamic option enabled and
+         * default translation
+         */
+        if ("" != $title &&
+            true === $nodeSource->getNode()->isDynamicNodeName() &&
+            $nodeSource->getTranslation()->isDefaultTranslation()) {
+            $testingNodeName = StringHandler::slugify($title);
+
+            /*
+             * node name wont be updated if name already taken
+             */
+            if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
+                false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
+                $nodeSource->getNode()->setNodeName($title);
+
+                $this->getService('em')->flush();
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($nodeSource->getNode());
+                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            }
+        }
     }
 
     /**
@@ -129,14 +150,15 @@ trait NodesSourcesTrait
                                       'required' => false,
                                       'attr' => [
                                           'data-desc' => '',
+                                          'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
                                       ],
                                   ]
                               );
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),
-                static::getFormTypeFromFieldType($source, $field, $this),
-                static::getFormOptionsFromFieldType($source, $field, $this->getTranslator())
+                $this->getFormTypeFromFieldType($source, $field, $this),
+                $this->getFormOptionsFromFieldType($field)
             );
         }
 
@@ -152,7 +174,7 @@ trait NodesSourcesTrait
      *
      * @return AbstractType
      */
-    public static function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, $controller)
+    public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, $controller)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
@@ -172,9 +194,9 @@ trait NodesSourcesTrait
                 return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
             case NodeTypeField::CHILDREN_T:
                 /*
-             * NodeTreeType is a virtual type which is only available
-             * with Rozier backend theme.
-             */
+                 * NodeTreeType is a virtual type which is only available
+                 * with Rozier backend theme.
+                 */
                 return new \Themes\Rozier\Forms\NodeTreeType(
                     $nodeSource,
                     $field,
@@ -198,122 +220,132 @@ trait NodesSourcesTrait
      *
      * @param  NodesSources  $nodeSource
      * @param  NodeTypeField $field
-     * @param  Translator    $translator
      *
      * @return array
      */
-    public static function getFormOptionsFromFieldType(
-        NodesSources $nodeSource,
-        NodeTypeField $field,
-        Translator $translator
+    public function getFormOptionsFromFieldType(
+        NodeTypeField $field
     ) {
+        $label = $field->getLabel();
+        $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+
         switch ($field->getType()) {
             case NodeTypeField::ENUM_T:
                 return [
-                    'label' => $field->getLabel(),
-                    'empty_value' => $translator->trans('choose.value'),
+                    'label' => $label,
+                    'placeholder' => 'choose.value',
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::DATETIME_T:
                 return [
                     'date_widget' => 'single_text',
                     'date_format' => 'yyyy-MM-dd',
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'rz-datetime-field',
                     ],
-                    'empty_value' => [
-                        'hour' => $translator->trans('hour'),
-                        'minute' => $translator->trans('minute'),
+                    'placeholder' => [
+                        'hour' => 'hour',
+                        'minute' => 'minute',
                     ],
                 ];
             case NodeTypeField::DATE_T:
                 return [
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'rz-date-field',
                     ],
-                    'empty_value' => '',
+                    'placeholder' => '',
                 ];
             case NodeTypeField::INTEGER_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'constraints' => [
                         new Type('integer'),
                     ],
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::EMAIL_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'constraints' => [
                         new \Symfony\Component\Validator\Constraints\Email(),
                     ],
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::DECIMAL_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'constraints' => [
                         new Type('double'),
                     ],
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             case NodeTypeField::COLOUR_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'colorpicker-input',
                     ],
                 ];
             case NodeTypeField::GEOTAG_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
+                        'data-dev-name' => $devName,
                         'class' => 'rz-geotag-field',
                     ],
                 ];
             case NodeTypeField::MARKDOWN_T:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'class' => 'markdown_textarea',
                         'data-desc' => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
             default:
                 return [
-                    'label' => $field->getLabel(),
+                    'label' => $label,
                     'required' => false,
                     'attr' => [
                         'data-desc' => $field->getDescription(),
                         'data-min-length' => $field->getMinLength(),
                         'data-max-length' => $field->getMaxLength(),
+                        'data-dev-name' => $devName,
                     ],
                 ];
         }
@@ -328,7 +360,7 @@ trait NodesSourcesTrait
      *
      * @return void
      */
-    public static function setValueFromFieldType($dataValue, NodesSources $nodeSource, NodeTypeField $field)
+    public function setValueFromFieldType($dataValue, NodesSources $nodeSource, NodeTypeField $field)
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:

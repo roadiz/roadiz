@@ -32,12 +32,13 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
@@ -86,11 +87,11 @@ class FrontendController extends AppController
     /**
      * Default action for any node URL.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node             $node
-     * @param RZ\Roadiz\Core\Entities\Translation      $translation
+     * @param Request $request
+     * @param Node             $node
+     * @param Translation      $translation
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(
         Request $request,
@@ -108,7 +109,7 @@ class FrontendController extends AppController
     /**
      * Default action for default URL (homepage).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @param string|null                              $_locale
      *
      * @return Symfony\Component\HttpFoundation\Response
@@ -145,17 +146,18 @@ class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param RZ\Roadiz\Core\Entities\Node        $node
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Node        $node
+     * @param Translation $translation
      */
     public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
     {
         $this->node = $node;
         $this->translation = $translation;
-
         $this->assignation['translation'] = $this->translation;
+        $this->getService('request')->attributes->set('translation', $this->translation);
 
         if (null !== $this->node) {
+            $this->getService('request')->attributes->set('node', $this->node);
             $this->nodeSource = $this->node->getNodeSources()->first();
             $this->assignation['node'] = $this->node;
             $this->assignation['nodeSource'] = $this->nodeSource;
@@ -165,9 +167,48 @@ class FrontendController extends AppController
     }
 
     /**
+     * Store current nodeSource and translation into controller.
+     *
+     * It makes following fields available into template assignation:
+     *
+     * * node
+     * * nodeSource
+     * * translation
+     * * pageMeta
+     *     * title
+     *     * description
+     *     * keywords
+     *
+     * @param NodesSources $nodeSource
+     * @param Translation $translation
+     */
+    public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
+    {
+        $this->nodeSource = $nodeSource;
+
+        if (null !== $this->nodeSource) {
+            $this->node = $this->nodeSource->getNode();
+            $this->translation = $this->nodeSource->getTranslation();
+
+            $this->getService('request')->attributes->set('translation', $this->translation);
+            $this->getService('request')->attributes->set('node', $this->node);
+
+            $this->assignation['translation'] = $this->translation;
+            $this->assignation['node'] = $this->node;
+            $this->assignation['nodeSource'] = $this->nodeSource;
+        } else {
+            $this->translation = $translation;
+            $this->assignation['translation'] = $this->translation;
+            $this->getService('request')->attributes->set('translation', $this->translation);
+        }
+
+        $this->assignation['pageMeta'] = $this->getNodeSEO();
+    }
+
+    /**
      * Get controller class path for a given node.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return string
      */
@@ -195,22 +236,19 @@ class FrontendController extends AppController
     /**
      * Return a 404 Response or TRUE if node is viewable.
      *
-     * @param  RZ\Roadiz\Core\Entities\Node $node
-     * @param  Symfony\Component\Security\Core\SecurityContext|null $securityContext
+     * @param  Node $node
      *
      * @return boolean|Symfony\Component\HttpFoundation\Response
      */
-    public function validateAccessForNodeWithStatus(Node $node, SecurityContext $securityContext = null)
+    public function validateAccessForNodeWithStatus(Node $node)
     {
-        if (null !== $securityContext &&
-            !$securityContext->isGranted(Role::ROLE_BACKEND_USER) &&
+        if (!$this->isGranted(Role::ROLE_BACKEND_USER) &&
             !$node->isPublished()) {
             /*
              * Not allowed to see unpublished nodes
              */
             return $this->throw404();
-        } elseif (null !== $securityContext &&
-            $securityContext->isGranted(Role::ROLE_BACKEND_USER) &&
+        } elseif ($this->isGranted(Role::ROLE_BACKEND_USER) &&
             $node->getStatus() > Node::PUBLISHED) {
             /*
              * Not allowed to see deleted and archived nodes
@@ -241,10 +279,8 @@ class FrontendController extends AppController
      * Handle node based routing, returns a Response object
      * for a node-based request.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
+     * @param Request $request
+     * @return Response
      * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(
@@ -257,7 +293,7 @@ class FrontendController extends AppController
         if ($node !== null) {
             if (true !== $resp = $this->validateAccessForNodeWithStatus(
                 $node,
-                $this->getService('securityContext')
+                $this->getService('securityAuthorizationChecker')
             )) {
                 return $resp;
             }
@@ -282,7 +318,7 @@ class FrontendController extends AppController
             /*
              * Inject current Kernel to the matched Controller
              */
-            if ($ctrl instanceof AppController) {
+            if ($ctrl instanceof FrontendController) {
                 $ctrl->setKernel($this->kernel);
                 $ctrl->setContainer($this->container);
 
@@ -337,10 +373,10 @@ class FrontendController extends AppController
     }
 
     /**
-     * Store basic informations for your theme.
+     * Store basic informations for your theme from a Node object.
      *
-     * @param RZ\Roadiz\Core\Entities\Node        $node
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Node        $node
+     * @param Translation $translation
      *
      * @return void
      */
@@ -352,6 +388,39 @@ class FrontendController extends AppController
          * Use a DI container to delay API requuests
          */
         $this->themeContainer = new Container();
+
+        $this->extendAssignation();
+    }
+
+    /**
+     * Store basic informations for your theme from a NodesSources object.
+     *
+     * @param NodesSources $nodeSource
+     * @param Translation $translation
+     *
+     * @return void
+     */
+    protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
+    {
+        $this->storeNodeSourceAndTranslation($nodeSource, $translation);
+        $this->assignation['home'] = $this->getHome($translation);
+        /*
+         * Use a DI container to delay API requuests
+         */
+        $this->themeContainer = new Container();
+
+        $this->extendAssignation();
+    }
+
+    /**
+     * Extends theme assignation with custom data.
+     *
+     * Override this method in your theme to add your own service
+     * and data.
+     */
+    protected function extendAssignation()
+    {
+
     }
 
     /**
@@ -377,7 +446,7 @@ class FrontendController extends AppController
     /**
      * Append objects to global container.
      *
-     * Add a request matcher on frontend to make securityContext
+     * Add a request matcher on frontend to make securityTokenStorage
      * available even when no user has logged in.
      *
      * @param Pimple\Container $container
@@ -392,10 +461,10 @@ class FrontendController extends AppController
         $requestMatcher = new RequestMatcher('^/');
 
         $listeners = [
-            // manages the SecurityContext persistence through a session
+            // manages the TokenStorage persistence through a session
             $container['contextListener'],
             // automatically adds a Token if none is already present.
-            new AnonymousAuthenticationListener($container['securityContext'], ''), // $key
+            new AnonymousAuthenticationListener($container['securityTokenStorage'], ''), // $key
             $container["switchUser"],
         ];
 
@@ -403,5 +472,36 @@ class FrontendController extends AppController
          * Inject a new firewall map element
          */
         $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function maintenanceAction(Request $request)
+    {
+        $translation = $this->bindLocaleFromRoute($request, $request->getLocale());
+        $this->prepareThemeAssignation(null, $translation);
+
+        return new Response(
+            $this->renderView('maintenance.html.twig', $this->assignation),
+            Response::HTTP_SERVICE_UNAVAILABLE,
+            ['content-type' => 'text/html']
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        $elm = parent::createEntityListManager($entity, $criteria, $ordering);
+
+        /*
+         * When using EntityListManager you need to manually set the
+         * security context
+         */
+        $elm->setAuthorizationChecker($this->getService('securityAuthorizationChecker'));
+
+        return $elm;
     }
 }

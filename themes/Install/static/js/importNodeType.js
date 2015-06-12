@@ -71,11 +71,13 @@ ImportNodeType.prototype.callSingleImport = function( index ) {
                             /*
                              * Update schema
                              */
+                            console.log('Calling: ' + _this.routes[index].postUpdate[0]);
                             $.ajax({
                                 url:_this.routes[index].postUpdate[1],
                                 type: 'POST',
                                 dataType: 'json',
                                 complete: function() {
+                                    console.log('Calling: ' + _this.routes[index].postUpdate[1]);
                                     _this.always(index + 1);
                                 }
                             });

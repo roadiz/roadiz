@@ -29,52 +29,43 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Console\SchemaCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use RZ\Roadiz\Console\Tools\Fixtures;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
  */
 class InstallCommand extends Command
 {
-    private $dialog;
+    private $entityManager;
 
     protected function configure()
     {
         $this
             ->setName('install')
-            ->setDescription('Install Roadiz roles, settings, translations and default backend theme')
-            ->addOption(
-                'with-theme',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Enable the devMode flag for your application'
-            );
+            ->setDescription('Install Roadiz roles, settings, translations and default backend theme');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
-        $text="";
+        $helper = $this->getHelper('question');
+        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $text = "";
+
+        $question = new ConfirmationQuestion(
+            'Before installing Roadiz, did you create database schema? ' . PHP_EOL .
+            'If not execute: <info>bin/roadiz orm:schema-tool:create</info>' . PHP_EOL .
+            '<question>Are you sure to perform installation?</question> : ',
+            false
+        );
 
         if ($input->getOption('no-interaction') ||
-            $this->dialog->askConfirmation(
-                $output,
-                'Before installing Roadiz, did you create database schema? '.PHP_EOL.
-                'If not execute: <info>bin/roadiz orm:schema-tool:create</info>'.PHP_EOL.
-                '<question>Are you sure to perform installation?</question> : ',
-                false
-            )
+            $helper->ask($input, $output, $question)
         ) {
             /*
              * Create backend theme
@@ -82,15 +73,15 @@ class InstallCommand extends Command
             if (!$this->hasDefaultBackend()) {
                 $theme = new Theme();
                 $theme->setAvailable(true)
-                    ->setBackendTheme(true)
-                    ->setClassName("Themes\Rozier\RozierApp");
+                      ->setBackendTheme(true)
+                      ->setClassName("Themes\Rozier\RozierApp");
 
-                Kernel::getService('em')->persist($theme);
-                Kernel::getService('em')->flush();
+                $this->entityManager->persist($theme);
+                $this->entityManager->flush();
 
-                $text .= '<info>Rozier back-end theme installed…</info>'.PHP_EOL;
+                $text .= '<info>Rozier back-end theme installed…</info>' . PHP_EOL;
             } else {
-                $text .= '<error>A back-end theme is already installed.</error>'.PHP_EOL;
+                $text .= '<error>A back-end theme is already installed.</error>' . PHP_EOL;
             }
 
             /**
@@ -107,7 +98,7 @@ class InstallCommand extends Command
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename)
                     );
-                    $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
+                    $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['groups'])) {
@@ -115,7 +106,7 @@ class InstallCommand extends Command
                     \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename)
                     );
-                    $text .= '     — <info>Theme file “'.$installRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
+                    $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['settings'])) {
@@ -123,7 +114,7 @@ class InstallCommand extends Command
                     \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename)
                     );
-                    $text .= '     — <info>Theme files “'.$installRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
+                    $text .= '     — <info>Theme files “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
 
@@ -137,99 +128,17 @@ class InstallCommand extends Command
                     ->setLocale("en")
                     ->setName("Default translation");
 
-                Kernel::getService('em')->persist($defaultTrans);
-                Kernel::getService('em')->flush();
+                $this->entityManager->persist($defaultTrans);
+                $this->entityManager->flush();
 
-                $text .= '<info>Default translation installed…</info>'.PHP_EOL;
+                $text .= '<info>Default translation installed…</info>' . PHP_EOL;
             } else {
-                $text .= '<error>A default translation is already installed.</error>'.PHP_EOL;
+                $text .= '<error>A default translation is already installed.</error>' . PHP_EOL;
             }
 
             /*
-             * Install theme
+             * Disable install mode
              */
-            if ($input->getOption('with-theme')) {
-                $themeFile = $input->getOption('with-theme');
-                $themeFile = str_replace('\\', '/', $themeFile);
-                $themeFile = str_replace('Themes', 'themes', $themeFile);
-                $themeFile .= ".php";
-
-                if (file_exists($themeFile)) {
-                    $fixtures = new Fixtures();
-                    $fixtures->installFrontendTheme($input->getOption('with-theme'));
-                    $text .= '<info>Theme class “'.$themeFile.'” has been installed…</info>'.PHP_EOL;
-
-                    // install fixtures
-                    $array = explode('\\', $input->getOption('with-theme'));
-                    $themeRoot = ROADIZ_ROOT . "/themes/". $array[count($array) - 2];
-                    $yaml = new YamlConfiguration($themeRoot . "/config.yml");
-
-                    $yaml->load();
-
-                    $data = $yaml->getConfiguration();
-                    if (false !== $data && isset($data["importFiles"])) {
-                        if (isset($data["importFiles"]['roles'])) {
-                            foreach ($data["importFiles"]['roles'] as $filename) {
-                                \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
-                                    file_get_contents($themeRoot . "/" . $filename)
-                                );
-                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                            }
-                        }
-                        if (isset($data["importFiles"]['groups'])) {
-                            foreach ($data["importFiles"]['groups'] as $filename) {
-                                \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
-                                    file_get_contents($themeRoot . "/" . $filename)
-                                );
-                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported..</info>'.PHP_EOL;
-                            }
-                        }
-                        if (isset($data["importFiles"]['settings'])) {
-                            foreach ($data["importFiles"]['settings'] as $filename) {
-                                \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
-                                    file_get_contents($themeRoot . "/" . $filename)
-                                );
-                                $text .= '     — <info>Theme files “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                            }
-                        }
-                        if (isset($data["importFiles"]['nodetypes'])) {
-                            foreach ($data["importFiles"]['nodetypes'] as $filename) {
-                                \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
-                                    file_get_contents($themeRoot . "/" . $filename)
-                                );
-                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                            }
-
-                            static::rebuildEntityManager();
-                            SchemaCommand::updateSchema();
-                        }
-                        if (isset($data["importFiles"]['tags'])) {
-                            foreach ($data["importFiles"]['tags'] as $filename) {
-                                \RZ\Roadiz\CMS\Importers\TagsImporter::importJsonFile(
-                                    file_get_contents($themeRoot . "/" . $filename)
-                                );
-                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                            }
-                        }
-                        if (isset($data["importFiles"]['nodes'])) {
-                            foreach ($data["importFiles"]['nodes'] as $filename) {
-                                \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
-                                    file_get_contents($themeRoot . "/" . $filename)
-                                );
-                                $text .= '     — <info>Theme file “'.$themeRoot . "/" .$filename.'” has been imported.</info>'.PHP_EOL;
-                            }
-                        }
-
-                        SchemaCommand::updateSchema();
-                    } else {
-                        $text .= '<info>Theme class “'.$themeFile.'” has no data to import.</info>'.PHP_EOL;
-                    }
-
-                } else {
-                    $text .= '<error>Theme class “'.$themeFile.'” does not exist.</error>'.PHP_EOL;
-                }
-            }
-
             $configuration = new YamlConfiguration();
             if (false === $configuration->load()) {
                 $configuration->setConfiguration($configuration->getDefaultConfiguration());
@@ -238,29 +147,22 @@ class InstallCommand extends Command
             $configuration->writeConfiguration();
 
             // Clear result cache
-            $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
 
-            $text .= 'Install mode has been changed to false.'.PHP_EOL;
+            $text .= 'Install mode has been changed to false.' . PHP_EOL;
         }
 
         $output->writeln($text);
     }
 
-    public static function rebuildEntityManager()
-    {
-        unset(Kernel::getInstance()->container["em.config"]);
-        unset(Kernel::getInstance()->container["em"]);
-        Kernel::getInstance()->container->register(new DoctrineServiceProvider());
-    }
-
     private function hasDefaultBackend()
     {
-        $default = Kernel::getService('em')
-            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-            ->findOneBy(["backendTheme"=>true]);
+        $default = $this->entityManager
+                        ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                        ->findOneBy(["backendTheme" => true]);
 
         return $default !== null ? true : false;
     }
@@ -272,9 +174,9 @@ class InstallCommand extends Command
      */
     public function hasDefaultTranslation()
     {
-        $default = Kernel::getService('em')
-            ->getRepository("RZ\Roadiz\Core\Entities\Translation")
-            ->findOneBy([]);
+        $default = $this->entityManager
+                        ->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                        ->findOneBy([]);
 
         return $default !== null ? true : false;
     }

@@ -29,7 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
@@ -58,29 +60,35 @@ class ControllerMatchedEvent
         $matchedCtrl = $event->getController()[0];
 
         /*
+         * Inject current Kernel to the matched Controller
+         */
+        if ($matchedCtrl instanceof Controller) {
+            $matchedCtrl->setKernel($this->kernel);
+            $matchedCtrl->setContainer($this->kernel->getContainer());
+        }
+        /*
          * Do not inject current theme when
          * Install mode is active.
          */
-        if (true !== $this->kernel->container['config']['install']) {
+        if (true !== $this->kernel->container['config']['install'] &&
+            $event->getRequest() instanceof RoadizRequest) {
             // No node controller matching in install mode
-            $this->kernel->getRequest()->setTheme($matchedCtrl::getTheme());
+            $event->getRequest()->setTheme($matchedCtrl->getTheme());
         }
 
         /*
          * Set request locale if _locale param
          * is present in Route.
          */
-        $routeParams = $this->kernel->getRequest()->get('_route_params');
+        $routeParams = $event->getRequest()->get('_route_params');
         if (!empty($routeParams["_locale"])) {
-            $this->kernel->getRequest()->setLocale($routeParams["_locale"]);
+            $event->getRequest()->setLocale($routeParams["_locale"]);
         }
 
         /*
-         * Inject current Kernel to the matched Controller
+         * Prepare base assignation
          */
         if ($matchedCtrl instanceof AppController) {
-            $matchedCtrl->setKernel($this->kernel);
-            $matchedCtrl->setContainer($this->kernel->getContainer());
             $matchedCtrl->__init();
         }
     }

@@ -30,15 +30,18 @@
 
 namespace Themes\Install;
 
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\Console\CacheCommand;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -55,6 +58,20 @@ class InstallApp extends AppController
     protected static $backendTheme = false;
 
     /**
+     * Append objects to the global dependency injection container.
+     *
+     * @param Pimple\Container $container
+     */
+    public static function setupDependencyInjection(Container $container)
+    {
+        parent::setupDependencyInjection($container);
+
+        $locale = $container['session']->get('_locale', 'en');
+        $container['request']->setLocale($locale);
+        \Locale::setDefault($locale);
+    }
+
+    /**
      * @return array $assignation
      */
     public function prepareBaseAssignation()
@@ -62,40 +79,28 @@ class InstallApp extends AppController
         $this->assignation = [
             'request' => $this->getRequest(),
             'head' => [
+                'siteTitle' => 'welcome.title',
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
-                'baseUrl' => $this->getRequest()->getResolvedBaseUrl(),
+                'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
                 'filesUrl' => $this->getRequest()
                                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->getService('csrfProvider')
-                                    ->generateCsrfToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->getService('csrfProvider')
-                                    ->generateCsrfToken(static::FONT_TOKEN_INTENTION),
+                'ajaxToken' => $this->getService('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->getService('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
+                'locale' => $this->getRequest()->getSession()->get('_locale', 'en'),
             ],
         ];
 
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function initializeTranslator()
-    {
-        $this->getRequest()->setLocale(
-            $this->getService('session')->get('_locale', 'en')
-        );
-
-        return parent::initializeTranslator();
     }
 
     /**
@@ -108,7 +113,7 @@ class InstallApp extends AppController
     public function indexAction(Request $request)
     {
         $form = $this->buildLanguageForm($request);
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $locale = $form->getData()['language'];
@@ -168,14 +173,14 @@ class InstallApp extends AppController
         $userForm = $this->buildUserForm($request);
 
         if ($userForm !== null) {
-            $userForm->handleRequest();
+            $userForm->handleRequest($request);
 
             if ($userForm->isValid()) {
                 /*
                  * Create user
                  */
                 try {
-                    $fixtures = new Fixtures();
+                    $fixtures = new Fixtures($this->getService("em"), $request);
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -228,7 +233,7 @@ class InstallApp extends AppController
         $doneForm = $this->buildDoneForm($request);
 
         if ($doneForm !== null) {
-            $doneForm->handleRequest();
+            $doneForm->handleRequest($request);
 
             if ($doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
@@ -251,9 +256,15 @@ class InstallApp extends AppController
                      */
                     $this->getService('session')->invalidate();
 
-                    CacheCommand::clearDoctrine();
-                    CacheCommand::clearTranslations();
-                    CacheCommand::clearRouteCollections();
+                    $clearers = [
+                        new DoctrineCacheClearer($this->getService('em')),
+                        new TranslationsCacheClearer(),
+                        new RoutingCacheClearer(),
+                    ];
+                    foreach ($clearers as $clearer) {
+                        $clearer->clear();
+                    }
+
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */

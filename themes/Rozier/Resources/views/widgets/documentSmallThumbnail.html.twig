@@ -1,13 +1,23 @@
+{% set classes = [
+    document.getShortType ~'-document',
+    'uk-sortable-list-item',
+    'documents-widget-sortable-list-item'
+] %}
+{% if not document.isImage %}
+{% set classes = classes|merge(['not-image']) %}
+{% endif %}
+
 {% spaceless %}
-<li class="{% if not document.isImage %}not-image {% endif %}{{ document.getShortType }}-document uk-sortable-list-item documents-widget-sortable-list-item"
-    data-document-id="{{ document.getId }}">
+<li class="{{ classes|join(' ') }}"
+    data-document-id="{{ document.getId }}"
+    title="{{ document.getFilename }}"
+    data-uk-tooltip="{animation:true, pos:'bottom'}">
 
 	<div class="uk-sortable-handle"></div>
-
     <div class="document-border"></div>
 
 	{% if document.isImage and not document.private %}
-	   <img class="document-image" src="{{ document.getViewer.getDocumentUrlByArray({"width":80, "crop":"1x1", "quality":50}) }}" />
+	   <img class="document-image" src="{{ document|url({"width":80, "crop":"1x1", "quality":50}) }}" />
     {% elseif document.private %}
         <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
     {% else %}
@@ -29,7 +39,7 @@
             <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
             <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
         {% else %}
-            <div class="document-mime-type">{{ document.getShortMimeType }}</div>
+            <div class="document-mime-type">{{ document.getShortMimeType|truncate(13, false, '…') }}</div>
         {% endif %}
 
         <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">

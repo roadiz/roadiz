@@ -32,6 +32,8 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Handle operations with node-type entities.
@@ -140,7 +142,16 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     }
 }
 ';
-            file_put_contents($file, $content);
+            if (false === @file_put_contents($file, $content)) {
+                throw new IOException("Impossible to write entity class file (".$file.").", 1);
+            }
+
+            /*
+             * Force Zend OPcache to reset file
+             */
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($file, true);
+            }
 
             return "Source class “".$this->nodeType->getSourceEntityClassName()."” has been created.".PHP_EOL;
         } else {
@@ -151,19 +162,28 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     }
 
     /**
-     * Update database schema for current node-type.
+     * Clear doctrine metadata cache and
+     * regenerate entity class file.
      *
      * @return $this
      */
     public function updateSchema()
     {
-        \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
-        $this->removeSourceEntityClass();
-        $this->generateSourceEntityClass();
+        $clearers = [
+            new DoctrineCacheClearer(Kernel::getService('em')),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
+
+        $this->regenerateEntityClass();
 
         return $this;
     }
 
+    /**
+     * Delete and recreate entity class file.
+     */
     public function regenerateEntityClass()
     {
         $this->removeSourceEntityClass();
@@ -180,7 +200,12 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     public function deleteSchema()
     {
         $this->removeSourceEntityClass();
-        \RZ\Roadiz\Console\CacheCommand::clearDoctrine();
+        $clearers = [
+            new DoctrineCacheClearer(Kernel::getService('em')),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
 
         return $this;
     }

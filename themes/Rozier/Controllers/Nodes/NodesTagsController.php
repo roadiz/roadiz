@@ -84,7 +84,7 @@ class NodesTagsController extends RozierApp
 
                 $form = $this->buildEditTagsForm($node);
 
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $this->addNodeTag($form->getData(), $node);
@@ -138,7 +138,7 @@ class NodesTagsController extends RozierApp
             $this->assignation['tag'] = $tag;
 
             $form = $this->buildRemoveTagForm($node, $tag);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->removeNodeTag($form->getData(), $node, $tag);
@@ -174,8 +174,6 @@ class NodesTagsController extends RozierApp
      *
      * @param array                       $data
      * @param RZ\Roadiz\Core\Entities\Node $node
-     *
-     * @return RZ\Roadiz\Core\Entities\Tag $linkedTag
      */
     protected function addNodeTag($data, Node $node)
     {
@@ -193,8 +191,6 @@ class NodesTagsController extends RozierApp
         }
 
         $this->getService('em')->flush();
-
-        return $tag;
     }
 
     /**
@@ -210,9 +206,9 @@ class NodesTagsController extends RozierApp
             $data['tagId'] == $tag->getId()) {
             $node->removeTag($tag);
             $this->getService('em')->flush();
-
-            return $tag;
         }
+
+        return $tag;
     }
 
     /**

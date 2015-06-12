@@ -56,22 +56,25 @@ class TranslationViewer implements ViewableInterface
      *     array (size=3)
      *       'en' =>
      *         array (size=4)
-     *             'name' => string 'newsPage' (length=8)
-     *             'url' => string 'http://localhost/news/test' (length=26)
+     *             'name' => string 'newsPage'
+     *             'url' => string 'http://localhost/news/test'
+     *             'locale' => string 'en'
      *             'active' => boolean false
-     *             'translation' => string 'English' (length=7)
+     *             'translation' => string 'English'
      *       'fr' =>
      *         array (size=4)
-     *             'name' => string 'newsPageLocale' (length=14)
-     *             'url' => string 'http://localhost/fr/news/test' (length=29)
+     *             'name' => string 'newsPageLocale'
+     *             'url' => string 'http://localhost/fr/news/test'
+     *             'locale' => string 'fr'
      *             'active' => boolean true
-     *             'translation' => string 'French' (length=6)
+     *             'translation' => string 'French'
      *       'es' =>
      *         array (size=4)
-     *             'name' => string 'newsPageLocale' (length=14)
-     *             'url' => string 'http://localhost/es/news/test' (length=29)
+     *             'name' => string 'newsPageLocale'
+     *             'url' => string 'http://localhost/es/news/test'
+     *             'locale' => string 'es'
      *             'active' => boolean false
-     *             'translation' => string 'Spanish' (length=2)
+     *             'translation' => string 'Spanish'
      *
      * @param Request $request
      * @param boolean $absolute Generate absolute url or relative paths
@@ -90,39 +93,44 @@ class TranslationViewer implements ViewableInterface
             $node = null;
         }
 
-        if ($node === null) {
+        if ($node === null && !empty($attr["_route"])) {
             $translations = Kernel::getService('em')
                 ->getRepository("RZ\Roadiz\Core\Entities\Translation")
                 ->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
-        } else {
+        } elseif (null !== $node) {
             $translations = $node->getHandler()->getAvailableTranslations();
             $translations = array_filter(
                 $translations,
-                function (Translation $x) {
-                    if ($x->isAvailable()) {
+                function (Translation $trans) {
+                    if ($trans->isAvailable()) {
                         return true;
                     }
                     return false;
                 }
             );
             $name = "node";
+        } else {
+            return [];
         }
 
         $return = [];
 
         foreach ($translations as $translation) {
+            $url = null;
+
             if ($node) {
                 $urlGenerator = new NodesSourcesUrlGenerator(
                     $request,
-                    $node->getHandler()->getNodeSourceByTranslation($translation)
+                    $node->getHandler()->getNodeSourceByTranslation($translation),
+                    (boolean) \RZ\Roadiz\Core\Bags\SettingsBag::get('force_locale')
                 );
                 $url = $urlGenerator->getUrl($absolute);
                 if (!empty($query)) {
                     $url .= "?" . http_build_query($query);
                 }
 
-            } else {
+            } elseif (!empty($attr["_route"])) {
                 if (!$translation->isDefaultTranslation()) {
                     $name = $attr["_route"] . "Locale";
                     $attr["_route_params"]["_locale"] = $translation->getLocale();
@@ -139,13 +147,15 @@ class TranslationViewer implements ViewableInterface
                 );
             }
 
-            $return[$translation->getLocale()] = [
-                'name' => $name,
-                'url' => $url,
-                'locale' => $translation->getLocale(),
-                'active' => ($this->translation == $translation) ? true : false,
-                'translation' => $translation->getName(),
-            ];
+            if (null !== $url) {
+                $return[$translation->getLocale()] = [
+                    'name' => $name,
+                    'url' => $url,
+                    'locale' => $translation->getLocale(),
+                    'active' => ($this->translation == $translation) ? true : false,
+                    'translation' => $translation->getName(),
+                ];
+            }
         }
         return $return;
     }

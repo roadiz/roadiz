@@ -82,7 +82,7 @@ class CustomFormsType extends AbstractType
                     $option["expanded"] = true;
                 }
                 if ($field->isRequired() === false) {
-                    $option['empty_value'] = 'none';
+                    $option['placeholder'] = 'none';
                 }
                 $option["choices"] = $choices;
             } elseif ($field->getType() == AbstractField::MULTIPLE_T) {
@@ -99,7 +99,7 @@ class CustomFormsType extends AbstractType
                 }
 
                 if ($field->isRequired() === false) {
-                    $option['empty_value'] = 'none';
+                    $option['placeholder'] = 'none';
                 }
             } elseif ($field->getType() == AbstractField::DOCUMENTS_T) {
                 $option['required'] = false;

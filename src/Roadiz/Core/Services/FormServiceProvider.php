@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
@@ -43,22 +43,16 @@ class FormServiceProvider implements \Pimple\ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['csrfProvider'] = function ($c) {
-            return new SessionCsrfProvider(
-                $c['session'],
-                $c['config']["security"]['secret']
-            );
-        };
-
         $container['formValidator'] = function ($c) {
             return Validation::createValidator();
         };
 
         $container['formFactory'] = function ($c) {
             return Forms::createFormFactoryBuilder()
-                        ->addExtension(new CsrfExtension($c['csrfProvider']))
-                        ->addExtension(new ValidatorExtension($c['formValidator']))
-                        ->getFormFactory();
+            ->addExtension(new HttpFoundationExtension())
+            ->addExtension(new CsrfExtension($c['csrfTokenManager']))
+            ->addExtension(new ValidatorExtension($c['formValidator']))
+            ->getFormFactory();
         };
 
         return $container;

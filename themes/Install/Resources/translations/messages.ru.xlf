@@ -12,117 +12,108 @@
       </trans-unit>
       <trans-unit id="3">
         <source>_username</source>
-        <target xml:lang="ru" state="translated">_&#x438;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
       </trans-unit>
       <trans-unit id="4">
         <source>_password</source>
-        <target xml:lang="ru" state="translated">_&#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
       </trans-unit>
       <trans-unit id="password.verify">
         <source>password.verify</source>
-        <target xml:lang="ru" state="translated">&#x43F;&#x440;&#x43E;&#x432;&#x435;&#x440;&#x43A;&#x430;.&#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C; &#x43F;&#x43E;&#x432;&#x442;&#x43E;&#x440;&#x43D;&#x43E;</target>
       </trans-unit>
       <trans-unit id="delete">
         <source>delete</source>
-        <target xml:lang="ru" state="translated">&#x443;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x44C;</target>
+        <target xml:lang="ru" state="translated">&#x423;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x44C;</target>
+        <alt-trans>
+          <target xml:lang="ru">&#x443;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x44C;</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="status">
         <source>status</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x442;&#x430;&#x442;&#x443;&#x441;</target>
+        <target xml:lang="ru" state="translated">&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;</target>
       </trans-unit>
       <!-- Welcome -->
       <trans-unit id="welcome.title">
         <source>welcome.title</source>
-        <target xml:lang="ru" state="translated">&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x438;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x430; Roadiz</target>
       </trans-unit>
       <trans-unit id="welcome.subtitle">
         <source>welcome.subtitle</source>
-        <target xml:lang="ru" state="translated">&#x43F;&#x43E;&#x434;&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x438;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x414;&#x43E;&#x431;&#x440;&#x43E; &#x43F;&#x43E;&#x436;&#x430;&#x43B;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x432; Roadiz CMS!</target>
       </trans-unit>
       <trans-unit id="welcome.message">
         <source>welcome.message</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;.&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x438;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x414;&#x432;&#x438;&#x433;&#x430;&#x442;&#x435;&#x43B;&#x438; &#x43D;&#x430; &#x441;&#x442;&#x430;&#x440;&#x442;! &#x41E;&#x441;&#x442;&#x430;&#x43B;&#x43E;&#x441;&#x44C; &#x441;&#x43A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x447;&#x443;&#x442;&#x44C;-&#x447;&#x443;&#x442;&#x44C; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x43E;&#x432;.</target>
       </trans-unit>
       <!-- Requirements -->
       <trans-unit id="requirements.title">
         <source>requirements.title</source>
-        <target xml:lang="ru" state="translated">&#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;.&#x43A;.&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43A;&#x443;</target>
+        <target xml:lang="ru" state="translated">&#x422;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43A; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x435;</target>
       </trans-unit>
       <trans-unit id="requirements.message">
         <source>requirements.message</source>
-        <target xml:lang="ru" state="translated">&#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;.&#x43A;.&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44E;</target>
+        <target xml:lang="ru" state="translated">&#x414;&#x43B;&#x44F; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; Roadiz &#x432;&#x430;&#x448; &#x441;&#x435;&#x440;&#x432;&#x435;&#x440; &#x434;&#x43E;&#x43B;&#x436;&#x435;&#x43D; &#x443;&#x434;&#x43E;&#x432;&#x43B;&#x435;&#x442;&#x432;&#x43E;&#x440;&#x44F;&#x442;&#x44C; &#x43D;&#x435;&#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x43C; &#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;&#x43C;, &#x432; &#x43E;&#x441;&#x43E;&#x431;&#x435;&#x43D;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43A;&#x430;&#x441;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E; PHP. &#x415;&#x441;&#x43B;&#x438; &#x443; &#x432;&#x430;&#x441; &#x435;&#x441;&#x442;&#x44C; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F; &#x43A; &#x444;&#x430;&#x439;&#x43B;&#x443; &#x43A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x430;&#x446;&#x438;&#x438; (php.ini), &#x432;&#x44B; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x43E;&#x442;&#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43D;&#x435;&#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x435; &#x438;&#x437; &#x43D;&#x438;&#x445;.</target>
       </trans-unit>
       <trans-unit id="requirements.spec">
         <source>requirements.spec</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43F;&#x435;&#x446;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x446;&#x438;&#x44F;.&#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;</target>
       </trans-unit>
       <trans-unit id="requirements.requirement">
         <source>requirements.requirement</source>
-        <target xml:lang="ru" state="translated">&#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;.&#x43A;.&#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;&#x43C;</target>
+        <target xml:lang="ru" state="translated">&#x422;&#x440;&#x435;&#x431;&#x443;&#x435;&#x442;&#x441;&#x44F;</target>
       </trans-unit>
       <trans-unit id="requirements.actual_value">
         <source>requirements.actual_value</source>
-        <target xml:lang="ru" state="translated">&#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;.&#x430;&#x43A;&#x442;&#x443;&#x430;&#x43B;&#x44C;&#x43D;&#x430;&#x44F;_&#x432;&#x435;&#x43B;&#x438;&#x447;&#x438;&#x43D;&#x430;</target>
+        <target xml:lang="ru" state="translated">&#x421;&#x435;&#x439;&#x447;&#x430;&#x441;</target>
       </trans-unit>
       <!-- Database -->
       <trans-unit id="database.title">
         <source>database.title</source>
-        <target xml:lang="ru" state="translated">&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x431;&#x430;&#x437;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x431;&#x430;&#x437;&#x430;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;.&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;</target>
-        </alt-trans>
+        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x44B; &#x431;&#x430;&#x437;&#x44B; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
       </trans-unit>
       <trans-unit id="database.message">
         <source>database.message</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;.&#x431;&#x430;&#x437;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x431;&#x430;&#x437;&#x430;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;.&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;</target>
-        </alt-trans>
+        <target xml:lang="ru" state="translated">&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x435; Roadiz &#x442;&#x440;&#x435;&#x431;&#x443;&#x435;&#x442;&#x441;&#x44F; &#x431;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x434;&#x43B;&#x44F; &#x445;&#x440;&#x430;&#x43D;&#x435;&#x43D;&#x438;&#x44F; &#x432;&#x430;&#x448;&#x435;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x435;&#x43D;&#x442;&#x430;. &#x412;&#x44B;&#x431;&#x435;&#x440;&#x438;&#x442;&#x435; &#x431;&#x430;&#x437;&#x443; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x430;&#x44F; &#x432;&#x430;&#x43C; &#x43D;&#x440;&#x430;&#x432;&#x438;&#x442;&#x441;&#x44F; &#x438; &#x443;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x43D;&#x443;&#x436;&#x43D;&#x44B;&#x435; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x44B;.</target>
       </trans-unit>
       <trans-unit id="database.cannot_connect">
         <source>database.cannot_connect</source>
-        <target xml:lang="ru" state="translated">&#x43D;&#x435;&#x442;_&#x441;&#x43E;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x438;&#x44F;.&#x441;.&#x431;&#x430;&#x437;&#x43E;&#x439;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x431;&#x430;&#x437;&#x430;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;.&#x43D;&#x435;&#x442;_&#x441;&#x43E;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x438;&#x44F;</target>
-        </alt-trans>
+        <target xml:lang="ru" state="translated">&#x41D;&#x435; &#x443;&#x434;&#x430;&#x43B;&#x43E;&#x441;&#x44C; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x441;&#x43E;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x438;&#x435; &#x441; &#x431;&#x430;&#x437;&#x43E;&#x439; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;!</target>
       </trans-unit>
       <trans-unit id="database.build">
         <source>database.build</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43E;&#x431;&#x440;&#x430;&#x442;&#x44C;.&#x431;&#x430;&#x437;&#x443;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x435;</target>
       </trans-unit>
       <!-- Database done -->
       <trans-unit id="database_done.title">
         <source>database_done.title</source>
-        <target xml:lang="ru" state="translated">&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x438;&#x44F;_&#x431;&#x430;&#x437;&#x44B;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target xml:lang="ru" state="translated">&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x437;&#x430;&#x433;&#x440;&#x443;&#x436;&#x435;&#x43D;&#x44B;</target>
       </trans-unit>
       <trans-unit id="database_done.message">
         <source>database_done.message</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;.&#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x438;&#x44F;_&#x431;&#x430;&#x437;&#x44B;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target xml:lang="ru" state="translated">&#x420;&#x430;&#x431;&#x43E;&#x442;&#x44B; &#x43D;&#x430;&#x434; &#x432;&#x430;&#x448;&#x435;&#x439; &#x431;&#x430;&#x437;&#x43E;&#x439; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x443;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x44B;. &#x41F;&#x435;&#x440;&#x435;&#x439;&#x434;&#x435;&#x43C; &#x43A; &#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44E; &#x441;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x433;&#x43E; &#x438; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x435; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x43E;&#x432; &#x432;&#x430;&#x448;&#x435;&#x433;&#x43E; &#x441;&#x430;&#x439;&#x442;&#x430;.</target>
       </trans-unit>
       <!-- Database fail -->
       <trans-unit id="database_fail.title">
         <source>database_fail.title</source>
-        <target xml:lang="ru" state="translated">&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x43E;&#x448;&#x438;&#x431;&#x43A;&#x438;_&#x431;&#x430;&#x437;&#x44B;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target xml:lang="ru" state="translated">&#x41D;&#x435; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x438;&#x43B;&#x43E;&#x441;&#x44C; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x435;</target>
       </trans-unit>
       <trans-unit id="database_fail.message">
         <source>database_fail.message</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;.&#x43E;&#x448;&#x438;&#x431;&#x43A;&#x438;_&#x431;&#x430;&#x437;&#x44B;&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target xml:lang="ru" state="translated">&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x43D;&#x435; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x430;&#x435;&#x442;&#x441;&#x44F; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x438;&#x437;-&#x437;&#x430; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x438; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x43E;&#x439; &#x43D;&#x438;&#x436;&#x435;. &#x412;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x431;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x43D;&#x435; &#x43F;&#x443;&#x441;&#x442;&#x430; &#x438;&#x43B;&#x438; &#x440;&#x435;&#x43A;&#x432;&#x438;&#x437;&#x438;&#x442;&#x44B; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x430; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x44B; &#x43D;&#x435; &#x432;&#x435;&#x440;&#x43D;&#x43E;.</target>
       </trans-unit>
       <!-- Import -->
       <trans-unit id="import.title">
         <source>import.title</source>
         <target xml:lang="ru" state="translated">&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x430;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;.&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="import.message">
         <source>import.message</source>
-        <target xml:lang="ru" state="translated">&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;.&#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x430;</target>
+        <target xml:lang="ru" state="needs-translation">import.message</target>
       </trans-unit>
       <trans-unit id="import.step_name">
         <source>import.step_name</source>
-        <target xml:lang="ru" state="translated">&#x438;&#x43C;&#x44F;_&#x448;&#x430;&#x433;&#x430;.&#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x430;</target>
+        <target xml:lang="ru" state="needs-translation">import.step_name</target>
       </trans-unit>
       <!-- User -->
       <trans-unit id="user.title">
@@ -157,7 +148,10 @@
       <!-- Themes -->
       <trans-unit id="themes.title">
         <source>themes.title</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
+        <target xml:lang="ru" state="translated">&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x430;&#x44F; &#x438;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
+        <alt-trans>
+          <target xml:lang="ru">&#x418;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="themes.message">
         <source>themes.message</source>
@@ -191,7 +185,7 @@
       <!-- Success -->
       <trans-unit id="success.title">
         <source>success.title</source>
-        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E;</target>
+        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x430; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x430; &#x443;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E;!</target>
       </trans-unit>
       <trans-unit id="success.message">
         <source>success.message</source>

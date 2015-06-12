@@ -29,14 +29,13 @@
  */
 namespace Themes\Install\Controllers;
 
-use RZ\Roadiz\Console\CacheCommand;
-use RZ\Roadiz\Console\SchemaCommand;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Install\InstallApp;
 
@@ -62,7 +61,7 @@ class DatabaseController extends InstallApp
         $databaseForm = $this->buildDatabaseForm($request, $config);
 
         if ($databaseForm !== null) {
-            $databaseForm->handleRequest();
+            $databaseForm->handleRequest($request);
 
             if ($databaseForm->isValid()) {
                 try {
@@ -78,9 +77,8 @@ class DatabaseController extends InstallApp
                      * Test connexion
                      */
                     try {
-                        $fixtures = new Fixtures();
+                        $fixtures = new Fixtures($this->getService('em'), $request);
                         $fixtures->createFolders();
-
                         $config->writeConfiguration();
 
                         /*
@@ -129,8 +127,7 @@ class DatabaseController extends InstallApp
          */
         if (null === $this->getService('em')) {
             $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $c['session']->getFlashBag()->all();
-
+            $this->assignation['errorMessage'] = $this->getService('session')->getFlashBag()->all();
         } else {
             try {
                 /*
@@ -138,8 +135,8 @@ class DatabaseController extends InstallApp
                  * Use updateSchema instead of create to enable upgrading
                  * Roadiz database using Install theme.
                  */
-                SchemaCommand::updateSchema();
-                CacheCommand::clearDoctrine();
+                $updater = new SchemaUpdater($this->getService('em'));
+                $updater->updateSchema();
 
                 /*
                  * Force redirect to install fixtures
@@ -149,7 +146,6 @@ class DatabaseController extends InstallApp
                 ));
 
             } catch (\PDOException $e) {
-                $message = "";
                 if (strstr($e->getMessage(), 'SQLSTATE[')) {
                     preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
                     $message = $matches[3];
@@ -176,7 +172,7 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-        $fixtures = new Fixtures();
+        $fixtures = new Fixtures($this->getService('em'), $request);
         $fixtures->installFixtures();
 
         /*
@@ -200,8 +196,8 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        CacheCommand::clearDoctrine();
-        SchemaCommand::updateSchema();
+        $updater = new SchemaUpdater($this->getService('em'));
+        $updater->updateSchema();
 
         return new JsonResponse(['status' => true]);
     }
@@ -213,7 +209,8 @@ class DatabaseController extends InstallApp
      */
     public function clearDoctrineCacheAction(Request $request)
     {
-        CacheCommand::clearDoctrine();
+        $doctrineClearer = new DoctrineCacheClearer($this->getService('em'));
+        $doctrineClearer->clear();
 
         return new JsonResponse(['status' => true]);
     }

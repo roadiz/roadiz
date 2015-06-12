@@ -35,7 +35,6 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -64,9 +63,7 @@ class CustomFormAnswersController extends RozierApp
             $customFormId
         );
 
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\CustomFormAnswer',
             ["customForm" => $customForm],
             ["submittedAt" => "DESC"]
@@ -97,7 +94,7 @@ class CustomFormAnswersController extends RozierApp
 
             $form = $this->buildDeleteForm($customFormAnswer);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId()) {

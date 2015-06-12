@@ -154,7 +154,7 @@ class Tag extends AbstractDateTimedPositioned
      *
      * @return $this
      */
-    public function setParent($parent)
+    public function setParent(Tag $parent = null)
     {
         $this->parent = $parent;
 
@@ -229,7 +229,7 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function getOneLineSummary()
     {
-        return $this->getId() . " — " . $this->getName() . " — " . $this->getNodeType()->getName() .
+        return $this->getId() . " — " . $this->getTagName() .
         " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
 
@@ -239,20 +239,5 @@ class Tag extends AbstractDateTimedPositioned
     public function getHandler()
     {
         return new TagHandler($this);
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        parent::prePersist();
-
-        /*
-         * If no plain password is present, we must generate one
-         */
-        if ($this->getTranslatedTags()->count() === 0) {
-            throw new \Exception("Cannot create a tag without a tag-translation", 1);
-        }
     }
 }

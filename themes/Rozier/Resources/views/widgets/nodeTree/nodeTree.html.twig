@@ -23,14 +23,25 @@
                         class="rz-no-ajax-link"
                        {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}
                        data-children-parent-node="{{ nodeTree.rootNode.id }}"
-                       data-translation-id="{{ lang.id }}">{{ lang.locale|capitalize }}</a>
+                       data-translation-id="{{ lang.id }}">{{ lang.preferredLocale|capitalize }}</a>
                 </li>
                 {% endfor %}
                 {% endspaceless %}
             </ul>
             {% endif %}
-            <ul class="root-tree uk-nestable{% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget {% elseif nodeTree.isStackTree %} stack-tree-widget{% endif %}"
-                data-uk-nestable="{'group':'nodeTree'}"
+
+            {% set rootTreeClasses = [
+                'root-tree',
+            ] %}
+            {% if nodeTree.canReorder %}{% set rootTreeClasses = rootTreeClasses|merge(['uk-nestable']) %}{% endif %}
+            {% if not mainNodeTree and not nodeTree.isStackTree %}
+            {% set rootTreeClasses = rootTreeClasses|merge(['children-node-widget']) %}
+            {% elseif nodeTree.isStackTree %}
+            {% set rootTreeClasses = rootTreeClasses|merge(['stack-tree-widget']) %}
+            {% endif %}
+
+            <ul class="{{ rootTreeClasses|join(' ') }}"
+                {% if nodeTree.canReorder %}data-uk-nestable="{'group':'nodeTree'}"{% endif %}
                 data-parent-node-id="{{ nodeTree.rootNode.id }}"
                 {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
                 {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
@@ -39,7 +50,7 @@
                     {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
                         "node":cnode,
                         "nodeTree":nodeTree,
-                        "securityContext":securityContext,
+                        "authorizationChecker":authorizationChecker,
                         "mainNodeTree":mainNodeTree,
                         "nodeStatuses":nodeStatuses
                     } only %}

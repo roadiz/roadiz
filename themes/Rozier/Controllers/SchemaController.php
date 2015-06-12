@@ -32,8 +32,10 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Redirection controller use to update database schema.
@@ -59,7 +61,6 @@ class SchemaController extends RozierApp
     public function updateNodeTypesSchemaAction(Request $request, $_token)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-
         $this->updateSchema($request, $_token);
 
         return $this->redirect($this->generateUrl(
@@ -77,7 +78,6 @@ class SchemaController extends RozierApp
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-
         $this->updateSchema($request, $_token);
 
         return $this->redirect($this->generateUrl(
@@ -90,16 +90,15 @@ class SchemaController extends RozierApp
 
     protected function updateSchema(Request $request, $_token)
     {
-
-        if ($this->getService('csrfProvider')
-            ->isCsrfTokenValid(static::SCHEMA_TOKEN_INTENTION, $_token)) {
-            \RZ\Roadiz\Console\SchemaCommand::updateSchema();
+        $token = new CsrfToken(static::SCHEMA_TOKEN_INTENTION, $_token);
+        if ($this->getService('csrfTokenManager')->isTokenValid($token)) {
+            $updater = new SchemaUpdater($this->getService('em'));
+            $updater->updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');
             $this->publishConfirmMessage($request, $msg);
         } else {
-            $msg = $this->getTranslator()->trans('database.schema.cannot_updated');
-            $this->publishErrorMessage($request, $e->getMessage());
+            throw new \RuntimeException($this->getTranslator()->trans('database.schema.cannot_updated'), 1);
         }
     }
 }

@@ -37,16 +37,22 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
 {
     protected $request;
     protected $nodeSource;
+    protected $forceLocale;
 
     /**
      *
-     * @param RZ\Roadiz\Core\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param Request $request
+     * @param NodesSources $nodeSource
+     * @param boolear $forceLocale
      */
-    public function __construct(Request $request = null, NodesSources $nodeSource = null)
-    {
+    public function __construct(
+        Request $request = null,
+        NodesSources $nodeSource = null,
+        $forceLocale = false
+    ) {
         $this->request = $request;
         $this->nodeSource = $nodeSource;
+        $this->forceLocale = $forceLocale;
     }
     /**
      * Get a resource Url.
@@ -58,13 +64,24 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
     public function getUrl($absolute = false)
     {
         if (null !== $this->request) {
-            $host = $this->request->getBaseUrl();
+            $schemeAuthority = '';
 
             if ($absolute === true) {
-                $host = $this->request->getResolvedBaseUrl();
+                $port = '';
+                $scheme = $this->request->getScheme();
+                if ('http' === $scheme && 80 != $this->request->getPort()) {
+                    $port = ':' . $this->request->getPort();
+                } elseif ('https' === $scheme && 443 != $this->request->getPort()) {
+                    $port = ':' . $this->request->getHttpsPort();
+                }
+                $schemeAuthority = $scheme . '://';
+                $schemeAuthority .= $this->request->getHost() . $port;
             }
 
-            return $host . '/' . $this->getNonContextualUrl($this->request->getTheme());
+            return $schemeAuthority .
+            $this->request->getBaseUrl() .
+            '/' .
+            $this->getNonContextualUrl($this->request->getTheme());
         } else {
             return $this->getNonContextualUrl();
         }
@@ -85,10 +102,11 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
         if (null !== $this->nodeSource) {
             if ($this->nodeSource->getNode()->isHome()
                 || (null !== $theme && $theme->getHomeNode() == $this->nodeSource->getNode())) {
-                if ($this->nodeSource->getTranslation()->isDefaultTranslation()) {
+                if ($this->nodeSource->getTranslation()->isDefaultTranslation() &&
+                    false === $this->forceLocale) {
                     return '';
                 } else {
-                    return $this->nodeSource->getTranslation()->getLocale();
+                    return $this->nodeSource->getTranslation()->getPreferredLocale();
                 }
             }
 
@@ -111,9 +129,10 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
              * If using node-name, we must use shortLocale when current
              * translation is not the default one.
              */
-            if ($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
-                !$this->nodeSource->getTranslation()->isDefaultTranslation()) {
-                $urlTokens[] = $this->nodeSource->getTranslation()->getLocale();
+            if (($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
+                 !$this->nodeSource->getTranslation()->isDefaultTranslation()) ||
+                  true === $this->forceLocale) {
+                $urlTokens[] = $this->nodeSource->getTranslation()->getPreferredLocale();
             }
 
             $urlTokens = array_reverse($urlTokens);

@@ -43,7 +43,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NewsletterSubscriber extends AbstractEntity
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", inversedBy="newsletterSubscriber")
      * @ORM\JoinColumn(name="newsletter_id", referencedColumnName="id", onDelete="CASCADE")
@@ -112,8 +111,8 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * Create a new relation between Newsletter, a Subscriber.
      *
-     * @param RZ\Roadiz\Core\Entities\Newsletter      $newsletter
-     * @param RZ\Roadiz\Core\Entities\Subscriber      $subscriber
+     * @param RZ\Roadiz\Core\Entities\Newsletter $newsletter
+     * @param RZ\Roadiz\Core\Entities\Subscriber $subscriber
      */
     public function __construct(Newsletter $newsletter, Subscriber $subscriber)
     {

@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Events\SolariumSubscriber;
+use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -77,8 +78,8 @@ class RozierApp extends BackendController
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
 
         $this->themeContainer['nodeTree'] = function ($c) {
-            if (!empty($this->assignation['session']["user"])) {
-                $parent = $this->assignation['session']["user"]->getChroot();
+            if (is_object($this->getUser())) {
+                $parent = $this->getUser()->getChroot();
             } else {
                 $parent = null;
             }
@@ -169,6 +170,13 @@ class RozierApp extends BackendController
                 new SolariumSubscriber($container['solr'], $container['logger'])
             );
         }
+
+        /*
+         * Add custom event subscriber to empty NS Url cache
+         */
+        $container['dispatcher']->addSubscriber(
+            new NodesSourcesUrlSubscriber($container['nodesSourcesUrlCacheProvider'])
+        );
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 

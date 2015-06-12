@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -37,13 +36,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing nodes from terminal.
  */
 class SolrCommand extends Command
 {
-    private $dialog;
+    private $questionHelper;
+    private $entityManager;
+    private $solr;
 
     protected function configure()
     {
@@ -65,36 +67,45 @@ class SolrCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $this->questionHelper = $this->getHelperSet()->get('question');
+        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->solr = $this->getHelperSet()->get('solr')->getSolr();
+
         $text = "";
 
-        $solr = Kernel::getService('solr');
-
-        if (null !== $solr) {
-            if (true === Kernel::getService('solr.ready')) {
+        if (null !== $this->solr) {
+            if (true === $this->getHelperSet()->get('solr')->ready()) {
                 if ($input->getOption('reset')) {
-                    if ($this->dialog->askConfirmation(
-                        $output,
-                        '<question>Are you sure to reset Solr index?</question> : ',
+                    $confirmation = new ConfirmationQuestion(
+                        '<question>Are you sure to reset Solr index?</question>',
                         false
+                    );
+                    if ($this->questionHelper->ask(
+                        $input,
+                        $output,
+                        $confirmation
                     )) {
-                        $update = $solr->createUpdate();
+                        $update = $this->solr->createUpdate();
                         $update->addDeleteQuery('*:*');
                         $update->addCommit();
-                        $solr->update($update);
+                        $this->solr->update($update);
 
                         $text = '<info>Solr index resetted…</info>' . PHP_EOL;
                     }
 
                 } elseif ($input->getOption('reindex')) {
-                    if ($this->dialog->askConfirmation(
-                        $output,
-                        '<question>Are you sure to reindex your Node database?</question> : ',
+                    $confirmation = new ConfirmationQuestion(
+                        '<question>Are you sure to reindex your Node database?</question>',
                         false
+                    );
+                    if ($this->questionHelper->ask(
+                        $input,
+                        $output,
+                        $confirmation
                     )) {
                         $stopwatch = new Stopwatch();
                         $stopwatch->start('global');
-                        $this->reindexNodeSources($solr, $output);
+                        $this->reindexNodeSources($this->solr, $output);
                         $stopwatch->stop('global');
 
                         $duration = $stopwatch->getEvent('global')->getDuration();
@@ -131,35 +142,35 @@ solr:
     /**
      * Delete Solr index and loop over every NodesSources to index them again.
      *
-     * @param \Solarium\Client $solr
+     * @param \Solarium\Client $this->solr
      * @param OutputInterface  $output
      */
     private function reindexNodeSources(\Solarium\Client $solr, OutputInterface $output)
     {
-        $update = $solr->createUpdate();
+        $update = $this->solr->createUpdate();
 
         // Empty first
         $update->addDeleteQuery('*:*');
-        $solr->update($update);
+        $this->solr->update($update);
         $update->addCommit();
 
         /*
          * Use buffered insertion
          */
-        $buffer = $solr->getPlugin('bufferedadd');
+        $buffer = $this->solr->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
         // Then index
-        $nSources = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-            ->findAll();
+        $nSources = $this->entityManager
+                         ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                         ->findAll();
 
         $progress = new ProgressBar($output, count($nSources));
         $progress->setFormat('verbose');
         $progress->start();
 
         foreach ($nSources as $ns) {
-            $solariumNS = new SolariumNodeSource($ns, $solr);
+            $solariumNS = new SolariumNodeSource($ns, $this->solr);
             $solariumNS->setDocument($update->createDocument());
             $solariumNS->index();
             $buffer->addDocument($solariumNS->getDocument());

@@ -90,7 +90,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         return $array;
     }
 
-    private static function makeNodeRec($data)
+    protected static function makeNodeRec($data)
     {
         $nodetype = Kernel::getInstance()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
@@ -128,7 +128,8 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             foreach ($fields as $field) {
                 if (!$field->isVirtual()) {
-                    if ($field->getType() == NodeTypeField::DATETIME_T) {
+                    if ($field->getType() == NodeTypeField::DATETIME_T
+                        || $field->getType() == NodeTypeField::DATE_T) {
                         $date = new \DateTime(
                             $source[$field->getName()]['date'],
                             new \DateTimeZone($source[$field->getName()]['timezone'])
@@ -141,23 +142,28 @@ class NodeJsonSerializer extends AbstractJsonSerializer
                     }
                 }
             }
-
-            foreach ($source['url_aliases'] as $url) {
-                $alias = new UrlAlias();
-                $alias->setAlias($url['alias']);
-                $nodeSource->addUrlAlias($alias);
+            if (!empty($source['url_aliases'])) {
+                foreach ($source['url_aliases'] as $url) {
+                    $alias = new UrlAlias($nodeSource);
+                    $alias->setAlias($url['alias']);
+                    $nodeSource->addUrlAlias($alias);
+                }
             }
             $node->getNodeSources()->add($nodeSource);
         }
-        foreach ($data["tags"] as $tag) {
-            $tmp = Kernel::getInstance()->getService('em')
-                                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                                        ->findOneBy(["tagName" => $tag]);
-            $node->getTags()->add($tmp);
+        if (!empty($data['tags'])) {
+            foreach ($data["tags"] as $tag) {
+                $tmp = Kernel::getInstance()->getService('em')
+                                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                                            ->findOneBy(["tagName" => $tag]);
+                $node->getTags()->add($tmp);
+            }
         }
-        foreach ($data['children'] as $child) {
-            $tmp = static::makeNodeRec($child);
-            $node->addChild($tmp);
+        if (!empty($data['children'])) {
+            foreach ($data['children'] as $child) {
+                $tmp = static::makeNodeRec($child);
+                $node->addChild($tmp);
+            }
         }
         return $node;
     }

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -40,6 +39,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodesSourcesCommand extends Command
 {
+    private $entityManager;
+
     protected function configure()
     {
         $this->setName('core:sources')
@@ -54,11 +55,12 @@ class NodesSourcesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
 
-        $nodetypes = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findAll();
+        $nodetypes = $this->entityManager
+                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                          ->findAll();
 
         if (count($nodetypes) > 0) {
             if ($input->getOption('regenerate')) {

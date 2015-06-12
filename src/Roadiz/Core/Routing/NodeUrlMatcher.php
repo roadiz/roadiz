@@ -64,6 +64,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 'Check your `Resources/routes.yml` file.',
                 'node' => null,
                 'translation' => null,
+                '_route' => null,
             ];
         }
     }
@@ -97,6 +98,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     '_locale' => $translation->getLocale(), //pass request locale to init translator
                     'node' => $node,
                     'translation' => $translation,
+                    '_route' => null,
                 ];
             } else {
                 /*
@@ -109,7 +111,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 }
 
                 $node = $this->parseNode($tokens, $translation);
-                if ($node !== null) {
+                /*
+                 * Prevent displaying home node using its nodeName
+                 */
+                if ($node !== null &&
+                    !$node->isHome() &&
+                    $this->theme->getHomeNode() !== $node) {
                     /*
                      * Try with nodeName
                      */
@@ -117,6 +124,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         '_controller' => $this->theme->getClassName() . '::indexAction',
                         'node' => $node,
                         'translation' => $translation,
+                        '_route' => null,
                     ];
 
                     if (null !== $translation) {
@@ -152,7 +160,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     /**
      * Parse URL searching nodeName.
      *
-     * Cannot use securityContext here as firewall
+     * Cannot use securityAuthorizationChecker here as firewall
      * has not been hit yet.
      *
      * @param array       &$tokens

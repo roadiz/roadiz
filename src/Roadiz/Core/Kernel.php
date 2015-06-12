@@ -35,19 +35,19 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
-use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
+use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
+use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\ProgressHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Yaml\Parser;
 
@@ -61,8 +61,8 @@ class Kernel implements ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.8.2";
-    private static $instance = null;
+    public static $cmsVersion = "0.9.0";
+    protected static $instance = null;
 
     public $container = null;
     protected $response = null;
@@ -89,8 +89,6 @@ class Kernel implements ServiceProviderInterface
          */
         $this->container->register($this);
         $this->container['stopwatch']->openSection();
-
-        $this->initEvents();
     }
 
     /**
@@ -123,18 +121,6 @@ class Kernel implements ServiceProviderInterface
         $container['dispatcher'] = function ($c) {
             return new EventDispatcher();
         };
-
-        $container['request'] = function ($c) {
-            return Request::createFromGlobals();
-        };
-
-        $container['requestContext'] = function ($c) {
-            $rc = new RequestContext($c['request']->getResolvedBasePath());
-            $rc->setHost($c['request']->server->get('HTTP_HOST'));
-
-            return $rc;
-        };
-
         /*
          * Load service providers from conf/services.yml
          *
@@ -166,8 +152,9 @@ class Kernel implements ServiceProviderInterface
         $helperSet = new HelperSet([
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
-            'dialog' => new DialogHelper(),
-            'progress' => new ProgressHelper(),
+            'question' => new QuestionHelper(),
+            'solr' => new SolrHelper($this->container['solr']),
+            'ns-cache' => new CacheProviderHelper($this->container['nodesSourcesUrlCacheProvider']),
         ]);
         $application->setHelperSet($helperSet);
 
@@ -182,6 +169,7 @@ class Kernel implements ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\SolrCommand);
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
         $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
+        $application->add(new \RZ\Roadiz\Console\ThemeInstallCommand);
 
         // Use default Doctrine commands
         ConsoleRunner::addCommands($application);
@@ -231,6 +219,12 @@ class Kernel implements ServiceProviderInterface
              */
             $this->response = $this->container['httpKernel']->handle($this->container['request']);
 
+        } catch (MaintenanceModeException $e) {
+            if (null !== $ctrl = $e->getController()) {
+                $this->response = $ctrl->maintenanceAction($this->container['request']);
+            } else {
+                $this->response = $this->getEmergencyResponse($e);
+            }
         } catch (\RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException $e) {
             $this->response = $this->getEmergencyResponse($e);
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
@@ -342,15 +336,14 @@ class Kernel implements ServiceProviderInterface
      *
      * @return boolean
      */
-    private function initEvents()
+    public function initEvents()
     {
         if ($this->isDebug() || RouteCollectionSubscriber::needToDumpUrlTools()) {
             $this->container['dispatcher']->addSubscriber(
                 new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
             );
         }
-
-        $this->container['dispatcher']->addSubscriber(new RouterListener($this->container['urlMatcher']));
+        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
 
         /*
          * Events
@@ -384,40 +377,13 @@ class Kernel implements ServiceProviderInterface
             ]
         );
 
+        $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
+
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
         if (true === (boolean) SettingsBag::get('display_debug_panel')) {
             $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
-        }
-    }
-
-    /**
-     * Get a FQDN base url for static resources.
-     *
-     * You should fill “static_domain_name” setting after your
-     * static domain name. Do not forget to create a virtual host
-     * for this domain to serve the same content as your primary domain.
-     *
-     * @return string
-     */
-    public function getStaticBaseUrl()
-    {
-        return $this->convertUrlToStaticDomainUrl($this->container['request']->getResolvedBaseUrl());
-    }
-
-    /**
-     * @param  string $url Absolute Url with primary domain.
-     * @return string      Absolute Url with static domain.
-     */
-    public function convertUrlToStaticDomainUrl($url)
-    {
-        $staticDomain = SettingsBag::get('static_domain_name');
-
-        if (!empty($staticDomain)) {
-            return preg_replace('#://([^:^/]+)#', '://' . $staticDomain, $url);
-        } else {
-            return $url;
         }
     }
 

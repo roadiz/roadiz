@@ -88,14 +88,14 @@ class NodeTypesUtilsController extends RozierApp
 
         $form = $this->buildImportJsonFileForm();
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid() &&
             !empty($form['node_type_file'])) {
             $file = $form['node_type_file']->getData();
 
-            if (UPLOAD_ERR_OK == $file['error']) {
-                $serializedData = file_get_contents($file['tmp_name']);
+            if ($file->isValid()) {
+                $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
                     $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
@@ -145,7 +145,7 @@ class NodeTypesUtilsController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'nodeTypesSchemaUpdate',
                         [
-                            '_token' => $this->getService('csrfProvider')->generateCsrfToken(static::SCHEMA_TOKEN_INTENTION),
+                            '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                         ]
                     ));
                 } else {

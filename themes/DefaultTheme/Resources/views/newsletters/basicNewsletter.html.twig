@@ -16,7 +16,7 @@
     {% set headerImage = nodeSource.headerImage[0] %}
 
     <td class="multi_{{ nbLevel }}">
-        {{ headerImage.viewer.documentByArray(imgConf)|raw }}
+        {{ headerImage|display(imgConf) }}
         <h2> {{ nodeSource.title }} </h2>
         {{ nodeSource.content|markdown }}
     </td>
@@ -38,7 +38,7 @@
     {% set headerImage = nodeSource.headerImage[0] %}
 
     <td class="multi_{{ nbLevel }}">
-        {{ headerImage.viewer.documentByArray(imgConf)|raw }}
+        {{ headerImage|display(imgConf) }}
         <h2> {{ nodeSource.title }} </h2>
         {{ nodeSource.content|markdown }}
     </td>
@@ -78,7 +78,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td class="content-block">
-                                        <a href="{{ node.titleLink }}" target="_blank"><h1>{{ nodeSource.newsletterTitle }}</h1></a>
+                                        <a href="{{ nodeSource.titleLink }}" target="_blank"><h1>{{ nodeSource.newsletterTitle }}</h1></a>
                                     </td>
                                 </tr>
                                 <tr>

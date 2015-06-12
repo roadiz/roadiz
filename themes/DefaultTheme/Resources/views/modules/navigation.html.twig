@@ -37,7 +37,8 @@
                 'source' : source,
                 'activeId' : node.id,
                 'level' : level,
-                'securityContext' : securityContext
+                'authorizationChecker' : authorizationChecker,
+                'themeServices': themeServices
             } only %}
 		{% endfor %}
 
@@ -53,7 +54,7 @@
 {% endif %}
     <div class="uk-navbar-flip">
         <ul class="uk-navbar-nav">
-        {% for id, key in translation.viewer.translationMenuAssignation(request) %}
+        {% for id, key in translation|menu %}
             <li class="uk-parent {% if key.active == true %}uk-active{% endif %}"><a href="{% if not key.active %}{{ key.url }}{% else %}#{% endif %}">{{ key.translation }}</a></li>
         {% endfor %}
         </ul>

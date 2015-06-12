@@ -37,7 +37,9 @@ if (version_compare(phpversion(), '5.4.3', '<')) {
     exit(1);
 }
 
-require dirname(__FILE__).'/../bootstrap.php';
+define('ROADIZ_ROOT', dirname(__DIR__));
+// Include Composer Autoload (relative to project root).
+require("vendor/autoload.php");
 
 if (php_sapi_name() == 'cli') {
     Kernel::getInstance()->boot();

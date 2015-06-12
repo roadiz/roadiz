@@ -5,79 +5,46 @@
       <trans-unit id="hello.world">
         <source>hello.world</source>
         <target xml:lang="ru" state="translated">Привет мир!</target>
-        <alt-trans>
-          <target xml:lang="ru">привет.мир</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
         <target xml:lang="ru" state="translated">Это узел %name%</target>
-        <alt-trans>
-          <target xml:lang="ru">имя.узла.%name%</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
         <target xml:lang="ru" state="translated">Это перевод "%name%"</target>
-        <alt-trans>
-          <target xml:lang="ru">перевод.%name%</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="contact">
         <source>contact</source>
         <target xml:lang="ru" state="translated">Контакты</target>
-        <alt-trans>
-          <target xml:lang="ru">обратнаяСвязь</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="contact.us">
         <source>contact.us</source>
         <target xml:lang="ru" state="translated">Свяжитесь с нами</target>
-        <alt-trans>
-          <target xml:lang="ru">свяжитесь.с.нами</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.email">
         <source>your.email</source>
         <target xml:lang="ru" state="translated">Ваш адрес электронной почты</target>
-        <alt-trans>
-          <target xml:lang="ru">ваш.почтовыйЯщик</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
         <target xml:lang="ru" state="translated">Ваше имя</target>
-        <alt-trans>
-          <target xml:lang="ru">ваше.имя</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.message">
         <source>your.message</source>
         <target xml:lang="ru" state="translated">Ваше сообщение</target>
-        <alt-trans>
-          <target xml:lang="ru">ваше.сообщение</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="call.me.back">
         <source>call.me.back</source>
         <target xml:lang="ru" state="translated">Перезвоните мне</target>
-        <alt-trans>
-          <target xml:lang="ru">позвоните.мне.позже</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="send.contact.form">
         <source>send.contact.form</source>
         <target xml:lang="ru" state="translated">Отправить форму</target>
-        <alt-trans>
-          <target xml:lang="ru">отправить.форму</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="document">
         <source>document</source>
         <target xml:lang="ru" state="translated">Прикрепите картинку или PDF (не больше 5 Мб)</target>
-        <alt-trans>
-          <target xml:lang="ru">документ</target>
-        </alt-trans>
       </trans-unit>
     </body>
   </file>

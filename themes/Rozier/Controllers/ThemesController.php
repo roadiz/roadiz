@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Type;
 use Themes\Rozier\RozierApp;
@@ -53,9 +52,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Theme'
         );
         $listManager->handle();
@@ -84,7 +81,7 @@ class ThemesController extends RozierApp
 
         $form = $this->buildAddForm($theme);
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
@@ -126,7 +123,7 @@ class ThemesController extends RozierApp
 
         if ($theme !== null) {
             $form = $this->buildEditForm($theme);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -171,7 +168,7 @@ class ThemesController extends RozierApp
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid() &&
                 $form->getData()['themeId'] == $theme->getId()) {
@@ -334,11 +331,16 @@ class ThemesController extends RozierApp
             if ($key == "homeNode" || $key == "root") {
                 if (count($value) > 1) {
                     if ($key == "root") {
-                        $msg = $this->getTranslator()->trans('theme.root.limited.one');
+                        $this->publishErrorMessage(
+                            $request,
+                            $this->getTranslator()->trans('theme.root.limited.one')
+                        );
                     } elseif ($key == "homeNode") {
-                        $msg = $this->getTranslator()->trans('home.node.limited.one');
+                        $this->publishErrorMessage(
+                            $request,
+                            $this->getTranslator()->trans('home.node.limited.one')
+                        );
                     }
-                    $this->publishErrorMessage($request, $msg);
                 }
                 if ($value !== null && !empty($value[0])) {
                     $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);

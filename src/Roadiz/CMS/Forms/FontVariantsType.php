@@ -31,7 +31,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Font variants selector form field type.
@@ -40,14 +40,12 @@ class FontVariantsType extends AbstractType
 {
     /**
      * {@inheritdoc}
-     * @param OptionsResolverInterface $resolver [description]
+     * @param OptionsResolver $resolver [description]
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $choices = Font::$variantToHuman;
-
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => Font::$variantToHuman,
         ]);
     }
     /**

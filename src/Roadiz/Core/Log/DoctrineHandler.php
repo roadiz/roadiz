@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * A log system which store message in database.
@@ -44,42 +44,39 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class DoctrineHandler extends AbstractProcessingHandler
 {
     protected $em = null;
-    protected $securityContext = null;
+    protected $tokenStorage = null;
     protected $user = null;
     protected $request = null;
 
     public function __construct(
         EntityManager $em,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         Request $request,
         $level = Logger::DEBUG,
         $bubble = true
     ) {
         $this->em = $em;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->request = $request;
 
         parent::__construct($level, $bubble);
     }
 
     /**
-     * @var Symfony\Component\Security\Core\SecurityContextInterface
+     * @return TokenStorageInterface
      */
-    /**
-     * @return Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    public function getSecurityContext()
+    public function getTokenStorage()
     {
-        return $this->securityContext;
+        return $this->tokenStorage;
     }
     /**
-     * @param Symfony\Component\Security\Core\SecurityContextInterface $securityContext
+     * @param TokenStorageInterface $tokenStorage
      *
      * @return $this
      */
-    public function setSecurityContext(SecurityContextInterface $securityContext)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
 
         return $this;
     }
@@ -131,13 +128,13 @@ class DoctrineHandler extends AbstractProcessingHandler
             );
 
             /*
-             * Use available securityContext to provide a valid user
+             * Use available securityAuthorizationChecker to provide a valid user
              */
-            if (null !== $this->getSecurityContext() &&
-                null !== $this->getSecurityContext()->getToken() &&
-                is_object($this->getSecurityContext()->getToken()->getUser()) &&
-                null !== $this->getSecurityContext()->getToken()->getUser()->getId()) {
-                $log->setUser($this->getSecurityContext()->getToken()->getUser());
+            if (null !== $this->getTokenStorage() &&
+                null !== $this->getTokenStorage()->getToken() &&
+                is_object($this->getTokenStorage()->getToken()->getUser()) &&
+                null !== $this->getTokenStorage()->getToken()->getUser()->getId()) {
+                $log->setUser($this->getTokenStorage()->getToken()->getUser());
             }
             /*
              * Use manually set user

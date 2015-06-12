@@ -85,7 +85,7 @@ class NodeTreeType extends AbstractType
     {
         parent::finishView($view, $form, $options);
 
-        $view->vars['securityContext'] = $this->controller->getService('securityContext');
+        $view->vars['authorizationChecker'] = $this->controller->getService('securityAuthorizationChecker');
         /*
          * Inject data as plain documents entities
          */
@@ -95,6 +95,13 @@ class NodeTreeType extends AbstractType
             $this->nodeSource->getNode(),
             $this->nodeSource->getTranslation()
         );
+        $view->vars['nodeStatuses'] = [
+            'draft' => Node::DRAFT,
+            'pending' => Node::PENDING,
+            'published' => Node::PUBLISHED,
+            'archived' => Node::ARCHIVED,
+            'deleted' => Node::DELETED,
+        ];
 
         /*
          * Linked types to create quick add buttons

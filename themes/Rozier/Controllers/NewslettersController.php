@@ -31,9 +31,9 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -58,9 +58,7 @@ class NewslettersController extends RozierApp
         $translation = $this->getService('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findDefault();
-        $listManager = new EntityListManager(
-            $request,
-            $this->getService('em'),
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Newsletter',
             [],
             ["id" => "DESC"]
@@ -107,13 +105,16 @@ class NewslettersController extends RozierApp
             $form = $this->getService('formFactory')
                          ->createBuilder()
                          ->add('nodeName', 'text', [
-                             'label' => $this->getTranslator()->trans('nodeName'),
+                             'label' => 'nodeName',
                              'constraints' => [
                                  new NotBlank(),
+                                 new UniqueNodeName([
+                                     'entityManager' => $this->getService('em'),
+                                 ]),
                              ],
                          ])
-                         ->getForm();
-            $form->handleRequest();
+                ->getForm();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
@@ -198,7 +199,7 @@ class NewslettersController extends RozierApp
                  * Form
                  */
                 $form = $this->buildEditSourceForm($node, $source);
-                $form->handleRequest();
+                $form->handleRequest($request);
 
                 if ($form->isValid()) {
                     $this->editNodeSource($form->getData(), $source);

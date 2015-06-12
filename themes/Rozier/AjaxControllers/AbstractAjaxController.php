@@ -33,6 +33,7 @@ namespace Themes\Rozier\AjaxControllers;
 use Themes\Rozier\RozierApp;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Extends common back-office controller, but add a request validation
@@ -55,8 +56,9 @@ abstract class AbstractAjaxController extends RozierApp
                 'responseText' => 'Wrong request'
             ];
         }
-        if (!$this->getService('csrfProvider')
-                ->isCsrfTokenValid(static::AJAX_TOKEN_INTENTION, $request->get('_token'))) {
+
+        $token = new CsrfToken(static::AJAX_TOKEN_INTENTION, $request->get('_token'));
+        if (!$this->getService('csrfTokenManager')->isTokenValid($token)) {
             return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',

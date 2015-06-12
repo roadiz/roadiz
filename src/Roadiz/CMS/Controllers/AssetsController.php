@@ -29,13 +29,19 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use AM\InterventionRequest\Configuration;
+use AM\InterventionRequest\InterventionRequest;
+use AM\InterventionRequest\ShortUrlExpander;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
- * Special controller app file for assets managment with SLIR.
+ * Special controller app file for assets managment with InterventionRequest lib.
  */
 class AssetsController extends AppController
 {
@@ -74,39 +80,68 @@ class AssetsController extends AppController
     }
 
     /**
-     * Handle images resize with SLIR vendor.
      *
-     * @param string $queryString
-     * @param string $filename
+     * @param  Request $request
+     * @param  string  $queryString
+     * @param  string  $filename
+     * @return Response
      */
-    public function slirAction($queryString, $filename)
+    public function interventionRequestAction(Request $request, $queryString, $filename)
     {
-        define('SLIR_CONFIG_CLASSNAME', '\RZ\Roadiz\CMS\Utils\SLIRConfig');
+        $log = new Logger('InterventionRequest');
+        $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/interventionRequest.log', Logger::INFO));
 
-        $slir = new \SLIR\SLIR();
-        $slir->processRequestFromURL();
+        try {
+            $cacheDir = ROADIZ_ROOT . '/cache/rendered';
+            if (!file_exists($cacheDir)) {
+                mkdir($cacheDir);
+            }
+            $conf = new Configuration();
+            $conf->setCachePath($cacheDir);
+            $conf->setImagesPath(ROADIZ_ROOT . '/files');
 
-        // SLIR handle response by itself
+            /*
+             * Handle short url with Url rewriting
+             */
+            $expander = new ShortUrlExpander($request);
+            $expander->injectParamsToRequest($queryString, $filename);
+
+            /*
+             * Handle main image request
+             */
+            $iRequest = new InterventionRequest($conf, $request, $log);
+            $iRequest->handle();
+            return $iRequest->getResponse();
+        } catch (\Exception $e) {
+            if (null !== $log) {
+                $log->error($e->getMessage());
+            }
+            return new Response(
+                $e->getMessage(),
+                Response::HTTP_NOT_FOUND,
+                ['content-type' => 'text/plain']
+            );
+        }
     }
 
     /**
      * Request a single protected font file from Roadiz.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
      * @param string                                   $filename
      * @param string                                   $extension
      * @param string                                   $token
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
+    public function fontFileAction($filename, $variant, $extension, $token)
     {
         $font = $this->getService('em')
                      ->getRepository('RZ\Roadiz\Core\Entities\Font')
                      ->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
-            if ($this->getService('csrfProvider')->isCsrfTokenValid($font->getHash() . $font->getVariant(), $token)) {
+            $token = new CsrfToken($font->getHash() . $font->getVariant(), $token);
+            if ($this->getService('csrfTokenManager')->isTokenValid($token)) {
                 switch ($extension) {
                     case 'eot':
                         $fontpath = $font->getEOTAbsolutePath();
@@ -136,11 +171,18 @@ class AssetsController extends AppController
                 }
 
                 if ("" != $fontpath) {
-                    return new Response(
+                    $response = new Response(
                         file_get_contents($fontpath),
                         Response::HTTP_OK,
                         ['content-type' => $mime]
                     );
+                    $date = new \DateTime();
+                    $date->modify('+2 hours');
+                    $response->setExpires($date);
+                    $response->setPrivate();
+                    $response->setMaxAge(60 * 60 * 2);
+
+                    return $response;
                 }
             } else {
                 return new Response(
@@ -163,13 +205,13 @@ class AssetsController extends AppController
      * Request the font-face CSS file listing available fonts.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $token
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFacesAction(Request $request, $token)
+    public function fontFacesAction(Request $request)
     {
-        $repository = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $repository = $this->getService('em')
+                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(
@@ -179,9 +221,8 @@ class AssetsController extends AppController
         );
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
-            'max_age' => 1800,
-            's_maxage' => 600,
-            'public' => true,
+            'max_age' => 60 * 60 * 2,
+            'public' => false,
         ]);
 
         if ($response->isNotModified($request)) {
@@ -193,7 +234,8 @@ class AssetsController extends AppController
         $fontOutput = [];
 
         foreach ($fonts as $font) {
-            $fontOutput[] = $font->getViewer()->getCSSFontFace($this->getService('csrfProvider'));
+            $fontOutput[] = $font->getViewer()
+                                 ->getCSSFontFace($this->getService('csrfTokenManager'));
         }
 
         $response->setContent(implode(PHP_EOL, $fontOutput));

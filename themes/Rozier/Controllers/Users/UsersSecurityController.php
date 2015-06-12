@@ -56,7 +56,7 @@ class UsersSecurityController extends RozierApp
             $this->assignation['user'] = $user;
             $form = $this->buildEditSecurityForm($user);
 
-            $form->handleRequest();
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->editUserSecurity($form->getData(), $user, $request);
@@ -117,7 +117,7 @@ class UsersSecurityController extends RozierApp
                     'label' => 'user.expiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
-                    'empty_value' => [
+                    'placeholder' => [
                         'year' => 'year',
                         'month' => 'month',
                         'day' => 'day',
@@ -133,7 +133,7 @@ class UsersSecurityController extends RozierApp
                     'label' => 'user.credentialsExpiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
-                    'empty_value' => [
+                    'placeholder' => [
                         'year' => 'year',
                         'month' => 'month',
                         'day' => 'day',
@@ -146,7 +146,7 @@ class UsersSecurityController extends RozierApp
                     'required' => false,
                 ]);
 
-        if ($this->getService('securityContext')->isGranted("ROLE_SUPERADMIN")) {
+        if ($this->isGranted("ROLE_SUPERADMIN")) {
             $n = $user->getChroot();
             $n = ($n !== null) ? [$n] : [];
             $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n), [

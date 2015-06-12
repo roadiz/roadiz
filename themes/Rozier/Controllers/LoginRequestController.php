@@ -51,7 +51,7 @@ class LoginRequestController extends RozierApp
     {
         $form = $this->buildLoginRequestForm();
 
-        $form->handleRequest();
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $this->getService('em')
