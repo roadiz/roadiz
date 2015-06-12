@@ -43,8 +43,10 @@ use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -53,17 +55,19 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
+use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 use Symfony\Component\Security\Http\AccessMap;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\RememberMeListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
-use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 
 /**
  * Register security services for dependency injection container.
@@ -186,7 +190,8 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         $container['userChecker'] = function ($c) {
             return new UserChecker();
         };
-        $container['authentificationManager'] = function ($c) {
+
+        $container['daoAuthenticationProvider'] = function ($c) {
             return new DaoAuthenticationProvider(
                 $c['userProvider'],
                 $c['userChecker'],
@@ -194,6 +199,44 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['userEncoderFactory']
             );
         };
+
+        $container['rememberMeAuthenticationProvider'] = function ($c) {
+            return new RememberMeAuthenticationProvider(
+                $c['userChecker'],
+                $c['config']["security"]['secret'],
+                Kernel::SECURITY_DOMAIN
+            );
+        };
+
+        $container['rememberMeListener'] = function ($c) {
+            return new RememberMeListener(
+                $c['securityTokenStorage'],
+                new TokenBasedRememberMeServices(
+                    [$c['userProvider']],
+                    $c['config']["security"]['secret'],
+                    Kernel::SECURITY_DOMAIN,
+                    [
+                        'name' => 'roadiz_remember_me',
+                        'lifetime' => 60 * 60 * 48,
+                        'remember_me_parameter' => '_remember_me',
+                        'path' => '/',
+                        'domain' => '~',
+                    ],
+                    $c['logger']
+                ),
+                $c['authentificationManager'],
+                $c['logger'],
+                $c['dispatcher']
+            );
+        };
+
+        $container['authentificationManager'] = function ($c) {
+            return new AuthenticationProviderManager([
+                $c['rememberMeAuthenticationProvider'],
+                $c['daoAuthenticationProvider'],
+            ]);
+        };
+
         /*
          * Main decision manager, set your voters here.
          */
@@ -247,7 +290,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['firewallMap'] = function ($c) {
             $map = new FirewallMap();
-
             return $map;
         };
 

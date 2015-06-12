@@ -89,6 +89,7 @@ class BackendController extends AppController
             $container['contextListener'],
             // logout users
             $logoutListener,
+            $container['rememberMeListener'],
             // authentication via a simple form composed of a username and a password
             new UsernamePasswordFormAuthenticationListener(
                 $container['securityTokenStorage'],
