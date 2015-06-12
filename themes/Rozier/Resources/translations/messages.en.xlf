@@ -6024,6 +6024,10 @@
           <source>overrideLocale</source>
           <target xml:lang="en" state="translated">Override locale</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
+          <source>keep_me_logged_in</source>
+          <target xml:lang="en" state="translated">Keep me logged in</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
