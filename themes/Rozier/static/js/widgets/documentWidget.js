@@ -8,7 +8,6 @@ var DocumentWidget = function () {
     _this.$sortables = $('.documents-widget-sortable');
     _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
     _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
-    _this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
     _this.$explorer = null;
     _this.$explorerClose = null;
@@ -37,11 +36,19 @@ DocumentWidget.prototype.init = function() {
     _this.$toggleUploaderButtons.off('click', onUploaderToggleP);
     _this.$toggleUploaderButtons.on('click', onUploaderToggleP);
 
+    _this.initUnlinkEvent();
+
+    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+};
+
+DocumentWidget.prototype.initUnlinkEvent = function() {
+    var _this = this;
+
+    _this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
+
     var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
     _this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
     _this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
-
-    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
 };
 
 
@@ -392,14 +399,13 @@ DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
 
     var $object = $(event.currentTarget).parents('.uk-sortable-list-item');
     $object.appendTo($originWidget);
-    console.log("click");
-    console.log($originWidget);
-    console.log($object);
 
     var inputName = 'source['+$originWidget.data('input-name')+']';
     $originWidget.find('li').each(function (index, element) {
         $(element).find('input').attr('name', inputName+'['+index+']');
     });
+
+    _this.initUnlinkEvent();
 
     return false;
 };
