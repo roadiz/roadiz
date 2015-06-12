@@ -120,6 +120,13 @@ class LoginController extends RozierApp
                             'constraints' => [
                                 new NotBlank(),
                             ],
+                        ])
+                        ->add('_remember_me', 'checkbox', [
+                            'label' => 'keep_me_logged_in',
+                            'required' => false,
+                            'attr' => [
+                                'checked' => true
+                            ],
                         ]);
 
         return $builder->getForm();
