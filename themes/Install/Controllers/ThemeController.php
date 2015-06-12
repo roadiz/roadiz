@@ -30,6 +30,7 @@
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
@@ -54,13 +55,7 @@ class ThemeController extends InstallApp
 
         $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
 
-        $array = explode('\\', $result->getClassName());
-        $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
-        $yaml = new YamlConfiguration($file);
-
-        $yaml->load();
-
-        $data = $yaml->getConfiguration();
+        $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
         $this->assignation = array_merge($this->assignation, $data["importFiles"]);
         $this->assignation["themeId"] = $id;
@@ -77,50 +72,9 @@ class ThemeController extends InstallApp
      */
     public function themeInstallAction(Request $request)
     {
-        $array = explode('\\', $request->get("classname"));
-        $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
-        $yaml = new YamlConfiguration($file);
-
-        $yaml->load();
-
-        $data = $yaml->getConfiguration();
-
-        $fix = new Fixtures($this->getService("em"), $request);
-        $data["className"] = $request->get("classname");
-        $fix->installTheme($data);
+        $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->getService("em"));
         $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                      ->findOneByClassName($request->get("classname"));
-
-        $installedLanguage = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                                  ->findAll();
-
-        foreach ($installedLanguage as $key => $locale) {
-            $installedLanguage[$key] = $locale->getLocale();
-        }
-
-        $exist = false;
-        foreach ($data["supportedLocale"] as $locale) {
-            if (in_array($locale, $installedLanguage)) {
-                $exist = true;
-            }
-        }
-
-        if ($exist === false) {
-            $newTranslation = new Translation();
-            $newTranslation->setLocale($data["supportedLocale"][0]);
-            $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);
-            $this->getService('em')->persist($newTranslation);
-            $this->getService('em')->flush();
-        }
-
-        $importFile = false;
-        foreach ($data["importFiles"] as $name => $filenames) {
-            foreach ($filenames as $filename) {
-                $importFile = true;
-                break;
-            }
-        }
-
+                                        ->findOneByClassName($request->get("classname"));
         if ($importFile === false) {
             return $this->redirect($this->generateUrl(
                 'installUserPage',
@@ -143,41 +97,7 @@ class ThemeController extends InstallApp
      */
     public function themeSummaryAction(Request $request)
     {
-        $array = explode('\\', $request->get("classname"));
-        $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
-        $yaml = new YamlConfiguration($file);
-
-        $yaml->load();
-
-        $data = $yaml->getConfiguration();
-
-        $this->assignation["theme"] = [
-            "name" => $data["name"],
-            "version" => $data["versionRequire"],
-            "supportedLocale" => $data["supportedLocale"],
-            "imports" => $data["importFiles"],
-        ];
-
-        $this->assignation["cms"] = ["version" => Kernel::$cmsVersion];
-        $this->assignation["status"] = [];
-
-        $this->assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) <= 0) ? true : false;
-
-        $this->assignation["cms"]["locale"] = $request->getLocale();
-        $this->assignation["status"]["locale"] = in_array($request->getLocale(), $data["supportedLocale"]);
-
-        $this->assignation["status"]["import"] = [];
-
-        $this->assignation['theme']['haveFileImport'] = false;
-
-        foreach ($data["importFiles"] as $name => $filenames) {
-            foreach ($filenames as $filename) {
-                $this->assignation["status"]["import"][$filename] = file_exists(ROADIZ_ROOT . "/themes/" . $array[2] . "/" . $filename);
-                $this->assignation['theme']['haveFileImport'] = true;
-            }
-        }
-
-        $this->assignation['classname'] = $request->get("classname");
+        ThemeInstaller::assignSummaryInfo($request->get("classname"), $this->assignation, $request->getLocale());
 
         return $this->render('steps/themeSummary.html.twig', $this->assignation);
     }
