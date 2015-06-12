@@ -9,3 +9,9 @@ themesDeletePage:
     path:     /delete/{themeId}
     defaults: { _controller: Themes\Rozier\Controllers\ThemesController::deleteAction }
     requirements: { themeId : "[0-9]+" }
+themesSummaryPage:
+    path:      /summary
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::summaryAction }
+themesSettingPage:
+    path:      /setting
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::settingAction }
