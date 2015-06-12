@@ -34,6 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Translations describe language locales to be used by Nodes,
@@ -700,7 +701,7 @@ class Translation extends AbstractDateTimed
      */
     public function setOverrideLocale($overrideLocale)
     {
-        $this->overrideLocale = $overrideLocale;
+        $this->overrideLocale = StringHandler::slugify($overrideLocale);
 
         return $this;
     }
