@@ -147,6 +147,10 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
 
             if (null !== $c['em'] &&
+                true === $c['config']['devMode']) {
+                $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz-debug.log', Logger::DEBUG));
+            }
+            if (null !== $c['em'] &&
                 true !== $c['config']['install']) {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
@@ -208,22 +212,31 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
+        $container['rememberMeCookieName'] = 'roadiz_remember_me';
+
+        $container['tokenBasedRememberMeServices'] = function ($c) {
+            return new TokenBasedRememberMeServices(
+                [$c['userProvider']],
+                $c['config']["security"]['secret'],
+                Kernel::SECURITY_DOMAIN,
+                [
+                    'name' => $c['rememberMeCookieName'],
+                    'lifetime' => 60 * 60 * 48,
+                    'remember_me_parameter' => '_remember_me',
+                    'path' => $c['request']->getBasePath(),
+                    'domain' => $c['request']->getHost(),
+                    'always_remember_me' => false,
+                    'secure' => false,
+                    'httponly' => false,
+                ],
+                $c['logger']
+            );
+        };
+
         $container['rememberMeListener'] = function ($c) {
             return new RememberMeListener(
                 $c['securityTokenStorage'],
-                new TokenBasedRememberMeServices(
-                    [$c['userProvider']],
-                    $c['config']["security"]['secret'],
-                    Kernel::SECURITY_DOMAIN,
-                    [
-                        'name' => 'roadiz_remember_me',
-                        'lifetime' => 60 * 60 * 48,
-                        'remember_me_parameter' => '_remember_me',
-                        'path' => '/',
-                        'domain' => '~',
-                    ],
-                    $c['logger']
-                ),
+                $c['tokenBasedRememberMeServices'],
                 $c['authentificationManager'],
                 $c['logger'],
                 $c['dispatcher']

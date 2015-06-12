@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
+use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
@@ -76,13 +77,24 @@ class BackendController extends AppController
         $logoutListener = new LogoutListener(
             $container['securityTokenStorage'],
             $container['httpUtils'],
-            new DefaultLogoutSuccessHandler($container['httpUtils'], '/login'),
+            new DefaultLogoutSuccessHandler(
+                $container['httpUtils'],
+                '/login'
+            ),
             [
                 'logout_path' => '/rz-admin/logout',
             ]
         );
         //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
         $logoutListener->addHandler(new SessionLogoutHandler());
+        $logoutListener->addHandler(
+            new CookieClearingLogoutHandler([
+                $container['rememberMeCookieName'] => [
+                    'path' => $container['request']->getBasePath(),
+                    'domain' => $container['request']->getHost(),
+                ],
+            ])
+        );
 
         $listeners = [
             // manages the AuthorizationChecker persistence through a session
@@ -97,13 +109,18 @@ class BackendController extends AppController
                 new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
                 $container['httpUtils'],
                 Kernel::SECURITY_DOMAIN,
-                new AuthenticationSuccessHandler($container['httpUtils'], [
-                    'always_use_default_target_path' => false,
-                    'default_target_path' => '/rz-admin',
-                    'login_path' => '/login',
-                    'target_path_parameter' => '_target_path',
-                    'use_referer' => true,
-                ]),
+                new AuthenticationSuccessHandler(
+                    $container['httpUtils'],
+                    $container['em'],
+                    $container['tokenBasedRememberMeServices'],
+                    [
+                        'always_use_default_target_path' => false,
+                        'default_target_path' => '/rz-admin',
+                        'login_path' => '/login',
+                        'target_path_parameter' => '_target_path',
+                        'use_referer' => true,
+                    ]
+                ),
                 new AuthenticationFailureHandler(
                     $container['httpKernel'],
                     $container['httpUtils'],
