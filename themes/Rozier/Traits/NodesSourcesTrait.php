@@ -35,11 +35,12 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Validator\Constraints\Type;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Type;
 
 trait NodesSourcesTrait
 {
@@ -194,9 +195,9 @@ trait NodesSourcesTrait
                 return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
             case NodeTypeField::CHILDREN_T:
                 /*
-                 * NodeTreeType is a virtual type which is only available
-                 * with Rozier backend theme.
-                 */
+             * NodeTreeType is a virtual type which is only available
+             * with Rozier backend theme.
+             */
                 return new \Themes\Rozier\Forms\NodeTreeType(
                     $nodeSource,
                     $field,
@@ -215,140 +216,122 @@ trait NodesSourcesTrait
     }
 
     /**
-     * Returns an option array for creating a Symfony Form
-     * according to a node-type field.
+     * Get common options for your node-type field form components.
      *
-     * @param  NodesSources  $nodeSource
      * @param  NodeTypeField $field
      *
      * @return array
      */
-    public function getFormOptionsFromFieldType(
-        NodeTypeField $field
-    ) {
+    public function getDefaultOptions(NodeTypeField $field)
+    {
         $label = $field->getLabel();
         $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+        $options = [
+            'label' => $label,
+            'required' => false,
+            'attr' => [
+                'data-dev-name' => $devName,
+                'autocomplete' => 'off',
+            ],
+        ];
+        if ('' !== $field->getDescription()) {
+            $options['attr']['data-desc'] = $field->getDescription();
+        }
+        if ($field->getMinLength() > 0) {
+            $options['attr']['data-min-length'] = $field->getMinLength();
+        }
+        if ($field->getMaxLength() > 0) {
+            $options['attr']['data-max-length'] = $field->getMaxLength();
+        }
+
+        return $options;
+    }
+    /**
+     * Returns an option array for creating a Symfony Form
+     * according to a node-type field.
+     *
+     * @param  NodeTypeField $field
+     *
+     * @return array
+     */
+    public function getFormOptionsFromFieldType(NodeTypeField $field)
+    {
+        $options = $this->getDefaultOptions($field);
 
         switch ($field->getType()) {
             case NodeTypeField::ENUM_T:
-                return [
-                    'label' => $label,
+                $options = array_merge_recursive($options, [
                     'placeholder' => 'choose.value',
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::DATETIME_T:
-                return [
+                $options = array_merge_recursive($options, [
                     'date_widget' => 'single_text',
                     'date_format' => 'yyyy-MM-dd',
-                    'label' => $label,
-                    'required' => false,
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'rz-datetime-field',
                     ],
                     'placeholder' => [
                         'hour' => 'hour',
                         'minute' => 'minute',
                     ],
-                ];
+                ]);
+                break;
             case NodeTypeField::DATE_T:
-                return [
+                $options = array_merge_recursive($options, [
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
-                    'label' => $label,
-                    'required' => false,
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'rz-date-field',
                     ],
                     'placeholder' => '',
-                ];
+                ]);
+                break;
             case NodeTypeField::INTEGER_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Type('integer'),
                     ],
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::EMAIL_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'constraints' => [
-                        new \Symfony\Component\Validator\Constraints\Email(),
+                        new Email(),
                     ],
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::DECIMAL_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Type('double'),
                     ],
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::COLOUR_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'colorpicker-input',
                     ],
-                ];
+                ]);
+                break;
             case NodeTypeField::GEOTAG_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'rz-geotag-field',
                     ],
-                ];
+                ]);
+                break;
             case NodeTypeField::MARKDOWN_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'attr' => [
                         'class' => 'markdown_textarea',
-                        'data-desc' => $field->getDescription(),
-                        'data-min-length' => $field->getMinLength(),
-                        'data-max-length' => $field->getMaxLength(),
-                        'data-dev-name' => $devName,
                     ],
-                ];
-            default:
-                return [
-                    'label' => $label,
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-min-length' => $field->getMinLength(),
-                        'data-max-length' => $field->getMaxLength(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
         }
+
+        return $options;
     }
 
     /**
