@@ -143,7 +143,7 @@ class ThemesController extends RozierApp
                 $data = $form->getData();
                 return $this->redirect($this->generateUrl('themesSummaryPage', [
                     'classname' => $data['className']
-                ]);
+                ]));
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
