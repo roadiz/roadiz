@@ -6028,6 +6028,10 @@
           <source>keep_me_logged_in</source>
           <target xml:lang="en" state="translated">Keep me logged in</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target xml:lang="en" state="translated">Themes settings</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

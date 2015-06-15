@@ -6028,6 +6028,10 @@
           <source>keep_me_logged_in</source>
           <target xml:lang="fr" state="translated">Garder ma session active</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target xml:lang="fr" state="translated">Paramètres du thème</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
