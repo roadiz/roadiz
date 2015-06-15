@@ -49,7 +49,7 @@ class ThemeInstaller
      *
      * @return array
      */
-    static public function getThemeInformation($classname)
+    public static function getThemeInformation($classname)
     {
         $array = explode('\\', $classname);
         $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
@@ -71,7 +71,7 @@ class ThemeInstaller
      *
      * @return bool
      */
-    static public function install(Request $request, $classname, EntityManager $em)
+    public static function install(Request $request, $classname, EntityManager $em)
     {
         $data = static::getThemeInformation($classname);
 
@@ -120,7 +120,7 @@ class ThemeInstaller
      *
      * @return array
      */
-    static public function assignSummaryInfo($classname, &$assignation, $locale)
+    public static function assignSummaryInfo($classname, &$assignation, $locale)
     {
         $array = explode('\\', $classname);
         $data = static::getThemeInformation($classname);
