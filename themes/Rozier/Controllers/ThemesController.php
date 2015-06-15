@@ -30,11 +30,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
+use RZ\Roadiz\Utils\Installer\ThemeInstaller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Type;
 use Themes\Rozier\RozierApp;
@@ -132,23 +135,15 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = new Theme();
-
         $form = $this->buildAddForm($theme);
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
                 $data = $form->getData();
-                return $this->redirect($this->generateUrl(
-                    'themesSummaryPage'
-                ) . "?classname=" . urlencode($data['className']));
-                // $this->addTheme($request, $data, $theme);
-                // $msg = $this->getTranslator()->trans(
-                //     'theme.%name%.created',
-                //     ['%name%' => $theme->getClassName()]
-                // );
-                // $this->publishConfirmMessage($request, $msg);
+                return $this->redirect($this->generateUrl('themesSummaryPage', [
+                    'classname' => $data['className']
+                ]);
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -358,7 +353,7 @@ class ThemesController extends RozierApp
     {
         $builder = $this->buildCommonForm($theme)
                         ->add('classname', 'hidden', [
-                            'data' => $classname
+                            'data' => $classname,
                         ]);
         return $builder->getForm();
     }
@@ -499,8 +494,9 @@ class ThemesController extends RozierApp
         }
 
         $importFile = ThemeInstaller::install($request, $data["classname"], $this->getService("em"));
-        $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                                        ->findOneByClassName($data["classname"]);
+        $theme = $this->getService("em")
+                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->findOneByClassName($data["classname"]);
         $this->setThemeValue($request, $data, $theme);
 
         $this->getService('em')->flush();

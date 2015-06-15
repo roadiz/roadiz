@@ -30,14 +30,8 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Utils\Installer\ThemeInstaller;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Type;
 use RZ\Roadiz\CMS\Controllers\ImportController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * {@inheritdoc}

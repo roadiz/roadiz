@@ -29,12 +29,11 @@
  */
 namespace RZ\Roadiz\Utils\Installer;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

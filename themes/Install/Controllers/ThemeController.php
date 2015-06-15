@@ -31,9 +31,6 @@ namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Install\InstallApp;
 
@@ -73,8 +70,9 @@ class ThemeController extends InstallApp
     public function themeInstallAction(Request $request)
     {
         $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->getService("em"));
-        $theme = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                                        ->findOneByClassName($request->get("classname"));
+        $theme = $this->getService("em")
+                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->findOneByClassName($request->get("classname"));
         if ($importFile === false) {
             return $this->redirect($this->generateUrl(
                 'installUserPage',
@@ -128,9 +126,9 @@ class ThemeController extends InstallApp
                         /*
                          * Force redirect to avoid resending form when refreshing page
                          */
-                        return $this->redirect($this->generateUrl(
-                            'installThemeSummaryPage'
-                        ) . "?classname=" . urlencode($infosForm->getData()['className']));
+                        return $this->redirect($this->generateUrl('installThemeSummaryPage', [
+                            'classname' => $infosForm->getData()['className'],
+                        ]));
                     } else {
                         return $this->redirect($this->generateUrl(
                             'installUserPage'
