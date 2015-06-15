@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 					"js/vendor/uikit.min.js",
 					"js/plugins.js",
 					"js/importFixtures.js",
-					"js/importNodeType.js",
+					"js/import.js",
 					"js/selectDatabaseField.js",
 					"js/resizeContainer.js",
 					"js/main.js"

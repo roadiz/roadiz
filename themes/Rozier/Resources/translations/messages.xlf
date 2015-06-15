@@ -6143,6 +6143,10 @@
           <source>keep_me_logged_in</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
