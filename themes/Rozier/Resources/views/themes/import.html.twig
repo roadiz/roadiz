@@ -1,23 +1,15 @@
-{% extends '@Install/base.html.twig' %}
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
-{% block siteTitle %}{{ head.siteTitle|trans }} — {% trans %}import.theme.content.title{% endtrans %}{% endblock %}
 {% block content %}
+<section class="content-global manage-themes">
+
+    <header class="content-header header-themes header-themes-add">
+        <h1 class="content-title">{% trans %}import.theme.content.title{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('themesHomePage') }}" title="{% trans %}back_to.themes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </a>
+    </header>
+
     <article id="content-import-node-type" class="content">
-
-        <div class="content-title-cont">
-            <h1 class="content-title">{% trans %}import.theme.content.title{% endtrans %}</h1>
-        </div>
-
-        <div class="content-progress">
-            <div class="content-progress-item first active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item"></div>
-            <div class="content-progress-item last"></div>
-        </div>
 
         <div class="content-text-cont">
 
@@ -141,8 +133,7 @@
 
             {% spaceless %}
             <div class="content-buttons">
-                <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme{% endtrans %}</a>
-                <a id="next-step-button" class="content-button uk-button uk-button-primary uk-button-disabled" href="{{ path('installUserPage')}}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                <a id="next-step-button" class="content-button uk-button uk-button-primary uk-button-disabled rz-no-ajax-link" href="{{ path('themesHomePage')}}">{% trans %}next{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
             </div>
             {% endspaceless %}
 
@@ -157,46 +148,46 @@
 {% block customScripts %}
 <script type="text/javascript">
     (function() {
-        Install.importThemeRoutes = [];
+        Rozier.importRoutes = [];
         {% for role in roles %}
-        Install.importThemeRoutes.push({
-            'url': "{{ path('installImportRoles', {'themeId': themeId}) }}",
+        Rozier.importRoutes.push({
+            'url': "{{ path('themesImportRoles', {'themeId': themeId}) }}",
             'id':'{{ role|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ role }}'
         });
         {% endfor %}
         {% for group in groups %}
-        Install.importThemeRoutes.push({
-            'url': "{{ path('installImportGroups', {'themeId': themeId}) }}",
+        Rozier.importRoutes.push({
+            'url': "{{ path('themesImportGroups', {'themeId': themeId}) }}",
             'id':'{{ group|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ group }}'
         });
         {% endfor %}
         {% for setting in settings %}
-        Install.importThemeRoutes.push({
-            'url': "{{ path('installImportSettings', {'themeId': themeId}) }}",
+        Rozier.importRoutes.push({
+            'url': "{{ path('themesImportSettings', {'themeId': themeId}) }}",
             'id':'{{ setting|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ setting }}'
         });
         {% endfor %}
         {% for nodetype in nodetypes %}
-        Install.importThemeRoutes.push({
-            'postUpdate': ["{{ path('installClearCacheSchema') }}", "{{ path('installUpdateSchema') }}"],
-            'url': "{{ path('installImportNodeTypes', {'themeId': themeId}) }}",
+        Rozier.importRoutes.push({
+            'postUpdate': ["{{ path('themesClearCacheSchema') }}", "{{ path('themesUpdateSchema') }}"],
+            'url': "{{ path('themesImportNodeTypes', {'themeId': themeId}) }}",
             'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ nodetype }}'
         });
         {% endfor %}
         {% for tag in tags %}
-        Install.importThemeRoutes.push({
-            'url': "{{ path('installImportTags', {'themeId': themeId}) }}",
+        Rozier.importRoutes.push({
+            'url': "{{ path('themesImportTags', {'themeId': themeId}) }}",
             'id':'{{ tag|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ tag }}'
         });
         {% endfor %}
         {% for node in nodes %}
-        Install.importThemeRoutes.push({
-            'url': "{{ path('installImportNodes', {'themeId': themeId}) }}",
+        Rozier.importRoutes.push({
+            'url': "{{ path('themesImportNodes', {'themeId': themeId}) }}",
             'id':'{{ node|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ node }}'
         });

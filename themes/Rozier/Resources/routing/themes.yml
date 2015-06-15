@@ -15,43 +15,49 @@ themesSummaryPage:
 themesSettingPage:
     path:      /setting
     defaults: { _controller: Themes\Rozier\Controllers\ThemesController::settingAction }
+themesImportPage:
+    path:     /import/{id}
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::importAction }
+    requirements: { id : "[0-9]+" }
+themesClearCacheSchema:
+    path:     /clear-cache
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::clearDoctrineCacheAction }
+themesUpdateSchema:
+    path:     /update
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::updateSchemaAction }
 themesImportSettings:
     path:     /import/settings/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesImportController::importSettingsAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 themesImportGroups:
     path:     /import/groups/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesImportController::importGroupsAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 themesImportRoles:
     path:     /import/roles/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction, themeId: null }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesImportController::importRolesAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/\.-]+$"
         themeId: "[0-9]+"
 themesImportNodes:
     path:     /import/nodes/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction, themeId: null }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesImportController::importNodesAction, themeId: null }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         id: "[0-9]+"
 themesImportNodeTypes:
     path:     /import/nodetypes/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesImportController::importNodeTypesAction }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
 themesImportTags:
     path:     /import/tags/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction }
+    defaults: { _controller: Themes\Rozier\Controllers\ThemesImportController::importTagsAction }
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
-themesImportPage:
-    path:     /import/{id}
-    defaults: { _controller:Themes\Rozier\Controllers\ThemesController::importAction }
-    requirements: { id : "[0-9]+" }

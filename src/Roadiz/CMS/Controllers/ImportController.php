@@ -30,14 +30,14 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\CMS\Controllers\AppController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Install\InstallApp;
 
 /**
  * Generic importer class for themes fixtures.
  */
-class ImportController extends InstallApp
+class ImportController extends AppController
 {
     /**
      * @param  string  $classImporter

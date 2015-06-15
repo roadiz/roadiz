@@ -252,6 +252,11 @@ Lazyload.prototype.generalBind = function() {
     });
 
     Rozier.getMessages();
+
+    if(typeof Rozier.importRoutes != "undefined" && Rozier.importRoutes !== null){
+        Rozier.import = new Import(Rozier.importRoutes);
+        Rozier.importRoutes = null;
+    }
 };
 
 Lazyload.prototype.initMarkdownEditors = function() {

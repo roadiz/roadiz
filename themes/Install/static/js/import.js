@@ -1,4 +1,4 @@
-var ImportNodeType = function ( routesArray ) {
+var Import = function ( routesArray ) {
     var _this = this;
 
     _this.routes = routesArray;
@@ -6,9 +6,9 @@ var ImportNodeType = function ( routesArray ) {
     _this.always(0);
 };
 
-ImportNodeType.prototype.routes = null;
-ImportNodeType.prototype.score = 0;
-ImportNodeType.prototype.always = function(index) {
+Import.prototype.routes = null;
+Import.prototype.score = 0;
+Import.prototype.always = function(index) {
     var _this = this;
 
     if(_this.routes.length > index) {
@@ -30,7 +30,7 @@ ImportNodeType.prototype.always = function(index) {
     }
 };
 
-ImportNodeType.prototype.callSingleImport = function( index ) {
+Import.prototype.callSingleImport = function( index ) {
     var _this = this;
 
     var $row = $("#"+_this.routes[index].id);

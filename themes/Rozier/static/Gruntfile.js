@@ -63,6 +63,7 @@ module.exports = function(grunt) {
 					'js/custom-form-fields/customFormFieldsPosition.js',
 					'js/custom-form-fields/customFormFieldEdit.js',
 					'js/panels/entriesPanel.js',
+					'js/import/import.js',
 					'js/rozierMobile.js',
 					'js/lazyload.js',
 					'js/plugins.js',
