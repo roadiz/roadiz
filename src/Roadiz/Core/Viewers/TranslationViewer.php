@@ -30,6 +30,7 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\RouteHandler;
@@ -49,7 +50,11 @@ class TranslationViewer implements ViewableInterface
     }
 
     /**
-     * Return available page translation information
+     * Return available page translation information.
+     *
+     * Be careful, for static routes Roadiz will generate a localized
+     * route identifier suffixed with "Locale" text. In case of "force_locale"
+     * setting to true, Roadiz will always use suffixed route.
      *
      * ## example return value
      *
@@ -86,6 +91,7 @@ class TranslationViewer implements ViewableInterface
         $attr = $request->attributes->all();
         $query = $request->query->all();
         $name = "";
+        $forceLocale = (boolean) SettingsBag::get('force_locale');
 
         if (in_array("node", array_keys($attr), true)) {
             $node = $attr["node"];
@@ -123,7 +129,7 @@ class TranslationViewer implements ViewableInterface
                 $urlGenerator = new NodesSourcesUrlGenerator(
                     $request,
                     $node->getHandler()->getNodeSourceByTranslation($translation),
-                    (boolean) \RZ\Roadiz\Core\Bags\SettingsBag::get('force_locale')
+                    $forceLocale
                 );
                 $url = $urlGenerator->getUrl($absolute);
                 if (!empty($query)) {
@@ -131,7 +137,12 @@ class TranslationViewer implements ViewableInterface
                 }
 
             } elseif (!empty($attr["_route"])) {
-                if (!$translation->isDefaultTranslation()) {
+                /*
+                 * Use suffixed route if locales are forced or
+                 * if it’s not default translation.
+                 */
+                if (true === $forceLocale ||
+                    !$translation->isDefaultTranslation()) {
                     $name = $attr["_route"] . "Locale";
                     $attr["_route_params"]["_locale"] = $translation->getLocale();
                 } else {
