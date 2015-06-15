@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 

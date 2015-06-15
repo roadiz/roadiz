@@ -45,52 +45,52 @@ class TranslationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-                    'name',
-                    'text',
-                    [
-                        'label' => 'name',
-                        'constraints' => [
-                            new NotBlank(),
-                        ],
-                    ]
-                )
-                ->add(
-                    'locale',
-                    'choice',
-                    [
-                        'label' => 'locale',
-                        'required' => true,
-                        'choices' => Translation::$availableLocales,
-                        'constraints' => [
-                            new UniqueTranslationLocale([
-                                'entityManager' => $options['em'],
-                                'currentValue' => $options['locale'],
-                            ]),
-                        ],
-                    ]
-                )
-                ->add(
-                    'available',
-                    'checkbox',
-                    [
-                        'label' => 'available',
-                        'required' => false,
-                    ]
-                )
-                ->add(
-                    'overrideLocale',
-                    'text',
-                    [
-                        'label' => 'overrideLocale',
-                        'required' => false,
-                        'constraints' => [
-                            new UniqueTranslationOverrideLocale([
-                                'entityManager' => $options['em'],
-                                'currentValue' => $options['overrideLocale'],
-                            ]),
-                        ],
-                    ]
-                );
+            'name',
+            'text',
+            [
+                'label' => 'name',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]
+        )
+        ->add(
+            'locale',
+            'choice',
+            [
+                'label' => 'locale',
+                'required' => true,
+                'choices' => Translation::$availableLocales,
+                'constraints' => [
+                    new UniqueTranslationLocale([
+                        'entityManager' => $options['em'],
+                        'currentValue' => $options['locale'],
+                    ]),
+                ],
+            ]
+        )
+        ->add(
+            'available',
+            'checkbox',
+            [
+                'label' => 'available',
+                'required' => false,
+            ]
+        )
+        ->add(
+            'overrideLocale',
+            'text',
+            [
+                'label' => 'overrideLocale',
+                'required' => false,
+                'constraints' => [
+                    new UniqueTranslationOverrideLocale([
+                        'entityManager' => $options['em'],
+                        'currentValue' => $options['overrideLocale'],
+                    ]),
+                ],
+            ]
+        );
     }
 
     public function getName()

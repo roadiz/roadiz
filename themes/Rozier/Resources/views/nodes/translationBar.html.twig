@@ -3,7 +3,8 @@
 	<ul class="uk-navbar-nav">
 		{% for translation in available_translations %}
 		    <li class="node-translation-bar-item uk-navbar-item{% if current == translation.getId %} uk-active{% endif %}">
-		    	<a class="node-translation-bar-link uk-navbar-link" href="{{ path('nodesEditSourcePage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getLocale }}</a>
+		    	<a class="node-translation-bar-link uk-navbar-link"
+                   href="{{ path('nodesEditSourcePage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.preferredLocale }}</a>
 		    </li>
 		{% endfor %}
 	</ul>

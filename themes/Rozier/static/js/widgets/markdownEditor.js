@@ -35,9 +35,10 @@ MarkdownEditor = function(){
 MarkdownEditor.prototype.init = function(){
     var _this = this;
 
-    if(_this.$cont.length && _this.$textarea.length){
+    if(_this.$cont.length &&
+       _this.$textarea.length) {
 
-        for(var i = 0; i < _this.$cont.length; i++) {
+        for(var i = _this.$cont.length - 1; i >= 0; i--) {
 
             // Store markdown index into datas
             $(_this.$cont[i]).find('.uk-htmleditor-button-code').attr('data-index',i);
@@ -47,13 +48,14 @@ MarkdownEditor.prototype.init = function(){
             $(_this.$cont[i]).find('.CodeMirror').attr('data-index',i);
 
             // Check if a desc is defined
-            if(_this.$textarea[i].getAttribute('data-desc') !== ''){
+            if(_this.$textarea[i].hasAttribute('data-desc') &&
+                _this.$textarea[i].getAttribute('data-desc') !== ''){
                 $(_this.$cont[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$textarea[i].getAttribute('data-desc')+'</div>');
             }
 
             // Check if a max length is defined
-            if(_this.$textarea[i].getAttribute('data-max-length') !== ''){
-
+            if(_this.$textarea[i].hasAttribute('data-max-length') &&
+                _this.$textarea[i].getAttribute('data-max-length') !== ''){
                 _this.limit[i] = true;
                 _this.countMaxLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-max-length'));
                 $(_this.$cont[i]).find('.count-current')[0].innerHTML = stripTags(Rozier.lazyload.htmlEditor[i].currentvalue).length;
@@ -62,13 +64,16 @@ MarkdownEditor.prototype.init = function(){
 
             }
 
-            if(_this.$textarea[i].getAttribute('data-min-length') !== ''){
-
+            if(_this.$textarea[i].hasAttribute('data-min-length') &&
+                _this.$textarea[i].getAttribute('data-min-length') !== ''){
                 _this.limit[i] = true;
                 _this.countMinLimit[i] = parseInt(_this.$textarea[i].getAttribute('data-min-length'));
             }
 
-            if( _this.$textarea[i].getAttribute('data-min-length') === '' && _this.$textarea[i].getAttribute('data-max-length') === ''){
+            if(_this.$textarea[i].hasAttribute('data-max-length') &&
+               _this.$textarea[i].hasAttribute('data-min-length') &&
+               _this.$textarea[i].getAttribute('data-min-length') === '' &&
+               _this.$textarea[i].getAttribute('data-max-length') === ''){
 
                 _this.limit[i] = false;
                 _this.countMaxLimit[i] = null;
@@ -105,17 +110,16 @@ MarkdownEditor.prototype.init = function(){
         _this.$countMaxLimitText = _this.$cont.find('.count-limit');
 
 
-
         // Events
-        for(var j = 0; j < Rozier.lazyload.$textAreaHTMLeditor.length; j++) {
+        for(var j = Rozier.lazyload.$textAreaHTMLeditor.length - 1; j >= 0; j--) {
             Rozier.lazyload.htmlEditor[j].editor.on('focus', $.proxy(_this.textareaFocus, _this));
             Rozier.lazyload.htmlEditor[j].editor.on('blur', $.proxy(_this.textareaFocusOut, _this));
         }
+
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
         Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
-
     }
 
 };

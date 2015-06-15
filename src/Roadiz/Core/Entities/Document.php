@@ -91,6 +91,7 @@ class Document extends AbstractDateTimed
         'application/x-rar-compressed' => 'archive',
         'application/msword' => 'word',
         'application/vnd.ms-excel' => 'excel',
+        'application/vnd.ms-office' => 'excel',
         'application/vnd.ms-powerpoint' => 'powerpoint',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'word',
         'application/vnd.oasis.opendocument.text ' => 'word',
@@ -163,7 +164,11 @@ class Document extends AbstractDateTimed
      */
     public function getShortType()
     {
-        return static::$mimeToIcon[$this->getMimeType()];
+        if (isset(static::$mimeToIcon[$this->getMimeType()])) {
+            return static::$mimeToIcon[$this->getMimeType()];
+        } else {
+            return 'unknown';
+        }
     }
 
     /**

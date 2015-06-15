@@ -29,16 +29,38 @@
  */
 namespace RZ\Roadiz\Core\Authentification;
 
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
+use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
 /**
  * {@inheritdoc}
  */
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
+    protected $em;
+    protected $rememberMeServices;
+
+    /**
+     * Constructor.
+     *
+     * @param HttpUtils $httpUtils
+     * @param array     $options   Options for processing a successful authentication attempt.
+     */
+    public function __construct(
+        HttpUtils $httpUtils,
+        EntityManager $em,
+        RememberMeServicesInterface $rememberMeServices = null,
+        array $options = array()
+    ) {
+        parent::__construct($httpUtils, $options);
+        $this->em = $em;
+        $this->rememberMeServices = $rememberMeServices;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -46,9 +68,15 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     {
         if (null !== $user = $token->getUser()) {
             $user->setLastLogin(new \DateTime('now'));
-            Kernel::getInstance()->getService('em')->flush();
+            $this->em->flush();
         }
 
-        return parent::onAuthenticationSuccess($request, $token);
+        $response = parent::onAuthenticationSuccess($request, $token);
+
+        if (null !== $this->rememberMeServices) {
+            $this->rememberMeServices->loginSuccess($request, $response, $token);
+        }
+
+        return $response;
     }
 }
