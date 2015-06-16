@@ -27,7 +27,7 @@
             <li class="document-item">
                 <div class="document-border"></div>
                 <figure class="document-image">
-                    {% if not document.private and document.isImage %}
+                    {% if not document.private and (document.isImage or document.isSvg) %}
                         {{ document|display(thumbnailFormat) }}
                     {% else %}
                         <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>

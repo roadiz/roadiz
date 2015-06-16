@@ -14,7 +14,7 @@
 
         <div class="content-inner">
             {% if not document.private %}
-                {% if document.image or document.video %}
+                {% if document.image or document.svg or document.video %}
                 <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                 {% endif %}
                 <div class="document-source"><code>{{ document|url(thumbnailFormat) }}</code></div>
