@@ -111,6 +111,7 @@ abstract class AbstractEmbedFinder
      * * height
      * * title
      * * id
+     * * class
      *
      * @param  array | null $args
      *
@@ -140,6 +141,9 @@ abstract class AbstractEmbedFinder
         }
         if (isset($args['id'])) {
             $attributes['id'] = $args['id'];
+        }
+        if (isset($args['class'])) {
+            $attributes['class'] = $args['class'];
         }
 
         if (isset($args['autoplay']) && $args['autoplay'] === true) {
