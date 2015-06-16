@@ -113,7 +113,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      * * portrait
      * * color
      */
-    public function getSource($args = [])
+    public function getSource(&$args = [])
     {
         $uri = '//player.vimeo.com/video/'.$this->embedId.'?api=1';
 
