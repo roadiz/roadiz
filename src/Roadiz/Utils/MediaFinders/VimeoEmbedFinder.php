@@ -105,6 +105,13 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
 
     /**
      * {@inheritdoc}
+     *
+     * Additional attributes for Vimeo
+     *
+     * * displayTitle
+     * * byline
+     * * portrait
+     * * color
      */
     public function getSource($args = [])
     {
@@ -121,6 +128,9 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         }
         if (isset($args['color'])) {
             $uri .= '&color='.$args['color'];
+        }
+        if (isset($args['id'])) {
+            $uri .= '&player_id='.$args['id'];
         }
 
         return $uri;
