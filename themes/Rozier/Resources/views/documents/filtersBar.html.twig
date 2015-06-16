@@ -1,20 +1,22 @@
 <nav class="uk-navbar" id="uk-navbar-filter">
     <div class="uk-navbar-content-cont">
 
-        {% if filters.description %}<a class="uk-navbar-brand">{{ filters.description }}</a>{% endif %}
+        {% if filters.description %}<a class="uk-navbar-brand">{{ filters.description|trans }}</a>{% endif %}
 
         <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-search">
+            {% if not orphans %}
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
                 <div class="uk-form-icon">
                     <i class="uk-icon-search"></i>
                     <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
                 </div>
             </form>
+            {% endif %}
 
             <a class="uk-button uk-button-select-all uk-button-bulk-select-documents" href="#" title="{% trans %}select.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-check-square-o"></i> {% trans %}select.all{% endtrans %}</a>
         </div>
 
-        {% if filters.itemCount > filters.itemPerPage %}
+        {% if filters.itemPerPage and filters.itemCount > filters.itemPerPage %}
         <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-pagination">
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
 
@@ -43,15 +45,18 @@
             {% spaceless %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-documents" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
                 <a class="uk-button uk-button-bulk uk-button-bulk-download uk-button-bulk-download-documents" href="#" title="{% trans %}bulk.download.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                {% if joinFolderForm %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-documents" href="#" title="{% trans %}bulk.fold.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-folder-tree-mini"></i></a>
+                {% endif %}
                 <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
-
+                {% if joinFolderForm %}
                 <div class="bulk-folder-cont documents-bulk-folder-cont">
                     {% form_theme joinFolderForm '@Rozier/forms.html.twig' %}
                     <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
                         {{ form_widget(joinFolderForm) }}
                     </form>
                 </div>
+                {% endif %}
             {% endspaceless %}
 
         </nav>

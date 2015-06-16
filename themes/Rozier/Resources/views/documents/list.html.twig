@@ -5,14 +5,19 @@
 	<header class="content-header header-document header-document-list">
         {% if folder %}
         <h1 class="content-title">{{ folder.name|truncate(25, true, '[…]') }}</h1>
+        {% elseif orphans %}
+        <h1 class="content-title">{% trans %}unused_documents{% endtrans %}</h1>
         {% else %}
         <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
         {% endif %}
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('documentsUploadPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
-           	<a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
-           	<a class="uk-button rz-no-ajax-link" href="{{ path('documentsRandomPage', {folderId: folder.id}) }}"><i class="uk-icon-magic"></i> {% trans %}random.document{% endtrans %}</a>
+            <a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
+            <a class="uk-button rz-no-ajax-link" href="{{ path('documentsRandomPage', {folderId: folder.id}) }}"><i class="uk-icon-magic"></i> {% trans %}random.document{% endtrans %}</a>
+            {% if not orphans %}
+            <a href="{{ path('documentsUnusedPage') }}" class="uk-button"><i class="uk-icon-ban"></i> {% trans %}unused_documents{% endtrans %}</a>
+            {% endif %}
         </div>
     </header>
 
@@ -23,7 +28,6 @@
         {% spaceless %}
         <ul class="documents-list">
         {% for document in documents %}
-
             <li class="document-item">
                 <div class="document-border"></div>
                 <figure class="document-image">
@@ -55,7 +59,6 @@
                     {% endif %}
                 </div>
             </li>
-
         {% endfor %}
         </ul>
         {% endspaceless %}

@@ -1,4 +1,4 @@
-{% if filters.itemCount > 10 %}
+{% if filters.itemPerPage and filters.itemCount > 10 %}
 {% set enabledCounts = [10,20,50,100,200] %}
 {% spaceless %}
 <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">

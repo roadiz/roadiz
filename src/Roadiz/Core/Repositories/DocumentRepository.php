@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
  * {@inheritdoc}
@@ -489,7 +490,7 @@ class DocumentRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
      * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
-     * @return array
+     * @return array|null
      */
     public function findByNodeSourceAndField(
         $nodeSource,
@@ -517,7 +518,7 @@ class DocumentRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param string                              $fieldName
      *
-     * @return array
+     * @return array|null
      */
     public function findByNodeSourceAndFieldName(
         $nodeSource,
@@ -535,6 +536,51 @@ class DocumentRepository extends EntityRepository
                       ->setParameter('name', (string) $fieldName)
                       ->setParameter('nodeSource', $nodeSource)
                       ->setParameter('translation', $nodeSource->getTranslation());
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Find documents used as Settings.
+     *
+     * @return array|null
+     */
+    public function findAllSettingDocuments()
+    {
+        $query = $this->_em->createQuery('
+            SELECT d FROM RZ\Roadiz\Core\Entities\Document d
+            WHERE d.id IN (
+                SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
+                WHERE s.type = :type
+            )
+        ')->setParameter('type', AbstractField::DOCUMENTS_T);
+
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Find all unused document.
+     *
+     * @return array|null
+     */
+    public function findAllUnused()
+    {
+        $query = $this->_em->createQuery('
+            SELECT d FROM RZ\Roadiz\Core\Entities\Document d
+            WHERE SIZE(d.nodesSourcesByFields) < 1
+            AND d.id NOT IN (
+                SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
+                WHERE s.type = :type
+            )
+        ')->setParameter('type', AbstractField::DOCUMENTS_T);
+
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {

@@ -6032,6 +6032,10 @@
           <source>setting.theme</source>
           <target xml:lang="fr" state="translated">Paramètres du thème</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="unused_documents">
+          <source>unused_documents</source>
+          <target xml:lang="fr" state="translated">Documents non-utilisés</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
