@@ -39,6 +39,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
@@ -231,10 +232,14 @@ class UsersCommand extends Command
         $user->setUsername($username);
 
         do {
-            $email = $this->questionHelper->ask(
-                $output,
+            $questionEmail = new Question(
                 '<question>Email</question> : ',
                 ''
+            );
+            $email = $this->questionHelper->ask(
+                $input,
+                $output,
+                $questionEmail
             );
         } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
             $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
@@ -242,17 +247,26 @@ class UsersCommand extends Command
 
         $user->setEmail($email);
 
-        if ($this->questionHelper->askConfirmation(
-            $output,
+        $questionBack = new ConfirmationQuestion(
             '<question>Is user a backend user?</question> : ',
             false
+        );
+        if ($this->questionHelper->ask(
+            $input,
+            $output,
+            $questionBack
         )) {
             $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
         }
-        if ($this->questionHelper->askConfirmation(
-            $output,
+
+        $questionAdmin = new ConfirmationQuestion(
             '<question>Is user a super-admin user?</question> : ',
             false
+        );
+        if ($this->questionHelper->ask(
+            $input,
+            $output,
+            $questionAdmin
         )) {
             $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
         }
