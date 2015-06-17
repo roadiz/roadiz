@@ -6151,6 +6151,27 @@
           <source>unused_documents</source>
           <target></target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
