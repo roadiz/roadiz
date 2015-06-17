@@ -6036,6 +6036,26 @@
           <source>unused_documents</source>
           <target xml:lang="fr" state="translated">Documents non-utilisés</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target xml:lang="fr" state="translated">La descendance du nœud a été publiée</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target xml:lang="fr" state="translated">Êtes-vous sûr(e) de vouloir publier toute la descendance de ce nœud ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target xml:lang="fr" state="translated">Publier la descendance de “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target xml:lang="fr" state="translated">Publier la descendance</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target xml:lang="fr" state="translated">Publier la descendance</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
