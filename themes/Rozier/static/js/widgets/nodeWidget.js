@@ -82,11 +82,9 @@ NodeWidget.prototype.onExplorerToggle = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
-
+            //console.log(data);
+            //console.log("success");
             if (typeof data.nodes != "undefined") {
-
                 var $currentsortable = $($(event.currentTarget).parents('.nodes-widget')[0]).find('.nodes-widget-sortable');
                 _this.createExplorer(data, $currentsortable);
             }
@@ -126,9 +124,8 @@ NodeWidget.prototype.onExplorerSearch = function($originWidget, event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
-
+            //console.log(data);
+            //console.log("success");
             if (typeof data.nodes != "undefined") {
                 _this.appendItemsToExplorer(data, $originWidget, true);
             }
@@ -168,8 +165,8 @@ NodeWidget.prototype.onExplorerNextPage = function(filters, $originWidget, event
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
+            //console.log(data);
+            //console.log("success");
 
             if (typeof data.nodes != "undefined") {
                 _this.appendItemsToExplorer(data, $originWidget);

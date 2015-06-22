@@ -69,7 +69,7 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
                 _this.applyContent(e.currentTarget, data, e.currentTarget.href);
             })
             .fail(function() {
-                console.log("error");
+                //console.log("error");
                 UIkit.notify({
                     message : Rozier.messages.forbiddenPage,
                     status  : 'danger',

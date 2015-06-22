@@ -73,9 +73,6 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             data: postData,
         })
         .done(function(data) {
-            console.log("success");
-            console.log(data);
-
             Rozier.refreshMainNodeTree();
             _this.refreshNodeTree(parentNodeId, null, postData.tagId);
 

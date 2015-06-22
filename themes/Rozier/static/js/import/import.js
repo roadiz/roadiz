@@ -18,7 +18,7 @@ Import.prototype.always = function(index) {
                 type: 'POST',
                 dataType: 'json',
                 complete: function() {
-                    console.log("updateSchema");
+                    //console.log("updateSchema");
                     _this.callSingleImport(index);
                 }
             });
@@ -109,8 +109,8 @@ Import.prototype.callSingleImport = function( index ) {
             }
         },
         complete: function(data) {
-            console.log("complete");
-            console.log(index);
+            //console.log("complete");
+            //console.log(index);
             $icon.removeClass('uk-icon-spin');
         }
     });

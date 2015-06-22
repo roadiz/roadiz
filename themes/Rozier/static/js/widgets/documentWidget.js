@@ -102,7 +102,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
             selector: '.documents-widget .documents-widget-uploader',
             headers: { "_token": Rozier.ajaxToken },
             onSuccess : function (data) {
-                console.log(data);
+                //console.log(data);
 
                 if(typeof data.thumbnail !== "undefined") {
                     var $sortable = $widget.find('.documents-widget-sortable');
@@ -116,8 +116,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
         };
 
         $.extend(options, Rozier.messages.dropzone);
-
-        console.log(options);
+        //console.log(options);
         _this.uploader = new DocumentUploader(options);
 
         $uploaderNew.slideDown(500);
@@ -155,8 +154,6 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
             Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {

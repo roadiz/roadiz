@@ -24,8 +24,12 @@ module.exports = function(grunt) {
         'bower_components/uikit/js/components/pagination.js',
         'bower_components/uikit/js/components/notify.js',
         'bower_components/uikit/js/components/tooltip.js',
-        'bower_components/jquery-ui/jquery-ui.js',
-        'bower_components/gsap/src/minified/TweenMax.min.js',
+        'bower_components/jquery-ui/ui/core.js',
+        'bower_components/jquery-ui/ui/widget.js',
+        'bower_components/jquery-ui/ui/menu.js',
+        'bower_components/jquery-ui/ui/position.js',
+        'bower_components/jquery-ui/ui/autocomplete.js',
+        'bower_components/gsap/src/uncompressed/TweenMax.js',
         'bower_components/gsap/src/minified/plugins/ScrollToPlugin.min.js',
         'bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
         'bower_components/jquery-minicolors/jquery.minicolors.js',
@@ -414,4 +418,6 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('default', ['clean','jshint','concat','uglify','less:production', 'postcss','versioning:production']);
+
+    grunt.registerTask('dev', ['clean','jshint','concat:rezozero', 'uglify:rezozero','less:development', 'postcss','versioning:development']);
 };

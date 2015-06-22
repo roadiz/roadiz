@@ -76,6 +76,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
+        $this->assignation['head']['themeName'] = static::$themeName;
 
         $this->themeContainer['nodeTree'] = function ($c) {
             if (is_object($this->getUser())) {

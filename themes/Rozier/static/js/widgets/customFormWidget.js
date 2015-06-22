@@ -81,11 +81,7 @@ CustomFormWidget.prototype.onExplorerToggle = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
-
             if (typeof data.customForms != "undefined") {
-
                 var $currentsortable = $($(event.currentTarget).parents('.custom-forms-widget')[0]).find('.custom-forms-widget-sortable');
                 _this.createExplorer(data, $currentsortable);
             }
@@ -125,9 +121,6 @@ CustomFormWidget.prototype.onExplorerSearch = function($originWidget, event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
-
             if (typeof data.customForms != "undefined") {
                 _this.appendItemsToExplorer(data, $originWidget, true);
             }
@@ -167,9 +160,6 @@ CustomFormWidget.prototype.onExplorerNextPage = function(filters, $originWidget,
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
-
             if (typeof data.custom-forms != "undefined") {
                 _this.appendItemsToExplorer(data, $originWidget);
             }

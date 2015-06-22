@@ -91,7 +91,7 @@ NodesBulk.prototype.onCheckboxChange = function(event) {
         _this.$nodesIdBulkStatus.val(_this.nodesIds.join(','));
     }
 
-    console.log(_this.nodesIds);
+    //console.log(_this.nodesIds);
 
     if(_this.nodesIds.length > 0){
         _this.showActions();
