@@ -605,7 +605,6 @@ class NodesController extends RozierApp
                         ])->getForm();
             $form->handleRequest($request);
             if ($form->isValid()) {
-
                 $node->getHandler()->publishWithChildren();
                 $this->getService('em')->flush();
 

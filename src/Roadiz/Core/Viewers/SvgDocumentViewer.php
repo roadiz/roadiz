@@ -29,9 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Viewers;
 
-use RZ\Roadiz\Core\Entities\Document;
-
-
 class SvgDocumentViewer
 {
     protected $imagePath;
