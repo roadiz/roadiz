@@ -61,29 +61,29 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $arrayFilter = [
-            'node.status' => ['<', Node::DELETED],
+            'status' => ['<', Node::DELETED],
         ];
         /*
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\NodesSources',
+            'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
         $listManager->setItemPerPage(40);
         $listManager->handle();
 
-        $nodesSources = $listManager->getEntities();
+        $nodes = $listManager->getEntities();
         $nodesArray = [];
 
-        if (null !== $nodesSources) {
-            foreach ($nodesSources as $nodeSource) {
+        if (null !== $nodes) {
+            foreach ($nodes as $node) {
                 $nodesArray[] = [
-                    'id' => $nodeSource->getNode()->getId(),
-                    'filename' => $nodeSource->getNode()->getNodeName(),
+                    'id' => $node->getId(),
+                    'filename' => $node->getNodeName(),
                     'html' => $this->getTwig()->render('widgets/nodeSmallThumbnail.html.twig', [
-                        'nodeSource' => $nodeSource,
-                        'node' => $nodeSource->getNode(),
+                        'nodeSource' => $node->getNodeSources()->first(),
+                        'node' => $node,
                     ]),
                 ];
             }
@@ -93,7 +93,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
-            'nodesCount' => count($nodesSources),
+            'nodesCount' => count($nodes),
             'filters' => $listManager->getAssignation(),
         ];
 
