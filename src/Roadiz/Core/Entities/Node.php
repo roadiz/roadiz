@@ -112,7 +112,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @param boolean $newdynamicNodeName
+     * @param boolean $dynamicNodeName
      */
     public function setDynamicNodeName($dynamicNodeName)
     {
@@ -180,7 +180,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @param int $newstatus
+     * @param int $status
      */
     public function setStatus($status)
     {
