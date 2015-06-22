@@ -4307,9 +4307,13 @@
         <source>soundcloud_client_id</source>
         <target xml:lang="en">Soundcloud client ID</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="google_client_id" approved="yes">
+      <trans-unit xml:space="preserve" id="google_client_id">
         <source>google_client_id</source>
-        <target xml:lang="en">Google client ID</target>
+        <target xml:lang="en" state="translated">Google API - browser key</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target xml:lang="en" state="translated">Google API - server key</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id" approved="yes">
         <source>twitter_client_id</source>

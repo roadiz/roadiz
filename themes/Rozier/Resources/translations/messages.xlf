@@ -4329,6 +4329,10 @@
         <source>google_client_id</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id">
         <source>twitter_client_id</source>
         <target></target>

@@ -4309,7 +4309,11 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="google_client_id" approved="yes">
         <source>google_client_id</source>
-        <target xml:lang="fr">Google : Id client</target>
+        <target xml:lang="fr">Google API - Clef navigateur</target>
+      <alt-trans><target xml:lang="fr">Google : Id client</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target xml:lang="fr" state="translated">Google API - Clef serveur</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id" approved="yes">
         <source>twitter_client_id</source>
