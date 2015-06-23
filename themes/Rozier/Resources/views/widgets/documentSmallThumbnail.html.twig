@@ -3,7 +3,7 @@
     'uk-sortable-list-item',
     'documents-widget-sortable-list-item'
 ] %}
-{% if not document.isImage %}
+{% if not document.isImage and not document.isSvg %}
 {% set classes = classes|merge(['not-image']) %}
 {% endif %}
 

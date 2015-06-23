@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         'bower_components/uikit/js/uikit.js',
         'js/vendor/addons/sortable.js',
         'bower_components/uikit/js/components/datepicker.js',
-        'bower_components/uikit/js/components/sortable.js',
+        //'bower_components/uikit/js/components/sortable.js',
         'bower_components/uikit/js/components/nestable.js',
         'bower_components/uikit/js/components/pagination.js',
         'bower_components/uikit/js/components/notify.js',
