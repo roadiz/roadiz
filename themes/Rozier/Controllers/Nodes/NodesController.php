@@ -97,7 +97,6 @@ class NodesController extends RozierApp
                 break;
 
             default:
-
                 $this->assignation['mainFilter'] = 'all';
                 $arrayFilter = [];
                 break;

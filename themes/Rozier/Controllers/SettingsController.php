@@ -342,9 +342,7 @@ class SettingsController extends RozierApp
     protected function setSettingValue($value, Setting $setting)
     {
         switch ($setting->getType()) {
-
             case NodeTypeField::DOCUMENTS_T:
-
                 if ($value !== null &&
                     $value->getError() == UPLOAD_ERR_OK &&
                     $value->isValid()) {

@@ -30,18 +30,17 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use Symfony\Component\Routing\RouteCollection;
-use RZ\Roadiz\CMS\Controllers\AppController;
 
 /**
-*
-*/
+ *
+ */
 class InstallRouteCollection extends RouteCollection
 {
     /**
      *
      * @param string $installClassname
      */
-    function __construct($installClassname)
+    public function __construct($installClassname)
     {
         if (class_exists($installClassname)) {
             $collection = $installClassname::getRoutes();
