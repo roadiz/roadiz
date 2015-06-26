@@ -157,30 +157,30 @@
 {% block customScripts %}
 <script type="text/javascript">
     (function() {
-        Install.importThemeRoutes = [];
+        Install.importRoutes = [];
         {% for role in roles %}
-        Install.importThemeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportRoles', {'themeId': themeId}) }}",
             'id':'{{ role|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ role }}'
         });
         {% endfor %}
         {% for group in groups %}
-        Install.importThemeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportGroups', {'themeId': themeId}) }}",
             'id':'{{ group|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ group }}'
         });
         {% endfor %}
         {% for setting in settings %}
-        Install.importThemeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportSettings', {'themeId': themeId}) }}",
             'id':'{{ setting|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ setting }}'
         });
         {% endfor %}
         {% for nodetype in nodetypes %}
-        Install.importThemeRoutes.push({
+        Install.importRoutes.push({
             'postUpdate': ["{{ path('installClearCacheSchema') }}", "{{ path('installUpdateSchema') }}"],
             'url': "{{ path('installImportNodeTypes', {'themeId': themeId}) }}",
             'id':'{{ nodetype|replace({'/': '_', '.': '_'}) }}',
@@ -188,14 +188,14 @@
         });
         {% endfor %}
         {% for tag in tags %}
-        Install.importThemeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportTags', {'themeId': themeId}) }}",
             'id':'{{ tag|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ tag }}'
         });
         {% endfor %}
         {% for node in nodes %}
-        Install.importThemeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportNodes', {'themeId': themeId}) }}",
             'id':'{{ node|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ node }}'
