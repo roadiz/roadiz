@@ -58,56 +58,60 @@ class NodeTypeFieldType extends AbstractType
                 new SimpleLatinString(),
             ],
         ])
-            ->add('label', 'text', [
-                'label' => 'label',
-                'constraints' => [
-                    new NotBlank(),
+        ->add('label', 'text', [
+            'label' => 'label',
+            'constraints' => [
+                new NotBlank(),
+            ],
+        ])
+        ->add('type', 'choice', [
+            'label' => 'type',
+            'required' => true,
+            'choices' => NodeTypeField::$typeToHuman,
+        ])
+        ->add('description', 'text', [
+            'label' => 'description',
+            'required' => false,
+        ])
+        ->add('groupName', 'text', [
+            'label' => 'groupName',
+            'required' => false,
+        ])
+        ->add('visible', 'checkbox', [
+            'label' => 'visible',
+            'required' => false,
+        ])
+        ->add('indexed', 'checkbox', [
+            'label' => 'indexed',
+            'required' => false,
+        ])
+        ->add(
+            'defaultValues',
+            'text',
+            [
+                'label' => 'defaultValues',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'enter_values_comma_separated',
                 ],
-            ])
-            ->add('type', 'choice', [
-                'label' => 'type',
-                'required' => true,
-                'choices' => NodeTypeField::$typeToHuman,
-            ])
-            ->add('description', 'text', [
-                'label' => 'description',
+            ]
+        )
+        ->add(
+            'minLength',
+            'integer',
+            [
+                'label' => 'nodeTypeField.minLength',
                 'required' => false,
-            ])
-            ->add('visible', 'checkbox', [
-                'label' => 'visible',
+            ]
+        )
+        ->add(
+            'maxLength',
+            'integer',
+            [
+                'label' => 'nodeTypeField.maxLength',
                 'required' => false,
-            ])
-            ->add('indexed', 'checkbox', [
-                'label' => 'indexed',
-                'required' => false,
-            ])
-            ->add(
-                'defaultValues',
-                'text',
-                [
-                    'label' => 'defaultValues',
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => 'enter_values_comma_separated',
-                    ],
-                ]
-            )
-            ->add(
-                'minLength',
-                'integer',
-                [
-                    'label' => 'nodeTypeField.minLength',
-                    'required' => false,
-                ]
-            )
-            ->add(
-                'maxLength',
-                'integer',
-                [
-                    'label' => 'nodeTypeField.maxLength',
-                    'required' => false,
-                ]
-            );
+            ]
+        );
     }
 
     public function getName()
