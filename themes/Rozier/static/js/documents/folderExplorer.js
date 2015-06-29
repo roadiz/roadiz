@@ -85,10 +85,6 @@ FolderExplorer.prototype.onFolderClick = function(event) {
     })
     .always(function() {
         Rozier.lazyload.canvasLoader.hide();
-
-        if (folderId === 0) {
-            _this.destroy();
-        }
     });
 
 
@@ -104,7 +100,7 @@ FolderExplorer.prototype.buildExplorer = function(data) {
             '<ul class="folders">',
                 '<li class="folder-close">',
                     '<a href="#" class="folder-item-link" data-folder-id="0">',
-                        '<i class="uk-icon-rz-close-explorer"></i>',
+                        '<i class="uk-icon-rz-reset"></i>',
                     '</a>',
                 '</li>',
             _this.insertFolders(data.folders),
@@ -125,7 +121,7 @@ FolderExplorer.prototype.insertFolders = function(folders) {
         explorer += [
             '<li class="folder-item">',
                 '<a href="#" class="folder-item-link" data-folder-id="'+ folders[i].id +'">',
-                    '<i class="uk-icon-rz-folder-tree-mini"></i> ' + folders[i].name,
+                    '<i class="uk-icon-rz-folder-tree-mini"></i><span class="text">' + folders[i].name + '</span>',
                 '</a>',
                 '<ul class="sub-folders">',
                     _this.insertFolders(folders[i].children),

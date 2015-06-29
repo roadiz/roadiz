@@ -12,21 +12,30 @@
         list-style: none;
     }
 
+    a {
+        outline: none;
+    }
+
     .folders {
         padding: 0px;
 
         & > .folder-item {
-            margin: 0 30px;
+            margin: 0 20px;
         }
     }
 
     .folder-item-link {
-        font-size: 12px;
+        font-size: 10px;
         color: #D5D5D5;
+        transition: color 0.3s linear;
 
         &:hover {
             text-decoration: none;
             color: white;
+        }
+
+        .text {
+            padding-left: 4px;
         }
     }
 
@@ -42,16 +51,33 @@
         a {
             font-size: 26px;
             border-bottom: 1px solid #d5d5d5;
-            padding: 5px 10px 0;
-            margin: 0 30px;
+            padding: 5px 5px 0;
+            margin: 0 20px;
             display: inline-block;
             color: #747474;
             height: 60px;
             .box-sizing();
+            bottom: -1px;
+            position: relative;
+
+            i {
+                font-size: 22px;
+            }
+
+            &:hover {
+                i {
+                    animation: reset-spin 2s infinite linear;
+                }
+            }
         }
     }
 
     .sub-folders {
         padding: 0 0 0 20px;
     }
+}
+
+@keyframes reset-spin {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(-360deg);}
 }

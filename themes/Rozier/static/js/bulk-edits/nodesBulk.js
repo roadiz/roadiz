@@ -168,6 +168,8 @@ NodesBulk.prototype.nodesFolderButtonClick = function(e){
         _this.$nodesFolderCont.slideUp();
         _this.nodesFolderOpen = false;
     }
+
+    return false;
 };
 /**
  * Nodes status button click
@@ -187,4 +189,6 @@ NodesBulk.prototype.nodesStatusButtonClick = function(e){
         _this.$nodesStatusCont.slideUp();
         _this.nodesStatusOpen = false;
     }
+
+    return false;
 };
