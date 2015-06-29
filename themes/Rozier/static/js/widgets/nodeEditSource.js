@@ -24,9 +24,7 @@ NodeEditSource = function(){
 NodeEditSource.prototype.wrapInTabs = function() {
     var _this = this;
 
-    var fieldGroups = {
-        'default' : []
-    };
+    var fieldGroups = {};
     var $fields = _this.$content.find('.uk-form-row[data-field-group]');
     var fieldsLength = $fields.length;
     var fieldsGroupsLength = 0;
@@ -42,7 +40,7 @@ NodeEditSource.prototype.wrapInTabs = function() {
         }
 
         if (fieldsGroupsLength > 1) {
-            _this.$form.prepend('<ul class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#edit-node-source-form-switcher\'}"></ul><ul id="edit-node-source-form-switcher" class="uk-switcher"></ul>');
+            _this.$form.prepend('<ul class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#edit-node-source-form-switcher\', animation: \'slide-horizontal\'}"></ul><ul id="edit-node-source-form-switcher" class="uk-switcher"></ul>');
             var $formSwitcher = _this.$form.find('.uk-switcher');
             var $formSwitcherNav = _this.$form.find('.uk-switcher-nav');
 
