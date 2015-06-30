@@ -40,7 +40,7 @@ NodeEditSource.prototype.wrapInTabs = function() {
         }
 
         if (fieldsGroupsLength > 1) {
-            _this.$form.prepend('<ul class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#edit-node-source-form-switcher\', animation: \'slide-horizontal\'}"></ul><ul id="edit-node-source-form-switcher" class="uk-switcher"></ul>');
+            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', animation: \'slide-horizontal\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
             var $formSwitcher = _this.$form.find('.uk-switcher');
             var $formSwitcherNav = _this.$form.find('.uk-switcher-nav');
 
@@ -57,13 +57,22 @@ NodeEditSource.prototype.wrapInTabs = function() {
                 var groupName2 = keysSorted[keyIndex];
                 var groupId = 'group-' + groupName2.toLowerCase();
                 $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>');
-                $formSwitcherNav.append('<li><a href="#">' + groupName2 + '</a></li>');
+
+                if (groupName2 == 'default') {
+                    $formSwitcherNav.append('<li><a href="#"><i class="uk-icon-star"></i></a></li>');
+                } else {
+                    $formSwitcherNav.append('<li><a href="#">' + groupName2 + '</a></li>');
+                }
                 var $group = $formSwitcher.find('#'+groupId);
 
                 for(var index = 0; index < fieldGroups[groupName2].length; index++) {
                     $group.append($(fieldGroups[groupName2][index]));
                 }
             }
+
+            $formSwitcherNav.on('show.uk.switcher', function(event, area){
+                Rozier.$window.trigger('resize');
+            });
         }
     }
 };
