@@ -49,7 +49,6 @@ class TagTranslationJsonSerializer extends AbstractJsonSerializer
         $data['title'] = $tt->getname();
         $data['description'] = $tt->getDescription();
 
-
         return $data;
     }
 
@@ -61,7 +60,7 @@ class TagTranslationJsonSerializer extends AbstractJsonSerializer
     public static function deserialize($string)
     {
         throw new \RuntimeException(
-            "Cannot simply deserialize a NodesSources entity. ".
+            "Cannot simply deserialize a NodesSources entity. " .
             "Use 'deserializeWithNodeType' method instead.",
             1
         );

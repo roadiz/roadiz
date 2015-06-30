@@ -55,20 +55,20 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         foreach ($nodes as $node) {
             $data = [];
 
-            $data['node_name'] =                $node->getNodeName();
-            $data['node_type'] =                $node->getNodeType()->getName();
-            $data['home'] =                     $node->isHome();
-            $data['visible'] =                  $node->isVisible();
-            $data['status'] =                   $node->getStatus();
-            $data['locked'] =                   $node->isLocked();
-            $data['priority'] =                 $node->getPriority();
-            $data['hiding_children'] =          $node->isHidingChildren();
-            $data['archived'] =                 $node->isArchived();
-            $data['sterile'] =                  $node->isSterile();
-            $data['children_order'] =           $node->getChildrenOrder();
+            $data['node_name'] = $node->getNodeName();
+            $data['node_type'] = $node->getNodeType()->getName();
+            $data['home'] = $node->isHome();
+            $data['visible'] = $node->isVisible();
+            $data['status'] = $node->getStatus();
+            $data['locked'] = $node->isLocked();
+            $data['priority'] = $node->getPriority();
+            $data['hiding_children'] = $node->isHidingChildren();
+            $data['archived'] = $node->isArchived();
+            $data['sterile'] = $node->isSterile();
+            $data['children_order'] = $node->getChildrenOrder();
             $data['children_order_direction'] = $node->getChildrenOrderDirection();
 
-            $data['children'] =  [];
+            $data['children'] = [];
             $data['nodes_sources'] = [];
             $data['tags'] = [];
 
@@ -93,8 +93,8 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     protected static function makeNodeRec($data)
     {
         $nodetype = Kernel::getInstance()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                    ->findOneByName($data["node_type"]);
+                                         ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                                         ->findOneByName($data["node_type"]);
 
         $node = new Node($nodetype);
         $node->setNodeName($data['node_name']);
@@ -116,7 +116,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             $namespace = NodeType::getGeneratedEntitiesNamespace();
             $classname = $nodetype->getSourceEntityClassName();
-            $class = $namespace."\\".$classname;
+            $class = $namespace . "\\" . $classname;
 
             $nodeSource = new $class($node, $trans);
             $nodeSource->setTitle($source["title"]);

@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Json Serialization handler for UrlAlias.
@@ -69,7 +69,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
         }
         $encoder = new JsonEncoder();
         $nameConverter = new CamelCaseToSnakeCaseNameConverter([
-            'alias'
+            'alias',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 

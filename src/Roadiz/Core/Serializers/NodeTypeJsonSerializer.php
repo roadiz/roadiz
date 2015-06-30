@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Json Serialization handler for NodeType.
@@ -50,13 +50,13 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
     {
         $data = [];
 
-        $data['name'] =           $nodeType->getName();
-        $data['displayName'] =    $nodeType->getDisplayName();
-        $data['description'] =    $nodeType->getDescription();
-        $data['visible'] =        $nodeType->isVisible();
+        $data['name'] = $nodeType->getName();
+        $data['displayName'] = $nodeType->getDisplayName();
+        $data['description'] = $nodeType->getDescription();
+        $data['visible'] = $nodeType->isVisible();
         $data['newsletterType'] = $nodeType->isNewsletterType();
-        $data['hidingNodes'] =    $nodeType->isHidingNodes();
-        $data['fields'] =         [];
+        $data['hidingNodes'] = $nodeType->isHidingNodes();
+        $data['fields'] = [];
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
             $nodeTypeFieldData = NodeTypeFieldJsonSerializer::toArray($nodeTypeField);
@@ -84,7 +84,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
             'description',
             'visible',
             'newsletterType',
-            'hidingNodes'
+            'hidingNodes',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
