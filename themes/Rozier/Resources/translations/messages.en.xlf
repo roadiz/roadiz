@@ -6060,6 +6060,10 @@
           <source>publish-all</source>
           <target xml:lang="en" state="translated">Publish offspring</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="groupName">
+          <source>groupName</source>
+          <target xml:lang="en" state="translated">Group name</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
