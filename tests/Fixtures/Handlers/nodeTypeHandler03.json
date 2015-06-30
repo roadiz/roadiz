@@ -14,7 +14,8 @@
             "type": 4,
             "indexed": false,
             "virtual": false,
-            "default_values": null
+            "default_values": null,
+            "group_name": null
         }
     ]
 }
