@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,45 +24,29 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TagTranslationJsonSerializer.php
+ * @file NodeTypeFieldRepository.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Serializers;
+namespace RZ\Roadiz\Core\Repositories;
 
-/**
- * Json Serialization handler for NodeSource.
- */
-class TagTranslationJsonSerializer extends AbstractJsonSerializer
+use RZ\Roadiz\Core\Entities\NodeType;
+
+class NodeTypeFieldRepository extends EntityRepository
 {
-    /**
-     * Create a simple associative array with a NodeSource.
-     *
-     * @param RZ\Roadiz\Core\Entities\NodeSource $nodeSource
-     *
-     * @return array
-     */
-    public static function toArray($tt)
+    public function findAvailableGroupsForNodeType(NodeType $nodeType = null)
     {
-        $data = [];
+        $query = $this->_em->createQuery('
+            SELECT partial ntf.{id,groupName} FROM RZ\Roadiz\Core\Entities\NodeTypeField ntf
+            WHERE ntf.visible = true
+            AND ntf.nodeType = :nodeType
+            GROUP BY ntf.groupName
+            ORDER BY ntf.groupName ASC
+        ')->setParameter(':nodeType', $nodeType);
 
-        $data['translation'] = $tt->getTranslation()->getLocale();
-        $data['title'] = $tt->getname();
-        $data['description'] = $tt->getDescription();
-
-        return $data;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see NodeSourceJsonSerializer::deserializeWithNodeType
-     */
-    public static function deserialize($string)
-    {
-        throw new \RuntimeException(
-            "Cannot simply deserialize a NodesSources entity. " .
-            "Use 'deserializeWithNodeType' method instead.",
-            1
-        );
+        try {
+            return $query->getScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
     }
 }

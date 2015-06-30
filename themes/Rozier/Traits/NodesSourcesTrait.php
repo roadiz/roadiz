@@ -142,19 +142,23 @@ trait NodesSourcesTrait
          * Create subform for source
          */
         $sourceBuilder = $this->getService('formFactory')
-                              ->createNamedBuilder('source', 'form', $sourceDefaults)
-                              ->add(
-                                  'title',
-                                  'text',
-                                  [
-                                      'label' => $this->getTranslator()->trans('title'),
-                                      'required' => false,
-                                      'attr' => [
-                                          'data-desc' => '',
-                                          'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
-                                      ],
-                                  ]
-                              );
+                              ->createNamedBuilder('source', 'form', $sourceDefaults);
+        /*
+         * Add title and default fields
+         */
+        $sourceBuilder->add(
+            'title',
+            'text',
+            [
+                'label' => $this->getTranslator()->trans('title'),
+                'required' => false,
+                'attr' => [
+                    'data-desc' => '',
+                    'data-field-group' => 'default',
+                    'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
+                ],
+            ]
+        );
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),
@@ -230,6 +234,7 @@ trait NodesSourcesTrait
             'label' => $label,
             'required' => false,
             'attr' => [
+                'data-field-group' => !empty($field->getGroupName()) ? $field->getGroupName() : 'default',
                 'data-dev-name' => $devName,
                 'autocomplete' => 'off',
             ],

@@ -30,11 +30,10 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use RZ\Roadiz\Core\Entities\NodeType;
-
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Json Serialization handler for NodeSource.
@@ -69,7 +68,6 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         return $data;
     }
 
-
     protected static function getSourceFields($nodeSource)
     {
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
@@ -96,7 +94,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
     public static function deserialize($string)
     {
         throw new \RuntimeException(
-            "Cannot simply deserialize a NodesSources entity. ".
+            "Cannot simply deserialize a NodesSources entity. " .
             "Use 'deserializeWithNodeType' method instead.",
             1
         );
@@ -120,7 +118,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
             "title",
             "meta_title",
             "meta_keywords",
-            "meta_description"
+            "meta_description",
         ];
 
         foreach ($fields as $field) {
@@ -136,7 +134,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         $serializer = new Serializer([$normalizer], [$encoder]);
         $node = $serializer->deserialize(
             $string,
-            NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName(),
+            NodeType::getGeneratedEntitiesNamespace() . '\\' . $type->getSourceEntityClassName(),
             'json'
         );
 

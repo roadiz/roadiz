@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Serialization class for Setting.
@@ -59,7 +59,7 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
             $tmpGroup['settings'] = [];
 
             foreach ($group->getSettings() as $setting) {
-                 $tmpGroup['settings'][] = SettingJsonSerializer::toArray($setting);
+                $tmpGroup['settings'][] = SettingJsonSerializer::toArray($setting);
             }
 
             $data[] = $tmpGroup;

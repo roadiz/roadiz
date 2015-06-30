@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Serialization class for NodeTypeField.
@@ -52,14 +52,15 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
     {
         $data = [];
 
-        $data['name'] =           $nodeTypeField->getName();
-        $data['label'] =          $nodeTypeField->getLabel();
-        $data['description'] =    $nodeTypeField->getDescription();
-        $data['visible'] =        $nodeTypeField->isVisible();
-        $data['type'] =           $nodeTypeField->getType();
-        $data['indexed'] =        $nodeTypeField->isIndexed();
-        $data['virtual'] =        $nodeTypeField->isVirtual();
+        $data['name'] = $nodeTypeField->getName();
+        $data['label'] = $nodeTypeField->getLabel();
+        $data['description'] = $nodeTypeField->getDescription();
+        $data['visible'] = $nodeTypeField->isVisible();
+        $data['type'] = $nodeTypeField->getType();
+        $data['indexed'] = $nodeTypeField->isIndexed();
+        $data['virtual'] = $nodeTypeField->isVirtual();
         $data['default_values'] = $nodeTypeField->getDefaultValues();
+        $data['group_name'] = $nodeTypeField->getGroupName();
 
         return $data;
     }
@@ -83,7 +84,8 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
             'type',
             'indexed',
             'virtual',
-            'default_values'
+            'default_values',
+            'group_name',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 

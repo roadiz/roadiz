@@ -7,6 +7,7 @@ NodeEditSource = function(){
 
     // Selectors
     _this.$content = $('.content-node-edit-source');
+    _this.$form = $('#edit-node-source-form');
     _this.$formRow = null;
     _this.$dropdown = null;
     _this.$input = null;
@@ -14,11 +15,67 @@ NodeEditSource = function(){
     // Methods
     if(_this.$content.length){
         _this.$formRow = _this.$content.find('.uk-form-row');
+        _this.wrapInTabs();
         _this.init();
     }
 
 };
 
+NodeEditSource.prototype.wrapInTabs = function() {
+    var _this = this;
+
+    var fieldGroups = {};
+    var $fields = _this.$content.find('.uk-form-row[data-field-group]');
+    var fieldsLength = $fields.length;
+    var fieldsGroupsLength = 0;
+
+    if (fieldsLength > 1) {
+        for (var i = 0; i < fieldsLength; i++) {
+            var groupName = $fields[i].getAttribute('data-field-group');
+            if (typeof fieldGroups[groupName] === "undefined" ) {
+                fieldGroups[groupName] = [];
+                fieldsGroupsLength++;
+            }
+            fieldGroups[groupName].push($fields[i]);
+        }
+
+        if (fieldsGroupsLength > 1) {
+            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', animation: \'fade\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
+            var $formSwitcher = _this.$form.find('.uk-switcher');
+            var $formSwitcherNav = _this.$form.find('.uk-switcher-nav');
+
+            /*
+             * Sort tab name and put default in first
+             */
+            var keysSorted = Object.keys(fieldGroups).sort(function (a,b) {
+                if (a == 'default') { return -1; }
+                if (b == 'default') { return 1; }
+                return +(a.toLowerCase() > b.toLowerCase()) || +(a.toLowerCase() === b.toLowerCase()) - 1;
+            });
+
+            for (var keyIndex in keysSorted) {
+                var groupName2 = keysSorted[keyIndex];
+                var groupId = 'group-' + groupName2.toLowerCase();
+                $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>');
+
+                if (groupName2 == 'default') {
+                    $formSwitcherNav.append('<li><a href="#"><i class="uk-icon-star"></i></a></li>');
+                } else {
+                    $formSwitcherNav.append('<li><a href="#">' + groupName2 + '</a></li>');
+                }
+                var $group = $formSwitcher.find('#'+groupId);
+
+                for(var index = 0; index < fieldGroups[groupName2].length; index++) {
+                    $group.append($(fieldGroups[groupName2][index]));
+                }
+            }
+
+            $formSwitcherNav.on('show.uk.switcher', function(event, area){
+                Rozier.$window.trigger('resize');
+            });
+        }
+    }
+};
 /**
  * Init
  * @return {[type]} [description]

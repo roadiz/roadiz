@@ -54,10 +54,10 @@ class TagJsonSerializer extends AbstractJsonSerializer
             $data = [];
 
             $data['tag_name'] = $tag->getTagName();
-            $data['visible'] =  $tag->isVisible();
-            $data['locked'] =   $tag->isLocked();
+            $data['visible'] = $tag->isVisible();
+            $data['locked'] = $tag->isLocked();
 
-            $data['children'] =  [];
+            $data['children'] = [];
             $data['tag_translation'] = [];
 
             foreach ($tag->getTranslatedTags() as $source) {
