@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
@@ -42,6 +44,70 @@ use RZ\Roadiz\Core\Events\DataInheritanceEvent;
  */
 class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
 {
+    /**
+     * Get cache driver according to config.yml entry.
+     *
+     * Logic from Doctrine setup method
+     * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
+     *
+     * @param  array      $cacheConfig
+     * @param  boolean    $isDevMode
+     * @param  string|null $proxyDir
+     * @return Cache
+     */
+    protected function getManuallyDefinedCache(array $cacheConfig, $isDevMode = false, $proxyDir = null)
+    {
+        $proxyDir = $proxyDir ?: sys_get_temp_dir();
+
+        if ($isDevMode === false) {
+            if (extension_loaded('apc') &&
+                !empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'apc'
+            ) {
+                $cache = new \Doctrine\Common\Cache\ApcCache();
+            } elseif (extension_loaded('xcache') &&
+                !empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'xcache'
+            ) {
+                $cache = new \Doctrine\Common\Cache\XcacheCache();
+            } elseif (extension_loaded('memcache') &&
+                !empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'memcache'
+            ) {
+                $memcache = new \Memcache();
+                $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
+                if (!empty($cacheConfig['port'])) {
+                    $memcache->connect($host, $cacheConfig['port']);
+                } else {
+                    $memcache->connect($host);
+                }
+                $cache = new \Doctrine\Common\Cache\MemcacheCache();
+                $cache->setMemcache($memcache);
+            } elseif (extension_loaded('redis') &&
+                !empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'redis'
+            ) {
+                $redis = new \Redis();
+                $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
+                if (!empty($cacheConfig['port'])) {
+                    $redis->connect($host, $cacheConfig['port']);
+                } else {
+                    $redis->connect($host);
+                }
+                $cache = new \Doctrine\Common\Cache\RedisCache();
+                $cache->setRedis($redis);
+            } else {
+                $cache = new ArrayCache();
+            }
+        } elseif ($cache === null) {
+            $cache = new ArrayCache();
+        }
+        if ($cache instanceof CacheProvider) {
+            $cache->setNamespace("dc2_" . md5($proxyDir) . "_"); // to avoid collisions
+        }
+
+        return $cache;
+    }
     /**
      * Initialize Doctrine entity manager in DI container.
      *
@@ -55,14 +121,23 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
             $container['em.config'] = function ($c) {
+                $cache = null;
+                if (isset($c['config']['cacheDriver']) &&
+                    !empty($c['config']['cacheDriver']['type'])) {
+                    $cache = $this->getManuallyDefinedCache(
+                        $c['config']['cacheDriver'],
+                        (boolean) $c['config']['devMode'],
+                        ROADIZ_ROOT . '/gen-src/Proxies'
+                    );
+                }
+
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
                     (boolean) $c['config']['devMode'],
                     ROADIZ_ROOT . '/gen-src/Proxies',
-                    null,
+                    $cache,
                     false
                 );
-
                 $config->setProxyDir(ROADIZ_ROOT . '/gen-src/Proxies');
                 $config->setProxyNamespace('Proxies');
 
@@ -112,35 +187,11 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             };
         }
         /*
-         * logic from Doctrine setup method
          *
-         * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-
-            if (true === (boolean) $c['config']['devMode']) {
-                $cache = new ArrayCache();
-            } else {
-                if (extension_loaded('apc')) {
-                    $cache = new \Doctrine\Common\Cache\ApcCache();
-                } elseif (extension_loaded('xcache')) {
-                    $cache = new \Doctrine\Common\Cache\XcacheCache();
-                } elseif (extension_loaded('memcache')) {
-                    $memcache = new \Memcache();
-                    $memcache->connect('127.0.0.1');
-                    $cache = new \Doctrine\Common\Cache\MemcacheCache();
-                    $cache->setMemcache($memcache);
-                } elseif (extension_loaded('redis')) {
-                    $redis = new \Redis();
-                    $redis->connect('127.0.0.1');
-                    $cache = new \Doctrine\Common\Cache\RedisCache();
-                    $cache->setRedis($redis);
-                } else {
-                    $cache = new ArrayCache();
-                }
-            }
-
-
+            // clone existing cache to be able to vary namespace
+            $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
             if ($cache instanceof CacheProvider) {
                 $cache->setNamespace($c['config']["appNamespace"] . "_nsurls"); // to avoid collisions
             }

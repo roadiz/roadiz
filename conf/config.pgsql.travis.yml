@@ -11,6 +11,10 @@ doctrine:
     dbname: "roadiz_tests"
 security:
     secret: "change#this#secret#very#important"
+cacheDriver:
+    type: null
+    host: null
+    port: null
 mailer:
     type: ""
     host: "localhost"
