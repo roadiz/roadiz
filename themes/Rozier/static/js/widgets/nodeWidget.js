@@ -29,11 +29,19 @@ NodeWidget.prototype.init = function() {
     _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
     _this.$toggleExplorerButtons.on('click', onExplorerToggleP);
 
+    _this.initUnlinkEvent();
+
+    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+};
+
+NodeWidget.prototype.initUnlinkEvent = function() {
+    var _this = this;
+
+    _this.$unlinkNodeButtons = $('[data-node-widget-unlink-node]');
+
     var onUnlinkNodeP = $.proxy(_this.onUnlinkNode, _this);
     _this.$unlinkNodeButtons.off('click', onUnlinkNodeP);
     _this.$unlinkNodeButtons.on('click', onUnlinkNodeP);
-
-    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
 };
 
 /**
@@ -186,7 +194,7 @@ NodeWidget.prototype.onUnlinkNode = function( event ) {
 
     var $element = $(event.currentTarget);
 
-    var $doc = $element.parents('li');
+    var $doc = $($element.parents('li')[0]);
     var $widget = $element.parents('.nodes-widget-sortable').first();
 
     $doc.remove();
@@ -297,6 +305,8 @@ NodeWidget.prototype.onAddNodeClick = function($originWidget, event) {
     $originWidget.find('li').each(function (index, element) {
         $(element).find('input').attr('name', inputName+'['+index+']');
     });
+
+    _this.initUnlinkEvent();
 
     return false;
 };

@@ -28,11 +28,19 @@ CustomFormWidget.prototype.init = function() {
     _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
     _this.$toggleExplorerButtons.on('click', onExplorerToggleP);
 
+    _this.initUnlinkEvent();
+
+    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+};
+
+CustomFormWidget.prototype.initUnlinkEvent = function() {
+    var _this = this;
+
+    _this.$unlinkCustomFormButtons = $('[data-custom-form-widget-unlink-custom-form]');
+
     var onUnlinkCustomFormP = $.proxy(_this.onUnlinkCustomForm, _this);
     _this.$unlinkCustomFormButtons.off('click', onUnlinkCustomFormP);
     _this.$unlinkCustomFormButtons.on('click', onUnlinkCustomFormP);
-
-    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
 };
 
 /**
@@ -178,7 +186,7 @@ CustomFormWidget.prototype.onUnlinkCustomForm = function( event ) {
 
     var $element = $(event.currentTarget);
 
-    var $doc = $element.parents('li');
+    var $doc = $($element.parents('li')[0]);
     var $widget = $element.parents('.custom-forms-widget-sortable').first();
 
     $doc.remove();
@@ -289,6 +297,8 @@ CustomFormWidget.prototype.onAddCustomFormClick = function($originWidget, event)
     $originWidget.find('li').each(function (index, element) {
         $(element).find('input').attr('name', inputName+'['+index+']');
     });
+
+    _this.initUnlinkEvent();
 
     return false;
 };

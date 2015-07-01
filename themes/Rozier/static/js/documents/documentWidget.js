@@ -182,8 +182,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
     var _this = this;
 
     var $element = $(event.currentTarget);
-
-    var $doc = $element.parents('li');
+    var $doc = $($element.parents('li')[0]);
     var $widget = $element.parents('.documents-widget-sortable').first();
 
     $doc.remove();
