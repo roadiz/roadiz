@@ -32,6 +32,7 @@ NodeEditSource.prototype.wrapInTabs = function() {
     if (fieldsLength > 1) {
         for (var i = 0; i < fieldsLength; i++) {
             var groupName = $fields[i].getAttribute('data-field-group');
+
             if (typeof fieldGroups[groupName] === "undefined" ) {
                 fieldGroups[groupName] = [];
                 fieldsGroupsLength++;
@@ -55,7 +56,9 @@ NodeEditSource.prototype.wrapInTabs = function() {
 
             for (var keyIndex in keysSorted) {
                 var groupName2 = keysSorted[keyIndex];
-                var groupId = 'group-' + groupName2.toLowerCase();
+                var groupName2Safe = groupName2.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+
+                var groupId = 'group-' + groupName2Safe;
                 $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>');
 
                 if (groupName2 == 'default') {
