@@ -234,7 +234,7 @@ trait NodesSourcesTrait
             'label' => $label,
             'required' => false,
             'attr' => [
-                'data-field-group' => !empty($field->getGroupName()) ? $field->getGroupName() : 'default',
+                'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
                 'data-dev-name' => $devName,
                 'autocomplete' => 'off',
             ],
