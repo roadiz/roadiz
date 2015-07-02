@@ -264,6 +264,13 @@ trait NodesSourcesTrait
         $options = $this->getDefaultOptions($field);
 
         switch ($field->getType()) {
+            case NodeTypeField::NODES_T:
+                $options = array_merge_recursive($options, [
+                    'attr' => [
+                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues()))
+                    ],
+                ]);
+                break;
             case NodeTypeField::ENUM_T:
                 $options = array_merge_recursive($options, [
                     'placeholder' => 'choose.value',

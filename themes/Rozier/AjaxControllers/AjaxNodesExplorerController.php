@@ -63,6 +63,18 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $arrayFilter = [
             'status' => ['<', Node::DELETED],
         ];
+
+        if (count($request->get('nodeTypes')) > 0) {
+            $nodeTypeNames = array_map('trim', $request->get('nodeTypes'));
+
+            $nodeTypes = $this->getService('nodeTypeApi')->getBy([
+                'name' => $nodeTypeNames,
+            ]);
+
+            if (null !== $nodeTypes && count($nodeTypes) > 0) {
+                $arrayFilter['nodeType'] = $nodeTypes;
+            }
+        }
         /*
          * Manage get request to filter list
          */
