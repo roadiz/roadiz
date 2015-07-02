@@ -99,7 +99,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             } else {
                 $cache = new ArrayCache();
             }
-        } elseif ($cache === null) {
+        } else {
             $cache = new ArrayCache();
         }
         if ($cache instanceof CacheProvider) {
