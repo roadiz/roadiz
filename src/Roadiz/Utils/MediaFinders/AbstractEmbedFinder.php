@@ -42,6 +42,7 @@ abstract class AbstractEmbedFinder
 {
     protected $feed = null;
     protected $embedId;
+    protected $key;
 
     protected static $platform = 'abstract';
 
@@ -330,5 +331,33 @@ abstract class AbstractEmbedFinder
         }
 
         return false;
+    }
+
+    /**
+     * Gets the value of key.
+     *
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Sets the value of key.
+     *
+     * Key is the access_token which could be asked to consume an API.
+     * For example, for Youtube it must be your API server key. For Soundcloud
+     * it should be you app client Id.
+     *
+     * @param mixed $key the key
+     *
+     * @return self
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
     }
 }
