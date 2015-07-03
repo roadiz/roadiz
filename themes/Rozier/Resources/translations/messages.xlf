@@ -6188,7 +6188,14 @@
           <source>YoutubeEmbedFinder needs a Google server key.</source>
           <target></target>
       </trans-unit>
-
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
+          <source>edit.user_details.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.edit_details">
+          <source>user.edit_details</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

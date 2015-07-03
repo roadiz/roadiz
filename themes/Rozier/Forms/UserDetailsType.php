@@ -24,13 +24,12 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UserType.php
+ * @file UserDetailsType.php
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
+use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,40 +38,38 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  *
  */
-class UserType extends AbstractType
+class UserDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', 'email', [
-                'label' => 'email',
-                'constraints' => [
-                    new NotBlank(),
-                    new UniqueEmail([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['email'],
-                    ]),
-                ],
-            ])
-            ->add('username', 'text', [
-                'label' => 'username',
-                'constraints' => [
-                    new NotBlank(),
-                    new UniqueUsername([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['username'],
-                    ]),
-                ],
-            ])
-            ->add('plainPassword', 'repeated', [
-                'type' => 'password',
-                'invalid_message' => 'password.must.match',
-                'first_options' => [
-                    'label' => 'password',
-                ],
-                'second_options' => [
-                    'label' => 'passwordVerify',
-                ],
+        $builder->add('firstName', 'text', [
+                'label' => 'firstName',
                 'required' => false,
+            ])
+            ->add('lastName', 'text', [
+                'label' => 'lastName',
+                'required' => false,
+            ])
+            ->add('facebookName', 'text', [
+                'label' => 'facebookName',
+                'required' => false,
+                'constraints' => [
+                    new ValidFacebookName(),
+                ],
+            ])
+            ->add('company', 'text', [
+                'label' => 'company',
+                'required' => false,
+            ])
+            ->add('job', 'text', [
+                'label' => 'job',
+                'required' => false,
+            ])
+            ->add('birthday', 'date', [
+                'label' => 'birthday',
+                'empty_value' => ['year' => 'year', 'month' => 'month', 'day' => 'day'],
+                'required' => false,
+                'years' => range(1920, date('Y') - 6),
             ]);
     }
 
@@ -86,20 +83,10 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'compound' => true,
             'label' => false,
-            'email' => '',
-            'username' => '',
             'data_class' => 'RZ\Roadiz\Core\Entities\User',
             'attr' => [
                 'class' => 'uk-form user-form',
             ],
         ]);
-
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
-        $resolver->setAllowedTypes('email', 'string');
-        $resolver->setAllowedTypes('username', 'string');
     }
 }

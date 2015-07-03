@@ -4,6 +4,10 @@
         <li class="{% if current == 'edit' %}uk-active{% endif %}" >
             <a href="{{ path('usersEditPage', { userId: user.getId }) }}">{% trans %}user.edit{% endtrans %}</a>
         </li>
+        <li class="{% if current == 'edit_details' %}uk-active{% endif %}" >
+            <a href="{{ path('usersEditDetailsPage', { userId: user.getId }) }}">{% trans %}user.edit_details{% endtrans %}</a>
+        </li>
+
         {% if (authorizationChecker.Granted('ROLE_ACCESS_USERS')) %}
         <li class="{% if current == 'security' %}uk-active{% endif %}">
             <a href="{{ path('usersSecurityPage', { userId: user.getId }) }}">{% trans %}user.security{% endtrans %}</a>

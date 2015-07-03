@@ -36,6 +36,7 @@ use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\UserType;
+use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -100,7 +101,6 @@ class UsersController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->updateProfileImage($user);
                 $this->getService('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -121,6 +121,60 @@ class UsersController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/edit.html.twig', $this->assignation);
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
+     * Return an edition form for requested user details.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $userId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function editDetailsAction(Request $request, $userId)
+    {
+        $this->validateAccessForRole('ROLE_BACKEND_USER');
+
+        if (!($this->isGranted('ROLE_ACCESS_USERS')
+            || $this->getUser()->getId() == $userId)) {
+            throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
+        }
+
+        $user = $this->getService('em')
+                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+
+        if ($user !== null) {
+            $this->assignation['user'] = $user;
+
+            $form = $this->createForm(new UserDetailsType(), $user);
+
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $this->updateProfileImage($user);
+                $this->getService('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'user.%name%.updated',
+                    ['%name%' => $user->getUsername()]
+                );
+                $this->publishConfirmMessage($request, $msg);
+
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                return $this->redirect($this->generateUrl(
+                    'usersEditDetailsPage',
+                    ['userId' => $user->getId()]
+                ));
+            }
+
+            $this->assignation['form'] = $form->createView();
+
+            return $this->render('users/editDetails.html.twig', $this->assignation);
         } else {
             return $this->throw404();
         }
@@ -223,24 +277,21 @@ class UsersController extends RozierApp
                 $url = $facebook->getPictureUrl();
                 $user->setPictureUrl($url);
             } catch (\Exception $e) {
-                $url = "http://www.gravatar.com/avatar/" .
-                md5(strtolower(trim($user->getEmail()))) .
-                "?d=identicon&s=200";
-                $user->setPictureUrl($url);
-                throw new FacebookUsernameNotFoundException(
-                    $this->getTranslator()->trans(
-                        'user.facebook_name.%name%._does_not_exist',
-                        ['%name%' => $user->getFacebookName()]
-                    ),
-                    1
-                );
+                $user->setPictureUrl(static::getGravatarUrl($user->getEmail()));
             }
         } else {
-            $url = "http://www.gravatar.com/avatar/" .
-            md5(strtolower(trim($user->getEmail()))) .
-            "?d=identicon&s=200";
-            $user->setPictureUrl($url);
+            $user->setPictureUrl(static::getGravatarUrl($user->getEmail()));
         }
+    }
+
+    /**
+     *
+     * @param  string $email
+     * @return string
+     */
+    public static function getGravatarUrl($email)
+    {
+        return "http://www.gravatar.com/avatar/".md5(strtolower(trim($email)))."?d=identicon&s=200";
     }
 
     /**
