@@ -64,6 +64,12 @@
                 "visible": true
             },
             {
+                "name": "google_server_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
                 "name": "twitter_client_id",
                 "value": "",
                 "type": 0,

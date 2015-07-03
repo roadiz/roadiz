@@ -30,8 +30,11 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
+use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -856,6 +859,13 @@ class DocumentsController extends RozierApp
             in_array($data['embedPlatform'], array_keys($handlers))) {
             $class = $handlers[$data['embedPlatform']];
             $finder = new $class($data['embedId']);
+
+            if ($finder instanceof YoutubeEmbedFinder) {
+                $finder->setKey(SettingsBag::get('google_server_id'));
+            }
+            if ($finder instanceof SoundcloudEmbedFinder) {
+                $finder->setKey(SettingsBag::get('soundcloud_client_id'));
+            }
 
             if ($finder->exists()) {
                 $document = $finder->createDocumentFromFeed($this->getContainer());

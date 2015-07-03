@@ -94,18 +94,16 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaFeed($search = null)
     {
-        $clientId = SettingsBag::get('soundcloud_client_id');
+        if ($this->getKey() != "") {
+            $url = "http://api.soundcloud.com/tracks/".
+                    $this->embedId.
+                    ".json?client_id=".
+                    $this->getKey();
 
-        if (false === $clientId) {
+            return $this->downloadFeedFromAPI($url);
+        } else {
             throw new APINeedsAuthentificationException("Soundcloud need a clientId to perform API calls, create a “soundcloud_client_id” setting.", 1);
         }
-
-        $url = "http://api.soundcloud.com/tracks/".
-                $this->embedId.
-                ".json?client_id=".
-                $clientId;
-
-        return $this->downloadFeedFromAPI($url);
     }
 
     /**
