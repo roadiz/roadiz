@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Utils\MediaFinders;
 
+use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
+
 /**
  * Youtube tools class.
  *
@@ -53,14 +55,14 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()['entry']['title']['$t'];
+        return $this->getFeed()['items'][0]['snippet']['title'];
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()['entry']['media$group']['media$description']['$t'];
+        return $this->getFeed()['items'][0]['snippet']['description'];
     }
     /**
      * {@inheritdoc}
@@ -74,7 +76,7 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()['entry']['media$group']['media$thumbnail'][2]['url'];
+        return $this->getFeed()['items'][0]['snippet']['thumbnails']['high']['url'];
     }
 
 
@@ -83,12 +85,15 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
-        $url = "http://gdata.youtube.com/feeds/api/videos/?q=".$searchTerm."&v=2&alt=json&max-results=".$maxResults;
-        if (!empty($author)) {
-            $url .= '&author='.$author;
+        if ($this->getKey() != "") {
+            $url = "https://www.googleapis.com/youtube/v3/search?q=".$searchTerm."&part=snippet&key=".$this->getKey()."&maxResults=".$maxResults;
+            if (!empty($author)) {
+                $url .= '&author='.$author;
+            }
+            return $this->downloadFeedFromAPI($url);
+        } else {
+            throw new APINeedsAuthentificationException("YoutubeEmbedFinder needs a Google server key, create a “google_server_id” setting.", 1);
         }
-
-        return $this->downloadFeedFromAPI($url);
     }
 
     /**
@@ -96,11 +101,12 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getMediaFeed($search = null)
     {
-        // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
-        //
-        $url = "http://gdata.youtube.com/feeds/api/videos/".$this->embedId."?v=2&alt=json";
-
-        return $this->downloadFeedFromAPI($url);
+        if ($this->getKey() != "") {
+            $url = "https://www.googleapis.com/youtube/v3/videos?id=".$this->embedId."&part=snippet&key=".$this->getKey()."&maxResults=1";
+            return $this->downloadFeedFromAPI($url);
+        } else {
+            throw new APINeedsAuthentificationException("YoutubeEmbedFinder needs a Google server key, create a “google_server_id” setting.", 1);
+        }
     }
 
     /**

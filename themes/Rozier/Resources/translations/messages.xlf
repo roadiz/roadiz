@@ -6139,6 +6139,14 @@
           <source>overrideLocale</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.does_not_exist">
+          <source>embedId.does_not_exist</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
+          <source>YoutubeEmbedFinder needs a Google server key.</source>
+          <target></target>
+      </trans-unit>
 
     </body>
   </file>
