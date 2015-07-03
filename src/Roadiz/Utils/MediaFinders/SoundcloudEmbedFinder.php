@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Utils\MediaFinders;
 
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 
 /**
  * Soundcloud tools class.
