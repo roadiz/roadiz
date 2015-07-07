@@ -63,12 +63,26 @@ class SvgDocumentViewer
 
     public function getContent()
     {
+        $xmlAttributes = $this->xml->attributes();
+        $existingAttributesKeys = [];
+        foreach ($xmlAttributes as $key => $value) {
+            $existingAttributesKeys[] = $key;
+        }
+
         foreach ($this->attributes as $key => $value) {
             if (in_array($key, static::$allowedAttributes)) {
                 if ($key == 'identifier') {
-                    $this->xml->addAttribute('id', $value);
+                    if (in_array('id', $existingAttributesKeys)) {
+                        $xmlAttributes['id'] = $value;
+                    } else {
+                        $this->xml->addAttribute('id', $value);
+                    }
                 } else {
-                    $this->xml->addAttribute($key, $value);
+                    if (in_array($key, $existingAttributesKeys)) {
+                        $xmlAttributes[$key] = $value;
+                    } else {
+                        $this->xml->addAttribute($key, $value);
+                    }
                 }
             }
         }
