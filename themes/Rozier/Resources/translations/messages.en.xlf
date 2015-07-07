@@ -6080,6 +6080,10 @@
           <source>user.edit_details</source>
           <target xml:lang="en">Details</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release" approved="yes">
+          <source>new.version.release</source>
+          <target xml:lang="en">A new version is released!</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

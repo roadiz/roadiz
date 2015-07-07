@@ -6155,7 +6155,6 @@
           <source>unused_documents</source>
           <target></target>
       </trans-unit>
-
       <trans-unit xml:space="preserve" id="node.offspring.published">
           <source>node.offspring.published</source>
           <target></target>
@@ -6194,6 +6193,10 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="user.edit_details">
           <source>user.edit_details</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
           <target></target>
       </trans-unit>
     </body>
