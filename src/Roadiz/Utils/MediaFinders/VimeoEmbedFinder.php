@@ -118,14 +118,14 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     {
         $uri = 'https://player.vimeo.com/video/'.$this->embedId.'?api=1';
 
-        if (isset($args['displayTitle'])) {
-            $uri .= '&title='.$args['displayTitle'];
+        if (array_key_exists($args['displayTitle'])) {
+            $uri .= '&title='.(int) $args['displayTitle'];
         }
-        if (isset($args['byline'])) {
-            $uri .= '&byline='.$args['byline'];
+        if (array_key_exists($args['byline'])) {
+            $uri .= '&byline='.(int) $args['byline'];
         }
-        if (isset($args['portrait'])) {
-            $uri .= '&portrait='.$args['portrait'];
+        if (array_key_exists($args['portrait'])) {
+            $uri .= '&portrait='.(int) $args['portrait'];
         }
         if (isset($args['color'])) {
             $uri .= '&color='.$args['color'];
@@ -133,7 +133,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         if (isset($args['id'])) {
             $uri .= '&player_id='.$args['id'];
         }
-        if (isset($args['loop'])) {
+        if (array_key_exists($args['loop'])) {
             $uri .= '&loop='.(int) $args['loop'];
         }
 
