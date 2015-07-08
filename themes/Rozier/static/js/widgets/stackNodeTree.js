@@ -164,8 +164,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
 
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
-
-                    Rozier.lazyload.generalBind();
+                    Rozier.lazyload.bindAjaxLink();
                     $nodeTree.fadeIn();
                     Rozier.resize();
 

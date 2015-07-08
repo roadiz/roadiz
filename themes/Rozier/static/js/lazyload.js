@@ -189,6 +189,16 @@ Lazyload.prototype.applyContent = function(data) {
     });
 };
 
+Lazyload.prototype.bindAjaxLink = function() {
+    var _this = this;
+
+    _this.parseLinks();
+
+    var onClickProxy = $.proxy(_this.onClick, _this);
+    _this.$linksSelector.off('click', onClickProxy);
+    _this.$linksSelector.on('click', onClickProxy);
+};
+
 
 /**
  * General bind on page load
@@ -197,11 +207,7 @@ Lazyload.prototype.applyContent = function(data) {
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
-    _this.parseLinks();
-
-    var onClickProxy = $.proxy(_this.onClick, _this);
-    _this.$linksSelector.off('click', onClickProxy);
-    _this.$linksSelector.on('click', onClickProxy);
+    _this.bindAjaxLink();
 
     new DocumentsBulk();
     new AutoUpdate();

@@ -287,9 +287,6 @@ Rozier.refreshMainNodeTree = function (translationId) {
             data: postData,
         })
         .done(function(data) {
-            //console.log("success");
-            //console.log(data);
-
             if($currentNodeTree.length &&
                 typeof data.nodeTree != "undefined"){
 
@@ -300,7 +297,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
                     Rozier.resize();
-                    Rozier.lazyload.generalBind();
+                    Rozier.lazyload.bindAjaxLink();
                 });
             }
         })

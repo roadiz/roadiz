@@ -6,7 +6,7 @@ NodeEditSource = function(){
     var _this = this;
 
     // Selectors
-    _this.$content = $('.content-node-edit-source');
+    _this.$content = $($('.content-node-edit-source')[0]);
     _this.$form = $('#edit-node-source-form');
     _this.$formRow = null;
     _this.$dropdown = null;
@@ -23,7 +23,7 @@ NodeEditSource = function(){
 
 NodeEditSource.prototype.wrapInTabs = function() {
     var _this = this;
-
+    console.log('--- wrapInTabs');
     var fieldGroups = {};
     var $fields = _this.$content.find('.uk-form-row[data-field-group]');
     var fieldsLength = $fields.length;
