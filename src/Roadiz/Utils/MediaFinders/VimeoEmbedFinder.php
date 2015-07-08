@@ -112,6 +112,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      * * byline
      * * portrait
      * * color
+     * * loop
      */
     public function getSource(&$args = [])
     {
@@ -131,6 +132,9 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         }
         if (isset($args['id'])) {
             $uri .= '&player_id='.$args['id'];
+        }
+        if (isset($args['loop'])) {
+            $uri .= '&loop='.(int) $args['loop'];
         }
 
         return $uri;
