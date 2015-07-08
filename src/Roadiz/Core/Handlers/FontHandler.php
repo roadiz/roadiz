@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Font;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with fonts entities..
@@ -52,26 +51,5 @@ class FontHandler
     public function getFont()
     {
         return $this->font;
-    }
-
-    /**
-     * Generate a font download url.
-     *
-     * @param string $extension Select a specific font file.
-     * @param string $token     Csrf token to protect from requesting font more than once.
-     *
-     * @return string
-     */
-    public function getDownloadUrl($extension, $token)
-    {
-        return Kernel::getService('urlGenerator')->generate(
-            'FontFile',
-            [
-                'filename'  => $this->font->getHash(),
-                'variant'   => $this->font->getVariant(),
-                'extension' => $extension,
-                'token'     => $token
-            ]
-        );
     }
 }

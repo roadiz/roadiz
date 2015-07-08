@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -135,7 +136,11 @@ class RoutingServiceProvider implements ServiceProviderInterface
              */
             $container['routeCollection'] = function ($c) {
                 $c['stopwatch']->start('routeCollection');
-                $rCollection = new RoadizRouteCollection($c['backendClass'], $c['frontendThemes']);
+                $rCollection = new RoadizRouteCollection(
+                    $c['backendClass'],
+                    $c['frontendThemes'],
+                    SettingsBag::get('static_domain_name')
+                );
                 $c['stopwatch']->stop('routeCollection');
 
                 return $rCollection;

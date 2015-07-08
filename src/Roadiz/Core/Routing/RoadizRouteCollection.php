@@ -43,12 +43,15 @@ class RoadizRouteCollection extends RouteCollection
     protected $frontendThemes;
 
     /**
-     *
      * @param string $backendClassname
      * @param array  $frontendThemes
+     * @param string $assetsHost
      */
-    public function __construct($backendClassname, array $frontendThemes)
-    {
+    public function __construct(
+        $backendClassname,
+        array $frontendThemes,
+        $assetsHost = ''
+    ) {
         $this->backendClassname = $backendClassname;
         $this->frontendThemes = $frontendThemes;
 
@@ -60,7 +63,11 @@ class RoadizRouteCollection extends RouteCollection
         /*
          * Add Assets controller routes
          */
-        $this->addCollection(AssetsController::getRoutes());
+        $assets = AssetsController::getRoutes();
+        if ('' != $assetsHost) {
+            $assets->setHost($assetsHost);
+        }
+        $this->addCollection($assets);
 
         /*
          * Add Entry points controller routes
