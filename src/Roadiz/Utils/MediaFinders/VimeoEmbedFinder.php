@@ -77,15 +77,14 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         return $this->getFeed()[0]['thumbnail_large'];
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
-        $url = "http://gdata.youtube.com/feeds/api/videos/?q=".$searchTerm."&v=2&alt=json&max-results=".$maxResults;
+        $url = "http://gdata.youtube.com/feeds/api/videos/?q=" . $searchTerm . "&v=2&alt=json&max-results=" . $maxResults;
         if (!empty($author)) {
-            $url .= '&author='.$author;
+            $url .= '&author=' . $author;
         }
 
         return $this->downloadFeedFromAPI($url);
@@ -98,7 +97,7 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     {
         // http://gdata.youtube.com/feeds/api/videos/<Code de la vidéo>?v=2&alt=json ---> JSON
         //
-        $url = "http://vimeo.com/api/v2/video/".$this->embedId.".json";
+        $url = "http://vimeo.com/api/v2/video/" . $this->embedId . ".json";
 
         return $this->downloadFeedFromAPI($url);
     }
@@ -116,25 +115,25 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource(&$args = [])
     {
-        $uri = 'https://player.vimeo.com/video/'.$this->embedId.'?api=1';
+        $uri = 'https://player.vimeo.com/video/' . $this->embedId . '?api=1';
 
-        if (array_key_exists($args['displayTitle'])) {
-            $uri .= '&title='.(int) $args['displayTitle'];
+        if (array_key_exists('displayTitle', $args)) {
+            $uri .= '&title=' . (int) $args['displayTitle'];
         }
-        if (array_key_exists($args['byline'])) {
-            $uri .= '&byline='.(int) $args['byline'];
+        if (array_key_exists('byline', $args)) {
+            $uri .= '&byline=' . (int) $args['byline'];
         }
-        if (array_key_exists($args['portrait'])) {
-            $uri .= '&portrait='.(int) $args['portrait'];
+        if (array_key_exists('portrait', $args)) {
+            $uri .= '&portrait=' . (int) $args['portrait'];
         }
         if (isset($args['color'])) {
-            $uri .= '&color='.$args['color'];
+            $uri .= '&color=' . $args['color'];
         }
         if (isset($args['id'])) {
-            $uri .= '&player_id='.$args['id'];
+            $uri .= '&player_id=' . $args['id'];
         }
-        if (array_key_exists($args['loop'])) {
-            $uri .= '&loop='.(int) $args['loop'];
+        if (array_key_exists('loop', $args)) {
+            $uri .= '&loop=' . (int) $args['loop'];
         }
 
         return $uri;
