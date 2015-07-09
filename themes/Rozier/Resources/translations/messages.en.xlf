@@ -6084,6 +6084,10 @@
           <source>new.version.release</source>
           <target xml:lang="en">A new version is released!</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found" approved="yes">
+          <source>no_valid_class_found</source>
+          <target xml:lang="en">No valid class found!</target>
+      <alt-trans><target xml:lang="en">No valid class available!</target></alt-trans></trans-unit>
     </body>
   </file>
 </xliff>

@@ -36,7 +36,9 @@
                     <tr>
                         <td class="informations">
                             {% for type, info in theme.getInformations %}
-                                <p class="{{type}}">{{ info }}</p>
+                            <p class="{{type}}">{{ info }}</p>
+                            {% else %}
+                            <p class="files-not-found uk-badge uk-badge-warning"><i class="uk-icon-warning"></i> {% trans %}no_valid_class_found{% endtrans %}</p>
                             {% endfor %}
                         </td>
                         <td class="mobile-hidden">

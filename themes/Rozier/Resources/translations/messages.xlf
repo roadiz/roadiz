@@ -6199,6 +6199,10 @@
           <source>new.version.release</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found">
+          <source>no_valid_class_found</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
