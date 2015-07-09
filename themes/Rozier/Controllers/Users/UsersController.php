@@ -31,12 +31,11 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Exceptions\FacebookUsernameNotFoundException;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\Forms\UserDetailsType;
+use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -291,7 +290,7 @@ class UsersController extends RozierApp
      */
     public static function getGravatarUrl($email)
     {
-        return "http://www.gravatar.com/avatar/".md5(strtolower(trim($email)))."?d=identicon&s=200";
+        return "http://www.gravatar.com/avatar/" . md5(strtolower(trim($email))) . "?d=identicon&s=200";
     }
 
     /**

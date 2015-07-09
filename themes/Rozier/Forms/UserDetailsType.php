@@ -33,7 +33,6 @@ use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  *
@@ -43,34 +42,34 @@ class UserDetailsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('firstName', 'text', [
-                'label' => 'firstName',
-                'required' => false,
-            ])
-            ->add('lastName', 'text', [
-                'label' => 'lastName',
-                'required' => false,
-            ])
-            ->add('facebookName', 'text', [
-                'label' => 'facebookName',
-                'required' => false,
-                'constraints' => [
-                    new ValidFacebookName(),
-                ],
-            ])
-            ->add('company', 'text', [
-                'label' => 'company',
-                'required' => false,
-            ])
-            ->add('job', 'text', [
-                'label' => 'job',
-                'required' => false,
-            ])
-            ->add('birthday', 'date', [
-                'label' => 'birthday',
-                'empty_value' => ['year' => 'year', 'month' => 'month', 'day' => 'day'],
-                'required' => false,
-                'years' => range(1920, date('Y') - 6),
-            ]);
+                    'label' => 'firstName',
+                    'required' => false,
+                ])
+                ->add('lastName', 'text', [
+                    'label' => 'lastName',
+                    'required' => false,
+                ])
+                ->add('facebookName', 'text', [
+                    'label' => 'facebookName',
+                    'required' => false,
+                    'constraints' => [
+                        new ValidFacebookName(),
+                    ],
+                ])
+                ->add('company', 'text', [
+                    'label' => 'company',
+                    'required' => false,
+                ])
+                ->add('job', 'text', [
+                    'label' => 'job',
+                    'required' => false,
+                ])
+                ->add('birthday', 'date', [
+                    'label' => 'birthday',
+                    'empty_value' => ['year' => 'year', 'month' => 'month', 'day' => 'day'],
+                    'required' => false,
+                    'years' => range(1920, date('Y') - 6),
+                ]);
     }
 
     public function getName()
