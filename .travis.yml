@@ -1,7 +1,7 @@
 # Roadiz travis setup
 # Ambroise Maupate
 language: php
-sudo: false
+sudo: required
 php:
   - 5.4
   - 5.5
@@ -22,6 +22,7 @@ env:
   - DB=sqlite
 
 before_script:
+  - sudo composer self-update
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
