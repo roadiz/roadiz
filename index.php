@@ -65,7 +65,7 @@ if (php_sapi_name() == 'cli') {
             Kernel::getInstance()->initEvents();
             Kernel::getInstance()->runApp();
         }
-    } catch (NoConfigurationFoundException $e) {
+    } catch (\Exception $e) {
         $response = Kernel::getInstance()->getEmergencyResponse($e);
         $response->send();
     }
