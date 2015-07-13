@@ -22,25 +22,11 @@
         {% spaceless %}
         <ul class="documents-list" id="documents-list-bulk-delete">
         {% for document in documents %}
-            <li class="document-item">
-                <div class="document-border"></div>
-                <figure class="document-image">
-                    {% if document.isImage %}
-                        {{ document|display(thumbnailFormat) }}
-                    {% else %}
-                        <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
-                    {% endif %}
-                </figure>
-                <div class="document-name">{{ document.getFilename|centralTruncate(18, -4)}}</div>
-                <div class="document-overflow">
-                    {% if document.isEmbed %}
-                        <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
-                        <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
-                    {% else %}
-                        <div class="document-mime-type">{{ document.getShortMimeType }}</div>
-                    {% endif %}
-                </div>
-            </li>
+        {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
+            document: document,
+            thumbnailFormat: thumbnailFormat,
+            controls: false
+        } only %}
         {% endfor %}
         </ul>
         {% endspaceless %}
