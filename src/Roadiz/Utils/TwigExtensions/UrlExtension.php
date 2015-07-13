@@ -70,19 +70,43 @@ class UrlExtension extends \Twig_Extension
         return ($ns->getId() . "_" . (int) $absolute);
     }
 
-    public function getUrl(AbstractEntity $mixed, array $criteria = [])
+    /**
+     * Convert an AbstractEntity to an Url.
+     *
+     * Compatible AbstractEntity:
+     *
+     * - Document
+     * - NodesSources
+     * - Node
+     *
+     * @param  AbstractEntity|null $mixed
+     * @param  array               $criteria
+     * @return string
+     */
+    public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
     {
-        if ($mixed instanceof Document) {
-            return $mixed->getViewer()->getDocumentUrlByArray($criteria);
-        } elseif ($mixed instanceof NodesSources) {
-            return $this->getNodesSourceUrl($mixed, $criteria);
-        } elseif ($mixed instanceof Node) {
-            return $this->getNodeUrl($mixed, $criteria);
+        if (null === $mixed) {
+            return '';
         } else {
-            throw new \RuntimeException("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
+            if ($mixed instanceof Document) {
+                return $mixed->getViewer()->getDocumentUrlByArray($criteria);
+            } elseif ($mixed instanceof NodesSources) {
+                return $this->getNodesSourceUrl($mixed, $criteria);
+            } elseif ($mixed instanceof Node) {
+                return $this->getNodeUrl($mixed, $criteria);
+            } else {
+                throw new \RuntimeException("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
+            }
         }
     }
 
+    /**
+     * Get nodeSource url using cache.
+     *
+     * @param  NodesSources $ns
+     * @param  array        $criteria
+     * @return string
+     */
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
     {
         $absolute = false;
@@ -108,6 +132,13 @@ class UrlExtension extends \Twig_Extension
         }
     }
 
+    /**
+     * Get node url using its first source.
+     *
+     * @param  Node   $node
+     * @param  array  $criteria
+     * @return string
+     */
     public function getNodeUrl(Node $node, array $criteria = [])
     {
         return $this->getNodesSourceUrl($node->getNodeSources()->first(), $criteria);

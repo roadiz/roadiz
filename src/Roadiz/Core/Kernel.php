@@ -121,6 +121,7 @@ class Kernel implements ServiceProviderInterface
         $container['dispatcher'] = function ($c) {
             return new EventDispatcher();
         };
+
         /*
          * Load service providers from conf/services.yml
          *
@@ -324,13 +325,6 @@ class Kernel implements ServiceProviderInterface
         }
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        $response = $event->getResponse();
-        $response->setCharset('UTF-8');
-        $event->setResponse($response);
-    }
-
     /**
      * Prepare backend and frontend routes and logic.
      *
@@ -366,13 +360,6 @@ class Kernel implements ServiceProviderInterface
             [
                 new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
                 'onControllerMatched',
-            ]
-        );
-        $this->container['dispatcher']->addListener(
-            KernelEvents::RESPONSE,
-            [
-                $this,
-                'onKernelResponse',
             ]
         );
 
