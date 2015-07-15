@@ -33,7 +33,6 @@ use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Pimple\Container;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
@@ -108,7 +107,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(new \Twig_Extensions_Extension_Intl());
             $twig->addExtension($c['twig.routingExtension']);
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
-            $twig->addExtension(new BlockRenderExtension($c, Kernel::getInstance()));
+            $twig->addExtension(new BlockRenderExtension($c));
             if (true !== $c['config']['install']) {
                 $twig->addExtension(new NodesSourcesExtension($c['securityAuthorizationChecker']));
             }

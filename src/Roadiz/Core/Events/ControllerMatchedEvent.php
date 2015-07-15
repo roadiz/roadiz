@@ -63,7 +63,6 @@ class ControllerMatchedEvent
          * Inject current Kernel to the matched Controller
          */
         if ($matchedCtrl instanceof Controller) {
-            $matchedCtrl->setKernel($this->kernel);
             $matchedCtrl->setContainer($this->kernel->getContainer());
         }
         /*

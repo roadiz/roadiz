@@ -46,7 +46,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 abstract class Controller
 {
     protected $container = null;
-    protected $kernel = null;
 
     /**
      * Shortcut to return the request service.
@@ -76,28 +75,6 @@ abstract class Controller
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * Inject current Kernel into running controller.
-     *
-     * @param RZ\Roadiz\Core\Kernel $newKernel
-     */
-    public function setKernel(Kernel $newKernel)
-    {
-        $this->kernel = $newKernel;
-    }
-    /**
-     * Get current Roadiz Kernel instance.
-     *
-     * Prefer this methods instead of calling static getInstance
-     * method of RZ\Roadiz\Core\Kernel.
-     *
-     * @return RZ\Roadiz\Core\Kernel
-     */
-    public function getKernel()
-    {
-        return $this->kernel;
     }
 
     /**
