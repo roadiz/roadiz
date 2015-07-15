@@ -57,7 +57,9 @@ class RolesUtilsController extends RozierApp
         $existingRole = $this->getService('em')
                              ->getRepository('RZ\Roadiz\Core\Entities\Role')
                              ->findAll();
-        $role = RoleCollectionJsonSerializer::serialize($existingRole);
+
+        $serializer = new RoleCollectionJsonSerializer($this->getService('em'));
+        $role = $serializer->serialize($existingRole);
 
         $response = new Response(
             $role,
@@ -93,7 +95,8 @@ class RolesUtilsController extends RozierApp
         $existingRole = $this->getService('em')
                              ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
-        $role = RoleCollectionJsonSerializer::serialize([$existingRole]);
+        $serializer = new RoleCollectionJsonSerializer($this->getService('em'));
+        $role = $serializer->serialize([$existingRole]);
 
         $response = new Response(
             $role,

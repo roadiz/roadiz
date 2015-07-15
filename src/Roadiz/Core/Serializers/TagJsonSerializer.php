@@ -46,8 +46,9 @@ class TagJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($tags)
+    public function toArray($tags)
     {
+        $ttSerializer = new TagTranslationJsonSerializer();
         $array = [];
 
         foreach ($tags as $tag) {
@@ -61,20 +62,20 @@ class TagJsonSerializer extends AbstractJsonSerializer
             $data['tag_translation'] = [];
 
             foreach ($tag->getTranslatedTags() as $source) {
-                $data['tag_translation'][] = TagTranslationJsonSerializer::toArray($source);
+                $data['tag_translation'][] = $ttSerializer->toArray($source);
             }
             /*
              * Recursivity !! Be careful
              */
             foreach ($tag->getChildren() as $child) {
-                $data['children'][] = static::toArray([$child])[0];
+                $data['children'][] = $this->toArray([$child])[0];
             }
             $array[] = $data;
         }
         return $array;
     }
 
-    protected static function makeTagRec($data)
+    protected function makeTagRec($data)
     {
         $tag = new Tag();
         $tag->setTagName($data['tag_name']);
@@ -93,7 +94,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
             $tag->getTranslatedTags()->add($tagSource);
         }
         foreach ($data['children'] as $child) {
-            $tmp = static::makeTagRec($child);
+            $tmp = $this->makeTagRec($child);
             $tag->addChild($tmp);
         }
         return $tag;
@@ -106,12 +107,12 @@ class TagJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
-    public static function deserialize($string)
+    public function deserialize($string)
     {
         $datas = json_decode($string, true);
         $array = [];
         foreach ($datas as $data) {
-            $array[] = static::makeTagRec($data);
+            $array[] = $this->makeTagRec($data);
         }
         return $array;
     }

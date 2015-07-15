@@ -42,7 +42,7 @@ interface SerializerInterface
      *
      * @return mixed
      */
-    public static function serialize($obj);
+    public function serialize($obj);
 
 
     /**
@@ -52,7 +52,7 @@ interface SerializerInterface
      *
      * @return array
      */
-    public static function toArray($obj);
+    public function toArray($obj);
 
     /**
      * Deserializes a json file into a readable array of datas.
@@ -61,5 +61,5 @@ interface SerializerInterface
      *
      * @return mixed
      */
-    public static function deserialize($string);
+    public function deserialize($string);
 }

@@ -41,9 +41,9 @@ abstract class AbstractJsonSerializer implements SerializerInterface
      *
      * @return string
      */
-    public static function serialize($obj)
+    public function serialize($obj)
     {
-        $data = static::toArray($obj);
+        $data = $this->toArray($obj);
 
         if (defined('JSON_PRETTY_PRINT')) {
             return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

@@ -43,12 +43,14 @@ class TagsImporter implements ImporterInterface
      * Import a Json file (.rzt) containing tag and tag translation.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
-        $tags = TagJsonSerializer::deserialize($serializedData);
+        $serializer = new TagJsonSerializer();
+        $tags = $serializer->deserialize($serializedData);
         $exist = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
                     ->findAll();
         if (empty($exist)) {

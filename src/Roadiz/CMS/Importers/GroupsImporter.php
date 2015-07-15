@@ -42,12 +42,14 @@ class GroupsImporter implements ImporterInterface
      * Import a Json file (.rzt) containing group.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
-        $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
+        $serializer = new GroupCollectionJsonSerializer($em);
+        $groups = $serializer->deserialize($serializedData);
         foreach ($groups as $group) {
             $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
                                 ->findOneBy(['name' => $group->getName()]);

@@ -58,7 +58,9 @@ class NodesUtilsController extends RozierApp
         $existingNode = $this->getService('em')
                              ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($existingNode);
-        $node = NodeJsonSerializer::serialize([$existingNode]);
+
+        $serializer = new NodeJsonSerializer($this->getService('em'));
+        $node = $serializer->serialize([$existingNode]);
 
         $response = new Response(
             $node,
@@ -98,7 +100,8 @@ class NodesUtilsController extends RozierApp
             $this->getService('em')->refresh($existingNode);
         }
 
-        $node = NodeJsonSerializer::serialize($existingNodes);
+        $serializer = new NodeJsonSerializer($this->getService('em'));
+        $node = $serializer->serialize($existingNodes);
 
         $response = new Response(
             $node,

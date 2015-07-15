@@ -43,12 +43,14 @@ class NodesImporter implements ImporterInterface
      * Import a Json file (.rzt) containing node and node source.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
-        $nodes = NodeJsonSerializer::deserialize($serializedData);
+        $serializer = new NodeJsonSerializer($em);
+        $nodes = $serializer->deserialize($serializedData);
         $exist = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
                     ->findAll();
         if (empty($exist)) {

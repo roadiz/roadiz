@@ -42,12 +42,14 @@ class SettingsImporter implements ImporterInterface
      * Import a Json file (.rzt) containing setting and setting group.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
-        $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
+        $serializer = new SettingCollectionJsonSerializer();
+        $settingGroups = $serializer->deserialize($serializedData);
 
         $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                           ->findAllNames();

@@ -67,7 +67,9 @@ class SettingsUtilsController extends RozierApp
         $tmpGroup->setName('__default__');
         $tmpGroup->addSettings($lonelySettings);
         $groups[] = $tmpGroup;
-        $data = SettingCollectionJsonSerializer::serialize($groups);
+
+        $serializer = new SettingCollectionJsonSerializer();
+        $data = $serializer->serialize($groups);
 
         $response = new Response(
             $data,

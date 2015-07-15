@@ -42,13 +42,15 @@ class NodeTypesImporter implements ImporterInterface
      * Import a Json file (.rzt) containing setting and setting group.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
         $return = false;
-        $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
+        $serializer = new NodeTypeJsonSerializer();
+        $nodeType = $serializer->deserialize($serializedData);
         $existingNodeType = $em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                                ->findOneByName($nodeType->getName());
         if ($existingNodeType === null) {

@@ -48,7 +48,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($nodeTypeField)
+    public function toArray($nodeTypeField)
     {
         $data = [];
 
@@ -72,7 +72,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\NodeTypeField
      */
-    public static function deserialize($jsonString)
+    public function deserialize($jsonString)
     {
         $encoder = new JsonEncoder();
 

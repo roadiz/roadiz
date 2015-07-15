@@ -42,12 +42,15 @@ class RolesImporter implements ImporterInterface
      * Import a Json file (.rzt) containing setting and setting group.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
-        RoleCollectionJsonSerializer::deserialize($serializedData);
+        $serializer = new RoleCollectionJsonSerializer($em);
+        $serializer->deserialize($serializedData);
+
         return true;
     }
 }

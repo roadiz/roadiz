@@ -57,7 +57,9 @@ class GroupsUtilsController extends RozierApp
         $existingGroup = $this->getService('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Group')
                               ->findAll();
-        $group = GroupCollectionJsonSerializer::serialize($existingGroup);
+
+        $serializer = new GroupCollectionJsonSerializer($this->getService('em'));
+        $group = $serializer->serialize($existingGroup);
 
         $response = new Response(
             $group,
@@ -91,7 +93,8 @@ class GroupsUtilsController extends RozierApp
         $existingGroup = $this->getService('em')
                               ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
-        $group = GroupCollectionJsonSerializer::serialize([$existingGroup]);
+        $serializer = new GroupCollectionJsonSerializer($this->getService('em'));
+        $group = $serializer->serialize([$existingGroup]);
 
         $response = new Response(
             $group,
