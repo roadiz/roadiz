@@ -36,6 +36,8 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
@@ -59,38 +61,47 @@ class ContactController extends DefaultThemeApp
             $translation = $this->bindLocaleFromRoute($request, $_locale);
             $this->prepareThemeAssignation($node, $translation);
 
+            $contactFormManager = $this->createContactFormManager();
             /*
              * Create a custom contact form
              */
-            $formBuilder = EntryPointsController::getContactFormBuilder(
-                $request,
-                true,
-                null,
-                null,
-                null
-            );
+            $formBuilder = $contactFormManager->getFormBuilder();
             $formBuilder->add('email', 'email', [
-                            'label' => $this->getTranslator()->trans('your.email'),
+                            'label' => 'your.email',
+                            'constraints' => [
+                                new NotBlank(),
+                                new Email(),
+                            ],
                         ])
                         ->add('name', 'text', [
-                            'label' => $this->getTranslator()->trans('your.name'),
+                            'label' => 'your.name',
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
                         ])
                         ->add('message', 'textarea', [
-                            'label' => $this->getTranslator()->trans('your.message'),
+                            'label' => 'your.message',
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
                         ])
                         ->add('callMeBack', 'checkbox', [
-                            'label' => $this->getTranslator()->trans('call.me.back'),
+                            'label' => 'call.me.back',
                             'required' => false,
                         ])
                         ->add('document', 'file', [
-                            'label' => $this->getTranslator()->trans('document'),
+                            'label' => 'document',
                             'required' => false,
                         ])
                         ->add('send', 'submit', [
-                            'label' => $this->getTranslator()->trans('send.contact.form'),
+                            'label' => 'send.contact.form',
                         ]);
-            $form = $formBuilder->getForm();
 
+            if (null !== $response = $contactFormManager->handle()) {
+                return $response;
+            }
+
+            $form = $contactFormManager->getForm();
             $this->assignation['contactForm'] = $form->createView();
 
             /*

@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use RZ\Roadiz\Utils\ContactFormManager;
 
 /**
  * Base controller.
@@ -383,6 +384,23 @@ abstract class Controller
             $entity,
             $criteria,
             $ordering
+        );
+    }
+
+    /**
+     * Create and return a ContactFormManager to build and send contact
+     * form by email.
+     *
+     * @return ContactFormManager
+     */
+    public function createContactFormManager()
+    {
+        return new ContactFormManager(
+            $this->container['request'],
+            $this->container['formFactory'],
+            $this->container['translator'],
+            $this->container['twig.environment'],
+            $this->container['mailer']
         );
     }
 
