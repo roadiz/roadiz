@@ -189,7 +189,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['userProvider'] = function ($c) {
-            return new UserProvider();
+            return new UserProvider($c['em']);
         };
         $container['userChecker'] = function ($c) {
             return new UserChecker();

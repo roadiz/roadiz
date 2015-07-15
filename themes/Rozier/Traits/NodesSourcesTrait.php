@@ -363,7 +363,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanDocumentsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $documentId) {
-                        $tempDoc = Kernel::getService('em')
+                        $tempDoc = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
@@ -376,7 +376,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanCustomFormsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $customFormId) {
-                        $tempCForm = Kernel::getService('em')
+                        $tempCForm = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
                         if ($tempCForm !== null) {
                             $hdlr->addCustomFormForField($tempCForm, $field);
@@ -390,7 +390,7 @@ trait NodesSourcesTrait
 
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $nodeId) {
-                        $tempNode = Kernel::getService('em')
+                        $tempNode = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                         if ($tempNode !== null) {
                             $hdlr->addNodeForField($tempNode, $field);

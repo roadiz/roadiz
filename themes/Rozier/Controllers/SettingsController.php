@@ -579,16 +579,6 @@ class SettingsController extends RozierApp
         return $builder->getForm();
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public static function getSettings()
-    {
-        return Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-            ->findAll();
-    }
-
     public static function getFormOptionsForSetting(
         $setting,
         Translator $translator,
