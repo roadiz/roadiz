@@ -30,7 +30,7 @@
 
 use RZ\Roadiz\Core\Kernel;
 
-define('ROADIZ_ROOT', dirname(__FILE__) . '/..');
+define('ROADIZ_ROOT', dirname(dirname(__FILE__)));
 
 // Include Composer Autoload (relative to project root).
 require ROADIZ_ROOT . "/vendor/autoload.php";
