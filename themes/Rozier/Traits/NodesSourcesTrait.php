@@ -186,17 +186,17 @@ trait NodesSourcesTrait
                 $documents = $nodeSource->getHandler()
                                         ->getDocumentsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents);
+                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents, $this->getService('em'));
             case NodeTypeField::NODES_T:
                 $nodes = $nodeSource->getNode()->getHandler()
                                     ->getNodesFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes);
+                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes, $this->getService('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
                 $customForms = $nodeSource->getNode()->getHandler()
                                           ->getCustomFormsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
+                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms, $this->getService('em'));
             case NodeTypeField::CHILDREN_T:
                 /*
              * NodeTreeType is a virtual type which is only available

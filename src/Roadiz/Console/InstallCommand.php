@@ -96,7 +96,8 @@ class InstallCommand extends Command
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
-                        file_get_contents($installRoot . "/" . $filename)
+                        file_get_contents($installRoot . "/" . $filename),
+                        $this->entityManager
                     );
                     $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -104,7 +105,8 @@ class InstallCommand extends Command
             if (isset($data["importFiles"]['groups'])) {
                 foreach ($data["importFiles"]['groups'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
-                        file_get_contents($installRoot . "/" . $filename)
+                        file_get_contents($installRoot . "/" . $filename),
+                        $this->entityManager
                     );
                     $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
                 }
@@ -112,7 +114,8 @@ class InstallCommand extends Command
             if (isset($data["importFiles"]['settings'])) {
                 foreach ($data["importFiles"]['settings'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
-                        file_get_contents($installRoot . "/" . $filename)
+                        file_get_contents($installRoot . "/" . $filename),
+                        $this->entityManager
                     );
                     $text .= '     — <info>Theme files “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }

@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -39,21 +39,22 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GroupsType extends AbstractType
 {
     protected $groups;
+    protected $entityManager;
     /**
      * {@inheritdoc}
      */
-    public function __construct($groups = null)
+    public function __construct($groups = null, EntityManager $em)
     {
         $this->groups = $groups;
+        $this->entityManager = $em;
     }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $groups = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Group')
-            ->findAll();
+        $groups = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Group')
+                       ->findAll();
 
         $choices = [];
         foreach ($groups as $group) {
@@ -63,7 +64,7 @@ class GroupsType extends AbstractType
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
         ]);
     }
     /**

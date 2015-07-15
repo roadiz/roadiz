@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -39,20 +38,30 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class DataInheritanceEvent
 {
+    protected $tablesPrefix;
+
+    /**
+     * @param string        $tablesPrefix
+     * @param EntityManager $em
+     */
+    public function __construct($tablesPrefix = '')
+    {
+        $this->tablesPrefix = $tablesPrefix;
+    }
+
     /**
      * @param Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
-
         // the $metadata is all the mapping info for this class
         $metadata = $eventArgs->getClassMetadata();
 
         /*
          * Prefix tables
          */
-        if (!empty(Kernel::getService('config')['doctrine']['prefix'])) {
-            $metadata->table['name'] = Kernel::getService('config')['doctrine']['prefix'].'_'.$metadata->table['name'];
+        if (!empty($this->tablesPrefix)) {
+            $metadata->table['name'] = $this->tablesPrefix.'_'.$metadata->table['name'];
 
             /*
              * Prefix join tables
@@ -60,7 +69,7 @@ class DataInheritanceEvent
             foreach ($metadata->associationMappings as $key => $association) {
                 if (!empty($association['joinTable']['name'])) {
                     $metadata->associationMappings[$key]['joinTable']['name'] =
-                        Kernel::getService('config')['doctrine']['prefix'].'_'.$association['joinTable']['name'];
+                        $this->tablesPrefix.'_'.$association['joinTable']['name'];
                 }
             }
         }
@@ -72,10 +81,7 @@ class DataInheritanceEvent
         if ($class->getName() === 'RZ\Roadiz\Core\Entities\NodesSources') {
             try {
                 // List node types
-                $nodeTypes = Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                    ->findAll();
-
+                $nodeTypes = $eventArgs->getEntityManager()->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findAll();
                 $map = [];
                 foreach ($nodeTypes as $type) {
                     $map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
@@ -88,41 +94,6 @@ class DataInheritanceEvent
                  * Need Install
                  */
             }
-        }
-    }
-
-    /**
-     * Get NodesSources class metadata.
-     *
-     * @return Doctrine\ORM\Mapping\ClassMetadata
-     */
-    public static function getNodesSourcesMetadata()
-    {
-        $metadata = new ClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
-
-        try {
-            /**
-             *  List node types
-             */
-            $nodeTypes = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->findAll();
-
-            $map = [];
-            foreach ($nodeTypes as $type) {
-                $map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
-            }
-
-            $metadata->setDiscriminatorMap($map);
-
-            return $metadata;
-        } catch (\PDOException $e) {
-            /*
-             * Database tables don't exist yet
-             * Need Install
-             */
-
-            return null;
         }
     }
 }

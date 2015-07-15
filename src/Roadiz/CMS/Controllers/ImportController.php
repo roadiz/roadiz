@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,7 +54,7 @@ class ImportController extends AppController
                 $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
             }
 
-            return self::importContent($filename, $classImporter, $themeId);
+            return $this->importContent($filename, $classImporter, $themeId);
         } else {
             return $this->throw404();
         }
@@ -180,7 +181,7 @@ class ImportController extends AppController
      *
      * @return string
      */
-    public static function importContent($pathFile, $classImporter, $themeId)
+    public function importContent($pathFile, $classImporter, $themeId)
     {
         $data = [];
         $data['status'] = false;
@@ -188,8 +189,7 @@ class ImportController extends AppController
             if (null === $themeId) {
                 $path = $pathFile;
             } else {
-                $theme = Kernel::getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
+                $theme = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
 
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');
@@ -201,7 +201,7 @@ class ImportController extends AppController
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                $classImporter::importJsonFile($file);
+                $classImporter::importJsonFile($file, $this->getService('em'));
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

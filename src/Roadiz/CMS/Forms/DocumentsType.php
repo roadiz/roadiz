@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -43,15 +43,17 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class DocumentsType extends AbstractType
 {
     protected $selectedDocuments;
+    protected $entityManager;
 
     /**
      * {@inheritdoc}
      *
      * @param array $documents Array of Document instances
      */
-    public function __construct(array $documents)
+    public function __construct(array $documents, EntityManager $em)
     {
         $this->selectedDocuments = $documents;
+        $this->entityManager = $em;
     }
 
     /**
@@ -64,9 +66,8 @@ class DocumentsType extends AbstractType
         $callback = function ($object, ExecutionContextInterface $context) {
 
             if (is_array($object)) {
-                $documents = Kernel::getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                ->findBy(['id'=>$object]);
+                $documents = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->findBy(['id' => $object]);
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
@@ -75,7 +76,7 @@ class DocumentsType extends AbstractType
                         null === $documents[$key]) {
                         $context->addViolationAt(
                             null,
-                            'Document #'.$value.' does not exists',
+                            'Document #' . $value . ' does not exists',
                             [],
                             null
                         );
@@ -83,14 +84,13 @@ class DocumentsType extends AbstractType
                 }
 
             } else {
-                $document = Kernel::getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
+                $document = $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
 
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $document) {
                     $context->addViolationAt(
                         null,
-                        'Document '.$object.' does not exists',
+                        'Document ' . $object . ' does not exists',
                         [],
                         null
                     );
@@ -103,8 +103,8 @@ class DocumentsType extends AbstractType
             'multiple' => true,
             'property' => 'id',
             'constraints' => [
-                new Callback($callback)
-            ]
+                new Callback($callback),
+            ],
         ]);
     }
 

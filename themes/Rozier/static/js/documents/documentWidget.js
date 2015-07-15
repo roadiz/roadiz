@@ -5,16 +5,18 @@ var DocumentWidget = function () {
     var _this = this;
 
     _this.$widgets = $('[data-document-widget]');
-    _this.$sortables = $('.documents-widget-sortable');
-    _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
-    _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
 
-    _this.$explorer = null;
-    _this.explorer = null;
-    _this.$explorerClose = null;
-    _this.uploader = null;
+    if (_this.$widgets.length) {
+        _this.$sortables = $('.documents-widget-sortable');
+        _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+        _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
+        _this.$explorer = null;
+        _this.explorer = null;
+        _this.$explorerClose = null;
+        _this.uploader = null;
 
-    _this.init();
+        _this.init();
+    }
 };
 
 /**

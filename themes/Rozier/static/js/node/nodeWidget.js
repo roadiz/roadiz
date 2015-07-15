@@ -30,16 +30,18 @@ var NodeWidget = function () {
     var _this = this;
 
     _this.$widgets = $('[data-node-widget]');
-    _this.$sortables = $('.nodes-widget-sortable');
-    _this.$toggleExplorerButtons = $('[data-node-widget-toggle-explorer]');
-    _this.$toggleUploaderButtons = $('[data-node-widget-toggle-uploader]');
-    _this.$unlinkNodeButtons = $('[data-node-widget-unlink-node]');
-    _this.$explorer = null;
-    _this.explorer = null;
-    _this.$explorerClose = null;
-    _this.uploader = null;
 
-    _this.init();
+    if (_this.$widgets.length) {
+        _this.$sortables = $('.nodes-widget-sortable');
+        _this.$toggleExplorerButtons = $('[data-node-widget-toggle-explorer]');
+        _this.$unlinkNodeButtons = $('[data-node-widget-unlink-node]');
+        _this.$explorer = null;
+        _this.explorer = null;
+        _this.$explorerClose = null;
+        _this.uploader = null;
+
+        _this.init();
+    }
 };
 
 
@@ -79,7 +81,7 @@ NodeWidget.prototype.onSortableNodeWidgetChange = function(event, list, element)
     var _this = this;
 
     //console.log("Node: "+element.data('node-id'));
-    console.log(element);
+    //console.log(element);
     $sortable = $(element).parent();
     var inputName = 'source['+$sortable.data('input-name')+']';
     $sortable.find('li').each(function (index) {
@@ -105,9 +107,13 @@ NodeWidget.prototype.onExplorerToggle = function(event) {
 
         var ajaxData = {
             '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken,
-            'nodeTypes': JSON.parse($currentWidget.attr('data-nodetypes'))
+            '_token': Rozier.ajaxToken
         };
+
+        var nodeTypes = $currentWidget.attr('data-nodetypes');
+        if (nodeTypes !== '') {
+            ajaxData.nodeTypes = JSON.parse(nodeTypes);
+        }
 
         $.ajax({
             url: Rozier.routes.nodesAjaxExplorer,

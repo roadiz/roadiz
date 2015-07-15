@@ -410,16 +410,22 @@ class ThemesController extends RozierApp
 
         $d = ($n !== null) ? [$n] : [];
 
-        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
+        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->getService('em')), [
             'label' => 'homeNode',
             'required' => false,
+            'attr' => [
+                'data-nodetypes' => ''
+            ]
         ]);
 
         $d = ($r !== null) ? [$r] : [];
 
-        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
+        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->getService('em')), [
             'label' => 'themeRoot',
             'required' => false,
+            'attr' => [
+                'data-nodetypes' => ''
+            ]
         ]);
 
         return $builder;

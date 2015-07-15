@@ -1,10 +1,10 @@
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section class="content-global edit-tag">
+<section class="content-global edit-themes">
 
     <header class="content-header header-themes header-themes-edit">
-        <h1 class="content-title tag-themes-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
+        <h1 class="content-title themes-title">{% trans %}edit.theme{% endtrans %} {{ theme.getClassName }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('themesHomePage') }}" title="{% trans %}back_to.themes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 

@@ -29,10 +29,9 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
-
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
+use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 
 /**
  * {@inheritdoc}
@@ -46,24 +45,23 @@ class NodeTypesImporter implements ImporterInterface
      *
      * @return bool
      */
-    public static function importJsonFile($serializedData)
+    public static function importJsonFile($serializedData, EntityManager $em)
     {
         $return = false;
         $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
-        $existingNodeType = Kernel::getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                 ->findOneByName($nodeType->getName());
+        $existingNodeType = $em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                               ->findOneByName($nodeType->getName());
         if ($existingNodeType === null) {
-            Kernel::getService('em')->persist($nodeType);
+            $em->persist($nodeType);
             $existingNodeType = $nodeType;
             foreach ($nodeType->getFields() as $field) {
-                Kernel::getService('em')->persist($field);
+                $em->persist($field);
                 $field->setNodeType($nodeType);
             }
         } else {
             $existingNodeType->getHandler()->diff($nodeType);
         }
-        Kernel::getService('em')->flush();
+        $em->flush();
         $existingNodeType->getHandler()->regenerateEntityClass();
         return $return;
     }

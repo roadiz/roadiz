@@ -100,7 +100,8 @@ class ThemeInstallCommand extends Command
             if (isset($data["importFiles"]['tags'])) {
                 foreach ($data["importFiles"]['tags'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\TagsImporter::importJsonFile(
-                        file_get_contents($themeRoot . "/" . $filename)
+                        file_get_contents($themeRoot . "/" . $filename),
+                        $this->entityManager
                     );
                     $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -108,7 +109,8 @@ class ThemeInstallCommand extends Command
             if (isset($data["importFiles"]['nodes'])) {
                 foreach ($data["importFiles"]['nodes'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
-                        file_get_contents($themeRoot . "/" . $filename)
+                        file_get_contents($themeRoot . "/" . $filename),
+                        $this->entityManager
                     );
                     $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -141,7 +143,8 @@ class ThemeInstallCommand extends Command
                 if (isset($data["importFiles"]['roles'])) {
                     foreach ($data["importFiles"]['roles'] as $filename) {
                         \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename)
+                            file_get_contents($themeRoot . "/" . $filename),
+                            $this->entityManager
                         );
                         $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                     }
@@ -149,7 +152,8 @@ class ThemeInstallCommand extends Command
                 if (isset($data["importFiles"]['groups'])) {
                     foreach ($data["importFiles"]['groups'] as $filename) {
                         \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename)
+                            file_get_contents($themeRoot . "/" . $filename),
+                            $this->entityManager
                         );
                         $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
                     }
@@ -157,7 +161,8 @@ class ThemeInstallCommand extends Command
                 if (isset($data["importFiles"]['settings'])) {
                     foreach ($data["importFiles"]['settings'] as $filename) {
                         \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename)
+                            file_get_contents($themeRoot . "/" . $filename),
+                            $this->entityManager
                         );
                         $text .= '     — <info>Theme files “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                     }
@@ -165,7 +170,8 @@ class ThemeInstallCommand extends Command
                 if (isset($data["importFiles"]['nodetypes'])) {
                     foreach ($data["importFiles"]['nodetypes'] as $filename) {
                         \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename)
+                            file_get_contents($themeRoot . "/" . $filename),
+                            $this->entityManager
                         );
                         $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                     }

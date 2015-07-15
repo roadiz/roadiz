@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\CMS\Importers\ImporterInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
-
-use RZ\Roadiz\CMS\Importers\ImporterInterface;
 
 /**
  * {@inheritdoc}
@@ -47,22 +46,21 @@ class TagsImporter implements ImporterInterface
      *
      * @return bool
      */
-    public static function importJsonFile($serializedData)
+    public static function importJsonFile($serializedData, EntityManager $em)
     {
         $tags = TagJsonSerializer::deserialize($serializedData);
-        $exist = Kernel::getInstance()->getService('em')
-                      ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                      ->findAll();
+        $exist = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                    ->findAll();
         if (empty($exist)) {
             foreach ($tags as $tag) {
-                static::browseTree($tag);
+                static::browseTree($tag, $em);
             }
         }
 
         return true;
     }
 
-    protected static function browseTree($tag)
+    protected static function browseTree($tag, EntityManager $em)
     {
         $childObj = [];
         $sourceObj = [];
@@ -71,29 +69,28 @@ class TagsImporter implements ImporterInterface
         }
         $tag->getChildren()->clear();
         foreach ($tag->getTranslatedTags() as $tagTranslation) {
-            $trans = Kernel::getInstance()->getService('em')
-                          ->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                          ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
+            $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                        ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
 
             if (empty($trans)) {
                 $trans = new Translation();
                 $trans->setLocale($tagTranslation->getTranslation()->getLocale());
                 $trans->setName(Translation::$availableLocales[$tagTranslation->getTranslation()->getLocale()]);
-                Kernel::getInstance()->getService('em')->persist($trans);
+                $em->persist($trans);
             }
             $tagTranslation->setTranslation($trans);
             $tagTranslation->setTag(null);
-            Kernel::getInstance()->getService('em')->persist($tagTranslation);
+            $em->persist($tagTranslation);
             $sourceObj[] = $tagTranslation;
         }
-        Kernel::getInstance()->getService('em')->persist($tag);
+        $em->persist($tag);
         foreach ($childObj as $child) {
             $child->setParent($tag);
         }
         foreach ($sourceObj as $tagTranslation) {
             $tagTranslation->setTag($tag);
         }
-        Kernel::getInstance()->getService('em')->flush();
+        $em->flush();
 
         return $tag;
     }

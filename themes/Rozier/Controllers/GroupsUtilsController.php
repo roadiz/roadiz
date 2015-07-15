@@ -134,7 +134,10 @@ class GroupsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    GroupsImporter::importJsonFile($serializedData);
+                    GroupsImporter::importJsonFile(
+                        $serializedData,
+                        $this->getService('em')
+                    );
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
                     $this->publishConfirmMessage($request, $msg);
