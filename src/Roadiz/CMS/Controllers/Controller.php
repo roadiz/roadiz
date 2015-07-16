@@ -40,6 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 
 /**
  * Base controller.
@@ -276,21 +277,31 @@ abstract class Controller
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
-        if (null === $response) {
-            $response = new Response(
-                '',
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+        try {
+            if (null === $response) {
+                $response = new Response(
+                    '',
+                    Response::HTTP_OK,
+                    ['content-type' => 'text/html']
+                );
+            }
+
+            if ($namespace !== "" && $namespace !== "/") {
+                $view = '@' . $namespace . '/' . $view;
+            }
+
+            $response->setContent($this->renderView($view, $parameters));
+
+            return $response;
+        } catch (ForceResponseException $e) {
+            return $e->getResponse();
+        } catch (\Twig_Error_Runtime $e) {
+            if ($e->getPrevious() instanceof ForceResponseException) {
+                return $e->getPrevious()->getResponse();
+            } else {
+                throw $e;
+            }
         }
-
-        if ($namespace !== "" && $namespace !== "/") {
-            $view = '@' . $namespace . '/' . $view;
-        }
-
-        $response->setContent($this->renderView($view, $parameters));
-
-        return $response;
     }
 
     /**

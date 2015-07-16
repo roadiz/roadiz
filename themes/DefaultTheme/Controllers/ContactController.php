@@ -33,10 +33,10 @@ namespace Themes\DefaultTheme\Controllers;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\File;
 use Themes\DefaultTheme\DefaultThemeApp;
-use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
  * Contact form page.
@@ -66,22 +66,22 @@ class ContactController extends DefaultThemeApp
              */
             $formBuilder = $contactFormManager->getFormBuilder();
             $formBuilder->add('callMeBack', 'checkbox', [
-                    'label' => 'call.me.back',
-                    'required' => false,
-                ])
-                ->add('document', 'file', [
-                    'label' => 'document',
-                    'required' => false,
-                    'constraints' => [
-                        new File([
-                            'maxSize' => $contactFormManager->getMaxFileSize(),
-                            'mimeTypes' => $contactFormManager->getAllowedMimeTypes(),
-                        ]),
-                    ]
-                ])
-                ->add('send', 'submit', [
-                    'label' => 'send.contact.form',
-                ]);
+                            'label' => 'call.me.back',
+                            'required' => false,
+                        ])
+                        ->add('document', 'file', [
+                            'label' => 'document',
+                            'required' => false,
+                            'constraints' => [
+                                new File([
+                                    'maxSize' => $contactFormManager->getMaxFileSize(),
+                                    'mimeTypes' => $contactFormManager->getAllowedMimeTypes(),
+                                ]),
+                            ],
+                        ])
+                        ->add('send', 'submit', [
+                            'label' => 'send.contact.form',
+                        ]);
 
             if (null !== $response = $contactFormManager->handle()) {
                 return $response;
