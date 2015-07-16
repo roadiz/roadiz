@@ -381,14 +381,4 @@ class SettingGroupsController extends RozierApp
 
         return $builder->getForm();
     }
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public static function getSettingGroups()
-    {
-        return Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-            ->findAll();
-    }
 }

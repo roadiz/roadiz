@@ -57,8 +57,10 @@ class NodeTypesUtilsController extends RozierApp
         $nodeType = $this->getService('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
+        $serializer = new NodeTypeJsonSerializer();
+
         $response = new Response(
-            NodeTypeJsonSerializer::serialize($nodeType),
+            $serializer->serialize($nodeType),
             Response::HTTP_OK,
             []
         );
@@ -98,7 +100,8 @@ class NodeTypesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    $nodeType = NodeTypeJsonSerializer::deserialize($serializedData);
+                    $serializer = new NodeTypeJsonSerializer();
+                    $nodeType = $serializer->deserialize($serializedData);
                     $existingNT = $this->getService('em')
                                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                                        ->findOneBy(['name' => $nodeType->getName()]);

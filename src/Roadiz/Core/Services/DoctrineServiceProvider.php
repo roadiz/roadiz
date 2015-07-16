@@ -154,7 +154,12 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                     /*
                      * Create dynamic dicriminator map for our Node system
                      */
-                    $evm->addEventListener(Events::loadClassMetadata, new DataInheritanceEvent());
+                    $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
+
+                    $evm->addEventListener(
+                        Events::loadClassMetadata,
+                        new DataInheritanceEvent($prefix)
+                    );
 
                     $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
                     if ($resultCacheDriver !== null) {

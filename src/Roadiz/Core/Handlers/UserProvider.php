@@ -29,17 +29,27 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * {@inheritdoc}
  */
 class UserProvider implements UserProviderInterface
 {
+    protected $em;
+
+    /**
+     * @param EntityManager $em
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * Loads the user for the given username.
      *
@@ -53,9 +63,9 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->findOneBy(['username' => $username]);
+        $user = $this->em
+                     ->getRepository('RZ\Roadiz\Core\Entities\User')
+                     ->findOneBy(['username' => $username]);
 
         if ($user !== null) {
             return $user;
@@ -79,8 +89,7 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        $refreshUser = Kernel::getService('em')
-            ->find('RZ\Roadiz\Core\Entities\User', (int) $user->getId());
+        $refreshUser = $this->em->find('RZ\Roadiz\Core\Entities\User', (int) $user->getId());
 
         if ($refreshUser !== null) {
             return $refreshUser;

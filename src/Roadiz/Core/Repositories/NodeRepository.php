@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -55,7 +56,7 @@ class NodeRepository extends EntityRepository
             if (is_array($criteria['tags'])) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
-                    $node = static::getNodeIdsByTagExcl($criteria['tags']);
+                    $node = static::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
                     $criteria["id"] = $node;
                     unset($criteria["tagExclusive"]);
                     unset($criteria['tags']);
@@ -79,14 +80,16 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Seach NodeId exclusively
+     * Search NodeId exclusively.
      *
-     * @param  array     $tags
+     * @param  array        $tags
+     * @param  EntityManager $em
+     *
      * @return array
      */
-    public static function getNodeIdsByTagExcl($tags)
+    public static function getNodeIdsByTagExcl($tags, EntityManager $em)
     {
-        $qb = Kernel::getInstance()->getService('em')->createQueryBuilder();
+        $qb = $em->createQueryBuilder();
 
         $qb->select("nj.id")
            ->addSelect("COUNT(t.id) as num")

@@ -30,13 +30,23 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Serialization class for Role.
  */
 class RoleCollectionJsonSerializer extends AbstractJsonSerializer
 {
+    protected $em;
+
+    /**
+     * @param EntityManager $em
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * Create a simple associative array with
      * an ArrayCollection of Role.
@@ -45,12 +55,13 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($roles)
+    public function toArray($roles)
     {
+        $roleSerializer = new RoleJsonSerializer();
         $data = [];
 
         foreach ($roles as $role) {
-            $data[] = RoleJsonSerializer::toArray($role);
+            $data[] = $roleSerializer->toArray($role);
         }
 
         return $data;
@@ -63,7 +74,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      *
      * @return ArrayCollection
      */
-    public static function deserialize($jsonString)
+    public function deserialize($jsonString)
     {
         if ($jsonString == "") {
             throw new \Exception('File is empty.');
@@ -72,7 +83,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
         $data = new ArrayCollection();
         foreach ($roles as $role) {
             if (!empty($role['name'])) {
-                $tmp = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
+                $tmp = $this->em->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
                 $data[] = $tmp;
             }
         }

@@ -39,6 +39,12 @@ use Symfony\Component\Serializer\Serializer;
  */
 class NodeTypeJsonSerializer extends AbstractJsonSerializer
 {
+    protected $ntfSerializer;
+
+    public function __construct()
+    {
+        $this->ntfSerializer = new NodeTypeFieldJsonSerializer();
+    }
     /**
      * Create a simple associative array with a NodeType.
      *
@@ -46,7 +52,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($nodeType)
+    public function toArray($nodeType)
     {
         $data = [];
 
@@ -59,7 +65,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $data['fields'] = [];
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
-            $nodeTypeFieldData = NodeTypeFieldJsonSerializer::toArray($nodeTypeField);
+            $nodeTypeFieldData = $this->ntfSerializer->toArray($nodeTypeField);
 
             $data['fields'][] = $nodeTypeFieldData;
         }
@@ -74,7 +80,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\NodeType
      */
-    public static function deserialize($string)
+    public function deserialize($string)
     {
         $encoder = new JsonEncoder();
         $nameConverter = new CamelCaseToSnakeCaseNameConverter([
@@ -100,7 +106,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $tempArray = json_decode($string, true);
 
         foreach ($tempArray['fields'] as $fieldAssoc) {
-            $ntField = NodeTypeFieldJsonSerializer::deserialize(json_encode($fieldAssoc));
+            $ntField = $this->ntfSerializer->deserialize(json_encode($fieldAssoc));
             $nodeType->addField($ntField);
         }
 

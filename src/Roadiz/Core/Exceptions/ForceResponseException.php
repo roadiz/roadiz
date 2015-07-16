@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,37 +24,46 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file LoggerHandler.php
+ * @file ForceResponseException.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Handlers;
+namespace RZ\Roadiz\Core\Exceptions;
 
-use RZ\Roadiz\Core\Entities\Logger;
-use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handle operations with logs entities.
+ * Exception raised when you want to force a given Response object.
  */
-class LoggerHandler
+class ForceResponseException extends \Exception
 {
-    private $log;
+    protected $response;
 
-    /**
-     * Create a new log handler with log to handle.
-     * @param Logger $log
-     */
-    public function __construct(Logger $log)
+    public function __construct(Response $response)
     {
-        $this->log = $log;
+        parent::__construct('Forcing response…', 1);
+        $this->response = $response;
     }
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\LoggerHandler
+     * Gets the value of response.
+     *
+     * @return Response
      */
-    public function persistAndFlush()
+    public function getResponse()
     {
-        Kernel::getService('em')->persist($this->log);
-        Kernel::getService('em')->flush();
+        return $this->response;
+    }
+
+    /**
+     * Sets the value of response.
+     *
+     * @param Response $response the response
+     *
+     * @return self
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
 
         return $this;
     }

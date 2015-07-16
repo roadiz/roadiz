@@ -42,10 +42,9 @@ class BlockRenderExtension extends \Twig_Extension
     protected $container;
     protected $kernel;
 
-    public function __construct(Container $container, Kernel $kernel)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->kernel = $kernel;
     }
 
     public function getName()
@@ -78,7 +77,6 @@ class BlockRenderExtension extends \Twig_Extension
                 if (class_exists($class) &&
                     method_exists($class, 'blockAction')) {
                     $ctrl = new $class();
-                    $ctrl->setKernel($this->kernel);
                     $ctrl->setContainer($this->container);
                     $ctrl->__init();
 

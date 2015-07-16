@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -43,15 +43,17 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class NodesType extends AbstractType
 {
     protected $selectedNodes;
+    protected $entityManager;
 
     /**
      * {@inheritdoc}
      *
      * @param array $nodes Array of Node instances
      */
-    public function __construct(array $nodes)
+    public function __construct(array $nodes, EntityManager $em)
     {
         $this->selectedNodes = $nodes;
+        $this->entityManager = $em;
     }
 
     /**
@@ -64,16 +66,15 @@ class NodesType extends AbstractType
         $callback = function ($object, ExecutionContextInterface $context) {
 
             if (is_array($object)) {
-                $nodes = Kernel::getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                ->findBy(['id'=>$object]);
+                $nodes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->findBy(['id' => $object]);
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
                     if (null !== $value && null === $nodes[$key]) {
                         $context->addViolationAt(
                             null,
-                            'Node #'.$value.' does not exists',
+                            'Node #' . $value . ' does not exists',
                             [],
                             null
                         );
@@ -81,14 +82,13 @@ class NodesType extends AbstractType
                 }
 
             } else {
-                $node = Kernel::getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Node', (int) $object);
+                $node = $this->entityManager->find('RZ\Roadiz\Core\Entities\Node', (int) $object);
 
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $node) {
                     $context->addViolationAt(
                         null,
-                        'Node '.$object.' does not exists',
+                        'Node ' . $object . ' does not exists',
                         [],
                         null
                     );
@@ -101,8 +101,8 @@ class NodesType extends AbstractType
             'multiple' => true,
             'property' => 'id',
             'constraints' => [
-                new Callback($callback)
-            ]
+                new Callback($callback),
+            ],
         ]);
     }
 

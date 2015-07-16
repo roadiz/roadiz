@@ -16,7 +16,8 @@ class SettingCollectionJsonSerializerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeserialize($json, $expected)
     {
-        $settings = SettingCollectionJsonSerializer::deserialize($json);
+        $serializer = new SettingCollectionJsonSerializer();
+        $settings = $serializer->deserialize($json);
 
         // Assert
         $this->assertEquals($settings->count(), $expected);
@@ -46,7 +47,8 @@ class SettingCollectionJsonSerializerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeserializeReturnType($json, $expected)
     {
-        $output = SettingCollectionJsonSerializer::deserialize($json);
+        $serializer = new SettingCollectionJsonSerializer();
+        $output = $serializer->deserialize($json);
 
         // Assert
         $this->assertEquals($expected, get_class($output));

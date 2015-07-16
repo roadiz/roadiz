@@ -1024,6 +1024,10 @@ body {
   font-size: 14px;
   font-family: 'Roadiz', Helvetica, sans-serif;
 }
+#contactForm .uk-alert {
+  list-style: none;
+  font-size: 13px;
+}
 .basic-block {
   font-size: 12px;
   line-height: 18px;

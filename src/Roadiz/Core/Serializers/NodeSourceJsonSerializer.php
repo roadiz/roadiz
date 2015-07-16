@@ -47,8 +47,9 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($nodeSource)
+    public function toArray($nodeSource)
     {
+        $urlAliasSerializer = new UrlAliasJsonSerializer();
         $data = [];
 
         $data['translation'] = $nodeSource->getTranslation()->getLocale();
@@ -57,18 +58,18 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         $data['meta_keywords'] = $nodeSource->getMetaKeywords();
         $data['meta_description'] = $nodeSource->getMetaDescription();
 
-        $data = array_merge($data, static::getSourceFields($nodeSource));
+        $data = array_merge($data, $this->getSourceFields($nodeSource));
 
         $data['url_aliases'] = [];
 
         foreach ($nodeSource->getUrlAliases() as $alias) {
-            $data['url_aliases'][] = UrlAliasJsonSerializer::toArray($alias);
+            $data['url_aliases'][] = $urlAliasSerializer->toArray($alias);
         }
 
         return $data;
     }
 
-    protected static function getSourceFields($nodeSource)
+    protected function getSourceFields($nodeSource)
     {
         $fields = $nodeSource->getNode()->getNodeType()->getFields();
 
@@ -88,10 +89,8 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
 
     /**
      * {@inheritDoc}
-     *
-     * @see NodeSourceJsonSerializer::deserializeWithNodeType
      */
-    public static function deserialize($string)
+    public function deserialize($string)
     {
         throw new \RuntimeException(
             "Cannot simply deserialize a NodesSources entity. " .
@@ -108,7 +107,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\NodeSource
      */
-    public static function deserializeWithNodeType($string, NodeType $type)
+    public function deserializeWithNodeType($string, NodeType $type)
     {
         $fields = $type->getFields();
         /*

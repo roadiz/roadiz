@@ -186,17 +186,17 @@ trait NodesSourcesTrait
                 $documents = $nodeSource->getHandler()
                                         ->getDocumentsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents);
+                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents, $this->getService('em'));
             case NodeTypeField::NODES_T:
                 $nodes = $nodeSource->getNode()->getHandler()
                                     ->getNodesFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes);
+                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes, $this->getService('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
                 $customForms = $nodeSource->getNode()->getHandler()
                                           ->getCustomFormsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
+                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms, $this->getService('em'));
             case NodeTypeField::CHILDREN_T:
                 /*
              * NodeTreeType is a virtual type which is only available
@@ -363,7 +363,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanDocumentsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $documentId) {
-                        $tempDoc = Kernel::getService('em')
+                        $tempDoc = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
@@ -376,7 +376,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanCustomFormsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $customFormId) {
-                        $tempCForm = Kernel::getService('em')
+                        $tempCForm = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
                         if ($tempCForm !== null) {
                             $hdlr->addCustomFormForField($tempCForm, $field);
@@ -390,7 +390,7 @@ trait NodesSourcesTrait
 
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $nodeId) {
-                        $tempNode = Kernel::getService('em')
+                        $tempNode = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                         if ($tempNode !== null) {
                             $hdlr->addNodeForField($tempNode, $field);

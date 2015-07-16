@@ -5,16 +5,18 @@ var CustomFormWidget = function () {
     var _this = this;
 
     _this.$widgets = $('[data-custom-form-widget]');
-    _this.$sortables = $('.custom-forms-widget-sortable');
-    _this.$toggleExplorerButtons = $('[data-custom-form-widget-toggle-explorer]');
-    _this.$toggleUploaderButtons = $('[data-custom-form-widget-toggle-uploader]');
-    _this.$unlinkCustomFormButtons = $('[data-custom-form-widget-unlink-custom-form]');
+    if (_this.$widgets.length) {
+        _this.$sortables = $('.custom-forms-widget-sortable');
+        _this.$toggleExplorerButtons = $('[data-custom-form-widget-toggle-explorer]');
+        _this.$toggleUploaderButtons = $('[data-custom-form-widget-toggle-uploader]');
+        _this.$unlinkCustomFormButtons = $('[data-custom-form-widget-unlink-custom-form]');
 
-    _this.$explorer = null;
-    _this.$explorerClose = null;
-    _this.uploader = null;
+        _this.$explorer = null;
+        _this.$explorerClose = null;
+        _this.uploader = null;
 
-    _this.init();
+        _this.init();
+    }
 };
 
 CustomFormWidget.prototype.init = function() {

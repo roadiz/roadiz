@@ -47,7 +47,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($setting)
+    public function toArray($setting)
     {
         $data = [];
 
@@ -66,7 +66,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\Setting
      */
-    public static function deserialize($jsonString)
+    public function deserialize($jsonString)
     {
         if ($jsonString == "") {
             throw new \Exception('File is empty.');
