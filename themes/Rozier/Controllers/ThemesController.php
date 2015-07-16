@@ -33,7 +33,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;

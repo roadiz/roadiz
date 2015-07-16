@@ -64,12 +64,11 @@ class GroupsImporter implements ImporterInterface
                 }
                 $em->persist($group);
                 // Flush before creating group's roles.
-                $em->flush();
+                $em->flush($group);
             } else {
                 $existingGroup->getHandler()->diff($group);
+                $em->flush($existingGroup);
             }
-
-            $em->flush();
         }
 
         return true;

@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\NotBlank;

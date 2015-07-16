@@ -35,7 +35,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 

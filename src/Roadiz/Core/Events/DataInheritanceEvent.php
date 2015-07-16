@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\NodeType;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * DataInheritanceEvent

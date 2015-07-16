@@ -28,7 +28,6 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 
 if (version_compare(phpversion(), '5.4.3', '<')) {

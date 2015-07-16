@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Extension that allow render inner page part calling directly their

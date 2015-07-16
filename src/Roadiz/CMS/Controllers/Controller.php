@@ -31,7 +31,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

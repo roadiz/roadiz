@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use RZ\Roadiz\Core\Kernel;
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

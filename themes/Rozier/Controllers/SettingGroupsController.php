@@ -32,7 +32,6 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;

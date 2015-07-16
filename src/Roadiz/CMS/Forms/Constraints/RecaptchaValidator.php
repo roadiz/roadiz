@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

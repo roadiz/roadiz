@@ -191,7 +191,7 @@ class ContactFormManager
 
         if ($this->form->isSubmitted()) {
             if ($this->form->isValid()) {
-                $this->handleFiles($this->form);
+                $this->handleFiles();
                 $this->handleFormData($this->form);
 
                 if ($this->send() > 0) {
@@ -233,7 +233,7 @@ class ContactFormManager
         }
     }
 
-    protected function handleFiles(Form $form)
+    protected function handleFiles()
     {
         $this->uploadedFiles = [];
 
