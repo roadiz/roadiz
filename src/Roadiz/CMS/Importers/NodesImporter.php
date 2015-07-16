@@ -67,7 +67,7 @@ class NodesImporter implements ImporterInterface
         $childObj = [];
         $sourceObj = [];
         foreach ($node->getChildren() as $child) {
-            $childObj[] = static::browseTree($child);
+            $childObj[] = static::browseTree($child, $em);
         }
         $node->getChildren()->clear();
         foreach ($node->getNodeSources() as $nodeSource) {
