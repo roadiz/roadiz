@@ -43,7 +43,7 @@ class GroupsType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function __construct($groups = null, EntityManager $em)
+    public function __construct(EntityManager $em, $groups = null)
     {
         $this->groups = $groups;
         $this->entityManager = $em;

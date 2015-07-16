@@ -206,7 +206,7 @@ class UsersGroupsController extends RozierApp
                         )
                         ->add(
                             'group',
-                            new \RZ\Roadiz\CMS\Forms\GroupsType($user->getGroups(), $this->getService('em')),
+                            new \RZ\Roadiz\CMS\Forms\GroupsType($this->getService('em'), $user->getGroups()),
                             ['label' => 'Group']
                         );
 
