@@ -31,13 +31,11 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\File;
 use Themes\DefaultTheme\DefaultThemeApp;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
@@ -61,41 +59,29 @@ class ContactController extends DefaultThemeApp
             $translation = $this->bindLocaleFromRoute($request, $_locale);
             $this->prepareThemeAssignation($node, $translation);
 
-            $contactFormManager = $this->createContactFormManager();
+            $contactFormManager = $this->createContactFormManager()
+                                       ->withDefaultFields();
             /*
              * Create a custom contact form
              */
             $formBuilder = $contactFormManager->getFormBuilder();
-            $formBuilder->add('email', 'email', [
-                            'label' => 'your.email',
-                            'constraints' => [
-                                new NotBlank(),
-                                new Email(),
-                            ],
-                        ])
-                        ->add('name', 'text', [
-                            'label' => 'your.name',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('message', 'textarea', [
-                            'label' => 'your.message',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('callMeBack', 'checkbox', [
-                            'label' => 'call.me.back',
-                            'required' => false,
-                        ])
-                        ->add('document', 'file', [
-                            'label' => 'document',
-                            'required' => false,
-                        ])
-                        ->add('send', 'submit', [
-                            'label' => 'send.contact.form',
-                        ]);
+            $formBuilder->add('callMeBack', 'checkbox', [
+                    'label' => 'call.me.back',
+                    'required' => false,
+                ])
+                ->add('document', 'file', [
+                    'label' => 'document',
+                    'required' => false,
+                    'constraints' => [
+                        new File([
+                            'maxSize' => $contactFormManager->getMaxFileSize(),
+                            'mimeTypes' => $contactFormManager->getAllowedMimeTypes(),
+                        ]),
+                    ]
+                ])
+                ->add('send', 'submit', [
+                    'label' => 'send.contact.form',
+                ]);
 
             if (null !== $response = $contactFormManager->handle()) {
                 return $response;

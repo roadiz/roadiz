@@ -29,16 +29,19 @@
  */
 namespace RZ\Roadiz\Utils;
 
+use InlineStyle\InlineStyle;
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\Form;
-use InlineStyle\InlineStyle;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  *
@@ -71,7 +74,7 @@ class ContactFormManager
     ];
     protected $maxFileSize = 5242880; // 5MB
 
-    function __construct(
+    public function __construct(
         Request $request,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
@@ -85,11 +88,11 @@ class ContactFormManager
         $this->templating = $templating;
 
         $this->formBuilder = $this->formFactory->createBuilder('form', null, [
-           'attr' => [
-               'id' => 'contactForm',
-           ],
-       ])
-       ->setMethod('POST');
+                 'attr' => [
+                     'id' => 'contactForm',
+                 ],
+             ])
+             ->setMethod('POST');
     }
 
     public function getFormBuilder()
@@ -99,6 +102,38 @@ class ContactFormManager
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Adds a email, name and message fields with their constraints.
+     *
+     * @return ContactFormManager $this
+     */
+    public function withDefaultFields()
+    {
+        $this->formBuilder->add('email', 'email', [
+                'label' => 'your.email',
+                'constraints' => [
+                    new NotBlank(),
+                    new Email([
+                        'message' => 'email.not.valid'
+                    ]),
+                ],
+            ])
+            ->add('name', 'text', [
+                'label' => 'your.name',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('message', 'textarea', [
+                'label' => 'your.message',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
+
+        return $this;
     }
 
     /**
@@ -142,6 +177,7 @@ class ContactFormManager
     protected function handleFiles(Form $form)
     {
         $this->uploadedFiles = [];
+
         /*
          * Files values
          */
@@ -152,9 +188,7 @@ class ContactFormManager
                         !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
                         $uploadedFile->getClientSize() > $this->maxFileSize) {
                         throw new BadFormRequestException(
-                            $this->translator->trans(
-                                'file.not.accepted'
-                            ),
+                            $this->translator->trans('file.not.accepted'),
                             Response::HTTP_FORBIDDEN,
                             'danger',
                             $name
@@ -183,11 +217,12 @@ class ContactFormManager
 
         $fields = [];
         $formData = $form->getData();
+
         /*
          * text values
          */
         foreach ($formData as $key => $value) {
-            if ($key[0] == '_') {
+            if ($key[0] == '_' || $value instanceof UploadedFile) {
                 continue;
             } elseif (!empty($value)) {
                 $fields[] = [
@@ -276,12 +311,12 @@ class ContactFormManager
 
         // Create the message
         $this->message = \Swift_Message::newInstance()
-        // Give the message a subject
-        ->setSubject($this->subject)
-        // Set the To addresses with an associative array
-        ->setTo([$this->receiver])
-        // Give it a body
-        ->setBody($htmldoc->getHTML(), 'text/html');
+             // Give the message a subject
+             ->setSubject($this->subject)
+             // Set the To addresses with an associative array
+             ->setTo([$this->receiver])
+             // Give it a body
+             ->setBody($htmldoc->getHTML(), 'text/html');
 
         if (null !== $this->sender) {
             // Set the From address with an associative array
@@ -473,6 +508,30 @@ class ContactFormManager
     public function setMaxFileSize($maxFileSize)
     {
         $this->maxFileSize = (int) $maxFileSize;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of allowedMimeTypes.
+     *
+     * @return array
+     */
+    public function getAllowedMimeTypes()
+    {
+        return $this->allowedMimeTypes;
+    }
+
+    /**
+     * Sets the value of allowedMimeTypes.
+     *
+     * @param array $allowedMimeTypes the allowed mime types
+     *
+     * @return self
+     */
+    public function setAllowedMimeTypes(array $allowedMimeTypes)
+    {
+        $this->allowedMimeTypes = $allowedMimeTypes;
 
         return $this;
     }
