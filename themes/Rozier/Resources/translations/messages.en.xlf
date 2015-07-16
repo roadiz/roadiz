@@ -4359,6 +4359,22 @@
         <source>twitter_account</source>
         <target xml:lang="en">Twitter account name</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_public_key" approved="yes">
+        <source>recaptcha_public_key</source>
+        <target xml:lang="en">Recaptcha site key (public)</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key" approved="yes">
+        <source>recaptcha_private_key</source>
+        <target xml:lang="en">Recaptcha private key (secret)</target>
+      <alt-trans><target xml:lang="en">Recaptcha private key</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot" approved="yes">
+        <source>you_must_show_youre_not_robot</source>
+        <target xml:lang="en">You must validate the Recaptcha to verify you’re not a robot.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again" approved="yes">
+        <source>recaptcha_is_invalid.try_again</source>
+        <target xml:lang="en">Recaptcha is invalid, please try again.</target>
+      </trans-unit>
       <!-- document usage -->
       <trans-unit xml:space="preserve" id="document.%name%.usage" approved="yes">
         <source>document.%name%.usage</source>
