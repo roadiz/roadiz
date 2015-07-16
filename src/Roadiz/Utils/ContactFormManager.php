@@ -30,10 +30,13 @@
 namespace RZ\Roadiz\Utils;
 
 use InlineStyle\InlineStyle;
+use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
+use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +44,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  *
@@ -113,14 +115,14 @@ class ContactFormManager
     public function withDefaultFields()
     {
         $this->formBuilder->add('email', 'email', [
-                'label' => 'your.email',
-                'constraints' => [
-                    new NotBlank(),
-                    new Email([
-                        'message' => 'email.not.valid'
-                    ]),
-                ],
-            ])
+            'label' => 'your.email',
+            'constraints' => [
+                new NotBlank(),
+                new Email([
+                    'message' => 'email.not.valid',
+                ]),
+            ],
+        ])
             ->add('name', 'text', [
                 'label' => 'your.name',
                 'constraints' => [
@@ -133,6 +135,46 @@ class ContactFormManager
                     new NotBlank(),
                 ],
             ]);
+
+        return $this;
+    }
+
+    /**
+     * Add a Google recaptcha to your contact form.
+     *
+     * Make sure you’ve added recaptcha form template and filled
+     * recaptcha_public_key and recaptcha_private_key settings.
+     *
+     *   <script src='https://www.google.com/recaptcha/api.js'></script>
+     *
+     *   {% block recaptcha_widget -%}
+     *       <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>
+     *   {%- endblock recaptcha_widget %}
+     *
+     *
+     * @return ContactFormManager $this
+     */
+    public function withGoogleRecaptcha()
+    {
+        $publicKey = SettingsBag::get('recaptcha_public_key');
+        $privateKey = SettingsBag::get('recaptcha_private_key');
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+
+        if (!empty($publicKey) &&
+            !empty($privateKey)) {
+            $this->formBuilder->add('recaptcha', new RecaptchaType(), [
+                'label' => false,
+                'configs' => [
+                    'publicKey' => $publicKey,
+                ],
+                'constraints' => [
+                    new Recaptcha($this->request, [
+                        'privateKey' => $privateKey,
+                        'verifyUrl' => $verifyUrl,
+                    ]),
+                ],
+            ]);
+        }
 
         return $this;
     }
@@ -187,7 +229,7 @@ class ContactFormManager
                 return null;
             }
         } else {
-            return null;;
+            return null;
         }
     }
 

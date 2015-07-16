@@ -4379,6 +4379,23 @@
         <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
+        <source>recaptcha_public_key</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key">
+        <source>recaptcha_private_key</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
+        <source>you_must_show_youre_not_robot</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
+        <source>recaptcha_is_invalid.try_again</source>
+        <target></target>
+      </trans-unit>
+
       <!-- document usage -->
       <trans-unit xml:space="preserve" id="document.%name%.usage">
         <source>document.%name%.usage</source>

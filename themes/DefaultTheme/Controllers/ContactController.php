@@ -60,7 +60,9 @@ class ContactController extends DefaultThemeApp
             $this->prepareThemeAssignation($node, $translation);
 
             $contactFormManager = $this->createContactFormManager()
-                                       ->withDefaultFields();
+                                       ->withDefaultFields()
+                                       ->withGoogleRecaptcha();
+
             /*
              * Create a custom contact form
              */

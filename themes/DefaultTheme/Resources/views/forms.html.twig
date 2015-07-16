@@ -70,3 +70,6 @@
     </ul>
     {%- endif -%}
 {%- endblock form_errors -%}
+{% block recaptcha_widget -%}
+    <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>
+{%- endblock recaptcha_widget %}
