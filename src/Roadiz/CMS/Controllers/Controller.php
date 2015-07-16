@@ -293,8 +293,6 @@ abstract class Controller
             $response->setContent($this->renderView($view, $parameters));
 
             return $response;
-        } catch (ForceResponseException $e) {
-            return $e->getResponse();
         } catch (\Twig_Error_Runtime $e) {
             if ($e->getPrevious() instanceof ForceResponseException) {
                 return $e->getPrevious()->getResponse();

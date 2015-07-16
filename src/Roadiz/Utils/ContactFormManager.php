@@ -54,6 +54,7 @@ class ContactFormManager
     protected $sender = null;
     protected $uploadedFiles = null;
     protected $successMessage = 'form.successfully.sent';
+    protected $failMessage = 'form.has.errors';
     protected $translator;
     protected $templating;
     protected $mailer;
@@ -146,31 +147,47 @@ class ContactFormManager
         $this->form = $this->formBuilder->getForm();
         $this->form->handleRequest($this->request);
 
-        if ($this->form->isValid()) {
-            $this->handleFiles($this->form);
-            $this->handleFormData($this->form);
+        if ($this->form->isSubmitted()) {
+            if ($this->form->isValid()) {
+                $this->handleFiles($this->form);
+                $this->handleFormData($this->form);
 
-            if ($this->send() > 0) {
-                if ($this->request->isXmlHttpRequest()) {
-                    $responseArray = [
-                        'statusCode' => Response::HTTP_OK,
-                        'status' => 'success',
-                        'message' => $this->translator->trans($this->successMessage),
-                    ];
-                    return new JsonResponse($responseArray);
+                if ($this->send() > 0) {
+                    if ($this->request->isXmlHttpRequest()) {
+                        $responseArray = [
+                            'statusCode' => Response::HTTP_OK,
+                            'status' => 'success',
+                            'message' => $this->translator->trans($this->successMessage),
+                        ];
+                        return new JsonResponse($responseArray);
+                    } else {
+                        $this->request
+                             ->getSession()
+                             ->getFlashBag()
+                             ->add('confirm', $this->translator->trans($this->successMessage));
+                        $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
+                        return new RedirectResponse($this->redirectUrl);
+                    }
                 } else {
-                    $this->request
-                         ->getSession()
-                         ->getFlashBag()
-                         ->add('confirm', $this->translator->trans($this->successMessage));
-                    $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
-                    return new RedirectResponse($this->redirectUrl);
+                    return null;
                 }
+            } elseif ($this->request->isXmlHttpRequest()) {
+                /*
+                 * If form has errors during AJAX
+                 * request we sent them.
+                 */
+                $responseArray = [
+                    'statusCode' => Response::HTTP_BAD_REQUEST,
+                    'status' => 'danger',
+                    'message' => $this->translator->trans($this->failMessage),
+                    'errors' => $this->form->getErrorsAsString(),
+                ];
+                return new JsonResponse($responseArray);
             } else {
                 return null;
             }
         } else {
-            return null;
+            return null;;
         }
     }
 
@@ -532,6 +549,78 @@ class ContactFormManager
     public function setAllowedMimeTypes(array $allowedMimeTypes)
     {
         $this->allowedMimeTypes = $allowedMimeTypes;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of failMessage.
+     *
+     * @return string
+     */
+    public function getFailMessage()
+    {
+        return $this->failMessage;
+    }
+
+    /**
+     * Sets the value of failMessage.
+     *
+     * @param string $failMessage the fail message
+     *
+     * @return self
+     */
+    public function setFailMessage($failMessage)
+    {
+        $this->failMessage = $failMessage;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of emailTemplate.
+     *
+     * @return string
+     */
+    public function getEmailTemplate()
+    {
+        return $this->emailTemplate;
+    }
+
+    /**
+     * Sets the value of emailTemplate.
+     *
+     * @param string $emailTemplate the email template
+     *
+     * @return self
+     */
+    public function setEmailTemplate($emailTemplate)
+    {
+        $this->emailTemplate = $emailTemplate;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of emailStylesheet.
+     *
+     * @return string
+     */
+    public function getEmailStylesheet()
+    {
+        return $this->emailStylesheet;
+    }
+
+    /**
+     * Sets the value of emailStylesheet.
+     *
+     * @param string $emailStylesheet the email stylesheet
+     *
+     * @return self
+     */
+    public function setEmailStylesheet($emailStylesheet)
+    {
+        $this->emailStylesheet = $emailStylesheet;
 
         return $this;
     }
