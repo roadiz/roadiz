@@ -40,6 +40,10 @@
         <source>form.successfully.sent</source>
         <target xml:lang="en">Your form has been successfully sent</target>
       </trans-unit>
+      <trans-unit id="form.has.errors" approved="yes">
+        <source>form.has.errors</source>
+        <target xml:lang="en">Your form is not valid, please fill correctly mandatory fields.</target>
+      </trans-unit>
       <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
         <target xml:lang="en">Field %field% is mandatory</target>

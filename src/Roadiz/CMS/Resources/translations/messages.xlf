@@ -42,6 +42,10 @@
                 <source>form.successfully.sent</source>
                 <target/>
             </trans-unit>
+            <trans-unit id="form.has.errors">
+                <source>form.has.errors</source>
+                <target/>
+            </trans-unit>
             <trans-unit id="%field%.is.mandatory">
                 <source>%field%.is.mandatory</source>
                 <target/>
