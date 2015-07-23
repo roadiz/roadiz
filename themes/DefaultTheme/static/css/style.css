@@ -1043,14 +1043,16 @@ body {
   text-align: left;
 }
 #rz-debug-panel {
-  width: 200px;
-  font-size: 11px;
-  padding: 5px;
+  font-size: 10px;
+  padding: 15px;
   -ms-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   background-color: #EFEFEF;
+}
+#rz-debug-panel h4 {
+  font-size: 12px;
 }
 #rz-debug-panel ul {
   padding: 0;
@@ -1058,13 +1060,15 @@ body {
 }
 #rz-debug-panel li {
   list-style: none;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 #rz-debug-panel h4,
 #rz-debug-panel dl,
 #rz-debug-panel dt,
 #rz-debug-panel dd {
   display: inline-block;
-  padding: 5px;
+  padding: 3px 5px;
   margin: 0px;
   -ms-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1074,6 +1078,13 @@ body {
 #rz-debug-panel dd {
   padding-left: 0px;
 }
-#rz-debug-panel dt {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+#rz-debug-panel .chart-bar {
+  background: #85D267;
+  height: 3px;
+  min-width: 1px;
+  position: relative;
+}
+#rz-debug-panel .chart-infos {
+  position: relative;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
 }

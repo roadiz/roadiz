@@ -69,6 +69,10 @@ class DebugPanel implements EventSubscriberInterface
             $this->stopwatch->stop('controllerHandling');
         }
 
+        if ($this->stopwatch->isStarted('twigRender')) {
+            $this->stopwatch->stop('twigRender');
+        }
+
         $response = $event->getResponse();
 
         if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {

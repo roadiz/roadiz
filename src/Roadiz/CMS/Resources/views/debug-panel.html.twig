@@ -1,24 +1,29 @@
-<section id="rz-debug-panel">
-	<div>
-		<h4>Debug panel</h4>
-		<ul>
-			{% for name, event in stopwatch.getSectionEvents('runtime') %}
-				{% if name == '__section__' %}
-				<li>
-					<dt><i class="uk-icon-truck"></i> Global memory</dt>
-					<dd>{{ (event.getMemory / 1000000)|round(2, 'floor') }}Mo</dd>
-				</li>
-				<li>
-					<dt><i class="uk-icon-clock-o"></i> Global time</dt>
-					<dd>{{ event.getDuration }}ms</dd>
-				</li>
-				{% else %}
-				<li>
-					<dt><i class="uk-icon-clock-o"></i> {{ name }}</dt>
-					<dd>{{ event.getDuration }}ms</dd>
-				</li>
-				{% endif %}
-			{% endfor %}
-		</ul>
-	</div>
+{% set runtime = stopwatch.getSectionEvents('runtime') %}
+<section id="rz-debug-panel" data-global-time="{{ runtime['__section__'].duration }}">
+    <div>
+        <h4>Debug panel</h4>
+        <ul>
+            {% for name, event in stopwatch.getSectionEvents('runtime') %}
+                {% if name == '__section__' %}
+                <li>
+                    <dt><i class="uk-icon-truck"></i> Global memory</dt>
+                    <dd>{{ (event.memory / 1000000)|round(2, 'floor') }}Mo</dd>
+                </li>
+                <li>
+                    <dt><i class="uk-icon-clock-o"></i> Global time</dt>
+                    <dd>{{ event.duration }}ms</dd>
+                </li>
+                {% else %}
+                <li data-memory="{{ (event.memory / 1000000)|round(2, 'floor') }}" data-duration="{{ event.duration }}" data-start-time="{{ event.startTime }}">
+                    <div class="chart-infos" style="left: {{ (event.startTime / runtime['__section__'].duration) * 100 }}%;">
+                        <dt><i class="uk-icon-clock-o"></i> {{ name }}</dt>
+                        <dd>{{ event.duration }}ms</dd>
+                    </div>
+                    <div class="chart-bar" style="width: {{ (event.duration / runtime['__section__'].duration) * 100 }}%; left: {{ (event.startTime / runtime['__section__'].duration) * 100 }}%;"></div>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
 </div>
+
