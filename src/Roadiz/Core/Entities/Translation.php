@@ -680,6 +680,7 @@ class Translation extends AbstractDateTimed
     {
         $this->nodeSources = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->documentTranslations = new ArrayCollection();
     }
 
     /**

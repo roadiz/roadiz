@@ -276,6 +276,10 @@ abstract class Controller
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
+        if (!$this->getService('stopwatch')->isStarted('twigRender')) {
+            $this->getService('stopwatch')->start('twigRender');
+        }
+
         try {
             if (null === $response) {
                 $response = new Response(
@@ -290,7 +294,6 @@ abstract class Controller
             }
 
             $response->setContent($this->renderView($view, $parameters));
-
             return $response;
         } catch (\Twig_Error_Runtime $e) {
             if ($e->getPrevious() instanceof ForceResponseException) {

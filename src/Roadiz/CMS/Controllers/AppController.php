@@ -238,6 +238,10 @@ class AppController extends Controller
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
         try {
+            if (!$this->getService('stopwatch')->isStarted('twigRender')) {
+                $this->getService('stopwatch')->start('twigRender');
+            }
+
             if (null === $response) {
                 $response = new Response(
                     '',

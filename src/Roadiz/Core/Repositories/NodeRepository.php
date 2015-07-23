@@ -940,6 +940,40 @@ class NodeRepository extends EntityRepository
     }
 
     /**
+     * @param string $urlAliasAlias
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     *
+     * @return RZ\Roadiz\Core\Entities\Node|null
+     */
+    public function findOneWithAliasAndAvailableTranslation(
+        $urlAliasAlias,
+        AuthorizationChecker $authorizationChecker = null
+    ) {
+        $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.nodeSources ns
+            INNER JOIN ns.urlAliases uas
+            INNER JOIN ns.translation t
+            WHERE uas.alias = :alias
+            AND t.available = true';
+
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('alias', $urlAliasAlias);
+
+        if (null !== $authorizationChecker) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * Modify DQL query string to support node status
      * according to security context.
      *
@@ -955,12 +989,12 @@ class NodeRepository extends EntityRepository
         &$txtQuery,
         AuthorizationChecker $authorizationChecker = null
     ) {
-        if (null !== $authorizationChecker &&
-            !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = :status';
-        } elseif (null !== $authorizationChecker &&
-            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+        $backendUser = null !== $authorizationChecker && $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+
+        if ($backendUser) {
             $txtQuery .= ' AND n.status <= :status';
+        } elseif (null !== $authorizationChecker) {
+            $txtQuery .= ' AND n.status = :status';
         }
 
         return $txtQuery;

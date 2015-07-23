@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,39 +24,42 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- * @file PageController.php
+ * @file TimedRouteListener.php
  * @author Ambroise Maupate
  */
-namespace Themes\DefaultTheme\Controllers;
+namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\HttpFoundation\Request;
-use Themes\DefaultTheme\DefaultThemeApp;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Frontend controller to handle Page node-type request.
+ * TimedRouteListener.
  */
-class PageController extends DefaultThemeApp
+class TimedRouteListener extends RouterListener
 {
+    protected $stopwatch;
 
-    /**
-     * Default action for any Page node.
-     *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node              $node
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
-     *
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction(
-        Request $request,
-        Node $node = null,
-        Translation $translation = null
+    public function __construct(
+        $matcher,
+        RequestContext $context = null,
+        LoggerInterface $logger = null,
+        RequestStack $requestStack = null,
+        Stopwatch $stopwatch = null
     ) {
-        $this->prepareThemeAssignation($node, $translation);
+        parent::__construct($matcher, $context, $logger, $requestStack);
 
-        return $this->render('types/page.html.twig', $this->assignation);
+        $this->stopwatch = $stopwatch;
+    }
+
+    public function onKernelRequest(GetResponseEvent $event)
+    {
+        $this->stopwatch->start('routeListener');
+        $return = parent::onKernelRequest($event);
+        $this->stopwatch->stop('routeListener');
+        return $return;
     }
 }

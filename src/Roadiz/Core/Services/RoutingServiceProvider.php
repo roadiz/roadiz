@@ -33,6 +33,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
+use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
@@ -41,7 +42,6 @@ use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -85,14 +85,16 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 return new MixedUrlMatcher(
                     $c['requestContext'],
                     $c['dynamicUrlMatcher'],
-                    (boolean) $c['config']['install']
+                    (boolean) $c['config']['install'],
+                    $c['stopwatch']
                 );
             }
         };
         $container['dynamicUrlMatcher'] = function ($c) {
             return new NodeUrlMatcher(
                 $c['requestContext'],
-                $c['em']
+                $c['em'],
+                $c['stopwatch']
             );
         };
         $container['urlGeneratorClass'] = function ($c) {
@@ -111,11 +113,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['routeListener'] = function ($c) {
-            return new RouterListener(
+            return new TimedRouteListener(
                 $c['urlMatcher'],
                 $c['requestContext'],
                 null,
-                $c['requestStack']
+                $c['requestStack'],
+                $c['stopwatch']
             );
         };
 

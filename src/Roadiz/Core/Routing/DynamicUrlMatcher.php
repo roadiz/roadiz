@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
@@ -42,16 +43,18 @@ class DynamicUrlMatcher extends UrlMatcher
     protected $em;
     protected $theme = null;
     protected $repository = null;
+    protected $stopwatch = null;
 
     /**
      * @param RouteCollection $routes
      * @param RequestContext  $context
      * @param Doctrine\ORM\EntityManager $em
      */
-    public function __construct(RequestContext $context, EntityManager $em)
+    public function __construct(RequestContext $context, EntityManager $em, Stopwatch $stopwatch = null)
     {
         $this->context = $context;
         $this->em = $em;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -94,52 +97,16 @@ class DynamicUrlMatcher extends UrlMatcher
         if (!empty($tokens[0])) {
             $firstToken = $tokens[0];
             $locale = strip_tags($firstToken);
-            /*
-             * First token is for language
-             */
+            // First token is for language
             if ($locale !== null && $locale != '') {
-                if (in_array($firstToken, $repository->getAvailableOverrideLocales())) {
+                if (in_array($locale, $repository->getAvailableOverrideLocales())) {
                     return $repository->findOneByOverrideLocaleAndAvailable($locale);
-                } elseif (in_array($firstToken, $repository->getAvailableLocales())) {
+                } elseif (in_array($locale, $repository->getAvailableLocales())) {
                     return $repository->findOneByLocaleAndAvailable($locale);
                 }
             }
         }
 
         return $repository->findDefault();
-    }
-
-    /**
-     * Parse UrlAlias for Url tokens.
-     *
-     * @param array &$tokens
-     *
-     * @return RZ\Roadiz\Core\Entities\UrlAlias
-     */
-    protected function parseUrlAlias(&$tokens)
-    {
-        if (!empty($tokens[0])) {
-            $locale = strip_tags($tokens[0]);
-
-            $transRepository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation');
-            /*
-             * If the only url token if for language, return no url alias !
-             */
-            if (count($tokens) === 1 &&
-                (in_array($locale, $transRepository->getAvailableOverrideLocales()) ||
-                    in_array($locale, $transRepository->getAvailableLocales()))
-            ) {
-                return null;
-            } else {
-                $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-
-                if ($identifier != '') {
-                    return $this->em->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-                                ->findOneBy(['alias' => $identifier]);
-                }
-            }
-        }
-
-        return null;
     }
 }

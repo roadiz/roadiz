@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Event dispatched after a route has been matched.
@@ -41,13 +42,15 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 class ControllerMatchedEvent
 {
     private $kernel;
+    private $stopwatch;
 
     /**
      * @param RZ\Roadiz\Core\Kernel $kernel
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel $kernel, Stopwatch $stopwatch = null)
     {
         $this->kernel = $kernel;
+        $this->stopwatch = $stopwatch;
     }
     /**
      * After a controller has been matched. We need to inject current
@@ -57,6 +60,7 @@ class ControllerMatchedEvent
      */
     public function onControllerMatched(FilterControllerEvent $event)
     {
+        if (null !== $this->stopwatch) { $this->stopwatch->start('onControllerMatched'); }
         $matchedCtrl = $event->getController()[0];
 
         /*
@@ -90,5 +94,6 @@ class ControllerMatchedEvent
         if ($matchedCtrl instanceof AppController) {
             $matchedCtrl->__init();
         }
+        if (null !== $this->stopwatch) { $this->stopwatch->stop('onControllerMatched'); }
     }
 }

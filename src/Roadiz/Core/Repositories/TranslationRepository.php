@@ -47,7 +47,7 @@ class TranslationRepository extends EntityRepository
             AND t.available = true
         ');
 
-        $query->useResultCache(true, 60, 'RZTranslationDefault');
+        $query->useResultCache(true, 1800, 'RZTranslationDefault');
 
         try {
             return $query->getSingleResult();
@@ -68,7 +68,7 @@ class TranslationRepository extends EntityRepository
             WHERE t.available = true
         ');
 
-        $query->useResultCache(true, 60, 'RZTranslationAllAvailable');
+        $query->useResultCache(true, 1800, 'RZTranslationAllAvailable');
 
         try {
             return $query->getResult();

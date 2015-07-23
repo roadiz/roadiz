@@ -87,7 +87,6 @@ class Kernel implements ServiceProviderInterface
          * Register current Kernel as a service provider.
          */
         $this->container->register($this);
-        $this->container['stopwatch']->openSection();
     }
 
     /**
@@ -127,11 +126,14 @@ class Kernel implements ServiceProviderInterface
          * Edit this file if you want to customize Roadiz services
          * behaviour.
          */
+        $container['stopwatch']->openSection();
+        $container['stopwatch']->start('registerServices');
         $yaml = new Parser();
         $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yml'));
         foreach ($services['providers'] as $providerClass) {
             $container->register(new $providerClass());
         }
+        $container['stopwatch']->stop('registerServices');
     }
 
     /**
@@ -317,11 +319,14 @@ class Kernel implements ServiceProviderInterface
             }
         }
 
+
+        $this->container['stopwatch']->start('themeDependencyInjection');
         // Register front-end security scheme
         foreach ($this->container['frontendThemes'] as $theme) {
             $feClass = $theme->getClassName();
             $feClass::setupDependencyInjection($this->container);
         }
+        $this->container['stopwatch']->stop('themeDependencyInjection');
     }
 
     /**
@@ -357,7 +362,7 @@ class Kernel implements ServiceProviderInterface
         $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
             [
-                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
+                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this, $this->container['stopwatch']),
                 'onControllerMatched',
             ]
         );

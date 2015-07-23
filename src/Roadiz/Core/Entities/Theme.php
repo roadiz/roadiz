@@ -230,7 +230,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
     * @ORM\JoinColumn(name="homenode_id", referencedColumnName="id", onDelete="SET NULL")
     *
     * @var RZ\Roadiz\Core\Entities\Node
@@ -258,7 +258,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="SET NULL")
     *
     * @var RZ\Roadiz\Core\Entities\Node
