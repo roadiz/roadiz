@@ -4,7 +4,7 @@
 #user-panel .uk-icon-button.uk-icon-rz-turn-off{
     border-color:{{ head.mainColor }};
 }
-.uk-icon-button:hover{
+.uk-icon-button:hover, .uk-icon-button:focus{
     border-color:{{ head.mainColor }};
 }
 .documents-list .document-border{
@@ -16,6 +16,11 @@
 .uk-datepicker-table a.uk-active {
     background: {{ head.mainColor }};
 }
+
+.node-widget-explorer .node-widget-explorer-nextpage i{
+    color: {{ head.mainColor }};
+}
+
 {% for type in nodeTypes %}
 /*
  * Custom color on node tree
@@ -30,4 +35,5 @@
 .nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .tree-contextualmenu .vertical-nodetype {
     background-color:{{ type.color }};
 }
+
 {% endfor %}

@@ -23,7 +23,7 @@ NodeEditSource = function(){
 
 NodeEditSource.prototype.wrapInTabs = function() {
     var _this = this;
-    console.log('--- wrapInTabs');
+    // console.log('--- wrapInTabs');
     var fieldGroups = {};
     var $fields = _this.$content.find('.uk-form-row[data-field-group]');
     var fieldsLength = $fields.length;
