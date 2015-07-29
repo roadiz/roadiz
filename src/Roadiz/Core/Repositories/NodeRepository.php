@@ -256,12 +256,12 @@ class NodeRepository extends EntityRepository
                  * With a null translation, just take the default one.
                  */
                 $qb->innerJoin('n.nodeSources', 'ns');
-                $qb->innerJoin(
-                    'ns.translation',
-                    't',
-                    'WITH',
-                    't.defaultTranslation = true'
-                );
+                // $qb->innerJoin(
+                //     'ns.translation',
+                //     't',
+                //     'WITH',
+                //     't.defaultTranslation = true'
+                // );
             }
         }
     }
