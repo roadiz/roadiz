@@ -253,15 +253,10 @@ class NodeRepository extends EntityRepository
                 );
             } else {
                 /*
-                 * With a null translation, just take the default one.
+                 * With a null translation, not filter by translation to enable
+                 * nodes with only one translation which is not the default one.
                  */
                 $qb->innerJoin('n.nodeSources', 'ns');
-                // $qb->innerJoin(
-                //     'ns.translation',
-                //     't',
-                //     'WITH',
-                //     't.defaultTranslation = true'
-                // );
             }
         }
     }
