@@ -176,6 +176,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
                     }
 
                     Rozier.lazyload.canvasLoader.hide();
+                    Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions();
                 });
             }
         })

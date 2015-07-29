@@ -160,6 +160,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
                     $nodeTree.fadeIn();
                     _this.$fields.find('.nodetree-langs').remove();
                     Rozier.lazyload.canvasLoader.hide();
+                    Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions();
                 });
             }
         })

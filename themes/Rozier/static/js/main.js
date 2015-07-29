@@ -298,6 +298,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
                     Rozier.bindMainTrees();
                     Rozier.resize();
                     Rozier.lazyload.bindAjaxLink();
+                    _this.lazyload.nodeTreeContextActions = new NodeTreeContextActions();
                 });
             }
         })
