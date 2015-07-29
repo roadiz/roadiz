@@ -64,7 +64,9 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
      */
     public function match($pathinfo)
     {
-        if (null !== $this->stopwatch) { $this->stopwatch->start('matchingRoute'); }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('matchingRoute');
+        }
 
         $matched = null;
         if (true === $this->installMode) {
@@ -82,12 +84,18 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
             /*
              * Try dynamic routes
              */
-            if (null !== $this->stopwatch) { $this->stopwatch->start('matchingDynamicRoute'); }
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->start('matchingDynamicRoute');
+            }
             $matched = $this->dynamicUrlMatcher->match($pathinfo);
-            if (null !== $this->stopwatch) { $this->stopwatch->stop('matchingDynamicRoute'); }
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('matchingDynamicRoute');
+            }
         }
 
-        if (null !== $this->stopwatch) { $this->stopwatch->stop('matchingRoute'); }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('matchingRoute');
+        }
         return $matched;
     }
 }

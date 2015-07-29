@@ -60,7 +60,9 @@ class ControllerMatchedEvent
      */
     public function onControllerMatched(FilterControllerEvent $event)
     {
-        if (null !== $this->stopwatch) { $this->stopwatch->start('onControllerMatched'); }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('onControllerMatched');
+        }
         $matchedCtrl = $event->getController()[0];
 
         /*
@@ -94,6 +96,8 @@ class ControllerMatchedEvent
         if ($matchedCtrl instanceof AppController) {
             $matchedCtrl->__init();
         }
-        if (null !== $this->stopwatch) { $this->stopwatch->stop('onControllerMatched'); }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('onControllerMatched');
+        }
     }
 }

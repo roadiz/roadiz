@@ -42,9 +42,13 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     public function match($pathinfo)
     {
-        if (null !== $this->stopwatch) { $this->stopwatch->start('findTheme'); }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('findTheme');
+        }
         $this->theme = $this->findTheme();
-        if (null !== $this->stopwatch) { $this->stopwatch->stop('findTheme'); }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('findTheme');
+        }
 
         $this->repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Node');
         $decodedUrl = rawurldecode($pathinfo);
@@ -87,9 +91,13 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             /*
              * Try with URL Aliases
              */
-            if (null !== $this->stopwatch) { $this->stopwatch->start('parseFromUrlAlias'); }
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->start('parseFromUrlAlias');
+            }
             $node = $this->parseFromUrlAlias($tokens);
-            if (null !== $this->stopwatch) { $this->stopwatch->stop('parseFromUrlAlias'); }
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('parseFromUrlAlias');
+            }
 
             if ($node !== null) {
                 $translation = $node->getNodeSources()->first()->getTranslation();
@@ -109,17 +117,25 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 /*
                  * Try with node name
                  */
-                if (null !== $this->stopwatch) { $this->stopwatch->start('parseTranslation'); }
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->start('parseTranslation');
+                }
                 $translation = $this->parseTranslation($tokens);
-                if (null !== $this->stopwatch) { $this->stopwatch->stop('parseTranslation'); }
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->stop('parseTranslation');
+                }
 
                 if ($translation === null) {
                     return false;
                 }
 
-                if (null !== $this->stopwatch) { $this->stopwatch->start('parseNode'); }
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->start('parseNode');
+                }
                 $node = $this->parseNode($tokens, $translation);
-                if (null !== $this->stopwatch) { $this->stopwatch->stop('parseNode'); }
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->stop('parseNode');
+                }
 
                 /*
                  * Prevent displaying home node using its nodeName
@@ -185,7 +201,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
              * If the only url token is not for language
              */
             if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
-
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
                 if ($identifier !== null &&
