@@ -61,7 +61,7 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
-use Symfony\Component\Security\Http\Firewall;
+use RZ\Roadiz\Utils\Security\TimedFirewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
@@ -254,11 +254,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
          * Main decision manager, set your voters here.
          */
         $container['accessDecisionManager'] = function ($c) {
-            return new AccessDecisionManager(
-                [
-                    $c['roleHierarchyVoter'],
-                ]
-            );
+            return new AccessDecisionManager([
+                $c['roleHierarchyVoter'],
+            ]);
         };
 
         $container['securityAuthorizationChecker'] = function ($c) {
@@ -344,7 +342,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['firewall'] = function ($c) {
             $c['stopwatch']->start('firewall');
-            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
+            $firewall = new TimedFirewall($c['firewallMap'], $c['dispatcher'], $c['stopwatch']);
             $c['stopwatch']->stop('firewall');
 
             return $firewall;
