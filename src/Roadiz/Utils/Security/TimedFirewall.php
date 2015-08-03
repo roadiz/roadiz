@@ -31,11 +31,9 @@ namespace RZ\Roadiz\Utils\Security;
 
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMapInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class TimedFirewall extends Firewall
