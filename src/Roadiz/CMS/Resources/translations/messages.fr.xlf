@@ -40,9 +40,9 @@
         <source>form.successfully.sent</source>
         <target xml:lang="fr">Votre formulaire a bien &#xE9;t&#xE9; envoy&#xE9;</target>
       </trans-unit>
-      <trans-unit id="form.has.errors" approved="yes">
+      <trans-unit id="form.has.errors">
         <source>form.has.errors</source>
-        <target xml:lang="fr">Votre formulaire n&#x2019;est pas valide, merci de remplir correctement les champs obligatoires.</target>
+        <target xml:lang="fr" state="translated">Votre formulaire n&#x2019;est pas valide, merci de remplir correctement les champs obligatoires.</target>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
@@ -111,6 +111,10 @@
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
                 <target xml:lang="fr">Si vous n&#x2019;avez pas sollicit&#xE9; cet email, veuillez l&#x2019;ignorer, votre mot de passe ne sera pas chang&#xE9;.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target xml:lang="fr" state="translated">R&#xE9;initialiser votre mot de passe</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>

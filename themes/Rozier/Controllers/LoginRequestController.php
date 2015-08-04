@@ -60,15 +60,22 @@ class LoginRequestController extends RozierApp
 
             if (null !== $user) {
                 if (!$user->isPasswordRequestNonExpired(LoginRequestController::CONFIRMATION_TTL)) {
-                    $tokenGenerator = new TokenGenerator($this->getService('logger'));
-                    $user->setPasswordRequestedAt(new \DateTime());
-                    $user->setConfirmationToken($tokenGenerator->generateToken());
-                    $this->getService('em')->flush();
-                    $user->getViewer()->sendPasswordResetLink($this->getService('urlGenerator'));
+                    try {
+                        $tokenGenerator = new TokenGenerator($this->getService('logger'));
+                        $user->setPasswordRequestedAt(new \DateTime());
+                        $user->setConfirmationToken($tokenGenerator->generateToken());
+                        $this->getService('em')->flush();
+                        $user->getViewer()->sendPasswordResetLink($this->getService('urlGenerator'));
 
-                    return $this->redirect($this->generateUrl(
-                        'loginRequestConfirmPage'
-                    ));
+                        return $this->redirect($this->generateUrl(
+                            'loginRequestConfirmPage'
+                        ));
+                    } catch (\Exception $e) {
+                        $user->setPasswordRequestedAt(null);
+                        $user->setConfirmationToken(null);
+                        $this->getService('em')->flush();
+                        $this->assignation['error'] = $e->getMessage();
+                    }
                 } else {
                     $this->assignation['error'] = $this->getTranslator()->trans('a.confirmation.email.has.already.be.sent');
                 }
