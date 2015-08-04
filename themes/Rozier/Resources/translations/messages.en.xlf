@@ -4041,7 +4041,7 @@
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409" approved="yes">
         <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
-        <target xml:lang="en">{0} No item|{1} &amp;lt;span&amp;gt;1&amp;lt;/span&amp;gt; item|]1,Inf] &amp;lt;span&amp;gt;%count%&amp;lt;/span&amp;gt; items</target>
+        <target xml:lang="en"><![CDATA[{0} No item|{1} <span>1</span> item|]1,Inf] <span>%count%</span> items]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410" approved="yes">
         <source>1.item</source>
