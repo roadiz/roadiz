@@ -40,6 +40,10 @@
         <source>form.successfully.sent</source>
         <target xml:lang="en">Your form has been successfully sent</target>
       </trans-unit>
+      <trans-unit id="form.has.errors">
+        <source>form.has.errors</source>
+        <target xml:lang="en" state="translated">Your form is not valid, please fill correctly mandatory fields.</target>
+      </trans-unit>
       <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
         <target xml:lang="en">Field %field% is mandatory</target>
@@ -107,6 +111,10 @@
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
                 <target xml:lang="en">If you didn&#x2019;t ask for this email, just ignore it and your password won&#x2019;t be changed.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target xml:lang="en" state="translated">Reset your password</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>

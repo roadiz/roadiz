@@ -11,8 +11,8 @@
         {% if availableThemesCount > 0 %}
         <div class="content-header-action-menu">
             <nav>
-				<a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.theme{% endtrans %}</a>
-			</nav>
+                <a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.theme{% endtrans %}</a>
+            </nav>
         </div>
         {% endif %}
     </header>
@@ -22,48 +22,50 @@
     <article class="content content-no-action-menu content-themes-list">
         <div class="content-table-cont">
             <table class="themes content-table uk-table">
-				<thead>
-			        <tr>
-			            <th class="informations">{% trans %}theme{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}theme.classname{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}theme.host{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
+                <thead>
+                    <tr>
+                        <th class="informations">{% trans %}theme{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}theme.classname{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}theme.host{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for theme in themes %}
-					<tr>
-						<td class="informations">
-							{% for type, info in theme.getInformations %}
-								<p class="{{type}}">{{ info }}</p>
-							{% endfor %}
-						</td>
-						<td class="mobile-hidden">
-							<a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
-						</td>
-						<td class="mobile-hidden">
-							{% if theme.getHostname != "*" %}
-							{{ theme.getHostname }}
-							{% else %}
-							<div class="uk-badge uk-badge-table">{% trans %}all.hostnames{% endtrans %}</div> <!-- uk-badge-success -->
-							{% endif %}
-						</td>
-						<td class="mobile-hidden">
-						{% if not theme.isAvailable %}<div class="uk-badge uk-badge-table"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
-						{% if theme.isBackendTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for theme in themes %}
+                    <tr>
+                        <td class="informations">
+                            {% for type, info in theme.getInformations %}
+                            <p class="{{type}}">{{ info }}</p>
+                            {% else %}
+                            <p class="files-not-found uk-badge uk-badge-warning"><i class="uk-icon-warning"></i> {% trans %}no_valid_class_found{% endtrans %}</p>
+                            {% endfor %}
+                        </td>
+                        <td class="mobile-hidden">
+                            <a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
+                        </td>
+                        <td class="mobile-hidden">
+                            {% if theme.getHostname != "*" %}
+                            {{ theme.getHostname }}
+                            {% else %}
+                            <div class="uk-badge uk-badge-table">{% trans %}all.hostnames{% endtrans %}</div> <!-- uk-badge-success -->
+                            {% endif %}
+                        </td>
+                        <td class="mobile-hidden">
+                        {% if not theme.isAvailable %}<div class="uk-badge uk-badge-table"><span class="uk-icon-eye-slash"></span> {% trans %}theme.disabled{% endtrans %}</div>{% endif %}
+                        {% if theme.isBackendTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
                         {% if theme.isStaticTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-road"></span> {% trans %}theme.is_static{% endtrans %}</div>{% endif %}
-						</td>
-						<td>
+                        </td>
+                        <td>
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesEditPage', { themeId: theme.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                         {% endspaceless %}
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </article>
 

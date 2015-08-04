@@ -29,10 +29,9 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
-
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
+use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**
  * {@inheritdoc}
@@ -43,20 +42,20 @@ class SettingsImporter implements ImporterInterface
      * Import a Json file (.rzt) containing setting and setting group.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
-    public static function importJsonFile($serializedData)
+    public static function importJsonFile($serializedData, EntityManager $em)
     {
-        $settingGroups = SettingCollectionJsonSerializer::deserialize($serializedData);
+        $serializer = new SettingCollectionJsonSerializer();
+        $settingGroups = $serializer->deserialize($serializedData);
 
-        $groupsNames = Kernel::getService('em')
-                  ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                  ->findAllNames();
+        $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+                          ->findAllNames();
 
-        $settingsNames = Kernel::getService('em')
-                  ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                  ->findAllNames();
+        $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                            ->findAllNames();
 
         $newSettings = [];
 
@@ -69,9 +68,8 @@ class SettingsImporter implements ImporterInterface
                 if (!in_array($setting->getName(), $settingsNames)) {
                     // do nothing
                 } else {
-                    $setting = Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                        ->findOneByName($setting->getName());
+                    $setting = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                                  ->findOneByName($setting->getName());
                 }
                 /*
                  * Set array with setting and the deserialize setting's group
@@ -91,11 +89,10 @@ class SettingsImporter implements ImporterInterface
              */
             if (null !== $settingGroup) {
                 if (!in_array($settingGroup->getName(), $groupsNames)) {
-                    Kernel::getService('em')->persist($settingGroup);
+                    $em->persist($settingGroup);
                 } else {
-                    $settingGroup = Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                        ->findOneByName($settingGroup->getName());
+                    $settingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+                                       ->findOneByName($settingGroup->getName());
                 }
             }
             /*
@@ -103,14 +100,14 @@ class SettingsImporter implements ImporterInterface
              */
             $setting->setSettingGroup($settingGroup);
             if ($setting->getId() === null) {
-                Kernel::getService('em')->persist($setting);
+                $em->persist($setting);
             }
         }
 
-        Kernel::getService('em')->flush();
+        $em->flush();
 
         // Clear result cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $em->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }

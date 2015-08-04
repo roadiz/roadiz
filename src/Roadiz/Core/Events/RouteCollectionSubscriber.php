@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Routing\RouteDumper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper;
-use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -42,15 +41,16 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class RouteCollectionSubscriber implements EventSubscriberInterface
 {
-    protected $routeCollection;
+    protected $routeDumper;
     protected $stopwatch;
-    protected $fs;
 
     public function __construct(RouteCollection $routeCollection, Stopwatch $stopwatch)
     {
-        $this->routeCollection = $routeCollection;
         $this->stopwatch = $stopwatch;
-        $this->fs = new Filesystem();
+        $this->routeDumper = new RouteDumper(
+            $routeCollection,
+            ROADIZ_ROOT . '/gen-src/Compiled'
+        );
     }
 
     /**
@@ -58,8 +58,10 @@ class RouteCollectionSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
+        // https://github.com/symfony/HttpKernel/blob/master/EventListener/RouterListener.php
+        // Use 33 priority
         return [
-            KernelEvents::REQUEST => 'onKernelRequest',
+            KernelEvents::REQUEST => ['onKernelRequest', 33],
         ];
     }
 
@@ -76,28 +78,7 @@ class RouteCollectionSubscriber implements EventSubscriberInterface
     public function onKernelRequest()
     {
         $this->stopwatch->start('dumpUrlUtils');
-
-        if (!$this->fs->exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
-            $this->fs->mkdir(ROADIZ_ROOT . '/gen-src/Compiled', 0755);
-        }
-        /*
-         * Generate custom UrlMatcher
-         */
-        $dumper = new PhpMatcherDumper($this->routeCollection);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlMatcher',
-        ]);
-        $this->fs->dumpFile(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php', $class);
-
-        /*
-         * Generate custom UrlGenerator
-         */
-        $dumper = new PhpGeneratorDumper($this->routeCollection);
-        $class = $dumper->dump([
-            'class' => 'GlobalUrlGenerator',
-        ]);
-        $this->fs->dumpFile(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php', $class);
-
+        $this->routeDumper->dump();
         $this->stopwatch->stop('dumpUrlUtils');
     }
 }

@@ -31,13 +31,27 @@ namespace RZ\Roadiz\CMS\Forms\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 
 class ValidFacebookNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (0 === preg_match("#^[a-zA-Z0-9\.\-\_]*$#", $value)) {
-            $this->context->addViolation($constraint->message);
+        if ($value != "") {
+            if (0 === preg_match("#^[0-9]*$#", $value)) {
+                $this->context->addViolation($constraint->message);
+            } else {
+                /*
+                 * Test if the user name really exists.
+                 */
+                $facebook = new FacebookPictureFinder($value);
+                try {
+                    $facebook->getPictureUrl();
+                } catch (\Exception $e) {
+                    $this->context->addViolation($constraint->message);
+                }
+            }
+
         }
     }
 }

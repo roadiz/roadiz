@@ -184,4 +184,5 @@ DocumentsBulk.prototype.documentsFolderButtonClick = function(e){
         _this.documentsFolderOpen = false;
     }
 
+    return false;
 };

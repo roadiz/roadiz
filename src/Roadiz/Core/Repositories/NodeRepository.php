@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -55,7 +55,7 @@ class NodeRepository extends EntityRepository
             if (is_array($criteria['tags'])) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
-                    $node = static::getNodeIdsByTagExcl($criteria['tags']);
+                    $node = static::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
                     $criteria["id"] = $node;
                     unset($criteria["tagExclusive"]);
                     unset($criteria['tags']);
@@ -79,14 +79,16 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Seach NodeId exclusively
+     * Search NodeId exclusively.
      *
-     * @param  array     $tags
+     * @param  array        $tags
+     * @param  EntityManager $em
+     *
      * @return array
      */
-    public static function getNodeIdsByTagExcl($tags)
+    public static function getNodeIdsByTagExcl($tags, EntityManager $em)
     {
-        $qb = Kernel::getInstance()->getService('em')->createQueryBuilder();
+        $qb = $em->createQueryBuilder();
 
         $qb->select("nj.id")
            ->addSelect("COUNT(t.id) as num")
@@ -251,15 +253,10 @@ class NodeRepository extends EntityRepository
                 );
             } else {
                 /*
-                 * With a null translation, just take the default one.
+                 * With a null translation, not filter by translation to enable
+                 * nodes with only one translation which is not the default one.
                  */
                 $qb->innerJoin('n.nodeSources', 'ns');
-                $qb->innerJoin(
-                    'ns.translation',
-                    't',
-                    'WITH',
-                    't.defaultTranslation = true'
-                );
             }
         }
     }
@@ -938,6 +935,40 @@ class NodeRepository extends EntityRepository
     }
 
     /**
+     * @param string $urlAliasAlias
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     *
+     * @return RZ\Roadiz\Core\Entities\Node|null
+     */
+    public function findOneWithAliasAndAvailableTranslation(
+        $urlAliasAlias,
+        AuthorizationChecker $authorizationChecker = null
+    ) {
+        $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.nodeSources ns
+            INNER JOIN ns.urlAliases uas
+            INNER JOIN ns.translation t
+            WHERE uas.alias = :alias
+            AND t.available = true';
+
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+
+        $query = $this->_em->createQuery($txtQuery)
+                           ->setParameter('alias', $urlAliasAlias);
+
+        if (null !== $authorizationChecker) {
+            $query->setParameter('status', Node::PUBLISHED);
+        }
+
+        try {
+            return $query->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * Modify DQL query string to support node status
      * according to security context.
      *
@@ -953,12 +984,12 @@ class NodeRepository extends EntityRepository
         &$txtQuery,
         AuthorizationChecker $authorizationChecker = null
     ) {
-        if (null !== $authorizationChecker &&
-            !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
-            $txtQuery .= ' AND n.status = :status';
-        } elseif (null !== $authorizationChecker &&
-            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+        $backendUser = null !== $authorizationChecker && $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+
+        if ($backendUser) {
             $txtQuery .= ' AND n.status <= :status';
+        } elseif (null !== $authorizationChecker) {
+            $txtQuery .= ' AND n.status = :status';
         }
 
         return $txtQuery;

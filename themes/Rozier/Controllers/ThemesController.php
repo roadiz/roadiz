@@ -33,7 +33,10 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
+use RZ\Roadiz\Utils\Installer\ThemeInstaller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Type;
 use Themes\Rozier\RozierApp;
@@ -43,6 +46,59 @@ use Themes\Rozier\RozierApp;
  */
 class ThemesController extends RozierApp
 {
+    /**
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function updateSchemaAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        $updater = new SchemaUpdater($this->getService('em'));
+        $updater->updateSchema();
+
+        return new JsonResponse(['status' => true]);
+    }
+    /**
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function clearDoctrineCacheAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        $doctrineClearer = new DoctrineCacheClearer($this->getService('em'));
+        $doctrineClearer->clear();
+
+        return new JsonResponse(['status' => true]);
+    }
+
+    /**
+     * Import theme screen.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $id
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function importAction(Request $request, $id)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+
+        $data = ThemeInstaller::getThemeInformation($result->getClassName());
+
+        $this->assignation = array_merge($this->assignation, $data["importFiles"]);
+        $this->assignation["themeId"] = $id;
+
+        return $this->render('themes/import.html.twig', $this->assignation);
+    }
+
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
      *
@@ -78,21 +134,15 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = new Theme();
-
         $form = $this->buildAddForm($theme);
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
                 $data = $form->getData();
-                $this->addTheme($request, $data, $theme);
-                $msg = $this->getTranslator()->trans(
-                    'theme.%name%.created',
-                    ['%name%' => $theme->getClassName()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-
+                return $this->redirect($this->generateUrl('themesSummaryPage', [
+                    'classname' => $data['className']
+                ]));
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -104,6 +154,55 @@ class ThemesController extends RozierApp
 
         return $this->render('themes/add.html.twig', $this->assignation);
 
+    }
+
+    /**
+     * Return a summary for requested theme.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function summaryAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        ThemeInstaller::assignSummaryInfo($request->get("classname"), $this->assignation, $request->getLocale());
+
+        return $this->render('themes/summary.html.twig', $this->assignation);
+    }
+
+    /**
+     * Return a setting form for requested theme.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function settingAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        $theme = new Theme();
+
+        $form = $this->buildSettingForm($theme, $request->get("classname"));
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            try {
+                $data = $form->getData();
+                return $this->addTheme($request, $data, $theme);
+            } catch (EntityAlreadyExistsException $e) {
+                $this->publishErrorMessage($request, $e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('themesHomePage'));
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('themes/setting.html.twig', $this->assignation);
     }
 
     /**
@@ -207,7 +306,8 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $builder = $this->buildCommonForm($theme);
+        $builder = $this->getService('formFactory')
+                        ->createNamedBuilder('source', 'form', []);
 
         /*
          * See if its possible to prepend field instead of adding it
@@ -238,6 +338,23 @@ class ThemesController extends RozierApp
     protected function buildEditForm(Theme $theme)
     {
         return $this->buildCommonForm($theme)->getForm();
+    }
+
+    /**
+     * Build setting theme form with classname constraint.
+     *
+     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param string                        $classname
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    protected function buildSettingForm(Theme $theme, $classname)
+    {
+        $builder = $this->buildCommonForm($theme)
+                        ->add('classname', 'hidden', [
+                            'data' => $classname,
+                        ]);
+        return $builder->getForm();
     }
 
     /**
@@ -292,16 +409,22 @@ class ThemesController extends RozierApp
 
         $d = ($n !== null) ? [$n] : [];
 
-        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
+        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->getService('em')), [
             'label' => 'homeNode',
             'required' => false,
+            'attr' => [
+                'data-nodetypes' => ''
+            ]
         ]);
 
         $d = ($r !== null) ? [$r] : [];
 
-        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d), [
+        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->getService('em')), [
             'label' => 'themeRoot',
             'required' => false,
+            'attr' => [
+                'data-nodetypes' => ''
+            ]
         ]);
 
         return $builder;
@@ -357,15 +480,13 @@ class ThemesController extends RozierApp
     /**
      * @param Symfony\Component\HttpFoundation\Request  $request
      * @param array                                     $data
-     * @param RZ\Roadiz\Core\Entities\Theme             $theme
+     * @param string                                    $className
      */
-    private function addTheme(Request $request, array &$data, Theme $theme)
+    private function addTheme(Request $request, array &$data)
     {
-        $this->setThemeValue($request, $data, $theme);
-
         $existing = $this->getService('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                         ->findOneBy(['className' => $theme->getClassName()]);
+                         ->findOneBy(['className' => $data["classname"]]);
 
         if ($existing !== null) {
             throw new EntityAlreadyExistsException(
@@ -377,7 +498,12 @@ class ThemesController extends RozierApp
             );
         }
 
-        $this->getService('em')->persist($theme);
+        $importFile = ThemeInstaller::install($request, $data["classname"], $this->getService("em"));
+        $theme = $this->getService("em")
+                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->findOneByClassName($data["classname"]);
+        $this->setThemeValue($request, $data, $theme);
+
         $this->getService('em')->flush();
 
         // Clear result cache
@@ -385,6 +511,17 @@ class ThemesController extends RozierApp
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }
+        if ($importFile === false) {
+            return $this->redirect($this->generateUrl(
+                'themesHomePage'
+            ));
+        } else {
+            return $this->redirect($this->generateUrl(
+                'themesImportPage',
+                ["id" => $theme->getId()]
+            ));
+        }
+
     }
 
     /**
@@ -419,7 +556,7 @@ class ThemesController extends RozierApp
         $this->getService('em')->flush();
 
         // Clear result cache
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }

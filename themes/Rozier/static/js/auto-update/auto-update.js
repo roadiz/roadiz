@@ -45,8 +45,7 @@ AutoUpdate.prototype.loadStep = function(progress, url, description) {
         //data: {param1: 'value1'},
     })
     .done(function(data) {
-        console.log(data);
-
+        //console.log(data);
         if(typeof(data.progress) !== "undefined") {
             if(typeof(data.complete) !== "undefined" &&
                 data.complete === true){
@@ -57,14 +56,12 @@ AutoUpdate.prototype.loadStep = function(progress, url, description) {
         }
     })
     .fail(function(data) {
-        console.log(data);
+        //console.log(data);
 
         if(typeof(data.responseJSON) !== "undefined") {
             _this.$progressBarInner.html(data.responseJSON.message);
         }
-
         _this.buttonFail();
-
         _this.$progressBar.removeClass("uk-progress-striped uk-active");
         _this.$progressBar.addClass("uk-progress-danger");
     });

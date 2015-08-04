@@ -581,4 +581,48 @@ class NodesController extends RozierApp
 
         return $this->throw404($this->getTranslator()->trans('bad.request'));
     }
+    /**
+     *
+     * @param  Request $request
+     * @param  integer  $nodeId
+     * @return Response
+     */
+    public function publishAllAction(Request $request, $nodeId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
+
+        $node = $this->getService('em')
+                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+        if (null !== $node) {
+            $form = $this->createFormBuilder()
+                        ->add('nodeId', 'hidden', [
+                            'data' => $node->getId(),
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ])->getForm();
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $node->getHandler()->publishWithChildren();
+                $this->getService('em')->flush();
+
+                $msg = $this->getTranslator()->trans('node.offspring.published');
+                $this->publishConfirmMessage($request, $msg);
+
+                return $this->redirect($this->generateUrl('nodesEditSourcePage', [
+                    'nodeId' => $nodeId,
+                    'translationId' => $node->getNodeSources()->first()->getTranslation()->getId(),
+                ]));
+            }
+
+            $this->assignation['node'] = $node;
+            $this->assignation['form'] = $form->createView();
+
+            return $this->render('nodes/publishAll.html.twig', $this->assignation);
+
+        } else {
+            return $this->throw404();
+        }
+    }
 }

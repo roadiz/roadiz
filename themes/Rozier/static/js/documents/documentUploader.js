@@ -3,15 +3,15 @@ var DocumentUploader = function (options) {
 
     _this.options = {
         'onSuccess' : function (data) {
-            console.log("Success file");
-            console.log(data);
+            //console.log("Success file");
+            //console.log(data);
         },
         'onError' : function (data) {
             console.log("Failed file");
             console.log(data);
         },
         'onAdded' : function (file) {
-            console.log("Added file");
+            //console.log("Added file");
         },
         'url':           Rozier.routes.documentsUploadPage,
         'selector':      "#upload-dropzone-document",
@@ -97,6 +97,6 @@ DocumentUploader.prototype.init = function() {
 
     var $dzMessage = $(_this.options.selector).find('.dz-message');
 
-    $dzMessage.append('<div class=\"circles-icons\"><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-file\"></i></div>'); 
+    $dzMessage.append('<div class=\"circles-icons\"><div class=\"circle circle-1\"></div><div class=\"circle circle-2\"></div><div class=\"circle circle-3\"></div><div class=\"circle circle-4\"></div><div class=\"circle circle-5\"></div><i class=\"uk-icon-rz-file\"></i></div>');
 
 };

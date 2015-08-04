@@ -56,8 +56,12 @@ class TranslationExtension extends \Twig_Extension
         ];
     }
 
-    public function getMenuAssignation(Translation $translation, $absolute = false)
+    public function getMenuAssignation(Translation $translation = null, $absolute = false)
     {
-        return $translation->getViewer()->getTranslationMenuAssignation($this->request, $absolute);
+        if (null !== $translation) {
+            return $translation->getViewer()->getTranslationMenuAssignation($this->request, $absolute);
+        } else {
+            return [];
+        }
     }
 }

@@ -40,3 +40,6 @@ documentsBulkDeletePage:
 documentsBulkDownloadPage:
     path:     /bulk-download
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDownloadAction }
+documentsUnusedPage:
+    path:     /orphans
+    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::unusedAction }

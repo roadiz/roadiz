@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Json Serialization handler for UrlAlias.
@@ -46,7 +46,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($urlAlias)
+    public function toArray($urlAlias)
     {
         $data = [];
 
@@ -62,14 +62,14 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\UrlAlias
      */
-    public static function deserialize($jsonString)
+    public function deserialize($jsonString)
     {
         if ($jsonString == "") {
             throw new \Exception('File is empty.');
         }
         $encoder = new JsonEncoder();
         $nameConverter = new CamelCaseToSnakeCaseNameConverter([
-            'alias'
+            'alias',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 

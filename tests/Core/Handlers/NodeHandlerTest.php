@@ -5,7 +5,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use GeneratedNodeSources\NSPage;
-use RZ\Roadiz\CMS\Controllers\ImportController;
+use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Kernel;
 
 class NodeHandlerTest extends PHPUnit_Framework_TestCase
@@ -74,10 +74,10 @@ class NodeHandlerTest extends PHPUnit_Framework_TestCase
         static::$runtimeCollection = array();
 
         date_default_timezone_set('Europe/Paris');
-        ImportController::importContent(
-            ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.json',
-            "RZ\Roadiz\CMS\Importers\NodeTypesImporter",
-            null
+        $file = file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.rzt');
+        NodeTypesImporter::importJsonFile(
+            $file,
+            Kernel::getService('em')
         );
     }
 

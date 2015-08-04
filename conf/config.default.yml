@@ -9,6 +9,12 @@ doctrine:
     user: ""
     password: ""
     dbname: ""
+# http://symfony.com/doc/current/reference/configuration/doctrine.html#caching-drivers
+# If null or empty, Roadiz will try to detect best cache driver available
+cacheDriver:
+    type: null
+    host: null
+    port: null
 security:
     secret: "change#this#secret#very#important"
 mailer:
@@ -22,3 +28,5 @@ entities:
     - "src/Roadiz/Core/Entities"
     - "src/Roadiz/Core/AbstractEntities"
     - "gen-src/GeneratedNodeSources"
+# Lifetime of remember-me cookie in seconds (30 days)
+rememberMeLifetime: 2592000

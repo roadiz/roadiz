@@ -112,7 +112,7 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSource($args = [])
+    public function getSource(&$args = [])
     {
         return '//www.youtube.com/embed/'.$this->embedId.'?rel=0&html5=1&wmode=transparent';
     }

@@ -136,12 +136,19 @@ class Theme extends AbstractEntity
     {
         $class = $this->getClassName();
 
-        return [
-            'name'=> $class::getThemeName(),
-            'author'=> $class::getThemeAuthor(),
-            'copyright'=> $class::getThemeCopyright(),
-            'dir'=> $class::getThemeDir()
-        ];
+        if (class_exists($class)) {
+            $reflector = new \ReflectionClass($class);
+            if ($reflector->isSubclassOf("RZ\Roadiz\CMS\Controllers\AppController")) {
+                return [
+                    'name'=> $class::getThemeName(),
+                    'author'=> $class::getThemeAuthor(),
+                    'copyright'=> $class::getThemeCopyright(),
+                    'dir'=> $class::getThemeDir()
+                ];
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -223,7 +230,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
     * @ORM\JoinColumn(name="homenode_id", referencedColumnName="id", onDelete="SET NULL")
     *
     * @var RZ\Roadiz\Core\Entities\Node
@@ -251,7 +258,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+    * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="SET NULL")
     *
     * @var RZ\Roadiz\Core\Entities\Node

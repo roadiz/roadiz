@@ -29,18 +29,27 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Json Serialization handler for Node.
  */
 class NodeJsonSerializer extends AbstractJsonSerializer
 {
+    protected $em;
+
+    /**
+     * @param EntityManager $em
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
     /**
      * Create a simple associative array with a Node.
      *
@@ -48,32 +57,33 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($nodes)
+    public function toArray($nodes)
     {
         $array = [];
+        $nsSerializer = new NodeSourceJsonSerializer();
 
         foreach ($nodes as $node) {
             $data = [];
 
-            $data['node_name'] =                $node->getNodeName();
-            $data['node_type'] =                $node->getNodeType()->getName();
-            $data['home'] =                     $node->isHome();
-            $data['visible'] =                  $node->isVisible();
-            $data['status'] =                   $node->getStatus();
-            $data['locked'] =                   $node->isLocked();
-            $data['priority'] =                 $node->getPriority();
-            $data['hiding_children'] =          $node->isHidingChildren();
-            $data['archived'] =                 $node->isArchived();
-            $data['sterile'] =                  $node->isSterile();
-            $data['children_order'] =           $node->getChildrenOrder();
+            $data['node_name'] = $node->getNodeName();
+            $data['node_type'] = $node->getNodeType()->getName();
+            $data['home'] = $node->isHome();
+            $data['visible'] = $node->isVisible();
+            $data['status'] = $node->getStatus();
+            $data['locked'] = $node->isLocked();
+            $data['priority'] = $node->getPriority();
+            $data['hiding_children'] = $node->isHidingChildren();
+            $data['archived'] = $node->isArchived();
+            $data['sterile'] = $node->isSterile();
+            $data['children_order'] = $node->getChildrenOrder();
             $data['children_order_direction'] = $node->getChildrenOrderDirection();
 
-            $data['children'] =  [];
+            $data['children'] = [];
             $data['nodes_sources'] = [];
             $data['tags'] = [];
 
             foreach ($node->getNodeSources() as $source) {
-                $data['nodes_sources'][] = NodeSourceJsonSerializer::toArray($source);
+                $data['nodes_sources'][] = $nsSerializer->toArray($source);
             }
 
             foreach ($node->getTags() as $tag) {
@@ -83,18 +93,17 @@ class NodeJsonSerializer extends AbstractJsonSerializer
              * Recursivity !! Be careful
              */
             foreach ($node->getChildren() as $child) {
-                $data['children'][] = static::toArray([$child])[0];
+                $data['children'][] = $this->toArray([$child])[0];
             }
             $array[] = $data;
         }
         return $array;
     }
 
-    protected static function makeNodeRec($data)
+    protected function makeNodeRec($data)
     {
-        $nodetype = Kernel::getInstance()->getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                    ->findOneByName($data["node_type"]);
+        $nodetype = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                         ->findOneByName($data["node_type"]);
 
         $node = new Node($nodetype);
         $node->setNodeName($data['node_name']);
@@ -116,7 +125,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             $namespace = NodeType::getGeneratedEntitiesNamespace();
             $classname = $nodetype->getSourceEntityClassName();
-            $class = $namespace."\\".$classname;
+            $class = $namespace . "\\" . $classname;
 
             $nodeSource = new $class($node, $trans);
             $nodeSource->setTitle($source["title"]);
@@ -127,7 +136,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $fields = $nodetype->getFields();
 
             foreach ($fields as $field) {
-                if (!$field->isVirtual()) {
+                if (!$field->isVirtual() && isset($source[$field->getName()])) {
                     if ($field->getType() == NodeTypeField::DATETIME_T
                         || $field->getType() == NodeTypeField::DATE_T) {
                         $date = new \DateTime(
@@ -153,15 +162,14 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (!empty($data['tags'])) {
             foreach ($data["tags"] as $tag) {
-                $tmp = Kernel::getInstance()->getService('em')
-                                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                                            ->findOneBy(["tagName" => $tag]);
+                $tmp = $this->em->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                            ->findOneBy(["tagName" => $tag]);
                 $node->getTags()->add($tmp);
             }
         }
         if (!empty($data['children'])) {
             foreach ($data['children'] as $child) {
-                $tmp = static::makeNodeRec($child);
+                $tmp = $this->makeNodeRec($child);
                 $node->addChild($tmp);
             }
         }
@@ -175,14 +183,14 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
-    public static function deserialize($string)
+    public function deserialize($string)
     {
         $datas = json_decode($string, true);
         $array = [];
 
         foreach ($datas as $data) {
             if (!empty($data)) {
-                $array[] = static::makeNodeRec($data);
+                $array[] = $this->makeNodeRec($data);
             }
         }
 

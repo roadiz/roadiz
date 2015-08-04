@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Serialization class for Setting.
@@ -47,8 +47,9 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($settingGroups)
+    public function toArray($settingGroups)
     {
+        $settingSerializer = new SettingJsonSerializer();
         $data = [];
 
         foreach ($settingGroups as $group) {
@@ -59,7 +60,7 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
             $tmpGroup['settings'] = [];
 
             foreach ($group->getSettings() as $setting) {
-                 $tmpGroup['settings'][] = SettingJsonSerializer::toArray($setting);
+                $tmpGroup['settings'][] = $settingSerializer->toArray($setting);
             }
 
             $data[] = $tmpGroup;
@@ -75,7 +76,7 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
-    public static function deserialize($jsonString)
+    public function deserialize($jsonString)
     {
         if ($jsonString == "") {
             throw new \Exception('File is empty.');
@@ -100,7 +101,10 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
                             $newSetting->setName($setting['name']);
                             $newSetting->setType($setting['type']);
                             if ($setting['type'] == NodeTypeField::DATETIME_T) {
-                                $dt = new \DateTime($setting['value']['date'], new \DateTimeZone($setting['value']['timezone']));
+                                $dt = new \DateTime(
+                                    $setting['value']['date'],
+                                    new \DateTimeZone($setting['value']['timezone'])
+                                );
                                 $newSetting->setValue($dt);
                             } else {
                                 $newSetting->setValue($setting['value']);

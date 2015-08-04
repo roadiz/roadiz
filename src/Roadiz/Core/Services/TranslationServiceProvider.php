@@ -65,7 +65,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
             $translator = new Translator(
                 $c['translator.locale'],
                 null,
-                ROADIZ_ROOT . '/cache/translations',
+                (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/translations',
                 (boolean) $c['config']['devMode']
             );
 

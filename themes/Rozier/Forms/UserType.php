@@ -31,7 +31,6 @@ namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
-use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -74,34 +73,6 @@ class UserType extends AbstractType
                     'label' => 'passwordVerify',
                 ],
                 'required' => false,
-            ])
-            ->add('firstName', 'text', [
-                'label' => 'firstName',
-                'required' => false,
-            ])
-            ->add('lastName', 'text', [
-                'label' => 'lastName',
-                'required' => false,
-            ])
-            ->add('facebookName', 'text', [
-                'label' => 'facebookName',
-                'required' => false,
-                'constraints' => [
-                    new ValidFacebookName(),
-                ],
-            ])
-            ->add('company', 'text', [
-                'label' => 'company',
-                'required' => false,
-            ])
-            ->add('job', 'text', [
-                'label' => 'job',
-                'required' => false,
-            ])
-            ->add('birthday', 'date', [
-                'label' => 'birthday',
-                'required' => false,
-                'years' => range(1920, date('Y') - 6),
             ]);
     }
 

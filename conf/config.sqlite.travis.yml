@@ -10,6 +10,10 @@ doctrine:
     path: "conf/travis.db"
 security:
     secret: "change#this#secret#very#important"
+cacheDriver:
+    type: null
+    host: null
+    port: null
 mailer:
     type: ""
     host: "localhost"
@@ -21,3 +25,5 @@ entities:
     - "src/Roadiz/Core/Entities"
     - "src/Roadiz/Core/AbstractEntities"
     - "gen-src/GeneratedNodeSources"
+# Lifetime of remember-me cookie in seconds (30 days)
+rememberMeLifetime: 2592000

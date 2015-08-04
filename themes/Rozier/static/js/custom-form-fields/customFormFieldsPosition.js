@@ -49,7 +49,7 @@ CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, elem
         data: postData,
     })
     .done(function(data) {
-        console.log(data);
+        //console.log(data);
         $element.attr('data-position', newPosition);
         UIkit.notify({
             message : data.responseText,
@@ -60,9 +60,6 @@ CustomFormFieldsPosition.prototype.onSortableChange = function(event, list, elem
     })
     .fail(function(data) {
         console.log(data);
-    })
-    .always(function() {
-        console.log("complete");
     });
 
 };

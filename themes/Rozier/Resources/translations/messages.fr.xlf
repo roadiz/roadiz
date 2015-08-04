@@ -478,9 +478,9 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="47" approved="yes">
+      <trans-unit xml:space="preserve" id="47">
         <source>user.facebook_name.%name%._does_not_exist</source>
-        <target xml:lang="fr">Le profil Facebook «%name%» n’existe pas.</target>
+        <target xml:lang="fr" state="translated">L’identifiant utilisateur Facebook «%name%» n’existe pas.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">569</context>
@@ -588,7 +588,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="57" approved="yes">
         <source>facebookName</source>
-        <target xml:lang="fr">Nom du profil Facebook</target>
+        <target xml:lang="fr">Identifiant utilisateur Facebook</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">734</context>
@@ -4041,7 +4041,7 @@
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409" approved="yes">
         <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
-        <target xml:lang="fr">{0} Aucun objet|{1} 1 objet|]1,Inf] %count% objets</target>
+        <target xml:lang="fr"><![CDATA[{0} Aucun objet|{1} <span>1</span> objet|]1,Inf] <span>%count%</span> objets]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410" approved="yes">
         <source>1.item</source>
@@ -4309,7 +4309,11 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="google_client_id" approved="yes">
         <source>google_client_id</source>
-        <target xml:lang="fr">Google : Id client</target>
+        <target xml:lang="fr">Google API - Clef navigateur</target>
+      <alt-trans><target xml:lang="fr">Google : Id client</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target xml:lang="fr" state="translated">Google API - Clef serveur</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id" approved="yes">
         <source>twitter_client_id</source>
@@ -4354,6 +4358,22 @@
       <trans-unit xml:space="preserve" id="twitter_account" approved="yes">
         <source>twitter_account</source>
         <target xml:lang="fr">Compte Twitter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
+        <source>recaptcha_public_key</source>
+        <target xml:lang="fr" state="translated">Clef publique Recaptcha (sitekey)</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key">
+        <source>recaptcha_private_key</source>
+        <target xml:lang="fr" state="translated">Clef privée Recaptcha (secret)</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
+        <source>you_must_show_youre_not_robot</source>
+        <target xml:lang="fr" state="translated">Vous devez valider le Recaptcha pour vérifier que vous n’êtes pas un robot.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
+        <source>recaptcha_is_invalid.try_again</source>
+        <target xml:lang="fr" state="translated">Le Recaptcha est invalide, veuillez réessayer.</target>
       </trans-unit>
       <!-- document usage -->
       <trans-unit xml:space="preserve" id="document.%name%.usage" approved="yes">
@@ -5713,9 +5733,9 @@
           <source>download.folder.content</source>
           <target xml:lang="fr">Télécharger le contenu du dossier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="not.valid.facebook.name" approved="yes">
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
           <source>not.valid.facebook.name</source>
-          <target xml:lang="fr">Ce n’est pas un nom Facebook valide, copiez seulement la partie après https://www.facebook.com/</target>
+          <target xml:lang="fr" state="translated">Ce n’est pas un ID Facebook valide, vous pouvez aller sur http://lookup-id.com/ pour le retrouver.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="routePrefix" approved="yes">
           <source>routePrefix</source>
@@ -6023,6 +6043,66 @@
       <trans-unit xml:space="preserve" id="overrideLocale">
           <source>overrideLocale</source>
           <target xml:lang="fr" state="translated">Locale de remplacement</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
+          <source>keep_me_logged_in</source>
+          <target xml:lang="fr" state="translated">Garder ma session active</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target xml:lang="fr" state="translated">Paramètres du thème</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unused_documents">
+          <source>unused_documents</source>
+          <target xml:lang="fr" state="translated">Documents non-utilisés</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target xml:lang="fr" state="translated">La descendance du nœud a été publiée</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target xml:lang="fr" state="translated">Êtes-vous sûr(e) de vouloir publier toute la descendance de ce nœud ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target xml:lang="fr" state="translated">Publier la descendance de “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target xml:lang="fr" state="translated">Publier la descendance</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target xml:lang="fr" state="translated">Publier la descendance</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="groupName">
+          <source>groupName</source>
+          <target xml:lang="fr" state="translated">Nom du groupe</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.does_not_exist">
+          <source>embedId.does_not_exist</source>
+          <target xml:lang="fr" state="translated">L’identifiant de média externe n’existe pas.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
+          <source>YoutubeEmbedFinder needs a Google server key.</source>
+          <target xml:lang="fr" state="translated">YoutubeEmbedFinder a besoin d’une clef serveur Google.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
+          <source>edit.user_details.%name%</source>
+          <target xml:lang="fr" state="translated">%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.edit_details">
+          <source>user.edit_details</source>
+          <target xml:lang="fr" state="translated">Détails</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target xml:lang="fr" state="translated">Une nouvelle version est disponible !</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found">
+          <source>no_valid_class_found</source>
+          <target xml:lang="fr" state="translated">Aucune classe valide disponible !</target>
       </trans-unit>
     </body>
   </file>

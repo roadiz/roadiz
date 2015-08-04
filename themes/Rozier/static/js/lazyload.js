@@ -189,6 +189,16 @@ Lazyload.prototype.applyContent = function(data) {
     });
 };
 
+Lazyload.prototype.bindAjaxLink = function() {
+    var _this = this;
+
+    _this.parseLinks();
+
+    var onClickProxy = $.proxy(_this.onClick, _this);
+    _this.$linksSelector.off('click', onClickProxy);
+    _this.$linksSelector.on('click', onClickProxy);
+};
+
 
 /**
  * General bind on page load
@@ -197,11 +207,7 @@ Lazyload.prototype.applyContent = function(data) {
 Lazyload.prototype.generalBind = function() {
     var _this = this;
 
-    _this.parseLinks();
-
-    var onClickProxy = $.proxy(_this.onClick, _this);
-    _this.$linksSelector.off('click', onClickProxy);
-    _this.$linksSelector.on('click', onClickProxy);
+    _this.bindAjaxLink();
 
     new DocumentsBulk();
     new AutoUpdate();
@@ -238,7 +244,7 @@ Lazyload.prototype.generalBind = function() {
     }
 
     // Animate actions menu
-    if($('.actions-menu').length && isMobile.any() === null){
+    if($('.actions-menu').length && isMobile.any() === null) {
         TweenLite.to('.actions-menu', 0.5, {right:0, delay:0.4, ease:Expo.easeOut});
     }
 
@@ -252,6 +258,11 @@ Lazyload.prototype.generalBind = function() {
     });
 
     Rozier.getMessages();
+
+    if(typeof Rozier.importRoutes != "undefined" && Rozier.importRoutes !== null){
+        Rozier.import = new Import(Rozier.importRoutes);
+        Rozier.importRoutes = null;
+    }
 };
 
 Lazyload.prototype.initMarkdownEditors = function() {

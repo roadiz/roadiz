@@ -1,4 +1,4 @@
-{% if filters.itemCount > 10 %}
+{% if filters.itemPerPage and filters.itemCount > 10 %}
 {% set enabledCounts = [10,20,50,100,200] %}
 {% spaceless %}
 <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
@@ -8,10 +8,10 @@
     <div class="rz-select">
         <select class="item-per-page" name="item_per_page">
             {% if filters.itemPerPage not in enabledCounts %}
-            <option selected value="{{ filters.itemPerPage }}">{{ '%count%.items'|trans({'%count%':filters.itemPerPage}) }}</option>
+            <option selected value="{{ filters.itemPerPage }}">{{ '%count%.items'|trans({'%count%':filters.itemPerPage})|raw }}</option>
             {% endif %}
             {% for index in enabledCounts %}
-            <option {% if filters.itemPerPage == index %}selected{% endif %} value="{{ index }}">{{ '%count%.items'|trans({'%count%':index}) }}</option>
+            <option {% if filters.itemPerPage == index %}selected{% endif %} value="{{ index }}">{{ '%count%.items'|trans({'%count%':index})|raw }}</option>
             {% endfor %}
         </select>
     </div>

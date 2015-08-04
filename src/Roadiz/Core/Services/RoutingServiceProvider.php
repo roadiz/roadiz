@@ -31,19 +31,21 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
+use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
 use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
+use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Http\HttpUtils;
 
 /**
@@ -83,14 +85,16 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 return new MixedUrlMatcher(
                     $c['requestContext'],
                     $c['dynamicUrlMatcher'],
-                    (boolean) $c['config']['install']
+                    (boolean) $c['config']['install'],
+                    $c['stopwatch']
                 );
             }
         };
         $container['dynamicUrlMatcher'] = function ($c) {
             return new NodeUrlMatcher(
                 $c['requestContext'],
-                $c['em']
+                $c['em'],
+                $c['stopwatch']
             );
         };
         $container['urlGeneratorClass'] = function ($c) {
@@ -109,11 +113,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['routeListener'] = function ($c) {
-            return new RouterListener(
+            return new TimedRouteListener(
                 $c['urlMatcher'],
                 $c['requestContext'],
                 null,
-                $c['requestStack']
+                $c['requestStack'],
+                $c['stopwatch']
             );
         };
 
@@ -123,81 +128,24 @@ class RoutingServiceProvider implements ServiceProviderInterface
              * Get Install routes
              */
             $container['routeCollection'] = function ($c) {
-
                 $installClassname = Kernel::INSTALL_CLASSNAME;
-                $feCollection = $installClassname::getRoutes();
-                $rCollection = new RouteCollection();
-                $rCollection->addCollection($feCollection);
-
                 $installClassname::setupDependencyInjection($c);
 
-                return $rCollection;
+                return new InstallRouteCollection($installClassname);
             };
         } else {
             /*
              * Get App routes
              */
             $container['routeCollection'] = function ($c) {
-
                 $c['stopwatch']->start('routeCollection');
-                $rCollection = new RouteCollection();
-
-                /*
-                 * Add Assets controller routes
-                 */
-                $rCollection->addCollection(
-                    \RZ\Roadiz\CMS\Controllers\AssetsController::getRoutes()
+                $rCollection = new RoadizRouteCollection(
+                    $c['backendClass'],
+                    $c['frontendThemes'],
+                    SettingsBag::get('static_domain_name')
                 );
-
-                /*
-                 * Add Entry points controller routes
-                 */
-                $rCollection->addCollection(
-                    \RZ\Roadiz\CMS\Controllers\EntryPointsController::getRoutes()
-                );
-
-                /*
-                 * Add Backend routes
-                 */
-                $beClass = $c['backendClass'];
-                $cmsCollection = $beClass::getRoutes();
-                if ($cmsCollection !== null) {
-                    $rCollection->addCollection($cmsCollection);
-                }
-
-                /*
-                 * Add Frontend routes
-                 *
-                 * return 'RZ\Roadiz\CMS\Controllers\FrontendController';
-                 */
-                foreach ($c['frontendThemes'] as $theme) {
-                    $feClass = $theme->getClassName();
-                    $feCollection = $feClass::getRoutes();
-                    $feBackendCollection = $feClass::getBackendRoutes();
-
-                    if ($feCollection !== null) {
-                        // set host pattern if defined
-                        if ($theme->getHostname() != '*' &&
-                            $theme->getHostname() != '') {
-                            $feCollection->setHost($theme->getHostname());
-                        }
-                        /*
-                         * Add a global prefix on theme static routes
-                         */
-                        if ($theme->getRoutePrefix() != '') {
-                            $feCollection->addPrefix($theme->getRoutePrefix());
-                        }
-                        $rCollection->addCollection($feCollection);
-                    }
-                    if ($feBackendCollection !== null) {
-                        /*
-                         * Do not prefix or hostname admin routes.
-                         */
-                        $rCollection->addCollection($feBackendCollection);
-                    }
-                }
-
                 $c['stopwatch']->stop('routeCollection');
+
                 return $rCollection;
             };
         }

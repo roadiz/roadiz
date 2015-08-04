@@ -15,12 +15,12 @@
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <button data-action-save="#add-theme-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
-                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                    <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}next{% endtrans %}</span></span>
                 </button>
             </fieldset>
         </form>
     </article>
-    {% include '@Rozier/themes/actionsMenu.html.twig' %}
+    {#  {% include '@Rozier/themes/actionsMenu.html.twig' %} #}
 </section>
 {% endblock %}

@@ -81,3 +81,7 @@ nodesEmptyTrashPage:
 nodesGenerateAndAddNodeAction:
     path:     /create
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::generateAndAddNodeAction }
+nodesPublishAllAction:
+    path:     /publish-all/{nodeId}
+    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::publishAllAction }
+    requirements: { nodeId : "[0-9]+" }

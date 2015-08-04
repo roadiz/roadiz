@@ -58,5 +58,18 @@
 {%- endblock form_row %}
 
 {% block submit_widget -%}
-    <button class="uk-button uk-button-primary" type="{{ type|default('submit') }}" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}>{{ label }}</button>
+    <button class="uk-button uk-button-primary" type="{{ type|default('submit') }}" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}>{{ label|trans }}</button>
 {%- endblock submit_widget %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+    <ul>
+        {%- for error in errors -%}
+        <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans }}</li>
+        {%- endfor -%}
+    </ul>
+    {%- endif -%}
+{%- endblock form_errors -%}
+{% block recaptcha_widget -%}
+    <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>
+{%- endblock recaptcha_widget %}

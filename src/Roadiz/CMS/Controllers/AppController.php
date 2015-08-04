@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
@@ -236,25 +237,37 @@ class AppController extends Controller
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
-        if (null === $response) {
-            $response = new Response(
-                '',
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+        try {
+            if (!$this->getService('stopwatch')->isStarted('twigRender')) {
+                $this->getService('stopwatch')->start('twigRender');
+            }
+
+            if (null === $response) {
+                $response = new Response(
+                    '',
+                    Response::HTTP_OK,
+                    ['content-type' => 'text/html']
+                );
+            }
+
+            if ($namespace !== "" && $namespace !== "/") {
+                $view = '@' . $namespace . '/' . $view;
+            } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
+                // when no namespace is used
+                // use current theme directory
+                $view = '@' . static::getThemeDir() . '/' . $view;
+            }
+
+            $response->setContent($this->container['twig.environment']->render($view, $parameters));
+
+            return $response;
+        } catch (\Twig_Error_Runtime $e) {
+            if ($e->getPrevious() instanceof ForceResponseException) {
+                return $e->getPrevious()->getResponse();
+            } else {
+                throw $e;
+            }
         }
-
-        if ($namespace !== "" && $namespace !== "/") {
-            $view = '@' . $namespace . '/' . $view;
-        } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
-            // when no namespace is used
-            // use current theme directory
-            $view = '@' . static::getThemeDir() . '/' . $view;
-        }
-
-        $response->setContent($this->container['twig.environment']->render($view, $parameters));
-
-        return $response;
     }
 
     /**

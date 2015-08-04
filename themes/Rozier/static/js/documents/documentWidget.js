@@ -5,15 +5,18 @@ var DocumentWidget = function () {
     var _this = this;
 
     _this.$widgets = $('[data-document-widget]');
-    _this.$sortables = $('.documents-widget-sortable');
-    _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
-    _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
 
-    _this.$explorer = null;
-    _this.$explorerClose = null;
-    _this.uploader = null;
+    if (_this.$widgets.length) {
+        _this.$sortables = $('.documents-widget-sortable');
+        _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
+        _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
+        _this.$explorer = null;
+        _this.explorer = null;
+        _this.$explorerClose = null;
+        _this.uploader = null;
 
-    _this.init();
+        _this.init();
+    }
 };
 
 /**
@@ -25,7 +28,7 @@ DocumentWidget.prototype.init = function() {
     var _this = this;
 
     var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
-    _this.$sortables.on('change.uk.sortable', changeProxy);
+    _this.$sortables.off('change.uk.sortable', changeProxy);
     _this.$sortables.on('change.uk.sortable', changeProxy);
 
     var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
@@ -63,7 +66,7 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
     var _this = this;
 
     //console.log("Document: "+element.data('document-id'));
-    console.log(element);
+    //console.log(element);
     $sortable = $(element).parent();
     var inputName = 'source['+$sortable.data('input-name')+']';
     $sortable.find('li').each(function (index) {
@@ -102,8 +105,6 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
             selector: '.documents-widget .documents-widget-uploader',
             headers: { "_token": Rozier.ajaxToken },
             onSuccess : function (data) {
-                console.log(data);
-
                 if(typeof data.thumbnail !== "undefined") {
                     var $sortable = $widget.find('.documents-widget-sortable');
                     $sortable.append(data.thumbnail.html);
@@ -116,8 +117,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
         };
 
         $.extend(options, Rozier.messages.dropzone);
-
-        console.log(options);
+        //console.log(options);
         _this.uploader = new DocumentUploader(options);
 
         $uploaderNew.slideDown(500);
@@ -155,8 +155,6 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
             Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
@@ -170,99 +168,7 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
             console.log("error");
         });
     }
-    else _this.closeExplorer();
-
-    return false;
-};
-
-
-/**
- * Query searched documents explorer.
- *
- * @param  {[type]} event   [description]
- * @return false
- */
-DocumentWidget.prototype.onExplorerSearch = function($originWidget, event) {
-    var _this = this;
-
-    if (_this.$explorer !== null){
-        var $search = $(event.currentTarget).find('#documents-search-input');
-
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken,
-            'search': $search.val()
-        };
-
-        Rozier.lazyload.canvasLoader.show();
-
-        $.ajax({
-            url: Rozier.routes.documentsAjaxExplorer,
-            type: 'get',
-            dataType: 'json',
-            data: ajaxData
-        })
-        .success(function(data) {
-            console.log(data);
-            console.log("success");
-            Rozier.lazyload.canvasLoader.hide();
-
-            if (typeof data.documents != "undefined") {
-
-                _this.appendItemsToExplorer(data, $originWidget, true);
-            }
-        })
-        .fail(function(data) {
-            console.log(data.responseText);
-            console.log("error");
-        });
-    }
-
-    return false;
-};
-
-
-/**
- * Query next page documents explorer.
- *
- * @param  {[type]} filters [description]
- * @param  {[type]} event   [description]
- * @return false
- */
-DocumentWidget.prototype.onExplorerNextPage = function(filters, $originWidget, event) {
-    var _this = this;
-
-    if (_this.$explorer !== null){
-        console.log(filters);
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken,
-            'search': filters.search,
-            'page': filters.nextPage
-        };
-
-        Rozier.lazyload.canvasLoader.show();
-
-        $.ajax({
-            url: Rozier.routes.documentsAjaxExplorer,
-            type: 'get',
-            dataType: 'json',
-            data: ajaxData
-        })
-        .success(function(data) {
-            console.log(data);
-            console.log("success");
-            Rozier.lazyload.canvasLoader.hide();
-
-            if (typeof data.documents != "undefined") {
-                _this.appendItemsToExplorer(data, $originWidget);
-            }
-        })
-        .fail(function(data) {
-            console.log(data.responseText);
-            console.log("error");
-        });
-    }
+    else _this.explorer.closeExplorer();
 
     return false;
 };
@@ -278,8 +184,7 @@ DocumentWidget.prototype.onUnlinkDocument = function( event ) {
     var _this = this;
 
     var $element = $(event.currentTarget);
-
-    var $doc = $element.parents('li');
+    var $doc = $($element.parents('li')[0]);
     var $widget = $element.parents('.documents-widget-sortable').first();
 
     $doc.remove();
@@ -302,7 +207,7 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
     var explorerDom = [
         '<div class="document-widget-explorer">',
             '<div class="document-widget-explorer-header">',
-                '<div class="document-widget-explorer-logo"><i class="uk-icon-rz-folder-tree-mini"></i></div>',
+                '<a href="#" class="document-widget-explorer-logo rz-no-ajax-link"><i class="uk-icon-rz-folder-tree-mini"></i></a>',
                 '<div class="document-widget-explorer-search">',
                     '<form action="#" method="POST" class="explorer-search uk-form">',
                         '<div class="uk-form-icon">',
@@ -317,126 +222,8 @@ DocumentWidget.prototype.createExplorer = function(data, $originWidget) {
         '</div>'
     ].join('');
 
-
     $("body").append(explorerDom);
     _this.$explorer = $('.document-widget-explorer');
-    _this.$explorerClose = $('.document-widget-explorer-close');
-
-    _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
-    _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this, $originWidget));
-
-
-    _this.appendItemsToExplorer(data, $originWidget);
-
-    window.setTimeout(function () {
-        _this.$explorer.addClass('visible');
-    }, 0);
+    _this.explorer = new DocumentExplorer(_this.$explorer, data, $originWidget, _this);
 };
 
-
-/**
- * Append documents to explorer.
- *
- * @param  Ajax data data
- * @param  jQuery $originWidget
- * @param  boolean replace Replace instead of appending
- */
-DocumentWidget.prototype.appendItemsToExplorer = function(data, $originWidget, replace) {
-    var _this = this;
-
-    var $sortable = _this.$explorer.find('.uk-sortable');
-
-    $sortable.find('.document-widget-explorer-nextpage').remove();
-
-    if (typeof replace !== 'undefined' &&
-        replace === true) {
-        $sortable.empty();
-    }
-
-    /*
-     * Add documents
-     */
-    for (var i = 0; i < data.documents.length; i++) {
-        var doc = data.documents[i];
-        $sortable.append(doc.html);
-    }
-
-    /*
-     * Bind add buttons.
-     */
-    var onAddClick = $.proxy(_this.onAddDocumentClick, _this, $originWidget);
-    var $links = $sortable.find('.link-button');
-    $links.on('click', onAddClick);
-
-
-    /*
-     * Add pagination
-     */
-    if (typeof data.filters.nextPage !== 'undefined' &&
-        data.filters.nextPage > 1) {
-
-        $sortable.append([
-            '<li class="document-widget-explorer-nextpage">',
-                '<i class="uk-icon-plus"></i><span class="label">'+Rozier.messages.moreDocuments+'</span>',
-            '</li>'
-        ].join(''));
-
-        $sortable.find('.document-widget-explorer-nextpage').on('click', $.proxy(_this.onExplorerNextPage, _this, data.filters, $originWidget));
-    }
-
-
-};
-
-
-/**
- * Add document click
- * @param  {[type]} $originWidget [description]
- * @param  {[type]} event         [description]
- * @return {[type]}               [description]
- */
-DocumentWidget.prototype.onAddDocumentClick = function($originWidget, event) {
-    var _this = this;
-
-    var $object = $(event.currentTarget).parents('.uk-sortable-list-item');
-    $object.appendTo($originWidget);
-
-    var inputName = 'source['+$originWidget.data('input-name')+']';
-    $originWidget.find('li').each(function (index, element) {
-        $(element).find('input').attr('name', inputName+'['+index+']');
-    });
-
-    _this.initUnlinkEvent();
-
-    return false;
-};
-
-
-/**
- * Echap key to close explorer
- * @return {[type]} [description]
- */
-DocumentWidget.prototype.echapKey = function(e){
-    var _this = this;
-
-    if(e.keyCode == 27 && _this.$explorer !== null) _this.closeExplorer();
-
-    return false;
-};
-
-
-/**
- * Close explorer
- * @return {[type]} [description]
- */
-DocumentWidget.prototype.closeExplorer = function(){
-    var _this = this;
-
-    _this.$toggleExplorerButtons.removeClass('uk-active');
-    _this.$explorer.removeClass('visible');
-    _this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
-        /* Act on the event */
-        _this.$explorer.remove();
-        _this.$explorer = null;
-    });
-
-};

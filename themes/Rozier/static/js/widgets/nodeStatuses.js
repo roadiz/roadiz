@@ -75,7 +75,7 @@ NodeStatuses.prototype.onChange = function(event) {
                 data: postData
             })
             .done(function(data) {
-                console.log(data);
+                //console.log(data);
                 Rozier.refreshMainNodeTree();
                 UIkit.notify({
                     message : data.responseText,
@@ -85,10 +85,8 @@ NodeStatuses.prototype.onChange = function(event) {
                 });
             })
             .fail(function(data) {
-                console.log(data.responseJSON);
-
+                //console.log(data.responseJSON);
                 data = JSON.parse(data.responseText);
-
                 UIkit.notify({
                     message : data.responseText,
                     status  : data.status,

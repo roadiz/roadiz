@@ -67,7 +67,9 @@ class SettingsUtilsController extends RozierApp
         $tmpGroup->setName('__default__');
         $tmpGroup->addSettings($lonelySettings);
         $groups[] = $tmpGroup;
-        $data = SettingCollectionJsonSerializer::serialize($groups);
+
+        $serializer = new SettingCollectionJsonSerializer();
+        $data = $serializer->serialize($groups);
 
         $response = new Response(
             $data,
@@ -110,7 +112,7 @@ class SettingsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (SettingsImporter::importJsonFile($serializedData)) {
+                    if (SettingsImporter::importJsonFile($serializedData, $this->getService('em'))) {
                         $msg = $this->getTranslator()->trans('setting.imported');
                         $this->publishConfirmMessage($request, $msg);
 

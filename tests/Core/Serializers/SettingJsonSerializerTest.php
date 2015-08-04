@@ -16,7 +16,8 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeserialize($json)
     {
-        $setting = SettingJsonSerializer::deserialize($json);
+        $serializer = new SettingJsonSerializer();
+        $setting = $serializer->deserialize($json);
 
         static::$entityCollection[] = $setting;
         Kernel::getService('em')->persist($setting);
@@ -50,7 +51,8 @@ class SettingJsonSerializerTest extends PHPUnit_Framework_TestCase
      */
     public function testDeserializeReturnType($json, $expected)
     {
-        $output = SettingJsonSerializer::deserialize($json);
+        $serializer = new SettingJsonSerializer();
+        $output = $serializer->deserialize($json);
 
         // Assert
         $this->assertEquals($expected, get_class($output));

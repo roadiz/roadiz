@@ -164,25 +164,31 @@ class CacheCommand extends Command
         $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
         if (null !== $cacheDriver) {
             $text .= "<info>Result cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
         }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getHydrationCacheImpl();
         if (null !== $cacheDriver) {
             $text .= "<info>Hydratation cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
         }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getQueryCacheImpl();
         if (null !== $cacheDriver) {
             $text .= "<info>Query cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
         }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
         if (null !== $cacheDriver) {
             $text .= "<info>Metadata cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
+            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
         }
 
         if (null !== $this->nsCacheHelper->getCacheProvider()) {
-            $text .= "<info>Node-sources URLs cache driver:</info> " . get_class($this->nsCacheHelper->getCacheProvider()) . PHP_EOL;
+            $nsCache = $this->nsCacheHelper->getCacheProvider();
+            $text .= "<info>Node-sources URLs cache driver:</info> " . get_class($nsCache) . PHP_EOL;
+            $text .= "    <info>Namespace:</info> " . $nsCache->getNamespace() . PHP_EOL;
         }
 
         return $text;

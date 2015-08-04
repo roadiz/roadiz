@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Utils\MediaFinders;
 
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 
 /**
  * Soundcloud tools class.
@@ -118,7 +117,7 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      * * show_reposts
      * * visual
      */
-    public function getSource($args = [])
+    public function getSource(&$args = [])
     {
         $uri = '//w.soundcloud.com/player/?url='.
                 'https://api.soundcloud.com/tracks/'.

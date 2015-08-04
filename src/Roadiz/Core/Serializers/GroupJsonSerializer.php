@@ -29,18 +29,29 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use RZ\Roadiz\Core\Kernel;
-
-use Symfony\Component\Serializer\Serializer;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Serialization class for Group.
  */
 class GroupJsonSerializer extends AbstractJsonSerializer
 {
+    protected $em;
+    protected $roleSerializer;
+
+    /**
+     * @param EntityManager $em
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+        $this->roleSerializer = new RoleJsonSerializer();
+    }
+
     /**
      * Create a simple associative array with Group entity.
      *
@@ -48,7 +59,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($group)
+    public function toArray($group)
     {
         $data = [];
 
@@ -56,7 +67,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
         $data['roles'] = [];
 
         foreach ($group->getRolesEntities() as $role) {
-            $data['roles'][] = RoleJsonSerializer::toArray($role);
+            $data['roles'][] = $this->roleSerializer->toArray($role);
         }
 
         return $data;
@@ -68,7 +79,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\Group
      */
-    public static function deserialize($string)
+    public function deserialize($string)
     {
         if ($string == "") {
             throw new \Exception('File is empty.');
@@ -93,10 +104,9 @@ class GroupJsonSerializer extends AbstractJsonSerializer
 
         if (!empty($tempArray['roles'])) {
             foreach ($tempArray['roles'] as $roleAssoc) {
-                $role = RoleJsonSerializer::deserialize(json_encode($roleAssoc));
-                $role = Kernel::getService('em')
-                                             ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                                             ->findOneByName($role->getName());
+                $role = $this->roleSerializer->deserialize(json_encode($roleAssoc));
+                $role = $this->em->getRepository('RZ\Roadiz\Core\Entities\Role')
+                             ->findOneByName($role->getName());
                 $group->addRole($role);
             }
             $data[] = $group;

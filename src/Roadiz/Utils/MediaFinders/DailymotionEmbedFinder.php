@@ -103,7 +103,7 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     /**
      * {@inheritdoc}
      */
-    public function getSource($args = [])
+    public function getSource(&$args = [])
     {
         $uri = '//www.dailymotion.com/embed/video/'.$this->embedId;
 

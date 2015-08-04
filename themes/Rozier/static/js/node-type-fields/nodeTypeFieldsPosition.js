@@ -49,7 +49,7 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
         data: postData,
     })
     .done(function(data) {
-        console.log(data);
+        //console.log(data);
         $element.attr('data-position', newPosition);
         UIkit.notify({
             message : data.responseText,
@@ -60,9 +60,6 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
     })
     .fail(function(data) {
         console.log(data);
-    })
-    .always(function() {
-        console.log("complete");
     });
 
 };

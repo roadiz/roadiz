@@ -35,11 +35,11 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Validator\Constraints\Type;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Type;
 
 trait NodesSourcesTrait
 {
@@ -141,19 +141,23 @@ trait NodesSourcesTrait
          * Create subform for source
          */
         $sourceBuilder = $this->getService('formFactory')
-                              ->createNamedBuilder('source', 'form', $sourceDefaults)
-                              ->add(
-                                  'title',
-                                  'text',
-                                  [
-                                      'label' => $this->getTranslator()->trans('title'),
-                                      'required' => false,
-                                      'attr' => [
-                                          'data-desc' => '',
-                                          'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
-                                      ],
-                                  ]
-                              );
+                              ->createNamedBuilder('source', 'form', $sourceDefaults);
+        /*
+         * Add title and default fields
+         */
+        $sourceBuilder->add(
+            'title',
+            'text',
+            [
+                'label' => $this->getTranslator()->trans('title'),
+                'required' => false,
+                'attr' => [
+                    'data-desc' => '',
+                    'data-field-group' => 'default',
+                    'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
+                ],
+            ]
+        );
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),
@@ -181,22 +185,22 @@ trait NodesSourcesTrait
                 $documents = $nodeSource->getHandler()
                                         ->getDocumentsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents);
+                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents, $this->getService('em'));
             case NodeTypeField::NODES_T:
                 $nodes = $nodeSource->getNode()->getHandler()
                                     ->getNodesFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes);
+                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes, $this->getService('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
                 $customForms = $nodeSource->getNode()->getHandler()
                                           ->getCustomFormsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms);
+                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms, $this->getService('em'));
             case NodeTypeField::CHILDREN_T:
                 /*
-                 * NodeTreeType is a virtual type which is only available
-                 * with Rozier backend theme.
-                 */
+             * NodeTreeType is a virtual type which is only available
+             * with Rozier backend theme.
+             */
                 return new \Themes\Rozier\Forms\NodeTreeType(
                     $nodeSource,
                     $field,
@@ -215,140 +219,130 @@ trait NodesSourcesTrait
     }
 
     /**
-     * Returns an option array for creating a Symfony Form
-     * according to a node-type field.
+     * Get common options for your node-type field form components.
      *
-     * @param  NodesSources  $nodeSource
      * @param  NodeTypeField $field
      *
      * @return array
      */
-    public function getFormOptionsFromFieldType(
-        NodeTypeField $field
-    ) {
+    public function getDefaultOptions(NodeTypeField $field)
+    {
         $label = $field->getLabel();
         $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+        $options = [
+            'label' => $label,
+            'required' => false,
+            'attr' => [
+                'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
+                'data-dev-name' => $devName,
+                'autocomplete' => 'off',
+            ],
+        ];
+        if ('' !== $field->getDescription()) {
+            $options['attr']['data-desc'] = $field->getDescription();
+        }
+        if ($field->getMinLength() > 0) {
+            $options['attr']['data-min-length'] = $field->getMinLength();
+        }
+        if ($field->getMaxLength() > 0) {
+            $options['attr']['data-max-length'] = $field->getMaxLength();
+        }
+
+        return $options;
+    }
+    /**
+     * Returns an option array for creating a Symfony Form
+     * according to a node-type field.
+     *
+     * @param  NodeTypeField $field
+     *
+     * @return array
+     */
+    public function getFormOptionsFromFieldType(NodeTypeField $field)
+    {
+        $options = $this->getDefaultOptions($field);
 
         switch ($field->getType()) {
-            case NodeTypeField::ENUM_T:
-                return [
-                    'label' => $label,
-                    'placeholder' => 'choose.value',
-                    'required' => false,
+            case NodeTypeField::NODES_T:
+                $options = array_merge_recursive($options, [
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
+                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues()))
                     ],
-                ];
+                ]);
+                break;
+            case NodeTypeField::ENUM_T:
+                $options = array_merge_recursive($options, [
+                    'placeholder' => 'choose.value',
+                ]);
+                break;
             case NodeTypeField::DATETIME_T:
-                return [
+                $options = array_merge_recursive($options, [
                     'date_widget' => 'single_text',
                     'date_format' => 'yyyy-MM-dd',
-                    'label' => $label,
-                    'required' => false,
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'rz-datetime-field',
                     ],
                     'placeholder' => [
                         'hour' => 'hour',
                         'minute' => 'minute',
                     ],
-                ];
+                ]);
+                break;
             case NodeTypeField::DATE_T:
-                return [
+                $options = array_merge_recursive($options, [
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd',
-                    'label' => $label,
-                    'required' => false,
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'rz-date-field',
                     ],
                     'placeholder' => '',
-                ];
+                ]);
+                break;
             case NodeTypeField::INTEGER_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Type('integer'),
                     ],
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::EMAIL_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'constraints' => [
-                        new \Symfony\Component\Validator\Constraints\Email(),
+                        new Email(),
                     ],
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::DECIMAL_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Type('double'),
                     ],
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
             case NodeTypeField::COLOUR_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'colorpicker-input',
                     ],
-                ];
+                ]);
+                break;
             case NodeTypeField::GEOTAG_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-dev-name' => $devName,
                         'class' => 'rz-geotag-field',
                     ],
-                ];
+                ]);
+                break;
             case NodeTypeField::MARKDOWN_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
+                $options = array_merge_recursive($options, [
                     'attr' => [
                         'class' => 'markdown_textarea',
-                        'data-desc' => $field->getDescription(),
-                        'data-min-length' => $field->getMinLength(),
-                        'data-max-length' => $field->getMaxLength(),
-                        'data-dev-name' => $devName,
                     ],
-                ];
-            default:
-                return [
-                    'label' => $label,
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => $field->getDescription(),
-                        'data-min-length' => $field->getMinLength(),
-                        'data-max-length' => $field->getMaxLength(),
-                        'data-dev-name' => $devName,
-                    ],
-                ];
+                ]);
+                break;
         }
+
+        return $options;
     }
 
     /**
@@ -368,7 +362,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanDocumentsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $documentId) {
-                        $tempDoc = Kernel::getService('em')
+                        $tempDoc = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
@@ -381,7 +375,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanCustomFormsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $customFormId) {
-                        $tempCForm = Kernel::getService('em')
+                        $tempCForm = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
                         if ($tempCForm !== null) {
                             $hdlr->addCustomFormForField($tempCForm, $field);
@@ -395,7 +389,7 @@ trait NodesSourcesTrait
 
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $nodeId) {
-                        $tempNode = Kernel::getService('em')
+                        $tempNode = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                         if ($tempNode !== null) {
                             $hdlr->addNodeForField($tempNode, $field);

@@ -63,8 +63,8 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             data: postData,
         })
         .done(function(data) {
-            console.log("success");
-            console.log(data);
+            //console.log("success");
+            //console.log(data);
 
             Rozier.refreshMainNodeTree();
 
@@ -92,7 +92,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             });
         })
         .always(function() {
-            console.log("complete");
+            //console.log("complete");
         });
     }
 
@@ -128,7 +128,6 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
             var $rootTree = $($nodeTree.find('.root-tree')[0]);
             rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
         }
-
         Rozier.lazyload.canvasLoader.show();
         var postData = {
             "_token": Rozier.ajaxToken,
@@ -148,24 +147,20 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
             data: postData,
         })
         .done(function(data) {
-
             if($nodeTree.length &&
-                typeof data.nodeTree != "undefined"){
+                typeof data.nodeTree != "undefined") {
 
                 $nodeTree.fadeOut('slow', function() {
                     var $tempContainer = $nodeTree.parents('.children-nodes-widget');
-
                     $nodeTree.replaceWith(data.nodeTree);
                     $nodeTree = $tempContainer.find('.nodetree-widget');
-
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
-                    Rozier.lazyload.generalBind();
+                    Rozier.lazyload.bindAjaxLink();
                     $nodeTree.fadeIn();
-
                     _this.$fields.find('.nodetree-langs').remove();
-
                     Rozier.lazyload.canvasLoader.hide();
+                    Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions();
                 });
             }
         })

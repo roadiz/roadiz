@@ -6,6 +6,8 @@ var NodeTreeContextActions = function () {
     _this.$nodeMoveFirstLinks = $contextualMenus.find('a.move-node-first-position');
     _this.$nodeMoveLastLinks = $contextualMenus.find('a.move-node-last-position');
 
+    // console.log('NODE TREE');
+
     if(_this.$links.length){
         _this.bind();
     }
@@ -84,7 +86,7 @@ NodeTreeContextActions.prototype.changeStatus = function(node_id, statusName, st
         data: postData
     })
     .done(function(data) {
-        console.log(data);
+        //console.log(data);
         Rozier.refreshAllNodeTrees();
         UIkit.notify({
             message : data.responseText,
@@ -94,8 +96,7 @@ NodeTreeContextActions.prototype.changeStatus = function(node_id, statusName, st
         });
     })
     .fail(function(data) {
-        console.log(data.responseJSON);
-
+        //console.log(data.responseJSON);
         data = JSON.parse(data.responseText);
 
         UIkit.notify({

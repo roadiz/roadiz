@@ -37,11 +37,12 @@ use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
  * NodeTypeField entities are used to create NodeTypes with
  * custom data structure.
  *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository")
  * @ORM\Table(name="node_type_fields",  indexes={
  *         @ORM\Index(columns={"visible"}),
  *         @ORM\Index(columns={"indexed"}),
  *         @ORM\Index(columns={"position"}),
+ *         @ORM\Index(columns={"group_name"}),
  *         @ORM\Index(columns={"type"})
  *     },
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={"name", "node_type_id"})}
@@ -177,6 +178,11 @@ class NodeTypeField extends AbstractField
     }
 
     /**
+     * @ORM\Column(name="group_name", type="string", nullable=true)
+     */
+    private $groupName;
+
+    /**
      * @return RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler
      */
     public function getHandler()
@@ -212,5 +218,29 @@ class NodeTypeField extends AbstractField
     {
         return $this->getId() . " — " . $this->getName() . " — " . $this->getLabel() .
         " — Indexed : " . ($this->isIndexed() ? 'true' : 'false') . PHP_EOL;
+    }
+
+    /**
+     * Gets the value of groupName.
+     *
+     * @return string
+     */
+    public function getGroupName()
+    {
+        return $this->groupName;
+    }
+
+    /**
+     * Sets the value of groupName.
+     *
+     * @param string $groupName the group name
+     *
+     * @return self
+     */
+    public function setGroupName($groupName)
+    {
+        $this->groupName = trim(strip_tags($groupName));
+
+        return $this;
     }
 }

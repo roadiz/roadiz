@@ -14,7 +14,7 @@
 
         <div class="content-inner">
             {% if not document.private %}
-                {% if document.image or document.video %}
+                {% if document.image or document.svg or document.video %}
                 <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                 {% endif %}
                 <div class="document-source"><code>{{ document|url(thumbnailFormat) }}</code></div>
@@ -22,7 +22,7 @@
                 {% if document.isEmbed and document.getViewer.getEmbedFinder %}
                 <hr />
                 <h3>{% trans %}embed.preview{% endtrans %}</h3>
-                <figure class="uk-thumbnail">{{ document.getViewer.getEmbedByArray(thumbnailFormat)|raw }}</figure>
+                <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({embed:true, autoplay:true})) }}</figure>
                 <div class="document-source"><code>{{ document.getViewer.getEmbedFinder.getSource }}</code></div>
                 {% endif %}
             {% else %}

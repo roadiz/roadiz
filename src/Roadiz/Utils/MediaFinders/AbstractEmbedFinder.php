@@ -83,7 +83,7 @@ abstract class AbstractEmbedFinder
      *
      * @return string
      */
-    abstract public function getSource($args = []);
+    abstract public function getSource(&$args = []);
 
     /**
      * Crawl an embed API to get a Json feed.
@@ -112,16 +112,17 @@ abstract class AbstractEmbedFinder
      * * height
      * * title
      * * id
+     * * class
      *
      * @param  array | null $args
      *
      * @return string
      */
-    public function getIFrame(&$args = null)
+    public function getIFrame(&$args = [])
     {
         $attributes = [];
 
-        $attributes['src'] = $this->getSource($this->embedId);
+        $attributes['src'] = $this->getSource($args);
 
         if (isset($args['width'])) {
             $attributes['width'] = $args['width'];
@@ -141,6 +142,9 @@ abstract class AbstractEmbedFinder
         }
         if (isset($args['id'])) {
             $attributes['id'] = $args['id'];
+        }
+        if (isset($args['class'])) {
+            $attributes['class'] = $args['class'];
         }
 
         if (isset($args['autoplay']) && $args['autoplay'] === true) {

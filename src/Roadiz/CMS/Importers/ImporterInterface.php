@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Class for create all importer.
  */
@@ -41,5 +43,5 @@ interface ImporterInterface
      *
      * @return bool
      */
-    public static function importJsonFile($template);
+    public static function importJsonFile($template, EntityManager $em);
 }

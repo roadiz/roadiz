@@ -38,15 +38,14 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
-use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
+use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Yaml\Parser;
@@ -61,7 +60,7 @@ class Kernel implements ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.9.3";
+    public static $cmsVersion = "0.10.0";
     protected static $instance = null;
 
     public $container = null;
@@ -88,7 +87,6 @@ class Kernel implements ServiceProviderInterface
          * Register current Kernel as a service provider.
          */
         $this->container->register($this);
-        $this->container['stopwatch']->openSection();
     }
 
     /**
@@ -121,17 +119,21 @@ class Kernel implements ServiceProviderInterface
         $container['dispatcher'] = function ($c) {
             return new EventDispatcher();
         };
+
         /*
          * Load service providers from conf/services.yml
          *
          * Edit this file if you want to customize Roadiz services
          * behaviour.
          */
+        $container['stopwatch']->openSection();
+        $container['stopwatch']->start('registerServices');
         $yaml = new Parser();
         $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yml'));
         foreach ($services['providers'] as $providerClass) {
             $container->register(new $providerClass());
         }
+        $container['stopwatch']->stop('registerServices');
     }
 
     /**
@@ -317,18 +319,14 @@ class Kernel implements ServiceProviderInterface
             }
         }
 
+
+        $this->container['stopwatch']->start('themeDependencyInjection');
         // Register front-end security scheme
         foreach ($this->container['frontendThemes'] as $theme) {
             $feClass = $theme->getClassName();
             $feClass::setupDependencyInjection($this->container);
         }
-    }
-
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        $response = $event->getResponse();
-        $response->setCharset('UTF-8');
-        $event->setResponse($response);
+        $this->container['stopwatch']->stop('themeDependencyInjection');
     }
 
     /**
@@ -344,7 +342,6 @@ class Kernel implements ServiceProviderInterface
             );
         }
         $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
-
         /*
          * Events
          */
@@ -365,15 +362,8 @@ class Kernel implements ServiceProviderInterface
         $this->container['dispatcher']->addListener(
             KernelEvents::CONTROLLER,
             [
-                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this),
+                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this, $this->container['stopwatch']),
                 'onControllerMatched',
-            ]
-        );
-        $this->container['dispatcher']->addListener(
-            KernelEvents::RESPONSE,
-            [
-                $this,
-                'onKernelResponse',
             ]
         );
 

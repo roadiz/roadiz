@@ -4329,6 +4329,10 @@
         <source>google_client_id</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id">
         <source>twitter_client_id</source>
         <target></target>
@@ -4372,6 +4376,23 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account">
         <source>twitter_account</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
+        <source>recaptcha_public_key</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key">
+        <source>recaptcha_private_key</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
+        <source>you_must_show_youre_not_robot</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
+        <source>recaptcha_is_invalid.try_again</source>
         <target></target>
       </trans-unit>
 
@@ -6139,6 +6160,42 @@
           <source>overrideLocale</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
+          <source>keep_me_logged_in</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unused_documents">
+          <source>unused_documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="groupName">
+          <source>groupName</source>
+          <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="embedId.does_not_exist">
           <source>embedId.does_not_exist</source>
           <target></target>
@@ -6147,7 +6204,22 @@
           <source>YoutubeEmbedFinder needs a Google server key.</source>
           <target></target>
       </trans-unit>
-
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
+          <source>edit.user_details.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.edit_details">
+          <source>user.edit_details</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found">
+          <source>no_valid_class_found</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

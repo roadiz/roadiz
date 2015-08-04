@@ -12,11 +12,6 @@
 @import "vars.less";
 
 
-/* -------- VENDORS -------- */
-
-@import "vendor/jquery-ui.less";
-@import "vendor/dropzone.less";
-
 
 /* -------- BASE -------- */
 
@@ -109,6 +104,7 @@
 @import "widgets/folder_tree.less";
 @import "widgets/stack_tree.less";
 @import "widgets/document_explorer.less";
+@import "widgets/folder_explorer.less";
 @import "widgets/node_explorer.less";
 @import "widgets/customform_explorer.less";
 @import "widgets/children_nodes_widget.less";
@@ -124,7 +120,9 @@
 @import "login/login.less";
 @import "login/purge.less";
 @import "history/history.less";
+
 @import "themes/themes.less";
+@import "themes/import.less";
 
 
 /* -------- BREADCRUMB -------- */
@@ -200,17 +198,8 @@
     @import "responsive/less-1280.less";
 }
 
-/* Width < 1024 */
-@media screen and (max-width: 1024px) {
-    @import "responsive/less-1024.less";
-}
 
 /* Width < 768 */
 @media screen and (max-width: 768px) {
     @import "responsive/less-768.less";
-}
-
-/* Width < 500 */
-@media screen and (max-width: 500px) {
-    @import "responsive/less-500.less";
 }

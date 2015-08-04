@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Serialization class for Setting.
@@ -47,7 +47,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($setting)
+    public function toArray($setting)
     {
         $data = [];
 
@@ -66,7 +66,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      *
      * @return RZ\Roadiz\Core\Entities\Setting
      */
-    public static function deserialize($jsonString)
+    public function deserialize($jsonString)
     {
         if ($jsonString == "") {
             throw new \Exception('File is empty.');
@@ -76,7 +76,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
             'name',
             'value',
             'type',
-            'visible'
+            'visible',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 

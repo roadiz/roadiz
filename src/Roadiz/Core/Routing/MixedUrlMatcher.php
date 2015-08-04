@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Routing;
 
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Extends compiled UrlMatcher to add a dynamic routing feature which deals
@@ -40,6 +41,7 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
 {
     protected $dynamicUrlMatcher;
     protected $installMode;
+    protected $stopwatch;
 
     /**
      * @param RequestContext  $context
@@ -49,33 +51,51 @@ class MixedUrlMatcher extends \GlobalUrlMatcher
     public function __construct(
         RequestContext $context,
         DynamicUrlMatcher $dynamicUrlMatcher,
-        $installMode = false
+        $installMode = false,
+        Stopwatch $stopwatch = null
     ) {
         $this->context = $context;
         $this->dynamicUrlMatcher = $dynamicUrlMatcher;
         $this->installMode = $installMode;
+        $this->stopwatch = $stopwatch;
     }
     /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
     {
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('matchingRoute');
+        }
+
+        $matched = null;
         if (true === $this->installMode) {
             // No node controller matching in install mode
-            return parent::match($pathinfo);
+            $matched = parent::match($pathinfo);
         }
 
         try {
             /*
              * Try STATIC routes
              */
-            return parent::match($pathinfo);
+            $matched = parent::match($pathinfo);
 
         } catch (ResourceNotFoundException $e) {
             /*
              * Try dynamic routes
              */
-            return $this->dynamicUrlMatcher->match($pathinfo);
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->start('matchingDynamicRoute');
+            }
+            $matched = $this->dynamicUrlMatcher->match($pathinfo);
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('matchingDynamicRoute');
+            }
         }
+
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('matchingRoute');
+        }
+        return $matched;
     }
 }

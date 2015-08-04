@@ -191,6 +191,16 @@ class Document extends AbstractDateTimed
     {
         return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'image';
     }
+
+    /**
+     * Is current document a vector SVG file.
+     *
+     * @return boolean
+     */
+    public function isSvg()
+    {
+        return $this->getMimeType() == 'image/svg+xml' || $this->getMimeType() == 'image/svg';
+    }
     /**
      * Is current document a video.
      *

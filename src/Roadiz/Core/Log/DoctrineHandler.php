@@ -121,46 +121,53 @@ class DoctrineHandler extends AbstractProcessingHandler
      */
     public function write(array $record)
     {
-        if ($this->em->isOpen()) {
-            $log = new Log(
-                $record['level'],
-                $record['message']
-            );
+        try {
+            if ($this->em->isOpen()) {
+                $log = new Log(
+                    $record['level'],
+                    $record['message']
+                );
 
-            /*
-             * Use available securityAuthorizationChecker to provide a valid user
-             */
-            if (null !== $this->getTokenStorage() &&
-                null !== $this->getTokenStorage()->getToken() &&
-                is_object($this->getTokenStorage()->getToken()->getUser()) &&
-                null !== $this->getTokenStorage()->getToken()->getUser()->getId()) {
-                $log->setUser($this->getTokenStorage()->getToken()->getUser());
-            }
-            /*
-             * Use manually set user
-             */
-            if (null !== $this->getUser()) {
-                $log->setUser($this->getUser());
-            }
+                /*
+                 * Use available securityAuthorizationChecker to provide a valid user
+                 */
+                if (null !== $this->getTokenStorage() &&
+                    null !== $this->getTokenStorage()->getToken() &&
+                    is_object($this->getTokenStorage()->getToken()->getUser()) &&
+                    null !== $this->getTokenStorage()->getToken()->getUser()->getId()) {
+                    $log->setUser($this->getTokenStorage()->getToken()->getUser());
+                }
+                /*
+                 * Use manually set user
+                 */
+                if (null !== $this->getUser()) {
+                    $log->setUser($this->getUser());
+                }
 
-            /*
-             * Add client IP to log if it’s an HTTP request
-             */
-            if (null !== $this->getRequest()) {
-                $log->setClientIp($this->getRequest()->getClientIp());
-            }
+                /*
+                 * Add client IP to log if it’s an HTTP request
+                 */
+                if (null !== $this->getRequest()) {
+                    $log->setClientIp($this->getRequest()->getClientIp());
+                }
 
-            /*
-             * Add a related node-source entity
-             */
-            if (isset($record['context']['source']) &&
-                null !== $record['context']['source'] &&
-                $record['context']['source'] instanceof NodesSources) {
-                $log->setNodeSource($record['context']['source']);
-            }
+                /*
+                 * Add a related node-source entity
+                 */
+                if (isset($record['context']['source']) &&
+                    null !== $record['context']['source'] &&
+                    $record['context']['source'] instanceof NodesSources) {
+                    $log->setNodeSource($record['context']['source']);
+                }
 
-            $this->em->persist($log);
-            $this->em->flush();
+                $this->em->persist($log);
+                $this->em->flush();
+            }
+        } catch (\Exception $e) {
+            /*
+             * Need to prevent SQL errors over throwing
+             * if PDO has fault
+             */
         }
     }
 }

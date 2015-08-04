@@ -41,7 +41,7 @@ class TagTranslationJsonSerializer extends AbstractJsonSerializer
      *
      * @return array
      */
-    public static function toArray($tt)
+    public function toArray($tt)
     {
         $data = [];
 
@@ -49,20 +49,16 @@ class TagTranslationJsonSerializer extends AbstractJsonSerializer
         $data['title'] = $tt->getname();
         $data['description'] = $tt->getDescription();
 
-
         return $data;
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @see NodeSourceJsonSerializer::deserializeWithNodeType
      */
-    public static function deserialize($string)
+    public function deserialize($string)
     {
         throw new \RuntimeException(
-            "Cannot simply deserialize a NodesSources entity. ".
-            "Use 'deserializeWithNodeType' method instead.",
+            "Cannot simply deserialize a TagTranslation entity. ",
             1
         );
     }

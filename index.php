@@ -28,7 +28,6 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 
 if (version_compare(phpversion(), '5.4.3', '<')) {
@@ -65,7 +64,7 @@ if (php_sapi_name() == 'cli') {
             Kernel::getInstance()->initEvents();
             Kernel::getInstance()->runApp();
         }
-    } catch (NoConfigurationFoundException $e) {
+    } catch (\Exception $e) {
         $response = Kernel::getInstance()->getEmergencyResponse($e);
         $response->send();
     }

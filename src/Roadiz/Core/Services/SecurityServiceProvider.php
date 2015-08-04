@@ -43,8 +43,10 @@ use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -53,17 +55,19 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\User\UserChecker;
-use Symfony\Component\Security\Http\AccessMap;
-use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
-use Symfony\Component\Security\Http\Firewall;
-use Symfony\Component\Security\Http\FirewallMap;
-use Symfony\Component\Security\Http\Firewall\ContextListener;
-use Symfony\Component\Security\Http\Firewall\ExceptionListener;
-use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
+use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
+use RZ\Roadiz\Utils\Security\TimedFirewall;
+use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\Firewall\ContextListener;
+use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\RememberMeListener;
+use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
+use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 
 /**
  * Register security services for dependency injection container.
@@ -143,6 +147,10 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
 
             if (null !== $c['em'] &&
+                true === $c['config']['devMode']) {
+                $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz-debug.log', Logger::DEBUG));
+            }
+            if (null !== $c['em'] &&
                 true !== $c['config']['install']) {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
@@ -181,12 +189,13 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['userProvider'] = function ($c) {
-            return new UserProvider();
+            return new UserProvider($c['em']);
         };
         $container['userChecker'] = function ($c) {
             return new UserChecker();
         };
-        $container['authentificationManager'] = function ($c) {
+
+        $container['daoAuthenticationProvider'] = function ($c) {
             return new DaoAuthenticationProvider(
                 $c['userProvider'],
                 $c['userChecker'],
@@ -194,15 +203,68 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['userEncoderFactory']
             );
         };
+
+        $container['rememberMeAuthenticationProvider'] = function ($c) {
+            return new RememberMeAuthenticationProvider(
+                $c['userChecker'],
+                $c['config']["security"]['secret'],
+                Kernel::SECURITY_DOMAIN
+            );
+        };
+
+        $container['rememberMeCookieName'] = 'roadiz_remember_me';
+        $container['rememberMeCookieLifetime'] = function ($c) {
+            if (isset($c['config']['rememberMeLifetime'])) {
+                return (int) $c['config']['rememberMeLifetime'];
+            } else {
+                // One month long cookie
+                return 60 * 60 * 24 * 30;
+            }
+        };
+
+        $container['tokenBasedRememberMeServices'] = function ($c) {
+            return new TokenBasedRememberMeServices(
+                [$c['userProvider']],
+                $c['config']["security"]['secret'],
+                Kernel::SECURITY_DOMAIN,
+                [
+                    'name' => $c['rememberMeCookieName'],
+                    'lifetime' => $c['rememberMeCookieLifetime'],
+                    'remember_me_parameter' => '_remember_me',
+                    'path' => $c['request']->getBasePath(),
+                    'domain' => $c['request']->getHost(),
+                    'always_remember_me' => false,
+                    'secure' => false,
+                    'httponly' => false,
+                ],
+                $c['logger']
+            );
+        };
+
+        $container['rememberMeListener'] = function ($c) {
+            return new RememberMeListener(
+                $c['securityTokenStorage'],
+                $c['tokenBasedRememberMeServices'],
+                $c['authentificationManager'],
+                $c['logger'],
+                $c['dispatcher']
+            );
+        };
+
+        $container['authentificationManager'] = function ($c) {
+            return new AuthenticationProviderManager([
+                $c['rememberMeAuthenticationProvider'],
+                $c['daoAuthenticationProvider'],
+            ]);
+        };
+
         /*
          * Main decision manager, set your voters here.
          */
         $container['accessDecisionManager'] = function ($c) {
-            return new AccessDecisionManager(
-                [
-                    $c['roleHierarchyVoter'],
-                ]
-            );
+            return new AccessDecisionManager([
+                $c['roleHierarchyVoter'],
+            ]);
         };
 
         $container['securityAuthorizationChecker'] = function ($c) {
@@ -247,7 +309,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['firewallMap'] = function ($c) {
             $map = new FirewallMap();
-
             return $map;
         };
 
@@ -289,7 +350,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['firewall'] = function ($c) {
             $c['stopwatch']->start('firewall');
-            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
+            $firewall = new TimedFirewall($c['firewallMap'], $c['dispatcher'], $c['stopwatch']);
             $c['stopwatch']->stop('firewall');
 
             return $firewall;

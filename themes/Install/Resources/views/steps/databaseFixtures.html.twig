@@ -87,23 +87,23 @@
 {% block customScripts %}
 <script type="text/javascript">
     (function() {
-        Install.importNodeTypeRoutes = [];
+        Install.importRoutes = [];
         {% for role in imports.roles %}
-        Install.importNodeTypeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportRoles') }}",
             'id':'{{ role|replace({'/': '_', '.': '_'}) }}',
             'filename':'{{ role }}'
         });
         {% endfor %}
         {% for group in imports.groups %}
-        Install.importNodeTypeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportGroups') }}",
             'id':'{{ group|replace({'/': '_', '.': '_'}) }}',
             'filename':'{{ group }}'
         });
         {% endfor %}
         {% for setting in imports.settings %}
-        Install.importNodeTypeRoutes.push({
+        Install.importRoutes.push({
             'url': "{{ path('installImportSettings') }}",
             'id':'{{ setting|replace({'/': '_', '.': '_'}) }}',
             'filename':'{{ setting }}'

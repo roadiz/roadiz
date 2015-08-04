@@ -91,7 +91,7 @@ NodesBulk.prototype.onCheckboxChange = function(event) {
         _this.$nodesIdBulkStatus.val(_this.nodesIds.join(','));
     }
 
-    console.log(_this.nodesIds);
+    //console.log(_this.nodesIds);
 
     if(_this.nodesIds.length > 0){
         _this.showActions();
@@ -168,6 +168,8 @@ NodesBulk.prototype.nodesFolderButtonClick = function(e){
         _this.$nodesFolderCont.slideUp();
         _this.nodesFolderOpen = false;
     }
+
+    return false;
 };
 /**
  * Nodes status button click
@@ -187,4 +189,6 @@ NodesBulk.prototype.nodesStatusButtonClick = function(e){
         _this.$nodesStatusCont.slideUp();
         _this.nodesStatusOpen = false;
     }
+
+    return false;
 };

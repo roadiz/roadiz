@@ -61,12 +61,25 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $arrayFilter = [];
+
+        if ($request->get('folderId') > 0) {
+            $folder = $this->getService('em')
+                           ->find(
+                               'RZ\Roadiz\Core\Entities\Folder',
+                               $request->get('folderId')
+                           );
+
+            $arrayFilter['folders'] = [$folder];
+        }
         /*
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Document',
-            $arrayFilter
+            $arrayFilter,
+            [
+                'createdAt' => 'DESC'
+            ]
         );
         $listManager->setItemPerPage(30);
         $listManager->handle();
@@ -99,7 +112,6 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
     }
 }
 AjaxDocumentsExplorerController::$thumbnailArray = [
-    "width" => 40,
-    "crop" => "1x1",
+    "fit" => "40x40",
     "quality" => 50,
 ];

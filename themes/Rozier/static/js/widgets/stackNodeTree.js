@@ -73,9 +73,6 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             data: postData,
         })
         .done(function(data) {
-            console.log("success");
-            console.log(data);
-
             Rozier.refreshMainNodeTree();
             _this.refreshNodeTree(parentNodeId, null, postData.tagId);
 
@@ -167,8 +164,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
 
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
-
-                    Rozier.lazyload.generalBind();
+                    Rozier.lazyload.bindAjaxLink();
                     $nodeTree.fadeIn();
                     Rozier.resize();
 
@@ -180,6 +176,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
                     }
 
                     Rozier.lazyload.canvasLoader.hide();
+                    Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions();
                 });
             }
         })

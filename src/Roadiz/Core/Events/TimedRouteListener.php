@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,38 +24,42 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file LoggerHandler.php
+ * @file TimedRouteListener.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Handlers;
+namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Core\Entities\Logger;
-use RZ\Roadiz\Core\Kernel;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Handle operations with logs entities.
+ * TimedRouteListener.
  */
-class LoggerHandler
+class TimedRouteListener extends RouterListener
 {
-    private $log;
+    protected $stopwatch;
 
-    /**
-     * Create a new log handler with log to handle.
-     * @param Logger $log
-     */
-    public function __construct(Logger $log)
-    {
-        $this->log = $log;
+    public function __construct(
+        $matcher,
+        RequestContext $context = null,
+        LoggerInterface $logger = null,
+        RequestStack $requestStack = null,
+        Stopwatch $stopwatch = null
+    ) {
+        parent::__construct($matcher, $context, $logger, $requestStack);
+
+        $this->stopwatch = $stopwatch;
     }
 
-    /**
-     * @return RZ\Roadiz\Core\Handlers\LoggerHandler
-     */
-    public function persistAndFlush()
+    public function onKernelRequest(GetResponseEvent $event)
     {
-        Kernel::getService('em')->persist($this->log);
-        Kernel::getService('em')->flush();
-
-        return $this;
+        $this->stopwatch->start('routeListener');
+        $return = parent::onKernelRequest($event);
+        $this->stopwatch->stop('routeListener');
+        return $return;
     }
 }

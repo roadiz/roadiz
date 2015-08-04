@@ -60,7 +60,7 @@
             width: 99%; // on Firefox, prevent line-return
             vertical-align: middle;
 
-            img {
+            img,svg {
                 display: block;
                 max-width: 95%;
                 height: auto;
@@ -84,6 +84,12 @@
 
         &:hover {
             .opacity(0.8);
+        }
+
+        &:focus{
+            background: darken(#333, 5%);
+            color:#b7b7b7;
+            .opacity(0.9);
         }
 
         &.uk-icon-rz-turn-off, &.uk-icon-rz-user{

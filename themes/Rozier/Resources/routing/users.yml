@@ -2,6 +2,10 @@ usersEditPage:
     path:     /edit/{userId}
     defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::editAction }
     requirements: { userId : "[0-9]+" }
+usersEditDetailsPage:
+    path:     /edit/{userId}/details
+    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::editDetailsAction }
+    requirements: { userId : "[0-9]+" }
 usersEditRolesPage:
     path:     /edit/{userId}/roles
     defaults: { _controller: Themes\Rozier\Controllers\Users\UsersRolesController::editRolesAction }

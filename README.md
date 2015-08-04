@@ -1,10 +1,11 @@
 # Roadiz CMS
 
-[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=master)](https://coveralls.io/r/roadiz/roadiz?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
+[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
+[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=develop)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/roadiz-cms/localized.png)](https://crowdin.com/project/roadiz-cms)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/roadiz-cms/localized.png)](https://crowdin.com/project/roadiz-cms) 
+![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)
 
 [![Join the chat at https://gitter.im/roadiz/roadiz](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/roadiz/roadiz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -146,13 +147,13 @@ bin/phpunit -v --bootstrap=tests/bootstrap.php tests/
 bin/phpcs --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
-                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/* \
+                --ignore="*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/*" \
                 -p ./
 # … and correct
 bin/phpcbf --report=full --report-file=./report.txt \
                 --extensions=php --warning-severity=0 \
                 --standard=PSR2 \
-                --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/* \
+                --ignore="*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/*" \
                 -p ./
 ```
 

@@ -31,7 +31,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +38,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 
 /**
  * Base controller.
@@ -46,7 +47,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 abstract class Controller
 {
     protected $container = null;
-    protected $kernel = null;
 
     /**
      * Shortcut to return the request service.
@@ -76,28 +76,6 @@ abstract class Controller
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * Inject current Kernel into running controller.
-     *
-     * @param RZ\Roadiz\Core\Kernel $newKernel
-     */
-    public function setKernel(Kernel $newKernel)
-    {
-        $this->kernel = $newKernel;
-    }
-    /**
-     * Get current Roadiz Kernel instance.
-     *
-     * Prefer this methods instead of calling static getInstance
-     * method of RZ\Roadiz\Core\Kernel.
-     *
-     * @return RZ\Roadiz\Core\Kernel
-     */
-    public function getKernel()
-    {
-        return $this->kernel;
     }
 
     /**
@@ -298,21 +276,32 @@ abstract class Controller
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
-        if (null === $response) {
-            $response = new Response(
-                '',
-                Response::HTTP_OK,
-                ['content-type' => 'text/html']
-            );
+        if (!$this->getService('stopwatch')->isStarted('twigRender')) {
+            $this->getService('stopwatch')->start('twigRender');
         }
 
-        if ($namespace !== "" && $namespace !== "/") {
-            $view = '@' . $namespace . '/' . $view;
+        try {
+            if (null === $response) {
+                $response = new Response(
+                    '',
+                    Response::HTTP_OK,
+                    ['content-type' => 'text/html']
+                );
+            }
+
+            if ($namespace !== "" && $namespace !== "/") {
+                $view = '@' . $namespace . '/' . $view;
+            }
+
+            $response->setContent($this->renderView($view, $parameters));
+            return $response;
+        } catch (\Twig_Error_Runtime $e) {
+            if ($e->getPrevious() instanceof ForceResponseException) {
+                return $e->getPrevious()->getResponse();
+            } else {
+                throw $e;
+            }
         }
-
-        $response->setContent($this->renderView($view, $parameters));
-
-        return $response;
     }
 
     /**
@@ -406,6 +395,23 @@ abstract class Controller
             $entity,
             $criteria,
             $ordering
+        );
+    }
+
+    /**
+     * Create and return a ContactFormManager to build and send contact
+     * form by email.
+     *
+     * @return ContactFormManager
+     */
+    public function createContactFormManager()
+    {
+        return new ContactFormManager(
+            $this->container['request'],
+            $this->container['formFactory'],
+            $this->container['translator'],
+            $this->container['twig.environment'],
+            $this->container['mailer']
         );
     }
 

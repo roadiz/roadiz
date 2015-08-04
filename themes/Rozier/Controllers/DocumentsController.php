@@ -1048,4 +1048,26 @@ class DocumentsController extends RozierApp
 
         return false;
     }
+    /**
+     * See unused documents.
+     *
+     * @param  Request $request
+     * @return Response
+     */
+    public function unusedAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        $this->assignation['orphans'] = true;
+        $this->assignation['documents'] = $this->getService('em')
+                                                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                                                ->findAllUnused();
+        $this->assignation['filters'] = [
+            'itemCount' => count($this->assignation['documents']),
+            'itemPerPage' => false
+        ];
+        $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
+
+        return $this->render('documents/list.html.twig', $this->assignation);
+    }
 }

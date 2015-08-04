@@ -1,0 +1,26 @@
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global manage-themes">
+
+    <header class="content-header header-themes header-themes-add">
+        <h1 class="content-title themes-list-title">{% trans %}setting.theme{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('themesHomePage') }}" title="{% trans %}back_to.themes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </a>
+    </header>
+
+    <article class="content content-themes-add">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form id="add-theme-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <button data-action-save="#add-theme-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}next{% endtrans %}</span></span>
+                </button>
+            </fieldset>
+        </form>
+    </article>
+    {#  {% include '@Rozier/themes/actionsMenu.html.twig' %} #}
+</section>
+{% endblock %}

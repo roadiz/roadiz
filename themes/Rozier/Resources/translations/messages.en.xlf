@@ -478,9 +478,9 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="47" approved="yes">
+      <trans-unit xml:space="preserve" id="47">
         <source>user.facebook_name.%name%._does_not_exist</source>
-        <target xml:lang="en">Facebook profile name (%name%) does not exist.</target>
+        <target xml:lang="en" state="translated">Facebook user ID (%name%) does not exist.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">569</context>
@@ -588,7 +588,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="57" approved="yes">
         <source>facebookName</source>
-        <target xml:lang="en">Facebook profile name</target>
+        <target xml:lang="en">Facebook user ID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">734</context>
@@ -4041,7 +4041,7 @@
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409" approved="yes">
         <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
-        <target xml:lang="en">{0} No item|{1} &lt;span&gt;1&lt;/span&gt; item|]1,Inf] &lt;span&gt;%count%&lt;/span&gt; items</target>
+        <target xml:lang="en"><![CDATA[{0} No item|{1} <span>1</span> item|]1,Inf] <span>%count%</span> items]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410" approved="yes">
         <source>1.item</source>
@@ -4307,9 +4307,13 @@
         <source>soundcloud_client_id</source>
         <target xml:lang="en">Soundcloud client ID</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="google_client_id" approved="yes">
+      <trans-unit xml:space="preserve" id="google_client_id">
         <source>google_client_id</source>
-        <target xml:lang="en">Google client ID</target>
+        <target xml:lang="en" state="translated">Google API - browser key</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target xml:lang="en" state="translated">Google API - server key</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id" approved="yes">
         <source>twitter_client_id</source>
@@ -4354,6 +4358,22 @@
       <trans-unit xml:space="preserve" id="twitter_account" approved="yes">
         <source>twitter_account</source>
         <target xml:lang="en">Twitter account name</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
+        <source>recaptcha_public_key</source>
+        <target xml:lang="en" state="translated">Recaptcha site key (public)</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key" approved="yes">
+        <source>recaptcha_private_key</source>
+        <target xml:lang="en">Recaptcha private key (secret)</target>
+      <alt-trans><target xml:lang="en">Recaptcha private key</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
+        <source>you_must_show_youre_not_robot</source>
+        <target xml:lang="en" state="translated">You must validate the Recaptcha to verify you’re not a robot.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
+        <source>recaptcha_is_invalid.try_again</source>
+        <target xml:lang="en" state="translated">Recaptcha is invalid, please try again.</target>
       </trans-unit>
       <!-- document usage -->
       <trans-unit xml:space="preserve" id="document.%name%.usage" approved="yes">
@@ -5715,7 +5735,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="not.valid.facebook.name">
           <source>not.valid.facebook.name</source>
-          <target xml:lang="en" state="translated">This is not a valid Facebook name, just copy the part after https://www.facebook.com/</target>
+          <target xml:lang="en" state="translated">This is not a valid Facebook user ID, find your ID using http://lookup-id.com/ website.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="routePrefix">
           <source>routePrefix</source>
@@ -6000,9 +6020,9 @@
           <source>pinterest_url</source>
           <target xml:lang="en">Pinterest URL</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="use_cdn">
+      <trans-unit xml:space="preserve" id="use_cdn" approved="yes">
           <source>use_cdn</source>
-          <target xml:lang="en" state="translated">Use a CDM for resources</target>
+          <target xml:lang="en">Use a CDN for resources</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="force_locale">
           <source>force_locale</source>
@@ -6024,6 +6044,66 @@
           <source>overrideLocale</source>
           <target xml:lang="en" state="translated">Override locale</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
+          <source>keep_me_logged_in</source>
+          <target xml:lang="en" state="translated">Keep me logged in</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target xml:lang="en" state="translated">Themes settings</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unused_documents">
+          <source>unused_documents</source>
+          <target xml:lang="en" state="translated">Unused documents</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target xml:lang="en" state="translated">Node offspring has been published.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target xml:lang="en" state="translated">Are you sure you want to publish this node offspring?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target xml:lang="en" state="translated">Publish node “%name%” offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target xml:lang="en" state="translated">Publish offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target xml:lang="en" state="translated">Publish offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="groupName">
+          <source>groupName</source>
+          <target xml:lang="en" state="translated">Group name</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.does_not_exist">
+          <source>embedId.does_not_exist</source>
+          <target xml:lang="en" state="translated">Embed media ID does not exist.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
+          <source>YoutubeEmbedFinder needs a Google server key.</source>
+          <target xml:lang="en" state="translated">YoutubeEmbedFinder needs a Google server key.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
+          <source>edit.user_details.%name%</source>
+          <target xml:lang="en" state="translated">%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.edit_details">
+          <source>user.edit_details</source>
+          <target xml:lang="en" state="translated">Details</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target xml:lang="en" state="translated">A new version is released!</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found" approved="yes">
+          <source>no_valid_class_found</source>
+          <target xml:lang="en">No valid class found!</target>
+      <alt-trans><target xml:lang="en">No valid class available!</target></alt-trans></trans-unit>
     </body>
   </file>
 </xliff>

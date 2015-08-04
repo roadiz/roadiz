@@ -42,6 +42,10 @@
                 <source>form.successfully.sent</source>
                 <target/>
             </trans-unit>
+            <trans-unit id="form.has.errors">
+                <source>form.has.errors</source>
+                <target/>
+            </trans-unit>
             <trans-unit id="%field%.is.mandatory">
                 <source>%field%.is.mandatory</source>
                 <target/>
@@ -111,11 +115,14 @@
                 <source>as.a.reminder.here.are.your.credentials</source>
                 <target></target>
             </trans-unit>
-              <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+            <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
                 <target></target>
             </trans-unit>
-
+            <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target></target>
+            </trans-unit>
             <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
                 <source>you.need.to.fill.this.required.field</source>
                 <target></target>

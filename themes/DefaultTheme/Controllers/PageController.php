@@ -57,8 +57,6 @@ class PageController extends DefaultThemeApp
     ) {
         $this->prepareThemeAssignation($node, $translation);
 
-        $this->getService('stopwatch')->start('twigRender');
-
         return $this->render('types/page.html.twig', $this->assignation);
     }
 }

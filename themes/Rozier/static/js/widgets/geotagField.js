@@ -34,7 +34,6 @@ GeotagField.prototype.bindFields = function() {
     _this.geocoder = new google.maps.Geocoder();
 
     _this.$fields.each(function (index, element) {
-
         _this.bindSingleField(element);
     });
 };
@@ -125,6 +124,12 @@ GeotagField.prototype.bindSingleField = function(element) {
     $geocodeInput.on('keypress', $.proxy(_this.requestGeocode, _this, marker, $input, $geocodeReset, map));
     $geocodeReset.on('click', $.proxy(_this.resetMarker, _this, marker, $input, $geocodeReset, map));
 
+    Rozier.$window.on('resize', $.proxy(_this.resetMap, this, map, marker, mapOptions));
+    _this.resetMap(map, marker, mapOptions, null);
+};
+
+GeotagField.prototype.resetMap = function(map, marker, mapOptions, event) {
+    var _this = this;
     setTimeout(function () {
         google.maps.event.trigger(map, "resize");
 
@@ -133,8 +138,7 @@ GeotagField.prototype.bindSingleField = function(element) {
         } else {
             map.panTo(mapOptions.center);
         }
-
-    }, 500);
+    }, 300);
 };
 
 /**

@@ -3,7 +3,7 @@
     'uk-sortable-list-item',
     'documents-widget-sortable-list-item'
 ] %}
-{% if not document.isImage %}
+{% if not document.isImage and not document.isSvg %}
 {% set classes = classes|merge(['not-image']) %}
 {% endif %}
 
@@ -16,7 +16,7 @@
 	<div class="uk-sortable-handle"></div>
     <div class="document-border"></div>
 
-	{% if document.isImage and not document.private %}
+	{% if (document.isImage or document.isSvg) and not document.private %}
 	   <img class="document-image" src="{{ document|url({"width":80, "crop":"1x1", "quality":50}) }}" />
     {% elseif document.private %}
         <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>

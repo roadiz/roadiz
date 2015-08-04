@@ -150,7 +150,7 @@ MarkdownEditor.prototype.textareaChange = function(e){
                 }
             }
             else if(textareaValLength < _this.countMinLimit[index]){
-                console.log('inf limit ');
+                //console.log('inf limit ');
                 if(!_this.countAlertActive[index]){
                     addClass(_this.$cont[index], 'content-limit');
                     _this.countAlertActive[index] = true;
@@ -260,16 +260,12 @@ MarkdownEditor.prototype.echapKey = function(e){
     var _this = this;
 
     if(e.keyCode == 27){
-
         for(var i = 0; i < _this.$cont.length; i++) {
-
             if(_this.fullscreenActive[i]){
                 $(_this.$buttonFullscreen[i]).find('a').trigger('click');
                 break;
             }
         }
-
-
     }
 
     return false;
@@ -282,5 +278,4 @@ MarkdownEditor.prototype.echapKey = function(e){
  */
 MarkdownEditor.prototype.resize = function(){
     var _this = this;
-
 };

@@ -43,7 +43,6 @@
                 <div class="documents-widget-quick-creation uk-button-group">
                     <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
                     <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
-                    <a class="uk-button uk-button-small rz-coming-soon" href="#" data-document-widget-toggle-embedder><i class="uk-icon-rz-embed"></i> {% trans %}documents.toggle-embedder{% endtrans %}</a>
                 </div>
             </div>
         </nav>
@@ -291,7 +290,12 @@
 {%- endblock choice_widget_collapsed %}
 
 {% block form_row -%}
-    <div class="uk-form-row form-col form-col-{{ form.vars.block_prefixes[1] }} form-col-{{ form.vars.name }}">
+    {% set rowClasses = [
+        'uk-form-row',
+        'form-col-' ~ form.vars.block_prefixes[1],
+        'form-col-' ~ form.vars.name|replace('_','-')
+    ] %}
+    <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group'] }}"{% endif %} class="{{ rowClasses|join(' ') }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
            {{- form_label(form) -}}
         {% endif %}

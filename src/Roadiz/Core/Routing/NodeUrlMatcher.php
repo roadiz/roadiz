@@ -42,7 +42,14 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     public function match($pathinfo)
     {
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('findTheme');
+        }
         $this->theme = $this->findTheme();
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('findTheme');
+        }
+
         $this->repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Node');
         $decodedUrl = rawurldecode($pathinfo);
 
@@ -80,11 +87,17 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $tokens = explode('/', $decodedUrl);
             // Remove empty tokens (especially when a trailing slash is present)
             $tokens = array_values(array_filter($tokens));
-
+            $node = null;
             /*
              * Try with URL Aliases
              */
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->start('parseFromUrlAlias');
+            }
             $node = $this->parseFromUrlAlias($tokens);
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('parseFromUrlAlias');
+            }
 
             if ($node !== null) {
                 $translation = $node->getNodeSources()->first()->getTranslation();
@@ -104,13 +117,26 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 /*
                  * Try with node name
                  */
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->start('parseTranslation');
+                }
                 $translation = $this->parseTranslation($tokens);
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->stop('parseTranslation');
+                }
 
                 if ($translation === null) {
                     return false;
                 }
 
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->start('parseNode');
+                }
                 $node = $this->parseNode($tokens, $translation);
+                if (null !== $this->stopwatch) {
+                    $this->stopwatch->stop('parseNode');
+                }
+
                 /*
                  * Prevent displaying home node using its nodeName
                  */
@@ -150,10 +176,10 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     protected function parseFromUrlAlias(&$tokens)
     {
-        if (null !== $ua = $this->parseUrlAlias($tokens)) {
-            return $this->repository->findOneWithUrlAlias($ua);
+        $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
+        if ($identifier != '') {
+            return $this->repository->findOneWithAliasAndAvailableTranslation($identifier);
         }
-
         return null;
     }
 
@@ -172,24 +198,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     {
         if (!empty($tokens[0])) {
             /*
-             * If the only url token is for language, return Home page
+             * If the only url token is not for language
              */
-            if (in_array($tokens[0], Translation::getAvailableLocales()) &&
-                count($tokens) == 1) {
-                if ($this->theme->getHomeNode() !== null) {
-                    $node = $this->theme->getHomeNode();
-                    if ($translation !== null) {
-                        return $this->repository
-                                    ->findWithTranslation(
-                                        $node->getId(),
-                                        $translation
-                                    );
-                    } else {
-                        return $this->repository->findWithDefaultTranslation($node->getId());
-                    }
-                }
-                return $this->repository->findHomeWithTranslation($translation);
-            } else {
+            if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
                 if ($identifier !== null &&

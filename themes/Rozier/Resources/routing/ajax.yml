@@ -23,10 +23,13 @@ nodeTypesFieldAjaxEdit:
     path:     /node-types/fields/edit/{nodeTypeFieldId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction }
     requirements: { nodeTypeFieldId : "[0-9]+" }
-# Ajax
+# Documents
 documentsAjaxExplorerPage:
     path:     /documents/explore
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction }
+foldersAjaxExplorerPage:
+    path:     /folders/explore
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxFoldersExplorerController::indexAction }
 ## Ajax
 tagAjaxEdit:
     path:     /tag/edit/{tagId}

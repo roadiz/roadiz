@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Viewers\SvgDocumentViewer;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
@@ -157,15 +158,19 @@ class DocumentViewer implements ViewableInterface
             $this->isEmbedPlatformSupported()) {
             return $this->getEmbedByArray($args);
 
+        } elseif ($this->document->isSvg()) {
+            $viewer = new SvgDocumentViewer(
+                $this->document->getAbsolutePath(),
+                $assignation
+            );
+            return $viewer->getContent();
         } elseif ($this->document->isImage()) {
             return $this->getTwig()->render('documents/image.html.twig', $assignation);
         } elseif ($this->document->isVideo()) {
             $assignation['sources'] = $this->getSourcesFiles();
-
             return $this->getTwig()->render('documents/video.html.twig', $assignation);
         } elseif ($this->document->isAudio()) {
             $assignation['sources'] = $this->getSourcesFiles();
-
             return $this->getTwig()->render('documents/audio.html.twig', $assignation);
         } else {
             return 'document.format.unknown';

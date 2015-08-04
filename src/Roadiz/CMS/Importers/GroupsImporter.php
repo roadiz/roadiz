@@ -29,10 +29,9 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
-
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
+use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 
 /**
  * {@inheritdoc}
@@ -43,34 +42,33 @@ class GroupsImporter implements ImporterInterface
      * Import a Json file (.rzt) containing group.
      *
      * @param string $serializedData
+     * @param EntityManager $em
      *
      * @return bool
      */
-    public static function importJsonFile($serializedData)
+    public static function importJsonFile($serializedData, EntityManager $em)
     {
-        $groups = GroupCollectionJsonSerializer::deserialize($serializedData);
+        $serializer = new GroupCollectionJsonSerializer($em);
+        $groups = $serializer->deserialize($serializedData);
         foreach ($groups as $group) {
-            $existingGroup = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Group')
-                ->findOneBy(['name'=>$group->getName()]);
+            $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
+                                ->findOneBy(['name' => $group->getName()]);
 
             if (null === $existingGroup) {
                 foreach ($group->getRolesEntities() as $role) {
-                   /*
-                    * then persist each role
-                    */
-                    $role = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Role')
-                                                    ->findOneByName($role->getName());
+                    /*
+                     * then persist each role
+                     */
+                    $role = $em->getRepository('RZ\Roadiz\Core\Entities\Role')
+                               ->findOneByName($role->getName());
                 }
-
-                Kernel::getService('em')->persist($group);
+                $em->persist($group);
                 // Flush before creating group's roles.
-                Kernel::getService('em')->flush();
+                $em->flush($group);
             } else {
                 $existingGroup->getHandler()->diff($group);
+                $em->flush($existingGroup);
             }
-
-            Kernel::getService('em')->flush();
         }
 
         return true;
