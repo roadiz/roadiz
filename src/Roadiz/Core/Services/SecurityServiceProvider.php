@@ -221,7 +221,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 Kernel::SECURITY_DOMAIN,
                 [
                     'name' => $c['rememberMeCookieName'],
-                    'lifetime' => 60 * 60 * 48,
+                    'lifetime' => isset($c['config']['rememberMeLifetime']) ? (int) $c['config']['rememberMeLifetime'] : 60 * 60 * 24 * 30, // One month long cookie
                     'remember_me_parameter' => '_remember_me',
                     'path' => $c['request']->getBasePath(),
                     'domain' => $c['request']->getHost(),
