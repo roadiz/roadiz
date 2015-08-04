@@ -478,9 +478,9 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="47" approved="yes">
+      <trans-unit xml:space="preserve" id="47">
         <source>user.facebook_name.%name%._does_not_exist</source>
-        <target xml:lang="fr">L’identifiant utilisateur Facebook «%name%» n’existe pas.</target>
+        <target xml:lang="fr" state="translated">L’identifiant utilisateur Facebook «%name%» n’existe pas.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">569</context>
@@ -4041,7 +4041,7 @@
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409" approved="yes">
         <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
-        <target xml:lang="fr">{0} Aucun objet|{1} 1 objet|]1,Inf] %count% objets</target>
+        <target xml:lang="fr"><![CDATA[{0} Aucun objet|{1} <span>1</span> objet|]1,Inf] <span>%count%</span> objets]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410" approved="yes">
         <source>1.item</source>
@@ -4311,9 +4311,9 @@
         <source>google_client_id</source>
         <target xml:lang="fr">Google API - Clef navigateur</target>
       <alt-trans><target xml:lang="fr">Google : Id client</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="google_server_id" approved="yes">
+      <trans-unit xml:space="preserve" id="google_server_id">
         <source>google_server_id</source>
-        <target xml:lang="fr">Google API - Clef serveur</target>
+        <target xml:lang="fr" state="translated">Google API - Clef serveur</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id" approved="yes">
         <source>twitter_client_id</source>
@@ -4359,21 +4359,21 @@
         <source>twitter_account</source>
         <target xml:lang="fr">Compte Twitter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="recaptcha_public_key" approved="yes">
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
         <source>recaptcha_public_key</source>
-        <target xml:lang="fr">Clef publique Recaptcha (sitekey)</target>
+        <target xml:lang="fr" state="translated">Clef publique Recaptcha (sitekey)</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="recaptcha_private_key" approved="yes">
+      <trans-unit xml:space="preserve" id="recaptcha_private_key">
         <source>recaptcha_private_key</source>
-        <target xml:lang="fr">Clef privée Recaptcha (secret)</target>
+        <target xml:lang="fr" state="translated">Clef privée Recaptcha (secret)</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot" approved="yes">
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
         <source>you_must_show_youre_not_robot</source>
-        <target xml:lang="fr">Vous devez valider le Recaptcha pour vérifier que vous n’êtes pas un robot.</target>
+        <target xml:lang="fr" state="translated">Vous devez valider le Recaptcha pour vérifier que vous n’êtes pas un robot.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again" approved="yes">
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
         <source>recaptcha_is_invalid.try_again</source>
-        <target xml:lang="fr">Le Recaptcha est invalide, veuillez réessayer.</target>
+        <target xml:lang="fr" state="translated">Le Recaptcha est invalide, veuillez réessayer.</target>
       </trans-unit>
       <!-- document usage -->
       <trans-unit xml:space="preserve" id="document.%name%.usage" approved="yes">
@@ -5733,9 +5733,9 @@
           <source>download.folder.content</source>
           <target xml:lang="fr">Télécharger le contenu du dossier</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="not.valid.facebook.name" approved="yes">
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
           <source>not.valid.facebook.name</source>
-          <target xml:lang="fr">Ce n’est pas un ID Facebook valide, vous pouvez aller sur http://lookup-id.com/ pour le retrouver.</target>
+          <target xml:lang="fr" state="translated">Ce n’est pas un ID Facebook valide, vous pouvez aller sur http://lookup-id.com/ pour le retrouver.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="routePrefix" approved="yes">
           <source>routePrefix</source>
@@ -5807,9 +5807,9 @@
           <source>This value should not be blank.</source>
           <target xml:lang="fr">Cette valeur ne devrait pas être vide.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="This value is not valid." approved="yes">
+      <trans-unit xml:space="preserve" id="This value is not valid.">
           <source>This value is not valid.</source>
-          <target xml:lang="fr">Cette valeur n'est pas valide.</target>
+          <target xml:lang="fr" state="translated">Cette valeur n'est pas valide.</target>
       </trans-unit>
       <!-- Font variantes -->
       <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
@@ -5836,273 +5836,273 @@
           <source>font_variant.light.italic</source>
           <target xml:lang="fr">Light italique</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update.roadiz" approved="yes">
+      <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
-          <target xml:lang="fr">Mettre à jour Roadiz</target>
+          <target xml:lang="fr" state="translated">Mettre à jour Roadiz</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update.please_wait" approved="yes">
+      <trans-unit xml:space="preserve" id="update.please_wait">
           <source>update.please_wait</source>
-          <target xml:lang="fr">Mise à jour en cours, veuillez patienter…</target>
+          <target xml:lang="fr" state="translated">Mise à jour en cours, veuillez patienter…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update.done.back_to_home" approved="yes">
+      <trans-unit xml:space="preserve" id="update.done.back_to_home">
           <source>update.done.back_to_home</source>
-          <target xml:lang="fr">Revenir à l’accueil</target>
+          <target xml:lang="fr" state="translated">Revenir à l’accueil</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update_roadiz.download_archive" approved="yes">
+      <trans-unit xml:space="preserve" id="update_roadiz.download_archive">
           <source>update_roadiz.download_archive</source>
-          <target xml:lang="fr">Roadiz est en train de télécharger la dernière archive disponible…</target>
+          <target xml:lang="fr" state="translated">Roadiz est en train de télécharger la dernière archive disponible…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update_roadiz.unarchive" approved="yes">
+      <trans-unit xml:space="preserve" id="update_roadiz.unarchive">
           <source>update_roadiz.unarchive</source>
-          <target xml:lang="fr">Roadiz est en train de décompresser l’archive de mise à jour…</target>
+          <target xml:lang="fr" state="translated">Roadiz est en train de décompresser l’archive de mise à jour…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files" approved="yes">
+      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files">
           <source>update_roadiz.move_new_files</source>
-          <target xml:lang="fr">Roadiz jongle avec ses fichiers pour mettre à jour votre CMS favori…</target>
+          <target xml:lang="fr" state="translated">Roadiz jongle avec ses fichiers pour mettre à jour votre CMS favori…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache" approved="yes">
+      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache">
           <source>update_roadiz.clear_cache</source>
-          <target xml:lang="fr">Roadiz est en train de vider son cache…</target>
+          <target xml:lang="fr" state="translated">Roadiz est en train de vider son cache…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update_roadiz.update_schema" approved="yes">
+      <trans-unit xml:space="preserve" id="update_roadiz.update_schema">
           <source>update_roadiz.update_schema</source>
-          <target xml:lang="fr">Roadiz est en train de migrer le schéma de sa base de données…</target>
+          <target xml:lang="fr" state="translated">Roadiz est en train de migrer le schéma de sa base de données…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="update_roadiz.update_complete" approved="yes">
+      <trans-unit xml:space="preserve" id="update_roadiz.update_complete">
           <source>update_roadiz.update_complete</source>
-          <target xml:lang="fr">La mise à jour de Roadiz est maintenant terminée !</target>
+          <target xml:lang="fr" state="translated">La mise à jour de Roadiz est maintenant terminée !</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="automatic.upgrade" approved="yes">
+      <trans-unit xml:space="preserve" id="automatic.upgrade">
           <source>automatic.upgrade</source>
-          <target xml:lang="fr">Mise à jour automatisée</target>
+          <target xml:lang="fr" state="translated">Mise à jour automatisée</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade" approved="yes">
+      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade">
           <source>always.make.a.database.backup.before.upgrade</source>
-          <target xml:lang="fr">Vous devriez toujours effectuer une sauvegarde de la base de donnée avant d’utiliser la mise à jour automatisée.</target>
+          <target xml:lang="fr" state="translated">Vous devriez toujours effectuer une sauvegarde de la base de donnée avant d’utiliser la mise à jour automatisée.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git">
           <source>cannot_update_roadiz.using_git</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, vous l’avez installé avec Git. Veuillez mettre à jour manuellement…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, vous l’avez installé avec Git. Veuillez mettre à jour manuellement…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink">
           <source>cannot_update_roadiz.using_symlink</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, vous l’avez installé avec des liens symboliques. Veuillez mettre à jour manuellement…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, vous l’avez installé avec des liens symboliques. Veuillez mettre à jour manuellement…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available">
           <source>cannot_update_roadiz.no_release_available</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, aucune mise à jour n’est disponible…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, aucune mise à jour n’est disponible…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download">
           <source>cannot_update_roadiz.no_archive_to_download</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, il n’y a aucune archive à télécharger…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, il n’y a aucune archive à télécharger…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist">
           <source>cannot_update_roadiz.temp_archive_does_not_exist</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, l’archive temporaire est introuvable…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, l’archive temporaire est introuvable…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive">
           <source>cannot_update_roadiz.cant_open_archive</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, l’archive ne peut pas être décompressée…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, l’archive ne peut pas être décompressée…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir">
           <source>cannot_update_roadiz.cant_create_temp_dir</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, il ne peut pas créer de dossier temporaire…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, il ne peut pas créer de dossier temporaire…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist">
           <source>cannot_update_roadiz.destination_folder_does_not_exist</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, le dossier de destination n’existe pas…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’existe pas…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable" approved="yes">
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
           <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
-          <target xml:lang="fr">Impossible de mettre à jour Roadiz, le dossier de destination n’est pas inscriptible…</target>
+          <target xml:lang="fr" state="translated">Impossible de mettre à jour Roadiz, le dossier de destination n’est pas inscriptible…</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeName.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists">
           <source>nodeName.alreadyExists</source>
-          <target xml:lang="fr">Ce nom de nœud est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Ce nom de nœud est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias" approved="yes">
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias">
           <source>nodeName.alreadyExists.as.urlAlias</source>
-          <target xml:lang="fr">Ce nom de nœud est déjà utilisé en tant qu’alias d’url</target>
+          <target xml:lang="fr" state="translated">Ce nom de nœud est déjà utilisé en tant qu’alias d’url</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="new.version.available" approved="yes">
+      <trans-unit xml:space="preserve" id="new.version.available">
           <source>new.version.available</source>
-          <target xml:lang="fr">Nouvelle version disponible</target>
+          <target xml:lang="fr" state="translated">Nouvelle version disponible</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.childrenOrder" approved="yes">
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
           <source>node.childrenOrder</source>
-          <target xml:lang="fr">Les nœuds enfant sont ordonnés par</target>
+          <target xml:lang="fr" state="translated">Les nœuds enfant sont ordonnés par</target>
       <alt-trans><target xml:lang="fr">Children nodes ordering by</target></alt-trans><alt-trans><target xml:lang="fr">Children nodes ordering</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="node.childrenOrderDirection" approved="yes">
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
           <source>node.childrenOrderDirection</source>
-          <target xml:lang="fr">Direction de l’ordre des nœuds enfants</target>
+          <target xml:lang="fr" state="translated">Direction de l’ordre des nœuds enfants</target>
       <alt-trans><target xml:lang="fr">Children nodes order direction</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="createdAt" approved="yes">
+      <trans-unit xml:space="preserve" id="createdAt">
           <source>createdAt</source>
-          <target xml:lang="fr">Date de création</target>
+          <target xml:lang="fr" state="translated">Date de création</target>
       <alt-trans><target xml:lang="fr">Créé le</target></alt-trans><alt-trans><target xml:lang="fr">Created at</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="updatedAt" approved="yes">
+      <trans-unit xml:space="preserve" id="updatedAt">
           <source>updatedAt</source>
-          <target xml:lang="fr">Date de mise à jour</target>
+          <target xml:lang="fr" state="translated">Date de mise à jour</target>
       <alt-trans><target xml:lang="fr">Mis à jour le</target></alt-trans><alt-trans><target xml:lang="fr">Updated at</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="ascendant" approved="yes">
+      <trans-unit xml:space="preserve" id="ascendant">
           <source>ascendant</source>
-          <target xml:lang="fr">Ascendant</target>
+          <target xml:lang="fr" state="translated">Ascendant</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="descendant" approved="yes">
+      <trans-unit xml:space="preserve" id="descendant">
           <source>descendant</source>
-          <target xml:lang="fr">Descendant</target>
+          <target xml:lang="fr" state="translated">Descendant</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="email.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="email.alreadyExists">
           <source>email.alreadyExists</source>
-          <target xml:lang="fr">L’adresse email est déjà utilisée</target>
+          <target xml:lang="fr" state="translated">L’adresse email est déjà utilisée</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="username.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="username.alreadyExists">
           <source>username.alreadyExists</source>
-          <target xml:lang="fr">Le nom d’utilisateur est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Le nom d’utilisateur est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="tagName.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
           <source>tagName.alreadyExists</source>
-          <target xml:lang="fr">Ce nom d‘étiquette est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Ce nom d‘étiquette est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
           <source>nodeTypeField.name.alreadyExists</source>
-          <target xml:lang="fr">Le nom du champ de type de nœud est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Le nom du champ de type de nœud est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
           <source>nodeType.name.alreadyExists</source>
-          <target xml:lang="fr">Le nom du type de nœud est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Le nom du type de nœud est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal" approved="yes">
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
           <source>color.should.be.formatted.in.hexadecimal</source>
-          <target xml:lang="fr">La couleur doit être écrite en notation hexadécimale</target>
+          <target xml:lang="fr" state="translated">La couleur doit être écrite en notation hexadécimale</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
           <source>customFormField.name.alreadyExists</source>
-          <target xml:lang="fr">Le nom du champ de formulaire personnalisé est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Le nom du champ de formulaire personnalisé est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
           <source>customForm.name.alreadyExists</source>
-          <target xml:lang="fr">Le nom du formulaire personnalisé est déjà utilisé</target>
+          <target xml:lang="fr" state="translated">Le nom du formulaire personnalisé est déjà utilisé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="ip" approved="yes">
+      <trans-unit xml:space="preserve" id="ip">
           <source>ip</source>
-          <target xml:lang="fr">IP</target>
+          <target xml:lang="fr" state="translated">IP</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font.variant.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="font.variant.alreadyExists">
           <source>font.variant.alreadyExists</source>
-          <target xml:lang="fr">La variant de fonte est existe déjà</target>
+          <target xml:lang="fr" state="translated">La variant de fonte est existe déjà</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file" approved="yes">
+      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file">
           <source>file.is_not_a.valid.font.file</source>
-          <target xml:lang="fr">Ce fichier n’est pas un fichier de fonte valide</target>
+          <target xml:lang="fr" state="translated">Ce fichier n’est pas un fichier de fonte valide</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="folder.%name%.updated" approved="yes">
+      <trans-unit xml:space="preserve" id="folder.%name%.updated">
           <source>folder.%name%.updated</source>
-          <target xml:lang="fr">Le dossier « %name% » a été mis à jour.</target>
+          <target xml:lang="fr" state="translated">Le dossier « %name% » a été mis à jour.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="folder.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="folder.alreadyExists">
           <source>folder.alreadyExists</source>
-          <target xml:lang="fr">Le dossier existe déjà.</target>
+          <target xml:lang="fr" state="translated">Le dossier existe déjà.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="folder.%name%.deleted" approved="yes">
+      <trans-unit xml:space="preserve" id="folder.%name%.deleted">
           <source>folder.%name%.deleted</source>
-          <target xml:lang="fr">Le dossier « %name% » a été supprimé.</target>
+          <target xml:lang="fr" state="translated">Le dossier « %name% » a été supprimé.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="no.folder.found" approved="yes">
+      <trans-unit xml:space="preserve" id="no.folder.found">
           <source>no.folder.found</source>
-          <target xml:lang="fr">Aucun dossier trouvé</target>
+          <target xml:lang="fr" state="translated">Aucun dossier trouvé</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="folder.does_not_exist" approved="yes">
+      <trans-unit xml:space="preserve" id="folder.does_not_exist">
           <source>folder.does_not_exist</source>
-          <target xml:lang="fr">Le dossier n’existe pas</target>
+          <target xml:lang="fr" state="translated">Le dossier n’existe pas</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="pinterest_url" approved="yes">
+      <trans-unit xml:space="preserve" id="pinterest_url">
           <source>pinterest_url</source>
-          <target xml:lang="fr">Url Pinterest</target>
+          <target xml:lang="fr" state="translated">Url Pinterest</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="use_cdn" approved="yes">
+      <trans-unit xml:space="preserve" id="use_cdn">
           <source>use_cdn</source>
-          <target xml:lang="fr">Utiliser un CDN pour les ressources</target>
+          <target xml:lang="fr" state="translated">Utiliser un CDN pour les ressources</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="force_locale" approved="yes">
+      <trans-unit xml:space="preserve" id="force_locale">
           <source>force_locale</source>
-          <target xml:lang="fr">Forcer la locale dans les Url</target>
+          <target xml:lang="fr" state="translated">Forcer la locale dans les Url</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache" approved="yes">
+      <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
           <source>nodeSourcesUrlsCache</source>
-          <target xml:lang="fr">Cache des URL des sources de nœud</target>
+          <target xml:lang="fr" state="translated">Cache des URL des sources de nœud</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="translation.locale.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="translation.locale.alreadyExists">
           <source>translation.locale.alreadyExists</source>
-          <target xml:lang="fr">Cette locale de traduction est déjà utilisée</target>
+          <target xml:lang="fr" state="translated">Cette locale de traduction est déjà utilisée</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="translation.override_locale.alreadyExists" approved="yes">
+      <trans-unit xml:space="preserve" id="translation.override_locale.alreadyExists">
           <source>translation.override_locale.alreadyExists</source>
-          <target xml:lang="fr">Cette locale de remplacement est déjà utilisée</target>
+          <target xml:lang="fr" state="translated">Cette locale de remplacement est déjà utilisée</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="overrideLocale" approved="yes">
+      <trans-unit xml:space="preserve" id="overrideLocale">
           <source>overrideLocale</source>
-          <target xml:lang="fr">Locale de remplacement</target>
+          <target xml:lang="fr" state="translated">Locale de remplacement</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="keep_me_logged_in" approved="yes">
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
           <source>keep_me_logged_in</source>
-          <target xml:lang="fr">Garder ma session active</target>
+          <target xml:lang="fr" state="translated">Garder ma session active</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="setting.theme" approved="yes">
+      <trans-unit xml:space="preserve" id="setting.theme">
           <source>setting.theme</source>
-          <target xml:lang="fr">Paramètres du thème</target>
+          <target xml:lang="fr" state="translated">Paramètres du thème</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="unused_documents" approved="yes">
+      <trans-unit xml:space="preserve" id="unused_documents">
           <source>unused_documents</source>
-          <target xml:lang="fr">Documents non-utilisés</target>
+          <target xml:lang="fr" state="translated">Documents non-utilisés</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.offspring.published" approved="yes">
+      <trans-unit xml:space="preserve" id="node.offspring.published">
           <source>node.offspring.published</source>
-          <target xml:lang="fr">La descendance du nœud a été publiée</target>
+          <target xml:lang="fr" state="translated">La descendance du nœud a été publiée</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring" approved="yes">
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
           <source>are_you_sure.publish.node.offspring</source>
-          <target xml:lang="fr">Êtes-vous sûr(e) de vouloir publier toute la descendance de ce nœud ?</target>
+          <target xml:lang="fr" state="translated">Êtes-vous sûr(e) de vouloir publier toute la descendance de ce nœud ?</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring" approved="yes">
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
           <source>publish.node.%name%.offspring</source>
-          <target xml:lang="fr">Publier la descendance de “%name%”</target>
+          <target xml:lang="fr" state="translated">Publier la descendance de “%name%”</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="publish_node_offspring" approved="yes">
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
           <source>publish_node_offspring</source>
-          <target xml:lang="fr">Publier la descendance</target>
+          <target xml:lang="fr" state="translated">Publier la descendance</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="publish-all" approved="yes">
+      <trans-unit xml:space="preserve" id="publish-all">
           <source>publish-all</source>
-          <target xml:lang="fr">Publier la descendance</target>
+          <target xml:lang="fr" state="translated">Publier la descendance</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="groupName" approved="yes">
+      <trans-unit xml:space="preserve" id="groupName">
           <source>groupName</source>
-          <target xml:lang="fr">Nom du groupe</target>
+          <target xml:lang="fr" state="translated">Nom du groupe</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="embedId.does_not_exist" approved="yes">
+      <trans-unit xml:space="preserve" id="embedId.does_not_exist">
           <source>embedId.does_not_exist</source>
-          <target xml:lang="fr">L’identifiant de média externe n’existe pas.</target>
+          <target xml:lang="fr" state="translated">L’identifiant de média externe n’existe pas.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="youtube_needs_a_key" approved="yes">
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
           <source>YoutubeEmbedFinder needs a Google server key.</source>
-          <target xml:lang="fr">YoutubeEmbedFinder a besoin d’une clef serveur Google.</target>
+          <target xml:lang="fr" state="translated">YoutubeEmbedFinder a besoin d’une clef serveur Google.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="edit.user_details.%name%" approved="yes">
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
           <source>edit.user_details.%name%</source>
-          <target xml:lang="fr">%name%</target>
+          <target xml:lang="fr" state="translated">%name%</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="user.edit_details" approved="yes">
+      <trans-unit xml:space="preserve" id="user.edit_details">
           <source>user.edit_details</source>
-          <target xml:lang="fr">Détails</target>
+          <target xml:lang="fr" state="translated">Détails</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="new.version.release" approved="yes">
+      <trans-unit xml:space="preserve" id="new.version.release">
           <source>new.version.release</source>
-          <target xml:lang="fr">Une nouvelle version est disponible !</target>
+          <target xml:lang="fr" state="translated">Une nouvelle version est disponible !</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="no_valid_class_found" approved="yes">
+      <trans-unit xml:space="preserve" id="no_valid_class_found">
           <source>no_valid_class_found</source>
-          <target xml:lang="fr">Aucune classe valide disponible !</target>
+          <target xml:lang="fr" state="translated">Aucune classe valide disponible !</target>
       </trans-unit>
     </body>
   </file>
