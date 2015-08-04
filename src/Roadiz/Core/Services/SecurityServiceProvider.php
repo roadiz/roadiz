@@ -213,6 +213,14 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['rememberMeCookieName'] = 'roadiz_remember_me';
+        $container['rememberMeCookieLifetime'] = function ($c) {
+            if (isset($c['config']['rememberMeLifetime'])) {
+                return (int) $c['config']['rememberMeLifetime'];
+            } else {
+                // One month long cookie
+                return 60 * 60 * 24 * 30;
+            }
+        };
 
         $container['tokenBasedRememberMeServices'] = function ($c) {
             return new TokenBasedRememberMeServices(
@@ -221,7 +229,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 Kernel::SECURITY_DOMAIN,
                 [
                     'name' => $c['rememberMeCookieName'],
-                    'lifetime' => isset($c['config']['rememberMeLifetime']) ? (int) $c['config']['rememberMeLifetime'] : 60 * 60 * 24 * 30, // One month long cookie
+                    'lifetime' => $c['rememberMeCookieLifetime'],
                     'remember_me_parameter' => '_remember_me',
                     'path' => $c['request']->getBasePath(),
                     'domain' => $c['request']->getHost(),
