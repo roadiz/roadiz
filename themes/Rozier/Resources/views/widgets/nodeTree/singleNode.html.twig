@@ -55,8 +55,13 @@
                 <span class="icon-stack-folder"></span>
                 <span class="icon-stack-folder icon-stack-folder-final"></span>
             {% endif %}
-            {% if node.isHome and not node.isHidingChildren %}<i class="uk-icon-rz-home"></i> {% endif %}
-            {% if node.isHome and node.isHidingChildren %}<i class="uk-icon-rz-building"></i> {% endif %}
+            {% if node.isHome and not node.isHidingChildren and not node.published %}
+            <i class="uk-icon-rz-home-unpublished"></i>
+            {% elseif node.isHome and not node.isHidingChildren %}
+            <i class="uk-icon-rz-home"></i>
+            {% elseif node.isHome and node.isHidingChildren %}
+            <i class="uk-icon-rz-building"></i>
+            {% endif %}
         </div>
 
         {#
