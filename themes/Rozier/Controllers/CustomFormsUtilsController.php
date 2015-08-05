@@ -60,4 +60,52 @@ class CustomFormsUtilsController extends RozierApp
 
         return $response;
     }
+
+    /**
+     * Duplicate custom form by ID
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param int                                      $nodeId
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function duplicateAction(Request $request, $customFormId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+
+        try {
+            $existingCustomForm = $this->getService('em')
+                                 ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+            $newCustomForm = clone $existingCustomForm;
+            $em = $this->getService("em");
+            $em->persist($newCustomForm);
+            $em->flush();
+            $msg = $this->getTranslator()->trans("duplicated.custom.form.%name%", [
+                '%name%' => $existingCustomForm->getDisplayName(),
+            ]);
+
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->getService('urlGenerator')
+                                            ->generate(
+                                                'customFormsEditPage',
+                                                ["customFormId" => $newCustomForm->getId()]
+                                            ));
+
+        } catch (\Exception $e) {
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                $this->getTranslator()->trans("impossible.duplicate.custom.form.%name%", [
+                    '%name%' => $existingCustomForm->getDisplayName(),
+                ])
+            );
+            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+
+            return $this->redirect($this->getService('urlGenerator')
+                                            ->generate(
+                                                'customFormsEditPage',
+                                                ["customFormId" => $existingCustomForm->getId()]
+                                            ));
+        }
+    }
 }

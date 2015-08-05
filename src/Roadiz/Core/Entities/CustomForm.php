@@ -370,4 +370,19 @@ class CustomForm extends AbstractDateTimed
     {
         return $this->nodes;
     }
+
+    public function __clone()
+    {
+        $this->setId(null);
+        $this->customFormAnswers = new ArrayCollection();
+        $fields = $this->getFields();
+        if ($fields !== null) {
+            $this->fields = new ArrayCollection();
+            foreach ($fields as $field) {
+                $cloneField = clone $field;
+                $this->fields->add($cloneField);
+                $cloneField->setCustomForm($this);
+            }
+        }
+    }
 }

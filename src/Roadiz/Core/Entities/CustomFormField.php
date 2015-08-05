@@ -159,4 +159,10 @@ class CustomFormField extends AbstractField
     {
         return $this->getId() . " — " . $this->getName() . " — " . $this->getLabel() . PHP_EOL;
     }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->customFormFieldAttribute = new ArrayCollection();
+    }
 }
