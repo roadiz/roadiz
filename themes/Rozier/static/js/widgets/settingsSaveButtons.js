@@ -35,7 +35,30 @@ SettingsSaveButtons.prototype.init = function(){
 SettingsSaveButtons.prototype.buttonClick = function(e){
     var _this = this;
 
-    $(e.currentTarget).parent().parent().find('.uk-form').submit();
+    var $form = $($(e.currentTarget).parent().parent().find('.uk-form')[0]);
+
+    if ($form.find('input[type=file]').length) {
+        $form.submit();
+        return false;
+    }
+
+    Rozier.lazyload.canvasLoader.show();
+
+    $.ajax({
+        url: $form.attr('action'),
+        type: 'post',
+        data: $form.serialize(),
+    })
+    .done(function() {
+        console.log("Saved setting with success.");
+    })
+    .fail(function() {
+        console.log("Error during save.");
+    })
+    .always(function() {
+        Rozier.lazyload.canvasLoader.hide();
+        Rozier.getMessages();
+    });
 
     return false;
 

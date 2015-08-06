@@ -54,6 +54,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     var mapOptions = {
         center: new google.maps.LatLng(jsonCode.lat, jsonCode.lng),
         zoom: jsonCode.zoom,
+        scrollwheel: false,
         styles: Rozier.mapsStyle
     };
 
