@@ -577,7 +577,8 @@ class DocumentRepository extends EntityRepository
             WHERE SIZE(d.nodesSourcesByFields) < 1
             AND d.id NOT IN (
                 SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
-                WHERE s.type = :type
+                WHERE s.type = :type AND
+                s.value IS NOT NULL
             )
         ')->setParameter('type', AbstractField::DOCUMENTS_T);
 
