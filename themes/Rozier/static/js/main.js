@@ -173,10 +173,12 @@ Rozier.bindMainNodeTreeLangs = function () {
 
     $('body').on('click', '#tree-container .nodetree-langs a', function (event) {
 
+        Rozier.lazyload.canvasLoader.show();
         var $link = $(event.currentTarget);
         var translationId = parseInt($link.attr('data-translation-id'));
 
         Rozier.refreshMainNodeTree(translationId);
+        return false;
     });
 };
 
@@ -265,6 +267,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
     var _this = this;
 
     var $currentNodeTree = $('#tree-container').find('.nodetree-widget');
+    var $currentRootTree = $($currentNodeTree.find('.root-tree')[0]);
 
     if($currentNodeTree.length){
 
@@ -272,6 +275,10 @@ Rozier.refreshMainNodeTree = function (translationId) {
             "_token": Rozier.ajaxToken,
             "_action":'requestMainNodeTree'
         };
+
+        if ($currentRootTree.length && !isset(translationId)) {
+            translationId = parseInt($currentRootTree.attr('data-translation-id'));
+        }
 
         var url = Rozier.routes.nodesTreeAjax;
         if(isset(translationId) && translationId > 0){
@@ -302,6 +309,9 @@ Rozier.refreshMainNodeTree = function (translationId) {
         })
         .fail(function(data) {
             console.log(data.responseJSON);
+        })
+        .always(function(){
+            Rozier.lazyload.canvasLoader.hide();
         });
     } else {
         console.error("No main node-tree available.");
@@ -432,7 +442,7 @@ Rozier.onSubmitSearchNodesSources = function(e){
 Rozier.onNestableNodeTreeChange = function (event, element, status) {
     var _this = this;
 
-    console.log("Node: "+element.data('node-id')+ " status : "+status);
+    //console.log("Node: "+element.data('node-id')+ " status : "+status);
 
     /*
      * If node removed, do not do anything, the othechange.uk.nestabler nodeTree will be triggered
@@ -443,8 +453,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 
     var node_id = parseInt(element.data('node-id'));
     var parent_node_id = parseInt(element.parents('ul').first().data('parent-node-id'));
-
-    console.log(parent_node_id);
+    //console.log(parent_node_id);
     /*
      * User dragged node inside itself
      * It will destroy the Internet !
@@ -481,7 +490,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
     }
     postData.newParent = parent_node_id;
 
-    console.log(postData);
+    //console.log(postData);
     $.ajax({
         url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
         type: 'POST',
@@ -489,7 +498,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
         data: postData
     })
     .done(function( data ) {
-        console.log(data);
+        //console.log(data);
         UIkit.notify({
             message : data.responseText,
             status  : data.status,
@@ -499,7 +508,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 
     })
     .fail(function( data ) {
-        console.log(data);
+        //console.log(data);
     });
 };
 
@@ -514,7 +523,7 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
 Rozier.onNestableTagTreeChange = function (event, element, status) {
     var _this = this;
 
-    console.log("Tag: "+element.data('tag-id')+ " status : "+status);
+    //console.log("Tag: "+element.data('tag-id')+ " status : "+status);
 
     /*
      * If tag removed, do not do anything, the other tagTree will be triggered
@@ -562,7 +571,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
     }
     postData.newParent = parent_tag_id;
 
-    console.log(postData);
+    //console.log(postData);
     $.ajax({
         url: Rozier.routes.tagAjaxEdit.replace("%tagId%", tag_id),
         type: 'POST',
@@ -570,7 +579,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
         data: postData
     })
     .done(function( data ) {
-        console.log(data);
+        //console.log(data);
         UIkit.notify({
             message : data.responseText,
             status  : data.status,
@@ -580,7 +589,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 
     })
     .fail(function( data ) {
-        console.log(data);
+        //console.log(data);
     });
 };
 
@@ -594,7 +603,7 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
 Rozier.onNestableFolderTreeChange = function (event, element, status) {
     var _this = this;
 
-    console.log("Folder: "+element.data('folder-id')+ " status : "+status);
+    //console.log("Folder: "+element.data('folder-id')+ " status : "+status);
 
     /*
      * If folder removed, do not do anything, the other folderTree will be triggered
@@ -642,7 +651,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
     }
     postData.newParent = parent_folder_id;
 
-    console.log(postData);
+    //console.log(postData);
     $.ajax({
         url: Rozier.routes.folderAjaxEdit.replace("%folderId%", folder_id),
         type: 'POST',
@@ -650,7 +659,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
         data: postData
     })
     .done(function( data ) {
-        console.log(data);
+        //console.log(data);
         UIkit.notify({
             message : data.responseText,
             status  : data.status,
@@ -660,7 +669,7 @@ Rozier.onNestableFolderTreeChange = function (event, element, status) {
 
     })
     .fail(function( data ) {
-        console.log(data);
+        //console.log(data);
     });
 };
 

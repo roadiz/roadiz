@@ -4,18 +4,18 @@ return array(
         'global' => array(
             'css' => array(
                 '/vendor.1546beea.css',
-                '/style.62604a38.css',
+                '/style.a375a2ac.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.3d7a503c.min.js',
-                '/rozier-backend-theme-vendor.7aa2cb8f.min.js',
+                '/rozier-backend-theme.55801dcc.min.js',
+                '/rozier-backend-theme-vendor.4263b6a7.min.js',
             ),
         ),
         'simple' => array(
             'css' => array(
             ),
             'js' => array(
-                '/rozier-backend-theme-simple.6e4a1752.min.js',
+                '/rozier-backend-theme-simple.8aefb313.min.js',
             ),
         ),
         'custom-forms' => array(
@@ -24,7 +24,7 @@ return array(
                 '/custom-forms-front.47be0471.css',
             ),
             'js' => array(
-                '/rozier-backend-theme-cforms.ccff297b.min.js',
+                '/rozier-backend-theme-cforms.13b53a33.min.js',
             ),
         ),
     )
