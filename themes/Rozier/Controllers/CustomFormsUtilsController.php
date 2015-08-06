@@ -65,21 +65,25 @@ class CustomFormsUtilsController extends RozierApp
      * Duplicate custom form by ID
      *
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param int                                      $customFormId
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
     public function duplicateAction(Request $request, $customFormId)
     {
+        $this->publishConfirmMessage($request, "OMG");
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         try {
             $existingCustomForm = $this->getService('em')
                                  ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+
             $newCustomForm = clone $existingCustomForm;
+
             $em = $this->getService("em");
             $em->persist($newCustomForm);
             $em->flush();
+
             $msg = $this->getTranslator()->trans("duplicated.custom.form.%name%", [
                 '%name%' => $existingCustomForm->getDisplayName(),
             ]);
