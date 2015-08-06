@@ -17,8 +17,8 @@ NodeEditSource = function(){
         _this.$formRow = _this.$content.find('.uk-form-row');
         _this.wrapInTabs();
         _this.init();
+        _this.initEvents();
     }
-
 };
 
 NodeEditSource.prototype.wrapInTabs = function() {
@@ -110,6 +110,19 @@ NodeEditSource.prototype.init = function(){
             }
         }
     }
+
+    // Check if children node widget needs his dropdowns to be flipped up
+    for (var k = _this.$formRow.length - 1; k >= 0; k--) {
+        if(_this.$formRow[k].className.indexOf('children-nodes-widget') >= 0){
+            _this.childrenNodeWidgetFlip(k);
+            break;
+        }
+    }
+};
+
+NodeEditSource.prototype.initEvents = function() {
+    var _this = this;
+
     Rozier.$window.off('keydown', $.proxy(_this.onInputKeyDown, _this));
     Rozier.$window.on('keydown', $.proxy(_this.onInputKeyDown, _this));
     Rozier.$window.off('keyup', $.proxy(_this.onInputKeyUp, _this));
@@ -120,13 +133,33 @@ NodeEditSource.prototype.init = function(){
     _this.$input.off('focusout', $.proxy(_this.inputFocusOut, _this));
     _this.$input.on('focusout', $.proxy(_this.inputFocusOut, _this));
 
-    // Check if children node widget needs his dropdowns to be flipped up
-    for (var k = _this.$formRow.length - 1; k >= 0; k--) {
-        if(_this.$formRow[k].className.indexOf('children-nodes-widget') >= 0){
-            _this.childrenNodeWidgetFlip(k);
-            break;
-        }
-    }
+    _this.$form.off('submit');
+    _this.$form.on('submit', $.proxy(_this.onFormSubmit, _this));
+};
+
+NodeEditSource.prototype.onFormSubmit = function(event) {
+    var _this = this;
+
+    Rozier.lazyload.canvasLoader.show();
+
+    $.ajax({
+        url: _this.$form.attr('action'),
+        type: 'post',
+        data: _this.$form.serialize(),
+    })
+    .done(function() {
+        console.log("Saved node-source with success.");
+    })
+    .fail(function() {
+        console.log("Error during save.");
+    })
+    .always(function() {
+        Rozier.lazyload.canvasLoader.hide();
+        Rozier.getMessages();
+        Rozier.refreshAllNodeTrees();
+    });
+
+    return false;
 };
 
 NodeEditSource.prototype.onInputKeyDown = function(event) {

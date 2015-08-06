@@ -141,7 +141,6 @@ Rozier.bindMainTrees = function () {
     _this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');
     _this.$mainTreeElementName.off('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
     _this.$mainTreeElementName.on('contextmenu', $.proxy(_this.maintreeElementNameRightClick, _this));
-
 };
 
 
@@ -251,7 +250,6 @@ Rozier.refreshAllNodeTrees = function (translationId) {
      * Children node fields widgets;
      */
     if(_this.lazyload.childrenNodesFields.treeAvailable()) {
-
         for (var i = _this.lazyload.childrenNodesFields.$nodeTrees.length - 1; i >= 0; i--) {
             var $nodeTree = $(_this.lazyload.childrenNodesFields.$nodeTrees[i]);
             _this.lazyload.childrenNodesFields.refreshNodeTree($nodeTree);
