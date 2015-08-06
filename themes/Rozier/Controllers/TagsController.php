@@ -86,9 +86,7 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         if (null === $translationId) {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $translation = $this->getService('defaultTranslation');
         } else {
             $translation = $this->getService('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
@@ -205,9 +203,7 @@ class TagsController extends RozierApp
 
         $tag = new Tag();
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         if ($tag !== null &&
             $translation !== null) {
@@ -259,9 +255,7 @@ class TagsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         $tag = $this->getService('em')
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
@@ -322,9 +316,7 @@ class TagsController extends RozierApp
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                 ->findOneBy(['id' => (int) $translationId]);
         } else {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $translation = $this->getService('defaultTranslation');
         }
 
         if (null !== $tag) {
@@ -399,9 +391,7 @@ class TagsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         if ($translationId !== null) {
             $translation = $this->getService('em')
@@ -475,9 +465,7 @@ class TagsController extends RozierApp
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if (null !== $tag) {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $translation = $this->getService('defaultTranslation');
 
             $this->assignation['tag'] = $tag;
 

@@ -47,6 +47,10 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container['defaultTranslation'] = function ($c) {
+            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                           ->findDefault();
+        };
         /**
          * This service have to be called once a controller has
          * been matched! Never before.
@@ -60,7 +64,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['translator'] = function ($c) {
-            $c['stopwatch']->start('initTranslations');
+            $c['stopwatch']->start('initTranslator');
 
             $translator = new Translator(
                 $c['translator.locale'],
@@ -103,7 +107,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
                 }
             }
 
-            $c['stopwatch']->stop('initTranslations');
+            $c['stopwatch']->stop('initTranslator');
 
             return $translator;
         };

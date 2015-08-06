@@ -70,9 +70,7 @@ class NodeTreeWidget extends AbstractWidget
         $this->translation = $translation;
 
         if ($this->translation === null) {
-            $this->translation = $this->getController()->getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                 ->findDefault();
+            $this->translation = $this->getController()->getService('defaultTranslation');
         }
 
         $this->availableTranslations = $this->getController()->getService('em')

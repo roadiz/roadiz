@@ -301,22 +301,24 @@ class Kernel implements ServiceProviderInterface
          * Register Themes dependency injection
          */
         if (!$this->isInstallMode()) {
+            $this->container['stopwatch']->start('backendDependencyInjection');
             // Register back-end security scheme
             $beClass = $this->container['backendClass'];
             $beClass::setupDependencyInjection($this->container);
+            $this->container['stopwatch']->stop('backendDependencyInjection');
 
             /*
              * Set default locale
              */
-            $translation = $this->container['em']
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $this->container['stopwatch']->start('setRequestLocale');
+            $translation = $this->container['defaultTranslation'];
 
             if ($translation !== null) {
                 $shortLocale = $translation->getLocale();
                 $this->container['request']->setLocale($shortLocale);
                 \Locale::setDefault($shortLocale);
             }
+            $this->container['stopwatch']->stop('setRequestLocale');
         }
 
 

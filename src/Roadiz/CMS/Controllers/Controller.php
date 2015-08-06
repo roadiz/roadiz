@@ -243,7 +243,7 @@ abstract class Controller
                 throw new NoTranslationAvailableException();
             }
         } else {
-            $translation = $repository->findDefault();
+            $translation = $this->container['defaultTranslation'];
         }
         $request->setLocale($translation->getLocale());
         return $translation;

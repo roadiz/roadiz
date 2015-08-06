@@ -55,9 +55,7 @@ class NewslettersUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         try {
             $existingNewsletter = $this->getService('em')

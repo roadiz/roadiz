@@ -62,9 +62,7 @@ class NodesTagsController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         if (null !== $translation) {
             $source = $this->getService('em')
