@@ -44,6 +44,8 @@
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>
 
+                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('customFormsDuplicatePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-duplicate"></i></a>
+
                                 <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('customFormsExportPage', { customFormId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-download"></i>
                                 </a>

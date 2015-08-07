@@ -6228,6 +6228,10 @@
           <source>impossible.duplicate.custom.form.%name%</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.duplicate">
+          <source>customForm.duplicate</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

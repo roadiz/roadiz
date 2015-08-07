@@ -5391,8 +5391,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%" approved="yes">
           <source>duplicated.newsletter.%name%</source>
-          <target xml:lang="en">Newsletter “%name%” duplicated.</target>
-      </trans-unit>
+          <target xml:lang="en">Newsletter “%name%” has been duplicated.</target>
+      <alt-trans><target xml:lang="en">Newsletter “%name%” duplicated.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%" approved="yes">
           <source>impossible.duplicate.newsletter.%name%</source>
           <target xml:lang="en">Impossible to duplicate newsletter “%name%”</target>
@@ -6104,6 +6104,18 @@
           <source>no_valid_class_found</source>
           <target xml:lang="en">No valid class found!</target>
       <alt-trans><target xml:lang="en">No valid class available!</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%" approved="yes">
+          <source>duplicated.custom.form.%name%</source>
+          <target xml:lang="en">Custom form “%name%” has been duplicated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.custom.form.%name%" approved="yes">
+          <source>impossible.duplicate.custom.form.%name%</source>
+          <target xml:lang="en">Impossible to duplicate custom form “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.duplicate" approved="yes">
+          <source>customForm.duplicate</source>
+          <target xml:lang="en">Duplicate</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
