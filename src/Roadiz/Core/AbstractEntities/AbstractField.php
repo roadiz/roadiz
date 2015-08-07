@@ -240,7 +240,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
-    private $id;
+    protected $id;
     /**
      * {@inheritdoc}
      */

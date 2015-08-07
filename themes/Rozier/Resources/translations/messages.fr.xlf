@@ -6104,6 +6104,18 @@
           <source>no_valid_class_found</source>
           <target xml:lang="fr" state="translated">Aucune classe valide disponible !</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%" approved="yes">
+          <source>duplicated.custom.form.%name%</source>
+          <target xml:lang="fr">Le formulaire personnalisé «%name%» a bien été dupliqué</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.custom.form.%name%" approved="yes">
+          <source>impossible.duplicate.custom.form.%name%</source>
+          <target xml:lang="fr">Impossible de dupliquer le formulaire personnalisé «%name%»</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.duplicate" approved="yes">
+          <source>customForm.duplicate</source>
+          <target xml:lang="fr">Dupliquer</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

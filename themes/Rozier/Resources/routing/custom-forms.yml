@@ -13,3 +13,7 @@ customFormsExportPage:
     path:     /export/{customFormId}
     requirements: { customFormId : "[0-9]+" }
     defaults: { _controller: Themes\Rozier\Controllers\CustomFormsUtilsController::exportAction }
+customFormsDuplicatePage:
+    path:     /duplicate/{customFormId}
+    requirements: { customFormId : "[0-9]+" }
+    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsUtilsController::duplicateAction }
