@@ -71,7 +71,6 @@ class CustomFormsUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $customFormId)
     {
-        $this->publishConfirmMessage($request, "OMG");
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         try {
@@ -81,6 +80,11 @@ class CustomFormsUtilsController extends RozierApp
             $newCustomForm = clone $existingCustomForm;
 
             $em = $this->getService("em");
+
+            foreach ($newCustomForm->getFields() as $field) {
+                $em->persist($field);
+            }
+
             $em->persist($newCustomForm);
             $em->flush();
 

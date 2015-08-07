@@ -374,7 +374,9 @@ class CustomForm extends AbstractDateTimed
     public function __clone()
     {
         $this->setId(null);
-        $this->name .= "-" . uniqid();
+        $suffix =  "-" . uniqid();
+        $this->name .= $suffix;
+        $this->displayName .= $suffix;
         $this->customFormAnswers = new ArrayCollection();
         $fields = $this->getFields();
         if ($fields !== null) {

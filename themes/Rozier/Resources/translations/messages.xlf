@@ -6220,6 +6220,14 @@
           <source>no_valid_class_found</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%">
+          <source>duplicated.custom.form.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.custom.form.%name%">
+          <source>impossible.duplicate.custom.form.%name%</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
