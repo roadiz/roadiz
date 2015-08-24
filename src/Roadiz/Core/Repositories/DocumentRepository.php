@@ -596,7 +596,7 @@ class DocumentRepository extends EntityRepository
          * Get unsed documents
          */
         $qb->select('d')
-            ->leftJoin('d.nodesSourcesByFields','ns')
+            ->leftJoin('d.nodesSourcesByFields', 'ns')
             ->having('COUNT(ns.id) = 0')
             ->groupBy('d.id');
 
