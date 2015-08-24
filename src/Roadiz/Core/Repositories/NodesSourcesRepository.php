@@ -623,25 +623,19 @@ class NodesSourcesRepository extends EntityRepository
     public function findByLatestUpdated($maxResult = 5)
     {
         $query = $this->createQueryBuilder('ns');
-        $query->select('ns, max(log.datetime) as max_date');
+        $query->select('ns');
+        $query->addSelect('log');
         $query->innerJoin('ns.logs', 'log');
-        $query->groupBy('ns.id');
         $query->setMaxResults($maxResult);
-        $query->orderBy('max_date', 'DESC');
+        $query->orderBy('log.datetime', 'DESC');
+        /*
+         * Cannot groupBy for the moment due to an incompatibility with Doctrine
+         * http://www.doctrine-project.org/jira/browse/DDC-2917
+         */
         $query = $query->getQuery();
 
         try {
-            /*
-             * We need to extract only the first value
-             * as the second is 'max_date'
-             */
-            $ns = [];
-            $results = $query->getResult();
-            foreach ($results as $group) {
-                $ns[] = $group[0];
-            }
-
-            return $ns;
+            return $query->getResult();
         } catch (NoResultException $e) {
             return null;
         }
