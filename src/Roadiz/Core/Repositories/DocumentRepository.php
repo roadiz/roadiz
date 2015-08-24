@@ -572,15 +572,42 @@ class DocumentRepository extends EntityRepository
      */
     public function findAllUnused()
     {
-        $query = $this->_em->createQuery('
-            SELECT d FROM RZ\Roadiz\Core\Entities\Document d
-            WHERE SIZE(d.nodesSourcesByFields) < 1
-            AND d.id NOT IN (
-                SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
-                WHERE s.type = :type AND
-                s.value IS NOT NULL
-            )
-        ')->setParameter('type', AbstractField::DOCUMENTS_T);
+        $qb = $this->createQueryBuilder('d');
+        $qb2 = $this->_em->createQueryBuilder();
+
+        /*
+         * Get documents used by settings
+         */
+        $qb2->select('s.value')
+            ->from('RZ\Roadiz\Core\Entities\Setting', 's')
+            ->where($qb2->expr()->eq('s.type', ':type'))
+            ->andWhere($qb2->expr()->isNotNull('s.value'))
+            ->andWhere($qb2->expr()->neq('s.value', $qb->expr()->literal('')))
+            ->setParameter('type', AbstractField::DOCUMENTS_T);
+
+        $subQuery = $qb2->getQuery();
+        $array = $subQuery->getScalarResult();
+        $idArray = [];
+        foreach ($array as $key => $value) {
+            $idArray[] = (int) $value['value'];
+        }
+
+        /*
+         * Get unsed documents
+         */
+        $qb->select('d')
+            ->leftJoin('d.nodesSourcesByFields','ns')
+            ->having('COUNT(ns.id) = 0')
+            ->groupBy('d.id');
+
+        if (count($idArray) > 0) {
+            $qb->where($qb->expr()->notIn(
+                'd.id',
+                $idArray
+            ));
+        }
+
+        $query = $qb->getQuery();
 
         try {
             return $query->getResult();
