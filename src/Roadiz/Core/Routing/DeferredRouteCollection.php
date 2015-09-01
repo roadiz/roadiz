@@ -49,4 +49,3 @@ class DeferredRouteCollection extends RouteCollection
 
     }
 }
-

@@ -42,9 +42,14 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 class Subscriber extends AbstractHuman
 {
     /**
+     * @ORM\Column(type="string", name="unsubscribe_token", nullable=true)
+     */
+    protected $unsubscribeToken = '';
+
+    /**
      * @ORM\Column(type="boolean")
      */
-    private $hardBounced = false;
+    protected $hardBounced = false;
     /**
      * @return boolean
      */
@@ -67,7 +72,7 @@ class Subscriber extends AbstractHuman
     /**
      * @ORM\Column(type="boolean")
      */
-    private $softBounced = false;
+    protected $softBounced = false;
     /**
      * @return boolean
      */
@@ -116,5 +121,29 @@ class Subscriber extends AbstractHuman
     {
         $this->newsletterSubscriber = $newsletterSubscriber;
         return $this->newsletterSubscriber;
+    }
+
+    /**
+     * Gets the value of unsubscribeToken.
+     *
+     * @return mixed
+     */
+    public function getUnsubscribeToken()
+    {
+        return $this->unsubscribeToken;
+    }
+
+    /**
+     * Sets the value of unsubscribeToken.
+     *
+     * @param mixed $unsubscribeToken the unsubscribe token
+     *
+     * @return self
+     */
+    public function setUnsubscribeToken($unsubscribeToken)
+    {
+        $this->unsubscribeToken = $unsubscribeToken;
+
+        return $this;
     }
 }

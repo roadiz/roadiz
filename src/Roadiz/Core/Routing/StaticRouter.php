@@ -45,7 +45,8 @@ class StaticRouter extends Router
         DeferredRouteCollection $routeCollection,
         array $options = [],
         RequestContext $context = null,
-        LoggerInterface $logger = null) {
+        LoggerInterface $logger = null
+    ) {
 
         $this->routeCollection = $routeCollection;
         $this->logger = $logger;
