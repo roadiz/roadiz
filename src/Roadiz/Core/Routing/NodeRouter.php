@@ -24,78 +24,77 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file MixedUrlMatcher.php
+ * @file NodeRouter.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-/**
- * Extends compiled UrlMatcher to add a dynamic routing feature which deals
- * with NodesSources URL.
- */
-class MixedUrlMatcher extends \GlobalUrlMatcher
+class NodeRouter extends Router
 {
-    protected $dynamicUrlMatcher;
-    protected $installMode;
+    protected $em;
     protected $stopwatch;
 
-    /**
-     * @param RequestContext  $context
-     * @param DynamicUrlMatcher $dynamicUrlMatcher
-     * @param boolean $installMode
-     */
     public function __construct(
-        RequestContext $context,
-        DynamicUrlMatcher $dynamicUrlMatcher,
-        $installMode = false,
+        EntityManager $em,
+        array $options = [],
+        RequestContext $context = null,
+        LoggerInterface $logger = null,
         Stopwatch $stopwatch = null
     ) {
-        $this->context = $context;
-        $this->dynamicUrlMatcher = $dynamicUrlMatcher;
-        $this->installMode = $installMode;
+        $this->em = $em;
         $this->stopwatch = $stopwatch;
+        $this->logger = $logger;
+        $this->context = $context ?: new RequestContext();
+        $this->setOptions($options);
     }
+
     /**
      * {@inheritdoc}
      */
-    public function match($pathinfo)
+    public function getRouteCollection()
     {
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->start('matchingRoute');
-        }
+        return null;
+    }
 
-        $matched = null;
-        if (true === $this->installMode) {
-            // No node controller matching in install mode
-            $matched = parent::match($pathinfo);
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    {
+        return "";
+    }
 
-        try {
-            /*
-             * Try STATIC routes
-             */
-            $matched = parent::match($pathinfo);
-
-        } catch (ResourceNotFoundException $e) {
-            /*
-             * Try dynamic routes
-             */
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->start('matchingDynamicRoute');
-            }
-            $matched = $this->dynamicUrlMatcher->match($pathinfo);
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->stop('matchingDynamicRoute');
-            }
+    /**
+     * Gets the UrlMatcher instance associated with this Router.
+     *
+     * @return UrlMatcherInterface A UrlMatcherInterface instance
+     */
+    public function getMatcher()
+    {
+        if (null !== $this->matcher) {
+            return $this->matcher;
         }
+        return $this->matcher = new NodeUrlMatcher(
+            $this->context,
+            $this->em,
+            $this->stopwatch
+        );
+    }
 
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('matchingRoute');
-        }
-        return $matched;
+    /**
+     * No generator for a node router.
+     *
+     * @return null
+     */
+    public function getGenerator()
+    {
+        return null;
     }
 }

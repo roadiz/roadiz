@@ -36,7 +36,6 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
-use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
@@ -321,7 +320,6 @@ class Kernel implements ServiceProviderInterface
             $this->container['stopwatch']->stop('setRequestLocale');
         }
 
-
         $this->container['stopwatch']->start('themeDependencyInjection');
         // Register front-end security scheme
         foreach ($this->container['frontendThemes'] as $theme) {
@@ -338,11 +336,6 @@ class Kernel implements ServiceProviderInterface
      */
     public function initEvents()
     {
-        if ($this->isDebug() || RouteCollectionSubscriber::needToDumpUrlTools()) {
-            $this->container['dispatcher']->addSubscriber(
-                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
-            );
-        }
         $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         /*
          * Events

@@ -24,33 +24,41 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RoutingCacheClearer.php
+ * @file StaticRouter.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Utils\Clearer;
+namespace RZ\Roadiz\Core\Routing;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Router;
 
 /**
- * RoutingCacheClearer.
+ * Router class which takes a DeferredRouteCollection instead of YamlLoader.
  */
-class RoutingCacheClearer extends Clearer
+class StaticRouter extends Router
 {
-    public function clear()
+    protected $routeCollection;
+
+    public function __construct(
+        DeferredRouteCollection $routeCollection,
+        array $options = [],
+        RequestContext $context = null,
+        LoggerInterface $logger = null) {
+
+        $this->routeCollection = $routeCollection;
+        $this->logger = $logger;
+        $this->context = $context ?: new RequestContext();
+        $this->setOptions($options);
+    }
+
+    public function getRouteCollection()
     {
-        $fs = new Filesystem();
-        $finder = new Finder();
-
-        if ($fs->exists(ROADIZ_ROOT . '/cache/routing')) {
-            $finder->in(ROADIZ_ROOT . '/cache/routing');
-            $fs->remove($finder);
-
-            $this->output .= 'Compiled route collections have been purged.'.PHP_EOL;
-
-            return true;
+        if (null === $this->collection) {
+            $this->routeCollection->parseResources();
+            $this->collection = $this->routeCollection;
         }
-
-        return false;
+        return $this->collection;
     }
 }

@@ -176,9 +176,11 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     protected function parseFromUrlAlias(&$tokens)
     {
-        $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-        if ($identifier != '') {
-            return $this->repository->findOneWithAliasAndAvailableTranslation($identifier);
+        if (count($tokens) > 0) {
+            $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
+            if ($identifier != '') {
+                return $this->repository->findOneWithAliasAndAvailableTranslation($identifier);
+            }
         }
         return null;
     }

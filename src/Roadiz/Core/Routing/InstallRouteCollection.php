@@ -29,26 +29,33 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use Symfony\Component\Routing\RouteCollection;
+use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
 
-/**
- *
- */
-class InstallRouteCollection extends RouteCollection
+class InstallRouteCollection extends DeferredRouteCollection
 {
+    protected $installClassname;
+
     /**
-     *
      * @param string $installClassname
      */
     public function __construct($installClassname)
     {
-        if (class_exists($installClassname)) {
-            $collection = $installClassname::getRoutes();
+        $this->installClassname = $installClassname;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseResources()
+    {
+        if (class_exists($this->installClassname)) {
+            $classname = $this->installClassname;
+            $collection = $classname::getRoutes();
             if (null !== $collection) {
                 $this->addCollection($collection);
             }
         } else {
-            throw new \RuntimeException("Install class “" . $installClassname . "” does not exist.", 1);
+            throw new \RuntimeException("Install class “" . $this->installClassname . "” does not exist.", 1);
         }
     }
 }
