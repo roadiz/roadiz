@@ -24,61 +24,29 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RouteCollectionSubscriber.php
+ * @file DeferredRouteCollection.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Events;
+namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Routing\RouteDumper;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Events for route collection generations.
+ * Extends Symfony2 RouteCollection to add parseResources()
+ * method to defer route loading.
  */
-class RouteCollectionSubscriber implements EventSubscriberInterface
+class DeferredRouteCollection extends RouteCollection
 {
-    protected $routeDumper;
-    protected $stopwatch;
-
-    public function __construct(RouteCollection $routeCollection, Stopwatch $stopwatch)
-    {
-        $this->stopwatch = $stopwatch;
-        $this->routeDumper = new RouteDumper(
-            $routeCollection,
-            ROADIZ_ROOT . '/gen-src/Compiled'
-        );
-    }
-
     /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
-    {
-        // https://github.com/symfony/HttpKernel/blob/master/EventListener/RouterListener.php
-        // Use 33 priority
-        return [
-            KernelEvents::REQUEST => ['onKernelRequest', 33],
-        ];
-    }
-
-    public static function needToDumpUrlTools()
-    {
-        $fs = new Filesystem();
-        return (!$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php'));
-    }
-
-    /**
+     * Method to parse and get routes from external resources
+     * in deferred way to your collection.
      *
+     * Useful if you want to use a caching system on your Router
+     * and parse Yaml file only when cache is not available.
      */
-    public function onKernelRequest()
+    public function parseResources()
     {
-        $this->stopwatch->start('dumpUrlUtils');
-        $this->routeDumper->dump();
-        $this->stopwatch->stop('dumpUrlUtils');
+
     }
 }
+

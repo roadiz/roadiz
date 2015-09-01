@@ -24,37 +24,77 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file InstallRouteCollection.php
+ * @file NodeRouter.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
+use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Stopwatch\Stopwatch;
 
-class InstallRouteCollection extends DeferredRouteCollection
+class NodeRouter extends Router
 {
-    protected $installClassname;
+    protected $em;
+    protected $stopwatch;
 
-    /**
-     * @param string $installClassname
-     */
-    public function __construct($installClassname)
-    {
-        $this->installClassname = $installClassname;
+    public function __construct(
+        EntityManager $em,
+        array $options = [],
+        RequestContext $context = null,
+        LoggerInterface $logger = null,
+        Stopwatch $stopwatch = null
+    ) {
+        $this->em = $em;
+        $this->stopwatch = $stopwatch;
+        $this->logger = $logger;
+        $this->context = $context ?: new RequestContext();
+        $this->setOptions($options);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parseResources()
+    public function getRouteCollection()
     {
-        if (class_exists($this->installClassname)) {
-            $collection = ($this->installClassname)::getRoutes();
-            if (null !== $collection) {
-                $this->addCollection($collection);
-            }
-        } else {
-            throw new \RuntimeException("Install class “" . $this->installClassname . "” does not exist.", 1);
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    {
+        return "";
+    }
+
+    /**
+     * Gets the UrlMatcher instance associated with this Router.
+     *
+     * @return UrlMatcherInterface A UrlMatcherInterface instance
+     */
+    public function getMatcher()
+    {
+        if (null !== $this->matcher) {
+            return $this->matcher;
         }
+        return $this->matcher = new NodeUrlMatcher(
+            $this->context,
+            $this->em,
+            $this->stopwatch
+        );
+    }
+
+    /**
+     * No generator for a node router.
+     *
+     * @return null
+     */
+    public function getGenerator()
+    {
+        return null;
     }
 }

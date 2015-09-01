@@ -32,19 +32,17 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
 use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
-use RZ\Roadiz\Core\Routing\MixedUrlMatcher;
-use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
+use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
+use RZ\Roadiz\Core\Routing\StaticRouter;
+use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Http\HttpUtils;
 
@@ -78,77 +76,82 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $container['httpKernel'] = function ($c) {
             return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
         };
-        $container['urlMatcher'] = function ($c) {
-            if (RouteCollectionSubscriber::needToDumpUrlTools()) {
-                return new UrlMatcher($c['routeCollection'], $c['requestContext']);
-            } else {
-                return new MixedUrlMatcher(
-                    $c['requestContext'],
-                    $c['dynamicUrlMatcher'],
-                    (boolean) $c['config']['install'],
-                    $c['stopwatch']
-                );
-            }
+        $container['router'] = function ($c) {
+            $router = new ChainRouter(
+                $c['logger']
+            );
+            $router->add($c['staticRouter']);
+            $router->add($c['nodeRouter']);
+
+            return $router;
         };
-        $container['dynamicUrlMatcher'] = function ($c) {
-            return new NodeUrlMatcher(
+        $container['staticRouter'] = function ($c) {
+            return new StaticRouter(
+                $c['routeCollection'],
+                [
+                    'cache_dir' => (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/routing',
+                    'debug' => (boolean) $c['config']['devMode'],
+                    'generator_cache_class' => 'StaticUrlGenerator',
+                    'matcher_cache_class' => 'StaticUrlMatcher',
+                ],
                 $c['requestContext'],
+                $c['logger']
+            );
+        };
+        $container['nodeRouter'] = function ($c) {
+            return new NodeRouter(
                 $c['em'],
+                [
+                    'cache_dir' => (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/routing',
+                    'debug' => (boolean) $c['config']['devMode'],
+                    'generator_cache_class' => 'NodeUrlGenerator',
+                    'matcher_cache_class' => 'NodeUrlMatcher',
+                ],
+                $c['requestContext'],
+                $c['logger'],
                 $c['stopwatch']
             );
         };
-        $container['urlGeneratorClass'] = function ($c) {
-            return '\\GlobalUrlGenerator';
-        };
         $container['urlGenerator'] = function ($c) {
-            if (RouteCollectionSubscriber::needToDumpUrlTools()) {
-                return new UrlGenerator($c['routeCollection'], $c['requestContext'], $c['logger']);
-            } else {
-                $className = $c['urlGeneratorClass'];
-                return new $className($c['requestContext']);
-            }
+            return $c['staticRouter']->getGenerator();
         };
         $container['httpUtils'] = function ($c) {
-            return new HttpUtils($c['urlGenerator'], $c['urlMatcher']);
+            return new HttpUtils($c['urlGenerator'], $c['router']);
         };
 
         $container['routeListener'] = function ($c) {
             return new TimedRouteListener(
-                $c['urlMatcher'],
+                $c['router'],
                 $c['requestContext'],
                 null,
                 $c['requestStack'],
                 $c['stopwatch']
             );
         };
-
-        if (isset($container['config']['install']) &&
-            true === $container['config']['install']) {
-            /*
-             * Get Install routes
-             */
-            $container['routeCollection'] = function ($c) {
+        $container['routeCollection'] = function ($c) {
+            if (isset($c['config']['install']) &&
+                true === $c['config']['install']) {
+                /*
+                 * Get Install routes
+                 */
                 $installClassname = Kernel::INSTALL_CLASSNAME;
                 $installClassname::setupDependencyInjection($c);
 
                 return new InstallRouteCollection($installClassname);
-            };
-        } else {
-            /*
-             * Get App routes
-             */
-            $container['routeCollection'] = function ($c) {
-                $c['stopwatch']->start('routeCollection');
+            } else {
+                /*
+                 * Get App routes
+                 */
                 $rCollection = new RoadizRouteCollection(
                     $c['backendClass'],
                     $c['frontendThemes'],
-                    SettingsBag::get('static_domain_name')
+                    SettingsBag::get('static_domain_name'),
+                    $c['stopwatch']
                 );
-                $c['stopwatch']->stop('routeCollection');
 
                 return $rCollection;
-            };
-        }
+            }
+        };
 
         return $container;
     }
