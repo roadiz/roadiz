@@ -18,6 +18,10 @@ nodesEditPage:
     path:     /edit/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::editAction }
     requirements: { nodeId : "[0-9]+" }
+nodesTranstypePage:
+    path:     /edit/{nodeId}/transtype
+    defaults: { _controller: Themes\Rozier\Controllers\Nodes\TranstypeController::transtypeAction }
+    requirements: { nodeId : "[0-9]+" }
 nodesEditSourcePage:
     path:     /edit/{nodeId}/source/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesSourcesController::editSourceAction }

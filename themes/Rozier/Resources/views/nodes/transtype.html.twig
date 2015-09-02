@@ -1,0 +1,28 @@
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global">
+
+    <header class="content-header header-node header-node-transtype">
+        <h1 class="content-title">{% trans %}transtype.a.node{% endtrans %}</h1>
+        {% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+    </header>
+
+    {% if form %}
+    <article class="content content-no-action-menu">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            <p class="uk-alert uk-alert-info">{% trans %}transtype_will_copy_data_from_fields_existing_in_both_types_not_others{% endtrans %}</p>
+
+            {{ form_widget(form) }}
+            {% spaceless %}
+            <button class="uk-button uk-button-primary" type="submit">
+                <i class="uk-icon-bolt"></i> {% trans %}transtype.node{% endtrans %}
+            </button>
+            {% endspaceless %}
+        </form>
+    </article>
+    {% endif %}
+</section>
+{% endblock %}
