@@ -53,13 +53,13 @@ class SolrCommand extends Command
              ->setDescription('Manage Solr search engine index')
              ->addOption(
                  'reset',
-                 null,
+                 'R',
                  InputOption::VALUE_NONE,
                  'Reset Solr search engine index'
              )
              ->addOption(
                  'reindex',
-                 null,
+                 'r',
                  InputOption::VALUE_NONE,
                  'Reindex every NodesSources into Solr'
              );

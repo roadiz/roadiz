@@ -68,31 +68,31 @@ class NodesCommand extends Command
              )
              ->addOption(
                  'create',
-                 null,
+                 'c',
                  InputOption::VALUE_NONE,
                  'Create a node'
              )
              ->addOption(
                  'delete',
-                 null,
+                 'D',
                  InputOption::VALUE_NONE,
                  'Delete requested node'
              )
              ->addOption(
                  'update',
-                 null,
+                 'u',
                  InputOption::VALUE_NONE,
                  'Update requested node'
              )
              ->addOption(
                  'hide',
-                 null,
+                 'H',
                  InputOption::VALUE_NONE,
                  'Hide requested node'
              )
              ->addOption(
                  'show',
-                 null,
+                 's',
                  InputOption::VALUE_NONE,
                  'Show requested node'
              );

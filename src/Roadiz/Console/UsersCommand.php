@@ -61,19 +61,19 @@ class UsersCommand extends Command
              )
              ->addOption(
                  'create',
-                 null,
+                 'c',
                  InputOption::VALUE_NONE,
                  'Create a new user'
              )
              ->addOption(
                  'delete',
-                 null,
+                 'D',
                  InputOption::VALUE_NONE,
                  'Delete an user'
              )
              ->addOption(
                  'add-roles',
-                 null,
+                 'R',
                  InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                  'Add roles to a user'
              )
@@ -91,13 +91,13 @@ class UsersCommand extends Command
              )
              ->addOption(
                  'disable',
-                 null,
+                 'd',
                  InputOption::VALUE_NONE,
                  'Disable user'
              )
              ->addOption(
                  'enable',
-                 null,
+                 'e',
                  InputOption::VALUE_NONE,
                  'Enable user'
              );

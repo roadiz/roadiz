@@ -54,19 +54,19 @@ class CacheCommand extends Command
              ->setDescription('Manage cache and compiled data.')
              ->addOption(
                  'infos',
-                 null,
+                 'i',
                  InputOption::VALUE_NONE,
                  'Get informations about caches.'
              )
              ->addOption(
                  'clear-doctrine',
-                 null,
+                 'd',
                  InputOption::VALUE_NONE,
                  'Clear doctrine metadata cache and entities proxies.'
              )
              ->addOption(
                  'clear-routes',
-                 null,
+                 'r',
                  InputOption::VALUE_NONE,
                  'Clear compiled route collections.'
              )
@@ -78,25 +78,25 @@ class CacheCommand extends Command
              )
              ->addOption(
                  'clear-templates',
-                 null,
+                 't',
                  InputOption::VALUE_NONE,
                  'Clear compiled Twig templates.'
              )
              ->addOption(
                  'clear-translations',
-                 null,
+                 'l',
                  InputOption::VALUE_NONE,
                  'Clear compiled translations catalogues.'
              )
              ->addOption(
                  'clear-nsurls',
-                 null,
+                 'u',
                  InputOption::VALUE_NONE,
                  'Clear cached node-sources Urls.'
              )
              ->addOption(
                  'clear-all',
-                 null,
+                 'a',
                  InputOption::VALUE_NONE,
                  'Clear all caches (Doctrine, proxies, routes, templates, assets and translations)'
              )
