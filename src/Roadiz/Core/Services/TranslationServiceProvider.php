@@ -56,7 +56,8 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
          * been matched! Never before.
          */
         $container['translator.locale'] = function ($c) {
-            if ($c['session']->get('_locale') != "") {
+            if (null !== $c['session']->get('_locale') &&
+                $c['session']->get('_locale') != "") {
                 return $c['session']->get('_locale');
             } else {
                 return $c['request']->getLocale();

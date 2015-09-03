@@ -113,7 +113,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return $c['staticRouter']->getGenerator();
         };
         $container['httpUtils'] = function ($c) {
-            return new HttpUtils($c['urlGenerator'], $c['router']);
+            return new HttpUtils($c['router'], $c['router']);
         };
 
         $container['routeListener'] = function ($c) {
@@ -149,7 +149,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 return $rCollection;
             }
         };
-
         return $container;
     }
 }

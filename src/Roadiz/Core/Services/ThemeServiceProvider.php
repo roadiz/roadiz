@@ -40,7 +40,12 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['backendClass'] = function ($c) {
+
+            $c['stopwatch']->start('getBackendTheme');
+
             $theme = $c['backendTheme'];
+
+            $c['stopwatch']->stop('getBackendTheme');
 
             if ($theme !== null) {
                 return $theme->getClassName();
@@ -53,8 +58,7 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 
             if (isset($c['config']['install']) &&
                 false === $c['config']['install']) {
-                return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                 ->findAvailableBackend();
+                return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableBackend();
             } else {
                 return null;
             }
@@ -64,19 +68,23 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 
             if (isset($c['config']['install']) &&
                 false === $c['config']['install']) {
-                $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                                  ->findAvailableFrontends();
+                $c['stopwatch']->start('getFrontendThemes');
 
+                $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableFrontends();
 
                 if (count($themes) < 1) {
                     $defaultTheme = new Theme();
                     $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
                     $defaultTheme->setAvailable(true);
 
+                    $c['stopwatch']->stop('getFrontendThemes');
+
                     return [
-                        $defaultTheme
+                        $defaultTheme,
                     ];
                 } else {
+                    $c['stopwatch']->stop('getFrontendThemes');
+
                     return $themes;
                 }
             } else {
