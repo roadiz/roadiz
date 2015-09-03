@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 
-
 class TranstypeController extends RozierApp
 {
     public function transtypeAction(Request $request, $nodeId)
@@ -114,7 +113,6 @@ class TranstypeController extends RozierApp
         }
 
         foreach ($node->getNodeSources() as $existingSource) {
-
             $sourceClass = "GeneratedNodeSources\\" . $nodeType->getSourceEntityClassName();
             $source = new $sourceClass($node, $existingSource->getTranslation());
             $source->setTitle($existingSource->getTitle());

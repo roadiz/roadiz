@@ -33,7 +33,6 @@ use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
