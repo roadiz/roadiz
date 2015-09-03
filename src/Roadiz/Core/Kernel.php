@@ -112,7 +112,7 @@ class Kernel implements ServiceProviderInterface
         };
 
         $container['debugPanel'] = function ($c) {
-            return new DebugPanel($c['twig.environment'], $c['stopwatch']);
+            return new DebugPanel($c);
         };
 
         $container['dispatcher'] = function ($c) {
@@ -336,16 +336,17 @@ class Kernel implements ServiceProviderInterface
      */
     public function initEvents()
     {
-        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         /*
          * Events
          */
+        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             [
                 $this,
                 'onKernelRequest',
-            ]
+            ],
+            60
         );
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,

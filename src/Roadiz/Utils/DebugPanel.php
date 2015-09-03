@@ -29,23 +29,21 @@
  */
 namespace RZ\Roadiz\Utils;
 
+use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Event subscriber which append a debug console after any HTML output.
  */
 class DebugPanel implements EventSubscriberInterface
 {
-    protected $twig = null;
-    protected $stopwatch = null;
+    protected $container = null;
 
-    public function __construct(\Twig_Environment $twig, Stopwatch $stopwatch)
+    public function __construct(Container $container)
     {
-        $this->stopwatch = $stopwatch;
-        $this->twig = $twig;
+        $this->container = $container;
     }
 
     /**
@@ -65,12 +63,12 @@ class DebugPanel implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($this->stopwatch->isStarted('controllerHandling')) {
-            $this->stopwatch->stop('controllerHandling');
+        if ($this->container['stopwatch']->isStarted('controllerHandling')) {
+            $this->container['stopwatch']->stop('controllerHandling');
         }
 
-        if ($this->stopwatch->isStarted('twigRender')) {
-            $this->stopwatch->stop('twigRender');
+        if ($this->container['stopwatch']->isStarted('twigRender')) {
+            $this->container['stopwatch']->stop('twigRender');
         }
 
         $response = $event->getResponse();
@@ -91,8 +89,8 @@ class DebugPanel implements EventSubscriberInterface
      */
     public function onKernelRequest()
     {
-        $this->stopwatch->start('requestHandling');
-        $this->stopwatch->start('matchingRoute');
+        $this->container['stopwatch']->start('requestHandling');
+        $this->container['stopwatch']->start('matchingRoute');
     }
     /**
      * Stop request-handling stopwatch event and
@@ -100,19 +98,19 @@ class DebugPanel implements EventSubscriberInterface
      */
     public function onControllerMatched()
     {
-        $this->stopwatch->stop('matchingRoute');
-        $this->stopwatch->stop('requestHandling');
-        $this->stopwatch->start('controllerHandling');
+        $this->container['stopwatch']->stop('matchingRoute');
+        $this->container['stopwatch']->stop('requestHandling');
+        $this->container['stopwatch']->start('controllerHandling');
     }
 
     private function getDebugView()
     {
-        $this->stopwatch->stopSection('runtime');
+        $this->container['stopwatch']->stopSection('runtime');
 
         $assignation = [
-            'stopwatch' => $this->stopwatch,
+            'stopwatch' => $this->container['stopwatch'],
         ];
 
-        return $this->twig->render('debug-panel.html.twig', $assignation);
+        return $this->container['twig.environment']->render('debug-panel.html.twig', $assignation);
     }
 }
