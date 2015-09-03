@@ -4041,7 +4041,7 @@
 
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409">
-        <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
+        <source><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></source>
         <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410">
@@ -6230,6 +6230,26 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.duplicate">
           <source>customForm.duplicate</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype">
+          <source>transtype</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.node">
+          <source>transtype.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype_will_copy_data_from_fields_existing_in_both_types_not_others">
+          <source>transtype_will_copy_data_from_fields_existing_in_both_types_not_others</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.a.node">
+          <source>transtype.a.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%node%.transtyped_to.%type%">
+          <source>%node%.transtyped_to.%type%</source>
           <target></target>
       </trans-unit>
     </body>

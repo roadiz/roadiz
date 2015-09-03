@@ -4040,7 +4040,7 @@
       </trans-unit>
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409" approved="yes">
-        <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
+        <source><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></source>
         <target xml:lang="fr"><![CDATA[{0} Aucun objet|{1} <span>1</span> objet|]1,Inf] <span>%count%</span> objets]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410" approved="yes">
@@ -6115,6 +6115,26 @@
       <trans-unit xml:space="preserve" id="customForm.duplicate" approved="yes">
           <source>customForm.duplicate</source>
           <target xml:lang="fr">Dupliquer</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype">
+          <source>transtype</source>
+          <target xml:lang="fr" state="translated">Transtyper</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.node">
+          <source>transtype.node</source>
+          <target xml:lang="fr" state="translated">Transtyper le nœud</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype_will_copy_data_from_fields_existing_in_both_types_not_others">
+          <source>transtype_will_copy_data_from_fields_existing_in_both_types_not_others</source>
+          <target xml:lang="fr" state="translated">L’opération de transtypage essaiera de préserver les contenus similaires en les copiant d’un type à l’autre. Le reste sera supprimé.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.a.node">
+          <source>transtype.a.node</source>
+          <target xml:lang="fr" state="translated">Transtyper un nœud</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%node%.transtyped_to.%type%">
+          <source>%node%.transtyped_to.%type%</source>
+          <target xml:lang="fr" state="translated">Le nœud « %node% » a été transtypé en %type%.</target>
       </trans-unit>
     </body>
   </file>

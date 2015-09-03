@@ -67,6 +67,12 @@ class TranstypeController extends RozierApp
             $this->doTranstype($node, $newNodeType);
             $this->getService('em')->refresh($node);
 
+            $msg = $this->getTranslator()->trans('%node%.transtyped_to.%type%', [
+                '%node%' => $node->getNodeName(),
+                '%type%' => $newNodeType->getName(),
+            ]);
+            $this->publishConfirmMessage($request, $msg);
+
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',
                 ['nodeId' => $node->getId(), 'translationId' => $node->getNodeSources()->first()->getTranslation()->getId()]

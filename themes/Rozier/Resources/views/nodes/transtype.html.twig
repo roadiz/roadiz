@@ -10,17 +10,15 @@
     </header>
 
     {% if form %}
-    <article class="content content-no-action-menu">
+    <article class="content content-delete content-node-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-            <p class="uk-alert uk-alert-info">{% trans %}transtype_will_copy_data_from_fields_existing_in_both_types_not_others{% endtrans %}</p>
-
             {{ form_widget(form) }}
-            {% spaceless %}
-            <button class="uk-button uk-button-primary" type="submit">
-                <i class="uk-icon-bolt"></i> {% trans %}transtype.node{% endtrans %}
-            </button>
-            {% endspaceless %}
+            <fieldset data-uk-margin>
+                <legend class="delete-legend">{% trans %}transtype_will_copy_data_from_fields_existing_in_both_types_not_others{% endtrans %}</legend>
+                <a href="{{ path('nodesEditPage', {nodeId: node.getId}) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-bolt"></i> {% trans %}transtype.node{% endtrans %}</button>
+            </fieldset>
         </form>
     </article>
     {% endif %}
