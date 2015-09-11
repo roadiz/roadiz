@@ -97,7 +97,11 @@
         <div class="tree-contextualmenu nodetree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click',boundary:'#root-tree'}">
             <a href="#" class="tree-contextualmenu-button uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></a>
             <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
-                <div class="vertical-nodetype"><p class="text">{{ type }}</p></div>
+                <div class="vertical-nodetype">
+                    <p class="text">{{ type }}</p>
+                    {% if node.Locked %} <i class="uk-icon-rz-lock"></i>{% endif %}
+                    {% if not node.Visible %} <i class="uk-icon-eye-slash"></i>{% endif %}
+                </div>
                 <div class="uk-nav uk-nav-dropdown">
                     <p class="add-child">
                         <a title="{{ "add.node.%name%.child"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
@@ -121,7 +125,7 @@
                                 <i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
                             </a>
                         </p>
-                        {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES_DELETE')) %}
+                        {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
                         <p>
                             <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
                                 <i class="uk-icon-rz-trash-o"></i> {% trans %}delete.node{% endtrans %}
