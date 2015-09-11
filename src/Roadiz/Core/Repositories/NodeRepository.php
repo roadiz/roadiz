@@ -1186,4 +1186,61 @@ class NodeRepository extends EntityRepository
         } while (!empty($in));
         return $theOffprings;
     }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     *
+     * @return array
+     */
+    public function findAllParentsIdByNode(Node $node)
+    {
+        $theParents = [];
+        $parent = $node->getParent();
+
+        do {
+            $theParents[] = $parent->getId();
+        } while (null !== $parent = $parent->getParent());
+
+        return $theParents;
+    }
+
+    /**
+     * Find all node’ parents with criteria and ordering.
+     *
+     * @param  Node                      $node
+     * @param  array                     $criteria
+     * @param  array|null                $orderBy
+     * @param  integer                   $limit
+     * @param  integer                   $offset
+     * @param  Translation|null          $translation
+     * @param  AuthorizationChecker|null $authorizationChecker
+     *
+     * @return array|null
+     */
+    public function findAllNodeParentsBy(
+        Node $node,
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null
+    ) {
+
+        $parentsId = $this->findAllParentsIdByNode($node);
+        if (count($parentsId) > 0) {
+            $criteria['id'] = $parentsId;
+        } else {
+            return null;
+        }
+
+        return $this->findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            $translation,
+            $authorizationChecker
+        );
+    }
 }
