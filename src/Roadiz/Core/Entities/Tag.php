@@ -69,9 +69,22 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function setTagName($tagName)
     {
+        $this->dirtyTagName = $tagName;
         $this->tagName = StringHandler::slugify($tagName);
 
         return $this;
+    }
+
+    private $dirtyTagName;
+
+    /**
+     * Gets the value of dirtyTagName.
+     *
+     * @return string
+     */
+    public function getDirtyTagName()
+    {
+        return $this->dirtyTagName;
     }
 
     /**

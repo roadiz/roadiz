@@ -39,7 +39,6 @@ class UniqueTagNameValidator extends ConstraintValidator
     {
         $value = StringHandler::slugify($value);
 
-
         /*
          * If value is already the node name
          * do nothing.
