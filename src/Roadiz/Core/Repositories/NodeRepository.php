@@ -1197,9 +1197,10 @@ class NodeRepository extends EntityRepository
         $theParents = [];
         $parent = $node->getParent();
 
-        do {
+        while (null !== $parent) {
             $theParents[] = $parent->getId();
-        } while (null !== $parent = $parent->getParent());
+            $parent = $parent->getParent();
+        }
 
         return $theParents;
     }
