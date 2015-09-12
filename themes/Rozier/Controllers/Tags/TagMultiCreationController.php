@@ -106,6 +106,7 @@ class TagMultiCreationController extends RozierApp
     {
         $builder = $this->createFormBuilder()
                         ->add('names', 'textarea', [
+                            'label' => 'tags.names',
                             'attr' => [
                                 'placeholder' => 'write.every.tags.names.comma.separated',
                             ],

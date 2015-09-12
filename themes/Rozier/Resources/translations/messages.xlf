@@ -6252,6 +6252,27 @@
           <source>%node%.transtyped_to.%type%</source>
           <target></target>
       </trans-unit>
+      <!-- Tag multiple children creation -->
+      <trans-unit xml:space="preserve" id="add_all">
+          <source>add_all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.multiple.tags">
+          <source>add.multiple.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated">
+          <source>write.every.tags.names.comma.separated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.names">
+          <source>tags.names</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.tags">
+          <source>add.tags</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

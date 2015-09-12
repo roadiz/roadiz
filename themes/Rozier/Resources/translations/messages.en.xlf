@@ -6136,6 +6136,27 @@
           <source>%node%.transtyped_to.%type%</source>
           <target xml:lang="en" state="translated">“%node%” has been transtyped to %type%.</target>
       </trans-unit>
+      <!-- Tag multiple children creation -->
+      <trans-unit xml:space="preserve" id="add_all">
+          <source>add_all</source>
+          <target xml:lang="en" state="translated">Add all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.multiple.tags">
+          <source>add.multiple.tags</source>
+          <target xml:lang="en" state="translated">Add multiple tags</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated">
+          <source>write.every.tags.names.comma.separated</source>
+          <target xml:lang="en" state="translated">Write every tags names you want to create comma separated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.names">
+          <source>tags.names</source>
+          <target xml:lang="en" state="translated">Tags names</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.tags">
+          <source>add.tags</source>
+          <target xml:lang="en" state="translated">Add tags</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
