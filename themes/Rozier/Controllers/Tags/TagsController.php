@@ -28,7 +28,7 @@
  * @file TagsController.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Tags;
 
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
@@ -482,7 +482,6 @@ class TagsController extends RozierApp
 
             $this->assignation['filters'] = $listManager->getAssignation();
             $this->assignation['nodes'] = $listManager->getEntities();
-
             $this->assignation['translation'] = $translation;
 
             return $this->render('tags/nodes.html.twig', $this->assignation);

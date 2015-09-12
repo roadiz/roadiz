@@ -29,7 +29,7 @@
  * @author Thomas Aufresne
  */
 
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Tags;
 
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 use Themes\Rozier\RozierApp;

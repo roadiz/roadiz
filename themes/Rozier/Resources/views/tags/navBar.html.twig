@@ -15,5 +15,8 @@
 		<li class="{% if current == 'nodes' %}uk-active{% endif %}" >
 			<a href="{{ path('tagsEditNodesPage', { tagId: tag.getId }) }}">{% trans %}tag.nodes{% endtrans %}</a>
 		</li>
+        <li class="{% if current == 'add-multiple' %}uk-active{% endif %}" >
+            <a href="{{ path('tagsAddMultipleChildPage', { parentTagId: tag.getId }) }}">{% trans %}add.tags{% endtrans %}</a>
+        </li>
 	</ul>
 </nav>
