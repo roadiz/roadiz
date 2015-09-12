@@ -88,11 +88,9 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             ) {
                 $memcached = new \Memcached();
                 $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
-                if (!empty($cacheConfig['port'])) {
-                    $memcached->connect($host, $cacheConfig['port']);
-                } else {
-                    $memcached->connect($host);
-                }
+                $port = !empty($cacheConfig['port']) ? $cacheConfig['port'] : 11211;
+                $memcached->addServer($host, $port);
+
                 $cache = new \Doctrine\Common\Cache\MemcachedCache();
                 $cache->setMemcached($memcached);
             } elseif (extension_loaded('redis') &&
