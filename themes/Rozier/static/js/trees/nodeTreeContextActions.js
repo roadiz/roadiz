@@ -51,7 +51,8 @@ NodeTreeContextActions.prototype.onClick = function(event) {
         Rozier.lazyload.canvasLoader.show();
 
         if(typeof statusName !== "undefined" &&
-            typeof statusValue !== "undefined") {
+            typeof statusValue !== "undefined" &&
+            !isNaN(statusValue)) {
             /*
              * Change node status
              */
