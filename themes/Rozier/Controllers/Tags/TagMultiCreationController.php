@@ -33,13 +33,9 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Themes\Rozier\Forms\TagTranslationType;
-use Themes\Rozier\Forms\TagType;
 use Themes\Rozier\RozierApp;
-use Themes\Rozier\Widgets\TagTreeWidget;
 
 /**
  * {@inheritdoc}
@@ -52,7 +48,7 @@ class TagMultiCreationController extends RozierApp
 
         $translation = $this->getService('defaultTranslation');
         $parentTag = $this->getService('em')
-                          ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parentTagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parentTagId);
 
         if (null !== $parentTag) {
             $form = $this->buildAddForm();
@@ -105,15 +101,15 @@ class TagMultiCreationController extends RozierApp
     private function buildAddForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('names', 'textarea', [
-                            'label' => 'tags.names',
-                            'attr' => [
-                                'placeholder' => 'write.every.tags.names.comma.separated',
-                            ],
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('names', 'textarea', [
+                'label' => 'tags.names',
+                'attr' => [
+                    'placeholder' => 'write.every.tags.names.comma.separated',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         return $builder->getForm();
     }
