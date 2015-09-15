@@ -38,7 +38,10 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
+use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
+use RZ\Roadiz\Utils\Console\Helper\TemplatingHelper;
+use RZ\Roadiz\Utils\Console\Helper\TranslatorHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -167,6 +170,9 @@ class Kernel implements ServiceProviderInterface
             'question' => new QuestionHelper(),
             'solr' => new SolrHelper($this->container['solr']),
             'ns-cache' => new CacheProviderHelper($this->container['nodesSourcesUrlCacheProvider']),
+            'mailer' => new MailerHelper($this->container['mailer']),
+            'templating' => new TemplatingHelper($this->container['twig.environment']),
+            'translator' => new TranslatorHelper($this->container['translator']),
         ]);
         $application->setHelperSet($helperSet);
 

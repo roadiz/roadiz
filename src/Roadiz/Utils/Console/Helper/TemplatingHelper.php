@@ -24,35 +24,23 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file CacheProviderHelper.php
+ * @file TemplatingHelper.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Doctrine\Common\Cache\CacheProvider;
 use Symfony\Component\Console\Helper\Helper;
 
 /**
- * CacheProviderHelper.
+ * TemplatingHelper.
  */
-class CacheProviderHelper extends Helper
+class TemplatingHelper extends Helper
 {
-    private $cacheProvider;
+    protected $templating;
 
-    /**
-     * @param CacheProvider|null $solr
-     */
-    public function __construct(CacheProvider $cacheProvider)
+    public function __construct(\Twig_Environment $templating)
     {
-        $this->cacheProvider = $cacheProvider;
-    }
-
-    /**
-     * @return CacheProvider
-     */
-    public function getCacheProvider()
-    {
-        return $this->cacheProvider;
+        $this->templating = $templating;
     }
 
     /**
@@ -60,6 +48,18 @@ class CacheProviderHelper extends Helper
      */
     public function getName()
     {
-        return 'cacheProvider';
+        return 'templating';
+    }
+
+    /**
+     * Wraps Twig_Environment render method.
+     *
+     * @param  string $templatePath
+     * @param  array  $assignation
+     * @return string
+     */
+    public function render($templatePath, $assignation = [])
+    {
+        return $this->templating->render($templatePath, $assignation);
     }
 }

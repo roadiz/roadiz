@@ -24,35 +24,23 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file CacheProviderHelper.php
+ * @file MailerHelper.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Doctrine\Common\Cache\CacheProvider;
 use Symfony\Component\Console\Helper\Helper;
 
 /**
- * CacheProviderHelper.
+ * MailerHelper.
  */
-class CacheProviderHelper extends Helper
+class MailerHelper extends Helper
 {
-    private $cacheProvider;
+    protected $mailer;
 
-    /**
-     * @param CacheProvider|null $solr
-     */
-    public function __construct(CacheProvider $cacheProvider)
+    public function __construct(\Swift_Mailer $mailer)
     {
-        $this->cacheProvider = $cacheProvider;
-    }
-
-    /**
-     * @return CacheProvider
-     */
-    public function getCacheProvider()
-    {
-        return $this->cacheProvider;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -60,6 +48,27 @@ class CacheProviderHelper extends Helper
      */
     public function getName()
     {
-        return 'cacheProvider';
+        return 'mailer';
+    }
+
+    /**
+     * Send the given Message like it would be sent in a mail client.
+     *
+     * All recipients (with the exception of Bcc) will be able to see the other
+     * recipients this message was sent to.
+     *
+     * Recipient/sender data will be retrieved from the Message object.
+     *
+     * The return value is the number of recipients who were accepted for
+     * delivery.
+     *
+     * @param Swift_Mime_Message $message
+     * @param array              $failedRecipients An array of failures by-reference
+     *
+     * @return int
+     */
+    public function send(\Swift_Mime_Message $message, &$failedRecipients = null)
+    {
+        return $this->mailer->send($message, $failedRecipients);
     }
 }

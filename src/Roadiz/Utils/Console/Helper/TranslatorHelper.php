@@ -24,35 +24,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file CacheProviderHelper.php
+ * @file TranslatorHelper.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Doctrine\Common\Cache\CacheProvider;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Console\Helper\Helper;
 
 /**
- * CacheProviderHelper.
+ * TranslatorHelper.
  */
-class CacheProviderHelper extends Helper
+class TranslatorHelper extends Helper
 {
-    private $cacheProvider;
+    protected $translator;
 
-    /**
-     * @param CacheProvider|null $solr
-     */
-    public function __construct(CacheProvider $cacheProvider)
+    public function __construct(Translator $translator)
     {
-        $this->cacheProvider = $cacheProvider;
-    }
-
-    /**
-     * @return CacheProvider
-     */
-    public function getCacheProvider()
-    {
-        return $this->cacheProvider;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,6 +49,42 @@ class CacheProviderHelper extends Helper
      */
     public function getName()
     {
-        return 'cacheProvider';
+        return 'translator';
+    }
+
+    /**
+     * Translates the given message.
+     *
+     * Wraps the Translator trans method.
+     *
+     * @param  string $id
+     * @param  array  $parameters
+     * @param  null   $domain
+     * @param  null   $locale
+     *
+     * @return string
+     */
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    {
+        return $this->translator->trans($id, $parameters, $domain, $locale);
+    }
+
+
+    /**
+     * Translates the given message.
+     *
+     * Wraps the Translator transChoice method.
+     *
+     * @param  string $id
+     * @param  int    $number
+     * @param  array  $parameters
+     * @param  null   $domain
+     * @param  null   $locale
+     *
+     * @return string
+     */
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
+    {
+        return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 }
