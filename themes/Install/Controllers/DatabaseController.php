@@ -32,6 +32,7 @@ namespace Themes\Install\Controllers;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use Symfony\Component\Yaml\Yaml;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -178,11 +179,7 @@ class DatabaseController extends InstallApp
         /*
          * files to import
          */
-        $yaml = new YamlConfiguration(ROADIZ_ROOT . "/themes/Install/config.yml");
-
-        $yaml->load();
-
-        $installData = $yaml->getConfiguration();
+        $installData = Yaml::parse(ROADIZ_ROOT . "/themes/Install/config.yml");
         $this->assignation['imports'] = $installData['importFiles'];
 
         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);

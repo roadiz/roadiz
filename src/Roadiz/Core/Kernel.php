@@ -119,15 +119,28 @@ class Kernel implements ServiceProviderInterface
             return new EventDispatcher();
         };
 
-        /*
-         * Load configuration
-         */
-        $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
-
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
-        if (isset($container['config']['serviceProviders'])) {
-            foreach ($container['config']['serviceProviders'] as $providerClass) {
+
+        $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\BackofficeServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\DoctrineServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\EntityApiServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\FormServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\MailerServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\RoutingServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\SecurityServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\SolrServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\ThemeServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\TranslationServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\TwigServiceProvider());
+
+        /*
+         * Load additional service providers
+         */
+        if (isset($container['config']['additionalServiceProviders'])) {
+            foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
                 $container->register(new $providerClass());
             }
         }
@@ -170,6 +183,20 @@ class Kernel implements ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
         $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
         $application->add(new \RZ\Roadiz\Console\ThemeInstallCommand);
+
+        /*
+         * Register user defined Commands
+         * Add them in your config.yml
+         */
+        if (isset($this->container['config']['additionalCommands'])) {
+            foreach ($this->container['config']['additionalCommands'] as $commandClass) {
+                if (class_exists($commandClass)) {
+                    $application->add(new $commandClass);
+                } else {
+                    throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
+                }
+            }
+        }
 
         // Use default Doctrine commands
         ConsoleRunner::addCommands($application);

@@ -30,10 +30,10 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Finder\Finder;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Theme selector form field type.
@@ -59,16 +59,13 @@ class ThemesType extends AbstractType
             ->files()
             ->name('config.yml')
             ->depth(1)
-            ->in(ROADIZ_ROOT.'/themes');
+            ->in(ROADIZ_ROOT . '/themes');
 
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
-            $yaml = new YamlConfiguration($file->getPathname());
-            $yaml->load();
+            $data = Yaml::parse($file->getPathname());
 
-            $data = $yaml->getConfiguration();
-
-            $classname = '\Themes\\'.$data['themeDir']."\\".$data['themeDir']."App";
+            $classname = '\Themes\\' . $data['themeDir'] . "\\" . $data['themeDir'] . "App";
 
             /*
              * Parsed file is not or does not contain any PHP Class
@@ -99,7 +96,7 @@ class ThemesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices' => $this->choices
+            'choices' => $this->choices,
         ]);
     }
 

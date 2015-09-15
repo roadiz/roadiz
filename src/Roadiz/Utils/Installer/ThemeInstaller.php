@@ -31,10 +31,10 @@ namespace RZ\Roadiz\Utils\Installer;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Console\Tools\Fixtures;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * ThemeController
@@ -52,13 +52,7 @@ class ThemeInstaller
     {
         $array = explode('\\', $classname);
         $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
-        $yaml = new YamlConfiguration($file);
-
-        $yaml->load();
-
-        $data = $yaml->getConfiguration();
-
-        return $data;
+        return Yaml::parse($file);
     }
 
     /**
@@ -79,7 +73,7 @@ class ThemeInstaller
         $fix->installTheme($data);
 
         $installedLanguage = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                                ->findAll();
+            ->findAll();
 
         foreach ($installedLanguage as $key => $locale) {
             $installedLanguage[$key] = $locale->getLocale();
