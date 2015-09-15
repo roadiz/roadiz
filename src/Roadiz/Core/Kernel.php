@@ -120,17 +120,16 @@ class Kernel implements ServiceProviderInterface
         };
 
         /*
-         * Load service providers from conf/services.yml
-         *
-         * Edit this file if you want to customize Roadiz services
-         * behaviour.
+         * Load configuration
          */
+        $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
+
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
-        $yaml = new Parser();
-        $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yml'));
-        foreach ($services['providers'] as $providerClass) {
-            $container->register(new $providerClass());
+        if (isset($container['config']['serviceProviders'])) {
+            foreach ($container['config']['serviceProviders'] as $providerClass) {
+                $container->register(new $providerClass());
+            }
         }
         $container['stopwatch']->stop('registerServices');
     }

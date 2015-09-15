@@ -98,6 +98,11 @@ class Configuration
             "security" => [
                 "secret" => "change#this#secret#very#important",
             ],
+            'cacheDriver' => [
+                'type' => null,
+                'host' => null,
+                'port' => null,
+            ],
             "mailer" => [
                 "type" => "",
                 "host" => "localhost",
@@ -111,6 +116,21 @@ class Configuration
                 "src/Roadiz/Core/AbstractEntities",
                 "gen-src/GeneratedNodeSources",
             ],
+            'rememberMeLifetime' => 2592000,
+            'serviceProviders' => [
+                '\RZ\Roadiz\Core\Services\BackofficeServiceProvider',
+                '\RZ\Roadiz\Core\Services\DoctrineServiceProvider',
+                '\RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider',
+                '\RZ\Roadiz\Core\Services\EntityApiServiceProvider',
+                '\RZ\Roadiz\Core\Services\FormServiceProvider',
+                '\RZ\Roadiz\Core\Services\MailerServiceProvider',
+                '\RZ\Roadiz\Core\Services\RoutingServiceProvider',
+                '\RZ\Roadiz\Core\Services\SecurityServiceProvider',
+                '\RZ\Roadiz\Core\Services\SolrServiceProvider',
+                '\RZ\Roadiz\Core\Services\ThemeServiceProvider',
+                '\RZ\Roadiz\Core\Services\TranslationServiceProvider',
+                '\RZ\Roadiz\Core\Services\TwigServiceProvider',
+            ]
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,39 +24,32 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file YamlConfigurationServiceProvider.php
+ * @file ConfigurationCacheClearer.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Utils\Clearer;
 
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
-use Pimple\Container;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
- * Register configuration services for dependency injection container.
+ * ConfigurationCacheClearer.
  */
-class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvider
+class ConfigurationCacheClearer extends Clearer
 {
-    /**
-     * @param Pimple\Container $container [description]
-     */
-    public function register(Container $container)
+    public function clear()
     {
-        parent::register($container);
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configuration = new YamlConfiguration();
+        $fs = new Filesystem();
+        $finder = new Finder();
+        $finder->in(ROADIZ_ROOT . '/cache')
+            ->files()
+            ->name('configuration.php')
+            ->name('configuration.php.meta');
 
-            if (false !== $configuration->load()) {
-                return $configuration->getConfiguration();
-            } else {
-                throw new NoYamlConfigurationFoundException();
-            }
-        };
+        $fs->remove($finder);
 
-        return $container;
+        $this->output .= 'Compiled configuration files have been deleted.' . PHP_EOL;
+
+        return true;
     }
 }

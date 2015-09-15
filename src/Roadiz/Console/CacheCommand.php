@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,55 +52,61 @@ class CacheCommand extends Command
     protected function configure()
     {
         $this->setName('cache')
-             ->setDescription('Manage cache and compiled data.')
-             ->addOption(
-                 'infos',
-                 'i',
-                 InputOption::VALUE_NONE,
-                 'Get informations about caches.'
-             )
-             ->addOption(
-                 'clear-doctrine',
-                 'd',
-                 InputOption::VALUE_NONE,
-                 'Clear doctrine metadata cache and entities proxies.'
-             )
-             ->addOption(
-                 'clear-routes',
-                 'r',
-                 InputOption::VALUE_NONE,
-                 'Clear compiled route collections.'
-             )
-             ->addOption(
-                 'clear-assets',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Clear compiled route collections'
-             )
-             ->addOption(
-                 'clear-templates',
-                 't',
-                 InputOption::VALUE_NONE,
-                 'Clear compiled Twig templates.'
-             )
-             ->addOption(
-                 'clear-translations',
-                 'l',
-                 InputOption::VALUE_NONE,
-                 'Clear compiled translations catalogues.'
-             )
-             ->addOption(
-                 'clear-nsurls',
-                 'u',
-                 InputOption::VALUE_NONE,
-                 'Clear cached node-sources Urls.'
-             )
-             ->addOption(
-                 'clear-all',
-                 'a',
-                 InputOption::VALUE_NONE,
-                 'Clear all caches (Doctrine, proxies, routes, templates, assets and translations)'
-             )
+            ->setDescription('Manage cache and compiled data.')
+            ->addOption(
+                'infos',
+                'i',
+                InputOption::VALUE_NONE,
+                'Get informations about caches.'
+            )
+            ->addOption(
+                'clear-configuration',
+                'g',
+                InputOption::VALUE_NONE,
+                'Clear compiled configuration.'
+            )
+            ->addOption(
+                'clear-doctrine',
+                'd',
+                InputOption::VALUE_NONE,
+                'Clear doctrine metadata cache and entities proxies.'
+            )
+            ->addOption(
+                'clear-routes',
+                'r',
+                InputOption::VALUE_NONE,
+                'Clear compiled route collections.'
+            )
+            ->addOption(
+                'clear-assets',
+                null,
+                InputOption::VALUE_NONE,
+                'Clear compiled route collections'
+            )
+            ->addOption(
+                'clear-templates',
+                't',
+                InputOption::VALUE_NONE,
+                'Clear compiled Twig templates.'
+            )
+            ->addOption(
+                'clear-translations',
+                'l',
+                InputOption::VALUE_NONE,
+                'Clear compiled translations catalogues.'
+            )
+            ->addOption(
+                'clear-nsurls',
+                'u',
+                InputOption::VALUE_NONE,
+                'Clear cached node-sources Urls.'
+            )
+            ->addOption(
+                'clear-all',
+                'a',
+                InputOption::VALUE_NONE,
+                'Clear all caches (Doctrine, configuration, proxies, routes, templates, assets and translations)'
+            )
         ;
     }
 
@@ -114,9 +121,11 @@ class CacheCommand extends Command
         $routingClearer = new RoutingCacheClearer();
         $templatesClearer = new TemplatesCacheClearer();
         $translationsClearer = new TranslationsCacheClearer();
+        $configurationClearer = new ConfigurationCacheClearer();
         $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
 
         $clearers = [
+            $configurationClearer,
             $assetsClearer,
             $doctrineClearer,
             $routingClearer,
@@ -132,6 +141,9 @@ class CacheCommand extends Command
             }
 
             $text .= '<info>All caches have been been purged…</info>' . PHP_EOL;
+        } elseif ($input->getOption('clear-configuration')) {
+            $configurationClearer->clear();
+            $text .= $configurationClearer->getOutput();
         } elseif ($input->getOption('clear-doctrine')) {
             $doctrineClearer->clear();
             $text .= $doctrineClearer->getOutput();
