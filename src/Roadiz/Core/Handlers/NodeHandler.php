@@ -196,6 +196,20 @@ class NodeHandler
     }
 
     /**
+     * Get nodes reversed-linked to current node for a given fieldname.
+     *
+     * @param string $fieldName Name of the node-type field
+     *
+     * @return ArrayCollection Collection of nodes
+     */
+    public function getReverseNodesFromFieldName($fieldName)
+    {
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findByReverseNodeAndFieldName($this->node, $fieldName);
+    }
+
+    /**
      * Get node source by translation.
      *
      * @param RZ\Roadiz\Core\Entities\Translation $translation
