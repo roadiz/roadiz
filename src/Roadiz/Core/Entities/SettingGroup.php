@@ -65,7 +65,7 @@ class SettingGroup extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(type="boolean", name="in_menu", nullable=false)
+     * @ORM\Column(type="boolean", name="in_menu", nullable=false, options={"default" = false})
      */
     protected $inMenu = false;
 

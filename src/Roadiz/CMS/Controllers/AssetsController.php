@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use AM\InterventionRequest\Configuration;
 use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
@@ -132,8 +131,8 @@ class AssetsController extends AppController
     public function fontFileAction($filename, $variant, $extension, $token)
     {
         $font = $this->getService('em')
-                     ->getRepository('RZ\Roadiz\Core\Entities\Font')
-                     ->findOneBy(['hash' => $filename, 'variant' => $variant]);
+            ->getRepository('RZ\Roadiz\Core\Entities\Font')
+            ->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
             $token = new CsrfToken($font->getHash() . $font->getVariant(), $token);
@@ -207,7 +206,7 @@ class AssetsController extends AppController
     public function fontFacesAction(Request $request)
     {
         $repository = $this->getService('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
+            ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(
@@ -231,7 +230,7 @@ class AssetsController extends AppController
 
         foreach ($fonts as $font) {
             $fontOutput[] = $font->getViewer()
-                                 ->getCSSFontFace($this->getService('csrfTokenManager'));
+                ->getCSSFontFace($this->getService('csrfTokenManager'));
         }
 
         $response->setContent(implode(PHP_EOL, $fontOutput));

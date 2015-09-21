@@ -88,7 +88,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
     /**
@@ -111,7 +111,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $locked = false;
     /**

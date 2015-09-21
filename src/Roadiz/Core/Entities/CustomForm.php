@@ -139,7 +139,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $open = true;
     /**

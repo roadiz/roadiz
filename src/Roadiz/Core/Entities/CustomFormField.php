@@ -109,7 +109,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @ORM\Column(name="field_required", type="boolean")
+     * @ORM\Column(name="field_required", type="boolean", nullable=false, options={"default" = false})
      */
     private $required = false;
 

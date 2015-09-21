@@ -237,7 +237,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     protected $enabled = true;
 
@@ -517,7 +517,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $expired = false;
 
@@ -565,7 +565,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $locked = false;
 
@@ -634,7 +634,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean", name="credentials_expired")
+     * @ORM\Column(type="boolean", name="credentials_expired", nullable=false, options={"default" = false})
      */
     private $credentialsExpired = false;
 

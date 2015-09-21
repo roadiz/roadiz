@@ -40,7 +40,10 @@ use RZ\Roadiz\Utils\StringHandler;
  * Documents entity represent a file on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
- * @ORM\Table(name="documents")
+ * @ORM\Table(name="documents", indexes={
+ *     @ORM\Index(columns={"raw"}),
+ *     @ORM\Index(columns={"private"})
+ * })
  */
 class Document extends AbstractDateTimed
 {
@@ -156,6 +159,18 @@ class Document extends AbstractDateTimed
 
         return $this;
     }
+
+    /**
+     * @ORM\OneToOne(targetEntity="Document")
+     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id")
+     **/
+    protected $rawDocument = null;
+
+    /**
+     * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
+     */
+    protected $raw = false;
+
 
     /**
      * Get short type name for current document Mime type.
@@ -346,7 +361,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $private = false;
     /**
@@ -492,5 +507,53 @@ class Document extends AbstractDateTimed
     public static function getPrivateFilesFolderName()
     {
         return 'files/private';
+    }
+
+    /**
+     * Gets the value of rawDocument.
+     *
+     * @return Document|null
+     */
+    public function getRawDocument()
+    {
+        return $this->rawDocument;
+    }
+
+    /**
+     * Sets the value of rawDocument.
+     *
+     * @param Document|null $rawDocument the raw document
+     *
+     * @return self
+     */
+    public function setRawDocument(Document $rawDocument = null)
+    {
+        $this->rawDocument = $rawDocument;
+
+        return $this;
+    }
+
+    /**
+     * Is document a raw one.
+     *
+     * @return boolean
+     */
+    public function isRaw()
+    {
+        return $this->raw;
+    }
+
+    /**
+     * Sets the value of raw.
+     *
+     * @param boolean $raw the raw
+     *
+     * @return self
+     */
+    public function setRaw($raw)
+    {
+        $this->raw = (boolean) $raw;
+
+        return $this;
     }
 }
