@@ -125,6 +125,7 @@ class Kernel implements ServiceProviderInterface
         $container['stopwatch']->start('registerServices');
 
         $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\AssetsServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\BackofficeServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\DoctrineServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider());

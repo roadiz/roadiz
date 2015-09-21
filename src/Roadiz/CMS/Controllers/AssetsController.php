@@ -92,14 +92,6 @@ class AssetsController extends AppController
         $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/interventionRequest.log', Logger::INFO));
 
         try {
-            $cacheDir = ROADIZ_ROOT . '/cache/rendered';
-            if (!file_exists($cacheDir)) {
-                mkdir($cacheDir);
-            }
-            $conf = new Configuration();
-            $conf->setCachePath($cacheDir);
-            $conf->setImagesPath(ROADIZ_ROOT . '/files');
-
             /*
              * Handle short url with Url rewriting
              */
@@ -109,7 +101,11 @@ class AssetsController extends AppController
             /*
              * Handle main image request
              */
-            $iRequest = new InterventionRequest($conf, $request, $log);
+            $iRequest = new InterventionRequest(
+                $this->getService('interventionRequestConfiguration'),
+                $request,
+                $log
+            );
             $iRequest->handle();
             return $iRequest->getResponse();
         } catch (\Exception $e) {

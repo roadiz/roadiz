@@ -54,6 +54,7 @@ if (php_sapi_name() == 'cli') {
             preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
         ) {
             $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
+            $ctrl->setContainer(Kernel::getInstance()->getContainer());
             $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
             $response->prepare($request);
             $response->send();

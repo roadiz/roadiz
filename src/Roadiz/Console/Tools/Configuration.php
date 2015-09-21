@@ -119,6 +119,11 @@ class Configuration
             'rememberMeLifetime' => 2592000,
             'additionalServiceProviders' => [],
             'additionalCommands' => [],
+            'assetsProcessing' => [
+                'driver' => 'gd',
+                'defaultQuality' => 90,
+                'maxPixelSize' => 1920,
+            ],
         ];
     }
 

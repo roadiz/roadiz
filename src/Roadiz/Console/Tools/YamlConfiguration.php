@@ -107,7 +107,7 @@ class YamlConfiguration extends Configuration
 
         try {
             $dumper = new Dumper();
-            $yaml = $dumper->dump($this->getConfiguration(), 2);
+            $yaml = $dumper->dump($this->getConfiguration(), 4);
 
             file_put_contents($this->path, $yaml);
             return true;

@@ -32,6 +32,8 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
@@ -69,7 +71,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->getService('em')
-                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $prefilters['folders'] = [$folder];
             $this->assignation['folder'] = $folder;
@@ -129,7 +131,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -166,6 +168,11 @@ class DocumentsController extends RozierApp
                     '%name%' => $document->getFilename(),
                 ]);
                 $this->publishConfirmMessage($request, $msg);
+
+                $this->getService("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_UPDATED,
+                    new FilterDocumentEvent($document)
+                );
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -194,7 +201,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -222,7 +229,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $document = $this->getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -232,6 +239,11 @@ class DocumentsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['documentId'] == $document->getId()) {
                 try {
+                    $this->getService("dispatcher")->dispatch(
+                        DocumentEvents::DOCUMENT_DELETED,
+                        new FilterDocumentEvent($document)
+                    );
+
                     $document->getHandler()->removeWithAssets();
                     $msg = $this->getTranslator()->trans('document.%name%.deleted', ['%name%' => $document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -268,10 +280,10 @@ class DocumentsController extends RozierApp
         $documentsIds = $request->get('documents');
 
         $documents = $this->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                          ->findBy([
-                              'id' => $documentsIds,
-                          ]);
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findBy([
+                'id' => $documentsIds,
+            ]);
 
         if ($documents !== null &&
             count($documents) > 0) {
@@ -317,10 +329,10 @@ class DocumentsController extends RozierApp
         $documentsIds = $request->get('documents');
 
         $documents = $this->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                          ->findBy([
-                              'id' => $documentsIds,
-                          ]);
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findBy([
+                'id' => $documentsIds,
+            ]);
 
         if ($documents !== null &&
             count($documents) > 0) {
@@ -365,7 +377,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->getService('em')
-                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $this->assignation['folder'] = $folder;
         }
@@ -384,6 +396,11 @@ class DocumentsController extends RozierApp
                     '%name%' => $document->getFilename(),
                 ]);
                 $this->publishConfirmMessage($request, $msg);
+
+                $this->getService("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_CREATED,
+                    new FilterDocumentEvent($document)
+                );
 
             } catch (\Exception $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
@@ -418,6 +435,11 @@ class DocumentsController extends RozierApp
             ]);
             $this->publishConfirmMessage($request, $msg);
 
+            $this->getService("dispatcher")->dispatch(
+                DocumentEvents::DOCUMENT_CREATED,
+                new FilterDocumentEvent($document)
+            );
+
         } catch (\Exception $e) {
             $this->publishErrorMessage(
                 $request,
@@ -442,7 +464,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $response = $document->getHandler()->getDownloadResponse();
@@ -465,7 +487,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->getService('em')
-                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $this->assignation['folder'] = $folder;
         }
@@ -484,6 +506,11 @@ class DocumentsController extends RozierApp
                     '%name%' => $document->getFilename(),
                 ]);
                 $this->publishConfirmMessage($request, $msg);
+
+                $this->getService("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_CREATED,
+                    new FilterDocumentEvent($document)
+                );
 
                 return new Response(
                     json_encode([
@@ -532,7 +559,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -555,12 +582,12 @@ class DocumentsController extends RozierApp
             'documentId' => $doc->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('documentId', 'hidden', [
-                            'data' => $doc->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('documentId', 'hidden', [
+                'data' => $doc->getId(),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         return $builder->getForm();
     }
@@ -573,12 +600,12 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('checksum', 'hidden', [
-                            'data' => md5(serialize($documentsIds)),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('checksum', 'hidden', [
+                'data' => md5(serialize($documentsIds)),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         return $builder->getForm();
     }
@@ -592,12 +619,12 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('checksum', 'hidden', [
-                            'data' => md5(serialize($documentsIds)),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('checksum', 'hidden', [
+                'data' => md5(serialize($documentsIds)),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         return $builder->getForm();
     }
@@ -616,18 +643,18 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('filename', 'text', [
-                            'label' => 'filename',
-                            'required' => false,
-                        ])
-                        ->add('private', 'checkbox', [
-                            'label' => 'private',
-                            'required' => false,
-                        ])
-                        ->add('newDocument', 'file', [
-                            'label' => 'overwrite.document',
-                            'required' => false,
-                        ]);
+            ->add('filename', 'text', [
+                'label' => 'filename',
+                'required' => false,
+            ])
+            ->add('private', 'checkbox', [
+                'label' => 'private',
+                'required' => false,
+            ])
+            ->add('newDocument', 'file', [
+                'label' => 'overwrite.document',
+                'required' => false,
+            ]);
 
         return $builder->getForm();
     }
@@ -638,15 +665,15 @@ class DocumentsController extends RozierApp
     private function buildUploadForm($folderId = null)
     {
         $builder = $this->getService('formFactory')
-                        ->createBuilder('form', [], [
-                            'csrf_protection' => false,
-                            'csrf_field_name' => '_token',
-                            // a unique key to help generate the secret token
-                            'intention' => static::AJAX_TOKEN_INTENTION,
-                        ])
-                        ->add('attachment', 'file', [
-                            'label' => 'choose.documents.to_upload',
-                        ]);
+            ->createBuilder('form', [], [
+                'csrf_protection' => false,
+                'csrf_field_name' => '_token',
+                // a unique key to help generate the secret token
+                'intention' => static::AJAX_TOKEN_INTENTION,
+            ])
+            ->add('attachment', 'file', [
+                'label' => 'choose.documents.to_upload',
+            ]);
 
         if (null !== $folderId &&
             $folderId > 0) {
@@ -669,13 +696,13 @@ class DocumentsController extends RozierApp
         }
 
         $builder = $this->createFormBuilder()
-                        ->add('embedId', 'text', [
-                            'label' => 'document.embedId',
-                        ])
-                        ->add('embedPlatform', 'choice', [
-                            'label' => 'document.platform',
-                            'choices' => $services,
-                        ]);
+            ->add('embedId', 'text', [
+                'label' => 'document.embedId',
+            ])
+            ->add('embedPlatform', 'choice', [
+                'label' => 'document.platform',
+                'choices' => $services,
+            ]);
 
         return $builder->getForm();
     }
@@ -688,39 +715,39 @@ class DocumentsController extends RozierApp
     private function buildLinkFoldersForm()
     {
         $builder = $this->getService('formFactory')
-                        ->createNamedBuilder('folderForm')
-                        ->add('documentsId', 'hidden', [
-                            'attr' => ['class' => 'document-id-bulk-folder'],
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('folderPaths', 'text', [
-                            'label' => false,
-                            'attr' => [
-                                'class' => 'rz-folder-autocomplete',
-                                'placeholder' => 'list.folders.to_link',
-                            ],
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('submitFolder', 'submit', [
-                            'label' => 'link.folders',
-                            'attr' => [
-                                'class' => 'uk-button uk-button-primary',
-                                'title' => 'link.folders',
-                                'data-uk-tooltip' => "{animation:true}",
-                            ],
-                        ])
-                        ->add('submitUnfolder', 'submit', [
-                            'label' => 'unlink.folders',
-                            'attr' => [
-                                'class' => 'uk-button',
-                                'title' => 'unlink.folders',
-                                'data-uk-tooltip' => "{animation:true}",
-                            ],
-                        ]);
+            ->createNamedBuilder('folderForm')
+            ->add('documentsId', 'hidden', [
+                'attr' => ['class' => 'document-id-bulk-folder'],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('folderPaths', 'text', [
+                'label' => false,
+                'attr' => [
+                    'class' => 'rz-folder-autocomplete',
+                    'placeholder' => 'list.folders.to_link',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('submitFolder', 'submit', [
+                'label' => 'link.folders',
+                'attr' => [
+                    'class' => 'uk-button uk-button-primary',
+                    'title' => 'link.folders',
+                    'data-uk-tooltip' => "{animation:true}",
+                ],
+            ])
+            ->add('submitUnfolder', 'submit', [
+                'label' => 'unlink.folders',
+                'attr' => [
+                    'class' => 'uk-button',
+                    'title' => 'unlink.folders',
+                    'data-uk-tooltip' => "{animation:true}",
+                ],
+            ]);
 
         return $builder->getForm();
     }
@@ -739,18 +766,18 @@ class DocumentsController extends RozierApp
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->getService('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                              ->findBy([
-                                  'id' => $documentsIds,
-                              ]);
+                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->findBy([
+                    'id' => $documentsIds,
+                ]);
 
             $folderPaths = explode(',', $data['folderPaths']);
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
                 $folder = $this->getService('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                               ->findOrCreateByPath($path);
+                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                    ->findOrCreateByPath($path);
 
                 /*
                  * Add each selected documents
@@ -782,18 +809,18 @@ class DocumentsController extends RozierApp
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->getService('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                              ->findBy([
-                                  'id' => $documentsIds,
-                              ]);
+                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->findBy([
+                    'id' => $documentsIds,
+                ]);
 
             $folderPaths = explode(',', $data['folderPaths']);
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
                 $folder = $this->getService('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                               ->findByPath($path);
+                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                    ->findByPath($path);
 
                 if (null !== $folder) {
                     /*
@@ -874,7 +901,7 @@ class DocumentsController extends RozierApp
                     null !== $folderId &&
                     $folderId > 0) {
                     $folder = $this->getService('em')
-                                   ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
                     $document->addFolder($folder);
                     $folder->addDocument($document);
@@ -905,7 +932,7 @@ class DocumentsController extends RozierApp
             null !== $folderId &&
             $folderId > 0) {
             $folder = $this->getService('em')
-                           ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);
@@ -1000,6 +1027,13 @@ class DocumentsController extends RozierApp
 
                 $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
 
+                if ($document->isImage()) {
+                    $this->getService("dispatcher")->dispatch(
+                        DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
+                        new FilterDocumentEvent($document)
+                    );
+                }
+
                 return $document;
             }
         }
@@ -1030,7 +1064,7 @@ class DocumentsController extends RozierApp
 
                     if (null !== $folderId && $folderId > 0) {
                         $folder = $this->getService('em')
-                                       ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
                         $document->addFolder($folder);
                         $folder->addDocument($document);
@@ -1038,6 +1072,13 @@ class DocumentsController extends RozierApp
                     }
 
                     $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+
+                    if ($document->isImage()) {
+                        $this->getService("dispatcher")->dispatch(
+                            DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
+                            new FilterDocumentEvent($document)
+                        );
+                    }
 
                     return $document;
                 } catch (\Exception $e) {
@@ -1060,11 +1101,11 @@ class DocumentsController extends RozierApp
 
         $this->assignation['orphans'] = true;
         $this->assignation['documents'] = $this->getService('em')
-                                                ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                                ->findAllUnused();
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findAllUnused();
         $this->assignation['filters'] = [
             'itemCount' => count($this->assignation['documents']),
-            'itemPerPage' => false
+            'itemPerPage' => false,
         ];
         $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
