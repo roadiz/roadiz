@@ -12,6 +12,7 @@ Rozier.$body = null;
 Rozier.windowWidth = null;
 Rozier.windowHeight = null;
 Rozier.resizeFirst = true;
+Rozier.gMapLoading = false;
 Rozier.gMapLoaded = false;
 
 Rozier.searchNodesSourcesDelay = null;

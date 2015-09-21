@@ -5228,6 +5228,10 @@
           <source>geographic.coordinates.type</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type">
+          <source>multiple.geographic.coordinates.type</source>
+          <target></target>
+      </trans-unit>
 
 
       <trans-unit xml:space="preserve" id="link.folders">

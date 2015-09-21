@@ -5161,6 +5161,10 @@
           <source>geographic.coordinates.type</source>
           <target xml:lang="fr">Coordonnées géographiques</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type" approved="yes">
+          <source>multiple.geographic.coordinates.type</source>
+          <target xml:lang="fr">Coordonnées géographiques multiples</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="link.folders" approved="yes">
           <source>link.folders</source>
           <target xml:lang="fr">Lier au(x) dossier(s)</target>
@@ -6137,25 +6141,25 @@
           <target xml:lang="fr">Le nœud « %node% » a été transtypé en %type%.</target>
       </trans-unit>
       <!-- Tag multiple children creation -->
-      <trans-unit xml:space="preserve" id="add_all">
+      <trans-unit xml:space="preserve" id="add_all" approved="yes">
           <source>add_all</source>
-          <target xml:lang="fr" state="translated">Tout ajouter</target>
+          <target xml:lang="fr">Tout ajouter</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="add.multiple.tags">
+      <trans-unit xml:space="preserve" id="add.multiple.tags" approved="yes">
           <source>add.multiple.tags</source>
-          <target xml:lang="fr" state="translated">Ajouter plusieurs étiquettes</target>
+          <target xml:lang="fr">Ajouter plusieurs étiquettes</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated">
+      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated" approved="yes">
           <source>write.every.tags.names.comma.separated</source>
-          <target xml:lang="fr" state="translated">Notez le nom de chaque étiquette à créer en les séparant par des virgules.</target>
+          <target xml:lang="fr">Notez le nom de chaque étiquette à créer en les séparant par des virgules.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="tags.names">
+      <trans-unit xml:space="preserve" id="tags.names" approved="yes">
           <source>tags.names</source>
-          <target xml:lang="fr" state="translated">Noms des étiquettes</target>
+          <target xml:lang="fr">Noms des étiquettes</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="add.tags">
+      <trans-unit xml:space="preserve" id="add.tags" approved="yes">
           <source>add.tags</source>
-          <target xml:lang="fr" state="translated">Ajouter des étiquettes</target>
+          <target xml:lang="fr">Ajouter des étiquettes</target>
       </trans-unit>
     </body>
   </file>

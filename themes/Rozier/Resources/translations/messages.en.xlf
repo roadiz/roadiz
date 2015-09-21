@@ -5161,6 +5161,10 @@
           <source>geographic.coordinates.type</source>
           <target xml:lang="en">Single geographic coordinates</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type" approved="yes">
+          <source>multiple.geographic.coordinates.type</source>
+          <target xml:lang="en">Multiple geographic coordinates</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="link.folders" approved="yes">
           <source>link.folders</source>
           <target xml:lang="en">Link to folder(s)</target>

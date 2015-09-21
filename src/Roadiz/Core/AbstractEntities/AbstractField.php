@@ -171,6 +171,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::COLOUR_T => 'colour.type',
         AbstractField::GEOTAG_T => 'geographic.coordinates.type',
         AbstractField::CUSTOM_FORMS_T => 'custom-forms.type',
+        AbstractField::MULTI_GEOTAG_T => 'multiple.geographic.coordinates.type',
     ];
     /**
      * Associates abstract field type to a Doctrine type.
@@ -196,6 +197,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::COLOUR_T => 'string',
         AbstractField::GEOTAG_T => 'string',
         AbstractField::CUSTOM_FORMS_T => null,
+        AbstractField::MULTI_GEOTAG_T => 'text',
     ];
     /**
      * Associates abstract field type to a Symfony Form type.
@@ -220,6 +222,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::CHILDREN_T => 'children_nodes',
         AbstractField::COLOUR_T => 'text',
         AbstractField::GEOTAG_T => 'text',
+        AbstractField::MULTI_GEOTAG_T => 'text',
         AbstractField::CUSTOM_FORMS_T => 'custom_forms',
     ];
 

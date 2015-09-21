@@ -64,6 +64,7 @@ module.exports = function(grunt) {
         'js/widgets/nodeTree.js',
         'js/widgets/nodeStatuses.js',
         'js/widgets/geotagField.js',
+        'js/widgets/multiGeotagField.js',
         'js/widgets/childrenNodesField.js',
         'js/widgets/markdownEditor.js',
         'js/widgets/tagAutocomplete.js',

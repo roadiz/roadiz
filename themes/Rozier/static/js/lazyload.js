@@ -219,6 +219,7 @@ Lazyload.prototype.generalBind = function() {
     new DocumentUploader(Rozier.messages.dropzone);
     _this.childrenNodesFields = new ChildrenNodesField();
     new GeotagField();
+    new MultiGeotagField();
     _this.stackNodeTrees = new StackNodeTree();
     if(isMobile.any() === null) new SaveButtons();
     new TagAutocomplete();
