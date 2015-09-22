@@ -135,6 +135,7 @@ class DocumentsController extends RozierApp
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
+            $this->assignation['rawDocument'] = $document->getRawDocument();
 
             /*
              * Handle main form

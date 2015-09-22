@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Events\SolariumSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
+use Themes\Rozier\Events\RawDocumentsSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -178,6 +179,22 @@ class RozierApp extends BackendController
         $container['dispatcher']->addSubscriber(
             new NodesSourcesUrlSubscriber($container['nodesSourcesUrlCacheProvider'])
         );
+
+        /*
+         * Add custom event subscriber to create a downscaled version for HD images.
+         */
+        if (!empty($container['config']['assetsProcessing']['maxPixelSize']) &&
+            $container['config']['assetsProcessing']['maxPixelSize'] > 0) {
+            $container['dispatcher']->addSubscriber(
+                new RawDocumentsSubscriber(
+                    $container['em'],
+                    $container['logger'],
+                    $container['config']['assetsProcessing']['driver'],
+                    $container['config']['assetsProcessing']['maxPixelSize']
+                )
+            );
+        }
+
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 
