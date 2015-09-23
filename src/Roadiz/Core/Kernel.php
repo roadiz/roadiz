@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
+use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
@@ -167,6 +168,7 @@ class Kernel implements ServiceProviderInterface
 
         $application = new Application('Roadiz Console Application', static::$cmsVersion);
         $helperSet = new HelperSet([
+            'configuration' => new ConfigurationHelper($this->container['config']),
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
             'question' => new QuestionHelper(),
@@ -190,6 +192,7 @@ class Kernel implements ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
         $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
         $application->add(new \RZ\Roadiz\Console\ThemeInstallCommand);
+        $application->add(new \RZ\Roadiz\Console\DocumentDownscaleCommand);
 
         /*
          * Register user defined Commands

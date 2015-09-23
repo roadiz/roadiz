@@ -24,50 +24,41 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RawDocumentsSubscriber.php
+ * @file ConfigurationHelper.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Events;
+namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Doctrine\ORM\EntityManager;
-use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Events\DocumentEvents;
-use RZ\Roadiz\Core\Events\FilterDocumentEvent;
-use RZ\Roadiz\Utils\Document\DownscaleImageManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Console\Helper\Helper;
 
 /**
- * Create a raw image and downscale it to a new image file for a better web usage.
+ * ConfigurationHelper.
  */
-class RawDocumentsSubscriber implements EventSubscriberInterface
+class ConfigurationHelper extends Helper
 {
-    protected $manager;
+    private $configuration;
 
     /**
-     * @param EntityManager $imageDriver
-     * @param string  $imageDriver
-     * @param integer $maxPixelSize
-     * @param string  $rawImageSuffix
+     * @param array $configuration
      */
-    public function __construct(
-        EntityManager $em,
-        LoggerInterface $logger = null,
-        $imageDriver = 'gd',
-        $maxPixelSize = 0,
-        $rawImageSuffix = ".raw"
-    ) {
-        $this->manager = new DownscaleImageManager($em, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
+    public function __construct(array $configuration)
+    {
+        $this->configuration = $configuration;
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public function getConfiguration()
     {
-        return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onDocumentImageUploaded',
-        ];
+        return $this->configuration;
     }
 
-    public function onDocumentImageUploaded(FilterDocumentEvent $event)
+    /**
+     * @return string
+     */
+    public function getName()
     {
-        $this->manager->processAndOverrideDocument($event->getDocument());
+        return 'configuration';
     }
 }
