@@ -47,7 +47,7 @@ class Subscriber extends AbstractHuman
     protected $unsubscribeToken = '';
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     protected $hardBounced = false;
     /**
@@ -70,7 +70,7 @@ class Subscriber extends AbstractHuman
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     protected $softBounced = false;
     /**

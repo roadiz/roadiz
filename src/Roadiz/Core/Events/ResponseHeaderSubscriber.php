@@ -24,51 +24,59 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesUrlSubscriber.php
+ * @file ResponseHeaderSubscriber.php
  * @author Ambroise Maupate
  */
-namespace Themes\Rozier\Events;
+namespace RZ\Roadiz\Core\Events;
 
-use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\UrlAliasEvents;
-use RZ\Roadiz\Core\Events\TranslationEvents;
+use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
- * Subscribe to Node, NodesSources and UrlAlias event to clear ns url cache.
+ * Add RZ-AuthentifiedUser and RZ-BackendUser variable to headers to enable cache varying.
  */
-class NodesSourcesUrlSubscriber implements EventSubscriberInterface
+class ResponseHeaderSubscriber implements EventSubscriberInterface
 {
-    protected $cacheProvider = null;
+    protected $authorizationChecker;
+    protected $tokenStorage;
 
-    public function __construct(CacheProvider $cacheProvider)
+    public function __construct(AuthorizationChecker $authorizationChecker = null, TokenStorage $tokenStorage = null)
     {
-        $this->cacheProvider = $cacheProvider;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->tokenStorage = $tokenStorage;
     }
-
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_CREATED => 'purgeNSUrlCache',
-            NodesSourcesEvents::NODE_SOURCE_DELETED => 'purgeNSUrlCache',
-            TranslationEvents::TRANSLATION_UPDATED => 'purgeNSUrlCache',
-            TranslationEvents::TRANSLATION_DELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_DELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_UNDELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_UPDATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_CREATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_UPDATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_DELETED => 'purgeNSUrlCache',
+            KernelEvents::RESPONSE => 'onResponse',
         ];
     }
 
-    /**
-     * Empty nodeSources Url cache
-     */
-    public function purgeNSUrlCache()
+    public function onResponse(FilterResponseEvent $event)
     {
-        $this->cacheProvider->deleteAll();
+        $response = $event->getResponse();
+
+        if (null !== $this->tokenStorage &&
+            is_object($this->tokenStorage->getToken()->getUser())) {
+            $response->headers->add([
+                'RZ-Authentified' => true,
+            ]);
+        }
+
+        if (null !== $this->authorizationChecker &&
+            $this->authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+            $response->headers->add([
+                'RZ-Backend' => true,
+            ]);
+        }
+        $response->setVary(['RZ-Authentified', 'RZ-Backend'], false);
+        $event->setResponse($response);
     }
 }

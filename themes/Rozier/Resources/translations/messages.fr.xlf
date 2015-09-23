@@ -6161,6 +6161,15 @@
           <source>add.tags</source>
           <target xml:lang="fr">Ajouter des étiquettes</target>
       </trans-unit>
+      <!-- Raw documents -->
+      <trans-unit xml:space="preserve" id="download.raw.document">
+          <source>download.raw.document</source>
+          <target xml:lang="fr" state="translated">Télécharger le document non traité</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.raw_document">
+          <source>document.raw_document</source>
+          <target xml:lang="fr" state="translated">Document non traité</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

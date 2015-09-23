@@ -24,51 +24,50 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesUrlSubscriber.php
+ * @file RawDocumentsSubscriber.php
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Events;
 
-use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\UrlAliasEvents;
-use RZ\Roadiz\Core\Events\TranslationEvents;
+use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Subscribe to Node, NodesSources and UrlAlias event to clear ns url cache.
+ * Create a raw image and downscale it to a new image file for a better web usage.
  */
-class NodesSourcesUrlSubscriber implements EventSubscriberInterface
+class RawDocumentsSubscriber implements EventSubscriberInterface
 {
-    protected $cacheProvider = null;
+    protected $manager;
 
-    public function __construct(CacheProvider $cacheProvider)
-    {
-        $this->cacheProvider = $cacheProvider;
+    /**
+     * @param EntityManager $imageDriver
+     * @param string  $imageDriver
+     * @param integer $maxPixelSize
+     * @param string  $rawImageSuffix
+     */
+    public function __construct(
+        EntityManager $em,
+        LoggerInterface $logger = null,
+        $imageDriver = 'gd',
+        $maxPixelSize = 0,
+        $rawImageSuffix = ".raw"
+    ) {
+        $this->manager = new DownscaleImageManager($em, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_CREATED => 'purgeNSUrlCache',
-            NodesSourcesEvents::NODE_SOURCE_DELETED => 'purgeNSUrlCache',
-            TranslationEvents::TRANSLATION_UPDATED => 'purgeNSUrlCache',
-            TranslationEvents::TRANSLATION_DELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_DELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_UNDELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_UPDATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_CREATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_UPDATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_DELETED => 'purgeNSUrlCache',
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onDocumentImageUploaded',
         ];
     }
 
-    /**
-     * Empty nodeSources Url cache
-     */
-    public function purgeNSUrlCache()
+    public function onDocumentImageUploaded(FilterDocumentEvent $event)
     {
-        $this->cacheProvider->deleteAll();
+        $this->manager->processAndOverrideDocument($event->getDocument());
     }
 }

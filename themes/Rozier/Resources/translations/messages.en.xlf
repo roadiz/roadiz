@@ -6161,6 +6161,15 @@
           <source>add.tags</source>
           <target xml:lang="en" state="translated">Add tags</target>
       </trans-unit>
+      <!-- Raw documents -->
+      <trans-unit xml:space="preserve" id="download.raw.document">
+          <source>download.raw.document</source>
+          <target xml:lang="en" state="translated">Download raw document</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.raw_document">
+          <source>document.raw_document</source>
+          <target xml:lang="en" state="translated">Raw document</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

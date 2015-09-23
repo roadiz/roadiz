@@ -31,6 +31,10 @@
             {% endif %}
             <dt>{% trans %}document.filepath{% endtrans %}</dt>
             <dd>{{ document.absolutePath }}</dd>
+            {% if rawDocument %}
+            <dt>{% trans %}document.raw_document{% endtrans %}</dt>
+            <dd><p>{{ rawDocument.absolutePath }}</p><p><a href="{{ path('documentsDownloadPage', { documentId: rawDocument.id}) }}" class="uk-button uk-button-small rz-no-ajax-link"><i class="uk-icon-cloud-download"></i> {% trans %}download.raw.document{% endtrans %}</a></p></dd>
+            {% endif %}
         </dl>
     </article>
 

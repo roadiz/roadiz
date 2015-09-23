@@ -144,7 +144,7 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
     /**

@@ -112,8 +112,11 @@ class NodeTreeType extends AbstractType
         }
 
         $nodeTypes = $this->controller->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                          ->findBy(['name' => $defaultValues]);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findBy(
+                ['name' => $defaultValues],
+                ['displayName' => 'ASC']
+            );
 
         $view->vars['linkedTypes'] = $nodeTypes;
     }
