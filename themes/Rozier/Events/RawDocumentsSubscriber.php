@@ -97,7 +97,6 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
     {
         if ($processImage->width() > $this->maxPixelSize ||
             $processImage->height() > $this->maxPixelSize) {
-
             // prevent possible upsizing
             $processImage->resize($this->maxPixelSize, $this->maxPixelSize, function ($constraint) {
                 $constraint->aspectRatio();
@@ -127,9 +126,8 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
              * Keeping the same document to preserve existing relationships!!
              */
             $originalDocument->setRawDocument(null);
+            $this->em->remove($formerRawDoc);
             $this->em->flush();
-
-            $formerRawDoc->getHandler()->removeWithAssets();
         }
         /*
          * We clone it to host raw document.

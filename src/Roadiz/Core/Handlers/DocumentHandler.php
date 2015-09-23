@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Handle operations with documents entities.
@@ -124,75 +125,22 @@ class DocumentHandler
      */
     public function getDownloadResponse()
     {
-        $response = new Response();
-        // Set headers
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', mime_content_type($this->document->getAbsolutePath()));
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($this->document->getAbsolutePath()) . '";');
-        $response->headers->set('Content-length', filesize($this->document->getAbsolutePath()));
-        // Send headers before outputting anything
-        $response->sendHeaders();
-        // Set content
-        $response->setContent(readfile($this->document->getAbsolutePath()));
+        $fs = new Filesystem();
+        if ($fs->exists($this->document->getAbsolutePath())) {
+            $response = new Response();
+            // Set headers
+            $response->headers->set('Cache-Control', 'private');
+            $response->headers->set('Content-type', mime_content_type($this->document->getAbsolutePath()));
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($this->document->getAbsolutePath()) . '";');
+            $response->headers->set('Content-length', filesize($this->document->getAbsolutePath()));
+            // Send headers before outputting anything
+            $response->sendHeaders();
+            // Set content
+            $response->setContent(readfile($this->document->getAbsolutePath()));
 
-        return $response;
-    }
-
-    /**
-     * Remove document assets and db row.
-     *
-     * @return boolean
-     */
-    public function removeWithAssets()
-    {
-        Kernel::getService('em')->remove($this->document);
-
-        if (file_exists($this->document->getAbsolutePath())) {
-            if (unlink($this->document->getAbsolutePath())) {
-                $this->cleanParentDirectory();
-                Kernel::getService('em')->flush();
-
-                return true;
-            } else {
-                throw new \Exception("document.cannot_delete", 1);
-            }
+            return $response;
         } else {
-            /*
-             * Only remove from DB
-             * and check directory
-             */
-            $this->cleanParentDirectory();
-            Kernel::getService('em')->flush();
-
-            return true;
+            return null;
         }
-    }
-
-    /**
-     * Remove document directory if there is no other file in it.
-     *
-     * @return boolean
-     */
-    public function cleanParentDirectory()
-    {
-        $dir = dirname($this->document->getAbsolutePath());
-
-        if (file_exists($dir)) {
-            $finder = new Finder();
-            $finder->files()->in($dir);
-
-            if (count($finder) <= 0) {
-                /*
-                 * Directory is empty
-                 */
-                if (rmdir($dir)) {
-                    return true;
-                } else {
-                    throw new \Exception("document.cannot_delete.parent_folder", 1);
-                }
-            }
-        }
-
-        return false;
     }
 }

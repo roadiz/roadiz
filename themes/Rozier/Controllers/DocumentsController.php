@@ -244,13 +244,13 @@ class DocumentsController extends RozierApp
                         DocumentEvents::DOCUMENT_DELETED,
                         new FilterDocumentEvent($document)
                     );
-
-                    $document->getHandler()->removeWithAssets();
+                    $this->getService('em')->remove($document);
+                    $this->getService('em')->flush();
                     $msg = $this->getTranslator()->trans('document.%name%.deleted', ['%name%' => $document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', ['%name%' => $document->getFilename()]);
+                    $this->getService('logger')->error($e->getMessage());
                     $this->publishErrorMessage($request, $msg);
                 }
                 /*
@@ -295,13 +295,14 @@ class DocumentsController extends RozierApp
 
             if ($form->isValid()) {
                 foreach ($documents as $document) {
-                    $document->getHandler()->removeWithAssets();
+                    $this->getService('em')->remove($document);
                     $msg = $this->getTranslator()->trans(
                         'document.%name%.deleted',
                         ['%name%' => $document->getFilename()]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 }
+                $this->getService('em')->flush();
 
                 return $this->redirect($this->generateUrl('documentsHomePage'));
             }
@@ -467,9 +468,8 @@ class DocumentsController extends RozierApp
         $document = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
-        if ($document !== null) {
-            $response = $document->getHandler()->getDownloadResponse();
-
+        if ($document !== null &&
+            null !== $response = $document->getHandler()->getDownloadResponse()) {
             return $response->send();
         } else {
             return $this->throw404();
