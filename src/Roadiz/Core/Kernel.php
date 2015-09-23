@@ -36,6 +36,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
@@ -395,6 +396,10 @@ class Kernel implements ServiceProviderInterface
             ]
         );
 
+        $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
+            $this->container['securityAuthorizationChecker'],
+            $this->container['securityTokenStorage']
+        ));
         $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
 
         /*
