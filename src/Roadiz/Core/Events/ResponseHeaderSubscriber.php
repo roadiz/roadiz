@@ -64,6 +64,7 @@ class ResponseHeaderSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
 
         if (null !== $this->tokenStorage &&
+            is_object($this->tokenStorage->getToken()) &&
             is_object($this->tokenStorage->getToken()->getUser())) {
             $response->headers->add([
                 'RZ-Authentified' => true,
