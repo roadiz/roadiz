@@ -64,20 +64,27 @@ class ResponseHeaderSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
 
         if (null !== $this->tokenStorage &&
-            is_object($this->tokenStorage->getToken()) &&
+            null !== $this->tokenStorage->getToken() &&
             is_object($this->tokenStorage->getToken()->getUser())) {
             $response->headers->add([
                 'RZ-Authentified' => true,
             ]);
+
+
+            if (null !== $this->authorizationChecker &&
+                $this->authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+                $response->headers->add([
+                    'RZ-Backend' => true,
+                ]);
+            } else {
+                $response->headers->add([
+                    'RZ-Backend' => false,
+                ]);
+            }
         }
 
-        if (null !== $this->authorizationChecker &&
-            $this->authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
-            $response->headers->add([
-                'RZ-Backend' => true,
-            ]);
-        }
         $response->setVary(['RZ-Authentified', 'RZ-Backend'], false);
+
         $event->setResponse($response);
     }
 }
