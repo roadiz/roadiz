@@ -439,6 +439,13 @@ class NodesController extends RozierApp
                     ['%name%' => $node->getNodeName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
+
+                if ($request->query->has('referer')) {
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($request->query->get('referer'));
+                }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
