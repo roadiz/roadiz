@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
+use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -187,6 +188,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         $this->container['dispatcher']->addSubscriber($this->container['firewall']);
+        $this->container['dispatcher']->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
         $this->container['dispatcher']->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $this->container['dispatcher']->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 

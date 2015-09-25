@@ -29,9 +29,9 @@
  */
 namespace RZ\Roadiz\Utils\Security;
 
-use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Doctrine\ORM\EntityManager;
-
+use RZ\Roadiz\Core\Entities\Role;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 class DoctrineRoleHierarchy extends RoleHierarchy
 {
@@ -58,7 +58,6 @@ class DoctrineRoleHierarchy extends RoleHierarchy
 
         return parent::getReachableRoles($roles);
     }
-
 
     protected function buildRoleMap()
     {
