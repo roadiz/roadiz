@@ -44,10 +44,12 @@ class YamlConfiguration extends Configuration
     protected $confCache;
 
     /**
-     * @param string  $path
+     *
+     * @param string  $cacheDir
      * @param boolean $debug
+     * @param string  $path
      */
-    public function __construct($cacheDir, $path = null, $debug = true)
+    public function __construct($cacheDir, $debug, $path = null)
     {
         $this->cacheDir = $cacheDir;
         $this->cachePath = $this->cacheDir . '/configuration.php';

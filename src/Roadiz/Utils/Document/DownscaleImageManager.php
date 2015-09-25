@@ -91,7 +91,6 @@ class DownscaleImageManager
     public function processDocumentFromExistingRaw(Document $document = null)
     {
         if (null !== $document && $this->maxPixelSize > 0) {
-
             if (null !== $document->getRawDocument()) {
                 $rawDocumentFile = $document->getRawDocument()->getAbsolutePath();
             } else {

@@ -113,7 +113,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             $cache = new ArrayCache();
         }
         if ($cache instanceof CacheProvider) {
-            $cache->setNamespace("dc2_" . md5($proxyDir) . "_"); // to avoid collisions
+            $cache->setNamespace("dc2_" . md5($proxyDir) . $c['kernel']->getEnvironment() . "_"); // to avoid collisions
         }
 
         return $cache;

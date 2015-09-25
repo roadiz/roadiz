@@ -42,10 +42,8 @@ class AssetsClearer extends Clearer
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if ($fs->exists($this->getCacheDir() . '/request') &&
-            $fs->exists($this->getCacheDir() . '/rendered')) {
-            $finder->in($this->getCacheDir() . '/request')
-                   ->in($this->getCacheDir() . '/rendered');
+        if ($fs->exists($this->getCacheDir() . '/rendered')) {
+            $finder->in($this->getCacheDir() . '/rendered');
             $fs->remove($finder);
 
             $this->output .= 'Assets cache has been purged.'.PHP_EOL;

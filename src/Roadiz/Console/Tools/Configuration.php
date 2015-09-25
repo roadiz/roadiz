@@ -98,8 +98,6 @@ class Configuration
     {
         return [
             "appNamespace" => "chooseAnUniqueNameForYourApp",
-            "install" => true,
-            "devMode" => true,
             "doctrine" => [
                 "driver" => "pdo_mysql",
                 "host" => "localhost",

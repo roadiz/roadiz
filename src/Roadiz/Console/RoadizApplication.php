@@ -36,17 +36,18 @@ use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
+use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use RZ\Roadiz\Utils\Console\Helper\TemplatingHelper;
 use RZ\Roadiz\Utils\Console\Helper\TranslatorHelper;
-use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Roadiz console application.
@@ -58,12 +59,13 @@ class RoadizApplication extends Application
     public function __construct(Kernel $kernel)
     {
         $this->kernel = $kernel;
-
         $this->kernel->boot();
         $this->kernel->container['request'] = Request::createFromGlobals();
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
+        $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
+        $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
         // Use default Doctrine commands
         ConsoleRunner::addCommands($this);
     }
@@ -115,7 +117,7 @@ class RoadizApplication extends Application
      */
     protected function getDefaultHelperSet()
     {
-        return new HelperSet(array(
+        return new HelperSet([
             new FormatterHelper(),
             new DebugFormatterHelper(),
             new ProcessHelper(),
@@ -129,6 +131,6 @@ class RoadizApplication extends Application
             'mailer' => new MailerHelper($this->kernel->container['mailer']),
             'templating' => new TemplatingHelper($this->kernel->container['twig.environment']),
             'translator' => new TranslatorHelper($this->kernel->container['translator']),
-        ));
+        ]);
     }
 }

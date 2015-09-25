@@ -1,7 +1,5 @@
 ---
 appNamespace: "chooseAnUniqueNameForYourAppSQLite"
-install: true
-devMode: true
 timezone: "Europe/Paris"
 doctrine:
     driver: "pdo_sqlite"

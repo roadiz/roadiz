@@ -48,7 +48,7 @@ class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvi
          * Inject app config
          */
         $container['config'] = function ($c) {
-            $configuration = new YamlConfiguration($c['kernel']->getCacheDir());
+            $configuration = new YamlConfiguration($c['kernel']->getCacheDir(), $c['kernel']->isDebug());
 
             if (false !== $configuration->load()) {
                 return $configuration->getConfiguration();

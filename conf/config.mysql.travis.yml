@@ -1,7 +1,5 @@
 ---
 appNamespace: "chooseAnUniqueNameForYourAppMySQL"
-install: true
-devMode: true
 timezone: "Europe/Paris"
 doctrine:
     driver: "pdo_mysql"

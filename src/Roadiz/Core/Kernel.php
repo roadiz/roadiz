@@ -64,6 +64,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public $container = null;
     protected $environment;
     protected $debug;
+    protected $preview;
     protected $booted = false;
     protected $rootDir;
     protected $name;
@@ -73,9 +74,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * @param string $environment
      * @param boolean $debug
      */
-    public function __construct($environment, $debug)
+    public function __construct($environment, $debug, $preview = false)
     {
         $this->environment = $environment;
+        $this->preview = $preview;
         $this->debug = (boolean) $debug;
         $this->rootDir = $this->getRootDir();
         $this->name = $this->getName();
@@ -249,9 +251,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * @return boolean
      */
-    public function isPreviewMode()
+    public function isPreview()
     {
-        return $this->environment == 'preview';
+        return $this->preview;
     }
 
     /**
