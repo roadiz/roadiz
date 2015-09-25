@@ -42,8 +42,8 @@ class TranslationsCacheClearer extends Clearer
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if ($fs->exists(ROADIZ_ROOT . '/cache/translations')) {
-            $finder->in(ROADIZ_ROOT . '/cache/translations');
+        if ($fs->exists($this->getCacheDir() . '/translations')) {
+            $finder->in($this->getCacheDir() . '/translations');
             $fs->remove($finder);
 
             $this->output .= 'Compiled translation catalogues have been purged.'.PHP_EOL;

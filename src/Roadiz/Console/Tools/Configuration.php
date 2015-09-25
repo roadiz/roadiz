@@ -38,14 +38,26 @@ use Doctrine\ORM\Tools\Setup;
 class Configuration
 {
     protected $configuration;
+    protected $cacheDir;
     protected $path;
 
-    public function __construct($path = null)
+    /**
+     * @param string $cacheDir
+     * @param string $path
+     */
+    public function __construct($cacheDir, $path = null)
     {
+        $this->cacheDir = $cacheDir;
+
         if ($path === null) {
             $path = ROADIZ_ROOT . '/conf/config.json';
         }
         $this->path = $path;
+    }
+
+    public function getCacheDir()
+    {
+        return $this->cacheDir;
     }
 
     /**

@@ -147,11 +147,11 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
 
             if (null !== $c['em'] &&
-                true === $c['config']['devMode']) {
+                true === $c['kernel']->isDevMode()) {
                 $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz-debug.log', Logger::DEBUG));
             }
             if (null !== $c['em'] &&
-                true !== $c['config']['install']) {
+                false === $c['kernel']->isInstallMode()) {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
                     $c['securityTokenStorage'],

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,42 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file index.php
+ * @file KernelHelper.php
  * @author Ambroise Maupate
  */
+namespace RZ\Roadiz\Utils\Console\Helper;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\HttpFoundation\Request;
+use Symfony\Component\Console\Helper\Helper;
 
-if (version_compare(phpversion(), '5.4.3', '<')) {
-    echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 5.4.3';
-    exit(1);
-}
-
-define('ROADIZ_ROOT', dirname(__FILE__));
-// Include Composer Autoload (relative to project root).
-require("vendor/autoload.php");
-
-$kernel = Kernel::getInstance('prod', false);
-$request = Request::createFromGlobals();
-$kernel->boot();
-
-/*
- * Bypass Roadiz kernel to directly serve images assets
+/**
+ * KernelHelper.
  */
-if (0 === strpos($request->getPathInfo(), '/assets') &&
-    preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-) {
-    $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-    $ctrl->setContainer($kernel->getContainer());
-    $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
-    $response->prepare($request);
-} else {
-    /*
-     * Start Roadiz App handling
-     */
-    $response = $kernel->handle($request);
-}
+class KernelHelper extends Helper
+{
+    private $kernel;
 
-$response->send();
-$kernel->terminate($request, $response);
+    /**
+     * @param Kernel $kernel
+     */
+    public function __construct(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
+    /**
+     * @return Kernel
+     */
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'kernel';
+    }
+}

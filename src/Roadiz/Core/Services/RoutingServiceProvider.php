@@ -33,7 +33,6 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\TimedRouteListener;
-use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
@@ -42,9 +41,9 @@ use RZ\Roadiz\Core\Routing\StaticRouter;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\HttpKernel\HttpKernel;
 
 /**
  * Register routing services for dependency injection container.
@@ -53,29 +52,25 @@ class RoutingServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['request'] = function ($c) {
-            return Request::createFromGlobals();
+        $container['httpKernel'] = function ($c) {
+            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
         };
 
         $container['requestStack'] = function ($c) {
             $stack = new RequestStack();
-            $stack->push($c['request']);
             return $stack;
         };
 
         $container['requestContext'] = function ($c) {
             $rc = new RequestContext();
             $rc->fromRequest($c['request']);
-
             return $rc;
         };
 
         $container['resolver'] = function ($c) {
             return new ControllerResolver();
         };
-        $container['httpKernel'] = function ($c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
-        };
+
         $container['router'] = function ($c) {
             $router = new ChainRouter($c['logger']);
             $router->add($c['staticRouter']);
@@ -86,8 +81,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new StaticRouter(
                 $c['routeCollection'],
                 [
-                    'cache_dir' => (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/routing',
-                    'debug' => (boolean) $c['config']['devMode'],
+                    'cache_dir' => $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/routing',
+                    'debug' => $c['kernel']->isDebug(),
                     'generator_cache_class' => 'StaticUrlGenerator',
                     'matcher_cache_class' => 'StaticUrlMatcher',
                 ],
@@ -99,8 +94,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new NodeRouter(
                 $c['em'],
                 [
-                    'cache_dir' => (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/routing',
-                    'debug' => (boolean) $c['config']['devMode'],
+                    'cache_dir' => $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/routing',
+                    'debug' => $c['kernel']->isDebug(),
                     'generator_cache_class' => 'NodeUrlGenerator',
                     'matcher_cache_class' => 'NodeUrlMatcher',
                 ],
@@ -126,8 +121,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             );
         };
         $container['routeCollection'] = function ($c) {
-            if (isset($c['config']['install']) &&
-                true === $c['config']['install']) {
+            if (true === $c['kernel']->isInstallMode()) {
                 /*
                  * Get Install routes
                  */

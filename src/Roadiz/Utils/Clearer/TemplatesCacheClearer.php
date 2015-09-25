@@ -42,8 +42,8 @@ class TemplatesCacheClearer extends Clearer
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if ($fs->exists(ROADIZ_ROOT . '/cache/twig_cache')) {
-            $finder->in(ROADIZ_ROOT . '/cache/twig_cache');
+        if ($fs->exists($this->getCacheDir() . '/twig_cache')) {
+            $finder->in($this->getCacheDir() . '/twig_cache');
             $fs->remove($finder);
 
             $this->output .= 'Compiled Twig templates have been purged.'.PHP_EOL;

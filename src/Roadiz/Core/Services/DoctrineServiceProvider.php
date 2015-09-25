@@ -136,14 +136,14 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                     !empty($c['config']['cacheDriver']['type'])) {
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
-                        (boolean) $c['config']['devMode'],
+                        $c['kernel']->isDevMode(),
                         ROADIZ_ROOT . '/gen-src/Proxies'
                     );
                 }
 
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
-                    (boolean) $c['config']['devMode'],
+                    $c['kernel']->isDevMode(),
                     ROADIZ_ROOT . '/gen-src/Proxies',
                     $cache,
                     false

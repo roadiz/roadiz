@@ -54,6 +54,7 @@ class DocumentDownscaleCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $this->configuration = $this->getHelperSet()->get('configuration')->getConfiguration();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->questionHelper = $this->getHelperSet()->get('question');
@@ -102,7 +103,7 @@ class DocumentDownscaleCommand extends Command
                 /*
                  * Clear cache documents
                  */
-                $assetsClearer = new AssetsClearer();
+                $assetsClearer = new AssetsClearer($kernel->getCacheDir());
                 $assetsClearer->clear();
                 $text .= $assetsClearer->getOutput() . PHP_EOL;
             }

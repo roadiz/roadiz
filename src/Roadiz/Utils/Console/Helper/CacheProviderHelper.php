@@ -60,6 +60,6 @@ class CacheProviderHelper extends Helper
      */
     public function getName()
     {
-        return 'cacheProvider';
+        return 'ns-cache';
     }
 }

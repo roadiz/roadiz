@@ -70,8 +70,8 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
             $translator = new Translator(
                 $c['translator.locale'],
                 null,
-                (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/translations',
-                (boolean) $c['config']['devMode']
+                $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/translations',
+                $c['kernel']->isDebug()
             );
 
             $translator->addLoader('xlf', new XliffFileLoader());

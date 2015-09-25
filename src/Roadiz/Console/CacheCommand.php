@@ -113,15 +113,16 @@ class CacheCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
+        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');
 
-        $assetsClearer = new AssetsClearer();
+        $assetsClearer = new AssetsClearer($kernel->getCacheDir());
         $doctrineClearer = new DoctrineCacheClearer($this->entityManager);
-        $routingClearer = new RoutingCacheClearer();
-        $templatesClearer = new TemplatesCacheClearer();
-        $translationsClearer = new TranslationsCacheClearer();
-        $configurationClearer = new ConfigurationCacheClearer();
+        $routingClearer = new RoutingCacheClearer($kernel->getCacheDir());
+        $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
+        $translationsClearer = new TranslationsCacheClearer($kernel->getCacheDir());
+        $configurationClearer = new ConfigurationCacheClearer($kernel->getCacheDir());
         $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
 
         $clearers = [

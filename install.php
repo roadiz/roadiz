@@ -37,30 +37,24 @@ if (version_compare(phpversion(), '5.4.3', '<')) {
     exit(1);
 }
 
+// This check prevents access to debug front controllers that are deployed by accident to production servers.
+// Feel free to remove this, extend it, or make something more sophisticated.
+if (isset($_SERVER['HTTP_CLIENT_IP'])
+    || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
+    || !(in_array(@$_SERVER['REMOTE_ADDR'], array('127.0.0.1', 'fe80::1', '::1')) || php_sapi_name() === 'cli-server')
+) {
+    header('HTTP/1.0 403 Forbidden');
+    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+}
+
 define('ROADIZ_ROOT', dirname(__FILE__));
 // Include Composer Autoload (relative to project root).
 require("vendor/autoload.php");
 
-$kernel = Kernel::getInstance('prod', false);
+
+$kernel = Kernel::getInstance('install', true);
 $request = Request::createFromGlobals();
-$kernel->boot();
 
-/*
- * Bypass Roadiz kernel to directly serve images assets
- */
-if (0 === strpos($request->getPathInfo(), '/assets') &&
-    preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-) {
-    $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-    $ctrl->setContainer($kernel->getContainer());
-    $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
-    $response->prepare($request);
-} else {
-    /*
-     * Start Roadiz App handling
-     */
-    $response = $kernel->handle($request);
-}
-
+$response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);

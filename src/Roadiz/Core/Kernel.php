@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,34 +29,29 @@
  */
 namespace RZ\Roadiz\Core;
 
-use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
+use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
-use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
-use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
-use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
-use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
-use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
-use RZ\Roadiz\Utils\Console\Helper\TemplatingHelper;
-use RZ\Roadiz\Utils\Console\Helper\TranslatorHelper;
+use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Utils\DebugPanel;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Main roadiz CMS entry point.
+ *
  */
-class Kernel implements ServiceProviderInterface
+class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
@@ -67,41 +62,46 @@ class Kernel implements ServiceProviderInterface
     protected static $instance = null;
 
     public $container = null;
-    protected $response = null;
+    protected $environment;
+    protected $debug;
+    protected $booted = false;
+    protected $rootDir;
+    protected $name;
+    protected $startTime;
 
     /**
-     * Kernel constructor.
-     *
-     * This method must not throw any exceptions.
+     * @param string $environment
+     * @param boolean $debug
      */
-    final private function __construct()
+    public function __construct($environment, $debug)
     {
-        $this->container = new Container();
+        $this->environment = $environment;
+        $this->debug = (boolean) $debug;
+        $this->rootDir = $this->getRootDir();
+        $this->name = $this->getName();
+
+        if ($this->debug) {
+            $this->startTime = microtime(true);
+        }
     }
 
     /**
-     * Boot every kernel services.
-     *
-     * @throws RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException
+     * Boots the current kernel.
      */
     public function boot()
     {
+        if (true === $this->booted) {
+            return;
+        }
+
         /*
          * Register current Kernel as a service provider.
          */
+        $this->container = new Container();
         $this->container->register($this);
-    }
 
-    /**
-     * Get Pimple dependency injection service container.
-     *
-     * @param string $key Service name
-     *
-     * @return mixed
-     */
-    public static function getService($key)
-    {
-        return static::getInstance()->container[$key];
+        $this->booted = true;
+
     }
 
     /**
@@ -123,6 +123,7 @@ class Kernel implements ServiceProviderInterface
             return new EventDispatcher();
         };
 
+        $container['kernel'] = $this;
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
 
@@ -153,10 +154,15 @@ class Kernel implements ServiceProviderInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Kernel $this
+     * {@inheritdoc}
+     *
      */
-    public function runConsole()
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
+        if (false === $this->booted) {
+            $this->boot();
+        }
+
         /*
          * Define a request wide timezone
          */
@@ -166,203 +172,11 @@ class Kernel implements ServiceProviderInterface
             date_default_timezone_set("Europe/Paris");
         }
 
-        $application = new Application('Roadiz Console Application', static::$cmsVersion);
-        $helperSet = new HelperSet([
-            'configuration' => new ConfigurationHelper($this->container['config']),
-            'db' => new ConnectionHelper($this->container['em']->getConnection()),
-            'em' => new EntityManagerHelper($this->container['em']),
-            'question' => new QuestionHelper(),
-            'solr' => new SolrHelper($this->container['solr']),
-            'ns-cache' => new CacheProviderHelper($this->container['nodesSourcesUrlCacheProvider']),
-            'mailer' => new MailerHelper($this->container['mailer']),
-            'templating' => new TemplatingHelper($this->container['twig.environment']),
-            'translator' => new TranslatorHelper($this->container['translator']),
-        ]);
-        $application->setHelperSet($helperSet);
+        $this->container['request'] = $request;
 
-        $application->add(new \RZ\Roadiz\Console\TranslationsCommand);
-        $application->add(new \RZ\Roadiz\Console\NodeTypesCommand);
-        $application->add(new \RZ\Roadiz\Console\NodesSourcesCommand);
-        $application->add(new \RZ\Roadiz\Console\NodesCommand);
-        $application->add(new \RZ\Roadiz\Console\ThemesCommand);
-        $application->add(new \RZ\Roadiz\Console\InstallCommand);
-        $application->add(new \RZ\Roadiz\Console\UsersCommand);
-        $application->add(new \RZ\Roadiz\Console\RequirementsCommand);
-        $application->add(new \RZ\Roadiz\Console\SolrCommand);
-        $application->add(new \RZ\Roadiz\Console\CacheCommand);
-        $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
-        $application->add(new \RZ\Roadiz\Console\ThemeInstallCommand);
-        $application->add(new \RZ\Roadiz\Console\DocumentDownscaleCommand);
+        $this->initEvents();
 
-        /*
-         * Register user defined Commands
-         * Add them in your config.yml
-         */
-        if (isset($this->container['config']['additionalCommands'])) {
-            foreach ($this->container['config']['additionalCommands'] as $commandClass) {
-                if (class_exists($commandClass)) {
-                    $application->add(new $commandClass);
-                } else {
-                    throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
-                }
-            }
-        }
-
-        // Use default Doctrine commands
-        ConsoleRunner::addCommands($application);
-
-        $application->run();
-
-        $this->container['stopwatch']->stop('global');
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isInstallMode()
-    {
-        if ($this->container['config'] === null ||
-            (isset($this->container['config']['install']) &&
-                true === (boolean) $this->container['config']['install'])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Run main HTTP application.
-     *
-     * @return RZ\Roadiz\Core\Kernel $this
-     */
-    public function runApp()
-    {
-        try {
-            /*
-             * Define a request wide timezone
-             */
-            if (!empty($this->container['config']["timezone"])) {
-                date_default_timezone_set($this->container['config']["timezone"]);
-            } else {
-                date_default_timezone_set("Europe/Paris");
-            }
-
-            /*
-             * ----------------------------
-             * Main Framework handle call
-             * ----------------------------
-             */
-            $this->response = $this->container['httpKernel']->handle($this->container['request']);
-
-        } catch (MaintenanceModeException $e) {
-            if (null !== $ctrl = $e->getController()) {
-                $this->response = $ctrl->maintenanceAction($this->container['request']);
-            } else {
-                $this->response = $this->getEmergencyResponse($e);
-            }
-        } catch (\RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException $e) {
-            $this->response = $this->getEmergencyResponse($e);
-        } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
-            $this->response = $this->getEmergencyResponse($e);
-        } catch (\RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException $e) {
-            $this->response = $this->getEmergencyResponse($e);
-        } catch (\Exception $e) {
-            $this->response = $this->getEmergencyResponse($e);
-        }
-
-        $this->response->prepare($this->container['request']);
-        $this->response->send();
-        $this->container['httpKernel']->terminate($this->container['request'], $this->response);
-
-        return $this;
-    }
-
-    /**
-     * Create an emergency response to be sent instead of error logs.
-     *
-     * @param \Exception $e
-     *
-     * @return Response
-     */
-    public function getEmergencyResponse($e)
-    {
-        /*
-         * Log error before displaying a fallback page.
-         */
-        if (isset($this->container['logger'])) {
-            $this->container['logger']->emerg($e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-                'exception' => get_class($e),
-            ]);
-        }
-
-        if ($this->container['request']->isXmlHttpRequest()) {
-            return new \Symfony\Component\HttpFoundation\JsonResponse(
-                [
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                    'exception' => get_class($e),
-                ],
-                Response::HTTP_SERVICE_UNAVAILABLE
-            );
-
-        } else {
-            $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
-            $html = str_replace('{{ message }}', $e->getMessage(), $html);
-
-            if ($this->isDebug()) {
-                $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
-                $html = str_replace('{{ details }}', $trace, $html);
-            } else {
-                $html = str_replace('{{ details }}', '', $html);
-            }
-
-            return new Response(
-                $html,
-                Response::HTTP_SERVICE_UNAVAILABLE,
-                ['content-type' => 'text/html']
-            );
-        }
-    }
-
-    /**
-     * Prepare Translation generation tools.
-     */
-    public function onKernelRequest()
-    {
-        /*
-         * Register Themes dependency injection
-         */
-        if (!$this->isInstallMode()) {
-            $this->container['stopwatch']->start('backendDependencyInjection');
-            // Register back-end security scheme
-            $beClass = $this->container['backendClass'];
-            $beClass::setupDependencyInjection($this->container);
-            $this->container['stopwatch']->stop('backendDependencyInjection');
-
-            /*
-             * Set default locale
-             */
-            $this->container['stopwatch']->start('setRequestLocale');
-            $translation = $this->container['defaultTranslation'];
-
-            if ($translation !== null) {
-                $shortLocale = $translation->getLocale();
-                $this->container['request']->setLocale($shortLocale);
-                \Locale::setDefault($shortLocale);
-            }
-            $this->container['stopwatch']->stop('setRequestLocale');
-        }
-
-        $this->container['stopwatch']->start('themeDependencyInjection');
-        // Register front-end security scheme
-        foreach ($this->container['frontendThemes'] as $theme) {
-            $feClass = $theme->getClassName();
-            $feClass::setupDependencyInjection($this->container);
-        }
-        $this->container['stopwatch']->stop('themeDependencyInjection');
+        return $this->container['httpKernel']->handle($request, $type, $catch);
     }
 
     /**
@@ -376,29 +190,12 @@ class Kernel implements ServiceProviderInterface
          * Events
          */
         $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
-        $this->container['dispatcher']->addListener(
-            KernelEvents::REQUEST,
-            [
-                $this,
-                'onKernelRequest',
-            ],
-            60
-        );
-        $this->container['dispatcher']->addListener(
-            KernelEvents::REQUEST,
-            [
-                $this->container['firewall'],
-                'onKernelRequest',
-            ]
-        );
-        $this->container['dispatcher']->addListener(
-            KernelEvents::CONTROLLER,
-            [
-                new \RZ\Roadiz\Core\Events\ControllerMatchedEvent($this, $this->container['stopwatch']),
-                'onControllerMatched',
-            ]
-        );
+        $this->container['dispatcher']->addSubscriber($this->container['firewall']);
+        $this->container['dispatcher']->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
+        $this->container['dispatcher']->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
+
         if (!$this->isInstallMode()) {
+            $this->container['dispatcher']->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
             $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
                 $this->container['securityAuthorizationChecker'],
                 $this->container['securityTokenStorage']
@@ -415,6 +212,79 @@ class Kernel implements ServiceProviderInterface
     }
 
     /**
+     * Get Pimple dependency injection service container.
+     *
+     * @param string $key Service name
+     *
+     * @return mixed
+     */
+    public static function getService($key)
+    {
+        return static::getInstance()->container[$key];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInstallMode()
+    {
+        return $this->environment == 'install';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPreviewMode()
+    {
+        return $this->environment == 'preview';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDevMode()
+    {
+        return $this->environment == 'dev';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isProdMode()
+    {
+        return $this->environment == 'prod';
+    }
+
+    /**
+     * Return unique instance of Kernel.
+     *
+     * @return Kernel
+     */
+    public static function getInstance($environment = 'prod', $debug = false)
+    {
+        if (static::$instance === null) {
+            static::$instance = new Kernel($environment, $debug);
+        }
+
+        return static::$instance;
+    }
+
+    /**
      * @return Pimple\Container
      */
     public function getContainer()
@@ -423,35 +293,168 @@ class Kernel implements ServiceProviderInterface
     }
 
     /**
-     * @return Symfony\Component\HttpFoundation\Request
+     * {@inheritdoc}
+     *
      */
-    public function getRequest()
+    public function terminate(Request $request, Response $response)
     {
-        return $this->container['request'];
+        if (false === $this->booted) {
+            return;
+        }
+        if ($this->container['httpKernel'] instanceof TerminableInterface) {
+            $this->container['httpKernel']->terminate($request, $response);
+        }
     }
 
     /**
-     * Get application debug status.
+     * {@inheritdoc}
      *
-     * @return boolean
+     * @api
      */
-    public function isDebug()
+    public function shutdown()
     {
-        return (boolean) $this->container['config']['devMode'] ||
-        (boolean) $this->container['config']['install'];
-    }
-
-    /**
-     * Return unique instance of Kernel.
-     *
-     * @return Kernel
-     */
-    public static function getInstance()
-    {
-        if (static::$instance === null) {
-            static::$instance = new Kernel();
+        if (false === $this->booted) {
+            return;
         }
 
-        return static::$instance;
+        $this->booted = false;
+        $this->container = null;
+    }
+
+    /**
+     * Gets a HTTP kernel from the container.
+     *
+     * @return HttpKernel
+     */
+    protected function getHttpKernel()
+    {
+        return $this->container['httpKernel'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     */
+    public function getBundles()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     */
+    public function getBundle($name, $first = true)
+    {
+        return false;
+    }
+    /**
+     * {@inheritdoc}
+     *
+     */
+    public function locateResource($name, $dir = null, $first = true)
+    {
+        return false;
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getName()
+    {
+        return 'roadiz';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getRootDir()
+    {
+        return ROADIZ_ROOT;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getStartTime()
+    {
+        return $this->debug ? $this->startTime : -INF;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getCacheDir()
+    {
+        return ROADIZ_ROOT . '/cache/' . $this->environment;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getLogDir()
+    {
+        return ROADIZ_ROOT . '/logs';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getCharset()
+    {
+        return 'UTF-8';
+    }
+
+    /**
+     * Returns an array of bundles to register.
+     *
+     * @return BundleInterface[] An array of bundle instances.
+     *
+     */
+    public function registerBundles()
+    {
+        return [];
+    }
+    /**
+     * Loads the container configuration.
+     *
+     * @param LoaderInterface $loader A LoaderInterface instance
+     *
+     */
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        return false;
+    }
+
+    /**
+     *
+     * @deprecated since version 2.6, to be removed in 3.0.
+     */
+    public function isClassInActiveBundle($class)
+    {
+        @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.6 and will be removed in version 3.0.', E_USER_DEPRECATED);
+
+        return false;
+    }
+
+    public function serialize()
+    {
+        return serialize(array($this->environment, $this->debug));
+    }
+    public function unserialize($data)
+    {
+        list($environment, $debug) = unserialize($data);
+        $this->__construct($environment, $debug);
     }
 }

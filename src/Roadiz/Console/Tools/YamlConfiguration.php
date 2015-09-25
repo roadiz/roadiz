@@ -47,9 +47,10 @@ class YamlConfiguration extends Configuration
      * @param string  $path
      * @param boolean $debug
      */
-    public function __construct($path = null, $debug = true)
+    public function __construct($cacheDir, $path = null, $debug = true)
     {
-        $this->cachePath = ROADIZ_ROOT . '/cache/configuration.php';
+        $this->cacheDir = $cacheDir;
+        $this->cachePath = $this->cacheDir . '/configuration.php';
         $this->confCache = new ConfigCache($this->cachePath, $debug);
 
         if ($path === null) {

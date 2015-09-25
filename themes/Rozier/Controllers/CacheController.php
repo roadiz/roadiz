@@ -61,10 +61,10 @@ class CacheController extends RozierApp
             $clearers = [
                 new DoctrineCacheClearer($this->getService('em')),
                 new NodesSourcesUrlsCacheClearer($this->getService('nodesSourcesUrlCacheProvider')),
-                new TranslationsCacheClearer(),
-                new RoutingCacheClearer(),
-                new TemplatesCacheClearer(),
-                new ConfigurationCacheClearer(),
+                new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
+                new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
+                new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
+                new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
             ];
             foreach ($clearers as $clearer) {
                 $clearer->clear();
@@ -123,7 +123,7 @@ class CacheController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $clearer = new AssetsClearer();
+            $clearer = new AssetsClearer($this->getService('kernel')->getCacheDir());
             $clearer->clear();
 
             $msg = $this->getTranslator()->trans('cache.deleted');
