@@ -29,11 +29,13 @@
  */
 
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\HttpFoundation\Request;
 
 define('ROADIZ_ROOT', dirname(dirname(__FILE__)));
 
 // Include Composer Autoload (relative to project root).
 require ROADIZ_ROOT . "/vendor/autoload.php";
 
-Kernel::getInstance()->boot();
-Kernel::getInstance()->initEvents();
+$kernel = Kernel::getInstance('test', false, false);
+$kernel->boot();
+$kernel->container['request'] = Request::createFromGlobals();

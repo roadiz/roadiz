@@ -214,7 +214,7 @@ If you see your entities being created and no system database erased, just `--ex
 If Doctrine send some error, you probably need to clear metadata cache:
 
 ```bash
-bin/roadiz cache --clear-all;
+bin/roadiz cache -a;
 ```
 
 ### Problem with entities and Doctrine cache?
@@ -222,9 +222,9 @@ bin/roadiz cache --clear-all;
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```bash
-bin/roadiz core:sources --regenerate
+bin/roadiz core:sources -r
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache --clear-all;
+bin/roadiz cache -a;
 
 ```
 
