@@ -445,8 +445,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function isClassInActiveBundle($class)
     {
-        @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 2.6 and will be removed in version 3.0.', E_USER_DEPRECATED);
-
         return false;
     }
 

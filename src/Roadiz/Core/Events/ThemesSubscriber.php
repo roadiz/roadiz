@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
