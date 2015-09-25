@@ -49,7 +49,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
     {
         $container['defaultTranslation'] = function ($c) {
             return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                           ->findDefault();
+                ->findDefault();
         };
         /**
          * This service have to be called once a controller has

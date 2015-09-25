@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
@@ -41,9 +40,9 @@ use RZ\Roadiz\Core\Routing\StaticRouter;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\HttpKernel\HttpKernel;
 
 /**
  * Register routing services for dependency injection container.
@@ -81,7 +80,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new StaticRouter(
                 $c['routeCollection'],
                 [
-                    'cache_dir' => $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/routing',
+                    'cache_dir' => $c['kernel']->getCacheDir() . '/routing',
                     'debug' => $c['kernel']->isDebug(),
                     'generator_cache_class' => 'StaticUrlGenerator',
                     'matcher_cache_class' => 'StaticUrlMatcher',
@@ -94,7 +93,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new NodeRouter(
                 $c['em'],
                 [
-                    'cache_dir' => $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/routing',
+                    'cache_dir' => $c['kernel']->getCacheDir() . '/routing',
                     'debug' => $c['kernel']->isDebug(),
                     'generator_cache_class' => 'NodeUrlGenerator',
                     'matcher_cache_class' => 'NodeUrlMatcher',
@@ -120,6 +119,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['stopwatch']
             );
         };
+
         $container['routeCollection'] = function ($c) {
             if (true === $c['kernel']->isInstallMode()) {
                 /*
@@ -133,14 +133,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 /*
                  * Get App routes
                  */
-                $rCollection = new RoadizRouteCollection(
-                    $c['backendClass'],
-                    $c['frontendThemes'],
-                    SettingsBag::get('static_domain_name'),
+                $collection = new RoadizRouteCollection(
+                    $c['themeResolver'],
                     $c['stopwatch']
                 );
 
-                return $rCollection;
+                return $collection;
             }
         };
         return $container;

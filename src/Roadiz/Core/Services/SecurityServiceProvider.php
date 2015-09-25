@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Log\DoctrineHandler;
 use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
 use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
+use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -144,10 +145,10 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['logger'] = function ($c) {
             $log = new Logger('roadiz');
-            $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
+            $log->pushHandler(new StreamHandler($c['kernel']->getLogDir() . '/roadiz.log', Logger::NOTICE));
 
             if (null !== $c['em'] &&
-                true === $c['kernel']->isDevMode()) {
+                true === $c['kernel']->isDebug()) {
                 $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz-debug.log', Logger::DEBUG));
             }
             if (null !== $c['em'] &&
@@ -170,7 +171,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['contextListener'] = function ($c) {
-
             $c['session']; //Force session handler
 
             return new ContextListener(
@@ -279,14 +279,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['roleHierarchy'] = function ($c) {
-            return new RoleHierarchy([
-                Role::ROLE_SUPERADMIN => $c['allBasicRoles'],
-            ]);
-        };
-
-        $container['allBasicRoles'] = function ($c) {
-            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Role')
-            ->getAllBasicRoleName();
+            return new DoctrineRoleHierarchy($c['em']);
         };
 
         $container['roleHierarchyVoter'] = function ($c) {
@@ -308,8 +301,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewallMap'] = function ($c) {
-            $map = new FirewallMap();
-            return $map;
+            return new FirewallMap();
         };
 
         $container['firewallExceptionListener'] = function ($c) {

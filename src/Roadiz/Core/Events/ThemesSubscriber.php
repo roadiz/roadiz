@@ -79,14 +79,14 @@ class ThemesSubscriber implements EventSubscriberInterface
         if (!$this->kernel->isInstallMode()) {
             $this->stopwatch->start('backendDependencyInjection');
             // Register back-end security scheme
-            $beClass = $this->kernel->container['backendClass'];
+            $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
             $beClass::setupDependencyInjection($this->kernel->getContainer());
             $this->stopwatch->stop('backendDependencyInjection');
         }
 
         $this->stopwatch->start('themeDependencyInjection');
         // Register front-end security scheme
-        foreach ($this->kernel->container['frontendThemes'] as $theme) {
+        foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
             $feClass = $theme->getClassName();
             $feClass::setupDependencyInjection($this->kernel->getContainer());
         }

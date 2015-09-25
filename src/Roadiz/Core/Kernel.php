@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
@@ -182,15 +181,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * Prepare backend and frontend routes and logic.
-     *
-     * @return boolean
+     * Register KernelEvents subscribers.
      */
-    public function initEvents()
+    protected function initEvents()
     {
-        /*
-         * Events
-         */
         $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         $this->container['dispatcher']->addSubscriber($this->container['firewall']);
         $this->container['dispatcher']->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
@@ -208,7 +202,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
-        if (true === (boolean) SettingsBag::get('display_debug_panel')) {
+        if ($this->isDebug()) {
             $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
         }
     }
