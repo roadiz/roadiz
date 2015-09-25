@@ -29,14 +29,13 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use Symfony\Component\Yaml\Yaml;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
@@ -74,8 +73,8 @@ class InstallCommand extends Command
             if (!$this->hasDefaultBackend()) {
                 $theme = new Theme();
                 $theme->setAvailable(true)
-                      ->setBackendTheme(true)
-                      ->setClassName("Themes\Rozier\RozierApp");
+                    ->setBackendTheme(true)
+                    ->setClassName("Themes\Rozier\RozierApp");
 
                 $this->entityManager->persist($theme);
                 $this->entityManager->flush();
@@ -150,8 +149,8 @@ class InstallCommand extends Command
     private function hasDefaultBackend()
     {
         $default = $this->entityManager
-                        ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                        ->findOneBy(["backendTheme" => true]);
+            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+            ->findOneBy(["backendTheme" => true]);
 
         return $default !== null ? true : false;
     }
@@ -164,8 +163,8 @@ class InstallCommand extends Command
     public function hasDefaultTranslation()
     {
         $default = $this->entityManager
-                        ->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                        ->findOneBy([]);
+            ->getRepository("RZ\Roadiz\Core\Entities\Translation")
+            ->findOneBy([]);
 
         return $default !== null ? true : false;
     }
