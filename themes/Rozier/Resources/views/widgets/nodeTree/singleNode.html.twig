@@ -127,7 +127,7 @@
                         </p>
                         {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
                         <p>
-                            <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId }) }}">
+                            <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId, referer:request.uri }) }}">
                                 <i class="uk-icon-rz-trash-o"></i> {% trans %}delete.node{% endtrans %}
                             </a>
                         </p>
@@ -175,6 +175,7 @@
             {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
                 "node":subNode,
                 "parent":node,
+                "request":request,
                 "nodeTree":nodeTree,
                 "mainNodeTree":mainNodeTree,
                 "authorizationChecker":authorizationChecker,

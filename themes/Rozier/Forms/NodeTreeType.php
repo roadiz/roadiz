@@ -89,6 +89,7 @@ class NodeTreeType extends AbstractType
         /*
          * Inject data as plain documents entities
          */
+        $view->vars['request'] = $this->controller->getRequest();
         $view->vars['nodeTree'] = new NodeTreeWidget(
             $this->controller->getRequest(),
             $this->controller,

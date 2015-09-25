@@ -398,11 +398,12 @@ class Kernel implements ServiceProviderInterface
                 'onControllerMatched',
             ]
         );
-
-        $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
-            $this->container['securityAuthorizationChecker'],
-            $this->container['securityTokenStorage']
-        ));
+        if (!$this->isInstallMode()) {
+            $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
+                $this->container['securityAuthorizationChecker'],
+                $this->container['securityTokenStorage']
+            ));
+        }
         $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
 
         /*

@@ -279,6 +279,8 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * Get node-source entity class name without its namespace.
+     *
      * @return string
      */
     public function getSourceEntityClassName()
@@ -287,6 +289,8 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * Get node-source entity database table name.
+     *
      * @return string
      */
     public function getSourceEntityTableName()
