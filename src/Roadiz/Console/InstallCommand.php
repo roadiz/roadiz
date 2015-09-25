@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use Symfony\Component\Yaml\Yaml;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
@@ -88,11 +89,8 @@ class InstallCommand extends Command
              * Import default data
              */
             $installRoot = ROADIZ_ROOT . "/themes/Install";
-            $yaml = new YamlConfiguration($installRoot . "/config.yml");
+            $data = Yaml::parse($installRoot . "/config.yml");
 
-            $yaml->load();
-
-            $data = $yaml->getConfiguration();
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
@@ -139,23 +137,11 @@ class InstallCommand extends Command
                 $text .= '<error>A default translation is already installed.</error>' . PHP_EOL;
             }
 
-            /*
-             * Disable install mode
-             */
-            $configuration = new YamlConfiguration();
-            if (false === $configuration->load()) {
-                $configuration->setConfiguration($configuration->getDefaultConfiguration());
-            }
-            $configuration->setInstall(false);
-            $configuration->writeConfiguration();
-
             // Clear result cache
             $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
-
-            $text .= 'Install mode has been changed to false.' . PHP_EOL;
         }
 
         $output->writeln($text);

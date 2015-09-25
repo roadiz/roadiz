@@ -181,7 +181,12 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    $fixtures = new Fixtures($this->getService("em"), $request);
+                    $fixtures = new Fixtures(
+                        $this->getService('em'),
+                        $this->getService('kernel')->getCacheDir(),
+                        $this->getService('kernel')->isDebug(),
+                        $request
+                    );
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -242,7 +247,10 @@ class InstallApp extends AppController
                  * Save informations
                  */
                 try {
-                    $config = new YamlConfiguration();
+                    $config = new YamlConfiguration(
+                        $this->getService('kernel')->getCacheDir(),
+                        $this->getService('kernel')->isDebug()
+                    );
                     if (false === $config->load()) {
                         $config->setConfiguration($config->getDefaultConfiguration());
                     }

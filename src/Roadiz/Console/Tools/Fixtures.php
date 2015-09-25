@@ -49,11 +49,25 @@ class Fixtures
 {
     protected $entityManager;
     protected $request;
+    protected $cacheDir;
+    protected $debug;
 
-    public function __construct(EntityManager $entityManager, Request $request = null)
-    {
+    /**
+     * @param EntityManager $entityManager
+     * @param string        $cacheDir
+     * @param boolean       $debug
+     * @param Request|null  $request
+     */
+    public function __construct(
+        EntityManager $entityManager,
+        $cacheDir,
+        $debug = true,
+        Request $request = null
+    ) {
         $this->entityManager = $entityManager;
         $this->request = $request;
+        $this->cacheDir = $cacheDir;
+        $this->debug = $debug;
     }
 
     /**
@@ -63,9 +77,7 @@ class Fixtures
     {
         $this->installDefaultTranslation();
         $this->installBackofficeTheme();
-
         $this->entityManager->flush();
-
         $this->clearResultCache();
     }
 
@@ -260,7 +272,7 @@ class Fixtures
          * Update timezone
          */
         if (!empty($data['timezone'])) {
-            $conf = new YamlConfiguration();
+            $conf = new YamlConfiguration($this->cacheDir, $this->debug);
             if (false === $conf->load()) {
                 $conf->setConfiguration($conf->getDefaultConfiguration());
             }
