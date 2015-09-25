@@ -247,19 +247,6 @@ class InstallApp extends AppController
                  * Save informations
                  */
                 try {
-                    $config = new YamlConfiguration(
-                        $this->getService('kernel')->getCacheDir(),
-                        $this->getService('kernel')->isDebug()
-                    );
-                    if (false === $config->load()) {
-                        $config->setConfiguration($config->getDefaultConfiguration());
-                    }
-                    $configuration = $config->getConfiguration();
-                    $configuration['install'] = false;
-                    $config->setConfiguration($configuration);
-
-                    $config->writeConfiguration();
-
                     /*
                      * Close Session for security and temp translation
                      */
@@ -267,18 +254,17 @@ class InstallApp extends AppController
 
                     $clearers = [
                         new DoctrineCacheClearer($this->getService('em')),
-                        new TranslationsCacheClearer(),
-                        new RoutingCacheClearer(),
-                        new ConfigurationCacheClearer(),
+                        new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
+                        new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
+                        new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
                     ];
                     foreach ($clearers as $clearer) {
                         $clearer->clear();
                     }
-
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    return $this->redirect($this->generateUrl('installHomePage'));
+                    return $this->redirect($this->generateUrl('installAfterDonePage'));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
@@ -289,6 +275,17 @@ class InstallApp extends AppController
         }
 
         return $this->render('steps/done.html.twig', $this->assignation);
+    }
+
+    /**
+     * After done and clearing caches.
+     *
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function afterDoneAction(Request $request)
+    {
+        return $this->render('steps/after-done.html.twig', $this->assignation);
     }
 
     /**
