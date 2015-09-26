@@ -37,6 +37,8 @@ before_script:
   - php bin/roadiz core:themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
   - php bin/roadiz orm:schema-tool:update -n --force
   - php bin/roadiz core:themes:install -n --data "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz cache -a --env=install
+  - php bin/roadiz cache -a --env=test
 
 script:
   - ENABLE_SECOND_LEVEL_CACHE=0 bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
