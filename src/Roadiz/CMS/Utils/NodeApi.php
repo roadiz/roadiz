@@ -67,7 +67,8 @@ class NodeApi extends AbstractApi
                         $limit,
                         $offset,
                         null,
-                        $this->container['securityAuthorizationChecker']
+                        $this->container['securityAuthorizationChecker'],
+                        $this->container['kernel']->isPreview()
                     );
     }
     /**
@@ -86,7 +87,8 @@ class NodeApi extends AbstractApi
                     ->countBy(
                         $criteria,
                         null,
-                        $this->container['securityAuthorizationChecker']
+                        $this->container['securityAuthorizationChecker'],
+                        $this->container['kernel']->isPreview()
                     );
     }
     /**
@@ -106,7 +108,8 @@ class NodeApi extends AbstractApi
                         $criteria,
                         $order,
                         null,
-                        $this->container['securityAuthorizationChecker']
+                        $this->container['securityAuthorizationChecker'],
+                        $this->container['kernel']->isPreview()
                     );
     }
 }

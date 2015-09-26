@@ -3,7 +3,6 @@
 #
 /dev.php
 /install.php
-/preview.php
 
 # PHPCS report
 report.txt
