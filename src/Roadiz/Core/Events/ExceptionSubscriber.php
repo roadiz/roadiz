@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -63,20 +64,27 @@ class ExceptionSubscriber implements EventSubscriberInterface
         // You get the exception object from the received event
         $exception = $event->getException();
 
-        // Customize your response object to display the exception details
-        $response = $this->getEmergencyResponse($exception, $event->getRequest());
-
-        // HttpExceptionInterface is a special type of exception that
-        // holds status code and header details
-        if ($exception instanceof HttpExceptionInterface) {
-            $response->setStatusCode($exception->getStatusCode());
-            $response->headers->replace($exception->getHeaders());
+        if ($exception instanceof MaintenanceModeException &&
+            null !== $ctrl = $exception->getController()) {
+            $response = $ctrl->maintenanceAction($event->getRequest());
+            $response->setStatusCode(Response::HTTP_SERVICE_UNAVAILABLE);
+            $event->setResponse($response);
         } else {
-            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+            // Customize your response object to display the exception details
+            $response = $this->getEmergencyResponse($exception, $event->getRequest());
 
-        // Send the modified response object to the event
-        $event->setResponse($response);
+            // HttpExceptionInterface is a special type of exception that
+            // holds status code and header details
+            if ($exception instanceof HttpExceptionInterface) {
+                $response->setStatusCode($exception->getStatusCode());
+                $response->headers->replace($exception->getHeaders());
+            } else {
+                $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            // Send the modified response object to the event
+            $event->setResponse($response);
+        }
     }
 
     /**
