@@ -32,10 +32,11 @@ namespace RZ\Roadiz\Core;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
+use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
-use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -77,7 +78,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function __construct($environment, $debug, $preview = false)
     {
         $this->environment = $environment;
-        $this->preview = $preview;
+        $this->preview = (boolean) $preview;
         $this->debug = (boolean) $debug;
         $this->rootDir = $this->getRootDir();
         $this->name = $this->getName();
@@ -198,7 +199,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
                 $this->container['securityAuthorizationChecker'],
                 $this->container['securityTokenStorage']
             ));
+
+            if ($this->isPreview()) {
+                $this->container['dispatcher']->addSubscriber(new PreviewModeSubscriber($this->container));
+            }
         }
+
         $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
 
         /*
@@ -273,10 +279,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      *
      * @return Kernel
      */
-    public static function getInstance($environment = 'prod', $debug = false)
+    public static function getInstance($environment = 'prod', $debug = false, $preview = false)
     {
         if (static::$instance === null) {
-            static::$instance = new Kernel($environment, $debug);
+            static::$instance = new Kernel($environment, $debug, $preview);
         }
 
         return static::$instance;
@@ -446,11 +452,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     public function serialize()
     {
-        return serialize(array($this->environment, $this->debug));
+        return serialize(array($this->environment, $this->debug, $this->preview));
     }
+
     public function unserialize($data)
     {
-        list($environment, $debug) = unserialize($data);
-        $this->__construct($environment, $debug);
+        list($environment, $debug, $preview) = unserialize($data);
+        $this->__construct($environment, $debug, $preview);
     }
 }

@@ -37,6 +37,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -78,6 +79,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
             if ($exception instanceof HttpExceptionInterface) {
                 $response->setStatusCode($exception->getStatusCode());
                 $response->headers->replace($exception->getHeaders());
+            } elseif ($exception instanceof AccessDeniedException) {
+                $response->setStatusCode(Response::HTTP_FORBIDDEN);
             } else {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
@@ -141,6 +144,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         if ($e instanceof \Doctrine\DBAL\Exception\TableNotFoundException) {
             return "Your database is not synchronised to Roadiz data schema. Did you run install before using Roadiz?";
+        }
+
+        if ($e instanceof AccessDeniedException) {
+            return "Oups! Wrong way, you are not supposed to be here.";
         }
 
         return "A problem occured on our website. We are working on this to be back soon.";
