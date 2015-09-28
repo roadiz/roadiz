@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\Document;
 use Doctrine\ORM\EntityManager;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Constraint;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Filesystem\Filesystem;
@@ -91,7 +92,6 @@ class DownscaleImageManager
     public function processDocumentFromExistingRaw(Document $document = null)
     {
         if (null !== $document && $this->maxPixelSize > 0) {
-
             if (null !== $document->getRawDocument()) {
                 $rawDocumentFile = $document->getRawDocument()->getAbsolutePath();
             } else {
@@ -117,7 +117,7 @@ class DownscaleImageManager
     protected function getDownscaledImage(Image $processImage)
     {
         // prevent possible upsizing
-        $processImage->resize($this->maxPixelSize, $this->maxPixelSize, function ($constraint) {
+        $processImage->resize($this->maxPixelSize, $this->maxPixelSize, function (Constraint $constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });

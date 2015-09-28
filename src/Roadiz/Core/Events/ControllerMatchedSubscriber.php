@@ -24,22 +24,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ControllerMatchedEvent.php
+ * @file ControllerMatchedSubscriber.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\CMS\Controllers\Controller;
-use RZ\Roadiz\CMS\Controllers\AppController;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Event dispatched after a route has been matched.
  */
-class ControllerMatchedEvent
+class ControllerMatchedSubscriber implements EventSubscriberInterface
 {
     private $kernel;
     private $stopwatch;
@@ -52,6 +54,17 @@ class ControllerMatchedEvent
         $this->kernel = $kernel;
         $this->stopwatch = $stopwatch;
     }
+
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::CONTROLLER => 'onControllerMatched',
+        ];
+    }
+
     /**
      * After a controller has been matched. We need to inject current
      * Kernel instance and main DI container.
@@ -75,7 +88,7 @@ class ControllerMatchedEvent
          * Do not inject current theme when
          * Install mode is active.
          */
-        if (true !== $this->kernel->container['config']['install'] &&
+        if (true !== $this->kernel->isInstallMode() &&
             $event->getRequest() instanceof RoadizRequest) {
             // No node controller matching in install mode
             $event->getRequest()->setTheme($matchedCtrl->getTheme());

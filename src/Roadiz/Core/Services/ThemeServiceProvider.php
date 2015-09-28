@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Utils\Theme\ThemeResolver;
 
 /**
  * Register Theme services for dependency injection container.
@@ -39,57 +39,16 @@ class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['backendClass'] = function ($c) {
-
-            $c['stopwatch']->start('getBackendTheme');
-
-            $theme = $c['backendTheme'];
-
-            $c['stopwatch']->stop('getBackendTheme');
-
-            if ($theme !== null) {
-                return $theme->getClassName();
-            }
-
-            return 'RZ\Roadiz\CMS\Controllers\BackendController';
+        $container['themeResolver'] = function ($c) {
+            return new ThemeResolver($c['em'], $c['stopwatch'], $c['kernel']->isInstallMode());
         };
 
         $container['backendTheme'] = function ($c) {
-
-            if (isset($c['config']['install']) &&
-                false === $c['config']['install']) {
-                return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableBackend();
-            } else {
-                return null;
-            }
+            return $c['themeResolver']->getBackendTheme();
         };
 
         $container['frontendThemes'] = function ($c) {
-
-            if (isset($c['config']['install']) &&
-                false === $c['config']['install']) {
-                $c['stopwatch']->start('getFrontendThemes');
-
-                $themes = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableFrontends();
-
-                if (count($themes) < 1) {
-                    $defaultTheme = new Theme();
-                    $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
-                    $defaultTheme->setAvailable(true);
-
-                    $c['stopwatch']->stop('getFrontendThemes');
-
-                    return [
-                        $defaultTheme,
-                    ];
-                } else {
-                    $c['stopwatch']->stop('getFrontendThemes');
-
-                    return $themes;
-                }
-            } else {
-                return [];
-            }
+            return $c['themeResolver']->getFrontendThemes();
         };
 
         return $container;

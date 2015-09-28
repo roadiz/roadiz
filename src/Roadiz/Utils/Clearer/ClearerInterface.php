@@ -39,4 +39,11 @@ interface ClearerInterface
      * @return string
      */
     public function getOutput();
+
+    /**
+     * Get global cache directory.
+     *
+     * @return string
+     */
+    public function getCacheDir();
 }

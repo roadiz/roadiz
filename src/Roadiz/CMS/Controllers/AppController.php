@@ -306,7 +306,7 @@ class AppController extends Controller
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => (boolean) $this->container['config']['devMode'],
+                'devMode' => $this->container['kernel']->isDevMode(),
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),

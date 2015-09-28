@@ -24,42 +24,66 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file CacheProviderHelper.php
+ * @file LocaleSubscriber.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Utils\Console\Helper;
+namespace RZ\Roadiz\Core\Events;
 
-use Doctrine\Common\Cache\CacheProvider;
-use Symfony\Component\Console\Helper\Helper;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * CacheProviderHelper.
+ * Event dispatched to setup theme configuration at kernel request.
  */
-class CacheProviderHelper extends Helper
+class LocaleSubscriber implements EventSubscriberInterface
 {
-    private $cacheProvider;
+    private $kernel;
+    private $stopwatch;
 
     /**
-     * @param CacheProvider|null $solr
+     * @param RZ\Roadiz\Core\Kernel $kernel
      */
-    public function __construct(CacheProvider $cacheProvider)
+    public function __construct(Kernel $kernel, Stopwatch $stopwatch)
     {
-        $this->cacheProvider = $cacheProvider;
+        $this->kernel = $kernel;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
-     * @return CacheProvider
+     * @return array
      */
-    public function getCacheProvider()
+    public static function getSubscribedEvents()
     {
-        return $this->cacheProvider;
+        return [
+            KernelEvents::REQUEST => [
+                'onKernelRequest',
+                70,
+            ],
+        ];
     }
 
     /**
-     * @return string
+     * After a controller has been matched. We need to inject current
+     * Kernel instance and main DI container.
+     *
+     * @param GetResponseEvent $event
      */
-    public function getName()
+    public function onKernelRequest(GetResponseEvent $event)
     {
-        return 'ns-cache';
+        /*
+         * Set default locale
+         */
+        $this->stopwatch->start('setRequestLocale');
+        $translation = $this->kernel->container['defaultTranslation'];
+
+        if ($translation !== null) {
+            $shortLocale = $translation->getLocale();
+            $event->getRequest()->setLocale($shortLocale);
+            \Locale::setDefault($shortLocale);
+        }
+        $this->stopwatch->stop('setRequestLocale');
     }
 }

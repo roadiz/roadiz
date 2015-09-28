@@ -88,7 +88,7 @@ class AssetsController extends AppController
     public function interventionRequestAction(Request $request, $queryString, $filename)
     {
         $log = new Logger('InterventionRequest');
-        $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/interventionRequest.log', Logger::INFO));
+        $log->pushHandler(new StreamHandler($this->getService('kernel')->getLogDir() . '/interventionRequest.log', Logger::INFO));
 
         try {
             /*

@@ -35,14 +35,13 @@ use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -88,7 +87,7 @@ class InstallApp extends AppController
                 'devMode' => false,
                 'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
                 'filesUrl' => $this->getRequest()
-                                   ->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->getService('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->getService('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
@@ -181,14 +180,19 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    $fixtures = new Fixtures($this->getService("em"), $request);
+                    $fixtures = new Fixtures(
+                        $this->getService('em'),
+                        $this->getService('kernel')->getCacheDir(),
+                        $this->getService('kernel')->isDebug(),
+                        $request
+                    );
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $user = $this->getService('em')
-                                 ->getRepository('RZ\Roadiz\Core\Entities\User')
-                                 ->findOneBy(['username' => $userForm->getData()['username']]);
+                        ->getRepository('RZ\Roadiz\Core\Entities\User')
+                        ->findOneBy(['username' => $userForm->getData()['username']]);
 
                     return $this->redirect($this->generateUrl(
                         'installUserSummaryPage',
@@ -242,16 +246,6 @@ class InstallApp extends AppController
                  * Save informations
                  */
                 try {
-                    $config = new YamlConfiguration();
-                    if (false === $config->load()) {
-                        $config->setConfiguration($config->getDefaultConfiguration());
-                    }
-                    $configuration = $config->getConfiguration();
-                    $configuration['install'] = false;
-                    $config->setConfiguration($configuration);
-
-                    $config->writeConfiguration();
-
                     /*
                      * Close Session for security and temp translation
                      */
@@ -259,18 +253,17 @@ class InstallApp extends AppController
 
                     $clearers = [
                         new DoctrineCacheClearer($this->getService('em')),
-                        new TranslationsCacheClearer(),
-                        new RoutingCacheClearer(),
-                        new ConfigurationCacheClearer(),
+                        new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
+                        new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
+                        new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
                     ];
                     foreach ($clearers as $clearer) {
                         $clearer->clear();
                     }
-
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    return $this->redirect($this->generateUrl('installHomePage'));
+                    return $this->redirect($this->generateUrl('installAfterDonePage'));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
@@ -284,6 +277,17 @@ class InstallApp extends AppController
     }
 
     /**
+     * After done and clearing caches.
+     *
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function afterDoneAction(Request $request)
+    {
+        return $this->render('steps/after-done.html.twig', $this->assignation);
+    }
+
+    /**
      * Build forms.
      *
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -293,21 +297,21 @@ class InstallApp extends AppController
     protected function buildLanguageForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-                        ->add('language', 'choice', [
-                            'choices' => [
-                                'en' => 'English',
-                                'fr' => 'Français',
-                                'ru' => 'Русский язык',
-                            ],
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                            'label' => 'choose.a.language',
-                            'attr' => [
-                                "id" => "language",
-                            ],
-                            'data' => $request->getLocale(),
-                        ]);
+            ->add('language', 'choice', [
+                'choices' => [
+                    'en' => 'English',
+                    'fr' => 'Français',
+                    'ru' => 'Русский язык',
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+                'label' => 'choose.a.language',
+                'attr' => [
+                    "id" => "language",
+                ],
+                'data' => $request->getLocale(),
+            ]);
 
         return $builder->getForm();
     }
@@ -321,30 +325,30 @@ class InstallApp extends AppController
     protected function buildUserForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-                        ->add('username', 'text', [
-                            'required' => true,
-                            'label' => $this->getTranslator()->trans('username'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('email', 'email', [
-                            'required' => true,
-                            'label' => $this->getTranslator()->trans('email'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('password', 'repeated', [
-                            'type' => 'password',
-                            'invalid_message' => 'password.must_match',
-                            'first_options' => ['label' => 'password'],
-                            'second_options' => ['label' => 'password.verify'],
-                            'required' => true,
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('username', 'text', [
+                'required' => true,
+                'label' => $this->getTranslator()->trans('username'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('email', 'email', [
+                'required' => true,
+                'label' => $this->getTranslator()->trans('email'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('password', 'repeated', [
+                'type' => 'password',
+                'invalid_message' => 'password.must_match',
+                'first_options' => ['label' => 'password'],
+                'second_options' => ['label' => 'password.verify'],
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         return $builder->getForm();
     }
@@ -375,59 +379,59 @@ class InstallApp extends AppController
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('site_name', 'text', [
-                            'required' => true,
-                            'label' => $this->getTranslator()->trans('site_name'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('email_sender', 'email', [
-                            'required' => true,
-                            'label' => $this->getTranslator()->trans('email_sender'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('email_sender_name', 'text', [
-                            'required' => true,
-                            'label' => $this->getTranslator()->trans('email_sender_name'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('seo_description', 'text', [
-                            'required' => false,
-                            'label' => $this->getTranslator()->trans('meta_description'),
-                        ])
-                        ->add('timezone', 'choice', [
-                            'choices' => $timeZoneList,
-                            'label' => $this->getTranslator()->trans('timezone'),
-                            'required' => true,
-                        ]);
+            ->add('site_name', 'text', [
+                'required' => true,
+                'label' => $this->getTranslator()->trans('site_name'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('email_sender', 'email', [
+                'required' => true,
+                'label' => $this->getTranslator()->trans('email_sender'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('email_sender_name', 'text', [
+                'required' => true,
+                'label' => $this->getTranslator()->trans('email_sender_name'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('seo_description', 'text', [
+                'required' => false,
+                'label' => $this->getTranslator()->trans('meta_description'),
+            ])
+            ->add('timezone', 'choice', [
+                'choices' => $timeZoneList,
+                'label' => $this->getTranslator()->trans('timezone'),
+                'required' => true,
+            ]);
 
         $themesType = new \RZ\Roadiz\CMS\Forms\ThemesType();
 
         if ($themesType->getSize() > 0) {
             $builder->add('separator_1', new SeparatorType(), [
-                        'label' => $this->getTranslator()->trans('themes.frontend.description'),
-                    ])
-                    ->add('install_theme', 'checkbox', [
-                        'required' => false,
-                        'label' => $this->getTranslator()->trans('install_theme'),
-                    ])
-                    ->add(
-                        'className',
-                        $themesType,
-                        [
-                            'label' => $this->getTranslator()->trans('theme.selector'),
-                            'required' => true,
-                            'constraints' => [
-                                new \Symfony\Component\Validator\Constraints\NotNull(),
-                                new \Symfony\Component\Validator\Constraints\Type('string'),
-                            ],
-                        ]
-                    );
+                'label' => $this->getTranslator()->trans('themes.frontend.description'),
+            ])
+                ->add('install_theme', 'checkbox', [
+                    'required' => false,
+                    'label' => $this->getTranslator()->trans('install_theme'),
+                ])
+                ->add(
+                    'className',
+                    $themesType,
+                    [
+                        'label' => $this->getTranslator()->trans('theme.selector'),
+                        'required' => true,
+                        'constraints' => [
+                            new \Symfony\Component\Validator\Constraints\NotNull(),
+                            new \Symfony\Component\Validator\Constraints\Type('string'),
+                        ],
+                    ]
+                );
         }
 
         return $builder->getForm();
@@ -442,9 +446,9 @@ class InstallApp extends AppController
     protected function buildDoneForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-                        ->add('action', 'hidden', [
-                            'data' => 'quit_install',
-                        ]);
+            ->add('action', 'hidden', [
+                'data' => 'quit_install',
+            ]);
 
         return $builder->getForm();
     }

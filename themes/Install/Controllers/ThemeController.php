@@ -119,7 +119,12 @@ class ThemeController extends InstallApp
                  * Save informations
                  */
                 try {
-                    $fixtures = new Fixtures($this->getService("em"));
+                    $fixtures = new Fixtures(
+                        $this->getService('em'),
+                        $this->getService('kernel')->getCacheDir(),
+                        $this->getService('kernel')->isDebug(),
+                        $request
+                    );
                     $fixtures->saveInformations($infosForm->getData());
 
                     if (!empty($infosForm->getData()["install_theme"])) {

@@ -36,9 +36,6 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * ThemeController
- */
 class ThemeInstaller
 {
     /**
@@ -68,7 +65,7 @@ class ThemeInstaller
     {
         $data = static::getThemeInformation($classname);
 
-        $fix = new Fixtures($em, $request);
+        $fix = new Fixtures($em, "", $request);
         $data["className"] = $classname;
         $fix->installTheme($data);
 

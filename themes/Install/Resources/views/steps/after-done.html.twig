@@ -1,0 +1,28 @@
+{% extends '@Install/base.html.twig' %}
+
+{% block siteTitle %}{{ head.siteTitle|trans }} — {% trans %}success.title{% endtrans %}{% endblock %}
+{% block content %}
+    <article id="content-done" class="content">
+        <div class="content-title-cont">
+            <h1 class="content-title">{% trans %}success.title{% endtrans %}</h1>
+        </div>
+
+        <div class="content-progress">
+            <div class="content-progress-item first active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active"></div>
+            <div class="content-progress-item active last"></div>
+        </div>
+
+        <div class="content-text-cont">
+            <div class="content-intro content-intro-big">
+                {% trans %}now_you_can_delete_install_file_and_use_roadiz{% endtrans %}
+            </div>
+        </div>
+    </article>
+
+{% endblock %}

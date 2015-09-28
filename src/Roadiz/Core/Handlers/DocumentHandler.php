@@ -31,10 +31,8 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Handle operations with documents entities.

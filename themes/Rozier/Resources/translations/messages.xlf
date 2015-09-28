@@ -3270,6 +3270,10 @@
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="preview.page">
+        <source>preview.page</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="314">
         <source>duplicate</source>
         <target></target>

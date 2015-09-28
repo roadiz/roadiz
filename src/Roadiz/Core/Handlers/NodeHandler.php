@@ -661,16 +661,18 @@ class NodeHandler
     /**
      * Get previous node from hierarchy.
      *
-     * @param  array|null           $criteria        [description]
-     * @param  array|null           $order           [description]
-     * @param  AuthorizationChecker|null $authorizationChecker [description]
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  AuthorizationChecker|null $authorizationChecker
+     * @param  boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getPrevious(
         array $criteria = null,
         array $order = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         if ($this->node->getPosition() <= 1) {
             return null;
@@ -700,23 +702,26 @@ class NodeHandler
             ->findOneBy(
                 $criteria,
                 $order,
-                $authorizationChecker
+                $authorizationChecker,
+                $preview
             );
     }
 
     /**
      * Get next node from hierarchy.
      *
-     * @param  array|null           $criteria        [description]
-     * @param  array|null           $order           [description]
-     * @param  AuthorizationChecker|null $authorizationChecker [description]
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  AuthorizationChecker|null $authorizationChecker
+     * @param  boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getNext(
         array $criteria = null,
         array $order = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         if (null === $criteria) {
             $criteria = [];
@@ -742,7 +747,8 @@ class NodeHandler
             ->findOneBy(
                 $criteria,
                 $order,
-                $authorizationChecker
+                $authorizationChecker,
+                $preview
             );
     }
 }

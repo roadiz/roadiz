@@ -24,33 +24,58 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TemplatesCacheClearer.php
+ * @file PreviewModeSubscriber.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Utils\Clearer;
+namespace RZ\Roadiz\Core\Events;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
+use Pimple\Container;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * TemplatesCacheClearer.
+ *
  */
-class TemplatesCacheClearer extends Clearer
+class PreviewModeSubscriber implements EventSubscriberInterface
 {
-    public function clear()
+    protected $container;
+
+    public function __construct(Container $container)
     {
-        $fs = new Filesystem();
-        $finder = new Finder();
+        $this->container = $container;
+    }
 
-        if ($fs->exists($this->getCacheDir() . '/twig_cache')) {
-            $finder->in($this->getCacheDir() . '/twig_cache');
-            $fs->remove($finder);
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::REQUEST => 'onRequest',
+            KernelEvents::RESPONSE => 'onResponse',
+        ];
+    }
 
-            $this->output .= 'Compiled Twig templates have been purged.'.PHP_EOL;
-
-            return true;
+    public function onRequest(GetResponseEvent $event)
+    {
+        if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
+            throw new AccessDeniedException("You are not allowed to use preview entry point.");
         }
+    }
 
-        return false;
+    /**
+     * Enforce cache disabling.
+     *
+     * @param  FilterResponseEvent $event
+     */
+    public function onResponse(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        $response->expire();
+
+        $event->setResponse($response);
     }
 }

@@ -41,7 +41,7 @@ class ConfigurationCacheClearer extends Clearer
     {
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->in(ROADIZ_ROOT . '/cache')
+        $finder->in($this->getCacheDir())
             ->files()
             ->name('configuration.php')
             ->name('configuration.php.meta');

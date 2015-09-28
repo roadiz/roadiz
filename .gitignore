@@ -1,6 +1,9 @@
 #
 # Roadiz
 #
+/dev.php
+/install.php
+
 # PHPCS report
 report.txt
 

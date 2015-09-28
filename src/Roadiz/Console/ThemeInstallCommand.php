@@ -120,13 +120,18 @@ class ThemeInstallCommand extends Command
 
     protected function importTheme($classname, &$text)
     {
+        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $themeFile = $classname;
         $themeFile = str_replace('\\', '/', $themeFile);
         $themeFile = str_replace('Themes', 'themes', $themeFile);
         $themeFile .= ".php";
 
         if (file_exists($themeFile)) {
-            $fixtures = new Fixtures($this->entityManager);
+            $fixtures = new Fixtures(
+                $this->entityManager,
+                $kernel->getCacheDir(),
+                $kernel->isDebug()
+            );
             $fixtures->installFrontendTheme($classname);
             $text .= '<info>Theme class “' . $themeFile . '” has been installed…</info>' . PHP_EOL;
 

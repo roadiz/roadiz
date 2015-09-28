@@ -281,26 +281,31 @@ class NodesSourcesRepository extends EntityRepository
      * @param  array                &$criteria
      * @param  QueryBuilder         &$qb
      * @param  AuthorizationChecker|null &$authorizationChecker
+     * @param  boolean $preview
+     *
      * @return boolean Already Joined Node relation
      */
     protected function filterByAuthorizationChecker(
         &$criteria,
         &$qb,
-        AuthorizationChecker &$authorizationChecker = null
+        AuthorizationChecker &$authorizationChecker = null,
+        $preview = false
     ) {
-        if (null !== $authorizationChecker &&
-            !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
-            /*
-             * Forbid unpublished node for anonymous and not backend users.
-             */
-            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
-            return true;
-        } elseif (null !== $authorizationChecker &&
-            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+        $backendUser = $preview === true &&
+                       null !== $authorizationChecker &&
+                       $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+
+        if ($backendUser) {
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
             $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->lte('n.status', Node::PUBLISHED));
+            return true;
+        } elseif (null !== $authorizationChecker) {
+            /*
+             * Forbid unpublished node for anonymous and not backend users.
+             */
+            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
             return true;
         }
 
@@ -311,11 +316,12 @@ class NodesSourcesRepository extends EntityRepository
      * Create a securized query with node.published = true if user is
      * not a Backend user.
      *
-     * @param AuthorizationChecker $authorizationChecker
      * @param array           $criteria
      * @param array\null      $orderBy
      * @param integer|null    $limit
      * @param integer|null    $offset
+     * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      *
      * @return QueryBuilder
      */
@@ -324,14 +330,15 @@ class NodesSourcesRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $joinedNodeType = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'ns')
            ->add('from', $this->getEntityName() . ' ns');
 
-        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker);
+        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         /*
          * Filtering by tag
@@ -375,18 +382,20 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean $preview
      *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
         array &$criteria,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(ns.id)')
            ->add('from', $this->getEntityName() . ' ns');
 
-        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker);
+        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         /*
          * Filtering by tag
@@ -402,16 +411,19 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean $preview
      *
      * @return int
      */
     public function countBy(
         $criteria,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $query = $this->getCountContextualQueryWithTranslation(
             $criteria,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $query->getQuery();
@@ -456,6 +468,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param integer         $limit
      * @param integer         $offset
      * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -464,7 +477,8 @@ class NodesSourcesRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $qb = $this->getContextualQuery(
@@ -472,7 +486,8 @@ class NodesSourcesRepository extends EntityRepository
             $orderBy,
             $limit,
             $offset,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $qb->getQuery();
@@ -493,14 +508,17 @@ class NodesSourcesRepository extends EntityRepository
      *
      *
      * @param array           $criteria
+     * @param array           $orderBy
      * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources|null
      */
     public function findOneBy(
         array $criteria,
         array $orderBy = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $qb = $this->getContextualQuery(
@@ -508,7 +526,8 @@ class NodesSourcesRepository extends EntityRepository
             $orderBy,
             1,
             null,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $qb->getQuery();

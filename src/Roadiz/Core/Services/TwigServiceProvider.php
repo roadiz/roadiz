@@ -56,7 +56,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return ROADIZ_ROOT . '/cache/twig_cache';
+            return $c['kernel']->getCacheDir() . '/twig_cache';
         };
 
         /*
@@ -83,7 +83,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         $container['twig.environment'] = function ($c) {
             $c['stopwatch']->start('initTwig');
             $twig = new \Twig_Environment($c['twig.loaderFileSystem'], [
-                'debug' => $c['config']['devMode'],
+                'debug' => $c['kernel']->isDebug(),
                 'cache' => $c['twig.cacheFolder'],
             ]);
 
@@ -108,8 +108,11 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension($c['twig.routingExtension']);
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
             $twig->addExtension(new BlockRenderExtension($c));
-            if (true !== $c['config']['install']) {
-                $twig->addExtension(new NodesSourcesExtension($c['securityAuthorizationChecker']));
+            if (true !== $c['kernel']->isInstallMode()) {
+                $twig->addExtension(new NodesSourcesExtension(
+                    $c['securityAuthorizationChecker'],
+                    $c['kernel']->isPreview()
+                ));
             }
             $twig->addExtension(new DocumentExtension());
             $twig->addExtension(new UrlExtension(
@@ -123,7 +126,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $twig->addExtension($c['twig.cacheExtension']);
             }
 
-            if (true === $c['config']['devMode']) {
+            if (true === $c['kernel']->isDebug()) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
             $c['stopwatch']->stop('initTwig');

@@ -39,6 +39,8 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Log\DoctrineHandler;
 use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
 use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
+use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
+use RZ\Roadiz\Utils\Security\TimedFirewall;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -53,7 +55,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
-use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
@@ -61,7 +62,6 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
-use RZ\Roadiz\Utils\Security\TimedFirewall;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
@@ -144,14 +144,14 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['logger'] = function ($c) {
             $log = new Logger('roadiz');
-            $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz.log', Logger::NOTICE));
+            $log->pushHandler(new StreamHandler($c['kernel']->getLogDir() . '/roadiz.log', Logger::NOTICE));
 
             if (null !== $c['em'] &&
-                true === $c['config']['devMode']) {
+                true === $c['kernel']->isDebug()) {
                 $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz-debug.log', Logger::DEBUG));
             }
             if (null !== $c['em'] &&
-                true !== $c['config']['install']) {
+                false === $c['kernel']->isInstallMode()) {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
                     $c['securityTokenStorage'],
@@ -170,7 +170,6 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['contextListener'] = function ($c) {
-
             $c['session']; //Force session handler
 
             return new ContextListener(
@@ -279,14 +278,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['roleHierarchy'] = function ($c) {
-            return new RoleHierarchy([
-                Role::ROLE_SUPERADMIN => $c['allBasicRoles'],
-            ]);
-        };
-
-        $container['allBasicRoles'] = function ($c) {
-            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Role')
-            ->getAllBasicRoleName();
+            return new DoctrineRoleHierarchy($c['em']);
         };
 
         $container['roleHierarchyVoter'] = function ($c) {
@@ -308,8 +300,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
 
         $container['firewallMap'] = function ($c) {
-            $map = new FirewallMap();
-            return $map;
+            return new FirewallMap();
         };
 
         $container['firewallExceptionListener'] = function ($c) {

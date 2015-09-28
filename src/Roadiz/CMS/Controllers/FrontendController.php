@@ -242,22 +242,35 @@ class FrontendController extends AppController
      */
     public function validateAccessForNodeWithStatus(Node $node)
     {
-        if (!$this->isGranted(Role::ROLE_BACKEND_USER) &&
-            !$node->isPublished()) {
-            /*
-             * Not allowed to see unpublished nodes
-             */
-            return $this->throw404();
-        } elseif ($this->isGranted(Role::ROLE_BACKEND_USER) &&
-            $node->getStatus() > Node::PUBLISHED) {
+        /*
+         * For archived and deleted nodes
+         */
+        if ($node->getStatus() > Node::PUBLISHED) {
             /*
              * Not allowed to see deleted and archived nodes
              * even for Admins
              */
             return $this->throw404();
-        } else {
-            return true;
         }
+
+        /*
+         * For unpublished nodes
+         */
+        if ($node->getStatus() < Node::PUBLISHED) {
+            if ($this->isGranted(Role::ROLE_BACKEND_USER) &&
+                $this->getService('kernel')->isPreview()) {
+                return true;
+            }
+            /*
+             * Not allowed to see unpublished nodes
+             */
+            return $this->throw404();
+        }
+
+        /*
+         * Everyone can view published nodes.
+         */
+        return true;
     }
 
     /**
@@ -292,8 +305,7 @@ class FrontendController extends AppController
 
         if ($node !== null) {
             if (true !== $resp = $this->validateAccessForNodeWithStatus(
-                $node,
-                $this->getService('securityAuthorizationChecker')
+                $node
             )) {
                 return $resp;
             }

@@ -14,7 +14,7 @@ class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetUrl($nodeSource, $expectedUrl)
     {
-        $generator = new NodesSourcesUrlGenerator(Kernel::getInstance()->getRequest(), $nodeSource);
+        $generator = new NodesSourcesUrlGenerator(Kernel::getService('request'), $nodeSource);
         $this->assertEquals($generator->getUrl(), $expectedUrl);
     }
 
