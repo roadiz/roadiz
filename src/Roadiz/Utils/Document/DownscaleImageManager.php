@@ -33,7 +33,6 @@ use Doctrine\ORM\EntityManager;
 use Intervention\Image\Constraint;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Constraint;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Filesystem\Filesystem;
