@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\Document;
 
 use Doctrine\ORM\EntityManager;
+use Intervention\Image\Constraint;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
@@ -116,7 +117,7 @@ class DownscaleImageManager
     protected function getDownscaledImage(Image $processImage)
     {
         // prevent possible upsizing
-        $processImage->resize($this->maxPixelSize, $this->maxPixelSize, function ($constraint) {
+        $processImage->resize($this->maxPixelSize, $this->maxPixelSize, function (Constraint $constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
