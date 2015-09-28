@@ -55,13 +55,13 @@ class SolariumSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             NodesSourcesEvents::NODE_SOURCE_UPDATED => 'onSolariumSingleUpdate',
             NodesSourcesEvents::NODE_SOURCE_DELETED => 'onSolariumSingleDelete',
             NodeEvents::NODE_DELETED => 'onSolariumNodeDelete',
             NodeEvents::NODE_UNDELETED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
-        );
+        ];
     }
 
     /**

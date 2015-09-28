@@ -4,16 +4,16 @@
 var ChildrenNodesField = function () {
     var _this = this;
 
-    _this.$fields = $('[data-children-nodes-widget]');
-    _this.$nodeTrees = _this.$fields.find('.nodetree-widget');
-    _this.$quickAddNodeButtons = _this.$fields.find('.children-nodes-quick-creation a');
-
     _this.init();
     _this.dropDownize();
 };
 
 ChildrenNodesField.prototype.init = function() {
     var _this = this;
+
+    _this.$fields = $('[data-children-nodes-widget]');
+    _this.$nodeTrees = _this.$fields.find('.nodetree-widget');
+    _this.$quickAddNodeButtons = _this.$fields.find('.children-nodes-quick-creation a');
 
     if (_this.$quickAddNodeButtons.length) {
 
@@ -63,11 +63,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             data: postData,
         })
         .done(function(data) {
-            //console.log("success");
-            //console.log(data);
-
             Rozier.refreshMainNodeTree();
-
             var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
             _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
 
@@ -123,10 +119,10 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
     var _this = this;
 
     if($nodeTree.length){
-
         if (typeof rootNodeId === "undefined") {
             var $rootTree = $($nodeTree.find('.root-tree')[0]);
             rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
+            translationId = parseInt($rootTree.attr("data-translation-id"));
         }
         Rozier.lazyload.canvasLoader.show();
         var postData = {
@@ -153,12 +149,16 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
                 $nodeTree.fadeOut('slow', function() {
                     var $tempContainer = $nodeTree.parents('.children-nodes-widget');
                     $nodeTree.replaceWith(data.nodeTree);
+
+
                     $nodeTree = $tempContainer.find('.nodetree-widget');
                     Rozier.initNestables();
                     Rozier.bindMainTrees();
                     Rozier.lazyload.bindAjaxLink();
                     $nodeTree.fadeIn();
-                    _this.$fields.find('.nodetree-langs').remove();
+
+                    _this.init();
+
                     Rozier.lazyload.canvasLoader.hide();
                     Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions();
                 });

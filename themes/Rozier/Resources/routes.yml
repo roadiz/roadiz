@@ -76,7 +76,7 @@ settingGroupsRoutes:
 # TAGS
 tagsHomePage:
     path:     /rz-admin/tags
-    defaults: { _controller: Themes\Rozier\Controllers\TagsController::indexAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Tags\TagsController::indexAction }
 tagsRoutes:
     resource: "routing/tags.yml"
     prefix: /rz-admin/tags

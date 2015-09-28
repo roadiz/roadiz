@@ -50,7 +50,7 @@ class NodesSourcesUrlSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             NodesSourcesEvents::NODE_SOURCE_CREATED => 'purgeNSUrlCache',
             NodesSourcesEvents::NODE_SOURCE_DELETED => 'purgeNSUrlCache',
             TranslationEvents::TRANSLATION_UPDATED => 'purgeNSUrlCache',
@@ -61,7 +61,7 @@ class NodesSourcesUrlSubscriber implements EventSubscriberInterface
             UrlAliasEvents::URL_ALIAS_CREATED => 'purgeNSUrlCache',
             UrlAliasEvents::URL_ALIAS_UPDATED => 'purgeNSUrlCache',
             UrlAliasEvents::URL_ALIAS_DELETED => 'purgeNSUrlCache',
-        );
+        ];
     }
 
     /**

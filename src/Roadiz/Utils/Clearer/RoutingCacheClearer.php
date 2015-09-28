@@ -42,8 +42,8 @@ class RoutingCacheClearer extends Clearer
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if ($fs->exists(ROADIZ_ROOT . '/gen-src/Compiled')) {
-            $finder->in(ROADIZ_ROOT . '/gen-src/Compiled');
+        if ($fs->exists(ROADIZ_ROOT . '/cache/routing')) {
+            $finder->in(ROADIZ_ROOT . '/cache/routing');
             $fs->remove($finder);
 
             $this->output .= 'Compiled route collections have been purged.'.PHP_EOL;

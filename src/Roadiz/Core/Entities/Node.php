@@ -89,7 +89,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean", name="dynamic_node_name", nullable=true)
+     * @ORM\Column(type="boolean", name="dynamic_node_name", nullable=false, options={"default" = true})
      */
     protected $dynamicNodeName = true;
 
@@ -122,7 +122,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean", name="home")
+     * @ORM\Column(type="boolean", name="home", nullable=false, options={"default" = false})
      */
     private $home = false;
     /**
@@ -144,7 +144,7 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
     /**
@@ -241,7 +241,7 @@ class Node extends AbstractDateTimedPositioned
         return $this;
     }
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $locked = false;
 
@@ -291,7 +291,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean", name="hide_children", nullable=false)
+     * @ORM\Column(type="boolean", name="hide_children", nullable=false, options={"default" = false})
      */
     protected $hideChildren = false;
 
@@ -335,7 +335,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $sterile = false;
     /**

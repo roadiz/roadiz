@@ -69,13 +69,26 @@ class Tag extends AbstractDateTimedPositioned
      */
     public function setTagName($tagName)
     {
+        $this->dirtyTagName = $tagName;
         $this->tagName = StringHandler::slugify($tagName);
 
         return $this;
     }
 
+    private $dirtyTagName;
+
     /**
-     * @ORM\Column(type="boolean")
+     * Gets the value of dirtyTagName.
+     *
+     * @return string
+     */
+    public function getDirtyTagName()
+    {
+        return $this->dirtyTagName;
+    }
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
     /**
@@ -98,7 +111,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $locked = false;
     /**

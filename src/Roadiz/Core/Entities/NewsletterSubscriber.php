@@ -43,6 +43,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NewsletterSubscriber extends AbstractEntity
 {
+    const QUEUED = 10;
+    const SENT = 20;
+    const OPENED = 30;
+
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", inversedBy="newsletterSubscriber")
      * @ORM\JoinColumn(name="newsletter_id", referencedColumnName="id", onDelete="CASCADE")
@@ -86,7 +90,7 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * @ORM\Column(type="integer", unique=false)
      */
-    private $status = Newsletter::PENDING;
+    private $status = NewsletterSubscriber::QUEUED;
 
     /**
      * @return integer

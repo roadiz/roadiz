@@ -81,7 +81,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
          * Main twig environment
          */
         $container['twig.environment'] = function ($c) {
-
+            $c['stopwatch']->start('initTwig');
             $twig = new \Twig_Environment($c['twig.loaderFileSystem'], [
                 'debug' => $c['config']['devMode'],
                 'cache' => $c['twig.cacheFolder'],
@@ -126,6 +126,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             if (true === $c['config']['devMode']) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
+            $c['stopwatch']->stop('initTwig');
 
             return $twig;
         };

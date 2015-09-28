@@ -333,6 +333,13 @@ trait NodesSourcesTrait
                     ],
                 ]);
                 break;
+            case NodeTypeField::MULTI_GEOTAG_T:
+                $options = array_merge_recursive($options, [
+                    'attr' => [
+                        'class' => 'rz-multi-geotag-field',
+                    ],
+                ]);
+                break;
             case NodeTypeField::MARKDOWN_T:
                 $options = array_merge_recursive($options, [
                     'attr' => [

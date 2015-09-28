@@ -46,7 +46,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Theme extends AbstractEntity
 {
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @var boolean
      */
     private $available = false;
@@ -71,7 +71,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(type="boolean", name="static_theme", nullable=false)
+     * @ORM\Column(type="boolean", name="static_theme", nullable=false, options={"default" = false})
      */
     protected $staticTheme = false;
 

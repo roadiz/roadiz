@@ -139,7 +139,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $open = true;
     /**
@@ -369,5 +369,24 @@ class CustomForm extends AbstractDateTimed
     public function getNodes()
     {
         return $this->nodes;
+    }
+
+    public function __clone()
+    {
+        $this->setId(null);
+        $suffix =  "-" . uniqid();
+        $this->name .= $suffix;
+        $this->displayName .= $suffix;
+        $this->customFormAnswers = new ArrayCollection();
+        $fields = $this->getFields();
+        if ($fields !== null) {
+            $this->fields = new ArrayCollection();
+            foreach ($fields as $field) {
+                $cloneField = clone $field;
+                $this->fields->add($cloneField);
+                $cloneField->setCustomForm($this);
+            }
+        }
+        $this->nodes = new ArrayCollection();
     }
 }

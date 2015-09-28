@@ -128,7 +128,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $indexed = false;
 
@@ -153,7 +153,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
 

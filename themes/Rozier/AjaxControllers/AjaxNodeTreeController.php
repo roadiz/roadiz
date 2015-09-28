@@ -58,9 +58,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if (null === $translationId) {
-            $translation = $this->getService('em')
-                                ->getRepository('\RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $translation = $this->getService('defaultTranslation');
         } else {
             $translation = $this->getService('em')
                                 ->find(

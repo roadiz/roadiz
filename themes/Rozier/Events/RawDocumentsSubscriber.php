@@ -24,61 +24,50 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RouteCollectionSubscriber.php
+ * @file RawDocumentsSubscriber.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Events;
+namespace Themes\Rozier\Events;
 
-use RZ\Roadiz\Core\Routing\RouteDumper;
+use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Events for route collection generations.
+ * Create a raw image and downscale it to a new image file for a better web usage.
  */
-class RouteCollectionSubscriber implements EventSubscriberInterface
+class RawDocumentsSubscriber implements EventSubscriberInterface
 {
-    protected $routeDumper;
-    protected $stopwatch;
-
-    public function __construct(RouteCollection $routeCollection, Stopwatch $stopwatch)
-    {
-        $this->stopwatch = $stopwatch;
-        $this->routeDumper = new RouteDumper(
-            $routeCollection,
-            ROADIZ_ROOT . '/gen-src/Compiled'
-        );
-    }
+    protected $manager;
 
     /**
-     * @return array
+     * @param EntityManager $imageDriver
+     * @param string  $imageDriver
+     * @param integer $maxPixelSize
+     * @param string  $rawImageSuffix
      */
+    public function __construct(
+        EntityManager $em,
+        LoggerInterface $logger = null,
+        $imageDriver = 'gd',
+        $maxPixelSize = 0,
+        $rawImageSuffix = ".raw"
+    ) {
+        $this->manager = new DownscaleImageManager($em, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
+    }
+
     public static function getSubscribedEvents()
     {
-        // https://github.com/symfony/HttpKernel/blob/master/EventListener/RouterListener.php
-        // Use 33 priority
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 33],
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onDocumentImageUploaded',
         ];
     }
 
-    public static function needToDumpUrlTools()
+    public function onDocumentImageUploaded(FilterDocumentEvent $event)
     {
-        $fs = new Filesystem();
-        return (!$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlMatcher.php') ||
-            !$fs->exists(ROADIZ_ROOT . '/gen-src/Compiled/GlobalUrlGenerator.php'));
-    }
-
-    /**
-     *
-     */
-    public function onKernelRequest()
-    {
-        $this->stopwatch->start('dumpUrlUtils');
-        $this->routeDumper->dump();
-        $this->stopwatch->stop('dumpUrlUtils');
+        $this->manager->processAndOverrideDocument($event->getDocument());
     }
 }

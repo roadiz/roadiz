@@ -4040,7 +4040,7 @@
       </trans-unit>
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409" approved="yes">
-        <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
+        <source><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></source>
         <target xml:lang="en"><![CDATA[{0} No item|{1} <span>1</span> item|]1,Inf] <span>%count%</span> items]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410" approved="yes">
@@ -5161,6 +5161,10 @@
           <source>geographic.coordinates.type</source>
           <target xml:lang="en">Single geographic coordinates</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type" approved="yes">
+          <source>multiple.geographic.coordinates.type</source>
+          <target xml:lang="en">Multiple geographic coordinates</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="link.folders" approved="yes">
           <source>link.folders</source>
           <target xml:lang="en">Link to folder(s)</target>
@@ -5391,8 +5395,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%" approved="yes">
           <source>duplicated.newsletter.%name%</source>
-          <target xml:lang="en">Newsletter “%name%” duplicated.</target>
-      </trans-unit>
+          <target xml:lang="en">Newsletter “%name%” has been duplicated.</target>
+      <alt-trans><target xml:lang="en">Newsletter “%name%” duplicated.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%" approved="yes">
           <source>impossible.duplicate.newsletter.%name%</source>
           <target xml:lang="en">Impossible to duplicate newsletter “%name%”</target>
@@ -6104,6 +6108,68 @@
           <source>no_valid_class_found</source>
           <target xml:lang="en">No valid class found!</target>
       <alt-trans><target xml:lang="en">No valid class available!</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%" approved="yes">
+          <source>duplicated.custom.form.%name%</source>
+          <target xml:lang="en">Custom form “%name%” has been duplicated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.custom.form.%name%" approved="yes">
+          <source>impossible.duplicate.custom.form.%name%</source>
+          <target xml:lang="en">Impossible to duplicate custom form “%name%”</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.duplicate" approved="yes">
+          <source>customForm.duplicate</source>
+          <target xml:lang="en">Duplicate</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype">
+          <source>transtype</source>
+          <target xml:lang="en" state="translated">Transtype</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.node">
+          <source>transtype.node</source>
+          <target xml:lang="en" state="translated">Transtype node</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype_will_copy_data_from_fields_existing_in_both_types_not_others">
+          <source>transtype_will_copy_data_from_fields_existing_in_both_types_not_others</source>
+          <target xml:lang="en" state="translated">Transtype processing will try to copy similar contents from former type to the new one. Remaining data will be lost.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.a.node">
+          <source>transtype.a.node</source>
+          <target xml:lang="en" state="translated">Transtype a node</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%node%.transtyped_to.%type%">
+          <source>%node%.transtyped_to.%type%</source>
+          <target xml:lang="en" state="translated">“%node%” has been transtyped to %type%.</target>
+      </trans-unit>
+      <!-- Tag multiple children creation -->
+      <trans-unit xml:space="preserve" id="add_all">
+          <source>add_all</source>
+          <target xml:lang="en" state="translated">Add all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.multiple.tags">
+          <source>add.multiple.tags</source>
+          <target xml:lang="en" state="translated">Add multiple tags</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated">
+          <source>write.every.tags.names.comma.separated</source>
+          <target xml:lang="en" state="translated">Write every tags names you want to create comma separated.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.names">
+          <source>tags.names</source>
+          <target xml:lang="en" state="translated">Tags names</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.tags">
+          <source>add.tags</source>
+          <target xml:lang="en" state="translated">Add tags</target>
+      </trans-unit>
+      <!-- Raw documents -->
+      <trans-unit xml:space="preserve" id="download.raw.document">
+          <source>download.raw.document</source>
+          <target xml:lang="en" state="translated">Download raw document</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.raw_document">
+          <source>document.raw_document</source>
+          <target xml:lang="en" state="translated">Raw document</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

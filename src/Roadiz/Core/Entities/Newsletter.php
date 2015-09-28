@@ -46,7 +46,6 @@ use RZ\Roadiz\Core\Handlers\NewsletterHandler;
  */
 class Newsletter extends AbstractDateTimed
 {
-
     const DRAFT = 10;
     const PENDING = 20;
     const SENDING = 30;

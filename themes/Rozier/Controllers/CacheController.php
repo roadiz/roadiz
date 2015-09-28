@@ -35,6 +35,7 @@ use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
@@ -63,6 +64,7 @@ class CacheController extends RozierApp
                 new TranslationsCacheClearer(),
                 new RoutingCacheClearer(),
                 new TemplatesCacheClearer(),
+                new ConfigurationCacheClearer(),
             ];
             foreach ($clearers as $clearer) {
                 $clearer->clear();

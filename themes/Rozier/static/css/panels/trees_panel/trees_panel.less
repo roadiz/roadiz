@@ -202,7 +202,8 @@
         position: relative;
 
 
-        li a,  #see-all {
+        li a,
+        #see-all {
             display: block;
             background-color: #AFAFAF;
             padding: 5px 13px 4px;
@@ -223,11 +224,36 @@
                 background: darken(@maintree-search-input-bg, 4%);
                 color: #333;
             }
+
+            .type {
+                text-transform: uppercase;
+                font-size: 8px;
+                float: right;
+                display: inline-block;
+                background-color: rgba(0, 0, 0, 0.15);
+                padding: 4px 6px 2px;
+                border-radius: 8px;
+                line-height: 8px;
+                color: rgba(255, 255, 255, 0.65);
+                text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+                letter-spacing: 0.04em;
+                margin-top: 1px;
+                margin-right: -7px;
+            }
+
+            &:after {
+                content: '';
+                display: block;
+                clear: both;
+                float: none;
+            }
         }
         &:first-child a {
             border-top: 1px solid darken(@maintree-search-input-bg, 4%);
         }
         #see-all {
+            display: none;
+
             border-left: 2px solid #333;
             background-color: @maintree-search-input-bg;
             &:before {

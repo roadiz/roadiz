@@ -55,9 +55,7 @@ class NewslettersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Newsletter',
             [],
@@ -91,9 +89,7 @@ class NewslettersController extends RozierApp
         $type = $this->getService('em')
                      ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
-        $trans = $this->getService('em')
-                      ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                      ->findDefault();
+        $trans = $this->getService('defaultTranslation');
 
         if ($translationId !== null) {
             $trans = $this->getService('em')

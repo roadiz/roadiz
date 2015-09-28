@@ -33,7 +33,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Symfony\Component\Console\Helper\Helper;
 
 /**
- * SolrHelper.
+ * CacheProviderHelper.
  */
 class CacheProviderHelper extends Helper
 {

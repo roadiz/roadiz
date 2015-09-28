@@ -1,0 +1,26 @@
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global">
+
+    <header class="content-header header-node header-node-transtype">
+        <h1 class="content-title">{% trans %}transtype.a.node{% endtrans %}</h1>
+        {% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+    </header>
+
+    {% if form %}
+    <article class="content content-delete content-node-delete content-no-action-menu">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend class="delete-legend">{% trans %}transtype_will_copy_data_from_fields_existing_in_both_types_not_others{% endtrans %}</legend>
+                <a href="{{ path('nodesEditPage', {nodeId: node.getId}) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-bolt"></i> {% trans %}transtype.node{% endtrans %}</button>
+            </fieldset>
+        </form>
+    </article>
+    {% endif %}
+</section>
+{% endblock %}

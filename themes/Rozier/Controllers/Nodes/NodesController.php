@@ -64,9 +64,7 @@ class NodesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         $user = $this->getUser();
 
@@ -145,9 +143,7 @@ class NodesController extends RozierApp
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($node);
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         if (null !== $node) {
             $this->assignation['node'] = $node;
@@ -268,9 +264,7 @@ class NodesController extends RozierApp
         $type = $this->getService('em')
                      ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         if ($translationId !== null) {
             $translation = $this->getService('em')
@@ -344,9 +338,7 @@ class NodesController extends RozierApp
         // include CHRoot to enable creating node in it
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         $nodeTypesCount = $this->getService('em')
                                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
@@ -447,6 +439,13 @@ class NodesController extends RozierApp
                     ['%name%' => $node->getNodeName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
+
+                if ($request->query->has('referer')) {
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($request->query->get('referer'));
+                }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */

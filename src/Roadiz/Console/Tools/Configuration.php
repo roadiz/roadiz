@@ -98,6 +98,11 @@ class Configuration
             "security" => [
                 "secret" => "change#this#secret#very#important",
             ],
+            'cacheDriver' => [
+                'type' => null,
+                'host' => null,
+                'port' => null,
+            ],
             "mailer" => [
                 "type" => "",
                 "host" => "localhost",
@@ -110,6 +115,14 @@ class Configuration
                 "src/Roadiz/Core/Entities",
                 "src/Roadiz/Core/AbstractEntities",
                 "gen-src/GeneratedNodeSources",
+            ],
+            'rememberMeLifetime' => 2592000,
+            'additionalServiceProviders' => [],
+            'additionalCommands' => [],
+            'assetsProcessing' => [
+                'driver' => 'gd',
+                'defaultQuality' => 90,
+                'maxPixelSize' => 1920,
             ],
         ];
     }

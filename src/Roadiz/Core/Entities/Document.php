@@ -35,12 +35,18 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
- * @ORM\Table(name="documents")
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(name="documents", indexes={
+ *     @ORM\Index(columns={"raw"}),
+ *     @ORM\Index(columns={"private"})
+ * })
  */
 class Document extends AbstractDateTimed
 {
@@ -156,6 +162,22 @@ class Document extends AbstractDateTimed
 
         return $this;
     }
+
+    /**
+     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
+     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
+     **/
+    protected $rawDocument = null;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
+     **/
+    private $downscaledDocument = null;
+
+    /**
+     * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
+     */
+    protected $raw = false;
 
     /**
      * Get short type name for current document Mime type.
@@ -346,7 +368,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $private = false;
     /**
@@ -492,5 +514,105 @@ class Document extends AbstractDateTimed
     public static function getPrivateFilesFolderName()
     {
         return 'files/private';
+    }
+
+    /**
+     * Gets the value of rawDocument.
+     *
+     * @return Document|null
+     */
+    public function getRawDocument()
+    {
+        return $this->rawDocument;
+    }
+
+    /**
+     * Sets the value of rawDocument.
+     *
+     * @param Document|null $rawDocument the raw document
+     *
+     * @return self
+     */
+    public function setRawDocument(Document $rawDocument = null)
+    {
+        $this->rawDocument = $rawDocument;
+
+        return $this;
+    }
+
+    /**
+     * Is document a raw one.
+     *
+     * @return boolean
+     */
+    public function isRaw()
+    {
+        return $this->raw;
+    }
+
+    /**
+     * Sets the value of raw.
+     *
+     * @param boolean $raw the raw
+     *
+     * @return self
+     */
+    public function setRaw($raw)
+    {
+        $this->raw = (boolean) $raw;
+
+        return $this;
+    }
+
+    /**
+     * Unlink file after document has been deleted.
+     *
+     * @ORM\PostRemove
+     */
+    public function postRemove()
+    {
+        $fs = new Filesystem();
+
+        $this->setRawDocument(null);
+
+        if ($fs->exists($this->getAbsolutePath())) {
+            $fs->remove($this->getAbsolutePath());
+        }
+        $this->cleanFileDirectory();
+    }
+
+    /**
+     * Remove document directory if there is no other file in it.
+     *
+     * @return boolean
+     */
+    protected function cleanFileDirectory()
+    {
+        $dir = dirname($this->getAbsolutePath());
+        $fs = new Filesystem();
+
+        if ($fs->exists($dir)) {
+            $finder = new Finder();
+            $finder->files()->in($dir);
+
+            if (count($finder) <= 0) {
+                /*
+                 * Directory is empty
+                 */
+                $fs->remove($dir);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets the downscaledDocument.
+     *
+     * @return Document|null
+     */
+    public function getDownscaledDocument()
+    {
+        return $this->downscaledDocument;
     }
 }

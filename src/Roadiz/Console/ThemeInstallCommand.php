@@ -31,12 +31,12 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use RZ\Roadiz\Console\Tools\Fixtures;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Command line utils for managing themes from terminal.
@@ -48,18 +48,18 @@ class ThemeInstallCommand extends Command
     protected function configure()
     {
         $this->setName('core:themes:install')
-             ->setDescription('Manage themes installation')
-             ->addArgument(
-                 'classname',
-                 InputArgument::REQUIRED,
-                 'Main theme classname'
-             )
-             ->addOption(
-                 'data',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Import default data (nodes and tags)'
-             );
+            ->setDescription('Manage themes installation')
+            ->addArgument(
+                'classname',
+                InputArgument::REQUIRED,
+                'Main theme classname'
+            )
+            ->addOption(
+                'data',
+                null,
+                InputOption::VALUE_NONE,
+                'Import default data (nodes and tags)'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -92,9 +92,7 @@ class ThemeInstallCommand extends Command
         // install fixtures
         $array = explode('\\', $classname);
         $themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
-        $yaml = new YamlConfiguration($themeRoot . "/config.yml");
-        $yaml->load();
-        $data = $yaml->getConfiguration();
+        $data = Yaml::parse($themeRoot . "/config.yml");
 
         if (false !== $data && isset($data["importFiles"])) {
             if (isset($data["importFiles"]['tags'])) {
@@ -135,9 +133,7 @@ class ThemeInstallCommand extends Command
             // install fixtures
             $array = explode('\\', $classname);
             $themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
-            $yaml = new YamlConfiguration($themeRoot . "/config.yml");
-            $yaml->load();
-            $data = $yaml->getConfiguration();
+            $data = Yaml::parse($themeRoot . "/config.yml");
 
             if (false !== $data && isset($data["importFiles"])) {
                 if (isset($data["importFiles"]['roles'])) {
@@ -191,6 +187,6 @@ class ThemeInstallCommand extends Command
     protected function getTheme($classname)
     {
         return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                    ->findOneByClassName($classname);
+            ->findOneByClassName($classname);
     }
 }

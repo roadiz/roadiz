@@ -28,3 +28,11 @@ entities:
     - "gen-src/GeneratedNodeSources"
 # Lifetime of remember-me cookie in seconds (30 days)
 rememberMeLifetime: 2592000
+additionalServiceProviders: []
+additionalCommands: []
+assetsProcessing:
+    driver: gd
+    defaultQuality: 90
+    # pixel size limit () after roadiz
+    # should create a smaller copy.
+    maxPixelSize: 1920

@@ -14,15 +14,15 @@ var GeotagField = function () {
 GeotagField.prototype.init = function() {
     var _this = this;
 
-    if(!Rozier.gMapLoaded) {
-
+    if(!Rozier.gMapLoaded && !Rozier.gMapLoading) {
+        Rozier.gMapLoading = true;
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = '//maps.googleapis.com/maps/api/js?key='+Rozier.googleClientId +
             '&callback=initializeGeotagFields';
         document.body.appendChild(script);
 
-    } else {
+    } else if(Rozier.gMapLoaded && !Rozier.gMapLoading) {
         _this.bindFields();
     }
 };
@@ -54,6 +54,7 @@ GeotagField.prototype.bindSingleField = function(element) {
     var mapOptions = {
         center: new google.maps.LatLng(jsonCode.lat, jsonCode.lng),
         zoom: jsonCode.zoom,
+        scrollwheel: false,
         styles: Rozier.mapsStyle
     };
 
@@ -215,6 +216,14 @@ GeotagField.prototype.createMarker = function(geocode, $input, map) {
     map.panTo(latlng);
     map.setZoom(geocode.zoom);
 
+    /*
+     * Add custom fields to markers
+     */
+    marker.zoom = geocode.zoom;
+    if (typeof geocode.name !== "undefined") {
+        marker.name = geocode.name;
+    }
+
     return marker;
 };
 
@@ -241,7 +250,9 @@ GeotagField.prototype.requestGeocode = function(marker, $input, $geocodeReset, m
 
 var initializeGeotagFields = function () {
     Rozier.gMapLoaded = true;
+    Rozier.gMapLoading = false;
     new GeotagField();
+    new MultiGeotagField();
 };
 
 GeotagField.uniqid = function () {

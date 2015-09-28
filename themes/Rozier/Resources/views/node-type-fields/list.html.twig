@@ -22,6 +22,7 @@
 			            <th>{% trans %}name{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}group{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -33,8 +34,9 @@
                                 <i class="uk-icon-chevron-right"></i>{{ field.getName }}
                             </a>
                         </td>
-						<td class="mobile-hidden">{{ field.getLabel }}</td>
-						<td class="mobile-hidden">{{ field.getTypeName|trans }}</td>
+						<td class="mobile-hidden">{{ field.label }}</td>
+						<td class="mobile-hidden">{{ field.typeName|trans }}</td>
+                        <td class="mobile-hidden">{{ field.groupName|trans }}</td>
 						<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>

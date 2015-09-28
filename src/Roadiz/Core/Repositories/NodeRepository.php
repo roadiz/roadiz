@@ -30,12 +30,12 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -91,9 +91,9 @@ class NodeRepository extends EntityRepository
         $qb = $em->createQueryBuilder();
 
         $qb->select("nj.id")
-           ->addSelect("COUNT(t.id) as num")
-           ->from("RZ\Roadiz\Core\Entities\Tag", "t")
-           ->leftJoin("t.nodes", "nj");
+            ->addSelect("COUNT(t.id) as num")
+            ->from("RZ\Roadiz\Core\Entities\Tag", "t")
+            ->leftJoin("t.nodes", "nj");
         foreach ($tags as $key => $tag) {
             $qb->orWhere($qb->expr()->eq('t.id', ':tag' . $key));
         }
@@ -308,7 +308,7 @@ class NodeRepository extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'n, ns')
-           ->add('from', $this->getEntityName() . ' n');
+            ->add('from', $this->getEntityName() . ' n');
 
         $this->filterByTranslation($criteria, $qb, $translation);
 
@@ -355,7 +355,7 @@ class NodeRepository extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(n.id)')
-           ->add('from', $this->getEntityName() . ' n');
+            ->add('from', $this->getEntityName() . ' n');
 
         $this->filterByTranslation($criteria, $qb, $translation);
         /*
@@ -582,8 +582,8 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('nodeId', (int) $nodeId)
-                      ->setParameter('translation', $translation);
+            ->setParameter('nodeId', (int) $nodeId)
+            ->setParameter('translation', $translation);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -618,7 +618,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('nodeId', (int) $nodeId);
+            ->setParameter('nodeId', (int) $nodeId);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -653,8 +653,8 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('nodeName', $nodeName)
-                      ->setParameter('translation', $translation);
+            ->setParameter('nodeName', $nodeName)
+            ->setParameter('translation', $translation);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -689,7 +689,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('nodeName', $nodeName);
+            ->setParameter('nodeName', $nodeName);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -727,7 +727,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('translation', $translation);
+            ->setParameter('translation', $translation);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -793,8 +793,8 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('node', $node)
-                      ->setParameter('translation', $translation);
+            ->setParameter('node', $node)
+            ->setParameter('translation', $translation);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -838,11 +838,11 @@ class NodeRepository extends EntityRepository
 
         if ($parent === null) {
             $query = $this->_em->createQuery($txtQuery)
-                          ->setParameter('translation_id', (int) $translation->getId());
+                ->setParameter('translation_id', (int) $translation->getId());
         } else {
             $query = $this->_em->createQuery($txtQuery)
-                          ->setParameter('parent', $parent)
-                          ->setParameter('translation_id', (int) $translation->getId());
+                ->setParameter('parent', $parent)
+                ->setParameter('translation_id', (int) $translation->getId());
         }
 
         if (null !== $authorizationChecker) {
@@ -887,7 +887,7 @@ class NodeRepository extends EntityRepository
             $query = $this->_em->createQuery($txtQuery);
         } else {
             $query = $this->_em->createQuery($txtQuery)
-                          ->setParameter('parent', $parent);
+                ->setParameter('parent', $parent);
         }
 
         if (null !== $authorizationChecker) {
@@ -921,7 +921,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                      ->setParameter('urlalias_id', (int) $urlAlias->getId());
+            ->setParameter('urlalias_id', (int) $urlAlias->getId());
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -955,7 +955,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
 
         $query = $this->_em->createQuery($txtQuery)
-                           ->setParameter('alias', $urlAliasAlias);
+            ->setParameter('alias', $urlAliasAlias);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -1044,7 +1044,7 @@ class NodeRepository extends EntityRepository
         $query = $this->_em->createQuery('
             SELECT COUNT(n.nodeName) FROM RZ\Roadiz\Core\Entities\Node n
             WHERE n.nodeName = :node_name')
-                      ->setParameter('node_name', $nodeName);
+            ->setParameter('node_name', $nodeName);
 
         try {
             return (boolean) $query->getSingleScalarResult();
@@ -1066,8 +1066,8 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.aNodes ntn
             WHERE ntn.field = :field AND ntn.nodeA = :nodeA
             ORDER BY ntn.position ASC')
-                      ->setParameter('field', $field)
-                      ->setParameter('nodeA', $node);
+            ->setParameter('field', $field)
+            ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -1089,8 +1089,8 @@ class NodeRepository extends EntityRepository
             INNER JOIN ntn.field f
             WHERE f.name = :name AND ntn.nodeA = :nodeA
             ORDER BY ntn.position ASC')
-                      ->setParameter('name', (string) $fieldName)
-                      ->setParameter('nodeA', $node);
+            ->setParameter('name', (string) $fieldName)
+            ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -1118,9 +1118,9 @@ class NodeRepository extends EntityRepository
             AND ntn.nodeA = :nodeA
             AND ns.translation = :translation
             ORDER BY ntn.position ASC')
-                      ->setParameter('field', $field)
-                      ->setParameter('nodeA', $node)
-                      ->setParameter('translation', $translation);
+            ->setParameter('field', $field)
+            ->setParameter('nodeA', $node)
+            ->setParameter('translation', $translation);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -1149,9 +1149,115 @@ class NodeRepository extends EntityRepository
             AND ntn.nodeA = :nodeA
             AND ns.translation = :translation
             ORDER BY ntn.position ASC')
-                      ->setParameter('name', (string) $fieldName)
-                      ->setParameter('nodeA', $node)
-                      ->setParameter('translation', $translation);
+            ->setParameter('name', (string) $fieldName)
+            ->setParameter('nodeA', $node)
+            ->setParameter('translation', $translation);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node          $node
+     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     *
+     * @return array
+     */
+    public function findByReverseNodeAndField($node, NodeTypeField $field)
+    {
+        $query = $this->_em->createQuery('
+            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.bNodes ntn
+            WHERE ntn.field = :field AND ntn.nodeB = :nodeB
+            ORDER BY ntn.position ASC')
+            ->setParameter('field', $field)
+            ->setParameter('nodeB', $node);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param string                      $fieldName
+     *
+     * @return array
+     */
+    public function findByReverseNodeAndFieldName($node, $fieldName)
+    {
+        $query = $this->_em->createQuery('
+            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.bNodes ntn
+            INNER JOIN ntn.field f
+            WHERE f.name = :name AND ntn.nodeB = :nodeB
+            ORDER BY ntn.position ASC')
+            ->setParameter('name', (string) $fieldName)
+            ->setParameter('nodeB', $node);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param Node          $node
+     * @param NodeTypeField $field
+     * @param Translation $translation
+     *
+     * @return array
+     */
+    public function findByReverseNodeAndFieldAndTranslation(
+        Node $node,
+        NodeTypeField $field,
+        Translation $translation
+    ) {
+        $query = $this->_em->createQuery('
+            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.bNodes ntn
+            INNER JOIN n.nodeSources ns
+            WHERE ntn.field = :field
+            AND ntn.nodeB = :nodeB
+            AND ns.translation = :translation
+            ORDER BY ntn.position ASC')
+            ->setParameter('field', $field)
+            ->setParameter('nodeB', $node)
+            ->setParameter('translation', $translation);
+        try {
+            return $query->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param string $fieldName
+     * @param Translation $translation
+     *
+     * @return array
+     */
+    public function findByReverseNodeAndFieldNameAndTranslation(
+        Node $node,
+        $fieldName,
+        Translation $translation
+    ) {
+        $query = $this->_em->createQuery('
+            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
+            INNER JOIN n.bNodes ntn
+            INNER JOIN n.nodeSources ns
+            INNER JOIN ntn.field f
+            WHERE f.name = :name
+            AND ntn.nodeB = :nodeB
+            AND ns.translation = :translation
+            ORDER BY ntn.position ASC')
+            ->setParameter('name', (string) $fieldName)
+            ->setParameter('nodeB', $node)
+            ->setParameter('translation', $translation);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -1175,7 +1281,7 @@ class NodeRepository extends EntityRepository
             $query = $this->_em->createQuery('
                 SELECT n.id FROM RZ\Roadiz\Core\Entities\Node n
                 WHERE n.parent IN (:tab)')
-                          ->setParameter('tab', $in);
+                ->setParameter('tab', $in);
             $result = $query->getScalarResult();
             $in = [];
 
@@ -1185,5 +1291,63 @@ class NodeRepository extends EntityRepository
             }
         } while (!empty($in));
         return $theOffprings;
+    }
+
+    /**
+     * @param RZ\Roadiz\Core\Entities\Node $node
+     *
+     * @return array
+     */
+    public function findAllParentsIdByNode(Node $node)
+    {
+        $theParents = [];
+        $parent = $node->getParent();
+
+        while (null !== $parent) {
+            $theParents[] = $parent->getId();
+            $parent = $parent->getParent();
+        }
+
+        return $theParents;
+    }
+
+    /**
+     * Find all node’ parents with criteria and ordering.
+     *
+     * @param  Node                      $node
+     * @param  array                     $criteria
+     * @param  array|null                $orderBy
+     * @param  integer                   $limit
+     * @param  integer                   $offset
+     * @param  Translation|null          $translation
+     * @param  AuthorizationChecker|null $authorizationChecker
+     *
+     * @return array|null
+     */
+    public function findAllNodeParentsBy(
+        Node $node,
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null
+    ) {
+
+        $parentsId = $this->findAllParentsIdByNode($node);
+        if (count($parentsId) > 0) {
+            $criteria['id'] = $parentsId;
+        } else {
+            return null;
+        }
+
+        return $this->findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            $translation,
+            $authorizationChecker
+        );
     }
 }

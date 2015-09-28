@@ -44,7 +44,6 @@ class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvi
     public function register(Container $container)
     {
         parent::register($container);
-
         /*
          * Inject app config
          */

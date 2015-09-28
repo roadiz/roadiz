@@ -76,6 +76,30 @@
                 "visible": true
             },
             {
+                "name": "twitter_consumer_key",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_consumer_secret",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_access_token",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "twitter_access_token_secret",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
                 "name": "facebook_client_id",
                 "value": "",
                 "type": 0,
@@ -95,6 +119,18 @@
             },
             {
                 "name": "recaptcha_private_key",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "instagram_user_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "instagram_access_token",
                 "value": "",
                 "type": 0,
                 "visible": true

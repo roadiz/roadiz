@@ -118,7 +118,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
     /**
@@ -140,7 +140,7 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
-     * @ORM\Column(name="newsletter_type", type="boolean")
+     * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
      */
     private $newsletterType = false;
     /**
@@ -162,7 +162,7 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
-     * @ORM\Column(name="hiding_nodes",type="boolean")
+     * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})
      */
     private $hidingNodes = false;
     /**
@@ -279,6 +279,8 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * Get node-source entity class name without its namespace.
+     *
      * @return string
      */
     public function getSourceEntityClassName()
@@ -287,6 +289,8 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * Get node-source entity database table name.
+     *
      * @return string
      */
     public function getSourceEntityTableName()

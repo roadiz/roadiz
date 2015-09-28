@@ -32,11 +32,13 @@ namespace Themes\Install\Controllers;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Yaml\Yaml;
 use Themes\Install\InstallApp;
 
 /**
@@ -80,6 +82,12 @@ class DatabaseController extends InstallApp
                         $fixtures = new Fixtures($this->getService('em'), $request);
                         $fixtures->createFolders();
                         $config->writeConfiguration();
+
+                        /*
+                         * Need to clear configuration cache.
+                         */
+                        $configurationClearer = new ConfigurationCacheClearer();
+                        $configurationClearer->clear();
 
                         /*
                          * Force redirect to avoid resending form when refreshing page
@@ -178,11 +186,7 @@ class DatabaseController extends InstallApp
         /*
          * files to import
          */
-        $yaml = new YamlConfiguration(ROADIZ_ROOT . "/themes/Install/config.yml");
-
-        $yaml->load();
-
-        $installData = $yaml->getConfiguration();
+        $installData = Yaml::parse(ROADIZ_ROOT . "/themes/Install/config.yml");
         $this->assignation['imports'] = $installData['importFiles'];
 
         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
@@ -231,79 +235,79 @@ class DatabaseController extends InstallApp
         }
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('driver', 'choice', [
-                            'choices' => [
-                                'pdo_mysql' => 'pdo_mysql',
-                                'pdo_pgsql' => 'pdo_pgsql',
-                                'pdo_sqlite' => 'pdo_sqlite',
-                                'oci8' => 'oci8',
-                            ],
-                            'label' => $this->getTranslator()->trans('driver'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                            'attr' => [
-                                "id" => "choice",
-                            ],
-                        ])
-                        ->add('host', 'text', [
-                            "required" => false,
-                            'label' => $this->getTranslator()->trans('host'),
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => "host",
-                            ],
-                        ])
-                        ->add('port', 'integer', [
-                            "required" => false,
-                            'label' => $this->getTranslator()->trans('port'),
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => "port",
-                            ],
-                        ])
-                        ->add('unix_socket', 'text', [
-                            "required" => false,
-                            'label' => $this->getTranslator()->trans('unix_socket'),
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => "unix_socket",
-                            ],
-                        ])
-                        ->add('path', 'text', [
-                            "required" => false,
-                            'label' => $this->getTranslator()->trans('path'),
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => "path",
-                            ],
-                        ])
-                        ->add('user', 'text', [
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => "user",
-                            ],
-                            'label' => $this->getTranslator()->trans('username'),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('password', 'password', [
-                            "required" => false,
-                            'label' => $this->getTranslator()->trans('password'),
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => 'password',
-                            ],
-                        ])
-                        ->add('dbname', 'text', [
-                            "required" => false,
-                            'label' => $this->getTranslator()->trans('dbname'),
-                            'attr' => [
-                                "autocomplete" => "off",
-                                'id' => 'dbname',
-                            ],
-                        ]);
+            ->add('driver', 'choice', [
+                'choices' => [
+                    'pdo_mysql' => 'pdo_mysql',
+                    'pdo_pgsql' => 'pdo_pgsql',
+                    'pdo_sqlite' => 'pdo_sqlite',
+                    'oci8' => 'oci8',
+                ],
+                'label' => $this->getTranslator()->trans('driver'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+                'attr' => [
+                    "id" => "choice",
+                ],
+            ])
+            ->add('host', 'text', [
+                "required" => false,
+                'label' => $this->getTranslator()->trans('host'),
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => "host",
+                ],
+            ])
+            ->add('port', 'integer', [
+                "required" => false,
+                'label' => $this->getTranslator()->trans('port'),
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => "port",
+                ],
+            ])
+            ->add('unix_socket', 'text', [
+                "required" => false,
+                'label' => $this->getTranslator()->trans('unix_socket'),
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => "unix_socket",
+                ],
+            ])
+            ->add('path', 'text', [
+                "required" => false,
+                'label' => $this->getTranslator()->trans('path'),
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => "path",
+                ],
+            ])
+            ->add('user', 'text', [
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => "user",
+                ],
+                'label' => $this->getTranslator()->trans('username'),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('password', 'password', [
+                "required" => false,
+                'label' => $this->getTranslator()->trans('password'),
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => 'password',
+                ],
+            ])
+            ->add('dbname', 'text', [
+                "required" => false,
+                'label' => $this->getTranslator()->trans('dbname'),
+                'attr' => [
+                    "autocomplete" => "off",
+                    'id' => 'dbname',
+                ],
+            ]);
 
         return $builder->getForm();
     }

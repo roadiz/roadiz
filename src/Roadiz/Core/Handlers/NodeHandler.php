@@ -37,8 +37,8 @@ use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Handle operations with nodes entities.
@@ -193,6 +193,20 @@ class NodeHandler
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByNodeAndFieldName($this->node, $fieldName);
+    }
+
+    /**
+     * Get nodes reversed-linked to current node for a given fieldname.
+     *
+     * @param string $fieldName Name of the node-type field
+     *
+     * @return ArrayCollection Collection of nodes
+     */
+    public function getReverseNodesFromFieldName($fieldName)
+    {
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findByReverseNodeAndFieldName($this->node, $fieldName);
     }
 
     /**
@@ -420,13 +434,33 @@ class NodeHandler
      */
     public function isRelatedToNewsletter()
     {
-        $parents = $this->getParents();
-
         if ($this->node->getNodeType()->isNewsletterType()) {
             return true;
         }
+
+        $parents = $this->getParents();
         foreach ($parents as $parent) {
             if ($parent->getNodeType()->isNewsletterType()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return if part of Node offspring.
+     *
+     * @return bool
+     */
+    public function isRelatedToNode(Node $relative)
+    {
+        if ($this->node == $relative) {
+            return true;
+        }
+
+        $parents = $this->getParents();
+        foreach ($parents as $parent) {
+            if ($parent == $relative) {
                 return true;
             }
         }
@@ -524,7 +558,7 @@ class NodeHandler
     public function getAllOffspringId()
     {
         return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                       ->findAllOffspringIdByNode($this->node);
+            ->findAllOffspringIdByNode($this->node);
     }
 
     /**

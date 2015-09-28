@@ -36,10 +36,14 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
-use RZ\Roadiz\Core\Events\RouteCollectionSubscriber;
+use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
+use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
+use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
+use RZ\Roadiz\Utils\Console\Helper\TemplatingHelper;
+use RZ\Roadiz\Utils\Console\Helper\TranslatorHelper;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -48,7 +52,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\Yaml\Parser;
 
 /**
  * Main roadiz CMS entry point.
@@ -60,7 +63,7 @@ class Kernel implements ServiceProviderInterface
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.10.1";
+    public static $cmsVersion = "0.11.0";
     protected static $instance = null;
 
     public $container = null;
@@ -113,25 +116,38 @@ class Kernel implements ServiceProviderInterface
         };
 
         $container['debugPanel'] = function ($c) {
-            return new DebugPanel($c['twig.environment'], $c['stopwatch']);
+            return new DebugPanel($c);
         };
 
         $container['dispatcher'] = function ($c) {
             return new EventDispatcher();
         };
 
-        /*
-         * Load service providers from conf/services.yml
-         *
-         * Edit this file if you want to customize Roadiz services
-         * behaviour.
-         */
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
-        $yaml = new Parser();
-        $services = $yaml->parse(file_get_contents(ROADIZ_ROOT . '/conf/services.yml'));
-        foreach ($services['providers'] as $providerClass) {
-            $container->register(new $providerClass());
+
+        $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\AssetsServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\BackofficeServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\DoctrineServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\EntityApiServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\FormServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\MailerServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\RoutingServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\SecurityServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\SolrServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\ThemeServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\TranslationServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\TwigServiceProvider());
+
+        /*
+         * Load additional service providers
+         */
+        if (isset($container['config']['additionalServiceProviders'])) {
+            foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
+                $container->register(new $providerClass());
+            }
         }
         $container['stopwatch']->stop('registerServices');
     }
@@ -152,11 +168,15 @@ class Kernel implements ServiceProviderInterface
 
         $application = new Application('Roadiz Console Application', static::$cmsVersion);
         $helperSet = new HelperSet([
+            'configuration' => new ConfigurationHelper($this->container['config']),
             'db' => new ConnectionHelper($this->container['em']->getConnection()),
             'em' => new EntityManagerHelper($this->container['em']),
             'question' => new QuestionHelper(),
             'solr' => new SolrHelper($this->container['solr']),
             'ns-cache' => new CacheProviderHelper($this->container['nodesSourcesUrlCacheProvider']),
+            'mailer' => new MailerHelper($this->container['mailer']),
+            'templating' => new TemplatingHelper($this->container['twig.environment']),
+            'translator' => new TranslatorHelper($this->container['translator']),
         ]);
         $application->setHelperSet($helperSet);
 
@@ -172,6 +192,21 @@ class Kernel implements ServiceProviderInterface
         $application->add(new \RZ\Roadiz\Console\CacheCommand);
         $application->add(new \RZ\Roadiz\Console\ConfigurationCommand);
         $application->add(new \RZ\Roadiz\Console\ThemeInstallCommand);
+        $application->add(new \RZ\Roadiz\Console\DocumentDownscaleCommand);
+
+        /*
+         * Register user defined Commands
+         * Add them in your config.yml
+         */
+        if (isset($this->container['config']['additionalCommands'])) {
+            foreach ($this->container['config']['additionalCommands'] as $commandClass) {
+                if (class_exists($commandClass)) {
+                    $application->add(new $commandClass);
+                } else {
+                    throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
+                }
+            }
+        }
 
         // Use default Doctrine commands
         ConsoleRunner::addCommands($application);
@@ -301,24 +336,25 @@ class Kernel implements ServiceProviderInterface
          * Register Themes dependency injection
          */
         if (!$this->isInstallMode()) {
+            $this->container['stopwatch']->start('backendDependencyInjection');
             // Register back-end security scheme
             $beClass = $this->container['backendClass'];
             $beClass::setupDependencyInjection($this->container);
+            $this->container['stopwatch']->stop('backendDependencyInjection');
 
             /*
              * Set default locale
              */
-            $translation = $this->container['em']
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $this->container['stopwatch']->start('setRequestLocale');
+            $translation = $this->container['defaultTranslation'];
 
             if ($translation !== null) {
                 $shortLocale = $translation->getLocale();
                 $this->container['request']->setLocale($shortLocale);
                 \Locale::setDefault($shortLocale);
             }
+            $this->container['stopwatch']->stop('setRequestLocale');
         }
-
 
         $this->container['stopwatch']->start('themeDependencyInjection');
         // Register front-end security scheme
@@ -336,21 +372,17 @@ class Kernel implements ServiceProviderInterface
      */
     public function initEvents()
     {
-        if ($this->isDebug() || RouteCollectionSubscriber::needToDumpUrlTools()) {
-            $this->container['dispatcher']->addSubscriber(
-                new RouteCollectionSubscriber($this->container['routeCollection'], $this->container['stopwatch'])
-            );
-        }
-        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         /*
          * Events
          */
+        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
             [
                 $this,
                 'onKernelRequest',
-            ]
+            ],
+            60
         );
         $this->container['dispatcher']->addListener(
             KernelEvents::REQUEST,
@@ -366,7 +398,12 @@ class Kernel implements ServiceProviderInterface
                 'onControllerMatched',
             ]
         );
-
+        if (!$this->isInstallMode()) {
+            $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
+                $this->container['securityAuthorizationChecker'],
+                $this->container['securityTokenStorage']
+            ));
+        }
         $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
 
         /*

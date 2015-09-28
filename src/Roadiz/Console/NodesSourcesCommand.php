@@ -47,7 +47,7 @@ class NodesSourcesCommand extends Command
              ->setDescription('Manage node-sources')
              ->addOption(
                  'regenerate',
-                 null,
+                 'r',
                  InputOption::VALUE_NONE,
                  'Delete and re-generate every nodes-sources entity classes'
              );

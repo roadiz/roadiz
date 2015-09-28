@@ -38,11 +38,13 @@
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}" title="{% trans %}manage.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}" title="{% trans %}manage.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-custom-form-fields"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-custom-form-answers"></i></a>
 
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>
+
+                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('customFormsDuplicatePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-duplicate"></i></a>
 
                                 <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('customFormsExportPage', { customFormId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}">
                                     <i class="uk-icon-rz-download"></i>

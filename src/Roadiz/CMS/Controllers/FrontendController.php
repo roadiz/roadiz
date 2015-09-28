@@ -357,9 +357,7 @@ class FrontendController extends AppController
     {
         parent::prepareBaseAssignation();
 
-        $translation = $this->getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findDefault();
+        $translation = $this->getService('defaultTranslation');
 
         $this->assignation['_default_locale'] = $translation->getLocale();
         $this->assignation['meta'] = [

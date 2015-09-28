@@ -30,9 +30,9 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
  * {@inheritdoc}
@@ -85,9 +85,9 @@ class DocumentRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
 
         $qb->select("d.id")
-           ->addSelect("COUNT(fd.id) as num")
-           ->from("RZ\Roadiz\Core\Entities\Folder", "fd")
-           ->leftJoin("fd.documents", "d");
+            ->addSelect("COUNT(fd.id) as num")
+            ->from("RZ\Roadiz\Core\Entities\Folder", "fd")
+            ->leftJoin("fd.documents", "d");
         foreach ($folders as $key => $folder) {
             $qb->orWhere($qb->expr()->eq('fd.id', ':folder' . $key));
         }
@@ -307,10 +307,7 @@ class DocumentRepository extends EntityRepository
         }
     }
     /**
-     * Create a securized query with node.published = true if user is
-     * not a Backend user and if securityAuthorizationChecker is defined.
-     *
-     * This method allows to pre-filter Nodes with a given translation.
+     * This method allows to pre-filter Documents with a given translation.
      *
      * @param array                                   $criteria
      * @param array|null                              $orderBy
@@ -331,7 +328,9 @@ class DocumentRepository extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'd')
-           ->add('from', $this->getEntityName() . ' d');
+            ->add('from', $this->getEntityName() . ' d')
+            ->andWhere($qb->expr()->eq('d.raw', ':raw'))
+            ->setParameter('raw', false);
 
         /*
          * Filtering by tag
@@ -356,10 +355,7 @@ class DocumentRepository extends EntityRepository
         return $qb;
     }
     /**
-     * Create a securized count query with node.published = true if user is
-     * not a Backend user and if securityAuthorizationChecker is defined.
-     *
-     * This method allows to pre-filter Nodes with a given translation.
+     * This method allows to pre-filter Documents with a given translation.
      *
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
@@ -374,7 +370,9 @@ class DocumentRepository extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(d.id)')
-           ->add('from', $this->getEntityName() . ' d');
+            ->add('from', $this->getEntityName() . ' d')
+            ->andWhere($qb->expr()->eq('d.raw', ':raw'))
+            ->setParameter('raw', false);
 
         /*
          * Filtering by tag
@@ -476,6 +474,7 @@ class DocumentRepository extends EntityRepository
         );
 
         $finalQuery = $query->getQuery();
+
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
@@ -502,11 +501,11 @@ class DocumentRepository extends EntityRepository
                 WITH dt.translation = :translation
             INNER JOIN d.nodesSourcesByFields nsf
                 WITH nsf.nodeSource = :nodeSource
-            WHERE nsf.field = :field
+            WHERE nsf.field = :field AND d.raw = false
             ORDER BY nsf.position ASC')
-                      ->setParameter('field', $field)
-                      ->setParameter('nodeSource', $nodeSource)
-                      ->setParameter('translation', $nodeSource->getTranslation());
+            ->setParameter('field', $field)
+            ->setParameter('nodeSource', $nodeSource)
+            ->setParameter('translation', $nodeSource->getTranslation());
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -532,10 +531,11 @@ class DocumentRepository extends EntityRepository
                 WITH nsf.nodeSource = :nodeSource
             INNER JOIN nsf.field f
                 WITH f.name = :name
+            WHERE d.raw = false
             ORDER BY nsf.position ASC')
-                      ->setParameter('name', (string) $fieldName)
-                      ->setParameter('nodeSource', $nodeSource)
-                      ->setParameter('translation', $nodeSource->getTranslation());
+            ->setParameter('name', (string) $fieldName)
+            ->setParameter('nodeSource', $nodeSource)
+            ->setParameter('translation', $nodeSource->getTranslation());
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -555,7 +555,7 @@ class DocumentRepository extends EntityRepository
             WHERE d.id IN (
                 SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
                 WHERE s.type = :type
-            )
+            ) AND d.raw = false
         ')->setParameter('type', AbstractField::DOCUMENTS_T);
 
         try {
@@ -596,12 +596,13 @@ class DocumentRepository extends EntityRepository
          * Get unsed documents
          */
         $qb->select('d')
-            ->leftJoin('d.nodesSourcesByFields','ns')
+            ->leftJoin('d.nodesSourcesByFields', 'ns')
             ->having('COUNT(ns.id) = 0')
-            ->groupBy('d.id');
+            ->groupBy('d.id')
+            ->where($qb->expr()->eq('d.raw', false));
 
         if (count($idArray) > 0) {
-            $qb->where($qb->expr()->notIn(
+            $qb->andWhere($qb->expr()->notIn(
                 'd.id',
                 $idArray
             ));

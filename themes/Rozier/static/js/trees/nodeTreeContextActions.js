@@ -40,7 +40,7 @@ NodeTreeContextActions.prototype.onClick = function(event) {
 
     var linkClass = $link.attr('data-action');
 
-    console.log('Clicked on '+linkClass);
+    //console.log('Clicked on '+linkClass);
 
     var statusName= $link.attr('data-status');
     var statusValue = $link.attr('data-value');
@@ -51,7 +51,8 @@ NodeTreeContextActions.prototype.onClick = function(event) {
         Rozier.lazyload.canvasLoader.show();
 
         if(typeof statusName !== "undefined" &&
-            typeof statusValue !== "undefined") {
+            typeof statusValue !== "undefined" &&
+            !isNaN(statusValue)) {
             /*
              * Change node status
              */
@@ -77,7 +78,7 @@ NodeTreeContextActions.prototype.changeStatus = function(node_id, statusName, st
         "statusName": statusName,
         "statusValue": statusValue
     };
-    console.log(postData);
+    //console.log(postData);
 
     $.ajax({
         url: Rozier.routes.nodesStatusesAjax,
@@ -190,7 +191,7 @@ NodeTreeContextActions.prototype.moveNodeToPosition = function (position, event)
     }
     postData.newParent = parent_node_id;
 
-    console.log(postData);
+    //console.log(postData);
     $.ajax({
         url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
         type: 'POST',
@@ -198,7 +199,7 @@ NodeTreeContextActions.prototype.moveNodeToPosition = function (position, event)
         data: postData
     })
     .done(function( data ) {
-        console.log(data);
+        //console.log(data);
 
         Rozier.refreshAllNodeTrees();
 
@@ -211,7 +212,7 @@ NodeTreeContextActions.prototype.moveNodeToPosition = function (position, event)
 
     })
     .fail(function( data ) {
-        console.log(data);
+        //console.log(data);
     })
     .always(function() {
         Rozier.lazyload.canvasLoader.hide();

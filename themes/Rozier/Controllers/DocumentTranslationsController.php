@@ -54,9 +54,7 @@ class DocumentTranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         if (null === $translationId) {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $translation = $this->getService('defaultTranslation');
 
             $translationId = $translation->getId();
         } else {

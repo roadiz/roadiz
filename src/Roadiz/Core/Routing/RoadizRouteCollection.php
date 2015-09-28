@@ -32,15 +32,18 @@ namespace RZ\Roadiz\Core\Routing;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Entities\Theme;
-use Symfony\Component\Routing\RouteCollection;
+use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  *
  */
-class RoadizRouteCollection extends RouteCollection
+class RoadizRouteCollection extends DeferredRouteCollection
 {
     protected $backendClassname;
     protected $frontendThemes;
+    protected $assetsHost;
+    protected $stopwatch;
 
     /**
      * @param string $backendClassname
@@ -50,36 +53,53 @@ class RoadizRouteCollection extends RouteCollection
     public function __construct(
         $backendClassname,
         array $frontendThemes,
-        $assetsHost = ''
+        $assetsHost = '',
+        Stopwatch $stopwatch = null
     ) {
         $this->backendClassname = $backendClassname;
         $this->frontendThemes = $frontendThemes;
+        $this->assetsHost = $assetsHost;
+        $this->stopwatch = $stopwatch;
+    }
 
-        /*
-         * Adding Backend routes
-         */
-        $this->addBackendCollection();
-
-        /*
-         * Add Assets controller routes
-         */
-        $assets = AssetsController::getRoutes();
-        if ('' != $assetsHost) {
-            $assets->setHost($assetsHost);
+    /**
+     * {@inheritdoc}
+     */
+    public function parseResources()
+    {
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('routeCollection');
         }
-        $this->addCollection($assets);
+        if (empty($this->resources)) {
+            /*
+             * Adding Backend routes
+             */
+            $this->addBackendCollection();
 
-        /*
-         * Add Entry points controller routes
-         */
-        $this->addCollection(EntryPointsController::getRoutes());
+            /*
+             * Add Assets controller routes
+             */
+            $assets = AssetsController::getRoutes();
+            if ('' != $this->assetsHost) {
+                $assets->setHost($this->assetsHost);
+            }
+            $this->addCollection($assets);
 
-        /*
-         * Add Frontend routes
-         *
-         * return 'RZ\Roadiz\CMS\Controllers\FrontendController';
-         */
-        $this->addThemesCollections();
+            /*
+             * Add Entry points controller routes
+             */
+            $this->addCollection(EntryPointsController::getRoutes());
+
+            /*
+             * Add Frontend routes
+             *
+             * return 'RZ\Roadiz\CMS\Controllers\FrontendController';
+             */
+            $this->addThemesCollections();
+        }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('routeCollection');
+        }
     }
 
     protected function addBackendCollection()

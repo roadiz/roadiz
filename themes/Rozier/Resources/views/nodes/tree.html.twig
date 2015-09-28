@@ -38,7 +38,9 @@
         {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
             "nodeTree":specificNodeTree,
             "node":specificNodeTree.getRootNode,
-            "authorizationChecker":authorizationChecker
+            "authorizationChecker":authorizationChecker,
+            "nodeStatuses":nodeStatuses,
+            'request':request,
         } only %}
     </article>
 

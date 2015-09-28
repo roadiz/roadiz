@@ -41,7 +41,6 @@ class FullTextSearchHandler
     protected $em = null;
 
     /**
-     *
      * @param Solarium\Client $client
      * @param Doctrine\ORM\EntityManager $em
      */
@@ -51,7 +50,7 @@ class FullTextSearchHandler
         $this->em = $em;
     }
 
-    private function solrSearch($q, $args = [])
+    private function solrSearch($q, $args = [], $rows = 20)
     {
         if (!empty($q)) {
             $query = $this->client->createSelect();
@@ -67,6 +66,7 @@ class FullTextSearchHandler
                 }
             }
             $query->addSort('score', $query::SORT_DESC);
+            $query->setRows($rows);
 
             $resultset = $this->client->select($query);
             $reponse = json_decode($resultset->getResponse()->getBody(), true);
@@ -157,10 +157,11 @@ class FullTextSearchHandler
      *
      * @param string $q
      * @param array  $args
+     * @param int  $rows
      *
      * @return array
      */
-    public function searchWithHighlight($q, $args = [])
+    public function searchWithHighlight($q, $args = [], $rows = 20)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
@@ -171,7 +172,7 @@ class FullTextSearchHandler
         $tmp["hl.simple.post"] = "</span>";
         $args = array_merge($tmp, $args);
 
-        return $this->solrSearch($q, $args);
+        return $this->solrSearch($q, $args, $rows);
     }
 
     /**
@@ -198,15 +199,16 @@ class FullTextSearchHandler
      *
      * @param string $q
      * @param array  $args
+     * @param int  $rows
      *
      * @return array
      */
-    public function search($q, $args = [])
+    public function search($q, $args = [], $rows = 20)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
         $tmp = [];
         $args = array_merge($tmp, $args);
-        return $this->solrSearch($q, $args);
+        return $this->solrSearch($q, $args, $rows);
     }
 }

@@ -24,9 +24,24 @@ mailer:
     encryption: false
     username: ""
     password: ""
+# Doctrine entities search paths
+# Append yours here if you want to create custom
+# entities in your theme.
 entities:
     - "src/Roadiz/Core/Entities"
     - "src/Roadiz/Core/AbstractEntities"
     - "gen-src/GeneratedNodeSources"
 # Lifetime of remember-me cookie in seconds (30 days)
 rememberMeLifetime: 2592000
+additionalServiceProviders: []
+additionalCommands:
+    - \Themes\DefaultTheme\Commands\DefaultThemeCommand
+# Image intervention and Intervention Request
+# settings for generating image on the fly
+assetsProcessing:
+    # gd or imagick (gd does not support TIFF and PSD formats)
+    driver: gd
+    defaultQuality: 90
+    # pixel size limit () after roadiz
+    # should create a smaller copy.
+    maxPixelSize: 1920

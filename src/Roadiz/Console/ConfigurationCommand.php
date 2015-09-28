@@ -47,19 +47,19 @@ class ConfigurationCommand extends Command
             ->setDescription('Manage configuration from CLI')
             ->addOption(
                 'enable-devmode',
-                null,
+                'd',
                 InputOption::VALUE_NONE,
                 'Enable the devMode flag for your application'
             )
             ->addOption(
                 'disable-devmode',
-                null,
+                'p',
                 InputOption::VALUE_NONE,
                 'Disable the devMode for your application'
             )
             ->addOption(
                 'enable-install',
-                null,
+                'i',
                 InputOption::VALUE_NONE,
                 'Enable the install assistant'
             )
@@ -71,7 +71,7 @@ class ConfigurationCommand extends Command
             )
             ->addOption(
                 'generate-htaccess',
-                null,
+                'g',
                 InputOption::VALUE_NONE,
                 'Generate .htaccess files to protect critical directories'
             );

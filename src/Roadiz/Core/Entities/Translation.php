@@ -552,7 +552,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(name="default_translation", type="boolean")
+     * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
      */
     private $defaultTranslation = false;
     /**
@@ -575,7 +575,7 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $available = true;
 

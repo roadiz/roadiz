@@ -4,8 +4,16 @@
     {% if (authorizationChecker.Granted('ROLE_ACCESS_CUSTOMFORMS_DELETE')) %}
     {% if customForm.getId %}
     <a class="uk-button uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: customForm.getId }) }}">
-        <span class="icon-container"><i class="uk-icon-rz-node-type-field"></i></span>
+        <span class="icon-container"><i class="uk-icon-rz-custom-form-fields"></i></span>
         <span class="label"><span class="label-text">{% trans %}manage.customFormFields{% endtrans %}</span></span>
+    </a>
+    <a class="uk-button uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: customForm.getId }) }}">
+        <span class="icon-container"><i class="uk-icon-rz-custom-form-answers"></i></span>
+        <span class="label"><span class="label-text">{% trans %}customForm.answers{% endtrans %}</span></span>
+    </a>
+    <a class="uk-button uk-button-small rz-no-ajax-link" href="{{ path('customFormsDuplicatePage', { customFormId: customForm.getId}) }}">
+        <span class="icon-container"><i class="uk-icon-rz-duplicate"></i></span>
+        <span class="label"><span class="label-text">{% trans %}customForm.duplicate{% endtrans %}</span></span>
     </a>
     <a class="uk-button uk-button-danger" href="{{ path('customFormsDeletePage', { customFormId: customForm.getId}) }}">
         <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>

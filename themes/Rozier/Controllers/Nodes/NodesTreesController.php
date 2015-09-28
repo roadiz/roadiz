@@ -63,9 +63,7 @@ class NodesTreesController extends RozierApp
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                 ->findOneBy(['id' => (int) $translationId]);
         } else {
-            $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findDefault();
+            $translation = $this->getService('defaultTranslation');
         }
 
         if (null !== $node) {

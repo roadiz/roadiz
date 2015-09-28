@@ -109,7 +109,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @ORM\Column(name="field_required", type="boolean")
+     * @ORM\Column(name="field_required", type="boolean", nullable=false, options={"default" = false})
      */
     private $required = false;
 
@@ -158,5 +158,11 @@ class CustomFormField extends AbstractField
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getName() . " — " . $this->getLabel() . PHP_EOL;
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->customFormFieldAttribute = new ArrayCollection();
     }
 }

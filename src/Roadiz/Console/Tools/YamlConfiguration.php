@@ -29,22 +29,34 @@
  */
 namespace RZ\Roadiz\Console\Tools;
 
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * YamlConfiguration class
  */
 class YamlConfiguration extends Configuration
 {
+    protected $cachePath;
+    protected $confCache;
 
-    public function __construct($path = null)
+    /**
+     * @param string  $path
+     * @param boolean $debug
+     */
+    public function __construct($path = null, $debug = true)
     {
+        $this->cachePath = ROADIZ_ROOT . '/cache/configuration.php';
+        $this->confCache = new ConfigCache($this->cachePath, $debug);
+
         if ($path === null) {
-            $path = ROADIZ_ROOT.'/conf/config.yml';
+            $this->path = ROADIZ_ROOT . '/conf/config.yml';
+        } else {
+            $this->path = $path;
         }
-        $this->path = $path;
     }
 
     /**
@@ -65,20 +77,23 @@ class YamlConfiguration extends Configuration
      */
     public function loadFromFile($file)
     {
-        if (file_exists($file)) {
-            try {
-                $yaml = new Parser();
-                $conf = $yaml->parse(file_get_contents($file));
-                $this->setConfiguration($conf);
+        if (!$this->confCache->isFresh()) {
+            $configuration = Yaml::parse($this->path);
+            $resources = [
+                new FileResource($this->path),
+            ];
 
-                return true;
+            // le code pour le « UserMatcher » est généré quelque part d'autre
+            $code = '<?php return ' . var_export($configuration, true) . ';' . PHP_EOL;
 
-            } catch (ParseException $e) {
-                return false;
-            }
+            $this->confCache->write($code, $resources);
+        } else {
+            $configuration = include $this->cachePath;
         }
 
-        return false;
+        $this->setConfiguration($configuration);
+
+        return true;
     }
 
     /**
@@ -92,7 +107,7 @@ class YamlConfiguration extends Configuration
 
         try {
             $dumper = new Dumper();
-            $yaml = $dumper->dump($this->getConfiguration(), 2);
+            $yaml = $dumper->dump($this->getConfiguration(), 4);
 
             file_put_contents($this->path, $yaml);
             return true;

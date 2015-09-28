@@ -42,6 +42,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -260,6 +261,7 @@ class InstallApp extends AppController
                         new DoctrineCacheClearer($this->getService('em')),
                         new TranslationsCacheClearer(),
                         new RoutingCacheClearer(),
+                        new ConfigurationCacheClearer(),
                     ];
                     foreach ($clearers as $clearer) {
                         $clearer->clear();
