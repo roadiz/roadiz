@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\Document;
 
 use Doctrine\ORM\EntityManager;
+use Intervention\Image\Constraint;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Constraint;
