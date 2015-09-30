@@ -501,11 +501,12 @@ class DocumentRepository extends EntityRepository
                 WITH dt.translation = :translation
             INNER JOIN d.nodesSourcesByFields nsf
                 WITH nsf.nodeSource = :nodeSource
-            WHERE nsf.field = :field AND d.raw = false
+            WHERE nsf.field = :field AND d.raw = :raw
             ORDER BY nsf.position ASC')
             ->setParameter('field', $field)
             ->setParameter('nodeSource', $nodeSource)
-            ->setParameter('translation', $nodeSource->getTranslation());
+            ->setParameter('translation', $nodeSource->getTranslation())
+            ->setParameter('raw', false);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -531,11 +532,12 @@ class DocumentRepository extends EntityRepository
                 WITH nsf.nodeSource = :nodeSource
             INNER JOIN nsf.field f
                 WITH f.name = :name
-            WHERE d.raw = false
+            WHERE d.raw = :raw
             ORDER BY nsf.position ASC')
             ->setParameter('name', (string) $fieldName)
             ->setParameter('nodeSource', $nodeSource)
-            ->setParameter('translation', $nodeSource->getTranslation());
+            ->setParameter('translation', $nodeSource->getTranslation())
+            ->setParameter('raw', false);
         try {
             return $query->getResult();
         } catch (\Doctrine\ORM\NoResultException $e) {
@@ -555,8 +557,9 @@ class DocumentRepository extends EntityRepository
             WHERE d.id IN (
                 SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
                 WHERE s.type = :type
-            ) AND d.raw = false
-        ')->setParameter('type', AbstractField::DOCUMENTS_T);
+            ) AND d.raw = :raw
+        ')->setParameter('type', AbstractField::DOCUMENTS_T)
+          ->setParameter('raw', false);
 
         try {
             return $query->getResult();
@@ -582,7 +585,6 @@ class DocumentRepository extends EntityRepository
             ->from('RZ\Roadiz\Core\Entities\Setting', 's')
             ->where($qb2->expr()->eq('s.type', ':type'))
             ->andWhere($qb2->expr()->isNotNull('s.value'))
-            ->andWhere($qb2->expr()->neq('s.value', $qb->expr()->literal('')))
             ->setParameter('type', AbstractField::DOCUMENTS_T);
 
         $subQuery = $qb2->getQuery();
@@ -599,7 +601,8 @@ class DocumentRepository extends EntityRepository
             ->leftJoin('d.nodesSourcesByFields', 'ns')
             ->having('COUNT(ns.id) = 0')
             ->groupBy('d.id')
-            ->where($qb->expr()->eq('d.raw', false));
+            ->where($qb->expr()->eq('d.raw', ':raw'))
+            ->setParameter('raw', false);
 
         if (count($idArray) > 0) {
             $qb->andWhere($qb->expr()->notIn(
