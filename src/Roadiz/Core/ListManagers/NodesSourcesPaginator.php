@@ -126,7 +126,7 @@ class NodesSourcesPaginator extends Paginator
      *
      * @return self
      */
-    protected function setPreview($preview)
+    public function setPreview($preview)
     {
         $this->preview = (boolean) $preview;
 
