@@ -61,7 +61,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::CONTROLLER => 'onControllerMatched',
+            KernelEvents::CONTROLLER => ['onControllerMatched', 9],
         ];
     }
 

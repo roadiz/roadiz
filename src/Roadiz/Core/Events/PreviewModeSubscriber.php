@@ -30,11 +30,11 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  *
@@ -54,15 +54,18 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => 'onRequest',
+            KernelEvents::CONTROLLER => ['onControllerMatched', 10],
             KernelEvents::RESPONSE => 'onResponse',
         ];
     }
 
-    public function onRequest(GetResponseEvent $event)
+    public function onControllerMatched(FilterControllerEvent $event)
     {
-        if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
-            throw new AccessDeniedException("You are not allowed to use preview entry point.");
+        if (null === $this->container['securityTokenStorage']->getToken() ||
+            !is_object($this->container['securityTokenStorage']->getToken()->getUser())) {
+            throw new PreviewNotAllowedException();
+        } elseif (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
+            throw new PreviewNotAllowedException();
         }
     }
 
