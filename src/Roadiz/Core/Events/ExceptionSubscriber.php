@@ -55,8 +55,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
+        /*
+         * Roadiz excepiton handling must be triggered AFTER firewall exceptions
+         */
         return [
-            KernelEvents::EXCEPTION => 'onKernelException',
+            KernelEvents::EXCEPTION => ['onKernelException', -1],
         ];
     }
 
