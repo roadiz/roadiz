@@ -36,6 +36,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -150,7 +151,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
             return "Your database is not synchronised to Roadiz data schema. Did you run install before using Roadiz?";
         }
 
-        if ($e instanceof AccessDeniedException || $e instanceof PreviewNotAllowedException) {
+        if ($e instanceof AccessDeniedException ||
+            $e instanceof AccessDeniedHttpException ||
+            $e instanceof PreviewNotAllowedException) {
             return "Oups! Wrong way, you are not supposed to be here.";
         }
 

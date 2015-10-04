@@ -39,7 +39,9 @@ use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -103,6 +105,8 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             /*
              * Extensions
              */
+            $twig->addExtension(new HttpFoundationExtension($c['requestStack']));
+            $twig->addExtension(new SecurityExtension($c['securityAuthorizationChecker']));
             $twig->addExtension(new TranslationExtension($c['translator']));
             $twig->addExtension(new \Twig_Extensions_Extension_Intl());
             $twig->addExtension($c['twig.routingExtension']);

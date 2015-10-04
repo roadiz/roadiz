@@ -80,12 +80,10 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
             );
 
         } else {
-            $url = $request->getBasePath() !== "" ? $request->getBasePath() : "/";
-            $response = new RedirectResponse($url);
+            $response = new RedirectResponse($request->getSchemeAndHttpHost());
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            $response->prepare($request);
 
-            return $response->send();
+            return $response;
         }
     }
 }

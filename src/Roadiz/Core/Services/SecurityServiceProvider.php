@@ -63,10 +63,12 @@ use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\FirewallMap;
+use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\RememberMeListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
+use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 
 /**
@@ -221,6 +223,15 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             }
         };
 
+        $container['cookieClearingLogoutHandler'] = function ($c) {
+            return new CookieClearingLogoutHandler([
+                $c['rememberMeCookieName'] => [
+                    'path' => $c['request']->getBasePath(),
+                    'domain' => $c['request']->getHost(),
+                ],
+            ]);
+        };
+
         $container['tokenBasedRememberMeServices'] = function ($c) {
             return new TokenBasedRememberMeServices(
                 [$c['userProvider']],
@@ -275,6 +286,15 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
         };
         $container['securityTokenStorage'] = function ($c) {
             return new TokenStorage();
+        };
+
+        $container['securityAccessListener'] = function ($c) {
+            return new AccessListener(
+                $c['securityTokenStorage'],
+                $c['accessDecisionManager'],
+                $c['accessMap'],
+                $c['authentificationManager']
+            );
         };
 
         $container['roleHierarchy'] = function ($c) {

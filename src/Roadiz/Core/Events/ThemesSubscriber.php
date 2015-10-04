@@ -80,7 +80,9 @@ class ThemesSubscriber implements EventSubscriberInterface
             $this->stopwatch->start('backendDependencyInjection');
             // Register back-end security scheme
             $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
-            $beClass::setupDependencyInjection($this->kernel->getContainer());
+            if (null !== $beClass) {
+                $beClass::setupDependencyInjection($this->kernel->getContainer());
+            }
             $this->stopwatch->stop('backendDependencyInjection');
         }
 

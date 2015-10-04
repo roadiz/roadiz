@@ -35,10 +35,8 @@ use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
-use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
@@ -87,14 +85,7 @@ class BackendController extends AppController
         );
         //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
         $logoutListener->addHandler(new SessionLogoutHandler());
-        $logoutListener->addHandler(
-            new CookieClearingLogoutHandler([
-                $container['rememberMeCookieName'] => [
-                    'path' => $container['request']->getBasePath(),
-                    'domain' => $container['request']->getHost(),
-                ],
-            ])
-        );
+        $logoutListener->addHandler($container['cookieClearingLogoutHandler']);
 
         $listeners = [
             // manages the AuthorizationChecker persistence through a session
@@ -135,17 +126,11 @@ class BackendController extends AppController
                 [
                     'check_path' => '/rz-admin/login_check',
                 ],
-                $container['logger'], // A LoggerInterface instance
+                $container['logger'],
                 $container['dispatcher'],
                 null
             ),
-            // enforces access control rules
-            new AccessListener(
-                $container['securityTokenStorage'],
-                $container['accessDecisionManager'],
-                $container['accessMap'],
-                $container['authentificationManager']
-            ),
+            $container['securityAccessListener'],
             $container["switchUser"],
         ];
 
