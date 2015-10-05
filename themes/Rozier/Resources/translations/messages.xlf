@@ -550,6 +550,10 @@
           <context context-type="linenumber">835</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="phone">
+        <source>phone</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="54">
         <source>company</source>
         <target></target>
@@ -6283,7 +6287,6 @@
       </trans-unit>
 
       <!-- Raw documents -->
-
       <trans-unit xml:space="preserve" id="download.raw.document">
           <source>download.raw.document</source>
           <target></target>

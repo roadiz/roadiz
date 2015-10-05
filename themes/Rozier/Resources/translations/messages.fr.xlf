@@ -550,6 +550,10 @@
           <context context-type="linenumber">835</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="phone" approved="yes">
+        <source>phone</source>
+        <target xml:lang="fr">Téléphone</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="54" approved="yes">
         <source>company</source>
         <target xml:lang="fr">Société</target>
@@ -3269,6 +3273,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/9a/f2a9ab31044ec747813125ad428def2be716184dc2d6462206038ed37577.php</context>
           <context context-type="linenumber">54</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="preview.page" approved="yes">
+        <source>preview.page</source>
+        <target xml:lang="fr">Prévisualiser la page</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="314" approved="yes">
         <source>duplicate</source>
@@ -6162,13 +6170,13 @@
           <target xml:lang="fr">Ajouter des étiquettes</target>
       </trans-unit>
       <!-- Raw documents -->
-      <trans-unit xml:space="preserve" id="download.raw.document">
+      <trans-unit xml:space="preserve" id="download.raw.document" approved="yes">
           <source>download.raw.document</source>
-          <target xml:lang="fr" state="translated">Télécharger le document non traité</target>
+          <target xml:lang="fr">Télécharger le document non traité</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.raw_document">
+      <trans-unit xml:space="preserve" id="document.raw_document" approved="yes">
           <source>document.raw_document</source>
-          <target xml:lang="fr" state="translated">Document non traité</target>
+          <target xml:lang="fr">Document non traité</target>
       </trans-unit>
     </body>
   </file>

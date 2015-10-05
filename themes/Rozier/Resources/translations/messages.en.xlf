@@ -550,6 +550,10 @@
           <context context-type="linenumber">835</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="phone">
+        <source>phone</source>
+        <target xml:lang="en" state="translated">Phone</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="54" approved="yes">
         <source>company</source>
         <target xml:lang="en">Company</target>
@@ -3269,6 +3273,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/9a/f2a9ab31044ec747813125ad428def2be716184dc2d6462206038ed37577.php</context>
           <context context-type="linenumber">54</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="preview.page">
+        <source>preview.page</source>
+        <target xml:lang="en" state="translated">Preview page</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="314" approved="yes">
         <source>duplicate</source>
