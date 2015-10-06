@@ -402,6 +402,10 @@
                 <source>warning.theme.continue</source>
                 <target xml:lang="fr">Vous pouvez ignorer ces messages et continuer tout de m&#xEA;me.</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
+                <source>now_you_can_delete_install_file_and_use_roadiz</source>
+                <target xml:lang="fr" state="translated">L&#x2019;installation de Roadiz est maintenant termin&#xE9;e, vous pouvez supprimer le fichier install.php et commencer &#xE0; utiliser votre tout nouveau site web.</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>
