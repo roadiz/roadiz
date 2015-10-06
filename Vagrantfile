@@ -61,8 +61,8 @@ Vagrant.configure(2) do |config|
     sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $DBPASSWD"
     sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
 
-    sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php5-fpm curl;
-    sudo apt-get -qq -f -y install php5-cli php5-mysqlnd php5-curl php5-gd php5-intl php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xcache php5-xdebug phpmyadmin;
+    sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php5-fpm curl > /dev/null 2>&1;
+    sudo apt-get -qq -f -y install php5-cli php5-mysqlnd php5-curl php5-gd php5-intl php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xcache php5-xdebug phpmyadmin > /dev/null 2>&1;
 
     echo -e "\n--- Setting up our MySQL user and db ---\n"
     sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME"
@@ -239,6 +239,13 @@ EOF
     curl --silent https://getcomposer.org/installer | php > /dev/null 2>&1
     sudo mv composer.phar /usr/local/bin/composer
 
+    echo -e "\n--- Installing NodeJS and NPM ---\n"
+    sudo apt-get -y install nodejs > /dev/null 2>&1
+    curl --silent https://npmjs.org/install.sh | sudo sh > /dev/null 2>&1
+
+    echo -e "\n--- Installing javascript components ---\n"
+    sudo npm install -g grunt grunt-cli bower > /dev/null 2>&1
+
     echo -e "\n--- Restarting servers ---\n"
     sudo service nginx restart
     sudo service php5-fpm restart
@@ -252,7 +259,7 @@ EOF
     echo -e "\n--- Your Roadiz Vagrant is ready in /var/www ---\n"
     echo -e "\nDo not forget to \"composer install\" and to copy a default config\n"
     echo -e "\nand a install.php with your host IP address authorized.\n"
-    echo -e "\n--- MySQL User: $DB_USER\n"
+    echo -e "\n--- MySQL User: $DBUSER\n"
     echo -e "\n--- MySQL Password: $DBPASSWD\n"
     echo -e "\n--- MySQL Database: $DBNAME\n"
 
