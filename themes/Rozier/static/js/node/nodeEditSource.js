@@ -141,11 +141,15 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
     var _this = this;
 
     Rozier.lazyload.canvasLoader.show();
+    var formData = new FormData(_this.$form[0]);
 
     $.ajax({
         url: _this.$form.attr('action'),
         type: 'post',
-        data: _this.$form.serialize(),
+        data: formData,
+        processData: false,
+        cache : false,
+        contentType: false
     })
     .done(function() {
         console.log("Saved node-source with success.");

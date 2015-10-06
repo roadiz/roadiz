@@ -43,12 +43,17 @@ SettingsSaveButtons.prototype.buttonClick = function(e){
     }
 
     Rozier.lazyload.canvasLoader.show();
-
-    $.ajax({
+    var formData = new FormData($form[0]);
+    var sendData = {
         url: $form.attr('action'),
         type: 'post',
-        data: $form.serialize(),
-    })
+        data: formData,
+        processData: false,
+        cache : false,
+        contentType: false
+    };
+
+    $.ajax(sendData)
     .done(function() {
         console.log("Saved setting with success.");
     })
