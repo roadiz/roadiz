@@ -45,7 +45,7 @@ SettingsSaveButtons.prototype.buttonClick = function(e){
     Rozier.lazyload.canvasLoader.show();
     var formData = new FormData($form[0]);
     var sendData = {
-        url: $form.attr('action'),
+        url: window.location.href,
         type: 'post',
         data: formData,
         processData: false,

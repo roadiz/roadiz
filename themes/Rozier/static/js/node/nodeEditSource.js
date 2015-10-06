@@ -144,7 +144,7 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
     var formData = new FormData(_this.$form[0]);
 
     $.ajax({
-        url: _this.$form.attr('action'),
+        url: window.location.href,
         type: 'post',
         data: formData,
         processData: false,
