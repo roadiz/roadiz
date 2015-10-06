@@ -755,6 +755,28 @@ class User extends AbstractHuman implements AdvancedUserInterface
         }
 
         $this->getHandler()->encodePassword();
+
+        /*
+         * Force a gravatar image if not defined
+         */
+        if ($this->getPictureUrl() == '') {
+            $this->setPictureUrl("http://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200");
+        }
+    }
+
+    /**
+     * @ORM\preUpdate
+     */
+    public function preUpdate()
+    {
+        parent::preUpdate();
+
+        /*
+         * Force a gravatar image if not defined
+         */
+        if ($this->getPictureUrl() == '') {
+            $this->setPictureUrl("http://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200");
+        }
     }
 
     /**
