@@ -111,6 +111,25 @@ server {
       try_files $uri $uri/ /index.php?$query_string;
   }
 
+  location ~ /install.php/ {
+      try_files $uri @pass_to_roadiz_install;
+  }
+  location @pass_to_roadiz_install{
+      rewrite ^ /install.php?$request_uri last;
+  }
+  location ~ /dev.php/ {
+      try_files $uri @pass_to_roadiz_dev;
+  }
+  location @pass_to_roadiz_dev{
+      rewrite ^ /dev.php?$request_uri last;
+  }
+  location ~ /preview.php/ {
+      try_files $uri @pass_to_roadiz_preview;
+  }
+  location @pass_to_roadiz_preview{
+      rewrite ^ /preview.php?$request_uri last;
+  }
+
   # redirect server error pages to the static page /50x.html
   #
   error_page 500 502 503 504 /50x.html;
@@ -244,7 +263,7 @@ EOF
     curl --silent https://npmjs.org/install.sh | sudo sh > /dev/null 2>&1
 
     echo -e "\n--- Installing javascript components ---\n"
-    sudo npm install -g grunt grunt-cli bower > /dev/null 2>&1
+    sudo npm install -g grunt-cli bower > /dev/null 2>&1
 
     echo -e "\n--- Restarting servers ---\n"
     sudo service nginx restart

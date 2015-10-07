@@ -129,8 +129,6 @@ class RoadizApplication extends Application
             'solr' => new SolrHelper($this->kernel->container['solr']),
             'ns-cache' => new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']),
             'mailer' => new MailerHelper($this->kernel->container['mailer']),
-            'templating' => new TemplatingHelper($this->kernel->container['twig.environment']),
-            'translator' => new TranslatorHelper($this->kernel->container['translator']),
         ]);
     }
 }

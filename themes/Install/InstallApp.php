@@ -256,6 +256,8 @@ class InstallApp extends AppController
                         new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
                         new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
                         new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
+                        // Force clear prod configuration too
+                        new ConfigurationCacheClearer(ROADIZ_ROOT . '/cache/prod'),
                     ];
                     foreach ($clearers as $clearer) {
                         $clearer->clear();
