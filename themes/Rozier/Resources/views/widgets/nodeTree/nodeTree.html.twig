@@ -50,6 +50,7 @@
                 {% if not cnode.nodetype.newsletterType %}
                     {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
                         "node":cnode,
+                        "parent":nodeTree.getRootNode,
                         "nodeTree":nodeTree,
                         "request":request,
                         "authorizationChecker":authorizationChecker,
