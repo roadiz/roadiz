@@ -335,6 +335,7 @@ class DocumentRepository extends EntityRepository
         /*
          * Filtering by tag
          */
+        $this->filterByTranslation($criteria, $qb, $translation);
         $this->filterByFolder($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
 
@@ -377,6 +378,7 @@ class DocumentRepository extends EntityRepository
         /*
          * Filtering by tag
          */
+        $this->filterByTranslation($criteria, $qb, $translation);
         $this->filterByFolder($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
 
