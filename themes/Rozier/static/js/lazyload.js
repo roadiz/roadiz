@@ -271,40 +271,18 @@ Lazyload.prototype.initMarkdownEditors = function() {
 
     // Init markdown-preview
     _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor], textarea[data-uk-rz-htmleditor]').not('[data-uk-check-display]');
+    var editorCount = _this.$textAreaHTMLeditor.length;
 
-    if(_this.$textAreaHTMLeditor.length){
-
+    if(editorCount){
         setTimeout(function(){
-            for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
-
-                _this.htmlEditor[i] = UIkit.htmleditor(
-                    $(_this.$textAreaHTMLeditor[i]),
-                    {
-                        markdown:true,
-                        mode:'tab',
-                        labels : Rozier.messages.htmleditor
-                    }
-                );
-                _this.$HTMLeditor = $('.uk-htmleditor');
-                _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
-                _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
-
-                $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);
-
-                _this.htmlEditor[i].redraw();
-
+            for(var i = 0; i < editorCount; i++) {
+                new MarkdownEditor($(_this.$textAreaHTMLeditor[i]), i);
             }
 
             $(".uk-htmleditor-preview").css("height", 250);
             $(".CodeMirror").css("height", 250);
 
-            setTimeout(function(){
-                _this.$HTMLeditorNavToRemove = $('.uk-htmleditor-navbar:not(.bottom)');
-                _this.$HTMLeditorNavToRemove.remove();
-                new MarkdownEditor();
-            }, 0);
-
-        }, 0);
+        }, 10);
     }
 };
 

@@ -23,7 +23,7 @@
 {% block markdown_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
-        <textarea {{ block('widget_attributes') }} data-uk-rz-htmleditor{# data-uk-htmleditor #}>{{ value }}</textarea>
+        <textarea {{ block('widget_attributes') }} data-uk-rz-htmleditor>{{ value }}</textarea>
     {% endspaceless %}
 {% endblock markdown_widget %}
 

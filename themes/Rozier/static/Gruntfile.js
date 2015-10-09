@@ -41,7 +41,10 @@ module.exports = function(grunt) {
         'bower_components/codemirror/mode/gfm/gfm.js',
         'bower_components/marked/lib/marked.js',
         'bower_components/dropzone/dist/dropzone.js',
-        'js/vendor/addons/htmleditor.js'
+        //'bower_components/uikit/js/components/htmleditor.js',
+        'js/vendor/addons/htmleditor.js',
+        'bower_components/CanvasLoader/js/heartcode-canvasloader.js',
+        'bower_components/jquery.actual/jquery.actual.js',
     ];
     var vendorFilesObject = objectify(vendorFiles);
 
