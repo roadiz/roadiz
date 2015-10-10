@@ -127,8 +127,10 @@
                         </p>
                         {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
                         {% set refererUrl = request.uri %}
-                        {% if refererUrl matches '/ajax/' %}
+                        {% if refererUrl matches '/ajax/' and parent %}
                             {% set refererUrl = path('nodesEditSourcePage', { nodeId:parent.getId, translationId:nodeTree.getTranslation.getId}) %}
+                        {% elseif refererUrl matches '/ajax/' %}
+                            {% set refererUrl = path('nodesHomePage') %}
                         {% endif %}
                         <p>
                             <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId, referer:refererUrl }) }}">
