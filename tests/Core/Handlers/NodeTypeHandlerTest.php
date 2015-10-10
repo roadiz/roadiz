@@ -28,6 +28,7 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         // Node type #2
         $nt2 = new NodeType();
         $nt2->setName('blog post');
+        $nt2->setColor('#FF0000');
         $nt2->setDisplayName('Un blog post');
 
         $ntf1 = new NodeTypeField();

@@ -154,10 +154,10 @@ class FrontendController extends AppController
         $this->node = $node;
         $this->translation = $translation;
         $this->assignation['translation'] = $this->translation;
-        $this->getService('request')->attributes->set('translation', $this->translation);
+        $this->getRequest()->attributes->set('translation', $this->translation);
 
         if (null !== $this->node) {
-            $this->getService('request')->attributes->set('node', $this->node);
+            $this->getRequest()->attributes->set('node', $this->node);
             $this->nodeSource = $this->node->getNodeSources()->first();
             $this->assignation['node'] = $this->node;
             $this->assignation['nodeSource'] = $this->nodeSource;
@@ -190,8 +190,8 @@ class FrontendController extends AppController
             $this->node = $this->nodeSource->getNode();
             $this->translation = $this->nodeSource->getTranslation();
 
-            $this->getService('request')->attributes->set('translation', $this->translation);
-            $this->getService('request')->attributes->set('node', $this->node);
+            $this->getRequest()->attributes->set('translation', $this->translation);
+            $this->getRequest()->attributes->set('node', $this->node);
 
             $this->assignation['translation'] = $this->translation;
             $this->assignation['node'] = $this->node;
@@ -199,7 +199,7 @@ class FrontendController extends AppController
         } else {
             $this->translation = $translation;
             $this->assignation['translation'] = $this->translation;
-            $this->getService('request')->attributes->set('translation', $this->translation);
+            $this->getRequest()->attributes->set('translation', $this->translation);
         }
 
         $this->assignation['pageMeta'] = $this->getNodeSEO();

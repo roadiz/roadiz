@@ -5,6 +5,7 @@
     "visible": true,
     "newsletterType": false,
     "hidingNodes": false,
+    "color": "#FF0000",
     "fields": [
         {
             "name": "title",
