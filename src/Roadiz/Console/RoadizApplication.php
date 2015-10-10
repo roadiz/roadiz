@@ -39,8 +39,6 @@ use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
-use RZ\Roadiz\Utils\Console\Helper\TemplatingHelper;
-use RZ\Roadiz\Utils\Console\Helper\TranslatorHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Symfony\Component\Console\Helper\FormatterHelper;
