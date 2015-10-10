@@ -42,13 +42,15 @@ class TranslationsCacheClearer extends Clearer
         $fs = new Filesystem();
         $finder = new Finder();
 
-        if ($fs->exists($this->getCacheDir() . '/translations')) {
-            $finder->in($this->getCacheDir() . '/translations');
-            $fs->remove($finder);
+        if ($fs->exists($this->getCacheDir())) {
+            if ($fs->exists($this->getCacheDir() . '/translations')) {
+                $finder->in($this->getCacheDir() . '/translations');
+                $fs->remove($finder);
 
-            $this->output .= 'Compiled translation catalogues have been purged.'.PHP_EOL;
+                $this->output .= 'Compiled translation catalogues have been purged.'.PHP_EOL;
 
-            return true;
+                return true;
+            }
         }
 
         return false;
