@@ -62,6 +62,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $data['visible'] = $nodeType->isVisible();
         $data['newsletterType'] = $nodeType->isNewsletterType();
         $data['hidingNodes'] = $nodeType->isHidingNodes();
+        $data['color'] = $nodeType->getColor();
         $data['fields'] = [];
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
@@ -90,6 +91,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
             'description',
             'visible',
             'newsletterType',
+            'color',
             'hidingNodes',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);

@@ -52,7 +52,7 @@ class TagsImporter implements ImporterInterface
         $serializer = new TagJsonSerializer();
         $tags = $serializer->deserialize($serializedData);
         $exist = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findAll();
+            ->findAll();
         if (empty($exist)) {
             foreach ($tags as $tag) {
                 static::browseTree($tag, $em);
@@ -67,12 +67,12 @@ class TagsImporter implements ImporterInterface
         $childObj = [];
         $sourceObj = [];
         foreach ($tag->getChildren() as $child) {
-            $childObj[] = static::browseTree($child);
+            $childObj[] = static::browseTree($child, $em);
         }
         $tag->getChildren()->clear();
         foreach ($tag->getTranslatedTags() as $tagTranslation) {
             $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                        ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
+                ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
 
             if (empty($trans)) {
                 $trans = new Translation();

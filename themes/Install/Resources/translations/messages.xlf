@@ -188,6 +188,10 @@
                 <source>import_node_type.node</source>
                 <target />
             </trans-unit>
+            <trans-unit id="import_node_type.tag">
+                <source>import_node_type.tag</source>
+                <target />
+            </trans-unit>
 
 
 
