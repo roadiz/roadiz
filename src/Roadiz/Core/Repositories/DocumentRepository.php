@@ -281,15 +281,14 @@ class DocumentRepository extends EntityRepository
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-            $qb->innerJoin('d.documentTranslations', 'dt');
-            $qb->innerJoin('dt.translation', 't');
-
+            $qb->leftJoin('d.documentTranslations', 'dt');
+            $qb->leftJoin('dt.translation', 't');
         } else {
             if (null !== $translation) {
                 /*
                  * With a given translation
                  */
-                $qb->innerJoin(
+                $qb->leftJoin(
                     'd.documentTranslations',
                     'dt',
                     'WITH',
@@ -297,10 +296,11 @@ class DocumentRepository extends EntityRepository
                 );
             } else {
                 /*
-                 * With a null translation, just take the default one.
+                 * With a null translation, just take the default one optionaly
+                 * Using left join instead of inner join.
                  */
-                $qb->innerJoin('d.documentTranslations', 'dt');
-                $qb->innerJoin(
+                $qb->leftJoin('d.documentTranslations', 'dt');
+                $qb->leftJoin(
                     'dt.translation',
                     't',
                     'WITH',
