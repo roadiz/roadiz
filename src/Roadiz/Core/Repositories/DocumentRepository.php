@@ -27,10 +27,12 @@
  * @file DocumentRepository.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Repositories;
+namespace Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 
@@ -239,9 +241,10 @@ class DocumentRepository extends EntityRepository
     protected function applyFilterByFolder(array &$criteria, &$finalQuery)
     {
         if (in_array('folders', array_keys($criteria))) {
-            if (is_object($criteria['folders'])) {
+            if ($criteria['folders'] instanceof Folder) {
                 $finalQuery->setParameter('folders', $criteria['folders']->getId());
-            } elseif (is_array($criteria['folders'])) {
+            } elseif (is_array($criteria['folders']) ||
+                $criteria['folders'] instanceof Collection) {
                 $finalQuery->setParameter('folders', $criteria['folders']);
             } elseif (is_integer($criteria['folders'])) {
                 $finalQuery->setParameter('folders', (int) $criteria['folders']);
@@ -561,7 +564,7 @@ class DocumentRepository extends EntityRepository
                 WHERE s.type = :type
             ) AND d.raw = :raw
         ')->setParameter('type', AbstractField::DOCUMENTS_T)
-          ->setParameter('raw', false);
+            ->setParameter('raw', false);
 
         try {
             return $query->getResult();

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use RZ\Roadiz\Core\Entities\Node;
@@ -201,7 +202,7 @@ class NodeRepository extends EntityRepository
             if ($criteria['tags'] instanceof Tag) {
                 $finalQuery->setParameter('tags', $criteria['tags']->getId());
             } elseif (is_array($criteria['tags']) ||
-                $criteria['tags'] instanceof \Doctrine\ORM\PersistentCollection) {
+                $criteria['tags'] instanceof Collection) {
                 $finalQuery->setParameter('tags', $criteria['tags']);
             } elseif (is_integer($criteria['tags'])) {
                 $finalQuery->setParameter('tags', (int) $criteria['tags']);
