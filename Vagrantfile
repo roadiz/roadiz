@@ -19,12 +19,12 @@ Vagrant.configure(2) do |config|
 
   config.vm.provider "virtualbox" do |vb|
     # Display the VirtualBox GUI when booting the machine
-    vb.gui = true
+    #vb.gui = true
     # Enable Symlink over shared folder
     # Userful if you are using symlink for your themes.
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
     # Customize the amount of memory on the VM:
-    vb.memory = "1024"
+    vb.memory = "512"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -61,7 +61,9 @@ Vagrant.configure(2) do |config|
     sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $DBPASSWD"
     sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
 
+    echo -e "\n--- Install base servers and packages ---\n"
     sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php5-fpm curl > /dev/null 2>&1;
+    echo -e "\n--- Install all php5 extensions ---\n"
     sudo apt-get -qq -f -y install php5-cli php5-mysqlnd php5-curl php5-gd php5-intl php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xcache php5-xdebug phpmyadmin > /dev/null 2>&1;
 
     echo -e "\n--- Setting up our MySQL user and db ---\n"
@@ -71,6 +73,9 @@ Vagrant.configure(2) do |config|
     echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
     sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php5/fpm/php.ini
     sed -i "s/display_errors = .*/display_errors = On/" /etc/php5/fpm/php.ini
+
+    echo -e "\n--- We definitly need to upload large files ---\n"
+    sed -i "s/server_tokens off;/server_tokens off;\\n\\tclient_max_body_size 256M;/" /etc/nginx/nginx.conf
 
     echo -e "\n--- Configure Nginx virtual host for Roadiz and phpmyadmin ---\n"
     sudo rm /etc/nginx/sites-available/default;
