@@ -510,6 +510,7 @@ class FrontendController extends AppController
          * security context
          */
         $elm->setAuthorizationChecker($this->getService('securityAuthorizationChecker'));
+        $elm->setPreview($this->getService('kernel')->isPreview());
 
         return $elm;
     }
