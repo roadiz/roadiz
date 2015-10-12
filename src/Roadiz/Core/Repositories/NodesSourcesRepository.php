@@ -35,6 +35,7 @@ use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -97,9 +98,10 @@ class NodesSourcesRepository extends EntityRepository
     protected function applyFilterByTag(array &$criteria, &$finalQuery)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (is_object($criteria['tags'])) {
+            if ($criteria['tags'] instanceof Tag) {
                 $finalQuery->setParameter('tags', $criteria['tags']->getId());
-            } elseif (is_array($criteria['tags'])) {
+            } elseif (is_array($criteria['tags']) ||
+                $criteria['tags'] instanceof \Doctrine\ORM\PersistentCollection) {
                 $finalQuery->setParameter('tags', $criteria['tags']);
             } elseif (is_integer($criteria['tags'])) {
                 $finalQuery->setParameter('tags', (int) $criteria['tags']);
@@ -292,8 +294,8 @@ class NodesSourcesRepository extends EntityRepository
         $preview = false
     ) {
         $backendUser = $preview === true &&
-                       null !== $authorizationChecker &&
-                       $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+        null !== $authorizationChecker &&
+        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
 
         if ($backendUser) {
             /*
@@ -336,7 +338,7 @@ class NodesSourcesRepository extends EntityRepository
         $joinedNodeType = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'ns')
-           ->add('from', $this->getEntityName() . ' ns');
+            ->add('from', $this->getEntityName() . ' ns');
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -393,7 +395,7 @@ class NodesSourcesRepository extends EntityRepository
     ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(ns.id)')
-           ->add('from', $this->getEntityName() . ' ns');
+            ->add('from', $this->getEntityName() . ' ns');
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -674,8 +676,8 @@ class NodesSourcesRepository extends EntityRepository
                     SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
                     WHERE ns.node = :node
                     AND ns.translation = :translation')
-                        ->setParameter('node', $nodeSource->getNode()->getParent())
-                        ->setParameter('translation', $nodeSource->getTranslation());
+                    ->setParameter('node', $nodeSource->getNode()->getParent())
+                    ->setParameter('translation', $nodeSource->getTranslation());
 
                 return $query->getSingleResult();
             } catch (NoResultException $e) {
