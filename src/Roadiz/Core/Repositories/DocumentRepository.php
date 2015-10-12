@@ -27,7 +27,7 @@
  * @file DocumentRepository.php
  * @author Ambroise Maupate
  */
-namespace Roadiz\Core\Repositories;
+namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
