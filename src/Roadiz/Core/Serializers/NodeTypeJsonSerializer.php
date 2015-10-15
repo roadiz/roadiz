@@ -87,7 +87,6 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $nameConverter = new CamelCaseToSnakeCaseNameConverter([
             'name',
             'displayName',
-            'display_name',
             'description',
             'visible',
             'newsletterType',
