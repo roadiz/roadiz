@@ -585,4 +585,22 @@ class NodesSourcesHandler
                 $this->nodeSource->getTranslation()
             );
     }
+
+    /**
+     * Get nodes which own a reference to current node for a given fieldname.
+     *
+     * @param string $fieldName Name of the node-type field
+     *
+     * @return ArrayCollection Collection of nodes
+     */
+    public function getReverseNodesFromFieldName($fieldName)
+    {
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findByReverseNodeAndFieldAndTranslation(
+                $this->nodeSource->getNode(),
+                $fieldName,
+                $this->nodeSource->getTranslation()
+            );
+    }
 }
