@@ -296,7 +296,7 @@
         'form-col-' ~ form.vars.block_prefixes[1],
         'form-col-' ~ form.vars.name|replace('_','-')
     ] %}
-    <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group'] }}"{% endif %} class="{{ rowClasses|join(' ') }}">
+    <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group']|trans }}"{% endif %} class="{{ rowClasses|join(' ') }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
            {{- form_label(form) -}}
         {% endif %}
