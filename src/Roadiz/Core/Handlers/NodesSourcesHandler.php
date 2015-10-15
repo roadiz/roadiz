@@ -597,7 +597,7 @@ class NodesSourcesHandler
     {
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findByReverseNodeAndFieldAndTranslation(
+            ->findByReverseNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
                 $this->nodeSource->getTranslation()
