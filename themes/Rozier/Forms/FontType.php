@@ -50,6 +50,9 @@ class FontType extends AbstractType
                         new NotBlank(),
                     ],
                 ])
+                ->add('hash', 'text', [
+                    'label' => 'font.cssfamily',
+                ])
                 ->add('variant', new FontVariantsType(), [
                     'label' => 'font.variant',
                 ])

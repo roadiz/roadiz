@@ -310,7 +310,7 @@ class Font extends AbstractDateTimed
     /**
      * @ORM\Column(type="string", nullable=false, unique=false)
      */
-    private $hash;
+    private $hash = "";
     /**
      * @return string
      */
@@ -318,12 +318,25 @@ class Font extends AbstractDateTimed
     {
         return $this->hash;
     }
+
+    /**
+     * @param string $hash
+     *
+     * @return $this
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
     /**
      * @param string $secret
      *
      * @return $this
      */
-    public function setHash($secret)
+    public function generateHashWithSecret($secret)
     {
         $this->hash = substr(hash("crc32b", $this->name . $secret), 0, 12);
 
@@ -602,6 +615,10 @@ class Font extends AbstractDateTimed
      */
     public function preUpload()
     {
+        if ($this->hash == "") {
+            $this->generateHashWithSecret('default_roadiz_secret');
+        }
+
         if (null !== $this->svgFile) {
             $this->setSVGFilename($this->svgFile->getClientOriginalName());
         }
