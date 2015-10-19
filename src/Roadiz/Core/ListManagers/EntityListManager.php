@@ -81,7 +81,7 @@ class EntityListManager
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
         $this->assignation = [];
-        $this->queryArray = $request->query->all();
+        $this->queryArray = array_filter($request->query->all());
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
 
