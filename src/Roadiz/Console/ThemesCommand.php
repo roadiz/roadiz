@@ -43,8 +43,8 @@ class ThemesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('core:themes')
-             ->setDescription('Manage themes')
+        $this->setName('themes:infos')
+             ->setDescription('Installed themes')
              ->addArgument(
                  'classname',
                  InputArgument::OPTIONAL,
@@ -68,7 +68,7 @@ class ThemesCommand extends Command
             . PHP_EOL;
 
         } else {
-            $text = '<info>Installed theme…</info>' . PHP_EOL;
+            $text = '<info>Installed themes…</info>' . PHP_EOL;
             $themes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
                            ->findAll();
 
