@@ -133,13 +133,16 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
             $queryString['portrait'] = (int) $args['portrait'];
         }
         if(isset($args['id'])){
-            $queryString['player_id'] = (int) $args['id'];
+            $queryString['player_id'] = $args['id'];
         }
         if(isset($args['loop'])){
             $queryString['loop'] = (int) $args['loop'];
         }
         if(isset($args['autoplay'])){
             $queryString['autoplay'] = (int) $args['autoplay'];
+        }
+        if(isset($args['api'])){
+            $queryString['api'] = (int) $args['api'];
         }
 
         return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);
