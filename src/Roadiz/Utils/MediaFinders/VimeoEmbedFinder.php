@@ -144,6 +144,9 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         if(isset($args['api'])){
             $queryString['api'] = (int) $args['api'];
         }
+        if (isset($args['controls'])) {
+            $queryString['controls'] = (int) $args['controls'];
+        }
 
         return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);
 

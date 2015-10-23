@@ -119,46 +119,36 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource(&$args = [])
     {
-        $uri = '//w.soundcloud.com/player/?url='.
-                'https://api.soundcloud.com/tracks/'.
-                $this->embedId;
+        $queryString = [
+            'url' => 'https://api.soundcloud.com/tracks/'.$this->embedId,
+        ];
 
-        if (!empty($args['auto_play'])) {
-            $uri .= '&auto_play='.((boolean) $args['auto_play'] ? 'true': 'false');
-        } else {
-            $uri .= '&auto_play=false';
+        if(isset($args['hide_related'])){
+            $queryString['hide_related'] = (int) $args['hide_related'];
+        }
+        if(isset($args['show_comments'])){
+            $queryString['show_comments'] = (int) $args['show_comments'];
+        }
+        if(isset($args['show_user'])){
+            $queryString['show_user'] = (int) $args['show_user'];
+        }
+        if(isset($args['show_reposts'])){
+            $queryString['show_reposts'] = (int) $args['show_reposts'];
+        }
+        if(isset($args['autoplay'])){
+            $queryString['auto_play'] = (int) $args['autoplay'];
+        }
+        if(isset($args['auto_play'])){
+            $queryString['auto_play'] = (int) $args['autoplay'];
+        }
+        if(isset($args['visual'])){
+            $queryString['visual'] = (int) $args['visual'];
+        }
+        if (isset($args['controls'])) {
+            $queryString['controls'] = (int) $args['controls'];
         }
 
-        if (!empty($args['hide_related'])) {
-            $uri .= '&hide_related='.((boolean) $args['hide_related'] ? 'true': 'false');
-        } else {
-            $uri .= '&hide_related=true';
-        }
 
-        if (!empty($args['show_comments'])) {
-            $uri .= '&show_comments='.((boolean) $args['show_comments'] ? 'true': 'false');
-        } else {
-            $uri .= '&show_comments=true';
-        }
-
-        if (!empty($args['show_user'])) {
-            $uri .= '&show_user='.((boolean) $args['show_user'] ? 'true': 'false');
-        } else {
-            $uri .= '&show_user=true';
-        }
-
-        if (!empty($args['show_reposts'])) {
-            $uri .= '&show_reposts='.((boolean) $args['show_reposts'] ? 'true': 'false');
-        } else {
-            $uri .= '&show_reposts=false';
-        }
-
-        if (!empty($args['visual'])) {
-            $uri .= '&visual='.((boolean) $args['visual'] ? 'true': 'false');
-        } else {
-            $uri .= '&visual=true';
-        }
-
-        return $uri;
+        return '//w.soundcloud.com/player/?' . http_build_query($queryString);
     }
 }

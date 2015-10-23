@@ -147,13 +147,6 @@ abstract class AbstractEmbedFinder
             $attributes['class'] = $args['class'];
         }
 
-        if (isset($args['autoplay']) && $args['autoplay'] === true) {
-            $attributes['src'] .= '&autoplay=1';
-        }
-        if (isset($args['controls']) && $args['controls'] === false) {
-            $attributes['src'] .= '&controls=0';
-        }
-
         $attributes['frameborder'] = "0";
         $attributes['webkitAllowFullScreen'] = "1";
         $attributes['mozallowfullscreen'] = "1";
