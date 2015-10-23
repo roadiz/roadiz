@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -48,7 +49,9 @@ class TagRepository extends EntityRepository
     protected function filterByNodes(&$criteria, &$qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
-            if (is_array($criteria['nodes'])) {
+            if (is_array($criteria['nodes'])||
+                (is_object($criteria['nodes']) &&
+                    $criteria['nodes'] instanceof Collection)) {
                 $qb->innerJoin(
                     'tg.nodes',
                     'n',
@@ -75,9 +78,10 @@ class TagRepository extends EntityRepository
     protected function applyFilterByNodes(array &$criteria, &$finalQuery)
     {
         if (in_array('nodes', array_keys($criteria))) {
-            if (is_object($criteria['nodes'])) {
+            if ($criteria['nodes'] instanceof Node) {
                 $finalQuery->setParameter('nodes', $criteria['nodes']->getId());
-            } elseif (is_array($criteria['nodes'])) {
+            } elseif (is_array($criteria['nodes']) ||
+                $criteria['nodes'] instanceof Collection) {
                 $finalQuery->setParameter('nodes', $criteria['nodes']);
             } elseif (is_integer($criteria['nodes'])) {
                 $finalQuery->setParameter('nodes', (int) $criteria['nodes']);

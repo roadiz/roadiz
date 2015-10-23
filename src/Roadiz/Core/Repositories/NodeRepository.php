@@ -54,7 +54,9 @@ class NodeRepository extends EntityRepository
     protected function filterByTag(&$criteria, &$qb)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (is_array($criteria['tags'])) {
+            if (is_array($criteria['tags']) ||
+                (is_object($criteria['tags']) &&
+                    $criteria['tags'] instanceof Collection)) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
                     $node = static::getNodeIdsByTagExcl($criteria['tags'], $this->_em);

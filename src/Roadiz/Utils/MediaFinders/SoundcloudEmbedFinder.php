@@ -123,25 +123,25 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
             'url' => 'https://api.soundcloud.com/tracks/'.$this->embedId,
         ];
 
-        if(isset($args['hide_related'])){
+        if (isset($args['hide_related'])) {
             $queryString['hide_related'] = (int) $args['hide_related'];
         }
-        if(isset($args['show_comments'])){
+        if (isset($args['show_comments'])) {
             $queryString['show_comments'] = (int) $args['show_comments'];
         }
-        if(isset($args['show_user'])){
+        if (isset($args['show_user'])) {
             $queryString['show_user'] = (int) $args['show_user'];
         }
-        if(isset($args['show_reposts'])){
+        if (isset($args['show_reposts'])) {
             $queryString['show_reposts'] = (int) $args['show_reposts'];
         }
-        if(isset($args['autoplay'])){
+        if (isset($args['autoplay'])) {
             $queryString['auto_play'] = (int) $args['autoplay'];
         }
-        if(isset($args['auto_play'])){
+        if (isset($args['auto_play'])) {
             $queryString['auto_play'] = (int) $args['autoplay'];
         }
-        if(isset($args['visual'])){
+        if (isset($args['visual'])) {
             $queryString['visual'] = (int) $args['visual'];
         }
         if (isset($args['controls'])) {

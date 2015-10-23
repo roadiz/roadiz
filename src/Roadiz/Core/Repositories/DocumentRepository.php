@@ -50,7 +50,9 @@ class DocumentRepository extends EntityRepository
     protected function filterByFolder(&$criteria, &$qb)
     {
         if (in_array('folders', array_keys($criteria))) {
-            if (is_array($criteria['folders'])) {
+            if (is_array($criteria['folders']) ||
+                (is_object($criteria['folders']) &&
+                    $criteria['folders'] instanceof Collection)) {
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
                     $documents = $this->getDocumentIdsByFolderExcl($criteria['folders']);

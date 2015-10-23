@@ -120,28 +120,28 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
             'api' => 1,
         ];
 
-        if(isset($args['displayTitle'])){
+        if (isset($args['displayTitle'])) {
             $queryString['title'] = (int) $args['displayTitle'];
         }
-        if(isset($args['byline'])){
+        if (isset($args['byline'])) {
             $queryString['byline'] = (int) $args['byline'];
         }
-        if(isset($args['color'])){
+        if (isset($args['color'])) {
             $queryString['color'] = $args['color'];
         }
-        if(isset($args['portrait'])){
+        if (isset($args['portrait'])) {
             $queryString['portrait'] = (int) $args['portrait'];
         }
-        if(isset($args['id'])){
+        if (isset($args['id'])) {
             $queryString['player_id'] = $args['id'];
         }
-        if(isset($args['loop'])){
+        if (isset($args['loop'])) {
             $queryString['loop'] = (int) $args['loop'];
         }
-        if(isset($args['autoplay'])){
+        if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
-        if(isset($args['api'])){
+        if (isset($args['api'])) {
             $queryString['api'] = (int) $args['api'];
         }
         if (isset($args['controls'])) {

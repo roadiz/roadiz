@@ -120,16 +120,16 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
             'wmode' => 'transparent',
         ];
 
-        if(isset($args['autoplay'])){
+        if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
-        if(isset($args['color'])){
+        if (isset($args['color'])) {
             $queryString['color'] = $args['color'];
         }
-        if(isset($args['controls'])){
+        if (isset($args['controls'])) {
             $queryString['controls'] = (int) $args['controls'];
         }
-        if(isset($args['enablejsapi'])){
+        if (isset($args['enablejsapi'])) {
             $queryString['enablejsapi'] = (int) $args['enablejsapi'];
         }
 

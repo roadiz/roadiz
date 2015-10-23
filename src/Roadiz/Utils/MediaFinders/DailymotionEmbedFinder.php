@@ -107,10 +107,10 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     {
         $queryString = [];
 
-        if(isset($args['loop'])){
+        if (isset($args['loop'])) {
             $queryString['loop'] = (int) $args['loop'];
         }
-        if(isset($args['autoplay'])){
+        if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
         if (isset($args['controls'])) {
