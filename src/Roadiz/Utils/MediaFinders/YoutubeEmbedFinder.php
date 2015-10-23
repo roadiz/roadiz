@@ -114,6 +114,25 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource(&$args = [])
     {
-        return '//www.youtube.com/embed/'.$this->embedId.'?rel=0&html5=1&wmode=transparent';
+        $queryString = [
+            'rel' => 0,
+            'html5' => 1,
+            'wmode' => 'transparent',
+        ];
+
+        if(isset($args['autoplay'])){
+            $queryString['autoplay'] = (int) $args['autoplay'];
+        }
+        if(isset($args['color'])){
+            $queryString['color'] = $args['color'];
+        }
+        if(isset($args['controls'])){
+            $queryString['controls'] = (int) $args['controls'];
+        }
+        if(isset($args['enablejsapi'])){
+            $queryString['enablejsapi'] = (int) $args['enablejsapi'];
+        }
+
+        return '//www.youtube.com/embed/'.$this->embedId.'?'.http_build_query($queryString);
     }
 }
