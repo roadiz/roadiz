@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
     # Userful if you are using symlink for your themes.
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
     # Customize the amount of memory on the VM:
-    vb.memory = "512"
+    vb.memory = "1024"
   end
 
   config.vm.provision "shell", inline: <<-SHELL
