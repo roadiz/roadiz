@@ -52,10 +52,10 @@ class SettingsImporter implements ImporterInterface
         $settingGroups = $serializer->deserialize($serializedData);
 
         $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                          ->findAllNames();
+            ->findAllNames();
 
         $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                            ->findAllNames();
+            ->findAllNames();
 
         $newSettings = [];
 
@@ -68,8 +68,20 @@ class SettingsImporter implements ImporterInterface
                 if (!in_array($setting->getName(), $settingsNames)) {
                     // do nothing
                 } else {
+                    $existingValue = null;
+
+                    if ($setting->getValue() !== "") {
+                        $existingValue = $setting->getValue();
+                    }
                     $setting = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
-                                  ->findOneByName($setting->getName());
+                        ->findOneByName($setting->getName());
+
+                    /*
+                     * Force setting value defined in Imported file.
+                     */
+                    if (null !== $existingValue) {
+                        $setting->setValue($existingValue);
+                    }
                 }
                 /*
                  * Set array with setting and the deserialize setting's group
@@ -92,7 +104,7 @@ class SettingsImporter implements ImporterInterface
                     $em->persist($settingGroup);
                 } else {
                     $settingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                                       ->findOneByName($settingGroup->getName());
+                        ->findOneByName($settingGroup->getName());
                 }
             }
             /*

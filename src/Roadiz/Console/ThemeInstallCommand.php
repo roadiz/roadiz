@@ -79,8 +79,6 @@ class ThemeInstallCommand extends Command
          */
         $classname = str_replace('/', '\\', $classname);
 
-        echo $classname;
-
         try {
             $theme = $this->getTheme($classname);
             $array = explode('\\', $classname);
@@ -149,7 +147,8 @@ class ThemeInstallCommand extends Command
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
-            $text .= 'You should do a <info>bin/roadiz orm:schema-tool:update --force</info> to apply your themes into database.' . PHP_EOL;
+            $text .= 'You should do a <info>bin/roadiz core:sources -r</info> to regenerate your node-types source classes.' . PHP_EOL;
+            $text .= 'And a <info>bin/roadiz orm:schema-tool:update --force</info> to apply your changes into database.' . PHP_EOL;
 
         } else {
             $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;
