@@ -57,15 +57,6 @@ class CustomFormFieldHandler
         return $this;
     }
 
-    protected function getDecimalPrecision()
-    {
-        if ($this->customFormField->getType() == CustomFormField::DECIMAL_T) {
-            return 'precision=10, scale=3, ';
-        } else {
-            return '';
-        }
-    }
-
     /**
      * Create a new custom-form-field handler with custom-form-field to handle.
      *
