@@ -21,7 +21,7 @@
                data-children-parent-node="{{ node.id }}"
                {% if specificNodeTree.tag %}data-filter-tag="{{ specificNodeTree.tag.id }}"{% endif %}
                class="uk-button rz-no-ajax-link rz-add-child-node"
-               href="#"><i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': stackType.getDisplayName}) }}</a>
+               href="#"><i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': stackType.getDisplayName|lower}) }}</a>
             {% endfor %}
         </div>
         {% endif %}
