@@ -32,6 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -673,20 +675,25 @@ class Font extends AbstractDateTimed
      */
     public function removeUpload()
     {
-        if (null !== $this->svgFilename) {
-            unlink($this->getSVGAbsolutePath());
-        }
-        if (null !== $this->otfFilename) {
-            unlink($this->getOTFAbsolutePath());
-        }
-        if (null !== $this->eotFilename) {
-            unlink($this->getEOTAbsolutePath());
-        }
-        if (null !== $this->woffFilename) {
-            unlink($this->getWOFFAbsolutePath());
-        }
-        if (null !== $this->woff2Filename) {
-            unlink($this->getWOFF2AbsolutePath());
+        $fs = new Filesystem();
+        try {
+            if (null !== $this->svgFilename) {
+                $fs->remove($this->getSVGAbsolutePath());
+            }
+            if (null !== $this->otfFilename) {
+                $fs->remove($this->getOTFAbsolutePath());
+            }
+            if (null !== $this->eotFilename) {
+                $fs->remove($this->getEOTAbsolutePath());
+            }
+            if (null !== $this->woffFilename) {
+                $fs->remove($this->getWOFFAbsolutePath());
+            }
+            if (null !== $this->woff2Filename) {
+                $fs->remove($this->getWOFF2AbsolutePath());
+            }
+        } catch (IOExceptionInterface $e) {
+            //do nothing
         }
     }
 }
