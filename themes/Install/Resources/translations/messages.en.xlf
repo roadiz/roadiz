@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
     <body>
@@ -33,7 +33,7 @@
       <!-- Welcome -->
       <trans-unit id="welcome.title" approved="yes">
         <source>welcome.title</source>
-        <target xml:lang="en">Roadiz&#x2019;s Installation</target>
+        <target xml:lang="en">Roadiz’s Installation</target>
       </trans-unit>
       <trans-unit id="welcome.subtitle" approved="yes">
         <source>welcome.subtitle</source>
@@ -176,6 +176,10 @@
         <source>import_node_type.node</source>
         <target xml:lang="en">Node type</target>
       </trans-unit>
+      <trans-unit id="import_tags">
+        <source>import_tags</source>
+        <target xml:lang="en" state="translated">Tags</target>
+      </trans-unit>
       <!-- Success -->
       <trans-unit id="success.title" approved="yes">
         <source>success.title</source>
@@ -268,7 +272,7 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.locale" approved="yes">
                 <source>cms.locale</source>
-                <target xml:lang="en">CMS&#xA0;locale</target>
+                <target xml:lang="en">CMS locale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="name" approved="yes">
                 <source>name</source>
@@ -344,7 +348,7 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="meta_description" approved="yes">
                 <source>meta_description</source>
-                <target xml:lang="en">SEO&#xA0;Description</target>
+                <target xml:lang="en">SEO Description</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="timezone" approved="yes">
                 <source>timezone</source>
