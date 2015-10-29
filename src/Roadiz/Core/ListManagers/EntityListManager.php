@@ -284,12 +284,18 @@ class EntityListManager
      *
      * ** Fields:
      *
-     * * description
-     * * search
-     * * currentPage
-     * * pageCount
-     * * itemPerPage
-     * * itemCount
+     * * description [string]
+     * * search [string]
+     * * currentPage [int]
+     * * pageCount [int]
+     * * itemPerPage [int]
+     * * itemCount [int]
+     * * previousPage [int]
+     * * nextPage [int]
+     * * nextPageQuery [string]
+     * * previousPageQuery [string]
+     * * previousQueryArray [array]
+     * * nextQueryArray [array]
      *
      * @return array
      */
@@ -319,12 +325,14 @@ class EntityListManager
         if ($this->currentPage > 1) {
             $this->queryArray['page'] = $this->currentPage - 1;
             $assign['previousPageQuery'] = http_build_query($this->queryArray);
+            $assign['previousQueryArray'] = $this->queryArray;
             $assign['previousPage'] = $this->currentPage - 1;
         }
         // compute next and prev page URL
         if ($this->currentPage < $this->paginator->getPageCount()) {
             $this->queryArray['page'] = $this->currentPage + 1;
             $assign['nextPageQuery'] = http_build_query($this->queryArray);
+            $assign['nextQueryArray'] = $this->queryArray;
             $assign['nextPage'] = $this->currentPage + 1;
         }
 
