@@ -161,7 +161,9 @@ class DocumentViewer implements ViewableInterface
         } elseif ($this->document->isSvg()) {
             $viewer = new SvgDocumentViewer(
                 $this->document->getAbsolutePath(),
-                $assignation
+                $assignation,
+                true,
+                Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl()
             );
             return $viewer->getContent();
         } elseif ($this->document->isImage()) {

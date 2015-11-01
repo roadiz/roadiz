@@ -41,6 +41,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -513,31 +514,26 @@ class DocumentsController extends RozierApp
                     new FilterDocumentEvent($document)
                 );
 
-                return new Response(
-                    json_encode([
-                        'success' => true,
-                        'documentId' => $document->getId(),
-                        'thumbnail' => [
-                            'id' => $document->getId(),
-                            'filename' => $document->getFilename(),
-                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                        ],
-                    ]),
-                    Response::HTTP_OK,
-                    ['content-type' => 'application/javascript']
-                );
+                return new JsonResponse([
+                    'success' => true,
+                    'documentId' => $document->getId(),
+                    'thumbnail' => [
+                        'id' => $document->getId(),
+                        'filename' => $document->getFilename(),
+                        'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                        'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
+                    ],
+                ]);
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $this->publishErrorMessage($request, $msg);
 
-                return new Response(
-                    json_encode([
+                return new JsonResponse(
+                    [
                         "error" => $msg,
-                    ]),
-                    Response::HTTP_NOT_FOUND,
-                    ['content-type' => 'application/javascript']
+                    ],
+                    Response::HTTP_NOT_FOUND
                 );
             }
         }
@@ -1060,6 +1056,16 @@ class DocumentsController extends RozierApp
                     $document = new Document();
                     $document->setFilename($uploadedFile->getClientOriginalName());
                     $document->setMimeType($uploadedFile->getMimeType());
+
+                    /*
+                     * Special case for SVG without XML statement
+                     */
+                    if ($document->getMimeType() == "text/plain" &&
+                        preg_match("#\.svg$#", $uploadedFile->getClientOriginalName())) {
+                        $this->getService('logger')->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
+                        $document->setMimeType('image/svg+xml');
+                    }
+
                     $this->getService('em')->persist($document);
                     $this->getService('em')->flush();
 
