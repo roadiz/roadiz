@@ -19,8 +19,14 @@ var Lazyload = function() {
 
     _this.parseLinks();
 
-    $(window).off('popstate', onStateChangeProxy);
-    $(window).on('popstate', onStateChangeProxy);
+    // this hack resolves safari triggering popstate
+    // at initial load.
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            $(window).off('popstate', onStateChangeProxy);
+            $(window).on('popstate', onStateChangeProxy);
+        }, 0);
+    });
 
     _this.$canvasLoaderContainer = $('#canvasloader-container');
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
@@ -86,22 +92,15 @@ Lazyload.prototype.onClick = function(event) {
  */
 Lazyload.prototype.onPopState = function(event) {
     var _this = this;
-
-    var state;
+    var state = null;
 
     if(null !== event){
         state = event.originalEvent.state;
     }
 
-    if(null !== state &&
-        typeof state != "undefined"){
-
-    } else {
+    if(typeof state === "undefined" || null === state){
         state = window.history.state;
     }
-
-    //console.log(state);
-    //console.log(document.location);
 
     if (null !== state) {
         _this.canvasLoader.show();

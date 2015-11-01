@@ -108,7 +108,6 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
                 if(typeof data.thumbnail !== "undefined") {
                     var $sortable = $widget.find('.documents-widget-sortable');
                     $sortable.append(data.thumbnail.html);
-
                     var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
 
                     _this.onSortableDocumentWidgetChange(null, $sortable, $element);

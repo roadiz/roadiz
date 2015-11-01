@@ -1,3 +1,4 @@
+{% if head.mainColor %}
 #user-panel #company {
     background-color:{{ head.mainColor }};
 }
@@ -16,10 +17,10 @@
 .uk-datepicker-table a.uk-active {
     background: {{ head.mainColor }};
 }
-
 .node-widget-explorer .node-widget-explorer-nextpage i{
     color: {{ head.mainColor }};
 }
+{% endif %}
 
 {% for type in nodeTypes %}
 /*
@@ -35,5 +36,4 @@
 .nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .tree-contextualmenu .vertical-nodetype {
     background-color:{{ type.color }};
 }
-
 {% endfor %}
