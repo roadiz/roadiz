@@ -129,7 +129,7 @@ MarkdownEditor.prototype.init = function(){
             else _this.countAlertActive = false;
         }
 
-        _this.$cont.find('.CodeMirror').on('keyup', $.proxy(_this.textareaChange, _this));
+        _this.editor.on('change', $.proxy(_this.textareaChange, _this));
 
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
