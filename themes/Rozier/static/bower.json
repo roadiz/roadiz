@@ -29,7 +29,7 @@
     "bootstrap-switch": "~3.3.2",
     "uikit": "~2.18.0",
     "mousetrap": "~1.4.6",
-    "codemirror": "~5.7.0",
+    "codemirror": "~5.8.0",
     "marked": "~0.3.3",
     "dropzone": "~4.0.1",
     "jquery.actual":"~1.0.17",
