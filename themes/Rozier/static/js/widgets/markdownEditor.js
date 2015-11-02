@@ -6,17 +6,26 @@ MarkdownEditor = function($textarea, index){
     var _this = this;
 
     _this.$textarea = $textarea;
-    _this.htmlEditor = UIkit.htmleditor(
-        $textarea,
-        {
-            markdown:true,
-            mode:'tab',
-            labels : Rozier.messages.htmleditor
-        }
-    );
+    // _this.htmlEditor = UIkit.htmleditor(
+    //     $textarea,
+    //     {
+    //         markdown:true,
+    //         mode:'tab',
+    //         labels : Rozier.messages.htmleditor
+    //     }
+    // );
+    _this.htmlEditor = CodeMirror.fromTextArea($textarea[0], {
+        mode: 'gfm',
+        lineNumbers: false,
+        theme: "default",
+        tabSize: 4,
+        indentWithTabs: false,
+        lineWrapping: true,
+        dragDrop: false
+    });
     // Selectors
     _this.$cont = _this.$textarea.parents('.uk-htmleditor');
-    _this.editor = _this.$cont.find('.CodeMirror')[0].CodeMirror;
+    _this.editor = _this.htmlEditor;//_this.$cont.find('.CodeMirror')[0].CodeMirror;
     _this.index = index;
     _this.textarea = _this.$textarea[0];
     _this.$buttonCode = null;
@@ -31,6 +40,8 @@ MarkdownEditor = function($textarea, index){
     _this.countAlertActive = false;
     _this.fullscreenActive = false;
 
+    _this.$parentForm = _this.$textarea.parents('form');
+
     // Methods
     _this.changeNavToBottom();
     _this.init();
@@ -41,10 +52,12 @@ MarkdownEditor.prototype.changeNavToBottom = function() {
     var _this = this;
 
     var $HTMLeditorNav = _this.$cont.find('.uk-htmleditor-navbar');
-    var HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+ $HTMLeditorNav[0].innerHTML+'</div>';
-    _this.$cont.append(HTMLeditorNavInner);
-    var $HTMLeditorNavToRemove = _this.$cont.find('.uk-htmleditor-navbar:not(.bottom)');
-    $HTMLeditorNavToRemove.remove();
+    if ($HTMLeditorNav.length) {
+        var HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+ $HTMLeditorNav[0].innerHTML+'</div>';
+        _this.$cont.append(HTMLeditorNavInner);
+        var $HTMLeditorNavToRemove = _this.$cont.find('.uk-htmleditor-navbar:not(.bottom)');
+        $HTMLeditorNavToRemove.remove();
+    }
 };
 
 
@@ -135,6 +148,14 @@ MarkdownEditor.prototype.init = function(){
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
         Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+
+        if (_this.$parentForm.length) {
+            _this.$parentForm.on('submit', function(event) {
+                console.log('Saving markdown editor values.');
+                _this.htmlEditor.save();
+                return true;
+            });
+        }
     }
 
 };

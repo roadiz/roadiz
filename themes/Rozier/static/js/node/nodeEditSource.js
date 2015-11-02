@@ -141,27 +141,30 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
     var _this = this;
 
     Rozier.lazyload.canvasLoader.show();
-    var formData = new FormData(_this.$form[0]);
 
-    $.ajax({
-        url: window.location.href,
-        type: 'post',
-        data: formData,
-        processData: false,
-        cache : false,
-        contentType: false
-    })
-    .done(function() {
-        console.log("Saved node-source with success.");
-    })
-    .fail(function() {
-        console.log("Error during save.");
-    })
-    .always(function() {
-        Rozier.lazyload.canvasLoader.hide();
-        Rozier.getMessages();
-        Rozier.refreshAllNodeTrees();
-    });
+    setTimeout(function () {
+        var formData = new FormData(_this.$form[0]);
+
+        $.ajax({
+            url: window.location.href,
+            type: 'post',
+            data: formData,
+            processData: false,
+            cache : false,
+            contentType: false
+        })
+        .done(function() {
+            console.log("Saved node-source with success.");
+        })
+        .fail(function() {
+            console.log("Error during save.");
+        })
+        .always(function() {
+            Rozier.lazyload.canvasLoader.hide();
+            Rozier.getMessages();
+            Rozier.refreshAllNodeTrees();
+        });
+    }, 300);
 
     return false;
 };
