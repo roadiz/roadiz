@@ -75,6 +75,11 @@ nodesExportPage:
 nodesExportAllPage:
     path:     /export
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAllAction }
+nodesExportAllXlsxPage:
+    path:     /export/xlsx/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\Nodes\ExportController::exportAllXlsxAction }
+    requirements:
+        translationId : "[0-9]+"
 nodesDuplicatePage:
     path:     /duplicate/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::duplicateAction }
