@@ -17,7 +17,7 @@
     <div class="document-border"></div>
 
     {% if document.isSvg and not document.private %}
-        <object class="document-image" type="image/svg+xml" width="80" height="80" data="{{ document|url }}" />
+        <object class="document-image" type="image/svg+xml" width="80" height="80" data="{{ document|url }}"></object>
     {% elseif document.isImage and not document.private %}
         <img class="document-image" width="80" height="80" src="{{ document|url({"width":80, "crop":"1x1", "quality":50}) }}" />
     {% elseif document.private %}
