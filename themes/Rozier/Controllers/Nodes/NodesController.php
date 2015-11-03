@@ -114,14 +114,17 @@ class NodesController extends RozierApp
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
+        $this->assignation['translation'] = $translation;
+        $this->assignation['availableTranslations'] = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findAllAvailable();
         $this->assignation['nodes'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->getService('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-             ->findBy([
-                 'newsletterType' => false,
-                 'visible' => true,
-             ]);
-        $this->assignation['translation'] = $translation;
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findBy([
+                'newsletterType' => false,
+                'visible' => true,
+            ]);
 
         return $this->render('nodes/list.html.twig', $this->assignation);
     }
@@ -140,7 +143,7 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($node);
 
         $translation = $this->getService('defaultTranslation');
@@ -262,26 +265,26 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $type = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+            ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
         $translation = $this->getService('defaultTranslation');
 
         if ($translationId !== null) {
             $translation = $this->getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if ($type !== null &&
             $translation !== null) {
             $form = $this->getService('formFactory')
-                         ->createBuilder()
-                         ->add('nodeName', 'text', [
-                             'label' => $this->getTranslator()->trans('nodeName'),
-                             'constraints' => [
-                                 new NotBlank(),
-                             ],
-                         ])
-                         ->getForm();
+                ->createBuilder()
+                ->add('nodeName', 'text', [
+                    'label' => $this->getTranslator()->trans('nodeName'),
+                    'constraints' => [
+                        new NotBlank(),
+                    ],
+                ])
+                ->getForm();
             $form->handleRequest($request);
 
             if ($form->isValid()) {
@@ -341,17 +344,17 @@ class NodesController extends RozierApp
         $translation = $this->getService('defaultTranslation');
 
         $nodeTypesCount = $this->getService('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                               ->countBy([]);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->countBy([]);
 
         if (null !== $translationId) {
             $translation = $this->getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if ($nodeId > 0) {
             $parentNode = $this->getService('em')
-                               ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         } else {
             $parentNode = null;
         }
@@ -413,7 +416,7 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node &&
             !$node->isDeleted() &&
@@ -483,8 +486,8 @@ class NodesController extends RozierApp
                 $criteria["parent"] = $ids;
             }
             $nodes = $this->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                          ->findBy($criteria);
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->findBy($criteria);
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();
             }
@@ -512,7 +515,7 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node &&
             $node->isDeleted()) {
@@ -591,16 +594,16 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
 
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
             $form = $this->createFormBuilder()
-                        ->add('nodeId', 'hidden', [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])->getForm();
+                ->add('nodeId', 'hidden', [
+                    'data' => $node->getId(),
+                    'constraints' => [
+                        new NotBlank(),
+                    ],
+                ])->getForm();
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $node->getHandler()->publishWithChildren();

@@ -29,11 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\Collection;
-use RZ\Roadiz\Core\Entities\NodeType;
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -42,6 +44,9 @@ use Symfony\Component\Serializer\Serializer;
 class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 {
     protected $em;
+    protected $request;
+    protected $forceLocale = false;
+    protected $addUrls = false;
     protected $onlyTexts = false;
 
     /**
@@ -65,11 +70,18 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
         $data = [];
 
         if ($nodeSource instanceof NodesSources) {
+
+            if ($this->addUrls === true) {
+                $generator = new NodesSourcesUrlGenerator($this->request, $nodeSource, $this->forceLocale);
+                $data['_url'] = $generator->getUrl(true);
+            }
+
             $data['translation'] = $nodeSource->getTranslation()->getLocale();
             $data['title'] = $nodeSource->getTitle();
             $data['meta_title'] = $nodeSource->getMetaTitle();
             $data['meta_keywords'] = $nodeSource->getMetaKeywords();
             $data['meta_description'] = $nodeSource->getMetaDescription();
+
             $data = array_merge($data, $this->getSourceFields($nodeSource));
         } elseif ($nodeSource instanceof Collection || is_array($nodeSource)) {
             /*
@@ -110,7 +122,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
                 NodeTypeField::STRING_T,
                 NodeTypeField::TEXT_T,
                 NodeTypeField::MARKDOWN_T,
-                NodeTypeField::RICHTEXT_T
+                NodeTypeField::RICHTEXT_T,
             ];
         } else {
             $criteria['type'] = [
@@ -125,16 +137,15 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
                 NodeTypeField::DECIMAL_T,
                 NodeTypeField::EMAIL_T,
                 NodeTypeField::ENUM_T,
-                NodeTypeField::MULTIPLE_T ,
+                NodeTypeField::MULTIPLE_T,
                 NodeTypeField::COLOUR_T,
                 NodeTypeField::GEOTAG_T,
                 NodeTypeField::MULTI_GEOTAG_T,
             ];
         }
 
-
         return $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-                ->findBy($criteria, ['position' => 'ASC']);
+            ->findBy($criteria, ['position' => 'ASC']);
     }
 
     /**
@@ -153,5 +164,12 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     public function setOnlyTexts($onlyTexts = true)
     {
         $this->onlyTexts = (boolean) $onlyTexts;
+    }
+
+    public function addUrls(Request $request, $forceLocale = false)
+    {
+        $this->addUrls = true;
+        $this->request = $request;
+        $this->forceLocale = (boolean) $forceLocale;
     }
 }

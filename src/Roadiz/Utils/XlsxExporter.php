@@ -61,13 +61,14 @@ class XlsxExporter
         $activeRow = 1;
         $hasGlobalHeader = false;
 
-        $styleArray = [
+        $headerStyles = [
             'font' => [
                 'bold' => true,
                 'color' => array('rgb' => 'FF0000'),
                 'size' => 11,
                 'name' => 'Verdana',
             ],
+            'width' => 50,
         ];
 
         /*
@@ -76,7 +77,7 @@ class XlsxExporter
         if (count($keys) > 0) {
             foreach ($keys as $key => $value) {
                 $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
-                $activeSheet->getStyle($columnAlpha . ($activeRow))->applyFromArray($styleArray);
+                $activeSheet->getStyle($columnAlpha . ($activeRow))->applyFromArray($headerStyles);
                 $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $value);
             }
             $activeRow++;
@@ -95,7 +96,7 @@ class XlsxExporter
                 $headerkeys = array_keys($answer);
                 foreach ($headerkeys as $key => $value) {
                     $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
-                    $activeSheet->getStyle($columnAlpha . ($activeRow))->applyFromArray($styleArray);
+                    $activeSheet->getStyle($columnAlpha . $activeRow)->applyFromArray($headerStyles);
                     $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $value);
                 }
                 $activeRow++;
@@ -122,11 +123,23 @@ class XlsxExporter
                 /*
                  * Set value into cell
                  */
+                $activeSheet->getStyle($columnAlpha . $activeRow)->getAlignment()->setWrapText(true);
                 $activeSheet->setCellValueByColumnAndRow($k, $activeRow, $value);
             }
 
             $activeRow++;
         }
+
+        /*
+         * autosize
+         */
+        foreach (range('A', $objPHPExcel->getActiveSheet()->getHighestDataColumn()) as $col) {
+            $objPHPExcel->getActiveSheet()
+                    ->getColumnDimension($col)
+                    ->setWidth(50);
+        }
+
+
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         ob_start();

@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Serializers\NodeSourceXlsxSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -68,7 +69,9 @@ class ExportController extends RozierApp
             ->findBy(["translation" => $translation], ['node.nodeType' => 'ASC']);
 
         $serializer = new NodeSourceXlsxSerializer($this->getService('em'));
-        $serializer->setOnlyTexts();
+        $serializer->setOnlyTexts(true);
+        $serializer->addUrls($request, SettingsBag::get('force_locale'));
+
         $xlsx = $serializer->serialize($sources);
 
         $response = new Response(

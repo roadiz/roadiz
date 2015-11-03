@@ -6299,6 +6299,16 @@
           <source>document.raw_document</source>
           <target></target>
       </trans-unit>
+
+      <trans-unit xml:space="preserve" id="export_format.rzn">
+          <source>export_format.rzn</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%">
+          <source>export_format.excel.%language%</source>
+          <target></target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

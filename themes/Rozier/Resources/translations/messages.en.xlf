@@ -478,14 +478,14 @@
           <context context-type="linenumber">453</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="47">
+      <trans-unit xml:space="preserve" id="47" approved="yes">
         <source>user.facebook_name.%name%._does_not_exist</source>
-        <target xml:lang="en" state="translated">Facebook user ID (%name%) does not exist.</target>
+        <target xml:lang="en">Facebook user (%name%) does not exist</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">569</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Facebook user ID (%name%) does not exist.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="48" approved="yes">
         <source>email</source>
         <target xml:lang="en">Email</target>
@@ -550,10 +550,10 @@
           <context context-type="linenumber">835</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="phone">
+      <trans-unit xml:space="preserve" id="phone" approved="yes">
         <source>phone</source>
-        <target xml:lang="en" state="translated">Phone</target>
-      </trans-unit>
+        <target xml:lang="en">Phone</target>
+      <alt-trans><target xml:lang="en">phone</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="54" approved="yes">
         <source>company</source>
         <target xml:lang="en">Company</target>
@@ -1094,9 +1094,9 @@
           <context context-type="linenumber">561</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+      <trans-unit xml:space="preserve" id="child_node.%name%.created" approved="yes">
         <source>child_node.%name%.created</source>
-        <target xml:lang="en" state="translated">Child node %name% has been created.</target>
+        <target xml:lang="en">Child node %name% has been created.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="107" approved="yes">
         <source>node.%name%.deleted</source>
@@ -1405,6 +1405,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/6f/c0/7e2dda8cb4755b3a3010129d72d82a94eb499c4d676281020cec69b5d6fe.php</context>
           <context context-type="linenumber">55</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.hash">
+        <source>font.hash</source>
+        <target xml:lang="en" state="translated">Font CSS identifier</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="143" approved="yes">
         <source>font.eotFile</source>
@@ -5854,8 +5858,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="update.please_wait">
           <source>update.please_wait</source>
-          <target xml:lang="en" state="translated">Update on going… please wait</target>
-      </trans-unit>
+          <target xml:lang="en" state="translated">Update in progress; please wait</target>
+      <alt-trans><target xml:lang="en">Update on going… please wait</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="update.done.back_to_home">
           <source>update.done.back_to_home</source>
           <target xml:lang="en" state="translated">Back to backoffice home</target>
@@ -6177,6 +6181,14 @@
       <trans-unit xml:space="preserve" id="document.raw_document">
           <source>document.raw_document</source>
           <target xml:lang="en" state="translated">Raw document</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.rzn">
+          <source>export_format.rzn</source>
+          <target xml:lang="en" state="translated">RZN file format</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%" approved="yes">
+          <source>export_format.excel.%language%</source>
+          <target xml:lang="en">Excel file format (%language%)</target>
       </trans-unit>
     </body>
   </file>
