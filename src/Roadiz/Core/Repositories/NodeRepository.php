@@ -1059,11 +1059,30 @@ class NodeRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
+        array &$criteria = [],
         $alias = "obj"
     ) {
 
         $this->classicLikeComparison($pattern, $qb, $alias);
+
+        /*
+         * Search in translations
+         */
+        $qb->innerJoin($alias . '.nodeSources', 'ns');
+        $criteriaFields = [];
+        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $this->searchableTypes)) {
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+            }
+        }
+        foreach ($criteriaFields as $key => $value) {
+            $fullKey = sprintf('LOWER(%s)', 'ns.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
+        }
 
         /*
          * Handle Tag relational queries
@@ -1079,7 +1098,7 @@ class NodeRepository extends EntityRepository
             unset($criteria['tags']);
         }
 
-        $qb = $this->directComparison($criteria, $qb, $alias);
+        $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
     }

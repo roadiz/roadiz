@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use RZ\Roadiz\Core\Repositories\EntityRepository;
+
 /**
  * {@inheritdoc}
  */

@@ -185,7 +185,7 @@ class DocumentRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
+        array &$criteria = [],
         $alias = "obj"
     ) {
 
@@ -202,14 +202,15 @@ class DocumentRepository extends EntityRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like('dt.' . $key, $qb->expr()->literal($value)));
+            $fullKey = sprintf('LOWER(%s)', 'dt.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
         }
 
-        $qb = $this->directComparison($criteria, $qb, $alias);
+        $qb = $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
     }

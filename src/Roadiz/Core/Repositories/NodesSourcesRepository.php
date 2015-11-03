@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
@@ -196,28 +197,6 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
-     *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    protected function createSearchBy(
-        $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
-        $alias = "obj"
-    ) {
-        $this->classicLikeComparison($pattern, $qb, $alias);
-        $qb = $this->directComparison($criteria, $qb, $alias);
-
-        return $qb;
-    }
-
-    /**
      * Direct bind one single parameter without preparation.
      *
      * @param string       $key
@@ -227,7 +206,7 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @return QueryBuilder
      */
-    protected function singleDirectComparison($key, &$value, &$qb, $alias)
+    protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
         if (false !== strpos($key, 'node.')) {
             if (!$this->hasJoinedNode($qb, $alias)) {

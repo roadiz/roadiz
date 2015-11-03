@@ -161,7 +161,8 @@ class DocumentViewer implements ViewableInterface
 
         } elseif ($this->document->isSvg()) {
             $asObject = true;
-            if (isset($args['inline']) && $args['inline'] == true) {
+            if (isset($args['inline']) &&
+                true === (boolean) $args['inline']) {
                 $asObject = false;
             }
 
