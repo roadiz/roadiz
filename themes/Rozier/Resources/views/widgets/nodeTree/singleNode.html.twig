@@ -43,7 +43,7 @@
         <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}">
             {% if not mainNodeTree and not nodeTree.isStackTree %}
                 {% set thumbnail = source.getDocumentsByFields.first.getDocument %}
-                {% if thumbnail and thumbnail.image and not thumbnail.private %}
+                {% if thumbnail and (thumbnail.image or thumbnail.svg) and not thumbnail.private %}
                 <figure class="nodetree-element-img">
                     {{ thumbnail|display({"width":60, "crop":"1x1", "quality":80}) }}
                 </figure>
