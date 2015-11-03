@@ -3,15 +3,23 @@
 {% endif %}
 
 {% set parent = nodeSource|parent %}
+{% if parent %}
+{% set subparent = parent|parent %}
+{% endif %}
 
 {% spaceless %}
 <li class="uk-sortable-list-item nodes-widget-sortable-list-item" data-node-id="{{ node.getId }}">
 	<div class="uk-sortable-handle"></div>
     <div class="node-border" style="background-color:{{ node.nodeType.color }};"></div>
     {% if parent %}
-    <span class="parent-node-name">{% if parent.title %}{{ parent.title|truncate(26, false, '[…]') }}{% else %}{{ parent.node.nodeName|truncate(26, false, '[…]') }}{% endif %}</span>
+    <p class="parent-node-name">
+        {% if subparent %}
+        <span class="sub">{{ subparent.title|default(subparent.node.nodeName)|truncate(26, false, '[…]') }}</span>
+        {% endif %}
+        <span class="direct">{{ parent.title|default(parent.node.nodeName)|truncate(26, false, '[…]') }}</span>
+    </p>
     {% endif %}
-	<span class="node-name">{% if nodeSource.title %}{{ nodeSource.title|truncate(26, false, '[…]') }}{% else %}{{ node.nodeName|truncate(26, false, '[…]') }}{% endif %}</span>
+	<span class="node-name">{{ nodeSource.title|default(node.nodeName)|truncate(26, false, '[…]') }}</span>
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 
     <div class="node-links">
