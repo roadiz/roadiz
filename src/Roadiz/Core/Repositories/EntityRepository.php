@@ -332,8 +332,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         $alias = "obj"
     ) {
         /*
-         * get fields needed for a search
-         * query
+         * Get fields needed for a search query
          */
         $metadatas = $this->_em->getClassMetadata($this->getEntityName());
         $criteriaFields = [];
@@ -353,7 +352,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
         }
     }
-    /**
+
+   /**
     * Create a Criteria object from a search pattern and additionnal fields.
     *
     * @param string                  $pattern  Search pattern

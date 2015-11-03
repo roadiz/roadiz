@@ -1076,7 +1076,6 @@ class NodeRepository extends EntityRepository
             } elseif (is_integer($criteria['tags'])) {
                 $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
             }
-
             unset($criteria['tags']);
         }
 

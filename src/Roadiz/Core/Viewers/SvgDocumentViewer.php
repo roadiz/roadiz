@@ -142,11 +142,15 @@ class SvgDocumentViewer
             }
         }
 
+        if (isset($attributes['alt'])) {
+            unset($attributes['alt']);
+        }
+
         $attrs = [];
         foreach ($attributes as $key => $value) {
             $attrs[] = $key . '="' . htmlspecialchars($value) . '"';
         }
 
-        return '<object ' . implode(' ', $attrs) . ' />';
+        return '<object ' . implode(' ', $attrs) . '></object>';
     }
 }
