@@ -1406,6 +1406,10 @@
           <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="font.hash">
+        <source>font.hash</source>
+        <target xml:lang="fr" state="translated">Identifiant CSS de la fonte</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="143" approved="yes">
         <source>font.eotFile</source>
         <target xml:lang="fr">Fichier EOT</target>
@@ -6177,6 +6181,14 @@
       <trans-unit xml:space="preserve" id="document.raw_document" approved="yes">
           <source>document.raw_document</source>
           <target xml:lang="fr">Document non traité</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.rzn">
+          <source>export_format.rzn</source>
+          <target xml:lang="fr" state="translated">Format de fichier RZN</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%">
+          <source>export_format.excel.%language%</source>
+          <target xml:lang="fr" state="translated">Format de fichier Excel (%language%)</target>
       </trans-unit>
     </body>
   </file>
