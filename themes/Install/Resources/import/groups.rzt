@@ -31,6 +31,9 @@
                 "name": "ROLE_ACCESS_TAGS"
             },
             {
+                "name": "ROLE_ACCESS_TAGS_DELETE"
+            },
+            {
                 "name": "ROLE_ACCESS_DOCUMENTS"
             },
             {
@@ -38,6 +41,9 @@
             },
             {
                 "name": "ROLE_ACCESS_NODES"
+            },
+            {
+                "name": "ROLE_ACCESS_NODES_DELETE"
             },
             {
                 "name": "ROLE_ACCESS_NODES_SETTING"
