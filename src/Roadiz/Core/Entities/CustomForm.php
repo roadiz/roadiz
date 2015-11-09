@@ -232,7 +232,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="CustomFormField", mappedBy="customForm", cascade={"ALL"})
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", mappedBy="customForm", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
      */
     private $fields;
@@ -342,7 +342,7 @@ class CustomForm extends AbstractDateTimed
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getName() .
-        " — Open : " . ($this->isOpen() ? 'true' : 'false') . PHP_EOL;
+            " — Open : " . ($this->isOpen() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**
@@ -374,7 +374,7 @@ class CustomForm extends AbstractDateTimed
     public function __clone()
     {
         $this->setId(null);
-        $suffix =  "-" . uniqid();
+        $suffix = "-" . uniqid();
         $this->name .= $suffix;
         $this->displayName .= $suffix;
         $this->customFormAnswers = new ArrayCollection();
@@ -384,7 +384,6 @@ class CustomForm extends AbstractDateTimed
             foreach ($fields as $field) {
                 $cloneField = clone $field;
                 $this->fields->add($cloneField);
-                $cloneField->setCustomForm($this);
             }
         }
         $this->nodes = new ArrayCollection();
