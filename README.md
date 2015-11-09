@@ -25,7 +25,7 @@ and distribute its code for personal and commercial projects.
 
 ### Installation
 
-The following instructions are a summary for our documentation [*Getting started* section](http://docs.roadiz.io/en/latest/intro/getting_started.html).
+The following instructions are a summary for our documentation [*Getting started* section](http://docs.roadiz.io/en/latest/developer/first-steps/getting_started.html).
 
 #### Requirements
 
@@ -81,9 +81,11 @@ This is the **recommended** method if you are expert.
 * Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
-* Go to your web-browser to launch Install wizard.
+* Copy `samples/install.php.sample` to `install.php` and add your IP address in to authorize your computer to access install entry point.
+* (Optional) Copy `samples/dev.php.sample` to `dev.php` and add your IP address in to authorize your computer to access development entry point.
+* Go to your web-browser using *install.php* after your server domain name to launch Install wizard.
 
-Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name to reach backoffice interface.
+Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name, without *install.php*, to reach backoffice interface.
 
 ### Database connexion
 
@@ -163,7 +165,7 @@ When you import your existing database, before performing any database migration
 you **must** regenerate first all node-sources PHP classes.
 
 ```bash
-bin/roadiz core:sources --regenerate
+bin/roadiz core:sources -r
 ```
 
 This will parse every node-types from your existing database and recreate PHP classes in `gen-src/GeneratedNodeSources` folder.
@@ -185,10 +187,10 @@ Then when you are sure to perform migration, just do:
 
 ```bash
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache --clear-all;
+bin/roadiz cache -a --env=prod;
 ```
 
-The `cache --clear-all` command force Doctrine to purge its metadata cache.
+The `cache -a --env=prod` command force Doctrine to purge its metadata cache for the *production* environment.
 **Be careful, this won’t purge APC or XCache. You will need to do it manually.**
 
 ### Managing your own database entities
@@ -214,7 +216,7 @@ If you see your entities being created and no system database erased, just `--ex
 If Doctrine send some error, you probably need to clear metadata cache:
 
 ```bash
-bin/roadiz cache -a;
+bin/roadiz cache -a --env=prod;
 ```
 
 ### Problem with entities and Doctrine cache?
@@ -224,7 +226,7 @@ After each Roadiz upgrade you should upgrade your node-sources entity classes an
 ```bash
 bin/roadiz core:sources -r
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache -a;
+bin/roadiz cache -a --env=prod;
 
 ```
 
