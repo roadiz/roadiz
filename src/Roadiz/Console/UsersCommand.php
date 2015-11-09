@@ -97,7 +97,7 @@ class UsersCommand extends Command
              )
              ->addOption(
                  'enable',
-                 'e',
+                 'E',
                  InputOption::VALUE_NONE,
                  'Enable user'
              );

@@ -86,7 +86,12 @@ class CustomFormsUtilsController extends RozierApp
             }
 
             $em->persist($newCustomForm);
+
             $em->flush();
+
+            foreach ($newCustomForm->getFields() as $field) {
+                $field->setCustomForm($newCustomForm);
+            }
 
             $msg = $this->getTranslator()->trans("duplicated.custom.form.%name%", [
                 '%name%' => $existingCustomForm->getDisplayName(),

@@ -232,7 +232,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="CustomFormField", mappedBy="customForm", cascade={"ALL"})
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", mappedBy="customForm", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
      */
     private $fields;
@@ -384,7 +384,7 @@ class CustomForm extends AbstractDateTimed
             foreach ($fields as $field) {
                 $cloneField = clone $field;
                 $this->fields->add($cloneField);
-                $cloneField->setCustomForm($this);
+                //$cloneField->setCustomForm($this);
             }
         }
         $this->nodes = new ArrayCollection();

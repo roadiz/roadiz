@@ -161,6 +161,7 @@ class CustomFormAnswer extends AbstractEntity
     {
         $this->answerFields = new ArrayCollection();
     }
+
     /**
      * @return string
      */
