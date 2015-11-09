@@ -167,7 +167,7 @@ class CustomFormAnswer extends AbstractEntity
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getIp().
-            " — Sumitted : ".($this->getSubmittedAt()).PHP_EOL;
+        return $this->getId() . " — " . $this->getIp() .
+            " — Sumitted : " . ($this->getSubmittedAt()) . PHP_EOL;
     }
 }
