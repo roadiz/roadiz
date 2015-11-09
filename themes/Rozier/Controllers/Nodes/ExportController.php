@@ -29,12 +29,11 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Serializers\NodeSourceXlsxSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use Themes\Rozier\RozierApp;
 
 /**

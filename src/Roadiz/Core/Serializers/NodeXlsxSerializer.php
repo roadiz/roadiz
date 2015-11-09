@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Node;
 
 /**
  * XLSX Serialization handler for Node.

@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * XLSX Serialization handler for NodeSource.
@@ -70,7 +69,6 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
         $data = [];
 
         if ($nodeSource instanceof NodesSources) {
-
             if ($this->addUrls === true) {
                 $generator = new NodesSourcesUrlGenerator($this->request, $nodeSource, $this->forceLocale);
                 $data['_url'] = $generator->getUrl(true);
