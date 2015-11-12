@@ -1,8 +1,8 @@
 # Roadiz CMS
 
-[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=master)](https://coveralls.io/r/roadiz/roadiz?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
+[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=develop)](https://travis-ci.org/roadiz/roadiz)
+[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=develop)](https://coveralls.io/r/roadiz/roadiz?branch=develop)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=develop)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/roadiz-cms/localized.png)](https://crowdin.com/project/roadiz-cms) 
 ![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)
@@ -57,33 +57,22 @@ Use one of our templates in `/samples` folder.
 
 * Requires `mod_expires` for managing your assets caching lifetime.
 
-#### Install from bundle
-
-Here is a simple install process if you already have a ready webserver.
-For the moment no automatic update tool is available, if you want to regularly update
-Roadiz against *Github*, prefer *install from sources*.
-
-* Download Roadiz ZIP bundle from our [website](http://www.roadiz.io)
-or from [github releases](https://github.com/roadiz/roadiz/releases) section.
-* Unzip it into your server root folder (eg. `www/`)
-* Go to your web-browser to launch Install wizard.
-
 #### Install from sources
 
-This process needs an *SSH* connexion to your server with *Git*
+This install process needs an *SSH* connexion to your server with *Git*
 and [*Composer*](https://getcomposer.org/doc/00-intro.md#globally).
 It will enable you to make Roadiz updates more easily than with the bundle version.
-This is the **recommended** method if you are expert.
+This is the **recommended** method.
 
-* Clone current repository to your web root
-* Install dependencies with *Composer*: `composer install --no-dev`
-* Copy `conf/config.default.yml` to `conf/config.yml`. After this command, `bin/roadiz` executable is available.
-* Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
+1. Clone current repository to your web root: `git clone -b develop https://github.com/roadiz/roadiz.git ./`
+2. Install dependencies with *Composer*: `composer install --no-dev -o`. At the end of the install, 
+a custom script will copy for you a default *configuration* file and `dev` and `install` environment entry points.
+3. Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
-* Copy `samples/install.php.sample` to `install.php` and add your IP address in to authorize your computer to access install entry point.
-* (Optional) Copy `samples/dev.php.sample` to `dev.php` and add your IP address in to authorize your computer to access development entry point.
-* Go to your web-browser using *install.php* after your server domain name to launch Install wizard.
+4. If Roadiz is not setup on your own computer (*localhost*), add your IP address 
+in the `dev.php` and `install.php` files to authorize your computer to access these two entry points.
+5. Go to your web-browser using *install.php* after your server domain name to launch Install wizard.
 
 Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name, without *install.php*, to reach backoffice interface.
 
@@ -112,9 +101,6 @@ doctrine:
     dbname: null
 ```
 
-You can specify a table prefix adding `prefix:"myprefix"` if you can’t create a dedicated database for your project
-and you need to use Roadiz side by side with other tables. But we strongly recommend you to respect the 1 app = 1 database motto.
-
 For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 
 ### Apache Solr
@@ -133,6 +119,39 @@ solr:
             timeout: 3
             username: ""
             password: ""
+```
+
+### Custom mailer
+
+Roadiz can use a *SMTP* mail server to send every message out of your website.
+We strongly recommend you to configure with an **external** SMTP service such as *Mandrill app* 
+so you don’t have to use your server built-in *sendmail* command.
+
+```yml
+mailer:
+    type: smtp
+    host: smtp.mandrillapp.com
+    port: 587
+    encryption: false
+    username: my-mandrill-email
+    password: my-mandrill-apikey
+```
+
+### Images processing
+
+Roadiz use [*Image Intervention*](http://image.intervention.io/) library to automatically create a lower quality
+version of your image if they are too big. You can define this threshold value
+in the `assetsProcessing` section. `driver` and `defaultQuality` will be also 
+use for the on-the-fly image processing with [*Intervention Request*](https://github.com/ambroisemaupate/intervention-request) library.
+
+```yml
+assetsProcessing:
+    # gd or imagick (gd does not support TIFF and PSD formats)
+    driver: gd
+    defaultQuality: 90
+    # pixel size limit () after roadiz
+    # should create a smaller copy.
+    maxPixelSize: 1280
 ```
 
 ### Run self tests
