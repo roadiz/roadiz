@@ -172,6 +172,20 @@
         letter-spacing: 0.03em;
         font-weight: 700;
     }
+    .parent-node-name {
+        margin: 0;
+        span {
+            display: inline-block;
+            &.sub {
+                &:after {
+                    content: '/';
+                    display: inline-block;
+                    margin: 0px 3px;
+                }
+            }
+        }
+    }
+
     .node-name {
         line-height: 16px;
         display: block;

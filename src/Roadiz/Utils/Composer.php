@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Utils;
 
-use Composer\Script\Event;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
