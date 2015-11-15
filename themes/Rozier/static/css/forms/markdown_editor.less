@@ -8,12 +8,47 @@
 @markdown-contentH: 200px;
 
 /* -------- STYLES -------- */
+.CodeMirror {
+    font-family: @roadiz-mono-font;
+    font-size: 12px;
+    line-height: 18px;
 
-.uk-htmleditor {
+    pre {
+        line-height: 18px;
+    }
+}
+.uk-form-row {
+    .CodeMirror {
+        height: auto;
+    }
+}
+
+.markdown-editor {
+    .CodeMirror {
+        font-family: @roadiz-mono-font;
+        font-size: 12px;
+        line-height: 18px;
+        color: #666666;
+        border: 1px solid @grey-form-border;
+        transition: border-color ease 0.2s;
+
+        &.cm-s-default .cm-header {color: #0F0F0F;}
+        &.cm-s-default .cm-quote {color: #4e76b7;}
+        &.cm-s-default .cm-link {color: #333;}
+        &.cm-s-default .cm-string {color: #bc8039;}
+        &.cm-s-default .cm-string-2 {color: #c46743;}
+
+        pre {
+            line-height: 18px;
+        }
+    }
+    .CodeMirror-lines { padding: 10px; }
+    .CodeMirror-selected { background: #d9d9d9; }
+    .CodeMirror-focused { background: #FFF; }
 
     &.content-limit{
 
-        .uk-htmleditor-content{
+        .CodeMirror{
             border-color:@alert-color;
 
             &:hover, &:focus, &:active{
@@ -21,14 +56,8 @@
             }
         }
 
-        .uk-htmleditor-count{
+        .markdown-editor-count{
             color:@alert-color;
-        }
-    }
-
-    .uk-htmleditor-content{
-        .CodeMirror-sizer{
-            z-index:1;
         }
     }
 
@@ -37,9 +66,15 @@
         background: none;
         margin-top: 8px;
 
-        &-nav>li {
+        &-nav {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        &-nav > li {
             width: @navbar-liHW;
             height: @navbar-liHW;
+            display: inline-block;
             .box-sizing();
 
             &>a {
@@ -58,9 +93,12 @@
                 background-color: #F2F2F2;
                 border-left: 0 none;
                 .box-sizing();
-                .transition(~'border-color ease 0.2s, background-color ease 0.2s');
+                transition: border-color ease 0.2s, background-color ease 0.2s;
 
-                &.uk-htmleditor-button-bold, &.uk-htmleditor-button-back, &.uk-htmleditor-button-blockquote, &.uk-htmleditor-button-link-fullscreen{
+                &.markdown-editor-button-bold,
+                &.markdown-editor-button-back,
+                &.markdown-editor-button-blockquote,
+                &.markdown-editor-button-link-fullscreen{
                     border-left: 1px solid @grey-form-border;
                 }
 
@@ -92,7 +130,9 @@
                 }
             }
 
-            &.uk-htmleditor-button-code, &.uk-htmleditor-button-preview, &.uk-htmleditor-button-fullscreen {
+            &.markdown-editor-button-code,
+            &.markdown-editor-button-preview,
+            &.markdown-editor-button-fullscreen {
                 // width: auto;
                 position: absolute;
                 right:35px;
@@ -112,7 +152,7 @@
                     }
                 }
 
-                &.uk-htmleditor-button-code{
+                &.markdown-editor-button-code{
                     display: none;
                     .opacity(0);
 
@@ -124,7 +164,7 @@
 
                 }
 
-                &.uk-htmleditor-button-fullscreen{
+                &.markdown-editor-button-fullscreen{
                     right:0px;
                 }
             }
@@ -147,7 +187,7 @@
         }
     }
     &-content {
-        border: 1px solid @grey-form-border;
+        //border: 1px solid @grey-form-border;
         background: #fff;
         .transition(~'0.35s ease border-color, 0.5s ease background');
         cursor: text;
@@ -181,34 +221,20 @@
             font-size: 13px;
         }
     }
-    &-code {
-        .CodeMirror {
-            font-family: @roadiz-mono-font;
-            font-size: 0.72em;
-            line-height: 18px;
-            color: #666666;
-            padding: 10px 14px;
-
-            &.cm-s-default .cm-header {color: #0F0F0F;}
-            &.cm-s-default .cm-quote {color: #4e76b7;}
-            &.cm-s-default .cm-link {color: #333;}
-            &.cm-s-default .cm-string {color: #bc8039;}
-            &.cm-s-default .cm-string-2 {color: #c46743;}
-        }
-        .CodeMirror-selected { background: #d9d9d9; }
-        .CodeMirror-focused { background: #FFF; }
-    }
 }
 
 // Separate buttons
-.uk-htmleditor-button-cont-bold, .uk-htmleditor-button-cont-back, .uk-htmleditor-button-cont-blockquote{
+.markdown-editor-button-cont-bold,
+.markdown-editor-button-cont-back,
+.markdown-editor-button-cont-blockquote{
     margin-left:10px;
 }
 
 // Count
-.uk-htmleditor-count{
+.markdown-editor-count{
     position: absolute;
-    right: 87px; bottom: -4px;
+    right: 0px;
+    bottom: 0px;
     height: 30px;
     line-height: 30px;
     font-size: 12px;
@@ -217,11 +243,11 @@
 }
 
 // Fullscreen
-.uk-htmleditor-fullscreen{
+.markdown-editor-fullscreen{
     top: 0px; right: 0px; bottom: 0px; left: 0px;
     background: rgba(230, 230, 230, 0.95);
 
-    .uk-htmleditor-content{
+    .markdown-editor-content{
         top: 60px; right: 0; bottom: 0; left: 0;
         border: none;
     }
@@ -230,17 +256,17 @@
         font-size: 14px; line-height:22px;
         padding:25px 60px 30px 30px;
     }
-    .uk-htmleditor-preview {
+    .markdown-editor-preview {
         font-size: 14px; line-height:22px;
         padding:25px 60px 30px 40px;
     }
 
-    .uk-htmleditor-navbar{
+    .markdown-editor-navbar{
         margin:14px 20px;
 
-        .uk-htmleditor-navbar-nav>li{
+        .markdown-editor-navbar-nav>li{
 
-            &.uk-htmleditor-button-fullscreen{
+            &.markdown-editor-button-fullscreen{
 
                 &>a {
                     background: #666;

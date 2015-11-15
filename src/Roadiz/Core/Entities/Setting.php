@@ -62,6 +62,7 @@ class Setting extends AbstractEntity
         AbstractField::EMAIL_T => 'email.type',
         AbstractField::DOCUMENTS_T => 'documents.type',
         AbstractField::COLOUR_T => 'colour.type',
+        AbstractField::JSON_T => 'json.type',
     ];
 
     /**
@@ -79,6 +80,7 @@ class Setting extends AbstractEntity
         AbstractField::EMAIL_T => 'email',
         AbstractField::DOCUMENTS_T => 'file',
         AbstractField::COLOUR_T => 'text',
+        AbstractField::JSON_T => 'json',
     ];
 
     /**

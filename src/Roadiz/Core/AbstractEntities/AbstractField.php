@@ -145,6 +145,14 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
      * @see \DateTime
      */
     const DATE_T = 22;
+    /**
+     * Textarea to write Json syntaxed code
+     */
+    const JSON_T = 23;
+    /**
+     * Textarea to write CSS syntaxed code
+     */
+    const CSS_T = 24;
 
     /**
      * Associates abstract field type to a readable string.
@@ -172,6 +180,8 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::GEOTAG_T => 'geographic.coordinates.type',
         AbstractField::CUSTOM_FORMS_T => 'custom-forms.type',
         AbstractField::MULTI_GEOTAG_T => 'multiple.geographic.coordinates.type',
+        AbstractField::JSON_T => 'json.type',
+        AbstractField::CSS_T => 'css.type',
     ];
     /**
      * Associates abstract field type to a Doctrine type.
@@ -198,6 +208,8 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::GEOTAG_T => 'string',
         AbstractField::CUSTOM_FORMS_T => null,
         AbstractField::MULTI_GEOTAG_T => 'text',
+        AbstractField::JSON_T => 'text',
+        AbstractField::CSS_T => 'text',
     ];
     /**
      * Associates abstract field type to a Symfony Form type.
@@ -224,6 +236,8 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::GEOTAG_T => 'text',
         AbstractField::MULTI_GEOTAG_T => 'text',
         AbstractField::CUSTOM_FORMS_T => 'custom_forms',
+        AbstractField::JSON_T => 'json_text',
+        AbstractField::CSS_T => 'css_text',
     ];
 
     /**

@@ -24,65 +24,41 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file Composer.php
+ * @file JsonType.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Utils;
+namespace RZ\Roadiz\CMS\Forms;
 
-use Composer\Script\Event;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- *
+ * Json editor form field type.
  */
-class Composer
+class JsonType extends AbstractType
 {
-    public static function postUpdate()
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
     {
-        static::copyDefaultConfiguration();
-        static::copyDevEnvironment();
+        return 'textarea';
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'json';
     }
 
-    public static function postInstall()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        static::copyDefaultConfiguration();
-        static::copyInstallEnvironment();
-        static::copyDevEnvironment();
-    }
-
-    public static function copyDefaultConfiguration()
-    {
-        $fs = new Filesystem();
-        $configFile = 'conf/config.yml';
-        $configFileSrc = 'conf/config.default.yml';
-
-        if (!$fs->exists($configFile) &&
-            $fs->exists($configFileSrc)) {
-            $fs->copy($configFileSrc, $configFile);
-        }
-    }
-
-    public static function copyInstallEnvironment()
-    {
-        $fs = new Filesystem();
-        $installFile = 'install.php';
-        $installFileSrc = 'samples/install.php.sample';
-
-        if (!$fs->exists($installFile) &&
-            $fs->exists($installFileSrc)) {
-            $fs->copy($installFileSrc, $installFile);
-        }
-    }
-
-    public static function copyDevEnvironment()
-    {
-        $fs = new Filesystem();
-        $devFile = 'dev.php';
-        $devFileSrc = 'samples/dev.php.sample';
-
-        if (!$fs->exists($devFile) &&
-            $fs->exists($devFileSrc)) {
-            $fs->copy($devFileSrc, $devFile);
-        }
+        $resolver->setDefaults([
+            'required' => false,
+            'attr' => [
+                'class' => 'json_textarea',
+            ],
+        ]);
     }
 }

@@ -5,7 +5,7 @@ var Lazyload = function() {
     var _this = this;
 
     _this.$linksSelector = null;
-    _this.$textAreaHTMLeditor = null;
+    _this.$textareasMarkdown = null;
     _this.$HTMLeditor = null;
     _this.htmlEditor = [];
     _this.$HTMLeditorContent = null;
@@ -234,8 +234,13 @@ Lazyload.prototype.generalBind = function() {
     _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
-    // Init markdown-preview
+    /*
+     * Codemirror
+     */
     _this.initMarkdownEditors();
+    _this.initJsonEditors();
+    _this.initCssEditors();
+
     _this.initFilterBars();
 
     // Init colorpicker
@@ -259,7 +264,8 @@ Lazyload.prototype.generalBind = function() {
 
     Rozier.getMessages();
 
-    if(typeof Rozier.importRoutes != "undefined" && Rozier.importRoutes !== null){
+    if(typeof Rozier.importRoutes != "undefined" &&
+        Rozier.importRoutes !== null){
         Rozier.import = new Import(Rozier.importRoutes);
         Rozier.importRoutes = null;
     }
@@ -269,18 +275,46 @@ Lazyload.prototype.initMarkdownEditors = function() {
     var _this = this;
 
     // Init markdown-preview
-    _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor], textarea[data-uk-rz-htmleditor]').not('[data-uk-check-display]');
-    var editorCount = _this.$textAreaHTMLeditor.length;
+    _this.$textareasMarkdown = $('textarea[data-rz-markdowneditor]');
+    var editorCount = _this.$textareasMarkdown.length;
 
     if(editorCount){
         setTimeout(function(){
             for(var i = 0; i < editorCount; i++) {
-                new MarkdownEditor($(_this.$textAreaHTMLeditor[i]), i);
+                new MarkdownEditor(_this.$textareasMarkdown.eq(i), i);
             }
+        }, 10);
+    }
+};
 
-            $(".uk-htmleditor-preview").css("height", 250);
-            $(".CodeMirror").css("height", 250);
+Lazyload.prototype.initJsonEditors = function() {
+    var _this = this;
 
+    // Init markdown-preview
+    _this.$textareasJson = $('textarea[data-rz-jsoneditor]');
+    var editorCount = _this.$textareasJson.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new JsonEditor(_this.$textareasJson.eq(i), i);
+            }
+        }, 10);
+    }
+};
+
+Lazyload.prototype.initCssEditors = function() {
+    var _this = this;
+
+    // Init markdown-preview
+    _this.$textareasCss = $('textarea[data-rz-csseditor]');
+    var editorCount = _this.$textareasCss.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new CssEditor(_this.$textareasCss.eq(i), i);
+            }
         }, 10);
     }
 };

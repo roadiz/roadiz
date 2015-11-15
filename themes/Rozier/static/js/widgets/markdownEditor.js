@@ -6,19 +6,21 @@ MarkdownEditor = function($textarea, index){
     var _this = this;
 
     _this.$textarea = $textarea;
-    _this.htmlEditor = UIkit.htmleditor(
-        $textarea,
-        {
-            markdown:true,
-            mode:'tab',
-            labels : Rozier.messages.htmleditor
-        }
-    );
-    // Selectors
-    _this.$cont = _this.$textarea.parents('.uk-htmleditor');
-    _this.editor = _this.$cont.find('.CodeMirror')[0].CodeMirror;
-    _this.index = index;
     _this.textarea = _this.$textarea[0];
+
+    _this.editor = CodeMirror.fromTextArea(_this.textarea, {
+        mode: 'gfm',
+        lineNumbers: false,
+        tabSize: 4,
+        styleActiveLine: true,
+        indentWithTabs: false,
+        lineWrapping: true,
+        dragDrop: false,
+        viewportMargin: Infinity
+    });
+    // Selectors
+    _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0);
+    _this.index = index;
     _this.$buttonCode = null;
     _this.$buttonPreview = null;
     _this.$buttonFullscreen = null;
@@ -31,20 +33,10 @@ MarkdownEditor = function($textarea, index){
     _this.countAlertActive = false;
     _this.fullscreenActive = false;
 
+    _this.$parentForm = _this.$textarea.parents('form').eq(0);
+
     // Methods
-    _this.changeNavToBottom();
     _this.init();
-};
-
-
-MarkdownEditor.prototype.changeNavToBottom = function() {
-    var _this = this;
-
-    var $HTMLeditorNav = _this.$cont.find('.uk-htmleditor-navbar');
-    var HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+ $HTMLeditorNav[0].innerHTML+'</div>';
-    _this.$cont.append(HTMLeditorNavInner);
-    var $HTMLeditorNavToRemove = _this.$cont.find('.uk-htmleditor-navbar:not(.bottom)');
-    $HTMLeditorNavToRemove.remove();
 };
 
 
@@ -55,30 +47,28 @@ MarkdownEditor.prototype.changeNavToBottom = function() {
 MarkdownEditor.prototype.init = function(){
     var _this = this;
 
+    _this.editor.on('change', $.proxy(_this.textareaChange, _this));
+
     if(_this.$cont.length &&
        _this.$textarea.length) {
 
+        _this.$cont.addClass('markdown-editor');
+        _this.$buttons = _this.$cont.find('[data-markdowneditor-button]');
         // Selectors
-        _this.$content = _this.$cont.find('.uk-htmleditor-content');
-        _this.$buttonCode = _this.$cont.find('.uk-htmleditor-button-code');
-        _this.$buttonPreview = _this.$cont.find('.uk-htmleditor-button-preview');
-        _this.$buttonFullscreen = _this.$cont.find('.uk-htmleditor-button-fullscreen');
-        _this.$count = _this.$cont.find('.uk-htmleditor-count');
+        _this.$content = _this.$cont.find('.markdown-editor-content');
+        _this.$buttonCode = _this.$cont.find('.markdown-editor-button-code');
+        _this.$buttonPreview = _this.$cont.find('.markdown-editor-button-preview');
+        _this.$buttonFullscreen = _this.$cont.find('.markdown-editor-button-fullscreen');
+        _this.$count = _this.$cont.find('.markdown-editor-count');
         _this.$countCurrent = _this.$cont.find('.count-current');
         _this.$countMaxLimitText = _this.$cont.find('.count-limit');
 
         // Store markdown index into datas
-        _this.$cont.find('.uk-htmleditor-button-code').attr('data-index', _this.index);
-        _this.$cont.find('.uk-htmleditor-button-preview').attr('data-index', _this.index);
-        _this.$cont.find('.uk-htmleditor-button-fullscreen').attr('data-index', _this.index);
+        _this.$cont.find('.markdown-editor-button-code').attr('data-index', _this.index);
+        _this.$cont.find('.markdown-editor-button-preview').attr('data-index', _this.index);
+        _this.$cont.find('.markdown-editor-button-fullscreen').attr('data-index', _this.index);
         _this.$cont.find('.markdown_textarea').attr('data-index', _this.index);
         _this.$cont.find('.CodeMirror').attr('data-index', _this.index);
-
-        // Check if a desc is defined
-        if(_this.textarea.hasAttribute('data-desc') &&
-            _this.textarea.getAttribute('data-desc') !== ''){
-            _this.$cont.after('<div class="form-help uk-alert uk-alert-large">'+_this.textarea.getAttribute('data-desc')+'</div>');
-        }
 
         // Check if a max length is defined
         if(_this.textarea.hasAttribute('data-max-length') &&
@@ -116,7 +106,6 @@ MarkdownEditor.prototype.init = function(){
         _this.fullscreenActive = false;
 
         if(_this.limit){
-
              // Check if current length is over limit
             if(stripTags(_this.editor.getValue()).length > _this.countMaxLimit){
                 _this.countAlertActive = true;
@@ -130,15 +119,175 @@ MarkdownEditor.prototype.init = function(){
         }
 
         _this.editor.on('change', $.proxy(_this.textareaChange, _this));
+        _this.editor.on('focus', $.proxy(_this.textareaFocus, _this));
+        _this.editor.on('blur', $.proxy(_this.textareaBlur, _this));
 
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
+
+        _this.$buttons.on('click', $.proxy(_this.buttonClick, _this));
+
         Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
     }
-
 };
 
+MarkdownEditor.prototype.buttonClick = function(event) {
+    var _this = this;
+    var $button = $(event.currentTarget);
+    var sel = _this.editor.getSelections();
+
+    if (sel.length > 0) {
+        console.log(sel);
+        switch($button.attr('data-markdowneditor-button')){
+            case 'nbsp':
+                _this.editor.replaceSelections(_this.nbspSelections(sel));
+            break;
+            case 'listUl':
+                _this.editor.replaceSelections(_this.listUlSelections(sel));
+            break;
+            case 'link':
+                _this.editor.replaceSelections(_this.linkSelections(sel));
+            break;
+            case 'image':
+                _this.editor.replaceSelections(_this.imageSelections(sel));
+            break;
+            case 'bold':
+                _this.editor.replaceSelections(_this.boldSelections(sel));
+            break;
+            case 'italic':
+                _this.editor.replaceSelections(_this.italicSelections(sel));
+            break;
+            case 'blockquote':
+                _this.editor.replaceSelections(_this.blockquoteSelections(sel));
+            break;
+            case 'h2':
+                _this.editor.replaceSelections(_this.h2Selections(sel));
+            break;
+            case 'h3':
+                _this.editor.replaceSelections(_this.h3Selections(sel));
+            break;
+            case 'h4':
+                _this.editor.replaceSelections(_this.h4Selections(sel));
+            break;
+            case 'h5':
+                _this.editor.replaceSelections(_this.h5Selections(sel));
+            break;
+            case 'h6':
+                _this.editor.replaceSelections(_this.h6Selections(sel));
+            break;
+            case 'back':
+                _this.editor.replaceSelections(_this.backSelections(sel));
+            break;
+            case 'hr':
+                _this.editor.replaceSelections(_this.hrSelections(sel));
+            break;
+        }
+
+        /*
+         * Pos cursor after last selection
+         */
+        _this.editor.focus();
+    }
+};
+MarkdownEditor.prototype.backSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '   \n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.hrSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n\n---\n\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.nbspSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = ' ';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.listUlSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n\n* '+selections[i]+'\n\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.linkSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '['+selections[i]+'](http://)';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.imageSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '!['+selections[i]+'](/files/)';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.boldSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '**'+selections[i]+'**';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.italicSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '*'+selections[i]+'*';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.h2Selections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n## '+selections[i]+'\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.h3Selections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n### '+selections[i]+'\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.h4Selections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n#### '+selections[i]+'\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.h5Selections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n##### '+selections[i]+'\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.h6Selections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n###### '+selections[i]+'\n';
+    }
+    return selections;
+};
+MarkdownEditor.prototype.blockquoteSelections = function(selections) {
+    var _this = this;
+    for(var i in selections) {
+        selections[i] = '\n> '+selections[i]+'\n';
+    }
+    return selections;
+};
 
 /**
  * Textarea change
@@ -146,6 +295,8 @@ MarkdownEditor.prototype.init = function(){
  */
 MarkdownEditor.prototype.textareaChange = function(e){
     var _this = this;
+
+    _this.editor.save();
 
     if(_this.limit){
         setTimeout(function(){
@@ -186,8 +337,7 @@ MarkdownEditor.prototype.textareaChange = function(e){
 MarkdownEditor.prototype.textareaFocus = function(e){
     var _this = this;
 
-   $(e.display.wrapper).parent().parent().parent().parent().addClass('form-col-focus');
-
+   _this.$cont.addClass('form-col-focus');
 };
 
 
@@ -195,11 +345,10 @@ MarkdownEditor.prototype.textareaFocus = function(e){
  * Textarea focus out
  * @return {[type]} [description]
  */
-MarkdownEditor.prototype.textareaFocusOut = function(e){
+MarkdownEditor.prototype.textareaBlur = function(e){
     var _this = this;
 
-    $(e.display.wrapper).parent().parent().parent().parent().removeClass('form-col-focus');
-
+    _this.$cont.removeClass('form-col-focus');
 };
 
 
@@ -271,11 +420,8 @@ MarkdownEditor.prototype.echapKey = function(e){
     var _this = this;
 
     if(e.keyCode == 27){
-        for(var i = 0; i < _this.$cont.length; i++) {
-            if(_this.fullscreenActive){
-                $(_this.$buttonFullscreen).find('a').trigger('click');
-                break;
-            }
+        if(_this.fullscreenActive){
+            _this.$buttonFullscreen.find('a').trigger('click');
         }
     }
 

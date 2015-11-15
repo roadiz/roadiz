@@ -4168,6 +4168,14 @@
         <source>markdown.type</source>
         <target xml:lang="fr">Markdown</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="json.type">
+        <source>json.type</source>
+        <target xml:lang="fr" state="translated">Code JSON</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css.type">
+        <source>css.type</source>
+        <target xml:lang="fr" state="translated">Code CSS</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="437" approved="yes">
         <source>boolean.type</source>
         <target xml:lang="fr">Booléen</target>
