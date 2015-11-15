@@ -26,6 +26,18 @@
         <textarea {{ block('widget_attributes') }} data-uk-rz-htmleditor>{{ value }}</textarea>
     {% endspaceless %}
 {% endblock markdown_widget %}
+{% block json_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <textarea {{ block('widget_attributes') }} data-rz-jsoneditor>{{ value }}</textarea>
+    {% endspaceless %}
+{% endblock json_widget %}
+{% block css_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <textarea {{ block('widget_attributes') }} data-rz-csseditor>{{ value }}</textarea>
+    {% endspaceless %}
+{% endblock css_widget %}
 
 {% block documents_widget %}
     {% spaceless %}

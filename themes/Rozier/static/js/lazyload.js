@@ -236,6 +236,8 @@ Lazyload.prototype.generalBind = function() {
 
     // Init markdown-preview
     _this.initMarkdownEditors();
+    _this.initJsonEditors();
+    _this.initCssEditors();
     _this.initFilterBars();
 
     // Init colorpicker
@@ -275,12 +277,44 @@ Lazyload.prototype.initMarkdownEditors = function() {
     if(editorCount){
         setTimeout(function(){
             for(var i = 0; i < editorCount; i++) {
-                new MarkdownEditor($(_this.$textAreaHTMLeditor[i]), i);
+                new MarkdownEditor(_this.$textAreaHTMLeditor.eq(1), i);
             }
 
-            $(".uk-htmleditor-preview").css("height", 250);
-            $(".CodeMirror").css("height", 250);
+            //$(".uk-htmleditor-preview").css("height", 250);
+            //$(".CodeMirror").css("height", 250);
 
+        }, 10);
+    }
+};
+
+Lazyload.prototype.initJsonEditors = function() {
+    var _this = this;
+
+    // Init markdown-preview
+    _this.$textareasJson = $('textarea[data-rz-jsoneditor]').not('[data-uk-check-display]');
+    var editorCount = _this.$textareasJson.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new JsonEditor(_this.$textareasJson.eq(i), i);
+            }
+        }, 10);
+    }
+};
+
+Lazyload.prototype.initCssEditors = function() {
+    var _this = this;
+
+    // Init markdown-preview
+    _this.$textareasCss = $('textarea[data-rz-csseditor]').not('[data-uk-check-display]');
+    var editorCount = _this.$textareasCss.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new CssEditor(_this.$textareasCss.eq(i), i);
+            }
         }, 10);
     }
 };

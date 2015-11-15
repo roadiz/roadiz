@@ -206,6 +206,10 @@ trait NodesSourcesTrait
                     $field,
                     $controller
                 );
+            case NodeTypeField::JSON_T:
+                return new \RZ\Roadiz\CMS\Forms\JsonType();
+            case NodeTypeField::CSS_T:
+                return new \RZ\Roadiz\CMS\Forms\CssType();
             case NodeTypeField::MARKDOWN_T:
                 return new \RZ\Roadiz\CMS\Forms\MarkdownType();
             case NodeTypeField::ENUM_T:

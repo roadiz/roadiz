@@ -434,7 +434,7 @@ class SettingsController extends RozierApp
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('value', NodeTypeField::$typeToForm[$setting->getType()], [
+                        ->add('value', $this->getFormTypeFromSettingType($setting), [
                             'label' => 'value',
                             'required' => false,
                         ])
@@ -500,7 +500,7 @@ class SettingsController extends RozierApp
                         )
                         ->add(
                             'value',
-                            Setting::$typeToForm[$setting->getType()],
+                            $this->getFormTypeFromSettingType($setting),
                             static::getFormOptionsForSetting($setting, $this->getTranslator())
                         )
                         ->add(
@@ -532,6 +532,26 @@ class SettingsController extends RozierApp
     }
 
     /**
+     *
+     * @param  Setting $setting [description]
+     * @return [type]           [description]
+     */
+    protected function getFormTypeFromSettingType(Setting $setting)
+    {
+        switch ($setting->getType()) {
+            case NodeTypeField::JSON_T:
+                return new \RZ\Roadiz\CMS\Forms\JsonType();
+            case NodeTypeField::CSS_T:
+                return new \RZ\Roadiz\CMS\Forms\CssType();
+            case NodeTypeField::MARKDOWN_T:
+                return new \RZ\Roadiz\CMS\Forms\MarkdownType();
+
+            default:
+                return Setting::$typeToForm[$setting->getType()];
+        }
+    }
+
+    /**
      * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return \Symfony\Component\Form\Form
@@ -553,7 +573,7 @@ class SettingsController extends RozierApp
                         ])
                         ->add(
                             'value',
-                            Setting::$typeToForm[$setting->getType()],
+                            $this->getFormTypeFromSettingType($setting),
                             static::getFormOptionsForSetting($setting, $this->getTranslator(), true)
                         );
 
