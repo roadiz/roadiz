@@ -37,13 +37,13 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class Composer
 {
-    public static function postUpdate(Event $event)
+    public static function postUpdate()
     {
         static::copyDefaultConfiguration();
         static::copyDevEnvironment();
     }
 
-    public static function postInstall(Event $event)
+    public static function postInstall()
     {
         static::copyDefaultConfiguration();
         static::copyInstallEnvironment();
