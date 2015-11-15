@@ -6,19 +6,21 @@ MarkdownEditor = function($textarea, index){
     var _this = this;
 
     _this.$textarea = $textarea;
-    _this.htmlEditor = UIkit.htmleditor(
-        $textarea,
-        {
-            markdown:true,
-            mode:'tab',
-            labels : Rozier.messages.htmleditor
-        }
-    );
+    _this.textarea = _this.$textarea[0];
+
+    _this.htmlEditor = CodeMirror.fromTextArea(_this.textarea, {
+        mode: 'gfm',
+        lineNumbers: false,
+        theme: "default",
+        tabSize: 4,
+        styleActiveLine: true,
+        indentWithTabs: false,
+        lineWrapping: true,
+        dragDrop: false
+    });
     // Selectors
     _this.$cont = _this.$textarea.parents('.uk-htmleditor');
-    _this.editor = _this.$cont.find('.CodeMirror')[0].CodeMirror;
     _this.index = index;
-    _this.textarea = _this.$textarea[0];
     _this.$buttonCode = null;
     _this.$buttonPreview = null;
     _this.$buttonFullscreen = null;
@@ -31,6 +33,8 @@ MarkdownEditor = function($textarea, index){
     _this.countAlertActive = false;
     _this.fullscreenActive = false;
 
+    _this.$parentForm = _this.$textarea.parents('form');
+
     // Methods
     _this.changeNavToBottom();
     _this.init();
@@ -41,10 +45,12 @@ MarkdownEditor.prototype.changeNavToBottom = function() {
     var _this = this;
 
     var $HTMLeditorNav = _this.$cont.find('.uk-htmleditor-navbar');
-    var HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+ $HTMLeditorNav[0].innerHTML+'</div>';
-    _this.$cont.append(HTMLeditorNavInner);
-    var $HTMLeditorNavToRemove = _this.$cont.find('.uk-htmleditor-navbar:not(.bottom)');
-    $HTMLeditorNavToRemove.remove();
+    if ($HTMLeditorNav.length) {
+        var HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+ $HTMLeditorNav[0].innerHTML+'</div>';
+        _this.$cont.append(HTMLeditorNavInner);
+        var $HTMLeditorNavToRemove = _this.$cont.find('.uk-htmleditor-navbar:not(.bottom)');
+        $HTMLeditorNavToRemove.remove();
+    }
 };
 
 
@@ -54,6 +60,8 @@ MarkdownEditor.prototype.changeNavToBottom = function() {
  */
 MarkdownEditor.prototype.init = function(){
     var _this = this;
+
+    _this.htmlEditor.on('change', $.proxy(_this.textareaChange, _this));
 
     if(_this.$cont.length &&
        _this.$textarea.length) {
@@ -90,7 +98,7 @@ MarkdownEditor.prototype.init = function(){
                 _this.$countMaxLimitText.length &&
                 _this.$count.length) {
 
-                _this.$countCurrent[0].innerHTML = stripTags(_this.editor.getValue()).length;
+                _this.$countCurrent[0].innerHTML = stripTags(_this.htmlEditor.getValue()).length;
                 _this.$countMaxLimitText[0].innerHTML = _this.textarea.getAttribute('data-max-length');
                 _this.$count[0].style.display = 'block';
             }
@@ -118,11 +126,11 @@ MarkdownEditor.prototype.init = function(){
         if(_this.limit){
 
              // Check if current length is over limit
-            if(stripTags(_this.editor.getValue()).length > _this.countMaxLimit){
+            if(stripTags(_this.htmlEditor.getValue()).length > _this.countMaxLimit){
                 _this.countAlertActive = true;
                 addClass(_this.$cont[0], 'content-limit');
             }
-            else if(stripTags(_this.editor.getValue()).length < _this.countMinLimit){
+            else if(stripTags(_this.htmlEditor.getValue()).length < _this.countMinLimit){
                 _this.countAlertActive = true;
                 addClass(_this.$cont[0], 'content-limit');
             }
@@ -136,7 +144,6 @@ MarkdownEditor.prototype.init = function(){
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
         Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
     }
-
 };
 
 
@@ -147,9 +154,11 @@ MarkdownEditor.prototype.init = function(){
 MarkdownEditor.prototype.textareaChange = function(e){
     var _this = this;
 
+    _this.htmlEditor.save();
+
     if(_this.limit){
         setTimeout(function(){
-            var textareaVal = _this.editor.getValue();
+            var textareaVal = _this.htmlEditor.getValue();
             var textareaValStripped = stripTags(textareaVal);
             var textareaValLength = textareaValStripped.length;
 

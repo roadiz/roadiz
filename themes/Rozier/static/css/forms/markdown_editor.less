@@ -147,7 +147,7 @@
         }
     }
     &-content {
-        border: 1px solid @grey-form-border;
+        //border: 1px solid @grey-form-border;
         background: #fff;
         .transition(~'0.35s ease border-color, 0.5s ease background');
         cursor: text;
@@ -181,27 +181,28 @@
             font-size: 13px;
         }
     }
-    &-code {
-        .CodeMirror {
-            font-family: @roadiz-mono-font;
-            font-size: 0.72em;
-            line-height: 18px;
-            color: #666666;
-            padding: 10px 14px;
-
-            &.cm-s-default .cm-header {color: #0F0F0F;}
-            &.cm-s-default .cm-quote {color: #4e76b7;}
-            &.cm-s-default .cm-link {color: #333;}
-            &.cm-s-default .cm-string {color: #bc8039;}
-            &.cm-s-default .cm-string-2 {color: #c46743;}
-        }
-        .CodeMirror-selected { background: #d9d9d9; }
-        .CodeMirror-focused { background: #FFF; }
-    }
 }
+.CodeMirror {
+    font-family: @roadiz-mono-font;
+    font-size: 0.72em;
+    line-height: 18px;
+    color: #666666;
+    padding: 10px 14px;
+    border: 1px solid @grey-form-border;
+
+    &.cm-s-default .cm-header {color: #0F0F0F;}
+    &.cm-s-default .cm-quote {color: #4e76b7;}
+    &.cm-s-default .cm-link {color: #333;}
+    &.cm-s-default .cm-string {color: #bc8039;}
+    &.cm-s-default .cm-string-2 {color: #c46743;}
+}
+.CodeMirror-selected { background: #d9d9d9; }
+.CodeMirror-focused { background: #FFF; }
 
 // Separate buttons
-.uk-htmleditor-button-cont-bold, .uk-htmleditor-button-cont-back, .uk-htmleditor-button-cont-blockquote{
+.uk-htmleditor-button-cont-bold,
+.uk-htmleditor-button-cont-back,
+.uk-htmleditor-button-cont-blockquote{
     margin-left:10px;
 }
 
