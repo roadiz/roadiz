@@ -4177,6 +4177,14 @@
         <source>markdown.type</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="json.type">
+        <source>json.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css.type">
+        <source>css.type</source>
+        <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="437">
         <source>boolean.type</source>
         <target></target>
