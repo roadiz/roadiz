@@ -33,6 +33,7 @@
     "marked": "~0.3.3",
     "dropzone": "~4.0.1",
     "jquery.actual":"~1.0.17",
-    "CanvasLoader":"~0.9.1"
+    "CanvasLoader":"~0.9.1",
+    "jquery-tag-editor": "~1.0.18"
   }
 }

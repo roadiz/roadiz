@@ -69,6 +69,14 @@ class TagsController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['tags'] = $listManager->getEntities();
 
+        if ($this->isGranted('ROLE_ACCESS_TAGS_DELETE')) {
+            /*
+             * Handle bulk delete form
+             */
+            $deleteTagsForm = $this->buildBulkDeleteForm($request->getRequestUri());
+            $this->assignation['deleteTagsForm'] = $deleteTagsForm->createView();
+        }
+
         return $this->render('tags/list.html.twig', $this->assignation);
     }
 
@@ -188,6 +196,59 @@ class TagsController extends RozierApp
         } else {
             return $this->throw404();
         }
+    }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS_DELETE');
+
+        if (!empty($request->get('deleteForm')['tagsIds'])) {
+            $tagsIds = trim($request->get('deleteForm')['tagsIds']);
+            $tagsIds = explode(',', $tagsIds);
+            array_filter($tagsIds);
+
+            $tags = $this->getService('em')
+                          ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                          ->findBy([
+                              'id' => $tagsIds,
+                          ]);
+
+            if (count($tags) > 0) {
+                $form = $this->buildBulkDeleteForm(
+                    $request->get('deleteForm')['referer'],
+                    $tagsIds
+                );
+                $form->handleRequest($request);
+
+                if ($form->isValid()) {
+                    $msg = $this->bulkDeleteTags($form->getData());
+
+                    $this->publishConfirmMessage($request, $msg);
+
+                    if (!empty($form->getData()['referer'])) {
+                        return $this->redirect($form->getData()['referer']);
+                    } else {
+                        return $this->redirect($this->generateUrl('tagsHomePage'));
+                    }
+                }
+
+                $this->assignation['tags'] = $tags;
+                $this->assignation['form'] = $form->createView();
+
+                if (!empty($request->get('deleteForm')['referer'])) {
+                    $this->assignation['referer'] = $request->get('deleteForm')['referer'];
+                }
+
+                return $this->render('tags/bulkDelete.html.twig', $this->assignation);
+            }
+        }
+
+        return $this->throw404();
     }
 
     /**
@@ -517,5 +578,61 @@ class TagsController extends RozierApp
                         ]);
 
         return $builder->getForm();
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    private function buildBulkDeleteForm(
+        $referer = false,
+        $tagsIds = []
+    ) {
+        $builder = $this->getService('formFactory')
+                        ->createNamedBuilder('deleteForm')
+                        ->add('tagsIds', 'hidden', [
+                            'data' => implode(',', $tagsIds),
+                            'attr' => ['class' => 'tags-id-bulk-tags'],
+                            'constraints' => [
+                                new NotBlank(),
+                            ],
+                        ]);
+
+        if (false !== $referer) {
+            $builder->add('referer', 'hidden', [
+                'data' => $referer,
+            ]);
+        }
+
+        return $builder->getForm();
+    }
+
+     /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function bulkDeleteTags($data)
+    {
+        if (!empty($data['tagsIds'])) {
+            $tagsIds = trim($data['tagsIds']);
+            $tagsIds = explode(',', $tagsIds);
+            array_filter($tagsIds);
+
+            $tags = $this->getService('em')
+                          ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                          ->findBy([
+                              'id' => $tagsIds,
+                          ]);
+
+            foreach ($tags as $tag) {
+                $tag->getHandler()->removeWithChildrenAndAssociations();
+            }
+
+            $this->getService('em')->flush();
+
+            return $this->getTranslator()->trans('tags.bulk.deleted');
+        }
+
+        return $this->getTranslator()->trans('wrong.request');
     }
 }

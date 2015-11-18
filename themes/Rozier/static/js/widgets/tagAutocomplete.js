@@ -5,51 +5,50 @@
 var TagAutocomplete = function () {
     var _this = this;
 
+    _this.$input = $(".rz-tag-autocomplete").eq(0);
+    _this.initialUrl = _this.$input.attr('data-get-url');
+    _this.placeholder = _this.$input.attr('placeholder');
+    _this.initialTags = [];
+
     function split( val ) {
         return val.split( /,\s*/ );
     }
     function extractLast( term ) {
         return split( term ).pop();
     }
-    $(".rz-tag-autocomplete")
-        // don't navigate away from the field on tab when selecting an item
-        .bind( "keydown", function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB &&
-                $( this ).autocomplete( "instance" ).menu.active ) {
-                event.preventDefault();
-            }
-        })
-        .autocomplete({
-            source: function( request, response ) {
 
-                $.getJSON( Rozier.routes.tagAjaxSearch, {
-                    '_action': 'tagAutocomplete',
-                    '_token': Rozier.ajaxToken,
-                    'search': extractLast( request.term )
-                }, response);
-            },
-            search: function() {
-
-                // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 2 ) {
-                  return false;
+    function initAutocomplete() {
+        _this.$input.tagEditor({
+            autocomplete: {
+                delay: 0.3, // show suggestions immediately
+                position: { collision: 'flip' }, // automatic menu position up/down
+                source: function( request, response ) {
+                    $.getJSON( Rozier.routes.tagAjaxSearch, {
+                        '_action': 'tagAutocomplete',
+                        '_token': Rozier.ajaxToken,
+                        'search': extractLast( request.term )
+                    }, response);
                 }
             },
-            focus: function() {
-              // prevent value inserted on focus
-              return false;
-            },
-            select: function( event, ui ) {
-              var terms = split( this.value );
-              // remove the current input
-              terms.pop();
-              // add the selected item
-              terms.push( ui.item.value );
-              // add placeholder to get the comma-and-space at the end
-              terms.push( "" );
-              this.value = terms.join( ", " );
-              return false;
-        }
-    });
+            placeholder: _this.placeholder,
+            initialTags: _this.initialTags,
+            animateDelete: 0
+        });
+    }
+
+    if (typeof _this.initialUrl !== "undefined" &&
+        _this.initialUrl !== "") {
+        $.getJSON(
+            _this.initialUrl,
+            {
+                '_action': 'getNodeTags',
+                '_token': Rozier.ajaxToken
+            }, function (data) {
+                _this.initialTags = data;
+                initAutocomplete();
+            }
+        );
+    } else {
+        initAutocomplete();
+    }
 };

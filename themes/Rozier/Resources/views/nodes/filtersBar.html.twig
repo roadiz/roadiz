@@ -35,15 +35,11 @@
         {% include '@Rozier/widgets/itemPerPage.html.twig' %}
 
         <nav class="bulk-actions nodes-bulk-actions">
-
             <div class="bulk-actions-title-cont">
                 <h3 class="bulk-actions-title nodes-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
             </div>
-
             {% spaceless %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-nodes" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
-
-
                 {# Links #}
                 {% if tagNodesForm %}
                     <a class="uk-button uk-button-bulk uk-button-bulk-folder uk-button-bulk-folder-nodes"
@@ -87,7 +83,6 @@
                     </div>
                 {% endif %}
             {% endspaceless %}
-
         </nav>
 
     </div>

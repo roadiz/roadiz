@@ -17,10 +17,52 @@
 
     .form-col-checkbox{
         display: inline-block;
-        
+
         &+ .form-col-checkbox{
             margin-left:30px;
         }
     }
 
 }
+.tags-bulk-actions {
+    display: none;
+    &.visible {
+        display: block;
+    }
+
+    form {
+        display: inline-block;
+    }
+}
+
+.tag-bulk-status-form,
+.tag-bulk-tag-form {
+    display: inline-block;
+
+    div,
+    .data-uk-margin {
+        display: inline-block;
+    }
+}
+
+.tagtree-bulk-selection {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.content-delete {
+    .tags-list {
+        margin: 0px;
+        li {
+            list-style-type: none;
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            font-size: 13px;
+            background-color: #eae9e9;
+            color: #545454;
+            border-radius: 30px;
+        }
+    }
+}
+

@@ -6321,6 +6321,23 @@
           <target></target>
       </trans-unit>
 
+      <!-- Bulk tags -->
+        <trans-unit xml:space="preserve" id="delete.tags">
+          <source>delete.tags</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags">
+          <source>are_you_sure.delete.these.tags</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="bulk.delete.tags">
+          <source>bulk.delete.tags</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="tags.bulk.deleted">
+          <source>tags.bulk.deleted</source>
+          <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -45,6 +45,8 @@ module.exports = function(grunt) {
         'bower_components/dropzone/dist/dropzone.js',
         'bower_components/CanvasLoader/js/heartcode-canvasloader.js',
         'bower_components/jquery.actual/jquery.actual.js',
+        'bower_components/caret/jquery.caret.js',
+        'bower_components/jquery-tag-editor/jquery.tag-editor.js',
     ];
     var vendorFilesObject = objectify(vendorFiles);
 
@@ -53,6 +55,7 @@ module.exports = function(grunt) {
         'js/trees/nodeTreeContextActions.js',
         'js/bulk-edits/documentsBulk.js',
         'js/bulk-edits/nodesBulk.js',
+        'js/bulk-edits/tagsBulk.js',
         'js/documents/documentsList.js',
         'js/documents/documentWidget.js',
         'js/documents/documentUploader.js',

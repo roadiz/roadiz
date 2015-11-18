@@ -73,7 +73,7 @@
     color: #333;
     background: #EFEFEF;
 }
-
+.tags-bulk-folder-cont,
 .documents-bulk-folder-cont,
 .nodes-bulk-status-cont,
 .nodes-bulk-folder-cont {
@@ -84,7 +84,12 @@
 
     .uk-form .data-uk-margin>div{
         display: inline-block;
+        vertical-align: middle;
         margin-bottom:0;
+    }
+
+    .tag-editor {
+        max-width: 400px;
     }
 }
 
@@ -131,6 +136,7 @@
     }
 }
 
+#tags-bulk-delete-form,
 #documents-bulk-delete-form,
 #documents-bulk-download-form,
 #nodes-bulk-delete-form{

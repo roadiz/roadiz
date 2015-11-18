@@ -211,6 +211,7 @@ Lazyload.prototype.generalBind = function() {
     new DocumentsBulk();
     new AutoUpdate();
     new NodesBulk();
+    new TagsBulk();
     new DocumentWidget();
     new NodeWidget();
     new CustomFormWidget();

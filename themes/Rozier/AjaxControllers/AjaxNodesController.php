@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
@@ -44,6 +45,40 @@ use Themes\Rozier\AjaxControllers\AbstractAjaxController;
  */
 class AjaxNodesController extends AbstractAjaxController
 {
+    /**
+     *
+     * @param  Request $request [description]
+     * @param  int  $nodeId  [description]
+     * @return JsonResponse
+     */
+    public function getTagsAction(Request $request, $nodeId)
+    {
+        /*
+         * Validate
+         */
+        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN,
+                ['content-type' => 'application/javascript']
+            );
+        }
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $tags = [];
+        $node = $this->getService('em')
+                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+        foreach ($node->getTags() as $tag) {
+            $tags[] = $tag->getHandler()->getFullPath();
+        }
+
+        return new JsonResponse(
+            $tags,
+            Response::HTTP_OK,
+            ['content-type' => 'application/javascript']
+        );
+    }
+
     /**
      * Handle AJAX edition requests for Node
      * such as comming from nodetree widgets.
@@ -59,8 +94,8 @@ class AjaxNodesController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request)) {
-            return new Response(
-                json_encode($notValid),
+            return new JsonResponse(
+                $notValid,
                 Response::HTTP_FORBIDDEN,
                 ['content-type' => 'application/javascript']
             );
@@ -109,8 +144,8 @@ class AjaxNodesController extends AbstractAjaxController
                 ];
             }
 
-            return new Response(
-                json_encode($responseArray),
+            return new JsonResponse(
+                $responseArray,
                 Response::HTTP_OK,
                 ['content-type' => 'application/javascript']
             );
@@ -124,8 +159,8 @@ class AjaxNodesController extends AbstractAjaxController
             ]),
         ];
 
-        return new Response(
-            json_encode($responseArray),
+        return new JsonResponse(
+            $responseArray,
             Response::HTTP_OK,
             ['content-type' => 'application/javascript']
         );
@@ -208,8 +243,8 @@ class AjaxNodesController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request)) {
-            return new Response(
-                json_encode($notValid),
+            return new JsonResponse(
+                $notValid,
                 Response::HTTP_FORBIDDEN,
                 ['content-type' => 'application/javascript']
             );
@@ -335,8 +370,8 @@ class AjaxNodesController extends AbstractAjaxController
             ];
         }
 
-        return new Response(
-            json_encode($responseArray),
+        return new JsonResponse(
+            $responseArray,
             $responseArray['statusCode'],
             ['content-type' => 'application/javascript']
         );
@@ -348,8 +383,8 @@ class AjaxNodesController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request)) {
-            return new Response(
-                json_encode($notValid),
+            return new JsonResponse(
+                $notValid,
                 Response::HTTP_FORBIDDEN,
                 ['content-type' => 'application/javascript']
             );
@@ -390,8 +425,8 @@ class AjaxNodesController extends AbstractAjaxController
             ];
         }
 
-        return new Response(
-            json_encode($responseArray),
+        return new JsonResponse(
+            $responseArray,
             $responseArray['statusCode'],
             ['content-type' => 'application/javascript']
         );

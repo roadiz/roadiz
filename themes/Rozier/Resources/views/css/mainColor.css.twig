@@ -43,6 +43,7 @@
  * Custom color on tag
  * for {{ tag.tagName }}
  */
+.tag-item[data-tag-id="{{ tag.id }}"] i,
 .tagtree-element[data-tag-id="{{ tag.id }}"] > .uk-nestable-item > .uk-nestable-handle i {
     color:{{ tag.color }};
 }
