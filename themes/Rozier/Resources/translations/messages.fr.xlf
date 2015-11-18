@@ -3786,6 +3786,10 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.color">
+        <source>tag.color</source>
+        <target xml:lang="fr" state="translated">Couleur</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="374" approved="yes">
         <source>tag.tree</source>
         <target xml:lang="fr">Arborescence</target>
@@ -6197,6 +6201,23 @@
       <trans-unit xml:space="preserve" id="export_format.excel.%language%">
           <source>export_format.excel.%language%</source>
           <target xml:lang="fr" state="translated">Format de fichier Excel (%language%)</target>
+      </trans-unit>
+      <!-- Bulk tags -->
+      <trans-unit xml:space="preserve" id="delete.tags">
+          <source>delete.tags</source>
+          <target xml:lang="fr" state="translated">Supprimer les étiquettes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags">
+          <source>are_you_sure.delete.these.tags</source>
+          <target xml:lang="fr" state="translated">Êtes-vous sûr(e) de vouloir supprimer ces étiquettes ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.tags">
+          <source>bulk.delete.tags</source>
+          <target xml:lang="fr" state="translated">Supprimer les étiquettes sélectionnées</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.bulk.deleted">
+          <source>tags.bulk.deleted</source>
+          <target xml:lang="fr" state="translated">Les étiquettes sélectionnées ont été supprimées</target>
       </trans-unit>
     </body>
   </file>
