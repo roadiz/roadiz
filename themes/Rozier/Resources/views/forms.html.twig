@@ -134,6 +134,41 @@
     {% endspaceless %}
 {% endblock css_widget %}
 
+{% block tags_widget %}
+    {% spaceless %}
+    <div class="uk-form-row uk-margin-small-top tags-widget" data-tag-widget {{ block('widget_attributes') }}>
+        {% if label is empty -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+
+        <nav class="tags-widget-nav uk-navbar">
+            <ul class="uk-navbar-nav">
+                <li class="uk-navbar-brand"><i class="uk-icon-rz-tags"></i></li>
+                <li class="uk-navbar-brand label">{{ label|trans }}</li>
+            </ul>
+            <div class="uk-navbar-content uk-navbar-flip">
+                <div class="tags-widget-quick-creation uk-button-group">
+                    <a class="uk-button uk-button-small" href="#" data-tag-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}tags.toggle-explorer{% endtrans %}</a>
+                </div>
+            </div>
+        </nav>
+        <ul class="uk-sortable tags-widget-sortable" data-uk-sortable="{group:'tags-widget', dragCustomClass:'tags-widget-dragging'}" data-input-name="{{ name }}">
+            {% for doc in data %}
+            {% include '@Rozier/widgets/tagSmallThumbnail.html.twig' with {
+                'tag':doc,
+                'name': name,
+                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                'read_only': read_only,
+                'disabled':disabled,
+                'required':required,
+                'attr': attr
+            } only %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endspaceless %}
+{% endblock tags_widget %}
+
 {% block documents_widget %}
     {% spaceless %}
     <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget {{ block('widget_attributes') }}>

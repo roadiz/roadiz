@@ -9,54 +9,58 @@
 {% block content %}
 <section class="content-global">
 
-	<header class="content-header header-node header-node-edit-tags">
-		{% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
-		<h1 class="content-title node-edit-tags-title">
-			{{ "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+    <header class="content-header header-node header-node-edit-tags">
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
+        <h1 class="content-title node-edit-tags-title">
+            {{ "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
-		</h1>
-		{% include '@Rozier/nodes/navBack.html.twig' %}
-		{% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
-	</header>
+        </h1>
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
+    </header>
 
-	<article class="content content-node-edit-tags">
-		<h2 class="content-subtitle">{% trans %}add.a.tag{% endtrans %}</h2>
-		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</button>
-	   		</fieldset>
-		</form>
+    <article class="content content-node-edit-tags">
+        <h2 class="content-subtitle">{% trans %}add.a.tag{% endtrans %}</h2>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.tag{% endtrans %}</button>
+            </fieldset>
+        </form>
+        <hr />
+        <h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
+        <div class="content-table-cont">
+            <table class="tags content-table  uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}id{% endtrans %}</th>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tag in node.getTags %}
 
-		<hr />
+                    {% set ttag = tag.getTranslatedTags.first %}
+                    {% if tag.parent %}
+                    {% set parentTtag = tag.parent.translatedTags.first %}
+                    {% endif %}
+                    <tr>
+                        <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
+                        <td>
+                            <a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{% if parentTtag %}{{ parentTtag.name }} / {% endif %}{{ ttag.getName }}</a>
+                        </td>
+                        <td>
+                            <a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
 
-		<h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
-		<div class="content-table-cont">
-			<table class="tags content-table  uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}id{% endtrans %}</th>
-			            <th>{% trans %}name{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for tag in node.getTags %}
-					{% set ttag = tag.getTranslatedTags.first %}
-					<tr>
-						<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
-						<td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
-						<td>
-							<a class="uk-button uk-button-small uk-button-danger" href="{{ path('nodesRemoveTagsPage', { nodeId: node.getId, tagId: tag.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</article>
-
-	{% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

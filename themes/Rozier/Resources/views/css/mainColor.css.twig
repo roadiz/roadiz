@@ -38,3 +38,12 @@
     background-color:{{ type.color }};
 }
 {% endfor %}
+{% for tag in tags %}
+/*
+ * Custom color on tag
+ * for {{ tag.tagName }}
+ */
+.tagtree-element[data-tag-id="{{ tag.id }}"] > .uk-nestable-item > .uk-nestable-handle i {
+    color:{{ tag.color }};
+}
+{% endfor %}

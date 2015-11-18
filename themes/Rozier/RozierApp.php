@@ -145,8 +145,10 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
-        $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy([]);
+        $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
+        $this->assignation['tags'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+                'color' => ['!=', '#000000'],
+            ]);
 
         return new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),

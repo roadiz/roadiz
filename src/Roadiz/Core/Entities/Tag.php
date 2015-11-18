@@ -88,6 +88,12 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
+     * @ORM\Column(type="string", name="color", length=7, unique=false, nullable=false, options={"default" = "#000000"})
+     */
+    protected $color = '#000000';
+
+
+    /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
@@ -252,5 +258,29 @@ class Tag extends AbstractDateTimedPositioned
     public function getHandler()
     {
         return new TagHandler($this);
+    }
+
+    /**
+     * Gets the value of color.
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * Sets the value of color.
+     *
+     * @param string $color the color
+     *
+     * @return self
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
     }
 }
