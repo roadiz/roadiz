@@ -160,13 +160,15 @@
         }
     }
 
-    .nodetree-element-inner, .tagtree-element-inner{
+    .nodetree-element-inner,
+    .tagtree-element-inner{
 
         &.nodetree-element-inner{
             padding-left: @node-icon-offset;
         }
 
         &:hover {
+            .non-nestable-handle,
             .uk-nestable-handle:after {
                 color: @nestable-handle-border-color-hover;
                 border-color: @nestable-handle-border-color-hover;
@@ -211,6 +213,7 @@
      * Handles change according to the node status
      */
     // Default circle
+    .non-nestable-handle,
     .uk-nestable-handle:after {
         position: relative;
         content: "";
@@ -270,12 +273,14 @@
             }
         }
         &.stack-node {
-
+            & > .non-nestable-handle,
             & > .uk-nestable-handle{
                 width:36px;
             }
 
-            & > .uk-nestable-handle:after, .uk-icon-folder:before {
+            & > .non-nestable-handle,
+            & > .uk-nestable-handle:after,
+            .uk-icon-folder:before {
                 display: none;
             }
 
@@ -390,6 +395,7 @@
             }
         }
         &.unpublished-node {
+           & > .non-nestable-handle,
            & > .uk-nestable-handle:after {
                 width: 9px;
                 height: 9px;

@@ -1,7 +1,7 @@
 var StackNodeTree = function () {
     var _this = this;
 
-    _this.$page = $('.stack-tree');
+    _this.$page = $('.stack-tree').eq(0);
     _this.$quickAddNodeButtons = _this.$page.find('.stack-tree-quick-creation a');
     _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
 
@@ -12,17 +12,14 @@ StackNodeTree.prototype.init = function() {
     var _this = this;
 
     if (_this.$quickAddNodeButtons.length) {
-
         var proxiedClick = $.proxy(_this.onQuickAddClick, _this);
-
         _this.$quickAddNodeButtons.off("click", proxiedClick);
         _this.$quickAddNodeButtons.on("click", proxiedClick);
-
-        if(_this.$switchLangButtons.length){
-            var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
-            _this.$switchLangButtons.off("click");
-            _this.$switchLangButtons.on("click", proxiedChangeLang);
-        }
+    }
+    if(_this.$switchLangButtons.length){
+        var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
+        _this.$switchLangButtons.off("click", proxiedChangeLang);
+        _this.$switchLangButtons.on("click", proxiedChangeLang);
     }
 };
 StackNodeTree.prototype.onChangeLangClick = function(event) {
