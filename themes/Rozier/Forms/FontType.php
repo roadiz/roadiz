@@ -62,7 +62,10 @@ class FontType extends AbstractType
                     'data_class' => 'Symfony\Component\HttpFoundation\File\UploadedFile',
                     'constraints' => [
                         new File([
-                            'mimeTypes' => ['application/vnd.ms-fontobject'],
+                            'mimeTypes' => [
+                                'application/vnd.ms-fontobject',
+                                'application/octet-stream'
+                            ],
                             'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
                         ]),
                     ],
