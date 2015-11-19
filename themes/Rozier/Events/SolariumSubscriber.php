@@ -56,6 +56,8 @@ class SolariumSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            NodeEvents::NODE_STATUS_CHANGED => 'onSolariumNodeUpdate',
+            NodeEvents::NODE_VISIBILITY_CHANGED => 'onSolariumNodeUpdate',
             NodesSourcesEvents::NODE_SOURCE_UPDATED => 'onSolariumSingleUpdate',
             NodesSourcesEvents::NODE_SOURCE_DELETED => 'onSolariumSingleDelete',
             NodeEvents::NODE_DELETED => 'onSolariumNodeDelete',
