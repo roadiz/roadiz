@@ -266,6 +266,7 @@ EOF
     echo -e "\n--- Installing NodeJS and NPM ---\n"
     sudo apt-get -y install nodejs > /dev/null 2>&1
     curl --silent https://npmjs.org/install.sh | sudo sh > /dev/null 2>&1
+    sudo npm update -g npm  > /dev/null 2>&1
 
     echo -e "\n--- Installing javascript components ---\n"
     sudo npm install -g grunt-cli bower > /dev/null 2>&1

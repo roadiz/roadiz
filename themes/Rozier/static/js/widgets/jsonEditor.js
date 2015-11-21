@@ -40,9 +40,21 @@ JsonEditor.prototype.init = function(){
         _this.editor.on('change', $.proxy(_this.textareaChange, _this));
         _this.editor.on('focus', $.proxy(_this.textareaFocus, _this));
         _this.editor.on('blur', $.proxy(_this.textareaBlur, _this));
+
+        var forceEditorUpdateProxy = $.proxy(_this.forceEditorUpdate, _this);
+        setTimeout(function () {
+            $('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy);
+            _this.forceEditorUpdate();
+        }, 300);
     }
 };
 
+
+JsonEditor.prototype.forceEditorUpdate = function(event) {
+    var _this = this;
+    //console.log('Refresh Json editor');
+    _this.editor.refresh();
+};
 
 /**
  * Textarea change

@@ -2,6 +2,7 @@ var StackNodeTree = function () {
     var _this = this;
 
     _this.$page = $('.stack-tree').eq(0);
+    _this.currentRequest = null;
     _this.$quickAddNodeButtons = _this.$page.find('.stack-tree-quick-creation a');
     _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
 
@@ -43,6 +44,11 @@ StackNodeTree.prototype.onChangeLangClick = function(event) {
 
 StackNodeTree.prototype.onQuickAddClick = function(event) {
     var _this = this;
+
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
+
     var $link = $(event.currentTarget);
 
     var nodeTypeId = parseInt($link.attr('data-children-node-type'));
@@ -63,7 +69,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
             postData.tagId = parseInt($link.attr('data-filter-tag'));
         }
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: Rozier.routes.nodesQuickAddAjax,
             type: 'post',
             dataType: 'json',
@@ -115,6 +121,11 @@ StackNodeTree.prototype.treeAvailable  = function() {
 
 StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, tagId) {
     var _this = this;
+
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
+
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
     if($nodeTree.length){
@@ -144,7 +155,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
             postData.tagId = parseInt(tagId);
         }
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: url,
             type: 'get',
             dataType: 'json',

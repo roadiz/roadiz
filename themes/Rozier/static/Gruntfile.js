@@ -19,6 +19,7 @@ module.exports = function(grunt) {
     var vendorFiles = [
         'bower_components/uikit/js/uikit.js',
         'js/vendor/addons/sortable.js',
+        //'bower_components/uikit/js/components/sortable.js', // Do not use vanilla sortable because of hardcoded link event in it.
         'bower_components/uikit/js/components/datepicker.js',
         'bower_components/uikit/js/components/nestable.js',
         'bower_components/uikit/js/components/pagination.js',

@@ -127,9 +127,20 @@ MarkdownEditor.prototype.init = function(){
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
 
         _this.$buttons.on('click', $.proxy(_this.buttonClick, _this));
-
         Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+
+        var forceEditorUpdateProxy = $.proxy(_this.forceEditorUpdate, _this);
+        setTimeout(function () {
+            $('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy);
+            _this.forceEditorUpdate();
+        }, 300);
     }
+};
+
+MarkdownEditor.prototype.forceEditorUpdate = function(event) {
+    var _this = this;
+    //console.log('Refresh Markdown editor');
+    _this.editor.refresh();
 };
 
 MarkdownEditor.prototype.buttonClick = function(event) {

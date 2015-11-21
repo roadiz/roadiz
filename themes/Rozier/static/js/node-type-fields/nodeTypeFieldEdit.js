@@ -6,7 +6,7 @@ NodeTypeFieldEdit = function(){
 
     // Selectors
     _this.$btn = $('.node-type-field-edit-button');
-
+    _this.currentRequest = null;
     if (_this.$btn.length) {
         _this.$formFieldRow = $('.node-type-field-row');
         _this.$formFieldCol = $('.node-type-field-col');
@@ -54,13 +54,16 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
     else _this.openFormDelay = 0;
 
     if(_this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index'))) {
+        if(_this.currentRequest && _this.currentRequest.readyState != 4){
+            _this.currentRequest.abort();
+        }
         Rozier.lazyload.canvasLoader.show();
 
         setTimeout(function(){
             console.log('Opening node-type field…');
             _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
 
-            $.ajax({
+            _this.currentRequest = $.ajax({
                 url: e.currentTarget.href,
                 type: 'get',
                 dataType: 'html'
@@ -95,7 +98,7 @@ NodeTypeFieldEdit.prototype.applyContent = function(target, data, url){
 
     var dataWrapped = [
         '<tr class="node-type-field-edit-form-row">',
-            '<td colspan="4">',
+            '<td colspan="5">',
                 '<div class="node-type-field-edit-form-cont">',
                     data,
                 '</div>',

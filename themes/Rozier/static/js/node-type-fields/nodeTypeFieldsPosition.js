@@ -2,7 +2,7 @@ var NodeTypeFieldsPosition = function () {
     var _this = this;
 
     _this.$list = $(".node-type-fields > .uk-sortable");
-
+    _this.currentRequest = null;
     _this.init();
 };
 
@@ -19,6 +19,10 @@ NodeTypeFieldsPosition.prototype.init = function() {
 
 NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, element) {
     var _this = this;
+
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
 
     var $element = $(element);
     var nodeTypeFieldId = parseInt($element.data('field-id'));
@@ -42,7 +46,7 @@ NodeTypeFieldsPosition.prototype.onSortableChange = function(event, list, elemen
         'newPosition':     newPosition
     };
 
-    $.ajax({
+    _this.currentRequest = $.ajax({
         url: Rozier.routes.nodeTypesFieldAjaxEdit.replace("%nodeTypeFieldId%", nodeTypeFieldId),
         type: 'POST',
         dataType: 'json',

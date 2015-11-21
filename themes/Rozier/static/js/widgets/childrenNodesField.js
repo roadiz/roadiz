@@ -4,6 +4,8 @@
 var ChildrenNodesField = function () {
     var _this = this;
 
+    _this.currentRequest = null;
+
     _this.init();
     _this.dropDownize();
 };
@@ -39,6 +41,11 @@ ChildrenNodesField.prototype.treeAvailable  = function() {
 
 ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     var _this = this;
+
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
+
     var $link = $(event.currentTarget);
 
     var nodeTypeId = parseInt($link.attr('data-children-node-type'));
@@ -56,7 +63,7 @@ ChildrenNodesField.prototype.onQuickAddClick = function(event) {
             "translationId":translationId
         };
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: Rozier.routes.nodesQuickAddAjax,
             type: 'post',
             dataType: 'json',
@@ -118,7 +125,11 @@ ChildrenNodesField.prototype.dropDownize = function() {
 ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, translationId) {
     var _this = this;
 
-    if($nodeTree.length){
+    if($nodeTree.length) {
+        if(_this.currentRequest && _this.currentRequest.readyState != 4){
+            _this.currentRequest.abort();
+        }
+
         if (typeof rootNodeId === "undefined") {
             var $rootTree = $($nodeTree.find('.root-tree')[0]);
             rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
@@ -136,7 +147,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
             url += '/'+translationId;
         }
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: url,
             type: 'get',
             dataType: 'json',

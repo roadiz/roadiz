@@ -41,7 +41,7 @@ NodeEditSource.prototype.wrapInTabs = function() {
         }
 
         if (fieldsGroupsLength > 1) {
-            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', animation: \'fade\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
+            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
             var $formSwitcher = _this.$form.find('.uk-switcher');
             var $formSwitcherNav = _this.$form.find('.uk-switcher-nav');
 

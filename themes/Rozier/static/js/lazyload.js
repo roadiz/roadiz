@@ -6,14 +6,10 @@ var Lazyload = function() {
 
     _this.$linksSelector = null;
     _this.$textareasMarkdown = null;
-    _this.$HTMLeditor = null;
-    _this.htmlEditor = [];
-    _this.$HTMLeditorContent = null;
-    _this.$HTMLeditorNav = null;
-    _this.HTMLeditorNavToRemove = null;
     _this.documentsList = null;
     _this.mainColor = null;
     _this.$canvasLoaderContainer = null;
+    _this.currentRequest = null;
 
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
@@ -118,7 +114,11 @@ Lazyload.prototype.onPopState = function(event) {
 Lazyload.prototype.loadContent = function(state, location) {
     var _this = this;
 
-    $.ajax({
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
+
+    _this.currentRequest = $.ajax({
         url: location.href,
         type: 'get',
         dataType: 'html',
@@ -284,7 +284,7 @@ Lazyload.prototype.initMarkdownEditors = function() {
             for(var i = 0; i < editorCount; i++) {
                 new MarkdownEditor(_this.$textareasMarkdown.eq(i), i);
             }
-        }, 10);
+        }, 100);
     }
 };
 
@@ -300,7 +300,7 @@ Lazyload.prototype.initJsonEditors = function() {
             for(var i = 0; i < editorCount; i++) {
                 new JsonEditor(_this.$textareasJson.eq(i), i);
             }
-        }, 10);
+        }, 100);
     }
 };
 
@@ -316,7 +316,7 @@ Lazyload.prototype.initCssEditors = function() {
             for(var i = 0; i < editorCount; i++) {
                 new CssEditor(_this.$textareasCss.eq(i), i);
             }
-        }, 10);
+        }, 100);
     }
 };
 
