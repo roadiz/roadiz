@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
+use \Parsedown;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
@@ -46,11 +47,8 @@ class SolariumNodeSource
     const IDENTIFIER_KEY = 'node_source_id_i';
 
     protected $client = null;
-
     protected $indexed = false;
-
     protected $nodeSource = null;
-
     protected $document = null;
 
     /**
@@ -150,7 +148,7 @@ class SolariumNodeSource
             },
             $this->nodeSource->getHandler()->getTags()
         );
-        $assoc['tags_en'] = $out;
+        $assoc['tags_txt'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();
         $collection[] = $this->nodeSource->getTitle();
@@ -164,14 +162,24 @@ class SolariumNodeSource
             $name = $field->getName();
             $getter = $field->getGetterName();
 
+            $content = $this->nodeSource->$getter();
+            /*
+             * Strip markdown syntax
+             */
+            $content = strip_tags(Parsedown::instance()->text($content));
+
             if ('content' == $name) {
-                $assoc['content'] = $this->nodeSource->$getter();
+                $assoc['content'] = $content;
             } else {
+                /*
+                 * Use locale to create field name
+                 * with right language
+                 */
                 $name .= '_t';
-                $assoc[$name] = $this->nodeSource->$getter();
+                $assoc[$name] = $content;
             }
 
-            $collection[] = $this->nodeSource->$getter();
+            $collection[] = $content;
         }
 
         /*
