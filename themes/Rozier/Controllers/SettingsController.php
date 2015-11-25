@@ -613,13 +613,13 @@ class SettingsController extends RozierApp
                     'placeholder' => $translator->trans('choose.value'),
                     'required' => false,
                 ];
-            case NodeTypeField::DATETIME_T:
+                case NodeTypeField::DATETIME_T:
                 return [
                     'label' => $label,
                     'years' => range(date('Y') - 10, date('Y') + 10),
                     'required' => false,
                 ];
-            case NodeTypeField::INTEGER_T:
+                case NodeTypeField::INTEGER_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -627,7 +627,7 @@ class SettingsController extends RozierApp
                         new Type('integer'),
                     ],
                 ];
-            case NodeTypeField::DECIMAL_T:
+                case NodeTypeField::DECIMAL_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -635,7 +635,7 @@ class SettingsController extends RozierApp
                         new Type('double'),
                     ],
                 ];
-            case NodeTypeField::COLOUR_T:
+                case NodeTypeField::COLOUR_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -644,7 +644,7 @@ class SettingsController extends RozierApp
                     ],
                 ];
 
-            default:
+                default:
                 return [
                     'label' => $label,
                     'required' => false,
