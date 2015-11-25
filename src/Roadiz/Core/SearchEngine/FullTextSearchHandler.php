@@ -50,11 +50,27 @@ class FullTextSearchHandler
         $this->em = $em;
     }
 
-    private function solrSearch($q, $args = [], $rows = 20)
+    /**
+     * @param  string  $q
+     * @param  array   $args
+     * @param  integer $rows
+     * @param  boolean $searchTags
+     *
+     * @return array
+     */
+    private function solrSearch($q, $args = [], $rows = 20, $searchTags = false)
     {
         if (!empty($q)) {
             $query = $this->client->createSelect();
-            $query->setQuery('collection_txt:' . trim($q));
+            $q = trim($q);
+
+            if (!$searchTags) {
+                $queryTxt = sprintf('collection_txt:%s', $q);
+            } else {
+                $queryTxt = sprintf('collection_txt:%s OR tags_en:%s', $q, $q);
+            }
+
+            $query->setQuery($queryTxt);
 
             foreach ($args as $key => $value) {
                 if (is_array($value)) {
@@ -156,12 +172,13 @@ class FullTextSearchHandler
      *  and for highlighting argument is [here](https://cwiki.apache.org/confluence/display/solr/Standard+Highlighter).
      *
      * @param string $q
-     * @param array  $args
-     * @param int  $rows
+     * @param array $args
+     * @param int $rows
+     * @param boolean $searchTags Search in tags too, even if a node don’t match
      *
      * @return array
      */
-    public function searchWithHighlight($q, $args = [], $rows = 20)
+    public function searchWithHighlight($q, $args = [], $rows = 20, $searchTags = false)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
@@ -172,7 +189,7 @@ class FullTextSearchHandler
         $tmp["hl.simple.post"] = "</span>";
         $args = array_merge($tmp, $args);
 
-        return $this->solrSearch($q, $args, $rows);
+        return $this->solrSearch($q, $args, $rows, $searchTags);
     }
 
     /**
@@ -200,15 +217,16 @@ class FullTextSearchHandler
      * @param string $q
      * @param array  $args
      * @param int  $rows
+     * @param boolean $searchTags Search in tags too, even if a node don’t match
      *
      * @return array
      */
-    public function search($q, $args = [], $rows = 20)
+    public function search($q, $args = [], $rows = 20, $searchTags = false)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
         $tmp = [];
         $args = array_merge($tmp, $args);
-        return $this->solrSearch($q, $args, $rows);
+        return $this->solrSearch($q, $args, $rows, $searchTags);
     }
 }
