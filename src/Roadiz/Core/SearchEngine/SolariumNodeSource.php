@@ -126,19 +126,20 @@ class SolariumNodeSource
     {
         $assoc = [];
         $collection = [];
+        $node = $this->nodeSource->getNode();
+
+        if (null == $node) {
+            throw new \Exception("No node relation found for source: " . $this->nodeSource->getTitle(), 1);
+        }
 
         // Need a documentType field
         $assoc['document_type_s'] = static::DOCUMENT_TYPE;
         // Need a nodeSourceId field
         $assoc[static::IDENTIFIER_KEY] = $this->nodeSource->getId();
-
-        $assoc['node_type_s'] = $this->nodeSource->getNode()->getNodeType()->getName();
-
-        $assoc['node_name_s'] = $this->nodeSource->getNode()->getNodeName();
-
-        $assoc['node_status_i'] = $this->nodeSource->getNode()->getStatus();
-
-        $assoc['node_visible_b'] = $this->nodeSource->getNode()->isVisible();
+        $assoc['node_type_s'] = $node->getNodeType()->getName();
+        $assoc['node_name_s'] = $node->getNodeName();
+        $assoc['node_status_i'] = $node->getStatus();
+        $assoc['node_visible_b'] = $node->isVisible();
 
         // Need a locale field
         $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
@@ -153,7 +154,7 @@ class SolariumNodeSource
         $assoc['title'] = $this->nodeSource->getTitle();
         $collection[] = $this->nodeSource->getTitle();
 
-        $searchableFields = $this->nodeSource->getNode()->getNodeType()->getSearchableFields();
+        $searchableFields = $node->getNodeType()->getSearchableFields();
 
         /*
          * Only one content fields to search in.

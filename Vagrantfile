@@ -35,6 +35,9 @@ Vagrant.configure(2) do |config|
     DBNAME=roadiz
     DBUSER=roadiz
     DBPASSWD=roadiz
+    # Apache Solr
+    SOLR_VERSION="5.3.1"
+    SOLR_MIRROR="http://apache.mirrors.ovh.net/ftp.apache.org/dist"
 
     echo -e "\n--- Okay, installing now... ---\n"
     echo -e "\n--- Updating packages list ---\n"
@@ -259,6 +262,25 @@ php_value[display_errors] = On
 php_value[error_reporting] = E_ALL
 EOF
 
+    # Install Apache Solr - based on article from Tomasz Muras - https://twitter.com/zabuch
+    # http://jmuras.com/blog/2012/setup-solr-4-tomcat-ubuntu-server-12-04-lts/
+    echo "\n--- Installing Apache Solr ---\n"
+    sudo apt-get -qq -f -y install openjdk-7-jre-headless unzip > /dev/null 2>&1;
+    cd /tmp/
+    sudo wget -q $SOLR_MIRROR/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz
+    tar xzf solr-$SOLR_VERSION.tgz
+    sudo cp -fr solr-$SOLR_VERSION /opt/solr
+    sudo cp /opt/solr/bin/init.d/solr /etc/init.d/solr
+    sudo sed -i "s/RUNAS=solr/#RUNAS=solr/" /etc/init.d/solr
+    sudo mkdir -p /var/solr
+    sudo cp /opt/solr/bin/solr.in.sh /var/solr/solr.in.sh
+    sudo update-rc.d solr defaults
+    sudo update-rc.d solr enable
+    sudo service solr start
+
+    echo "\n--- Create a new Solr core called \"roadiz\"  ---\n"
+    sudo /opt/solr/bin/solr create_core -c roadiz
+
     echo -e "\n--- Installing Composer for PHP package management ---\n"
     curl --silent https://getcomposer.org/installer | php > /dev/null 2>&1
     sudo mv composer.phar /usr/local/bin/composer
@@ -274,6 +296,12 @@ EOF
     echo -e "\n--- Restarting servers ---\n"
     sudo service nginx restart
     sudo service php5-fpm restart
+    sudo service solr restart
+
+    ##### CLEAN UP #####
+    echo -e "\n--- Cleaning up ---\n"
+    sudo dpkg --configure -a # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
+    sudo apt-get autoremove -y # remove obsolete packages
 
     # Set envvars
     export DB_HOST=$DBHOST
@@ -284,9 +312,9 @@ EOF
     echo -e "\n--- Your Roadiz Vagrant is ready in /var/www ---\n"
     echo -e "\nDo not forget to \"composer install\" and to copy a default config\n"
     echo -e "\nand a install.php with your host IP address authorized.\n"
-    echo -e "\n--- MySQL User: $DBUSER\n"
-    echo -e "\n--- MySQL Password: $DBPASSWD\n"
-    echo -e "\n--- MySQL Database: $DBNAME\n"
+    echo -e "--- MySQL User: $DBUSER\n"
+    echo -e "--- MySQL Password: $DBPASSWD\n"
+    echo -e "--- MySQL Database: $DBNAME\n"
 
   SHELL
 end
