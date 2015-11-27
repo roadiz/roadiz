@@ -76,6 +76,25 @@ in the `dev.php` and `install.php` files to authorize your computer to access th
 
 Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name, without *install.php*, to reach backoffice interface.
 
+### Use our custom Vagrant box for development
+
+Roadiz comes with a dedicated `Vagrantfile` which is configured to run a *LEMP* stack 
+(nginx + PHP-FPM + MariaDB) and an *Apache Solr server*. This will be useful 
+to develop your website on your local computer. Once you’ve cloned Roadiz’ sources
+just do a `vagrant up` in Roadiz’ folder. Then Vagrant will run your code in `/var/www`
+and you will be able to completely use `bin/roadiz` commands without bloating your
+computer with lots of binaries.
+
+Once vagrant box has provisioned you will be able to use:
+
+* `http://localhost:8080/install.php` to proceed to install.
+* `http://localhost:8983/solr` to use Apache Solr admin.
+* `http://localhost:8080/phpmyadmin` for your MySQL db admin.
+
+Be careful, **Windows users**, this `Vagrantfile` is configured to use a *NFS* fileshare.
+Do not hesitate to disable it if you did not setup a NFS emulator. For OS X and Linux user
+this is built-in your system, so have fun!
+
 ### Database connexion
 
 To connect manually to your database, you can add this to your `config.yml`:
