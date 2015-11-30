@@ -238,7 +238,7 @@ EOF
 echo -e "\n--- Installing Apache Solr ---\n"
 sudo apt-get -qq -f -y install openjdk-7-jre-headless unzip > /dev/null 2>&1;
 cd /tmp/
-sudo wget -q $SOLR_MIRROR/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz
+sudo wget –q --output-document=solr-$SOLR_VERSION.tgz $SOLR_MIRROR/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz > /dev/null 2>&1
 tar xzf solr-$SOLR_VERSION.tgz
 sudo cp -fr solr-$SOLR_VERSION /opt/solr
 sudo cp /opt/solr/bin/init.d/solr /etc/init.d/solr

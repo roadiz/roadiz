@@ -63,6 +63,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeEvents::NODE_DELETED => 'onSolariumNodeDelete',
             NodeEvents::NODE_UNDELETED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
+            NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
         ];
     }
 
