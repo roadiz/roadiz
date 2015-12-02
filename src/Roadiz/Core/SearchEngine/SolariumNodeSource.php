@@ -128,7 +128,7 @@ class SolariumNodeSource
         $collection = [];
         $node = $this->nodeSource->getNode();
 
-        if (null == $node) {
+        if (null === $node) {
             throw new \Exception("No node relation found for source: " . $this->nodeSource->getTitle(), 1);
         }
 
