@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -44,17 +45,24 @@ class DynamicUrlMatcher extends UrlMatcher
     protected $theme = null;
     protected $repository = null;
     protected $stopwatch = null;
+    protected $logger = null;
 
     /**
      * @param RouteCollection $routes
      * @param RequestContext  $context
      * @param Doctrine\ORM\EntityManager $em
+     * @param LoggerInterface $logger
      */
-    public function __construct(RequestContext $context, EntityManager $em, Stopwatch $stopwatch = null)
-    {
+    public function __construct(
+        RequestContext $context,
+        EntityManager $em,
+        Stopwatch $stopwatch = null,
+        LoggerInterface $logger = null
+    ) {
         $this->context = $context;
         $this->em = $em;
         $this->stopwatch = $stopwatch;
+        $this->logger = $logger;
     }
 
     /**
@@ -69,7 +77,7 @@ class DynamicUrlMatcher extends UrlMatcher
          * First we look for theme according to hostname.
          */
         $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                      ->findAvailableNonStaticFrontendWithHost($host);
+            ->findAvailableNonStaticFrontendWithHost($host);
 
         /*
          * If no theme for current host, we look for
@@ -77,7 +85,7 @@ class DynamicUrlMatcher extends UrlMatcher
          */
         if (null === $theme) {
             $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                          ->findFirstAvailableNonStaticFrontend();
+                ->findFirstAvailableNonStaticFrontend();
         }
 
         return $theme;

@@ -225,11 +225,11 @@ class FrontendController extends AppController
         if (in_array($node->getNodeName(), static::$specificNodesControllers)) {
             return $namespace . '\\' .
             StringHandler::classify($node->getNodeName()) .
-            'Controller';
+                'Controller';
         } else {
             return $namespace . '\\' .
             StringHandler::classify($node->getNodeType()->getName()) .
-            'Controller';
+                'Controller';
         }
     }
 
@@ -304,9 +304,7 @@ class FrontendController extends AppController
         $this->getService('stopwatch')->start('handleNodeController');
 
         if ($node !== null) {
-            if (true !== $resp = $this->validateAccessForNodeWithStatus(
-                $node
-            )) {
+            if (true !== $resp = $this->validateAccessForNodeWithStatus($node)) {
                 return $resp;
             }
 
@@ -319,12 +317,14 @@ class FrontendController extends AppController
             if (class_exists($controllerPath) &&
                 method_exists($controllerPath, 'indexAction')) {
                 $ctrl = new $controllerPath();
+                $this->getService('logger')->debug("Initialize " . $controllerPath . " controller…");
             } else {
-                return $this->throw404(
-                    "No front-end controller found for '" .
-                    $node->getNodeName() .
-                    "' node. You need to create a " . $controllerPath . "."
-                );
+                $msg = "No front-end controller found for '" .
+                $node->getNodeName() .
+                    "' node. You need to create a " . $controllerPath . ".";
+
+                $this->getService('logger')->debug($msg);
+                return $this->throw404($msg);
             }
 
             /*
