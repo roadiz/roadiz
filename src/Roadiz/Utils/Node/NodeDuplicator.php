@@ -163,10 +163,10 @@ class NodeDuplicator
                 $nsdoc->setField($f);
                 $this->em->persist($nsdoc);
             }
-
-            $this->em->flush();
             $newSources->add($nodeSource);
         }
+        // Flush only outside of loop
+        $this->em->flush();
 
         return $newSources;
     }
