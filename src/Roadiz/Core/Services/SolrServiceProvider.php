@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-
 use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
 
 /**
@@ -71,7 +70,7 @@ class SolrServiceProvider implements \Pimple\ServiceProviderInterface
 
         $container['solr.search.nodeSource'] = function ($c) {
             if ($c['solr.ready']) {
-                return new FullTextSearchHandler($c['solr'], $c['em']);
+                return new FullTextSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
                 return null;
             }
