@@ -611,6 +611,12 @@ class Node extends AbstractDateTimedPositioned
      * @var ArrayCollection
      */
     protected $bNodes;
+
+    /**
+     * Return nodes related to this (B nodes).
+     *
+     * @return ArrayCollection
+     */
     public function getBNodes()
     {
         return $this->bNodes;
@@ -621,6 +627,12 @@ class Node extends AbstractDateTimedPositioned
      * @var ArrayCollection
      */
     protected $aNodes;
+
+    /**
+     * Return nodes which own a relation with this (A nodes).
+     *
+     * @return ArrayCollection
+     */
     public function getANodes()
     {
         return $this->aNodes;

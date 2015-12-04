@@ -144,11 +144,11 @@ class NodesController extends RozierApp
 
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-        $this->getService('em')->refresh($node);
-
-        $translation = $this->getService('defaultTranslation');
 
         if (null !== $node) {
+            $this->getService('em')->refresh($node);
+            $translation = $this->getService('defaultTranslation');
+
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $node->getNodeSources()->first();
             $this->assignation['translation'] = $translation;

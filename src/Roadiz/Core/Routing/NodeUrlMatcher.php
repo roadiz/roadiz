@@ -57,12 +57,20 @@ class NodeUrlMatcher extends DynamicUrlMatcher
          * Try nodes routes
          */
         if (false !== $ret = $this->matchNode($decodedUrl)) {
+            if (null !== $this->logger) {
+                $this->logger->debug('NodeUrlMatcher has matched node (' . $ret['node']->getNodeName() . ').', $ret);
+            }
+
             return $ret;
         } else {
             if (null !== $this->theme) {
                 $ctrl = $this->theme->getClassName();
             } else {
                 $ctrl = 'RZ\Roadiz\CMS\Controllers\FrontendController';
+            }
+
+            if (null !== $this->logger) {
+                $this->logger->debug('NodeUrlMatcher is unable to find any matching node.');
             }
 
             return [
@@ -208,10 +216,10 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 if ($identifier !== null &&
                     $identifier != '') {
                     return $this->repository
-                                ->findByNodeNameWithTranslation(
-                                    $identifier,
-                                    $translation
-                                );
+                        ->findByNodeNameWithTranslation(
+                            $identifier,
+                            $translation
+                        );
                 }
             }
         }
