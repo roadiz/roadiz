@@ -66,6 +66,10 @@ add_header X-Frame-Options "SAMEORIGIN";
 add_header X-XSS-Protection "1; mode=block";
 add_header X-Content-Type-Options "nosniff";
 
+location ~ /themes/(.+)\.(php|yml|twig|xlf|rzn|rzt|rzg)$ {
+  deny all;
+}
+
 # Enable Expire on Themes public assets
 location ~* ^/themes/*.*\.(?:ico|css|js|woff2?|eot|ttf|otf|svg|gif|jpe?g|png)$ {
   expires 30d;
