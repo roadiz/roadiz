@@ -257,7 +257,19 @@ If Doctrine send some error, you probably need to clear metadata cache:
 bin/roadiz cache -a --env=prod;
 ```
 
-### Problem with entities and Doctrine cache?
+### Troubleshooting
+
+#### Empty caches manually for an environment
+
+If you experience errors only on a dedicated environment such as `prod`, `dev` or `install`, it means that cache
+is not fresh for these environments. As a first try, you can **delete** `cache/prod` folder and retry.
+For your information, `preview` entry point use the `dev` environment, so if errors occur in preview: **delete**
+`cache/dev` folder.
+
+If you still get errors from a specific env and you are using an *OPcode* cache or *var cache* (APC, Xcache), try restarting your PHP daemon in
+order to purge these memory caches.
+
+#### Problem with entities and Doctrine cache?
 
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
