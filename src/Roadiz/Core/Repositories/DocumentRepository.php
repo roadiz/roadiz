@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 
@@ -48,7 +50,9 @@ class DocumentRepository extends EntityRepository
     protected function filterByFolder(&$criteria, &$qb)
     {
         if (in_array('folders', array_keys($criteria))) {
-            if (is_array($criteria['folders'])) {
+            if (is_array($criteria['folders']) ||
+                (is_object($criteria['folders']) &&
+                    $criteria['folders'] instanceof Collection)) {
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
                     $documents = $this->getDocumentIdsByFolderExcl($criteria['folders']);
@@ -181,7 +185,7 @@ class DocumentRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
+        array &$criteria = [],
         $alias = "obj"
     ) {
 
@@ -198,14 +202,15 @@ class DocumentRepository extends EntityRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like('dt.' . $key, $qb->expr()->literal($value)));
+            $fullKey = sprintf('LOWER(%s)', 'dt.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
         }
 
-        $qb = $this->directComparison($criteria, $qb, $alias);
+        $qb = $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
     }
@@ -239,9 +244,10 @@ class DocumentRepository extends EntityRepository
     protected function applyFilterByFolder(array &$criteria, &$finalQuery)
     {
         if (in_array('folders', array_keys($criteria))) {
-            if (is_object($criteria['folders'])) {
+            if ($criteria['folders'] instanceof Folder) {
                 $finalQuery->setParameter('folders', $criteria['folders']->getId());
-            } elseif (is_array($criteria['folders'])) {
+            } elseif (is_array($criteria['folders']) ||
+                $criteria['folders'] instanceof Collection) {
                 $finalQuery->setParameter('folders', $criteria['folders']);
             } elseif (is_integer($criteria['folders'])) {
                 $finalQuery->setParameter('folders', (int) $criteria['folders']);
@@ -278,15 +284,14 @@ class DocumentRepository extends EntityRepository
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-            $qb->innerJoin('d.documentTranslations', 'dt');
-            $qb->innerJoin('dt.translation', 't');
-
+            $qb->leftJoin('d.documentTranslations', 'dt');
+            $qb->leftJoin('dt.translation', 't');
         } else {
             if (null !== $translation) {
                 /*
                  * With a given translation
                  */
-                $qb->innerJoin(
+                $qb->leftJoin(
                     'd.documentTranslations',
                     'dt',
                     'WITH',
@@ -294,10 +299,11 @@ class DocumentRepository extends EntityRepository
                 );
             } else {
                 /*
-                 * With a null translation, just take the default one.
+                 * With a null translation, just take the default one optionaly
+                 * Using left join instead of inner join.
                  */
-                $qb->innerJoin('d.documentTranslations', 'dt');
-                $qb->innerJoin(
+                $qb->leftJoin('d.documentTranslations', 'dt');
+                $qb->leftJoin(
                     'dt.translation',
                     't',
                     'WITH',
@@ -335,6 +341,7 @@ class DocumentRepository extends EntityRepository
         /*
          * Filtering by tag
          */
+        $this->filterByTranslation($criteria, $qb, $translation);
         $this->filterByFolder($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
 
@@ -377,6 +384,7 @@ class DocumentRepository extends EntityRepository
         /*
          * Filtering by tag
          */
+        $this->filterByTranslation($criteria, $qb, $translation);
         $this->filterByFolder($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
 
@@ -559,7 +567,7 @@ class DocumentRepository extends EntityRepository
                 WHERE s.type = :type
             ) AND d.raw = :raw
         ')->setParameter('type', AbstractField::DOCUMENTS_T)
-          ->setParameter('raw', false);
+            ->setParameter('raw', false);
 
         try {
             return $query->getResult();

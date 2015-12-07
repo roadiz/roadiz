@@ -105,7 +105,19 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource(&$args = [])
     {
-        $uri = '//www.dailymotion.com/embed/video/'.$this->embedId;
+        $queryString = [];
+
+        if (isset($args['loop'])) {
+            $queryString['loop'] = (int) $args['loop'];
+        }
+        if (isset($args['autoplay'])) {
+            $queryString['autoplay'] = (int) $args['autoplay'];
+        }
+        if (isset($args['controls'])) {
+            $queryString['controls'] = (int) $args['controls'];
+        }
+
+        $uri = '//www.dailymotion.com/embed/video/'.$this->embedId . '?' . http_build_query($queryString);
 
         return $uri;
     }

@@ -100,6 +100,7 @@ class DocumentViewer implements ViewableInterface
      * - background (hexadecimal color without #)
      * - progressive (boolean)
      * - noProcess (boolean) : Disable image resample
+     * - inline : For SVG, display SVG code in Html instead of using <object>
      *
      * ## Audio / Video options
      *
@@ -159,9 +160,17 @@ class DocumentViewer implements ViewableInterface
             return $this->getEmbedByArray($args);
 
         } elseif ($this->document->isSvg()) {
+            $asObject = true;
+            if (isset($args['inline']) &&
+                true === (boolean) $args['inline']) {
+                $asObject = false;
+            }
+
             $viewer = new SvgDocumentViewer(
                 $this->document->getAbsolutePath(),
-                $assignation
+                $assignation,
+                $asObject,
+                Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl()
             );
             return $viewer->getContent();
         } elseif ($this->document->isImage()) {

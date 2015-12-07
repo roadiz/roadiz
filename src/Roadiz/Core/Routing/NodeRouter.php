@@ -84,7 +84,8 @@ class NodeRouter extends Router
         return $this->matcher = new NodeUrlMatcher(
             $this->context,
             $this->em,
-            $this->stopwatch
+            $this->stopwatch,
+            $this->logger
         );
     }
 

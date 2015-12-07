@@ -85,8 +85,7 @@ class NodesTagsController extends RozierApp
                 $form->handleRequest($request);
 
                 if ($form->isValid()) {
-                    $this->addNodeTag($form->getData(), $node);
-
+                    $this->repopulateNodeTags($form->getData(), $node);
                     /*
                      * Dispatch event
                      */
@@ -140,7 +139,6 @@ class NodesTagsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->removeNodeTag($form->getData(), $node, $tag);
-
                 /*
                  * Dispatch event
                  */
@@ -173,8 +171,10 @@ class NodesTagsController extends RozierApp
      * @param array                       $data
      * @param RZ\Roadiz\Core\Entities\Node $node
      */
-    protected function addNodeTag($data, Node $node)
+    protected function repopulateNodeTags($data, Node $node)
     {
+        $node->getTags()->clear();
+
         if (!empty($data['tagPaths'])) {
             $paths = explode(',', $data['tagPaths']);
             $paths = array_filter($paths);
@@ -228,7 +228,11 @@ class NodesTagsController extends RozierApp
                         ])
                         ->add('tagPaths', 'text', [
                             'label' => 'list.tags.to_link',
-                            'attr' => ['class' => 'rz-tag-autocomplete'],
+                            'attr' => [
+                                'class' => 'rz-tag-autocomplete',
+                                'placeholder' => 'use.new_or_existing.tags_with_hierarchy',
+                                'data-get-url' => $this->generateUrl('nodeAjaxTags', ['nodeId' => $node->getId()])
+                            ],
                         ])
                         ->add('separator_1', new SeparatorType(), [
                             'label' => 'use.new_or_existing.tags_with_hierarchy',

@@ -11,7 +11,10 @@
         </div>
     </header>
 
-    {% include '@Rozier/widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/tags/filtersBar.html.twig' with {
+        filters: filters,
+        deleteTagsForm: deleteTagsForm
+    } only %}
 
     <article class="content content-no-action-menu content-tags-list">
         <div class="content-table-cont">
@@ -20,7 +23,7 @@
                     <tr>
                         <th class="table-id-row">{% trans %}id{% endtrans %}</th>
                         <th>{% trans %}name{% endtrans %}</th>
-                        <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,8 +35,13 @@
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
                             <td>
                                 {% spaceless %}
+                                    {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                    <div class="tagtree-bulk-selection">
+                                        <input class="tag-checkbox" type="checkbox" name="bulk-selection[]" value="{{ tag.getId }}" />
+                                    </div>
+                                    {% endif %}
                                     <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                                    {% if authorizationChecker.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                    {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                         <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
                                             <i class="uk-icon-rz-trash-o"></i>
                                         </a>
@@ -47,9 +55,14 @@
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
                             <td>
                             {% spaceless %}
+                                {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                <div class="tagtree-bulk-selection">
+                                    <input class="tag-checkbox" type="checkbox" name="bulk-selection[]" value="{{ tag.getId }}" />
+                                </div>
+                                {% endif %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('tagsEditPage', { tagId: tag.getId }) }}" title="{% trans %}edit.tag{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
 
-                                {% if authorizationChecker.Granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
+                                {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                     <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('tagsDeletePage', { tagId: tag.getId }) }}" title="{% trans %}delete.tag{% endtrans %}" data-uk-tooltip="{animation:true}">
                                         <i class="uk-icon-rz-trash-o"></i>
                                     </a>

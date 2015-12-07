@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
  * {@inheritdoc}
@@ -51,12 +52,9 @@ class NodesImporter implements ImporterInterface
     {
         $serializer = new NodeJsonSerializer($em);
         $nodes = $serializer->deserialize($serializedData);
-        $exist = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findAll();
-        if (empty($exist)) {
-            foreach ($nodes as $node) {
-                static::browseTree($node, $em);
-            }
+
+        foreach ($nodes as $node) {
+            static::browseTree($node, $em);
         }
 
         return true;
@@ -64,40 +62,53 @@ class NodesImporter implements ImporterInterface
 
     protected static function browseTree($node, EntityManager $em)
     {
-        $childObj = [];
-        $sourceObj = [];
-        foreach ($node->getChildren() as $child) {
-            $childObj[] = static::browseTree($child, $em);
-        }
-        $node->getChildren()->clear();
-        foreach ($node->getNodeSources() as $nodeSource) {
-            $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                        ->findOneByLocale($nodeSource->getTranslation()->getLocale());
-
-            if (empty($trans)) {
-                $trans = new Translation();
-                $trans->setLocale($nodeSource->getTranslation()->getLocale());
-                $trans->setName(Translation::$availableLocales[$nodeSource->getTranslation()->getLocale()]);
-                $em->persist($trans);
+        try {
+            /*
+             * Test if node already exists against its nodeName
+             */
+            $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+                           ->findOneByNodeName($node->getNodeName());
+            if (null !== $existing) {
+                return null;
             }
-            $nodeSource->setTranslation($trans);
-            foreach ($nodeSource->getUrlAliases() as $alias) {
-                $em->persist($alias);
+
+            $childObj = [];
+            $sourceObj = [];
+            foreach ($node->getChildren() as $child) {
+                $childObj[] = static::browseTree($child, $em);
             }
-            $nodeSource->setNode(null);
-            $em->persist($nodeSource);
-            $sourceObj[] = $nodeSource;
-        }
+            $node->getChildren()->clear();
+            foreach ($node->getNodeSources() as $nodeSource) {
+                $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                            ->findOneByLocale($nodeSource->getTranslation()->getLocale());
 
-        $em->persist($node);
-        foreach ($childObj as $child) {
-            $child->setParent($node);
-        }
-        foreach ($sourceObj as $nodeSource) {
-            $nodeSource->setNode($node);
-        }
-        $em->flush();
+                if (empty($trans)) {
+                    $trans = new Translation();
+                    $trans->setLocale($nodeSource->getTranslation()->getLocale());
+                    $trans->setName(Translation::$availableLocales[$nodeSource->getTranslation()->getLocale()]);
+                    $em->persist($trans);
+                }
+                $nodeSource->setTranslation($trans);
+                foreach ($nodeSource->getUrlAliases() as $alias) {
+                    $em->persist($alias);
+                }
+                $nodeSource->setNode(null);
+                $em->persist($nodeSource);
+                $sourceObj[] = $nodeSource;
+            }
 
-        return $node;
+            $em->persist($node);
+            foreach ($childObj as $child) {
+                $child->setParent($node);
+            }
+            foreach ($sourceObj as $nodeSource) {
+                $nodeSource->setNode($node);
+            }
+            $em->flush();
+
+            return $node;
+        } catch (UniqueConstraintViolationException $e) {
+            return null;
+        }
     }
 }

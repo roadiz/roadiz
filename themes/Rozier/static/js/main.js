@@ -254,7 +254,7 @@ Rozier.refreshAllNodeTrees = function (translationId) {
      */
     if(_this.lazyload.childrenNodesFields.treeAvailable()) {
         for (var i = _this.lazyload.childrenNodesFields.$nodeTrees.length - 1; i >= 0; i--) {
-            var $nodeTree = $(_this.lazyload.childrenNodesFields.$nodeTrees[i]);
+            var $nodeTree = _this.lazyload.childrenNodesFields.$nodeTrees.eq(i);
             _this.lazyload.childrenNodesFields.refreshNodeTree($nodeTree);
         }
     }

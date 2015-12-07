@@ -35,9 +35,9 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\Events\SolariumSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
+use Themes\Rozier\Events\SolariumSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -103,14 +103,14 @@ class RozierApp extends BackendController
 
         $this->themeContainer['settingGroups'] = function ($c) {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                 ->findBy(
-                     ['inMenu' => true],
-                     ['name' => 'ASC']
-                 );
+                ->findBy(
+                    ['inMenu' => true],
+                    ['name' => 'ASC']
+                );
         };
 
         $this->themeContainer['adminImage'] = function ($c) {
-                 /*
+            /*
              * Get admin image
              */
             return SettingsBag::getDocument('admin_image');
@@ -145,8 +145,10 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
-        $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-             ->findBy([]);
+        $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
+        $this->assignation['tags'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+                'color' => ['!=', '#000000'],
+            ]);
 
         return new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),
@@ -194,7 +196,6 @@ class RozierApp extends BackendController
                 )
             );
         }
-
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
 

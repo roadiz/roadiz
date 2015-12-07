@@ -7,7 +7,7 @@ SettingsSaveButtons = function(){
 
     // Selectors
     _this.$button = $('.uk-button-settings-save');
-
+    _this.currentRequest = null;
     // Methods
     if(_this.$button.length) _this.init();
 
@@ -35,7 +35,11 @@ SettingsSaveButtons.prototype.init = function(){
 SettingsSaveButtons.prototype.buttonClick = function(e){
     var _this = this;
 
-    var $form = $($(e.currentTarget).parent().parent().find('.uk-form')[0]);
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
+
+    var $form = $(e.currentTarget).parent().parent().find('.uk-form').eq(0);
 
     if ($form.find('input[type=file]').length) {
         $form.submit();
@@ -43,12 +47,17 @@ SettingsSaveButtons.prototype.buttonClick = function(e){
     }
 
     Rozier.lazyload.canvasLoader.show();
-
-    $.ajax({
-        url: $form.attr('action'),
+    var formData = new FormData($form[0]);
+    var sendData = {
+        url: window.location.href,
         type: 'post',
-        data: $form.serialize(),
-    })
+        data: formData,
+        processData: false,
+        cache : false,
+        contentType: false
+    };
+
+    _this.currentRequest = $.ajax(sendData)
     .done(function() {
         console.log("Saved setting with success.");
     })

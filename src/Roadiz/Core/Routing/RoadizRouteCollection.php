@@ -31,8 +31,10 @@ namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
+use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -40,10 +42,8 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class RoadizRouteCollection extends DeferredRouteCollection
 {
-    protected $backendClassname;
-    protected $frontendThemes;
-    protected $assetsHost;
     protected $stopwatch;
+    protected $themeResolver;
 
     /**
      * @param string $backendClassname
@@ -51,15 +51,11 @@ class RoadizRouteCollection extends DeferredRouteCollection
      * @param string $assetsHost
      */
     public function __construct(
-        $backendClassname,
-        array $frontendThemes,
-        $assetsHost = '',
+        ThemeResolver $themeResolver,
         Stopwatch $stopwatch = null
     ) {
-        $this->backendClassname = $backendClassname;
-        $this->frontendThemes = $frontendThemes;
-        $this->assetsHost = $assetsHost;
         $this->stopwatch = $stopwatch;
+        $this->themeResolver = $themeResolver;
     }
 
     /**
@@ -80,8 +76,8 @@ class RoadizRouteCollection extends DeferredRouteCollection
              * Add Assets controller routes
              */
             $assets = AssetsController::getRoutes();
-            if ('' != $this->assetsHost) {
-                $assets->setHost($this->assetsHost);
+            if ('' != SettingsBag::get('static_domain_name')) {
+                $assets->setHost(SettingsBag::get('static_domain_name'));
             }
             $this->addCollection($assets);
 
@@ -104,20 +100,21 @@ class RoadizRouteCollection extends DeferredRouteCollection
 
     protected function addBackendCollection()
     {
-        if (class_exists($this->backendClassname)) {
-            $class = $this->backendClassname;
+        $class = $this->themeResolver->getBackendClassName();
+        if (class_exists($class)) {
             $collection = $class::getRoutes();
             if (null !== $collection) {
                 $this->addCollection($collection);
             }
         } else {
-            throw new \RuntimeException("Class “" . $this->backendClassname . "” does not exist.", 1);
+            throw new \RuntimeException("Class “" . $class . "” does not exist.", 1);
         }
     }
 
     protected function addThemesCollections()
     {
-        foreach ($this->frontendThemes as $theme) {
+        $frontendThemes = $this->themeResolver->getFrontendThemes();
+        foreach ($frontendThemes as $theme) {
             if ($theme instanceof Theme) {
                 $feClass = $theme->getClassName();
                 $feCollection = $feClass::getRoutes();

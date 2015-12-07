@@ -369,9 +369,9 @@ class AboutController extends RozierApp
 
         $clearers = [
             new DoctrineCacheClearer($this->getService('em')),
-            new TranslationsCacheClearer(),
-            new RoutingCacheClearer(),
-            new TemplatesCacheClearer(),
+            new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
+            new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
+            new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
         ];
         foreach ($clearers as $clearer) {
             $clearer->clear();

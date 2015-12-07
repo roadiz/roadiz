@@ -29,12 +29,15 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -62,7 +65,9 @@ class NodesSourcesRepository extends EntityRepository
                 $joinedNode = true;
             }
 
-            if (is_array($criteria['tags'])) {
+            if (is_array($criteria['tags']) ||
+                (is_object($criteria['tags']) &&
+                    $criteria['tags'] instanceof Collection)) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
                     $node = NodeRepository::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
@@ -97,9 +102,10 @@ class NodesSourcesRepository extends EntityRepository
     protected function applyFilterByTag(array &$criteria, &$finalQuery)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (is_object($criteria['tags'])) {
+            if ($criteria['tags'] instanceof Tag) {
                 $finalQuery->setParameter('tags', $criteria['tags']->getId());
-            } elseif (is_array($criteria['tags'])) {
+            } elseif (is_array($criteria['tags']) ||
+                $criteria['tags'] instanceof Collection) {
                 $finalQuery->setParameter('tags', $criteria['tags']);
             } elseif (is_integer($criteria['tags'])) {
                 $finalQuery->setParameter('tags', (int) $criteria['tags']);
@@ -191,28 +197,6 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
-     *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    protected function createSearchBy(
-        $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
-        $alias = "obj"
-    ) {
-        $this->classicLikeComparison($pattern, $qb, $alias);
-        $qb = $this->directComparison($criteria, $qb, $alias);
-
-        return $qb;
-    }
-
-    /**
      * Direct bind one single parameter without preparation.
      *
      * @param string       $key
@@ -222,7 +206,7 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @return QueryBuilder
      */
-    protected function singleDirectComparison($key, &$value, &$qb, $alias)
+    protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
         if (false !== strpos($key, 'node.')) {
             if (!$this->hasJoinedNode($qb, $alias)) {
@@ -281,26 +265,31 @@ class NodesSourcesRepository extends EntityRepository
      * @param  array                &$criteria
      * @param  QueryBuilder         &$qb
      * @param  AuthorizationChecker|null &$authorizationChecker
+     * @param  boolean $preview
+     *
      * @return boolean Already Joined Node relation
      */
     protected function filterByAuthorizationChecker(
         &$criteria,
         &$qb,
-        AuthorizationChecker &$authorizationChecker = null
+        AuthorizationChecker &$authorizationChecker = null,
+        $preview = false
     ) {
-        if (null !== $authorizationChecker &&
-            !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
-            /*
-             * Forbid unpublished node for anonymous and not backend users.
-             */
-            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
-            return true;
-        } elseif (null !== $authorizationChecker &&
-            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+        $backendUser = $preview === true &&
+        null !== $authorizationChecker &&
+        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+
+        if ($backendUser) {
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
             $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->lte('n.status', Node::PUBLISHED));
+            return true;
+        } elseif (null !== $authorizationChecker) {
+            /*
+             * Forbid unpublished node for anonymous and not backend users.
+             */
+            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
             return true;
         }
 
@@ -311,11 +300,12 @@ class NodesSourcesRepository extends EntityRepository
      * Create a securized query with node.published = true if user is
      * not a Backend user.
      *
-     * @param AuthorizationChecker $authorizationChecker
      * @param array           $criteria
      * @param array\null      $orderBy
      * @param integer|null    $limit
      * @param integer|null    $offset
+     * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      *
      * @return QueryBuilder
      */
@@ -324,14 +314,15 @@ class NodesSourcesRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $joinedNodeType = false;
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'ns')
-           ->add('from', $this->getEntityName() . ' ns');
+            ->add('from', $this->getEntityName() . ' ns');
 
-        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker);
+        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         /*
          * Filtering by tag
@@ -375,18 +366,20 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean $preview
      *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
         array &$criteria,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(ns.id)')
-           ->add('from', $this->getEntityName() . ' ns');
+            ->add('from', $this->getEntityName() . ' ns');
 
-        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker);
+        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         /*
          * Filtering by tag
@@ -402,16 +395,19 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean $preview
      *
      * @return int
      */
     public function countBy(
         $criteria,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $query = $this->getCountContextualQueryWithTranslation(
             $criteria,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $query->getQuery();
@@ -456,6 +452,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param integer         $limit
      * @param integer         $offset
      * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -464,7 +461,8 @@ class NodesSourcesRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $qb = $this->getContextualQuery(
@@ -472,7 +470,8 @@ class NodesSourcesRepository extends EntityRepository
             $orderBy,
             $limit,
             $offset,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $qb->getQuery();
@@ -493,14 +492,17 @@ class NodesSourcesRepository extends EntityRepository
      *
      *
      * @param array           $criteria
+     * @param array           $orderBy
      * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\NodesSources|null
      */
     public function findOneBy(
         array $criteria,
         array $orderBy = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $qb = $this->getContextualQuery(
@@ -508,7 +510,8 @@ class NodesSourcesRepository extends EntityRepository
             $orderBy,
             1,
             null,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $qb->getQuery();
@@ -655,8 +658,8 @@ class NodesSourcesRepository extends EntityRepository
                     SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
                     WHERE ns.node = :node
                     AND ns.translation = :translation')
-                        ->setParameter('node', $nodeSource->getNode()->getParent())
-                        ->setParameter('translation', $nodeSource->getTranslation());
+                    ->setParameter('node', $nodeSource->getNode()->getParent())
+                    ->setParameter('translation', $nodeSource->getTranslation());
 
                 return $query->getSingleResult();
             } catch (NoResultException $e) {

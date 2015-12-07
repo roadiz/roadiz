@@ -29,9 +29,11 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -48,7 +50,9 @@ class TagRepository extends EntityRepository
     protected function filterByNodes(&$criteria, &$qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
-            if (is_array($criteria['nodes'])) {
+            if (is_array($criteria['nodes']) ||
+                (is_object($criteria['nodes']) &&
+                    $criteria['nodes'] instanceof Collection)) {
                 $qb->innerJoin(
                     'tg.nodes',
                     'n',
@@ -75,9 +79,10 @@ class TagRepository extends EntityRepository
     protected function applyFilterByNodes(array &$criteria, &$finalQuery)
     {
         if (in_array('nodes', array_keys($criteria))) {
-            if (is_object($criteria['nodes'])) {
+            if ($criteria['nodes'] instanceof Node) {
                 $finalQuery->setParameter('nodes', $criteria['nodes']->getId());
-            } elseif (is_array($criteria['nodes'])) {
+            } elseif (is_array($criteria['nodes']) ||
+                $criteria['nodes'] instanceof Collection) {
                 $finalQuery->setParameter('nodes', $criteria['nodes']);
             } elseif (is_integer($criteria['nodes'])) {
                 $finalQuery->setParameter('nodes', (int) $criteria['nodes']);
@@ -151,8 +156,7 @@ class TagRepository extends EntityRepository
                 $key = str_replace('translatedTag.', '', $key);
             }
 
-
-             /*
+            /*
              * Search in translation fields
              */
             if ($key == 'translation') {
@@ -235,7 +239,6 @@ class TagRepository extends EntityRepository
         }
     }
 
-
     /**
      * This method allows to pre-filter Nodes with a given translation.
      *
@@ -257,7 +260,7 @@ class TagRepository extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'tg, tt')
-           ->add('from', $this->getEntityName() . ' tg');
+            ->add('from', $this->getEntityName() . ' tg');
 
         $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
@@ -266,7 +269,7 @@ class TagRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('tg.'.$key, $value);
+                $qb->addOrderBy('tg.' . $key, $value);
             }
         }
 
@@ -294,7 +297,7 @@ class TagRepository extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(tg.id)')
-           ->add('from', $this->getEntityName() . ' tg');
+            ->add('from', $this->getEntityName() . ' tg');
 
         $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
@@ -423,8 +426,8 @@ class TagRepository extends EntityRepository
             INNER JOIN t.translatedTags tt
             WHERE t.id = :tag_id
             AND tt.translation = :translation')
-                        ->setParameter('tag_id', (int) $tagId)
-                        ->setParameter('translation', $translation);
+            ->setParameter('tag_id', (int) $tagId)
+            ->setParameter('translation', $translation);
 
         try {
             return $query->getSingleResult();
@@ -444,7 +447,7 @@ class TagRepository extends EntityRepository
             SELECT tg, tt FROM RZ\Roadiz\Core\Entities\Tag tg
             INNER JOIN tg.translatedTags tt
             WHERE tt.translation = :translation')
-                        ->setParameter('translation', $translation);
+            ->setParameter('translation', $translation);
 
         try {
             return $query->getResult();
@@ -466,7 +469,7 @@ class TagRepository extends EntityRepository
             INNER JOIN tt.translation tr
             WHERE t.id = :tag_id
             AND tr.defaultTranslation = true')
-                        ->setParameter('tag_id', (int) $tagId);
+            ->setParameter('tag_id', (int) $tagId);
 
         try {
             return $query->getSingleResult();
@@ -509,7 +512,7 @@ class TagRepository extends EntityRepository
             INNER JOIN tt.translation tr
             WHERE t.parent IS NULL AND tr.id = :translation_id
             ORDER BY t.position ASC')
-                            ->setParameter('translation_id', (int) $translation->getId());
+                ->setParameter('translation_id', (int) $translation->getId());
         } else {
             $query = $this->_em->createQuery('
                 SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
@@ -518,8 +521,8 @@ class TagRepository extends EntityRepository
                 INNER JOIN t.parent pt
                 WHERE pt.id = :parent AND tr.id = :translation_id
                 ORDER BY t.position ASC')
-                            ->setParameter('parent', $parent->getId())
-                            ->setParameter('translation_id', (int) $translation->getId());
+                ->setParameter('parent', $parent->getId())
+                ->setParameter('translation_id', (int) $translation->getId());
         }
 
         try {
@@ -552,7 +555,7 @@ class TagRepository extends EntityRepository
                 INNER JOIN t.parent pt
                 WHERE pt.id = :parent AND tr.defaultTranslation = true
                 ORDER BY t.position ASC')
-                            ->setParameter('parent', $parent->getId());
+                ->setParameter('parent', $parent->getId());
         }
 
         try {
@@ -562,21 +565,20 @@ class TagRepository extends EntityRepository
         }
     }
 
-
     /**
-    * Create a Criteria object from a search pattern and additionnal fields.
-    *
-    * @param string                  $pattern  Search pattern
-    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-    * @param array                   $criteria Additionnal criteria
-    * @param string                  $alias    SQL query table alias
-    *
-    * @return \Doctrine\ORM\QueryBuilder
-    */
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string                  $pattern  Search pattern
+     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+     * @param array                   $criteria Additionnal criteria
+     * @param string                  $alias    SQL query table alias
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
+        array &$criteria = [],
         $alias = "obj"
     ) {
 
@@ -593,14 +595,15 @@ class TagRepository extends EntityRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like('tt.' .$key, $qb->expr()->literal($value)));
+            $fullKey = sprintf('LOWER(%s)', 'tt.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
         }
 
-        $qb = $this->directComparison($criteria, $qb, $alias);
+        $qb = $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
     }
@@ -615,8 +618,8 @@ class TagRepository extends EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(t)')
-           ->add('from', $this->getEntityName() . ' t')
-           ->innerJoin('t.translatedTags', 'obj');
+            ->add('from', $this->getEntityName() . ' t')
+            ->innerJoin('t.translatedTags', 'obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
@@ -653,8 +656,8 @@ class TagRepository extends EntityRepository
 
             if (null === $parentTag) {
                 $ttagParent = $this->_em
-                            ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                            ->findOneByName($parentName);
+                    ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                    ->findOneByName($parentName);
                 if (null !== $ttagParent) {
                     $parentTag = $ttagParent->getTag();
                 }
@@ -663,11 +666,10 @@ class TagRepository extends EntityRepository
 
         $tag = $this->findOneByTagName($tagName);
 
-
         if (null === $tag) {
             $ttag = $this->_em
-                        ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                        ->findOneByName($tagName);
+                ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                ->findOneByName($tagName);
             if (null !== $ttag) {
                 $tag = $ttag->getTag();
             }
@@ -679,8 +681,8 @@ class TagRepository extends EntityRepository
              * before linking it to the node
              */
             $trans = $this->_em
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findDefault();
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->findDefault();
 
             $tag = new Tag();
             $tag->setTagName($tagName);
@@ -727,8 +729,8 @@ class TagRepository extends EntityRepository
 
             if (null === $parentTag) {
                 $ttagParent = $this->_em
-                            ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                            ->findOneByName($parentName);
+                    ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                    ->findOneByName($parentName);
                 if (null !== $ttagParent) {
                     $parentTag = $ttagParent->getTag();
                 }
@@ -737,16 +739,14 @@ class TagRepository extends EntityRepository
 
         $tag = $this->findOneByTagName($tagName);
 
-
         if (null === $tag) {
             $ttag = $this->_em
-                        ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                        ->findOneByName($tagName);
+                ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                ->findOneByName($tagName);
             if (null !== $ttag) {
                 $tag = $ttag->getTag();
             }
         }
-
 
         return $tag;
     }

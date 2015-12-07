@@ -41,6 +41,16 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
 {
     protected $container;
 
+    protected function getAuthorizedRoutes()
+    {
+        return [
+            'loginPage',
+            'FontFile',
+            'FontFaceCSS',
+            'loginImagePage',
+        ];
+    }
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -57,7 +67,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
 
     public function onControllerMatched(FilterControllerEvent $event)
     {
-        if ('loginPage' != $event->getRequest()->get('_route') &&
+        if (!in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes()) &&
             (boolean) SettingsBag::get('maintenance_mode') === true) {
             if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
                 $matchedCtrl = $event->getController()[0];

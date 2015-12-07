@@ -43,22 +43,29 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ThemeInstallCommand extends Command
 {
+    private $themeRoot;
     private $entityManager;
 
     protected function configure()
     {
-        $this->setName('core:themes:install')
+        $this->setName('themes:install')
             ->setDescription('Manage themes installation')
             ->addArgument(
                 'classname',
                 InputArgument::REQUIRED,
-                'Main theme classname'
+                'Main theme classname (Use / instead of \\ and do not forget starting slash)'
             )
             ->addOption(
                 'data',
                 null,
                 InputOption::VALUE_NONE,
-                'Import default data (nodes and tags)'
+                'Import default data (node-types, roles, settings and tags)'
+            )
+            ->addOption(
+                'nodes',
+                null,
+                InputOption::VALUE_NONE,
+                'Import nodes data. This cannot be done at the same time with --data option.'
             );
     }
 
@@ -67,9 +74,15 @@ class ThemeInstallCommand extends Command
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $classname = $input->getArgument('classname');
+        /*
+         * Replace slash by anti-slashes
+         */
+        $classname = str_replace('/', '\\', $classname);
 
         try {
             $theme = $this->getTheme($classname);
+            $array = explode('\\', $classname);
+            $this->themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
         } catch (TableNotFoundException $e) {
             $theme = null;
         }
@@ -80,6 +93,12 @@ class ThemeInstallCommand extends Command
             } else {
                 throw new \Exception("You cannot import data from a non-existant theme.", 1);
             }
+        } elseif ($input->getOption('nodes')) {
+            if (null !== $theme) {
+                $this->importThemeNodes($classname, $text);
+            } else {
+                throw new \Exception("You cannot import nodes from a non-existant theme.", 1);
+            }
         } else {
             $this->importTheme($classname, $text);
         }
@@ -89,96 +108,93 @@ class ThemeInstallCommand extends Command
 
     protected function importThemeData($classname, &$text)
     {
-        // install fixtures
-        $array = explode('\\', $classname);
-        $themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
-        $data = Yaml::parse($themeRoot . "/config.yml");
+        $data = $this->getThemeConfig($classname);
 
         if (false !== $data && isset($data["importFiles"])) {
+            if (isset($data["importFiles"]['roles'])) {
+                foreach ($data["importFiles"]['roles'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
+                        file_get_contents($this->themeRoot . "/" . $filename),
+                        $this->entityManager
+                    );
+                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                }
+            }
+            if (isset($data["importFiles"]['settings'])) {
+                foreach ($data["importFiles"]['settings'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
+                        file_get_contents($this->themeRoot . "/" . $filename),
+                        $this->entityManager
+                    );
+                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                }
+            }
+            if (isset($data["importFiles"]['nodetypes'])) {
+                foreach ($data["importFiles"]['nodetypes'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
+                        file_get_contents($this->themeRoot . "/" . $filename),
+                        $this->entityManager
+                    );
+                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                }
+            }
             if (isset($data["importFiles"]['tags'])) {
                 foreach ($data["importFiles"]['tags'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\TagsImporter::importJsonFile(
-                        file_get_contents($themeRoot . "/" . $filename),
+                        file_get_contents($this->themeRoot . "/" . $filename),
                         $this->entityManager
                     );
-                    $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
-            if (isset($data["importFiles"]['nodes'])) {
-                foreach ($data["importFiles"]['nodes'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
-                        file_get_contents($themeRoot . "/" . $filename),
-                        $this->entityManager
-                    );
-                    $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
-                }
-            }
+            $text .= 'You should do a <info>bin/roadiz core:sources -r</info> to regenerate your node-types source classes.' . PHP_EOL;
+            $text .= 'And a <info>bin/roadiz orm:schema-tool:update --force</info> to apply your changes into database.' . PHP_EOL;
+
         } else {
             $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;
         }
     }
 
+    protected function importThemeNodes($classname, &$text)
+    {
+        $data = $this->getThemeConfig($classname);
+
+        if (false !== $data && isset($data["importFiles"])) {
+            if (isset($data["importFiles"]['nodes'])) {
+                foreach ($data["importFiles"]['nodes'] as $filename) {
+                    \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
+                        file_get_contents($this->themeRoot . "/" . $filename),
+                        $this->entityManager
+                    );
+                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                }
+            }
+        } else {
+            $text .= '<info>Theme class “' . $classname . '” has no nodes to import.</info>' . PHP_EOL;
+        }
+    }
+
+    protected function getThemeConfig($classname)
+    {
+        return Yaml::parse($this->themeRoot . "/config.yml");
+    }
+
     protected function importTheme($classname, &$text)
     {
+        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $themeFile = $classname;
         $themeFile = str_replace('\\', '/', $themeFile);
         $themeFile = str_replace('Themes', 'themes', $themeFile);
         $themeFile .= ".php";
 
         if (file_exists($themeFile)) {
-            $fixtures = new Fixtures($this->entityManager);
+            $fixtures = new Fixtures(
+                $this->entityManager,
+                $kernel->getCacheDir(),
+                $kernel->isDebug()
+            );
             $fixtures->installFrontendTheme($classname);
             $text .= '<info>Theme class “' . $themeFile . '” has been installed…</info>' . PHP_EOL;
-
-            // install fixtures
-            $array = explode('\\', $classname);
-            $themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
-            $data = Yaml::parse($themeRoot . "/config.yml");
-
-            if (false !== $data && isset($data["importFiles"])) {
-                if (isset($data["importFiles"]['roles'])) {
-                    foreach ($data["importFiles"]['roles'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename),
-                            $this->entityManager
-                        );
-                        $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
-                    }
-                }
-                if (isset($data["importFiles"]['groups'])) {
-                    foreach ($data["importFiles"]['groups'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename),
-                            $this->entityManager
-                        );
-                        $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
-                    }
-                }
-                if (isset($data["importFiles"]['settings'])) {
-                    foreach ($data["importFiles"]['settings'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename),
-                            $this->entityManager
-                        );
-                        $text .= '     — <info>Theme files “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
-                    }
-                }
-                if (isset($data["importFiles"]['nodetypes'])) {
-                    foreach ($data["importFiles"]['nodetypes'] as $filename) {
-                        \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
-                            file_get_contents($themeRoot . "/" . $filename),
-                            $this->entityManager
-                        );
-                        $text .= '     — <info>Theme file “' . $themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
-                    }
-                }
-
-                $text .= 'You should do a <info>bin/roadiz orm:schema-tool:update --force</info> to apply your themes into database.' . PHP_EOL;
-
-            } else {
-                $text .= '<info>Theme class “' . $themeFile . '” has no data to import.</info>' . PHP_EOL;
-            }
-
         } else {
             $text .= '<error>Theme class “' . $themeFile . '” does not exist.</error>' . PHP_EOL;
         }

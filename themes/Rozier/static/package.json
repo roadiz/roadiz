@@ -1,6 +1,6 @@
 {
   "name": "rozier-backend-theme",
-  "version": "0.10.0",
+  "version": "0.12.0",
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
     "csswring": "^3.0.5",

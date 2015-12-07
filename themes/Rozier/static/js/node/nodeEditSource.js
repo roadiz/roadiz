@@ -41,7 +41,7 @@ NodeEditSource.prototype.wrapInTabs = function() {
         }
 
         if (fieldsGroupsLength > 1) {
-            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', animation: \'fade\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
+            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
             var $formSwitcher = _this.$form.find('.uk-switcher');
             var $formSwitcherNav = _this.$form.find('.uk-switcher-nav');
 
@@ -142,22 +142,29 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
 
     Rozier.lazyload.canvasLoader.show();
 
-    $.ajax({
-        url: _this.$form.attr('action'),
-        type: 'post',
-        data: _this.$form.serialize(),
-    })
-    .done(function() {
-        console.log("Saved node-source with success.");
-    })
-    .fail(function() {
-        console.log("Error during save.");
-    })
-    .always(function() {
-        Rozier.lazyload.canvasLoader.hide();
-        Rozier.getMessages();
-        Rozier.refreshAllNodeTrees();
-    });
+    setTimeout(function () {
+        var formData = new FormData(_this.$form[0]);
+
+        $.ajax({
+            url: window.location.href,
+            type: 'post',
+            data: formData,
+            processData: false,
+            cache : false,
+            contentType: false
+        })
+        .done(function() {
+            console.log("Saved node-source with success.");
+        })
+        .fail(function() {
+            console.log("Error during save.");
+        })
+        .always(function() {
+            Rozier.lazyload.canvasLoader.hide();
+            Rozier.getMessages();
+            Rozier.refreshAllNodeTrees();
+        });
+    }, 300);
 
     return false;
 };

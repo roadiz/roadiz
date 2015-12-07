@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
@@ -614,5 +615,25 @@ class Document extends AbstractDateTimed
     public function getDownscaledDocument()
     {
         return $this->downscaledDocument;
+    }
+
+    /**
+     * Get image orientation.
+     *
+     * - Return null if document is not an Image
+     * - Return `'landscape'` if width is higher or equal to height
+     * - Return `'portrait'` if height is strictly lower to width
+     *
+     * @return string|null
+     */
+    public function getOrientation()
+    {
+        if ($this->isImage()) {
+            $manager = new ImageManager();
+            $imageProcess = $manager->make($this->getAbsolutePath());
+            return $imageProcess->width() >= $imageProcess->height() ? 'landscape' : 'portrait';
+        }
+
+        return null;
     }
 }

@@ -86,31 +86,30 @@ class NodeTypeFieldHandler
                $this->generateSourceGetter().
                $this->generateSourceSetter().PHP_EOL;
     }
-
-    protected function getDecimalPrecision()
-    {
-        if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
-            return 'precision=10, scale=3, ';
-        } else {
-            return '';
-        }
-    }
-
     /**
      * @return string
      */
     protected function getORMAnnotation()
     {
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
+            $ormParams = [
+                'type' => '"' . NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] . '"',
+                'nullable' => 'true'
+            ];
+
+            if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
+                $ormParams['precision'] = 10;
+                $ormParams['scale'] = 3;
+            } elseif ($this->nodeTypeField->getType() == NodeTypeField::BOOLEAN_T) {
+                $ormParams['nullable'] = 'false';
+                $ormParams['options'] = '{"default" = false}';
+            }
+
             return '
     /**
      * ' . $this->nodeTypeField->getLabel() .'
      *
-     * @ORM\Column(type="'.
-            NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()].
-            '", '.
-            $this->getDecimalPrecision().
-            'nullable=true )
+     * @ORM\Column(' . $this->flattenORMParameters($ormParams) . ')
      */'.PHP_EOL;
         } else {
             return '
@@ -119,6 +118,16 @@ class NodeTypeFieldHandler
      * (Virtual field, this var is a buffer)
      */'.PHP_EOL;
         }
+    }
+
+    protected function flattenORMParameters(array $ormParams)
+    {
+        $flatParams = [];
+        foreach ($ormParams as $key => $value) {
+            $flatParams[] = $key . '=' . $value;
+        }
+
+        return implode(', ', $flatParams);
     }
 
     /**

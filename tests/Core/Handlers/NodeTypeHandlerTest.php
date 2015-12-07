@@ -19,6 +19,33 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertJsonStringEqualsJsonFile($expectedFile, $json);
     }
 
+    /**
+     * @dataProvider deserializeProvider
+     */
+    public function testDeserialize($expectedFile)
+    {
+        $expectedJson = file_get_contents($expectedFile);
+        $serializer = new NodeTypeJsonSerializer();
+        $nt = $serializer->deserialize($expectedJson);
+
+        $newJson = $serializer->serialize($nt);
+        $this->assertJsonStringEqualsJsonString($expectedJson, $newJson);
+    }
+
+    /**
+     * @dataProvider defaultValueTestProvider
+     */
+    public function testDefaultValue($json, $expectedValue)
+    {
+        $serializer = new NodeTypeJsonSerializer();
+        $nt = $serializer->deserialize(file_get_contents($json));
+
+        $ntfields = $nt->getFields();
+        if (count($ntfields) > 0) {
+            $this->assertEquals($expectedValue, $ntfields[0]->getDefaultValues());
+        }
+    }
+
     public function serializeToJsonProvider()
     {
         // Node type #1
@@ -28,11 +55,13 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         // Node type #2
         $nt2 = new NodeType();
         $nt2->setName('blog post');
+        $nt2->setColor('#FF0000');
         $nt2->setDisplayName('Un blog post');
 
         $ntf1 = new NodeTypeField();
         $ntf1->setName('Title');
         $ntf1->setType(NodeTypeField::MARKDOWN_T);
+        $ntf1->setDefaultValues('value1, value2');
 
         $nt2->addField($ntf1);
 
@@ -40,6 +69,23 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
             array(new NodeType(), ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'),
             array($nt1, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'),
             array($nt2, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json')
+        );
+    }
+
+    public function deserializeProvider()
+    {
+        return array(
+            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'),
+            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'),
+            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json')
+        );
+    }
+
+    public function defaultValueTestProvider()
+    {
+        return array(
+            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json', null),
+            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json', "value1, value2")
         );
     }
 }

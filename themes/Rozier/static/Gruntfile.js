@@ -19,6 +19,7 @@ module.exports = function(grunt) {
     var vendorFiles = [
         'bower_components/uikit/js/uikit.js',
         'js/vendor/addons/sortable.js',
+        //'bower_components/uikit/js/components/sortable.js', // Do not use vanilla sortable because of hardcoded link event in it.
         'bower_components/uikit/js/components/datepicker.js',
         'bower_components/uikit/js/components/nestable.js',
         'bower_components/uikit/js/components/pagination.js',
@@ -36,12 +37,17 @@ module.exports = function(grunt) {
         'bower_components/mousetrap/mousetrap.js',
         'bower_components/codemirror/lib/codemirror.js',
         'bower_components/codemirror/mode/markdown/markdown.js',
+        'bower_components/codemirror/mode/javascript/javascript.js',
+        'bower_components/codemirror/mode/css/css.js',
         'bower_components/codemirror/addon/mode/overlay.js',
         'bower_components/codemirror/mode/xml/xml.js',
         'bower_components/codemirror/mode/gfm/gfm.js',
         'bower_components/marked/lib/marked.js',
         'bower_components/dropzone/dist/dropzone.js',
-        'js/vendor/addons/htmleditor.js'
+        'bower_components/CanvasLoader/js/heartcode-canvasloader.js',
+        'bower_components/jquery.actual/jquery.actual.js',
+        'bower_components/caret/jquery.caret.js',
+        'bower_components/jquery-tag-editor/jquery.tag-editor.js',
     ];
     var vendorFilesObject = objectify(vendorFiles);
 
@@ -50,6 +56,7 @@ module.exports = function(grunt) {
         'js/trees/nodeTreeContextActions.js',
         'js/bulk-edits/documentsBulk.js',
         'js/bulk-edits/nodesBulk.js',
+        'js/bulk-edits/tagsBulk.js',
         'js/documents/documentsList.js',
         'js/documents/documentWidget.js',
         'js/documents/documentUploader.js',
@@ -67,6 +74,8 @@ module.exports = function(grunt) {
         'js/widgets/multiGeotagField.js',
         'js/widgets/childrenNodesField.js',
         'js/widgets/markdownEditor.js',
+        'js/widgets/jsonEditor.js',
+        'js/widgets/cssEditor.js',
         'js/widgets/tagAutocomplete.js',
         'js/widgets/folderAutocomplete.js',
         'js/widgets/inputLengthWatcher.js',

@@ -7,7 +7,7 @@
         </a>
     </div>
     {# Delete current node #}
-    {% if (authorizationChecker.Granted('ROLE_ACCESS_DOCUMENTS_DELETE')) %}
+    {% if (is_granted('ROLE_ACCESS_DOCUMENTS_DELETE')) %}
         {% if document.getId %}
         <a class="uk-button uk-button-danger" href="{{ path('documentsDeletePage', { documentId: document.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-trash-mini-o"></i></span>

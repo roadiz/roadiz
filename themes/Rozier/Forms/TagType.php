@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
+use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,6 +51,14 @@ class TagType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['tagName'],
                     ]),
+                ],
+            ])
+            ->add('color', 'text', [
+                'label' => 'tag.color',
+                'required' => false,
+                'attr' => ['class' => 'colorpicker-input'],
+                'constraints' => [
+                    new HexadecimalColor(),
                 ],
             ])
             ->add('visible', 'checkbox', [

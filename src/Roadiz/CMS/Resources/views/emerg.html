@@ -298,9 +298,10 @@
 <div id="error" class="container">
     <p class="smiley">:-(</p>
     <h1>Roadiz has lost its musicians</h1>
-    <h2>{{ message }}</h2>
+    <h2>{{ humanMessage }}</h2>
 
     <div id="details">
+        <p>{{ message }}</p>
         <p>Please contact your site administrator, or post an issue on <a href="https://github.com/roadiz/roadiz/issues">Github</a> with following informations:</p>
         <div id="trace">{{ details }}</div>
     </div>

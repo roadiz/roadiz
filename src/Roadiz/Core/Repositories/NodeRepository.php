@@ -30,11 +30,13 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
@@ -52,7 +54,9 @@ class NodeRepository extends EntityRepository
     protected function filterByTag(&$criteria, &$qb)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (is_array($criteria['tags'])) {
+            if (is_array($criteria['tags']) ||
+                (is_object($criteria['tags']) &&
+                    $criteria['tags'] instanceof Collection)) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
                     $node = static::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
@@ -197,9 +201,10 @@ class NodeRepository extends EntityRepository
     protected function applyFilterByTag(array &$criteria, &$finalQuery)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (is_object($criteria['tags'])) {
+            if ($criteria['tags'] instanceof Tag) {
                 $finalQuery->setParameter('tags', $criteria['tags']->getId());
-            } elseif (is_array($criteria['tags'])) {
+            } elseif (is_array($criteria['tags']) ||
+                $criteria['tags'] instanceof Collection) {
                 $finalQuery->setParameter('tags', $criteria['tags']);
             } elseif (is_integer($criteria['tags'])) {
                 $finalQuery->setParameter('tags', (int) $criteria['tags']);
@@ -264,21 +269,28 @@ class NodeRepository extends EntityRepository
      * @param array                &$criteria
      * @param QueryBuilder         &$qb
      * @param AuthorizationChecker|null &$authorizationChecker
+     * @param boolean $preview
      */
-    protected function filterByAuthorizationChecker(&$criteria, &$qb, AuthorizationChecker &$authorizationChecker = null)
-    {
-        if (null !== $authorizationChecker &&
-            !$authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+    protected function filterByAuthorizationChecker(
+        &$criteria,
+        &$qb,
+        AuthorizationChecker &$authorizationChecker = null,
+        $preview = false
+    ) {
+        $backendUser = null !== $authorizationChecker &&
+        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER) &&
+        $preview === true;
+
+        if ($backendUser) {
+            /*
+             * Forbid deleted node for anonymous and backend users.
+             */
+            $qb->andWhere($qb->expr()->lte('n.status', Node::PUBLISHED));
+        } elseif (null !== $authorizationChecker) {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
             $qb->andWhere($qb->expr()->eq('n.status', Node::PUBLISHED));
-        } elseif (null !== $authorizationChecker &&
-            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
-            /*
-             * Forbid deleted node for anonymous and not backend users.
-             */
-            $qb->andWhere($qb->expr()->lte('n.status', Node::PUBLISHED));
         }
     }
 
@@ -294,6 +306,7 @@ class NodeRepository extends EntityRepository
      * @param integer|null                            $offset
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean                     $preview
      *
      * @return QueryBuilder
      */
@@ -303,7 +316,8 @@ class NodeRepository extends EntityRepository
         $limit = null,
         $offset = null,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $qb = $this->_em->createQueryBuilder();
@@ -317,7 +331,7 @@ class NodeRepository extends EntityRepository
          */
         $this->filterByTag($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
-        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker);
+        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         // Add ordering
         if (null !== $orderBy) {
@@ -344,13 +358,15 @@ class NodeRepository extends EntityRepository
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $authorizationChecker
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean                     $preview
      *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
         array &$criteria,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $qb = $this->_em->createQueryBuilder();
@@ -363,7 +379,7 @@ class NodeRepository extends EntityRepository
          */
         $this->filterByTag($criteria, $qb);
         $this->filterByCriteria($criteria, $qb);
-        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker);
+        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         return $qb;
     }
@@ -392,12 +408,13 @@ class NodeRepository extends EntityRepository
      * * `tags => [$tag1, $tag2]`
      * * `tags => [$tag1, $tag2], tagExclusive => true`
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
+     * @param array                                    $criteria
+     * @param array|null                               $orderBy
+     * @param integer|null                             $limit
+     * @param integer|null                             $offset
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param AuthorizationChecker|null                $authorizationChecker
+     * @param boolean                                  $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -407,7 +424,8 @@ class NodeRepository extends EntityRepository
         $limit = null,
         $offset = null,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $query = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -415,7 +433,8 @@ class NodeRepository extends EntityRepository
             $limit,
             $offset,
             $translation,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $query->getQuery();
@@ -437,6 +456,7 @@ class NodeRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean                                  $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
@@ -444,7 +464,8 @@ class NodeRepository extends EntityRepository
         array $criteria,
         array $orderBy = null,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $query = $this->getContextualQueryWithTranslation(
@@ -453,7 +474,8 @@ class NodeRepository extends EntityRepository
             1,
             0,
             $translation,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $query->getQuery();
@@ -474,18 +496,21 @@ class NodeRepository extends EntityRepository
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param boolean                                  $preview
      *
      * @return int
      */
     public function countBy(
         $criteria,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $query = $this->getCountContextualQueryWithTranslation(
             $criteria,
             $translation,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
 
         $finalQuery = $query->getQuery();
@@ -566,20 +591,22 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\Translation $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findWithTranslation(
         $nodeId,
         Translation $translation,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             WHERE n.id = :nodeId AND ns.translation = :translation';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('nodeId', (int) $nodeId)
@@ -602,12 +629,14 @@ class NodeRepository extends EntityRepository
      * @param integer              $nodeId
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findWithDefaultTranslation(
         $nodeId,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
@@ -615,7 +644,7 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE n.id = :nodeId AND t.defaultTranslation = true';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('nodeId', (int) $nodeId);
@@ -638,19 +667,21 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\Translation $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findByNodeNameWithTranslation(
         $nodeName,
         Translation $translation,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             WHERE n.nodeName = :nodeName AND ns.translation = :translation';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('nodeName', $nodeName)
@@ -673,12 +704,14 @@ class NodeRepository extends EntityRepository
      * @param string               $nodeName
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findByNodeNameWithDefaultTranslation(
         $nodeName,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
@@ -686,7 +719,7 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE n.nodeName = :nodeName AND t.defaultTranslation = true';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('nodeName', $nodeName);
@@ -708,12 +741,14 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findHomeWithTranslation(
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         if (null === $translation) {
@@ -724,7 +759,7 @@ class NodeRepository extends EntityRepository
             INNER JOIN n.nodeSources ns
             WHERE n.home = true AND ns.translation = :translation';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('translation', $translation);
@@ -745,11 +780,13 @@ class NodeRepository extends EntityRepository
      *
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findHomeWithDefaultTranslation(
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
@@ -757,7 +794,7 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE n.home = true AND t.defaultTranslation = true';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery);
 
@@ -777,20 +814,22 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\Translation $translation
      * @param AuthorizationChecker|null               $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function getChildrenWithTranslation(
         Node $node,
         Translation $translation,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
             WHERE n.parent = :node AND ns.translation = :translation';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('node', $node)
@@ -812,13 +851,15 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\Node        $parent
      * @param AuthorizationChecker|null               $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function findByParentWithTranslation(
         Translation $translation,
         Node $parent = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
                      INNER JOIN n.nodeSources ns
@@ -832,7 +873,7 @@ class NodeRepository extends EntityRepository
 
         $txtQuery .= ' AND t.id = :translation_id';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $txtQuery .= ' ORDER BY n.position ASC';
 
@@ -860,12 +901,14 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\Node $parent
      * @param AuthorizationChecker|null        $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function findByParentWithDefaultTranslation(
         Node $parent = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
                      INNER JOIN n.nodeSources ns
@@ -879,7 +922,7 @@ class NodeRepository extends EntityRepository
 
         $txtQuery .= ' AND t.defaultTranslation = true';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $txtQuery .= ' ORDER BY n.position ASC';
 
@@ -905,12 +948,14 @@ class NodeRepository extends EntityRepository
      * @param RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findOneWithUrlAlias(
         $urlAlias,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
@@ -918,7 +963,7 @@ class NodeRepository extends EntityRepository
             INNER JOIN ns.translation t
             WHERE uas.id = :urlalias_id';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('urlalias_id', (int) $urlAlias->getId());
@@ -938,12 +983,14 @@ class NodeRepository extends EntityRepository
      * @param string $urlAliasAlias
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
+     * @param boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node|null
      */
     public function findOneWithAliasAndAvailableTranslation(
         $urlAliasAlias,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
             INNER JOIN n.nodeSources ns
@@ -952,7 +999,7 @@ class NodeRepository extends EntityRepository
             WHERE uas.alias = :alias
             AND t.available = true';
 
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker);
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
             ->setParameter('alias', $urlAliasAlias);
@@ -977,14 +1024,18 @@ class NodeRepository extends EntityRepository
      *
      * @param  string               &$txtQuery
      * @param  AuthorizationChecker|null $authorizationChecker
+     * @param  boolean $preview
      *
      * @return string
      */
     protected function alterQueryWithAuthorizationChecker(
         &$txtQuery,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
-        $backendUser = null !== $authorizationChecker && $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+        $backendUser = $preview === true &&
+        null !== $authorizationChecker &&
+        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
 
         if ($backendUser) {
             $txtQuery .= ' AND n.status <= :status';
@@ -1008,11 +1059,30 @@ class NodeRepository extends EntityRepository
     protected function createSearchBy(
         $pattern,
         \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
+        array &$criteria = [],
         $alias = "obj"
     ) {
 
         $this->classicLikeComparison($pattern, $qb, $alias);
+
+        /*
+         * Search in translations
+         */
+        $qb->innerJoin($alias . '.nodeSources', 'ns');
+        $criteriaFields = [];
+        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $this->searchableTypes)) {
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+            }
+        }
+        foreach ($criteriaFields as $key => $value) {
+            $fullKey = sprintf('LOWER(%s)', 'ns.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
+        }
 
         /*
          * Handle Tag relational queries
@@ -1025,11 +1095,10 @@ class NodeRepository extends EntityRepository
             } elseif (is_integer($criteria['tags'])) {
                 $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
             }
-
             unset($criteria['tags']);
         }
 
-        $qb = $this->directComparison($criteria, $qb, $alias);
+        $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
     }

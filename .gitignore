@@ -1,6 +1,9 @@
 #
 # Roadiz
 #
+/dev.php
+/install.php
+
 # PHPCS report
 report.txt
 
@@ -77,6 +80,8 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
+### Vagrant ###
+.vagrant/
 
 ### grunt ###
 # Grunt usually compiles files inside this directory

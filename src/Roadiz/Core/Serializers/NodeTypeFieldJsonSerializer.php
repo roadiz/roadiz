@@ -84,8 +84,8 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
             'type',
             'indexed',
             'virtual',
-            'default_values',
-            'group_name',
+            'defaultValues',
+            'groupName',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 

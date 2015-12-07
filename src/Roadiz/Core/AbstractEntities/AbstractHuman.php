@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 
 /**
  * Abstract entity for any Human-like objects.
@@ -116,7 +116,13 @@ abstract class AbstractHuman extends AbstractDateTimed
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $phone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $company;
+
     /**
      * @return string
      */
@@ -179,6 +185,30 @@ abstract class AbstractHuman extends AbstractDateTimed
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of phone.
+     *
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * Sets the value of phone.
+     *
+     * @param mixed $phone the phone
+     *
+     * @return self
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
 
         return $this;
     }

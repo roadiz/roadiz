@@ -115,27 +115,40 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getSource(&$args = [])
     {
-        $uri = 'https://player.vimeo.com/video/' . $this->embedId . '?api=1';
 
-        if (array_key_exists('displayTitle', $args)) {
-            $uri .= '&title=' . (int) $args['displayTitle'];
+        $queryString = [
+            'api' => 1,
+        ];
+
+        if (isset($args['displayTitle'])) {
+            $queryString['title'] = (int) $args['displayTitle'];
         }
-        if (array_key_exists('byline', $args)) {
-            $uri .= '&byline=' . (int) $args['byline'];
-        }
-        if (array_key_exists('portrait', $args)) {
-            $uri .= '&portrait=' . (int) $args['portrait'];
+        if (isset($args['byline'])) {
+            $queryString['byline'] = (int) $args['byline'];
         }
         if (isset($args['color'])) {
-            $uri .= '&color=' . $args['color'];
+            $queryString['color'] = $args['color'];
+        }
+        if (isset($args['portrait'])) {
+            $queryString['portrait'] = (int) $args['portrait'];
         }
         if (isset($args['id'])) {
-            $uri .= '&player_id=' . $args['id'];
+            $queryString['player_id'] = $args['id'];
         }
-        if (array_key_exists('loop', $args)) {
-            $uri .= '&loop=' . (int) $args['loop'];
+        if (isset($args['loop'])) {
+            $queryString['loop'] = (int) $args['loop'];
+        }
+        if (isset($args['autoplay'])) {
+            $queryString['autoplay'] = (int) $args['autoplay'];
+        }
+        if (isset($args['api'])) {
+            $queryString['api'] = (int) $args['api'];
+        }
+        if (isset($args['controls'])) {
+            $queryString['controls'] = (int) $args['controls'];
         }
 
-        return $uri;
+        return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);
+
     }
 }

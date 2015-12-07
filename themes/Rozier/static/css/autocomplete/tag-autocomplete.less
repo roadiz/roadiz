@@ -1,0 +1,100 @@
+/* surrounding tag container */
+
+.tag-editor {
+    min-height: 36px;
+    min-width: 300px;
+    margin: 0px;
+    padding: 0px !important;
+    cursor: text;
+
+    &:after {
+        content: '';
+        display: block;
+        float: none;
+        clear: both;
+    }
+
+    li {
+        display: block;
+        float: left;
+        overflow: hidden;
+        margin: 5px 4px;
+        line-height: 1.5;
+        border-radius: 20px;
+
+        &:first-child {
+            display: none;
+        }
+    }
+    div {
+        float: left;
+        padding: 0 4px;
+    }
+    .placeholder {
+        padding: 3px 8px;
+        color: #bbb;
+    }
+    .tag-editor-spacer {
+        display: none;
+    }
+    input {
+        height: 17px !important;
+        background: none !important;
+        border: none !important;
+        padding: 0px !important;
+    }
+
+    .tag-editor-tag {
+        background: #DCDCDC;
+        padding: 3px 2px 3px 10px;
+    }
+    /* delete icon */
+    .tag-editor-delete {
+        cursor: pointer;
+        background: #DCDCDC;
+        padding: 3px 11px 3px 4px;
+
+        i {
+            opacity: 0.75;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            vertical-align: middle;
+            position: relative;
+            font-style: normal;
+            top: -1px;
+
+            &:after {
+                content: "\e00b";
+                display: block;
+                font-family: 'rz-icons';
+                font-size: 10px;
+                vertical-align: middle;
+                line-height: normal;
+            }
+        }
+
+        &:hover {
+            i {
+                opacity: 1;
+            }
+        }
+    }
+
+}
+/* hide original input field or textarea visually to allow tab navigation */
+.tag-editor-hidden-src { position: absolute !important; left: -99999px; }
+/* hide IE10 "clear field" X */
+.tag-editor ::-ms-clear { display: none; }
+
+.tag-editor .tag-editor-tag.active+.tag-editor-delete,
+.tag-editor .tag-editor-tag.active+.tag-editor-delete i {
+    cursor: text;
+    background: none;
+    &:after {
+        content: none;
+    }
+}
+
+.tag-editor .tag-editor-tag.active { background: none !important; }
+

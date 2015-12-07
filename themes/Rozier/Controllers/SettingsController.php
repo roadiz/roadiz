@@ -434,7 +434,7 @@ class SettingsController extends RozierApp
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('value', NodeTypeField::$typeToForm[$setting->getType()], [
+                        ->add('value', $this->getFormTypeFromSettingType($setting), [
                             'label' => 'value',
                             'required' => false,
                         ])
@@ -500,7 +500,7 @@ class SettingsController extends RozierApp
                         )
                         ->add(
                             'value',
-                            Setting::$typeToForm[$setting->getType()],
+                            $this->getFormTypeFromSettingType($setting),
                             static::getFormOptionsForSetting($setting, $this->getTranslator())
                         )
                         ->add(
@@ -532,6 +532,26 @@ class SettingsController extends RozierApp
     }
 
     /**
+     *
+     * @param  Setting $setting [description]
+     * @return [type]           [description]
+     */
+    protected function getFormTypeFromSettingType(Setting $setting)
+    {
+        switch ($setting->getType()) {
+            case NodeTypeField::JSON_T:
+                return new \RZ\Roadiz\CMS\Forms\JsonType();
+            case NodeTypeField::CSS_T:
+                return new \RZ\Roadiz\CMS\Forms\CssType();
+            case NodeTypeField::MARKDOWN_T:
+                return new \RZ\Roadiz\CMS\Forms\MarkdownType();
+
+            default:
+                return Setting::$typeToForm[$setting->getType()];
+        }
+    }
+
+    /**
      * @param RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return \Symfony\Component\Form\Form
@@ -553,7 +573,7 @@ class SettingsController extends RozierApp
                         ])
                         ->add(
                             'value',
-                            Setting::$typeToForm[$setting->getType()],
+                            $this->getFormTypeFromSettingType($setting),
                             static::getFormOptionsForSetting($setting, $this->getTranslator(), true)
                         );
 
@@ -593,13 +613,13 @@ class SettingsController extends RozierApp
                     'placeholder' => $translator->trans('choose.value'),
                     'required' => false,
                 ];
-            case NodeTypeField::DATETIME_T:
+                case NodeTypeField::DATETIME_T:
                 return [
                     'label' => $label,
                     'years' => range(date('Y') - 10, date('Y') + 10),
                     'required' => false,
                 ];
-            case NodeTypeField::INTEGER_T:
+                case NodeTypeField::INTEGER_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -607,7 +627,7 @@ class SettingsController extends RozierApp
                         new Type('integer'),
                     ],
                 ];
-            case NodeTypeField::DECIMAL_T:
+                case NodeTypeField::DECIMAL_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -615,7 +635,7 @@ class SettingsController extends RozierApp
                         new Type('double'),
                     ],
                 ];
-            case NodeTypeField::COLOUR_T:
+                case NodeTypeField::COLOUR_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -624,7 +644,7 @@ class SettingsController extends RozierApp
                     ],
                 ];
 
-            default:
+                default:
                 return [
                     'label' => $label,
                     'required' => false,

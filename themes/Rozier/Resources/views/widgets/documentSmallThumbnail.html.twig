@@ -13,17 +13,19 @@
     title="{{ document.getFilename }}"
     data-uk-tooltip="{animation:true, pos:'bottom'}">
 
-	<div class="uk-sortable-handle"></div>
+    <div class="uk-sortable-handle"></div>
     <div class="document-border"></div>
 
-	{% if (document.isImage or document.isSvg) and not document.private %}
-	   <img class="document-image" src="{{ document|url({"width":80, "crop":"1x1", "quality":50}) }}" />
+    {% if document.isSvg and not document.private %}
+        <object class="document-image" type="image/svg+xml" width="80" height="80" data="{{ document|url }}"></object>
+    {% elseif document.isImage and not document.private %}
+        <img class="document-image" width="80" height="80" src="{{ document|url({"width":80, "crop":"1x1", "quality":50}) }}" />
     {% elseif document.private %}
         <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
     {% else %}
         <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
     {% endif %}
-	<input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
+    <input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
     <div class="document-overflow">
         <div class="document-links">
              <a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button document-link uk-button-mini">

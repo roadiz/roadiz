@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\ImporterInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
  * {@inheritdoc}
@@ -51,49 +52,57 @@ class TagsImporter implements ImporterInterface
     {
         $serializer = new TagJsonSerializer();
         $tags = $serializer->deserialize($serializedData);
-        $exist = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findAll();
-        if (empty($exist)) {
-            foreach ($tags as $tag) {
-                static::browseTree($tag, $em);
-            }
+        foreach ($tags as $tag) {
+            static::browseTree($tag, $em);
         }
-
         return true;
     }
 
     protected static function browseTree($tag, EntityManager $em)
     {
-        $childObj = [];
-        $sourceObj = [];
-        foreach ($tag->getChildren() as $child) {
-            $childObj[] = static::browseTree($child);
-        }
-        $tag->getChildren()->clear();
-        foreach ($tag->getTranslatedTags() as $tagTranslation) {
-            $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                        ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
-
-            if (empty($trans)) {
-                $trans = new Translation();
-                $trans->setLocale($tagTranslation->getTranslation()->getLocale());
-                $trans->setName(Translation::$availableLocales[$tagTranslation->getTranslation()->getLocale()]);
-                $em->persist($trans);
+        try {
+            /*
+             * Test if tag already exists against its tagName
+             */
+            $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                           ->findOneByTagName($tag->getTagName());
+            if (null !== $existing) {
+                return null;
             }
-            $tagTranslation->setTranslation($trans);
-            $tagTranslation->setTag(null);
-            $em->persist($tagTranslation);
-            $sourceObj[] = $tagTranslation;
-        }
-        $em->persist($tag);
-        foreach ($childObj as $child) {
-            $child->setParent($tag);
-        }
-        foreach ($sourceObj as $tagTranslation) {
-            $tagTranslation->setTag($tag);
-        }
-        $em->flush();
 
-        return $tag;
+            $childObj = [];
+            $sourceObj = [];
+            foreach ($tag->getChildren() as $child) {
+                $childObj[] = static::browseTree($child, $em);
+            }
+            $tag->getChildren()->clear();
+            foreach ($tag->getTranslatedTags() as $tagTranslation) {
+                $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                    ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
+
+                if (empty($trans)) {
+                    $trans = new Translation();
+                    $trans->setLocale($tagTranslation->getTranslation()->getLocale());
+                    $trans->setName(Translation::$availableLocales[$tagTranslation->getTranslation()->getLocale()]);
+                    $em->persist($trans);
+                }
+                $tagTranslation->setTranslation($trans);
+                $tagTranslation->setTag(null);
+                $em->persist($tagTranslation);
+                $sourceObj[] = $tagTranslation;
+            }
+            $em->persist($tag);
+            foreach ($childObj as $child) {
+                $child->setParent($tag);
+            }
+            foreach ($sourceObj as $tagTranslation) {
+                $tagTranslation->setTag($tag);
+            }
+            $em->flush();
+
+            return $tag;
+        } catch (UniqueConstraintViolationException $e) {
+            return null;
+        }
     }
 }

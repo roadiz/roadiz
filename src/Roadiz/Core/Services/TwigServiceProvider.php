@@ -39,7 +39,9 @@ use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -56,7 +58,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return ROADIZ_ROOT . '/cache/twig_cache';
+            return $c['kernel']->getCacheDir() . '/twig_cache';
         };
 
         /*
@@ -83,7 +85,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         $container['twig.environment'] = function ($c) {
             $c['stopwatch']->start('initTwig');
             $twig = new \Twig_Environment($c['twig.loaderFileSystem'], [
-                'debug' => $c['config']['devMode'],
+                'debug' => $c['kernel']->isDebug(),
                 'cache' => $c['twig.cacheFolder'],
             ]);
 
@@ -103,13 +105,18 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             /*
              * Extensions
              */
+            $twig->addExtension(new HttpFoundationExtension($c['requestStack']));
+            $twig->addExtension(new SecurityExtension($c['securityAuthorizationChecker']));
             $twig->addExtension(new TranslationExtension($c['translator']));
             $twig->addExtension(new \Twig_Extensions_Extension_Intl());
             $twig->addExtension($c['twig.routingExtension']);
             $twig->addExtension(new \Twig_Extensions_Extension_Text());
             $twig->addExtension(new BlockRenderExtension($c));
-            if (true !== $c['config']['install']) {
-                $twig->addExtension(new NodesSourcesExtension($c['securityAuthorizationChecker']));
+            if (true !== $c['kernel']->isInstallMode()) {
+                $twig->addExtension(new NodesSourcesExtension(
+                    $c['securityAuthorizationChecker'],
+                    $c['kernel']->isPreview()
+                ));
             }
             $twig->addExtension(new DocumentExtension());
             $twig->addExtension(new UrlExtension(
@@ -123,7 +130,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
                 $twig->addExtension($c['twig.cacheExtension']);
             }
 
-            if (true === $c['config']['devMode']) {
+            if (true === $c['kernel']->isDebug()) {
                 $twig->addExtension(new \Twig_Extension_Debug());
             }
             $c['stopwatch']->stop('initTwig');

@@ -82,8 +82,6 @@ NodeExplorer.prototype.onExplorerSearch = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            //console.log(data);
-            //console.log("success");
             if (typeof data.nodes != "undefined") {
                 _this.appendItemsToExplorer(data, true);
             }
@@ -91,6 +89,12 @@ NodeExplorer.prototype.onExplorerSearch = function(event) {
         .fail(function(data) {
             console.log(data.responseText);
             console.log("error");
+            UIkit.notify({
+                message : "Error while searching.",
+                status  : 'danger',
+                timeout : 2000,
+                pos     : 'top-center'
+            });
         });
     }
 
@@ -132,6 +136,12 @@ NodeExplorer.prototype.onExplorerNextPage = function(filters, event) {
         .fail(function(data) {
             console.log(data.responseText);
             console.log("error");
+            UIkit.notify({
+                message : "Error while loading next page.",
+                status  : 'danger',
+                timeout : 2000,
+                pos     : 'top-center'
+            });
         });
     }
 

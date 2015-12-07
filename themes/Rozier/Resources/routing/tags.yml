@@ -40,3 +40,6 @@ tagsExportPage:
 tagsExportAllPage:
     path:     /export
     defaults: { _controller: Themes\Rozier\Controllers\Tags\TagsUtilsController::exportAction }
+tagsBulkDeletePage:
+    path:     /bulk-delete
+    defaults: { _controller: Themes\Rozier\Controllers\Tags\TagsController::bulkDeleteAction }

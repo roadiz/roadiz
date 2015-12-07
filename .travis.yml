@@ -32,11 +32,15 @@ before_script:
   - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.yml conf/config.yml; fi"
   - composer self-update
   - composer install --no-interaction
-  - php bin/roadiz orm:schema-tool:create -n
-  - php bin/roadiz install -n
-  - php bin/roadiz core:themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz orm:schema-tool:create -n --env=install
+  - php bin/roadiz install -n --env=install
+  - php bin/roadiz themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz themes:install -n --data "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz cache -a --env=install
   - php bin/roadiz orm:schema-tool:update -n --force
-  - php bin/roadiz core:themes:install -n --data "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz themes:install -n --nodes "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz cache -a --env=install
+  - php bin/roadiz cache -a --env=test
 
 script:
   - ENABLE_SECOND_LEVEL_CACHE=0 bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/

@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
@@ -581,96 +582,33 @@ class NodeHandler
         return $this;
     }
 
-    private function duplicateRec(Node $node, $level)
-    {
-        $childrenArray = [];
-        $sourceArray = [];
-        $childs = new ArrayCollection($node->getChildren()->toArray());
-        $node->getChildren()->clear();
-        foreach ($childs as $child) {
-            $childrenArray[] = $this->duplicateRec($child, $level + 1);
-        }
-
-        $nodeSources = new ArrayCollection($node->getNodeSources()->toArray());
-        $node->getNodeSources()->clear();
-        foreach ($nodeSources as $nodeSource) {
-            $nodeSource->setNode(null);
-
-            $tran = Kernel::getService('em')->merge($nodeSource->getTranslation());
-
-            $nodeSource->setTranslation($tran);
-
-            Kernel::getService('em')->persist($nodeSource);
-
-            $nsdocs = $nodeSource->getDocumentsByFields();
-
-            foreach ($nsdocs as $nsdoc) {
-                $nsdoc->setNodeSource($nodeSource);
-                $doc = Kernel::getService('em')->merge($nsdoc->getDocument());
-                $nsdoc->setDocument($doc);
-                $f = Kernel::getService('em')->merge($nsdoc->getField());
-                $nsdoc->setField($f);
-                Kernel::getService('em')->persist($nsdoc);
-            }
-
-            Kernel::getService('em')->flush();
-            $sourceArray[] = $nodeSource;
-        }
-
-        $nodetype = Kernel::getService('em')->merge($node->getNodeType());
-
-        $node->setNodeType($nodetype);
-
-        $node->setParent(null);
-
-        Kernel::getService('em')->persist($node);
-        foreach ($childrenArray as $child) {
-            $child->setParent($node);
-        }
-        foreach ($sourceArray as $source) {
-            $source->setNode($node);
-        }
-        Kernel::getService('em')->flush();
-        return $node;
-    }
-
     /**
      * Duplicate current node with all its children.
      *
-     * @return Node $newNode
+     * @return Node
      */
     public function duplicate()
     {
-        Kernel::getService('em')->refresh($this->node);
+        $duplicator = new NodeDuplicator($this->node, Kernel::getService('em'));
 
-        $parent = $this->node->getParent();
-        $node = clone $this->node;
-        Kernel::getService('em')->clear($node);
-
-        $newNode = $this->duplicateRec($node, 0);
-        if ($parent !== null) {
-            $parent = Kernel::getService('em')->find("RZ\Roadiz\Core\Entities\Node", $parent->getId());
-            $newNode->setParent($parent);
-        }
-        Kernel::getService('em')->flush();
-        Kernel::getService('em')->refresh($newNode);
-
-        return $newNode;
+        return $duplicator->duplicate();
     }
 
     /**
      * Get previous node from hierarchy.
      *
-     * @param  array|null           $criteria        [description]
-     * @param  array|null           $order           [description]
-     * @param  AuthorizationChecker|null $authorizationChecker [description]
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  AuthorizationChecker|null $authorizationChecker
+     * @param  boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getPrevious(
         array $criteria = null,
         array $order = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         if ($this->node->getPosition() <= 1) {
             return null;
@@ -700,23 +638,26 @@ class NodeHandler
             ->findOneBy(
                 $criteria,
                 $order,
-                $authorizationChecker
+                $authorizationChecker,
+                $preview
             );
     }
 
     /**
      * Get next node from hierarchy.
      *
-     * @param  array|null           $criteria        [description]
-     * @param  array|null           $order           [description]
-     * @param  AuthorizationChecker|null $authorizationChecker [description]
+     * @param  array|null           $criteria
+     * @param  array|null           $order
+     * @param  AuthorizationChecker|null $authorizationChecker
+     * @param  boolean $preview
      *
      * @return RZ\Roadiz\Core\Entities\Node
      */
     public function getNext(
         array $criteria = null,
         array $order = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         if (null === $criteria) {
             $criteria = [];
@@ -742,7 +683,8 @@ class NodeHandler
             ->findOneBy(
                 $criteria,
                 $order,
-                $authorizationChecker
+                $authorizationChecker,
+                $preview
             );
     }
 }

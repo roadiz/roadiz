@@ -44,7 +44,7 @@ class AssetsServiceProvider implements \Pimple\ServiceProviderInterface
     {
         $container['interventionRequestConfiguration'] = function ($c) {
 
-            $cacheDir = ROADIZ_ROOT . '/cache/rendered';
+            $cacheDir = $c['kernel']->getCacheDir() . '/rendered';
             if (!file_exists($cacheDir)) {
                 mkdir($cacheDir);
             }

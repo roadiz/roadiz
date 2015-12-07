@@ -29,13 +29,13 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
@@ -73,8 +73,8 @@ class InstallCommand extends Command
             if (!$this->hasDefaultBackend()) {
                 $theme = new Theme();
                 $theme->setAvailable(true)
-                      ->setBackendTheme(true)
-                      ->setClassName("Themes\Rozier\RozierApp");
+                    ->setBackendTheme(true)
+                    ->setClassName("Themes\Rozier\RozierApp");
 
                 $this->entityManager->persist($theme);
                 $this->entityManager->flush();
@@ -88,11 +88,8 @@ class InstallCommand extends Command
              * Import default data
              */
             $installRoot = ROADIZ_ROOT . "/themes/Install";
-            $yaml = new YamlConfiguration($installRoot . "/config.yml");
+            $data = Yaml::parse($installRoot . "/config.yml");
 
-            $yaml->load();
-
-            $data = $yaml->getConfiguration();
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
@@ -139,23 +136,11 @@ class InstallCommand extends Command
                 $text .= '<error>A default translation is already installed.</error>' . PHP_EOL;
             }
 
-            /*
-             * Disable install mode
-             */
-            $configuration = new YamlConfiguration();
-            if (false === $configuration->load()) {
-                $configuration->setConfiguration($configuration->getDefaultConfiguration());
-            }
-            $configuration->setInstall(false);
-            $configuration->writeConfiguration();
-
             // Clear result cache
             $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
-
-            $text .= 'Install mode has been changed to false.' . PHP_EOL;
         }
 
         $output->writeln($text);
@@ -164,8 +149,8 @@ class InstallCommand extends Command
     private function hasDefaultBackend()
     {
         $default = $this->entityManager
-                        ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                        ->findOneBy(["backendTheme" => true]);
+            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+            ->findOneBy(["backendTheme" => true]);
 
         return $default !== null ? true : false;
     }
@@ -178,8 +163,8 @@ class InstallCommand extends Command
     public function hasDefaultTranslation()
     {
         $default = $this->entityManager
-                        ->getRepository("RZ\Roadiz\Core\Entities\Translation")
-                        ->findOneBy([]);
+            ->getRepository("RZ\Roadiz\Core\Entities\Translation")
+            ->findOneBy([]);
 
         return $default !== null ? true : false;
     }

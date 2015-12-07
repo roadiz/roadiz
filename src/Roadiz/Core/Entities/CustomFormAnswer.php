@@ -161,12 +161,13 @@ class CustomFormAnswer extends AbstractEntity
     {
         $this->answerFields = new ArrayCollection();
     }
+
     /**
      * @return string
      */
     public function getOneLineSummary()
     {
-        return $this->getId()." — ".$this->getIp().
-            " — Sumitted : ".($this->getSubmittedAt()).PHP_EOL;
+        return $this->getId() . " — " . $this->getIp() .
+            " — Sumitted : " . ($this->getSubmittedAt()) . PHP_EOL;
     }
 }

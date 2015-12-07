@@ -276,21 +276,9 @@ class UsersController extends RozierApp
                 $url = $facebook->getPictureUrl();
                 $user->setPictureUrl($url);
             } catch (\Exception $e) {
-                $user->setPictureUrl(static::getGravatarUrl($user->getEmail()));
+                $user->setPictureUrl('');
             }
-        } else {
-            $user->setPictureUrl(static::getGravatarUrl($user->getEmail()));
         }
-    }
-
-    /**
-     *
-     * @param  string $email
-     * @return string
-     */
-    public static function getGravatarUrl($email)
-    {
-        return "http://www.gravatar.com/avatar/" . md5(strtolower(trim($email))) . "?d=identicon&s=200";
     }
 
     /**

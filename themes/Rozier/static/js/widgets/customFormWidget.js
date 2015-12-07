@@ -4,6 +4,7 @@
 var CustomFormWidget = function () {
     var _this = this;
 
+    _this.currentRequest = null;
     _this.$widgets = $('[data-custom-form-widget]');
     if (_this.$widgets.length) {
         _this.$sortables = $('.custom-forms-widget-sortable');
@@ -76,6 +77,9 @@ CustomFormWidget.prototype.onExplorerToggle = function(event) {
     var _this = this;
 
     if (_this.$explorer === null) {
+        if(_this.currentRequest && _this.currentRequest.readyState != 4){
+            _this.currentRequest.abort();
+        }
 
         _this.$toggleExplorerButtons.addClass('uk-active');
 
@@ -84,7 +88,7 @@ CustomFormWidget.prototype.onExplorerToggle = function(event) {
             '_token': Rozier.ajaxToken
         };
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: Rozier.routes.customFormsAjaxExplorer,
             type: 'get',
             dataType: 'json',
@@ -115,7 +119,11 @@ CustomFormWidget.prototype.onExplorerToggle = function(event) {
 CustomFormWidget.prototype.onExplorerSearch = function($originWidget, event) {
     var _this = this;
 
-    if (_this.$explorer !== null){
+    if (_this.$explorer !== null) {
+        if(_this.currentRequest && _this.currentRequest.readyState != 4){
+            _this.currentRequest.abort();
+        }
+
         var $search = $(event.currentTarget).find('#custom-forms-search-input');
 
         var ajaxData = {
@@ -124,7 +132,7 @@ CustomFormWidget.prototype.onExplorerSearch = function($originWidget, event) {
             'search': $search.val()
         };
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: Rozier.routes.customFormsAjaxExplorer,
             type: 'get',
             dataType: 'json',
@@ -154,8 +162,11 @@ CustomFormWidget.prototype.onExplorerSearch = function($originWidget, event) {
 CustomFormWidget.prototype.onExplorerNextPage = function(filters, $originWidget, event) {
     var _this = this;
 
-    if (_this.$explorer !== null){
-        console.log(filters);
+    if (_this.$explorer !== null) {
+        if(_this.currentRequest && _this.currentRequest.readyState != 4){
+            _this.currentRequest.abort();
+        }
+        //console.log(filters);
         var ajaxData = {
             '_action':'toggleExplorer',
             '_token': Rozier.ajaxToken,
@@ -163,7 +174,7 @@ CustomFormWidget.prototype.onExplorerNextPage = function(filters, $originWidget,
             'page': filters.nextPage
         };
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: Rozier.routes.customFormsAjaxExplorer,
             type: 'get',
             dataType: 'json',

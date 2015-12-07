@@ -29,7 +29,12 @@
  * @author Ambroise Maupate
  */
 
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Console\RoadizApplication;
+
+set_time_limit(0);
 
 if (version_compare(phpversion(), '5.4.3', '<')) {
     echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
@@ -41,9 +46,16 @@ define('ROADIZ_ROOT', dirname(__DIR__));
 // Include Composer Autoload (relative to project root).
 require("vendor/autoload.php");
 
-if (php_sapi_name() == 'cli') {
-    Kernel::getInstance()->boot();
-    Kernel::getInstance()->runConsole();
+$input = new ArgvInput();
+$env = $input->getParameterOption(array('--env', '-e'), getenv('ROADIZ_ENV') ?: 'dev');
+$debug = getenv('ROADIZ_DEBUG') !== '0' && !$input->hasParameterOption(array('--no-debug', '')) && $env !== 'prod';
+
+if ($debug) {
+    Debug::enable();
 }
 
-exit(0);
+$kernel = Kernel::getInstance($env, $debug);
+
+$application = new RoadizApplication($kernel);
+$application->run($input);
+

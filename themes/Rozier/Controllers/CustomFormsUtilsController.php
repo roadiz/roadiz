@@ -75,7 +75,7 @@ class CustomFormsUtilsController extends RozierApp
 
         try {
             $existingCustomForm = $this->getService('em')
-                                 ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
             $newCustomForm = clone $existingCustomForm;
 
@@ -86,7 +86,12 @@ class CustomFormsUtilsController extends RozierApp
             }
 
             $em->persist($newCustomForm);
+
             $em->flush();
+
+            foreach ($newCustomForm->getFields() as $field) {
+                $field->setCustomForm($newCustomForm);
+            }
 
             $msg = $this->getTranslator()->trans("duplicated.custom.form.%name%", [
                 '%name%' => $existingCustomForm->getDisplayName(),
@@ -95,10 +100,10 @@ class CustomFormsUtilsController extends RozierApp
             $this->publishConfirmMessage($request, $msg);
 
             return $this->redirect($this->getService('urlGenerator')
-                                            ->generate(
-                                                'customFormsEditPage',
-                                                ["customFormId" => $newCustomForm->getId()]
-                                            ));
+                    ->generate(
+                        'customFormsEditPage',
+                        ["customFormId" => $newCustomForm->getId()]
+                    ));
 
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
@@ -110,10 +115,10 @@ class CustomFormsUtilsController extends RozierApp
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
             return $this->redirect($this->getService('urlGenerator')
-                                            ->generate(
-                                                'customFormsEditPage',
-                                                ["customFormId" => $existingCustomForm->getId()]
-                                            ));
+                    ->generate(
+                        'customFormsEditPage',
+                        ["customFormId" => $existingCustomForm->getId()]
+                    ));
         }
     }
 }

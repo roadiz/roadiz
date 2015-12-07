@@ -42,10 +42,10 @@
     <div class="{{ innerClasses|join(' ') }}">
         <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}">
             {% if not mainNodeTree and not nodeTree.isStackTree %}
-                {% set thumbnail = source.getDocumentsByFields.first.getDocument %}
-                {% if thumbnail and thumbnail.image and not thumbnail.private %}
+                {% set thumbnail = source.documentsByFields.first.document %}
+                {% if thumbnail and (thumbnail.image or thumbnail.svg) and not thumbnail.private %}
                 <figure class="nodetree-element-img">
-                    {{ thumbnail|display({"width":60, "crop":"1x1", "quality":80}) }}
+                    {{ thumbnail|display({"width":60, "height":60, "fit":"60x60", "quality":80}) }}
                 </figure>
                 {% endif %}
             {% endif %}
@@ -125,9 +125,15 @@
                                 <i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
                             </a>
                         </p>
-                        {% if (authorizationChecker.Granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
+                        {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
+                        {% set refererUrl = request.uri %}
+                        {% if refererUrl matches '/ajax/' and parent %}
+                            {% set refererUrl = path('nodesEditSourcePage', { nodeId:parent.getId, translationId:nodeTree.getTranslation.getId}) %}
+                        {% elseif refererUrl matches '/ajax/' %}
+                            {% set refererUrl = path('nodesHomePage') %}
+                        {% endif %}
                         <p>
-                            <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId, referer:request.uri }) }}">
+                            <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}" href="{{ path('nodesDeletePage', { nodeId:node.getId, referer:refererUrl }) }}">
                                 <i class="uk-icon-rz-trash-o"></i> {% trans %}delete.node{% endtrans %}
                             </a>
                         </p>
@@ -142,7 +148,7 @@
                             <a data-action="show" data-status="visible" data-value="1" class="show-node" title="{% trans %}node.show{% endtrans %}" href="#"><i class="uk-icon-rz-visibility-mini"></i> {% trans %}node.show{% endtrans %}</a>
                             {% endif %}
                         </p>
-                        {% if authorizationChecker.Granted('ROLE_ACCESS_NODES_STATUS')%}
+                        {% if is_granted('ROLE_ACCESS_NODES_STATUS')%}
                         <p>
                             {% if not node.published %}
                             <a data-action="publish" data-status="status" data-value="{{ nodeStatuses.published }}" class="publish-node" title="{% trans %}node.publish{% endtrans %}" href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>

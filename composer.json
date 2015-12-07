@@ -103,5 +103,13 @@
             "recurse": false
         }
     },
-    "bin": ["bin/roadiz"]
+    "bin": ["bin/roadiz"],
+    "scripts": {
+        "post-update-cmd": [
+            "RZ\\Roadiz\\Utils\\Composer::postUpdate"
+        ],
+        "post-install-cmd": [
+            "RZ\\Roadiz\\Utils\\Composer::postInstall"
+        ]
+    }
 }

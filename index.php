@@ -29,6 +29,7 @@
  */
 
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\HttpFoundation\Request;
 
 if (version_compare(phpversion(), '5.4.3', '<')) {
     echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
@@ -40,33 +41,26 @@ define('ROADIZ_ROOT', dirname(__FILE__));
 // Include Composer Autoload (relative to project root).
 require("vendor/autoload.php");
 
-if (php_sapi_name() == 'cli') {
-    echo 'Use "bin/roadiz" as an executable instead of calling index.php' . PHP_EOL;
-} else {
-    try {
-        Kernel::getInstance()->boot();
-        $request = Kernel::getInstance()->getRequest();
+$kernel = Kernel::getInstance('prod', false);
+$request = Request::createFromGlobals();
+$kernel->boot();
 
-        /*
-         * Bypass Roadiz kernel to directly serve images assets
-         */
-        if (0 === strpos($request->getPathInfo(), '/assets') &&
-            preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-        ) {
-            $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-            $ctrl->setContainer(Kernel::getInstance()->getContainer());
-            $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
-            $response->prepare($request);
-            $response->send();
-        } else {
-            /*
-             * Start Roadiz App handling
-             */
-            Kernel::getInstance()->initEvents();
-            Kernel::getInstance()->runApp();
-        }
-    } catch (\Exception $e) {
-        $response = Kernel::getInstance()->getEmergencyResponse($e);
-        $response->send();
-    }
+/*
+ * Bypass Roadiz kernel to directly serve images assets
+ */
+if (0 === strpos($request->getPathInfo(), '/assets') &&
+    preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
+) {
+    $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
+    $ctrl->setContainer($kernel->getContainer());
+    $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
+    $response->prepare($request);
+} else {
+    /*
+     * Start Roadiz App handling
+     */
+    $response = $kernel->handle($request);
 }
+
+$response->send();
+$kernel->terminate($request, $response);

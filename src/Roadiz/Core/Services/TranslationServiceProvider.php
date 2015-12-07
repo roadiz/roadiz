@@ -49,7 +49,7 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
     {
         $container['defaultTranslation'] = function ($c) {
             return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                           ->findDefault();
+                ->findDefault();
         };
         /**
          * This service have to be called once a controller has
@@ -70,8 +70,8 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
             $translator = new Translator(
                 $c['translator.locale'],
                 null,
-                (boolean) $c['config']['devMode'] ? null : ROADIZ_ROOT . '/cache/translations',
-                (boolean) $c['config']['devMode']
+                $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/translations',
+                $c['kernel']->isDebug()
             );
 
             $translator->addLoader('xlf', new XliffFileLoader());

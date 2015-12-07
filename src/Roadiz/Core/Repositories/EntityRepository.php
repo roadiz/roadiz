@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 
@@ -49,17 +51,17 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * Build a query comparison.
      *
      * @param mixed $value
-     * @param string $prefix
+     * @param string $prefix The prefix should always end with a dot
      * @param string $key
      * @param string $baseKey
      * @param QueryBuilder $qb
      *
      * @return string
      */
-    protected function buildComparison($value, $prefix, $key, $baseKey, &$qb)
+    protected function buildComparison($value, $prefix, $key, $baseKey, QueryBuilder $qb)
     {
         if (is_object($value) && $value instanceof PersistableInterface) {
-            $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif (is_array($value)) {
             /*
              * array
@@ -78,53 +80,54 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                 switch ($value[0]) {
                     case '!=':
                         # neq
-                        $res = $qb->expr()->neq($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->neq($prefix . $key, ':' . $baseKey);
                         break;
                     case '<=':
                         # lte
-                        $res = $qb->expr()->lte($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->lte($prefix . $key, ':' . $baseKey);
                         break;
                     case '<':
                         # lt
-                        $res = $qb->expr()->lt($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->lt($prefix . $key, ':' . $baseKey);
                         break;
                     case '>=':
                         # gte
-                        $res = $qb->expr()->gte($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->gte($prefix . $key, ':' . $baseKey);
                         break;
                     case '>':
                         # gt
-                        $res = $qb->expr()->gt($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->gt($prefix . $key, ':' . $baseKey);
                         break;
                     case 'BETWEEN':
                         $res = $qb->expr()->between(
-                            $prefix.$key,
-                            ':'.$baseKey.'_1',
-                            ':'.$baseKey.'_2'
+                            $prefix . $key,
+                            ':' . $baseKey . '_1',
+                            ':' . $baseKey . '_2'
                         );
                         break;
                     case 'LIKE':
-                        $res = $qb->expr()->like($prefix.$key, $qb->expr()->literal($value[1]));
+                        $fullKey = sprintf('LOWER(%s)', $prefix . $key);
+                        $res = $qb->expr()->like($fullKey, $qb->expr()->literal(strtolower($value[1])));
                         break;
                     case 'NOT IN':
-                        $res = $qb->expr()->notIn($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->notIn($prefix . $key, ':' . $baseKey);
                         break;
                     default:
-                        $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
+                        $res = $qb->expr()->in($prefix . $key, ':' . $baseKey);
                         break;
                 }
             } else {
-                $res = $qb->expr()->in($prefix.$key, ':'.$baseKey);
+                $res = $qb->expr()->in($prefix . $key, ':' . $baseKey);
             }
 
         } elseif (is_bool($value)) {
-            $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif ('NOT NULL' == $value) {
-            $res = $qb->expr()->isNotNull($prefix.$key);
+            $res = $qb->expr()->isNotNull($prefix . $key);
         } elseif (isset($value)) {
-            $res = $qb->expr()->eq($prefix.$key, ':'.$baseKey);
+            $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif (null === $value) {
-            $res = $qb->expr()->isNull($prefix.$key);
+            $res = $qb->expr()->isNull($prefix . $key);
         }
 
         return $res;
@@ -139,13 +142,41 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return QueryBuilder
      */
-    protected function directComparison(&$criteria, &$qb, $alias)
+    protected function directComparison(array &$criteria, QueryBuilder $qb, $alias)
     {
         foreach ($criteria as $key => $value) {
             $qb = $this->singleDirectComparison($key, $value, $qb, $alias);
         }
 
         return $qb;
+    }
+
+    /**
+     *
+     * @param  array        $criteria
+     * @param  QueryBuilder $qb
+     * @param  string       $alias
+     * @return QueryBuilder
+     */
+    protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
+    {
+        foreach ($criteria as $key => $value) {
+            $qb->andWhere($this->buildComparison($value, $alias.'.', $key, $key, $qb));
+        }
+
+        return $qb;
+    }
+
+    /**
+     *
+     * @param  array  $criteria
+     * @param  Query  $finalQuery
+     */
+    protected function applyComparisons(array &$criteria, Query $finalQuery)
+    {
+        foreach ($criteria as $key => $value) {
+            $this->applyComparison($key, $value, $finalQuery);
+        }
     }
 
     /**
@@ -158,10 +189,10 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return QueryBuilder
      */
-    protected function singleDirectComparison($key, &$value, &$qb, $alias)
+    protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
         if (is_object($value) && $value instanceof PersistableInterface) {
-            $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
+            $res = $qb->expr()->eq($alias . '.' . $key, $value->getId());
         } elseif (is_array($value)) {
             /*
              * array
@@ -178,53 +209,76 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                 switch ($value[0]) {
                     case '!=':
                         # neq
-                        $res = $qb->expr()->neq($alias . '.' .$key, $value[1]);
+                        $res = $qb->expr()->neq($alias . '.' . $key, $value[1]);
                         break;
                     case '<=':
                         # lte
-                        $res = $qb->expr()->lte($alias . '.' .$key, $value[1]);
+                        $res = $qb->expr()->lte($alias . '.' . $key, $value[1]);
                         break;
                     case '<':
                         # lt
-                        $res = $qb->expr()->lt($alias . '.' .$key, $value[1]);
+                        $res = $qb->expr()->lt($alias . '.' . $key, $value[1]);
                         break;
                     case '>=':
                         # gte
-                        $res = $qb->expr()->gte($alias . '.' .$key, $value[1]);
+                        $res = $qb->expr()->gte($alias . '.' . $key, $value[1]);
                         break;
                     case '>':
                         # gt
-                        $res = $qb->expr()->gt($alias . '.' .$key, $value[1]);
+                        $res = $qb->expr()->gt($alias . '.' . $key, $value[1]);
                         break;
                     case 'BETWEEN':
                         $res = $qb->expr()->between(
-                            $alias . '.' .$key,
+                            $alias . '.' . $key,
                             $value[1],
                             $value[2]
                         );
                         break;
                     case 'LIKE':
-                        $res = $qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value[1]));
+                        $fullKey = sprintf('LOWER(%s)', $alias . '.' . $key);
+                        $res = $qb->expr()->like($fullKey, $qb->expr()->literal(strtolower($value[1])));
                         break;
                     default:
-                        $res = $qb->expr()->in($alias . '.' .$key, $value);
+                        $res = $this->directExprIn($qb, $alias . '.' . $key, $key, $value);
                         break;
                 }
             } else {
-                $res = $qb->expr()->in($alias . '.' .$key, $value);
+                $res = $this->directExprIn($qb, $alias . '.' . $key, $key, $value);
             }
-
-        } elseif (is_array($value)) {
-            $res = $qb->expr()->in($alias . '.' .$key, $value);
         } elseif (is_bool($value)) {
-            $res = $qb->expr()->eq($alias . '.' .$key, (boolean) $value);
+            $res = $qb->expr()->eq($alias . '.' . $key, (boolean) $value);
         } else {
-            $res = $qb->expr()->eq($alias . '.' .$key, $value);
+            $res = $qb->expr()->eq($alias . '.' . $key, $value);
         }
 
         $qb->andWhere($res);
 
         return $qb;
+
+    }
+
+    /**
+     * @param  QueryBuilder &$qb
+     * @param  string $name
+     * @param  string $key
+     * @param  array $value
+     * @return QueryBuilder
+     */
+    protected function directExprIn(QueryBuilder $qb, $name, $key, $value)
+    {
+        $newValue = [];
+
+        if (is_array($value)) {
+            foreach ($value as $singleValue) {
+                if ($singleValue instanceof PersistableInterface) {
+                    $newValue[] = $singleValue->getId();
+                } else {
+                    $newValue[] = $value;
+                }
+            }
+        }
+
+        return $qb->expr()->in($name, $newValue);
     }
 
     /**
@@ -232,9 +286,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      *
      * @param string $key
      * @param mixed  $value
-     * @param mixed  $finalQuery
+     * @param Query  $finalQuery
      */
-    protected function applyComparison($key, $value, &$finalQuery)
+    protected function applyComparison($key, $value, Query $finalQuery)
     {
         $key = str_replace('.', '_', $key);
 
@@ -252,8 +306,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                         $finalQuery->setParameter($key, $value[1]);
                         break;
                     case 'BETWEEN':
-                        $finalQuery->setParameter($key.'_1', $value[1]);
-                        $finalQuery->setParameter($key.'_2', $value[2]);
+                        $finalQuery->setParameter($key . '_1', $value[1]);
+                        $finalQuery->setParameter($key . '_2', $value[2]);
                         break;
                     case 'LIKE':
                         // param is setted in filterBy
@@ -293,7 +347,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         } elseif (is_array($criteria)) {
             $qb = $this->_em->createQueryBuilder();
             $qb->add('select', 'count(obj.id)')
-               ->add('from', $this->getEntityName() . ' obj');
+                ->add('from', $this->getEntityName() . ' obj');
 
             foreach ($criteria as $key => $value) {
                 $baseKey = str_replace('.', '_', $key);
@@ -328,12 +382,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     protected function classicLikeComparison(
         $pattern,
-        \Doctrine\ORM\QueryBuilder &$qb,
+        QueryBuilder $qb,
         $alias = "obj"
     ) {
         /*
-         * get fields needed for a search
-         * query
+         * Get fields needed for a search query
          */
         $metadatas = $this->_em->getClassMetadata($this->getEntityName());
         $criteriaFields = [];
@@ -345,46 +398,34 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                 $field != 'folder' &&
                 $field != 'childrenOrder' &&
                 $field != 'childrenOrderDirection') {
-                $criteriaFields[$field] = '%'.strip_tags($pattern).'%';
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
             }
         }
 
         foreach ($criteriaFields as $key => $value) {
-            $qb->orWhere($qb->expr()->like($alias . '.' .$key, $qb->expr()->literal($value)));
+            $fullKey = sprintf('LOWER(%s)', $alias . '.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
         }
     }
+
     /**
-    * Create a Criteria object from a search pattern and additionnal fields.
-    *
-    * @param string                  $pattern  Search pattern
-    * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-    * @param array                   $criteria Additionnal criteria
-    * @param string                  $alias    SQL query table alias
-    *
-    * @return \Doctrine\ORM\QueryBuilder
-    */
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string                  $pattern  Search pattern
+     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
+     * @param array                   $criteria Additionnal criteria
+     * @param string                  $alias    SQL query table alias
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
-        array $criteria = [],
+        QueryBuilder $qb,
+        array &$criteria = [],
         $alias = "obj"
     ) {
-
         $this->classicLikeComparison($pattern, $qb, $alias);
-
-        foreach ($criteria as $key => $value) {
-            if (is_object($value) && $value instanceof PersistableInterface) {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value->getId());
-            } elseif (is_array($value)) {
-                $res = $qb->expr()->in($alias . '.' .$key, $value);
-            } elseif (is_bool($value)) {
-                $res = $qb->expr()->eq($alias . '.' .$key, (int) $value);
-            } else {
-                $res = $qb->expr()->eq($alias . '.' .$key, $value);
-            }
-
-            $qb->andWhere($res);
-        }
+        $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
     }
@@ -407,13 +448,13 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'obj')
-           ->add('from', $this->getEntityName() . ' obj');
+            ->add('from', $this->getEntityName() . ' obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria, 'obj');
 
         // Add ordering
         foreach ($orders as $key => $value) {
-            $qb->addOrderBy('obj.'.$key, $value);
+            $qb->addOrderBy('obj.' . $key, $value);
         }
 
         if (null !== $offset) {
@@ -424,6 +465,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         }
 
         $finalQuery = $qb->getQuery();
+        $this->applyComparisons($criteria, $finalQuery);
 
         try {
             return $finalQuery->getResult();
@@ -444,12 +486,15 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->add('select', 'count(distinct obj.id)')
-           ->add('from', $this->getEntityName() . ' obj');
+            ->add('from', $this->getEntityName() . ' obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
+        $finalQuery = $qb->getQuery();
+        $this->applyComparisons($criteria, $finalQuery);
+
         try {
-            return $qb->getQuery()->getSingleScalarResult();
+            return $finalQuery->getSingleScalarResult();
         } catch (\Doctrine\ORM\Query\QueryException $e) {
             return null;
         } catch (\Doctrine\ORM\NoResultException $e) {

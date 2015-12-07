@@ -30,6 +30,7 @@ var NodeWidget = function () {
     var _this = this;
 
     _this.$widgets = $('[data-node-widget]');
+    _this.currentRequest = null;
 
     if (_this.$widgets.length) {
         _this.$sortables = $('.nodes-widget-sortable');
@@ -101,6 +102,9 @@ NodeWidget.prototype.onExplorerToggle = function(event) {
     var _this = this;
 
     if (_this.explorer === null || _this.explorer.isDestroyed) {
+        if(_this.currentRequest && _this.currentRequest.readyState != 4){
+            _this.currentRequest.abort();
+        }
 
         _this.$toggleExplorerButtons.addClass('uk-active');
         $currentWidget = $($(event.currentTarget).parents('.nodes-widget')[0]);
@@ -115,7 +119,7 @@ NodeWidget.prototype.onExplorerToggle = function(event) {
             ajaxData.nodeTypes = JSON.parse(nodeTypes);
         }
 
-        $.ajax({
+        _this.currentRequest = $.ajax({
             url: Rozier.routes.nodesAjaxExplorer,
             type: 'get',
             dataType: 'json',

@@ -32,6 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -130,32 +132,33 @@ class Font extends AbstractDateTimed
                     'style' => 'italic',
                     'weight' => 300,
                 ];
-            case static::LIGHT:
+
+                case static::LIGHT:
                 return [
                     'style' => 'normal',
                     'weight' => 300,
                 ];
 
-            case static::BOLD_ITALIC:
+                case static::BOLD_ITALIC:
                 return [
                     'style' => 'italic',
                     'weight' => 'bold',
                 ];
 
-            case static::BOLD:
+                case static::BOLD:
                 return [
                     'style' => 'normal',
                     'weight' => 'bold',
                 ];
 
-            case static::ITALIC:
+                case static::ITALIC:
                 return [
                     'style' => 'italic',
                     'weight' => 'normal',
                 ];
 
-            case static::REGULAR:
-            default:
+                case static::REGULAR:
+                default:
                 return [
                     'style' => 'normal',
                     'weight' => 'normal',
@@ -310,7 +313,7 @@ class Font extends AbstractDateTimed
     /**
      * @ORM\Column(type="string", nullable=false, unique=false)
      */
-    private $hash;
+    private $hash = "";
     /**
      * @return string
      */
@@ -318,12 +321,25 @@ class Font extends AbstractDateTimed
     {
         return $this->hash;
     }
+
+    /**
+     * @param string $hash
+     *
+     * @return $this
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
     /**
      * @param string $secret
      *
      * @return $this
      */
-    public function setHash($secret)
+    public function generateHashWithSecret($secret)
     {
         $this->hash = substr(hash("crc32b", $this->name . $secret), 0, 12);
 
@@ -602,6 +618,10 @@ class Font extends AbstractDateTimed
      */
     public function preUpload()
     {
+        if ($this->hash == "") {
+            $this->generateHashWithSecret('default_roadiz_secret');
+        }
+
         if (null !== $this->svgFile) {
             $this->setSVGFilename($this->svgFile->getClientOriginalName());
         }
@@ -656,20 +676,25 @@ class Font extends AbstractDateTimed
      */
     public function removeUpload()
     {
-        if (null !== $this->svgFilename) {
-            unlink($this->getSVGAbsolutePath());
-        }
-        if (null !== $this->otfFilename) {
-            unlink($this->getOTFAbsolutePath());
-        }
-        if (null !== $this->eotFilename) {
-            unlink($this->getEOTAbsolutePath());
-        }
-        if (null !== $this->woffFilename) {
-            unlink($this->getWOFFAbsolutePath());
-        }
-        if (null !== $this->woff2Filename) {
-            unlink($this->getWOFF2AbsolutePath());
+        $fs = new Filesystem();
+        try {
+            if (null !== $this->svgFilename) {
+                $fs->remove($this->getSVGAbsolutePath());
+            }
+            if (null !== $this->otfFilename) {
+                $fs->remove($this->getOTFAbsolutePath());
+            }
+            if (null !== $this->eotFilename) {
+                $fs->remove($this->getEOTAbsolutePath());
+            }
+            if (null !== $this->woffFilename) {
+                $fs->remove($this->getWOFFAbsolutePath());
+            }
+            if (null !== $this->woff2Filename) {
+                $fs->remove($this->getWOFF2AbsolutePath());
+            }
+        } catch (IOExceptionInterface $e) {
+            //do nothing
         }
     }
 }

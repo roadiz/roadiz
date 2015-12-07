@@ -55,7 +55,10 @@ class DatabaseController extends InstallApp
      */
     public function databaseAction(Request $request)
     {
-        $config = new YamlConfiguration();
+        $config = new YamlConfiguration(
+            $this->getService('kernel')->getCacheDir(),
+            $this->getService('kernel')->isDebug()
+        );
         if (false === $config->load()) {
             $config->setConfiguration($config->getDefaultConfiguration());
         }
@@ -79,14 +82,19 @@ class DatabaseController extends InstallApp
                      * Test connexion
                      */
                     try {
-                        $fixtures = new Fixtures($this->getService('em'), $request);
+                        $fixtures = new Fixtures(
+                            $this->getService('em'),
+                            $this->getService('kernel')->getCacheDir(),
+                            $this->getService('kernel')->isDebug(),
+                            $request
+                        );
                         $fixtures->createFolders();
                         $config->writeConfiguration();
 
                         /*
                          * Need to clear configuration cache.
                          */
-                        $configurationClearer = new ConfigurationCacheClearer();
+                        $configurationClearer = new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir());
                         $configurationClearer->clear();
 
                         /*
@@ -180,7 +188,12 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-        $fixtures = new Fixtures($this->getService('em'), $request);
+        $fixtures = new Fixtures(
+            $this->getService('em'),
+            $this->getService('kernel')->getCacheDir(),
+            $this->getService('kernel')->isDebug(),
+            $request
+        );
         $fixtures->installFixtures();
 
         /*

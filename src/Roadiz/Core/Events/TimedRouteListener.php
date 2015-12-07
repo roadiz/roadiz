@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -44,13 +45,13 @@ class TimedRouteListener extends RouterListener
     protected $stopwatch;
 
     public function __construct(
-        $matcher,
+        ChainRouter $router,
         RequestContext $context = null,
         LoggerInterface $logger = null,
         RequestStack $requestStack = null,
         Stopwatch $stopwatch = null
     ) {
-        parent::__construct($matcher, $context, $logger, $requestStack);
+        parent::__construct($router, $context, $logger, $requestStack);
 
         $this->stopwatch = $stopwatch;
     }
@@ -58,6 +59,7 @@ class TimedRouteListener extends RouterListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $this->stopwatch->start('routeListener');
+
         $return = parent::onKernelRequest($event);
         $this->stopwatch->stop('routeListener');
         return $return;

@@ -1,4 +1,8 @@
 ## Ajax
+nodeAjaxTags:
+    path:     /node/tags/{nodeId}
+    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::getTagsAction }
+    requirements: { nodeId : "[0-9]+" }
 nodeAjaxEdit:
     path:     /node/edit/{nodeId}
     defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxNodesController::editAction }

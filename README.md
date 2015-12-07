@@ -25,7 +25,7 @@ and distribute its code for personal and commercial projects.
 
 ### Installation
 
-The following instructions are a summary for our documentation [*Getting started* section](http://docs.roadiz.io/en/latest/intro/getting_started.html).
+The following instructions are a summary for our documentation [*Getting started* section](http://docs.roadiz.io/en/latest/developer/first-steps/getting_started.html).
 
 #### Requirements
 
@@ -57,33 +57,43 @@ Use one of our templates in `/samples` folder.
 
 * Requires `mod_expires` for managing your assets caching lifetime.
 
-#### Install from bundle
-
-Here is a simple install process if you already have a ready webserver.
-For the moment no automatic update tool is available, if you want to regularly update
-Roadiz against *Github*, prefer *install from sources*.
-
-* Download Roadiz ZIP bundle from our [website](http://www.roadiz.io)
-or from [github releases](https://github.com/roadiz/roadiz/releases) section.
-* Unzip it into your server root folder (eg. `www/`)
-* Go to your web-browser to launch Install wizard.
-
 #### Install from sources
 
-This process needs an *SSH* connexion to your server with *Git*
+This install process needs an *SSH* connexion to your server with *Git*
 and [*Composer*](https://getcomposer.org/doc/00-intro.md#globally).
 It will enable you to make Roadiz updates more easily than with the bundle version.
-This is the **recommended** method if you are expert.
+This is the **recommended** method.
 
-* Clone current repository to your web root
-* Install dependencies with *Composer*: `composer install --no-dev`
-* Copy `conf/config.default.yml` to `conf/config.yml`. After this command, `bin/roadiz` executable is available.
-* Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
+1. Clone current repository to your web root: `git clone -b develop https://github.com/roadiz/roadiz.git ./`
+2. Install dependencies with *Composer*: `composer install --no-dev -o`. At the end of the install, 
+a custom script will copy for you a default *configuration* file and `dev` and `install` environment entry points.
+3. Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
 execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
-* Go to your web-browser to launch Install wizard.
+4. If Roadiz is not setup on your own computer (*localhost*), add your IP address 
+in the `dev.php` and `install.php` files to authorize your computer to access these two entry points.
+5. Go to your web-browser using *install.php* after your server domain name to launch Install wizard.
 
-Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name to reach backoffice interface.
+Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain name, without *install.php*, to reach backoffice interface.
+
+### Use our custom Vagrant box for development
+
+Roadiz comes with a dedicated `Vagrantfile` which is configured to run a *LEMP* stack 
+(nginx + PHP-FPM + MariaDB) and an *Apache Solr server*. This will be useful 
+to develop your website on your local computer. Once you’ve cloned Roadiz’ sources
+just do a `vagrant up` in Roadiz’ folder. Then Vagrant will run your code in `/var/www`
+and you will be able to completely use `bin/roadiz` commands without bloating your
+computer with lots of binaries.
+
+Once vagrant box has provisioned you will be able to use:
+
+* `http://localhost:8080/install.php` to proceed to install.
+* `http://localhost:8983/solr` to use Apache Solr admin.
+* `http://localhost:8080/phpmyadmin` for your MySQL db admin.
+
+Be careful, **Windows users**, this `Vagrantfile` is configured to use a *NFS* fileshare.
+Do not hesitate to disable it if you did not setup a NFS emulator. For OS X and Linux user
+this is built-in your system, so have fun!
 
 ### Database connexion
 
@@ -110,9 +120,6 @@ doctrine:
     dbname: null
 ```
 
-You can specify a table prefix adding `prefix:"myprefix"` if you can’t create a dedicated database for your project
-and you need to use Roadiz side by side with other tables. But we strongly recommend you to respect the 1 app = 1 database motto.
-
 For more options you can visit *Doctrine* website: http://doctrine-dbal.readthedocs.org/en/latest/reference/configuration.html
 
 ### Apache Solr
@@ -131,6 +138,39 @@ solr:
             timeout: 3
             username: ""
             password: ""
+```
+
+### Custom mailer
+
+Roadiz can use a *SMTP* mail server to send every message out of your website.
+We strongly recommend you to configure with an **external** SMTP service such as *Mandrill app* 
+so you don’t have to use your server built-in *sendmail* command.
+
+```yml
+mailer:
+    type: smtp
+    host: smtp.mandrillapp.com
+    port: 587
+    encryption: false
+    username: my-mandrill-email
+    password: my-mandrill-apikey
+```
+
+### Images processing
+
+Roadiz use [*Image Intervention*](http://image.intervention.io/) library to automatically create a lower quality
+version of your image if they are too big. You can define this threshold value
+in the `assetsProcessing` section. `driver` and `defaultQuality` will be also 
+use for the on-the-fly image processing with [*Intervention Request*](https://github.com/ambroisemaupate/intervention-request) library.
+
+```yml
+assetsProcessing:
+    # gd or imagick (gd does not support TIFF and PSD formats)
+    driver: gd
+    defaultQuality: 90
+    # pixel size limit () after roadiz
+    # should create a smaller copy.
+    maxPixelSize: 1280
 ```
 
 ### Run self tests
@@ -163,7 +203,7 @@ When you import your existing database, before performing any database migration
 you **must** regenerate first all node-sources PHP classes.
 
 ```bash
-bin/roadiz core:sources --regenerate
+bin/roadiz core:sources -r
 ```
 
 This will parse every node-types from your existing database and recreate PHP classes in `gen-src/GeneratedNodeSources` folder.
@@ -185,10 +225,10 @@ Then when you are sure to perform migration, just do:
 
 ```bash
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache --clear-all;
+bin/roadiz cache -a --env=prod;
 ```
 
-The `cache --clear-all` command force Doctrine to purge its metadata cache.
+The `cache -a --env=prod` command force Doctrine to purge its metadata cache for the *production* environment.
 **Be careful, this won’t purge APC or XCache. You will need to do it manually.**
 
 ### Managing your own database entities
@@ -214,17 +254,29 @@ If you see your entities being created and no system database erased, just `--ex
 If Doctrine send some error, you probably need to clear metadata cache:
 
 ```bash
-bin/roadiz cache --clear-all;
+bin/roadiz cache -a --env=prod;
 ```
 
-### Problem with entities and Doctrine cache?
+### Troubleshooting
+
+#### Empty caches manually for an environment
+
+If you experience errors only on a dedicated environment such as `prod`, `dev` or `install`, it means that cache
+is not fresh for these environments. As a first try, you can **delete** `cache/prod` folder and retry.
+For your information, `preview` entry point use the `dev` environment, so if errors occur in preview: **delete**
+`cache/dev` folder.
+
+If you still get errors from a specific env and you are using an *OPcode* cache or *var cache* (APC, Xcache), try restarting your PHP daemon in
+order to purge these memory caches.
+
+#### Problem with entities and Doctrine cache?
 
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```bash
-bin/roadiz core:sources --regenerate
+bin/roadiz core:sources -r
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache --clear-all;
+bin/roadiz cache -a --env=prod;
 
 ```
 

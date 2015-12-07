@@ -254,7 +254,7 @@
                 overflow: hidden;
                 z-index:5;
 
-                img{
+                img, object{
                     position: relative;
                     vertical-align: top;
                 }
@@ -275,6 +275,9 @@
 
                     img{
                         .transform(rotate(-45deg) scale(1.4));
+                    }
+                    object{
+                        .transform(rotate(-45deg));
                     }
                 }
             }

@@ -69,9 +69,9 @@ class CustomFormField extends AbstractField
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
-     * @ORM\JoinColumn(name="custom_form_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $customForm;
+    private $customForm = null;
 
     /**
      * @return RZ\Roadiz\Core\Entities\CustomForm
@@ -163,6 +163,7 @@ class CustomFormField extends AbstractField
     public function __clone()
     {
         $this->id = null;
+        $this->customForm = null;
         $this->customFormFieldAttribute = new ArrayCollection();
     }
 }

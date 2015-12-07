@@ -154,10 +154,10 @@ class FrontendController extends AppController
         $this->node = $node;
         $this->translation = $translation;
         $this->assignation['translation'] = $this->translation;
-        $this->getService('request')->attributes->set('translation', $this->translation);
+        $this->getRequest()->attributes->set('translation', $this->translation);
 
         if (null !== $this->node) {
-            $this->getService('request')->attributes->set('node', $this->node);
+            $this->getRequest()->attributes->set('node', $this->node);
             $this->nodeSource = $this->node->getNodeSources()->first();
             $this->assignation['node'] = $this->node;
             $this->assignation['nodeSource'] = $this->nodeSource;
@@ -190,8 +190,8 @@ class FrontendController extends AppController
             $this->node = $this->nodeSource->getNode();
             $this->translation = $this->nodeSource->getTranslation();
 
-            $this->getService('request')->attributes->set('translation', $this->translation);
-            $this->getService('request')->attributes->set('node', $this->node);
+            $this->getRequest()->attributes->set('translation', $this->translation);
+            $this->getRequest()->attributes->set('node', $this->node);
 
             $this->assignation['translation'] = $this->translation;
             $this->assignation['node'] = $this->node;
@@ -199,7 +199,7 @@ class FrontendController extends AppController
         } else {
             $this->translation = $translation;
             $this->assignation['translation'] = $this->translation;
-            $this->getService('request')->attributes->set('translation', $this->translation);
+            $this->getRequest()->attributes->set('translation', $this->translation);
         }
 
         $this->assignation['pageMeta'] = $this->getNodeSEO();
@@ -225,11 +225,11 @@ class FrontendController extends AppController
         if (in_array($node->getNodeName(), static::$specificNodesControllers)) {
             return $namespace . '\\' .
             StringHandler::classify($node->getNodeName()) .
-            'Controller';
+                'Controller';
         } else {
             return $namespace . '\\' .
             StringHandler::classify($node->getNodeType()->getName()) .
-            'Controller';
+                'Controller';
         }
     }
 
@@ -242,22 +242,35 @@ class FrontendController extends AppController
      */
     public function validateAccessForNodeWithStatus(Node $node)
     {
-        if (!$this->isGranted(Role::ROLE_BACKEND_USER) &&
-            !$node->isPublished()) {
-            /*
-             * Not allowed to see unpublished nodes
-             */
-            return $this->throw404();
-        } elseif ($this->isGranted(Role::ROLE_BACKEND_USER) &&
-            $node->getStatus() > Node::PUBLISHED) {
+        /*
+         * For archived and deleted nodes
+         */
+        if ($node->getStatus() > Node::PUBLISHED) {
             /*
              * Not allowed to see deleted and archived nodes
              * even for Admins
              */
             return $this->throw404();
-        } else {
-            return true;
         }
+
+        /*
+         * For unpublished nodes
+         */
+        if ($node->getStatus() < Node::PUBLISHED) {
+            if ($this->isGranted(Role::ROLE_BACKEND_USER) &&
+                $this->getService('kernel')->isPreview()) {
+                return true;
+            }
+            /*
+             * Not allowed to see unpublished nodes
+             */
+            return $this->throw404();
+        }
+
+        /*
+         * Everyone can view published nodes.
+         */
+        return true;
     }
 
     /**
@@ -291,10 +304,7 @@ class FrontendController extends AppController
         $this->getService('stopwatch')->start('handleNodeController');
 
         if ($node !== null) {
-            if (true !== $resp = $this->validateAccessForNodeWithStatus(
-                $node,
-                $this->getService('securityAuthorizationChecker')
-            )) {
+            if (true !== $resp = $this->validateAccessForNodeWithStatus($node)) {
                 return $resp;
             }
 
@@ -307,12 +317,14 @@ class FrontendController extends AppController
             if (class_exists($controllerPath) &&
                 method_exists($controllerPath, 'indexAction')) {
                 $ctrl = new $controllerPath();
+                $this->getService('logger')->debug("Initialize " . $controllerPath . " controller…");
             } else {
-                return $this->throw404(
-                    "No front-end controller found for '" .
-                    $node->getNodeName() .
-                    "' node. You need to create a " . $controllerPath . "."
-                );
+                $msg = "No front-end controller found for '" .
+                $node->getNodeName() .
+                    "' node. You need to create a " . $controllerPath . ".";
+
+                $this->getService('logger')->debug($msg);
+                return $this->throw404($msg);
             }
 
             /*
@@ -498,6 +510,7 @@ class FrontendController extends AppController
          * security context
          */
         $elm->setAuthorizationChecker($this->getService('securityAuthorizationChecker'));
+        $elm->setPreview($this->getService('kernel')->isPreview());
 
         return $elm;
     }

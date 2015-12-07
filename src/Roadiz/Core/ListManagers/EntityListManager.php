@@ -29,14 +29,13 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use RZ\Roadiz\Core\ListManagers\Paginator;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
+use RZ\Roadiz\Core\ListManagers\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\Node;
-
-use Doctrine\ORM\EntityManager;
 
 /**
  * Perform basic filtering and search over entity listings.
@@ -59,6 +58,7 @@ class EntityListManager
     protected $itemPerPage = null;
     protected $translation = null;
     protected $authorizationChecker = null;
+    protected $preview = false;
 
     /**
      * @param Request $request
@@ -74,14 +74,14 @@ class EntityListManager
         $preFilters = [],
         $preOrdering = []
     ) {
-        $this->request =    $request;
+        $this->request = $request;
         $this->entityName = $entityName;
-        $this->_em =        $_em;
+        $this->_em = $_em;
 
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
         $this->assignation = [];
-        $this->queryArray = $request->query->all();
+        $this->queryArray = array_filter($request->query->all());
 
         $this->itemPerPage = static::ITEM_PER_PAGE;
 
@@ -162,7 +162,6 @@ class EntityListManager
         $this->pagination = false;
     }
 
-
     /**
      * @return Translation
      */
@@ -179,7 +178,6 @@ class EntityListManager
 
         return $this;
     }
-
 
     /**
      * @return AuthorizationChecker
@@ -211,6 +209,7 @@ class EntityListManager
             );
             $this->paginator->setTranslation($this->translation);
             $this->paginator->setAuthorizationChecker($this->authorizationChecker);
+            $this->paginator->setPreview($this->preview);
 
         } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
             $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
@@ -224,6 +223,7 @@ class EntityListManager
             );
 
             $this->paginator->setAuthorizationChecker($this->authorizationChecker);
+            $this->paginator->setPreview($this->preview);
         } else {
             $this->paginator = new Paginator(
                 $this->_em,
@@ -284,28 +284,34 @@ class EntityListManager
      *
      * ** Fields:
      *
-     * * description
-     * * search
-     * * currentPage
-     * * pageCount
-     * * itemPerPage
-     * * itemCount
+     * * description [string]
+     * * search [string]
+     * * currentPage [int]
+     * * pageCount [int]
+     * * itemPerPage [int]
+     * * itemCount [int]
+     * * previousPage [int]
+     * * nextPage [int]
+     * * nextPageQuery [string]
+     * * previousPageQuery [string]
+     * * previousQueryArray [array]
+     * * nextQueryArray [array]
      *
      * @return array
      */
     public function getAssignation()
     {
         $assign = [
-            'description'       => '',
-            'search'            => $this->searchPattern,
-            'currentPage'       => $this->currentPage,
-            'pageCount'         => $this->paginator->getPageCount(),
-            'itemPerPage'       => $this->itemPerPage,
-            'itemCount'         => $this->_em
-                                        ->getRepository($this->entityName)
-                                        ->countBy($this->filteringArray),
-            'nextPageQuery'     => null,
-            'previousPageQuery' => null
+            'description' => '',
+            'search' => $this->searchPattern,
+            'currentPage' => $this->currentPage,
+            'pageCount' => $this->paginator->getPageCount(),
+            'itemPerPage' => $this->itemPerPage,
+            'itemCount' => $this->_em
+                ->getRepository($this->entityName)
+                ->countBy($this->filteringArray),
+            'nextPageQuery' => null,
+            'previousPageQuery' => null,
         ];
 
         // Edit item count after a search
@@ -315,17 +321,18 @@ class EntityListManager
                 ->countSearchBy($this->searchPattern, $this->filteringArray);
         }
 
-
         // compute next and prev page URL
         if ($this->currentPage > 1) {
             $this->queryArray['page'] = $this->currentPage - 1;
             $assign['previousPageQuery'] = http_build_query($this->queryArray);
+            $assign['previousQueryArray'] = $this->queryArray;
             $assign['previousPage'] = $this->currentPage - 1;
         }
         // compute next and prev page URL
         if ($this->currentPage < $this->paginator->getPageCount()) {
             $this->queryArray['page'] = $this->currentPage + 1;
             $assign['nextPageQuery'] = http_build_query($this->queryArray);
+            $assign['nextQueryArray'] = $this->queryArray;
             $assign['nextPage'] = $this->currentPage + 1;
         }
 
@@ -343,11 +350,35 @@ class EntityListManager
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
             return $this->_em->getRepository($this->entityName)
-                            ->findBy(
-                                $this->filteringArray,
-                                $this->orderingArray,
-                                $this->itemPerPage
-                            );
+                ->findBy(
+                    $this->filteringArray,
+                    $this->orderingArray,
+                    $this->itemPerPage
+                );
         }
+    }
+
+    /**
+     * Gets the value of preview.
+     *
+     * @return mixed
+     */
+    public function isPreview()
+    {
+        return $this->preview;
+    }
+
+    /**
+     * Sets the value of preview.
+     *
+     * @param boolean $preview the preview
+     *
+     * @return self
+     */
+    public function setPreview($preview)
+    {
+        $this->preview = (boolean) $preview;
+
+        return $this;
     }
 }

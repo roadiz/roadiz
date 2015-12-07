@@ -52,10 +52,15 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
      * @param  array      $cacheConfig
      * @param  boolean    $isDevMode
      * @param  string|null $proxyDir
+     * @param  string $environment
      * @return Cache
      */
-    protected function getManuallyDefinedCache(array $cacheConfig, $isDevMode = false, $proxyDir = null)
-    {
+    protected function getManuallyDefinedCache(
+        array $cacheConfig,
+        $isDevMode = false,
+        $proxyDir = null,
+        $environment = 'prod'
+    ) {
         $proxyDir = $proxyDir ?: sys_get_temp_dir();
 
         if ($isDevMode === false) {
@@ -113,7 +118,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             $cache = new ArrayCache();
         }
         if ($cache instanceof CacheProvider) {
-            $cache->setNamespace("dc2_" . md5($proxyDir) . "_"); // to avoid collisions
+            $cache->setNamespace("dc2_" . md5($proxyDir) . $environment . "_"); // to avoid collisions
         }
 
         return $cache;
@@ -136,14 +141,15 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                     !empty($c['config']['cacheDriver']['type'])) {
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
-                        (boolean) $c['config']['devMode'],
-                        ROADIZ_ROOT . '/gen-src/Proxies'
+                        $c['kernel']->isDevMode(),
+                        ROADIZ_ROOT . '/gen-src/Proxies',
+                        $c['kernel']->getEnvironment()
                     );
                 }
 
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
-                    (boolean) $c['config']['devMode'],
+                    $c['kernel']->isDevMode(),
                     ROADIZ_ROOT . '/gen-src/Proxies',
                     $cache,
                     false

@@ -550,6 +550,10 @@
           <context context-type="linenumber">835</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="phone" approved="yes">
+        <source>phone</source>
+        <target xml:lang="fr">Téléphone</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="54" approved="yes">
         <source>company</source>
         <target xml:lang="fr">Société</target>
@@ -1401,6 +1405,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/6f/c0/7e2dda8cb4755b3a3010129d72d82a94eb499c4d676281020cec69b5d6fe.php</context>
           <context context-type="linenumber">55</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.hash">
+        <source>font.hash</source>
+        <target xml:lang="fr" state="translated">Identifiant CSS de la fonte</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="143" approved="yes">
         <source>font.eotFile</source>
@@ -3270,6 +3278,10 @@
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="preview.page" approved="yes">
+        <source>preview.page</source>
+        <target xml:lang="fr">Prévisualiser la page</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="314" approved="yes">
         <source>duplicate</source>
         <target xml:lang="fr">Dupliquer</target>
@@ -3774,6 +3786,10 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.color">
+        <source>tag.color</source>
+        <target xml:lang="fr" state="translated">Couleur</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="374" approved="yes">
         <source>tag.tree</source>
         <target xml:lang="fr">Arborescence</target>
@@ -4155,6 +4171,14 @@
       <trans-unit xml:space="preserve" id="436" approved="yes">
         <source>markdown.type</source>
         <target xml:lang="fr">Markdown</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="json.type">
+        <source>json.type</source>
+        <target xml:lang="fr" state="translated">Code JSON</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css.type">
+        <source>css.type</source>
+        <target xml:lang="fr" state="translated">Code CSS</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="437" approved="yes">
         <source>boolean.type</source>
@@ -6162,13 +6186,38 @@
           <target xml:lang="fr">Ajouter des étiquettes</target>
       </trans-unit>
       <!-- Raw documents -->
-      <trans-unit xml:space="preserve" id="download.raw.document">
+      <trans-unit xml:space="preserve" id="download.raw.document" approved="yes">
           <source>download.raw.document</source>
-          <target xml:lang="fr" state="translated">Télécharger le document non traité</target>
+          <target xml:lang="fr">Télécharger le document non traité</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.raw_document">
+      <trans-unit xml:space="preserve" id="document.raw_document" approved="yes">
           <source>document.raw_document</source>
-          <target xml:lang="fr" state="translated">Document non traité</target>
+          <target xml:lang="fr">Document non traité</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.rzn">
+          <source>export_format.rzn</source>
+          <target xml:lang="fr" state="translated">Format de fichier RZN</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%">
+          <source>export_format.excel.%language%</source>
+          <target xml:lang="fr" state="translated">Format de fichier Excel (%language%)</target>
+      </trans-unit>
+      <!-- Bulk tags -->
+      <trans-unit xml:space="preserve" id="delete.tags">
+          <source>delete.tags</source>
+          <target xml:lang="fr" state="translated">Supprimer les étiquettes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags">
+          <source>are_you_sure.delete.these.tags</source>
+          <target xml:lang="fr" state="translated">Êtes-vous sûr(e) de vouloir supprimer ces étiquettes ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.tags">
+          <source>bulk.delete.tags</source>
+          <target xml:lang="fr" state="translated">Supprimer les étiquettes sélectionnées</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.bulk.deleted">
+          <source>tags.bulk.deleted</source>
+          <target xml:lang="fr" state="translated">Les étiquettes sélectionnées ont été supprimées</target>
       </trans-unit>
     </body>
   </file>

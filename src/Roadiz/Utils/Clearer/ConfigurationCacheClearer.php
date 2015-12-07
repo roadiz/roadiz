@@ -41,14 +41,17 @@ class ConfigurationCacheClearer extends Clearer
     {
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->in(ROADIZ_ROOT . '/cache')
-            ->files()
-            ->name('configuration.php')
-            ->name('configuration.php.meta');
 
-        $fs->remove($finder);
+        if ($fs->exists($this->getCacheDir())) {
+            $finder->in($this->getCacheDir())
+                ->files()
+                ->name('configuration.php')
+                ->name('configuration.php.meta');
 
-        $this->output .= 'Compiled configuration files have been deleted.' . PHP_EOL;
+            $fs->remove($finder);
+
+            $this->output .= 'Compiled configuration files have been deleted.' . PHP_EOL;
+        }
 
         return true;
     }

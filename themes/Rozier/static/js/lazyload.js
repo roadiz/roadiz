@@ -5,22 +5,24 @@ var Lazyload = function() {
     var _this = this;
 
     _this.$linksSelector = null;
-    _this.$textAreaHTMLeditor = null;
-    _this.$HTMLeditor = null;
-    _this.htmlEditor = [];
-    _this.$HTMLeditorContent = null;
-    _this.$HTMLeditorNav = null;
-    _this.HTMLeditorNavToRemove = null;
+    _this.$textareasMarkdown = null;
     _this.documentsList = null;
     _this.mainColor = null;
     _this.$canvasLoaderContainer = null;
+    _this.currentRequest = null;
 
     var onStateChangeProxy = $.proxy(_this.onPopState, _this);
 
     _this.parseLinks();
 
-    $(window).off('popstate', onStateChangeProxy);
-    $(window).on('popstate', onStateChangeProxy);
+    // this hack resolves safari triggering popstate
+    // at initial load.
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            $(window).off('popstate', onStateChangeProxy);
+            $(window).on('popstate', onStateChangeProxy);
+        }, 0);
+    });
 
     _this.$canvasLoaderContainer = $('#canvasloader-container');
     _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff';
@@ -86,22 +88,15 @@ Lazyload.prototype.onClick = function(event) {
  */
 Lazyload.prototype.onPopState = function(event) {
     var _this = this;
-
-    var state;
+    var state = null;
 
     if(null !== event){
         state = event.originalEvent.state;
     }
 
-    if(null !== state &&
-        typeof state != "undefined"){
-
-    } else {
+    if(typeof state === "undefined" || null === state){
         state = window.history.state;
     }
-
-    //console.log(state);
-    //console.log(document.location);
 
     if (null !== state) {
         _this.canvasLoader.show();
@@ -119,7 +114,11 @@ Lazyload.prototype.onPopState = function(event) {
 Lazyload.prototype.loadContent = function(state, location) {
     var _this = this;
 
-    $.ajax({
+    if(_this.currentRequest && _this.currentRequest.readyState != 4){
+        _this.currentRequest.abort();
+    }
+
+    _this.currentRequest = $.ajax({
         url: location.href,
         type: 'get',
         dataType: 'html',
@@ -212,6 +211,7 @@ Lazyload.prototype.generalBind = function() {
     new DocumentsBulk();
     new AutoUpdate();
     new NodesBulk();
+    new TagsBulk();
     new DocumentWidget();
     new NodeWidget();
     new CustomFormWidget();
@@ -235,8 +235,13 @@ Lazyload.prototype.generalBind = function() {
     _this.nodeTree = new NodeTree();
     _this.customFormFieldEdit = new CustomFormFieldEdit();
 
-    // Init markdown-preview
+    /*
+     * Codemirror
+     */
     _this.initMarkdownEditors();
+    _this.initJsonEditors();
+    _this.initCssEditors();
+
     _this.initFilterBars();
 
     // Init colorpicker
@@ -260,7 +265,8 @@ Lazyload.prototype.generalBind = function() {
 
     Rozier.getMessages();
 
-    if(typeof Rozier.importRoutes != "undefined" && Rozier.importRoutes !== null){
+    if(typeof Rozier.importRoutes != "undefined" &&
+        Rozier.importRoutes !== null){
         Rozier.import = new Import(Rozier.importRoutes);
         Rozier.importRoutes = null;
     }
@@ -270,41 +276,47 @@ Lazyload.prototype.initMarkdownEditors = function() {
     var _this = this;
 
     // Init markdown-preview
-    _this.$textAreaHTMLeditor = $('textarea[data-uk-htmleditor], textarea[data-uk-rz-htmleditor]').not('[data-uk-check-display]');
+    _this.$textareasMarkdown = $('textarea[data-rz-markdowneditor]');
+    var editorCount = _this.$textareasMarkdown.length;
 
-    if(_this.$textAreaHTMLeditor.length){
-
+    if(editorCount){
         setTimeout(function(){
-            for(var i = 0; i < _this.$textAreaHTMLeditor.length; i++) {
-
-                _this.htmlEditor[i] = UIkit.htmleditor(
-                    $(_this.$textAreaHTMLeditor[i]),
-                    {
-                        markdown:true,
-                        mode:'tab',
-                        labels : Rozier.messages.htmleditor
-                    }
-                );
-                _this.$HTMLeditor = $('.uk-htmleditor');
-                _this.$HTMLeditorNav = $('.uk-htmleditor-navbar');
-                _this.HTMLeditorNavInner = '<div class="uk-htmleditor-navbar bottom">'+_this.$HTMLeditorNav[0].innerHTML+'</div>';
-
-                $(_this.$HTMLeditor[i]).append(_this.HTMLeditorNavInner);
-
-                _this.htmlEditor[i].redraw();
-
+            for(var i = 0; i < editorCount; i++) {
+                new MarkdownEditor(_this.$textareasMarkdown.eq(i), i);
             }
+        }, 100);
+    }
+};
 
-            $(".uk-htmleditor-preview").css("height", 250);
-            $(".CodeMirror").css("height", 250);
+Lazyload.prototype.initJsonEditors = function() {
+    var _this = this;
 
-            setTimeout(function(){
-                _this.$HTMLeditorNavToRemove = $('.uk-htmleditor-navbar:not(.bottom)');
-                _this.$HTMLeditorNavToRemove.remove();
-                new MarkdownEditor();
-            }, 0);
+    // Init markdown-preview
+    _this.$textareasJson = $('textarea[data-rz-jsoneditor]');
+    var editorCount = _this.$textareasJson.length;
 
-        }, 0);
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new JsonEditor(_this.$textareasJson.eq(i), i);
+            }
+        }, 100);
+    }
+};
+
+Lazyload.prototype.initCssEditors = function() {
+    var _this = this;
+
+    // Init markdown-preview
+    _this.$textareasCss = $('textarea[data-rz-csseditor]');
+    var editorCount = _this.$textareasCss.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new CssEditor(_this.$textareasCss.eq(i), i);
+            }
+        }, 100);
     }
 };
 

@@ -126,13 +126,13 @@ class SolrCommand extends Command
 solr:
     endpoint:
         localhost:
-            host:"localhost"
-            port:"8983"
-            path:"/solr"
-            core:"mycore"
-            timeout:3
-            username:""
-            password:""
+            host: "localhost"
+            port: "8983"
+            path: "/solr"
+            core: "mycore"
+            timeout: 3
+            username: ""
+            password: ""
             ';
         }
 

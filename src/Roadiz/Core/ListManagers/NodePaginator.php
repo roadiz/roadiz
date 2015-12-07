@@ -41,6 +41,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 class NodePaginator extends Paginator
 {
     protected $authorizationChecker = null;
+    protected $preview = false;
     protected $translation = null;
 
     /**
@@ -93,14 +94,15 @@ class NodePaginator extends Paginator
             return $this->searchByAtPage($order, $page);
         } else {
             return $this->em->getRepository($this->entityName)
-                                                 ->findBy(
-                                                     $this->criteria,
-                                                     $order,
-                                                     $this->getItemsPerPage(),
-                                                     $this->getItemsPerPage() * ($page - 1),
-                                                     $this->translation,
-                                                     $this->authorizationChecker
-                                                 );
+                ->findBy(
+                    $this->criteria,
+                    $order,
+                    $this->getItemsPerPage(),
+                    $this->getItemsPerPage() * ($page - 1),
+                    $this->translation,
+                    $this->authorizationChecker,
+                    $this->preview
+                );
         }
     }
 
@@ -115,16 +117,41 @@ class NodePaginator extends Paginator
     {
         if (null !== $this->searchPattern) {
             $total = $this->em->getRepository($this->entityName)
-                                                   ->countSearchBy($this->searchPattern, $this->criteria);
+                ->countSearchBy($this->searchPattern, $this->criteria);
         } else {
             $total = $this->em->getRepository($this->entityName)
-                                                   ->countBy(
-                                                       $this->criteria,
-                                                       $this->translation,
-                                                       $this->authorizationChecker
-                                                   );
+                ->countBy(
+                    $this->criteria,
+                    $this->translation,
+                    $this->authorizationChecker,
+                    $this->preview
+                );
         }
 
         return ceil($total / $this->getItemsPerPage());
+    }
+
+    /**
+     * Gets the value of preview.
+     *
+     * @return mixed
+     */
+    public function getPreview()
+    {
+        return $this->preview;
+    }
+
+    /**
+     * Sets the value of preview.
+     *
+     * @param boolean $preview the preview
+     *
+     * @return self
+     */
+    public function setPreview($preview)
+    {
+        $this->preview = (boolean) $preview;
+
+        return $this;
     }
 }

@@ -30,31 +30,74 @@
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use Solarium\Client;
+use Solarium\Core\Query\Helper;
 
 class FullTextSearchHandler
 {
     protected $client = null;
     protected $em = null;
+    protected $logger = null;
 
     /**
      * @param Solarium\Client $client
      * @param Doctrine\ORM\EntityManager $em
      */
-    public function __construct(Client $client, EntityManager $em)
-    {
+    public function __construct(
+        Client $client,
+        EntityManager $em,
+        LoggerInterface $logger = null
+    ) {
         $this->client = $client;
         $this->em = $em;
+        $this->logger = $logger;
     }
 
-    private function solrSearch($q, $args = [], $rows = 20)
+    /**
+     * @param string  $q
+     * @param array   $args
+     * @param integer $rows
+     * @param boolean $searchTags
+     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
+     *
+     * @return array
+     */
+    private function solrSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000)
     {
         if (!empty($q)) {
             $query = $this->client->createSelect();
-            $query->setQuery('collection_txt:' . trim($q));
+
+            $q = trim($q);
+            $qHelper = new Helper();
+            $q = $qHelper->escapeTerm($q);
+
+            $singleWord = strpos($q, ' ') === false ? true : false;
+
+            /*
+             * @see http://www.solrtutorial.com/solr-query-syntax.html
+             */
+            if ($singleWord) {
+                $queryTxt = sprintf('(title:*%s*)^1.5 (collection_txt:*%s*)', $q, $q);
+            } else {
+                $queryTxt = sprintf('(title:"%s"~%d)^1.5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
+            }
+
+            /*
+             * Search in node-sources tags name…
+             */
+            if ($searchTags) {
+                if ($singleWord) {
+                    $queryTxt .= sprintf(' (tags_txt:*%s*)', $q);
+                } else {
+                    $queryTxt .= sprintf(' (tags_txt:"%s"~%d)', $q, $proximity);
+                }
+            }
+
+            $query->setQuery($queryTxt);
 
             foreach ($args as $key => $value) {
                 if (is_array($value)) {
@@ -67,6 +110,10 @@ class FullTextSearchHandler
             }
             $query->addSort('score', $query::SORT_DESC);
             $query->setRows($rows);
+
+            if (null !== $this->logger) {
+                $this->logger->debug('[Solr] Request node-sources search…', ['query' => $queryTxt]);
+            }
 
             $resultset = $this->client->select($query);
             $reponse = json_decode($resultset->getResponse()->getBody(), true);
@@ -112,11 +159,11 @@ class FullTextSearchHandler
         // filter by tag or tags
         if (!empty($args['tags'])) {
             if ($args['tags'] instanceof Tag) {
-                $args["fq"][] = "tags_en:" . $args['tags']->getTranslatedTags()->first()->getName();
+                $args["fq"][] = "tags_txt:" . $args['tags']->getTranslatedTags()->first()->getName();
             } elseif (is_array($args['tags'])) {
                 foreach ($args['tags'] as $tag) {
                     if ($tag instanceof Tag) {
-                        $args["fq"][] = "tags_en:" . $tag->getTranslatedTags()->first()->getName();
+                        $args["fq"][] = "tags_txt:" . $tag->getTranslatedTags()->first()->getName();
                     }
                 }
             }
@@ -156,12 +203,14 @@ class FullTextSearchHandler
      *  and for highlighting argument is [here](https://cwiki.apache.org/confluence/display/solr/Standard+Highlighter).
      *
      * @param string $q
-     * @param array  $args
-     * @param int  $rows
+     * @param array $args
+     * @param int $rows
+     * @param boolean $searchTags Search in tags too, even if a node don’t match
+     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      *
      * @return array
      */
-    public function searchWithHighlight($q, $args = [], $rows = 20)
+    public function searchWithHighlight($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
@@ -172,7 +221,7 @@ class FullTextSearchHandler
         $tmp["hl.simple.post"] = "</span>";
         $args = array_merge($tmp, $args);
 
-        return $this->solrSearch($q, $args, $rows);
+        return $this->solrSearch($q, $args, $rows, $searchTags, $proximity);
     }
 
     /**
@@ -200,15 +249,17 @@ class FullTextSearchHandler
      * @param string $q
      * @param array  $args
      * @param int  $rows
+     * @param boolean $searchTags Search in tags too, even if a node don’t match
+     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      *
      * @return array
      */
-    public function search($q, $args = [], $rows = 20)
+    public function search($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
         $tmp = [];
         $args = array_merge($tmp, $args);
-        return $this->solrSearch($q, $args, $rows);
+        return $this->solrSearch($q, $args, $rows, $searchTags, $proximity);
     }
 }

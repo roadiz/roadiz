@@ -152,6 +152,21 @@
 
         .parent-node-name {
             color: rgba(255, 255, 255, 0.25);
+            margin: 0;
+
+            span {
+                display: inline-block;
+
+                &.sub {
+                    color: rgba(255, 255, 255, 0.20);
+
+                    &:after {
+                        content: '/';
+                        display: inline-block;
+                        margin: 0px 3px;
+                    }
+                }
+            }
         }
 
         .uk-sortable-handle{

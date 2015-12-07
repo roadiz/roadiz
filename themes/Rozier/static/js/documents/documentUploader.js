@@ -78,7 +78,7 @@ DocumentUploader.prototype.init = function() {
             });
             this.on("success", function(file, data) {
                 console.log(data);
-                _this.options.onSuccess(JSON.parse(data));
+                _this.options.onSuccess(data);
                 Rozier.getMessages();
             });
             this.on("canceled", function(file, data) {
