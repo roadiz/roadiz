@@ -57,26 +57,13 @@ class Request extends BaseRequest
 
     /**
      * Get absolute base url containing Hostname and
-     * baseUrl.
+     * basePath.
      *
      * @return string
      */
     public function getAbsoluteBaseUrl()
     {
-        $schemeAuthority = '';
-        $port = '';
-        $scheme = $this->getScheme();
-
-        if ('http' === $scheme && 80 != $this->getPort()) {
-            $port = ':' . $this->getPort();
-        } elseif ('https' === $scheme && 443 != $this->getPort()) {
-            $port = ':' . $this->getHttpsPort();
-        }
-
-        $schemeAuthority = $scheme . '://';
-        $schemeAuthority .= $this->getHost() . $port;
-
-        return $schemeAuthority . $this->getBasePath();
+        return $this->getSchemeAndHttpHost() . $this->getBasePath();
     }
 
     /**
