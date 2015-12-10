@@ -123,6 +123,9 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
         if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
+        if (isset($args['loop'])) {
+            $queryString['loop'] = (int) $args['loop'];
+        }
         if (isset($args['color'])) {
             $queryString['color'] = $args['color'];
         }
