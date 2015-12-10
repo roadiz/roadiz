@@ -66,6 +66,15 @@ class RoadizApplication extends Application
         $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
         // Use default Doctrine commands
         ConsoleRunner::addCommands($this);
+
+        /*
+         * Define a request wide timezone
+         */
+        if (!empty($this->kernel->container['config']["timezone"])) {
+            date_default_timezone_set($this->kernel->container['config']["timezone"]);
+        } else {
+            date_default_timezone_set("Europe/Paris");
+        }
     }
 
     /**
