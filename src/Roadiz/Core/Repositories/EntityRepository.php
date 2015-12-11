@@ -346,7 +346,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             return $collection->count();
         } elseif (is_array($criteria)) {
             $qb = $this->_em->createQueryBuilder();
-            $qb->add('select', 'count(obj.id)')
+            $qb->select($qb->expr()->countDistinct('obj.id'))
                 ->add('from', $this->getEntityName() . ' obj');
 
             foreach ($criteria as $key => $value) {

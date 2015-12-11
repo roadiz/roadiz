@@ -370,7 +370,7 @@ class NodeRepository extends EntityRepository
     ) {
 
         $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'count(n.id)')
+        $qb->select($qb->expr()->countDistinct('n.id'))
             ->add('from', $this->getEntityName() . ' n');
 
         $this->filterByTranslation($criteria, $qb, $translation);
