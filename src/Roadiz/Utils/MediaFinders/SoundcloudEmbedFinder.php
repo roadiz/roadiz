@@ -106,7 +106,7 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
-     * {@inheritdoc}
+     * Get embed media source URL.
      *
      * ## Available fields
      *
@@ -116,6 +116,10 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      * * show_user
      * * show_reposts
      * * visual
+     *
+     * @param array $args
+     *
+     * @return string
      */
     public function getSource(&$args = [])
     {

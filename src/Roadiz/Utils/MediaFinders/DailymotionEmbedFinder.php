@@ -101,7 +101,17 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
-     * {@inheritdoc}
+     * Get embed media source URL.
+     *
+     * ## Available fields
+     *
+     * * loop
+     * * autoplay
+     * * controls
+     *
+     * @param array $args
+     *
+     * @return string
      */
     public function getSource(&$args = [])
     {

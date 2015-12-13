@@ -133,32 +133,32 @@ class Font extends AbstractDateTimed
                     'weight' => 300,
                 ];
 
-                case static::LIGHT:
+            case static::LIGHT:
                 return [
                     'style' => 'normal',
                     'weight' => 300,
                 ];
 
-                case static::BOLD_ITALIC:
+            case static::BOLD_ITALIC:
                 return [
                     'style' => 'italic',
                     'weight' => 'bold',
                 ];
 
-                case static::BOLD:
+            case static::BOLD:
                 return [
                     'style' => 'normal',
                     'weight' => 'bold',
                 ];
 
-                case static::ITALIC:
+            case static::ITALIC:
                 return [
                     'style' => 'italic',
                     'weight' => 'normal',
                 ];
 
-                case static::REGULAR:
-                default:
+            case static::REGULAR:
+            default:
                 return [
                     'style' => 'normal',
                     'weight' => 'normal',

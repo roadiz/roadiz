@@ -103,15 +103,22 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
-     * {@inheritdoc}
+     * Get embed media source URL.
      *
-     * Additional attributes for Vimeo
+     * ### Vimeo embed parameters
      *
      * * displayTitle
      * * byline
      * * portrait
+     * * autoplay
      * * color
      * * loop
+     * * controls
+     * * api
+     *
+     * @param array $args
+     *
+     * @return string
      */
     public function getSource(&$args = [])
     {

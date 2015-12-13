@@ -110,20 +110,24 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
-     * {@inheritdoc}
+     * Get embed media source URL.
      *
-     *  ### Embed parameters
+     * ### Youtube embed parameters
      *
-     *  * autoplay
-     *  * loop
-     *  * color
-     *  * controls
-     *  * fs
-     *  * modestbranding
-     *  * rel
-     *  * showinfo
-     *  * start
-     *  * enablejsapi
+     * * autoplay
+     * * loop
+     * * color
+     * * controls
+     * * fs
+     * * modestbrandin
+     * * rel
+     * * showinfo
+     * * start
+     * * enablejsapi
+     *
+     * @param array $args
+     *
+     * @return string
      */
     public function getSource(&$args = [])
     {
