@@ -302,15 +302,16 @@ class DocumentViewer implements ViewableInterface
      * - noProcess (boolean) : Disable image resample
      *
      * @param array $args
+     * @param boolean $absolute
      *
      * @return string Url
      */
-    public function getDocumentUrlByArray($args = null)
+    public function getDocumentUrlByArray($args = null, $absolute = false)
     {
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getService('request')->getStaticBaseUrl($absolute) . '/files/' . $this->document->getRelativeUrl();
         } else {
             $slirArgs = [];
 
@@ -354,10 +355,24 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            $url = Kernel::getService('urlGenerator')->generate('interventionRequestProcess', [
+            $routeParams = [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl(),
-            ], UrlGenerator::ABSOLUTE_PATH);
+            ];
+
+            if ($absolute === false) {
+                $url = Kernel::getService('urlGenerator')->generate(
+                    'interventionRequestProcess',
+                    $routeParams,
+                    UrlGenerator::ABSOLUTE_PATH
+                );
+            } else {
+                $url = Kernel::getService('urlGenerator')->generate(
+                    'interventionRequestProcess',
+                    $routeParams,
+                    UrlGenerator::ABSOLUTE_URL
+                );
+            }
 
             return Kernel::getService('request')->convertUrlToStaticDomainUrl($url);
         }

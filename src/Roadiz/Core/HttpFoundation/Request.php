@@ -91,15 +91,17 @@ class Request extends BaseRequest
      *
      * If “static_domain_name” is empty, this method returns baseUrl
      *
+     * @param boolean $absolute
+     *
      * @return string
      */
-    public function getStaticBaseUrl()
+    public function getStaticBaseUrl($absolute = false)
     {
         $staticDomain = SettingsBag::get('static_domain_name');
         if (!empty($staticDomain)) {
             return $this->convertUrlToStaticDomainUrl($this->getAbsoluteBaseUrl());
         } else {
-            return $this->getBasePath();
+            return $absolute ? $this->getBaseUrl() : $this->getBasePath();
         }
     }
 }
