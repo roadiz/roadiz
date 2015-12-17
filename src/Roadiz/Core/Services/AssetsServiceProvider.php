@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 use AM\InterventionRequest\Configuration;
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
