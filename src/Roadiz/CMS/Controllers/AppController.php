@@ -221,15 +221,7 @@ class AppController extends Controller
      */
     public function getStaticResourcesUrl()
     {
-        $staticDomain = SettingsBag::get('static_domain_name');
-
-        if (!empty($staticDomain)) {
-            return $this->getRequest()->getStaticBaseUrl() .
-            '/themes/' . static::$themeDir . '/static/';
-        } else {
-            return $this->getRequest()->getBasePath() .
-            '/themes/' . static::$themeDir . '/static/';
-        }
+        return $this->getService('assetPackages')->getUrl('/themes/' . static::$themeDir . '/static/');
     }
 
     /**
@@ -309,7 +301,7 @@ class AppController extends Controller
                 'devMode' => $this->container['kernel']->isDevMode(),
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
-                'baseUrl' => $this->getRequest()->getAbsoluteBaseUrl(),
+                'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->container['csrfTokenManager']->getToken(static::AJAX_TOKEN_INTENTION),
@@ -367,8 +359,8 @@ class AppController extends Controller
                 }
             }
             $this->theme = $this->getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                 ->findOneByClassName($className);
+                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->findOneByClassName($className);
         }
         return $this->theme;
     }
@@ -398,29 +390,29 @@ class AppController extends Controller
             if ($home !== null) {
                 if ($translation !== null) {
                     return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                ->findWithTranslation(
-                                    $home->getId(),
-                                    $translation,
-                                    $this->container['securityAuthorizationChecker']
-                                );
+                        ->findWithTranslation(
+                            $home->getId(),
+                            $translation,
+                            $this->container['securityAuthorizationChecker']
+                        );
                 } else {
                     return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
-                                ->findWithDefaultTranslation(
-                                    $home->getId(),
-                                    $this->container['securityAuthorizationChecker']
-                                );
+                        ->findWithDefaultTranslation(
+                            $home->getId(),
+                            $this->container['securityAuthorizationChecker']
+                        );
                 }
             }
         }
         if ($translation !== null) {
             return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findHomeWithTranslation(
-                            $translation,
-                            $this->container['securityAuthorizationChecker']
-                        );
+                ->findHomeWithTranslation(
+                    $translation,
+                    $this->container['securityAuthorizationChecker']
+                );
         } else {
             return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                        ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
+                ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
         }
     }
 
@@ -493,7 +485,7 @@ class AppController extends Controller
     {
         $user = $this->getUser();
         $node = $this->container['em']
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
             $this->container['em']->refresh($node);

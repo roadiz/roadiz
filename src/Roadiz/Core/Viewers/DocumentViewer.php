@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\SvgDocumentViewer;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use RZ\Roadiz\Utils\Asset\Packages;
 
 /**
  * DocumentViewer
@@ -56,6 +57,7 @@ class DocumentViewer implements ViewableInterface
     public function __construct(Document $document)
     {
         $this->document = $document;
+
     }
 
     /**
@@ -170,7 +172,7 @@ class DocumentViewer implements ViewableInterface
                 $this->document->getAbsolutePath(),
                 $assignation,
                 $asObject,
-                Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl()
+                Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
             );
             return $viewer->getContent();
         } elseif ($this->document->isImage()) {
@@ -274,7 +276,7 @@ class DocumentViewer implements ViewableInterface
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
-                'url' => Kernel::getService('request')->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
+                'url' => Kernel::getService('assetPackages')->getUrl($source->getRelativeUrl(), Packages::DOCUMENTS),
             ];
         }
 
@@ -308,10 +310,12 @@ class DocumentViewer implements ViewableInterface
      */
     public function getDocumentUrlByArray($args = null, $absolute = false)
     {
+        $packageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
+
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getService('request')->getStaticBaseUrl($absolute) . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), $packageName);
         } else {
             $slirArgs = [];
 
@@ -360,21 +364,17 @@ class DocumentViewer implements ViewableInterface
                 'filename' => $this->document->getRelativeUrl(),
             ];
 
-            if ($absolute === false) {
-                $url = Kernel::getService('urlGenerator')->generate(
-                    'interventionRequestProcess',
-                    $routeParams,
-                    UrlGenerator::ABSOLUTE_PATH
-                );
-            } else {
-                $url = Kernel::getService('urlGenerator')->generate(
-                    'interventionRequestProcess',
-                    $routeParams,
-                    UrlGenerator::ABSOLUTE_URL
-                );
-            }
+            $url = Kernel::getService('urlGenerator')->generate(
+                'interventionRequestProcess',
+                $routeParams,
+                UrlGenerator::ABSOLUTE_PATH
+            );
 
-            return Kernel::getService('request')->convertUrlToStaticDomainUrl($url);
+            if ($absolute === false) {
+                return Kernel::getService('assetPackages')->getUrl($url);
+            } else {
+                return Kernel::getService('assetPackages')->getUrl($url, Packages::ABSOLUTE);
+            }
         }
     }
 }

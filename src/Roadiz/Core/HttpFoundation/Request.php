@@ -29,9 +29,8 @@
  */
 namespace RZ\Roadiz\Core\HttpFoundation;
 
-use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use Symfony\Component\HttpFoundation\Request as BaseRequest;
 
 /**
  * Roadiz Request extending Symfony to be able to store current
@@ -53,55 +52,5 @@ class Request extends BaseRequest
     public function getTheme()
     {
         return $this->theme;
-    }
-
-    /**
-     * Get absolute base url containing Hostname and
-     * basePath.
-     *
-     * @return string
-     */
-    public function getAbsoluteBaseUrl()
-    {
-        return $this->getSchemeAndHttpHost() . $this->getBasePath();
-    }
-
-    /**
-     * @param  string $url Absolute Url with primary domain.
-     *
-     * @return string      Absolute Url with static domain.
-     */
-    public function convertUrlToStaticDomainUrl($url)
-    {
-        $staticDomain = SettingsBag::get('static_domain_name');
-
-        if (!empty($staticDomain)) {
-            return preg_replace('#://([^:^/]+)#', '://' . $staticDomain, $url);
-        } else {
-            return $url;
-        }
-    }
-
-    /**
-     * Get a FQDN base url for static resources.
-     *
-     * You should fill “static_domain_name” setting after your
-     * static domain name. Do not forget to create a virtual host
-     * for this domain to serve the same content as your primary domain.
-     *
-     * If “static_domain_name” is empty, this method returns baseUrl
-     *
-     * @param boolean $absolute
-     *
-     * @return string
-     */
-    public function getStaticBaseUrl($absolute = false)
-    {
-        $staticDomain = SettingsBag::get('static_domain_name');
-        if (!empty($staticDomain)) {
-            return $this->convertUrlToStaticDomainUrl($this->getAbsoluteBaseUrl());
-        } else {
-            return $absolute ? $this->getBaseUrl() : $this->getBasePath();
-        }
     }
 }
