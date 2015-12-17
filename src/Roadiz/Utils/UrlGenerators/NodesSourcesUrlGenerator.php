@@ -67,15 +67,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             $schemeAuthority = '';
 
             if ($absolute === true) {
-                $port = '';
-                $scheme = $this->request->getScheme();
-                if ('http' === $scheme && 80 != $this->request->getPort()) {
-                    $port = ':' . $this->request->getPort();
-                } elseif ('https' === $scheme && 443 != $this->request->getPort()) {
-                    $port = ':' . $this->request->getHttpsPort();
-                }
-                $schemeAuthority = $scheme . '://';
-                $schemeAuthority .= $this->request->getHost() . $port;
+                $schemeAuthority = $this->request->getSchemeAndHttpHost();
             }
 
             return $schemeAuthority .

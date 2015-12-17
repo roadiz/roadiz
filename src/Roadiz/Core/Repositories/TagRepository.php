@@ -296,7 +296,7 @@ class TagRepository extends EntityRepository
     ) {
 
         $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'count(tg.id)')
+        $qb->select($qb->expr()->countDistinct('tg.id'))
             ->add('from', $this->getEntityName() . ' tg');
 
         $this->filterByNodes($criteria, $qb);

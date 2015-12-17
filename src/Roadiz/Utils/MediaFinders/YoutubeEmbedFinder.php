@@ -110,7 +110,24 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
-     * {@inheritdoc}
+     * Get embed media source URL.
+     *
+     * ### Youtube embed parameters
+     *
+     * * autoplay
+     * * loop
+     * * color
+     * * controls
+     * * fs
+     * * modestbrandin
+     * * rel
+     * * showinfo
+     * * start
+     * * enablejsapi
+     *
+     * @param array $args
+     *
+     * @return string
      */
     public function getSource(&$args = [])
     {
@@ -123,11 +140,30 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
         if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
+        if (isset($args['loop'])) {
+            $queryString['loop'] = (int) $args['loop'];
+            $queryString['playlist'] = $this->embedId;
+        }
         if (isset($args['color'])) {
             $queryString['color'] = $args['color'];
         }
         if (isset($args['controls'])) {
             $queryString['controls'] = (int) $args['controls'];
+        }
+        if (isset($args['fs'])) {
+            $queryString['fs'] = (int) $args['fs'];
+        }
+        if (isset($args['modestbranding'])) {
+            $queryString['modestbranding'] = (int) $args['modestbranding'];
+        }
+        if (isset($args['rel'])) {
+            $queryString['rel'] = (int) $args['rel'];
+        }
+        if (isset($args['showinfo'])) {
+            $queryString['showinfo'] = (int) $args['showinfo'];
+        }
+        if (isset($args['start'])) {
+            $queryString['start'] = (int) $args['start'];
         }
         if (isset($args['enablejsapi'])) {
             $queryString['enablejsapi'] = (int) $args['enablejsapi'];

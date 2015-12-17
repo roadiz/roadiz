@@ -376,7 +376,7 @@ class DocumentRepository extends EntityRepository
     ) {
 
         $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'count(d.id)')
+        $qb->select($qb->expr()->countDistinct('d.id'))
             ->add('from', $this->getEntityName() . ' d')
             ->andWhere($qb->expr()->eq('d.raw', ':raw'))
             ->setParameter('raw', false);

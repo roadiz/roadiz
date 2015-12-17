@@ -45,15 +45,26 @@ abstract class AbstractConfigurationServiceProvider implements \Pimple\ServicePr
          * Every path to parse to find doctrine entities
          */
         $container['entitiesPaths'] = function ($c) {
+            $relPaths = [];
+            $absPaths = [];
             if (isset($c['config']['entities'])) {
-                return $c['config']['entities'];
+                $relPaths = $c['config']['entities'];
             } else {
-                return [
+                $relPaths = [
                     "src/Roadiz/Core/Entities",
                     "src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources",
                 ];
             }
+
+            /*
+             * We need to work with absolute paths.
+             */
+            foreach ($relPaths as $relPath) {
+                $absPaths[] = $c['kernel']->getRootDir() . '/' . $relPath;
+            }
+
+            return $absPaths;
         };
 
         return $container;

@@ -376,7 +376,7 @@ class NodesSourcesRepository extends EntityRepository
         $preview = false
     ) {
         $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'count(ns.id)')
+        $qb->select($qb->expr()->countDistinct('ns.id'))
             ->add('from', $this->getEntityName() . ' ns');
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);

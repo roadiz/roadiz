@@ -142,7 +142,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
                         $c['kernel']->isDevMode(),
-                        ROADIZ_ROOT . '/gen-src/Proxies',
+                        $c['kernel']->getRootDir() . '/gen-src/Proxies',
                         $c['kernel']->getEnvironment()
                     );
                 }
@@ -150,11 +150,11 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
                     $c['kernel']->isDevMode(),
-                    ROADIZ_ROOT . '/gen-src/Proxies',
+                    $c['kernel']->getRootDir() . '/gen-src/Proxies',
                     $cache,
                     false
                 );
-                $config->setProxyDir(ROADIZ_ROOT . '/gen-src/Proxies');
+                $config->setProxyDir($c['kernel']->getRootDir() . '/gen-src/Proxies');
                 $config->setProxyNamespace('Proxies');
 
                 return $config;
@@ -163,9 +163,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
             $container['em'] = function ($c) {
                 try {
                     $c['stopwatch']->start('initDoctrine');
-
                     $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
-
                     $evm = $em->getEventManager();
 
                     /*
