@@ -33,6 +33,7 @@ use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -140,24 +141,24 @@ class AssetsController extends AppController
                 switch ($extension) {
                     case 'eot':
                         $fontpath = $font->getEOTAbsolutePath();
-                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['eot'];
+                        $mime = Font::$extensionToMime['eot'];
                         break;
                     case 'woff':
                         $fontpath = $font->getWOFFAbsolutePath();
-                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff'];
+                        $mime = Font::$extensionToMime['woff'];
                         break;
                     case 'woff2':
                         $fontpath = $font->getWOFF2AbsolutePath();
-                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['woff2'];
+                        $mime = Font::$extensionToMime['woff2'];
                         break;
                     case 'svg':
                         $fontpath = $font->getSVGAbsolutePath();
-                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['svg'];
+                        $mime = Font::$extensionToMime['svg'];
                         break;
                     case 'otf':
                     case 'ttf':
                         $fontpath = $font->getOTFAbsolutePath();
-                        $mime = \RZ\Roadiz\Core\Entities\Font::$extensionToMime['otf'];
+                        $mime = Font::$extensionToMime['otf'];
                         break;
                     default:
                         $fontpath = "";
@@ -182,7 +183,7 @@ class AssetsController extends AppController
             } else {
                 return new Response(
                     "Font Fail " . $token,
-                    Response::HTTP_NOT_FOUND,
+                    Response::HTTP_BAD_REQUEST,
                     ['content-type' => 'text/html']
                 );
             }
