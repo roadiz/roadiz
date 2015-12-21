@@ -119,8 +119,18 @@ class DownscaleImageManagerTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals($originalHashes[$key], $afterHash);
                 $this->assertNull($document->getRawDocument());
             } else {
+                /*
+                 * Other must be dowscaled
+                 * a raw image should be saved.
+                 */
                 $this->assertNotEquals($originalHashes[$key], $afterHash);
                 $this->assertNotNull($document->getRawDocument());
+
+                /*
+                 * Raw document must be equal to original file
+                 */
+                $rawHash = hash_file('md5', $document->getRawDocument()->getAbsolutePath());
+                $this->assertEquals($originalHashes[$key], $rawHash);
             }
         }
 
