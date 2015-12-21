@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
     vb.memory = "1024"
   end
 
-  config.vm.provision "roadiz", path: "samples/vagrant-provisioning.sh"
-  config.vm.provision "solr", path: "samples/vagrant-solr-provisioning.sh"
-  config.vm.provision "devtools", path: "samples/vagrant-devtools-provisioning.sh"
+  config.vm.provision "roadiz",   type: :shell, path: "samples/vagrant-provisioning.sh"
+  config.vm.provision "solr",     type: :shell, path: "samples/vagrant-solr-provisioning.sh"
+  config.vm.provision "devtools", type: :shell, path: "samples/vagrant-devtools-provisioning.sh"
 end

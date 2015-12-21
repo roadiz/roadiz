@@ -6,9 +6,6 @@ export DEBIAN_FRONTEND=noninteractive
 SOLR_VERSION="5.3.1"
 SOLR_MIRROR="http://apache.mirrors.ovh.net/ftp.apache.org/dist"
 
-echo -e "\n--- Okay, installing now... ---\n"
-echo -e "\n--- Updating packages list ---\n"
-
 sudo apt-get -qq update;
 
 # Install Apache Solr - based on article from Tomasz Muras - https://twitter.com/zabuch
@@ -34,15 +31,10 @@ echo -e "\n--- Restarting Solr server ---\n"
 sudo service solr restart > /dev/null 2>&1;
 
 ##### CLEAN UP #####
-echo -e "\n--- Cleaning up ---\n"
 sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
 sudo apt-get autoremove -y  > /dev/null 2>&1; # remove obsolete packages
 
-# Set envvars
-export DB_HOST=$DBHOST
-export DB_NAME=$DBNAME
-export DB_USER=$DBUSER
-export DB_PASS=$DBPASSWD
-
-echo -e "\n--- Your Solr server is ready ---\n"
+echo -e "\n-----------------------------------------------------------"
+echo -e "\n---------------- Your Solr server is ready ----------------"
 echo -e "\n* Type http://localhost:8983/solr to use Apache Solr admin."
+echo -e "\n-----------------------------------------------------------"

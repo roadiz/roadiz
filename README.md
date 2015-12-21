@@ -102,15 +102,27 @@ choose the `roadiz` provisioner which only set up the LEMP stack. So that you c
 use *Composer* directly on your host machine to take benefit of your cache 
 if you have lots of Roadiz websites.
 
-```
+```bash
 # Just LEMP stack, no Solr, no Composer, no NPM, no grunt, no bower
-vagrant up --provision-with roadiz
+vagrant up --no-provision
+vagrant provision --provision-with roadiz
 
-# If you need Solr later
-vagrant provision --provision-with solr
+# If you need Solr
+# do not use space after comma
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,solr
 
-# If you need dev tools later
-vagrant provision --provision-with devtools
+# If you need dev tools
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,devtools
+```
+
+When you use default `vagrant up` command, it’s the same as using:
+
+```bash
+# Default vagrant up provisioners
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,solr,devtools
 ```
 
 ### Database connexion
