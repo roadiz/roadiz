@@ -16,8 +16,14 @@
             {% if not document.private %}
                 {% if document.image or document.svg or document.video %}
                 <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
-                {% endif %}
                 <div class="document-source"><code>{{ document|url(thumbnailFormat) }}</code></div>
+
+                {% if document.mimeType == 'image/gif' %}
+                <hr />
+                <figure class="uk-thumbnail">{{ document|display({noProcess:true}) }}</figure>
+                <div class="document-source"><code>{{ document|url({noProcess:true}) }}</code></div>
+                {% endif %}
+                {% endif %}
 
                 {% if document.isEmbed and document.getViewer.getEmbedFinder %}
                 <hr />
