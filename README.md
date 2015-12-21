@@ -95,6 +95,24 @@ Be careful, **Windows users**, this `Vagrantfile` is configured to use a *NFS* f
 Do not hesitate to disable it if you did not setup a NFS emulator. For OS X and Linux user
 this is built-in your system, so have fun!
 
+#### Provisioners
+
+If you don’t need Apache Solr or any development tools on your Vagrant VM, you can
+choose the `roadiz` provisioner which only set up the LEMP stack. So that you can
+use *Composer* directly on your host machine to take benefit of your cache 
+if you have lots of Roadiz websites.
+
+```
+# Just LEMP stack, no Solr, no Composer, no NPM, no grunt, no bower
+vagrant up --provision-with roadiz
+
+# If you need Solr later
+vagrant provision --provision-with solr
+
+# If you need dev tools later
+vagrant provision --provision-with devtools
+```
+
 ### Database connexion
 
 To connect manually to your database, you can add this to your `config.yml`:
