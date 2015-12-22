@@ -54,19 +54,13 @@ class Font extends AbstractDateTimed
     const LIGHT = 4;
     const LIGHT_ITALIC = 5;
 
-    /**
-     * Get Mime type for each font file extensions.
-     *
-     * @var array
-     */
-    public static $extensionToMime = [
-        'svg' => 'image/svg+xml',
-        'ttf' => 'application/x-font-truetype',
-        'otf' => 'application/x-font-opentype',
-        'woff' => 'application/font-woff',
-        'woff2' => 'application/font-woff2',
-        'eot' => 'application/vnd.ms-fontobject',
-    ];
+    const MIME_DEFAULT = 'application/octet-stream';
+    const MIME_SVG = 'image/svg+xml';
+    const MIME_TTF = 'application/x-font-truetype';
+    const MIME_OTF = 'application/x-font-opentype';
+    const MIME_WOFF = 'application/font-woff';
+    const MIME_WOFF2 = 'application/font-woff2';
+    const MIME_EOT = 'application/vnd.ms-fontobject';
 
     /**
      * Get readable variant association
@@ -481,13 +475,6 @@ class Font extends AbstractDateTimed
     public function getHandler()
     {
         return new \RZ\Roadiz\Core\Handlers\FontHandler($this);
-    }
-    /**
-     * @return RZ\Roadiz\Core\Handlers\FontViewer
-     */
-    public function getViewer()
-    {
-        return new \RZ\Roadiz\Core\Viewers\FontViewer($this);
     }
 
     /**

@@ -195,10 +195,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
         if (!$this->isInstallMode()) {
             $this->container['dispatcher']->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
-            $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
-                $this->container['securityAuthorizationChecker'],
-                $this->container['securityTokenStorage']
-            ));
 
             if ($this->isPreview()) {
                 $this->container['dispatcher']->addSubscriber(new PreviewModeSubscriber($this->container));

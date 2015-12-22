@@ -33,6 +33,7 @@ use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
@@ -129,11 +130,13 @@ class AssetsController extends AppController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function fontFileAction($filename, $variant, $extension, $token)
+    public function fontFileAction(Request $request, $filename, $variant, $extension, $token)
     {
-        $font = $this->getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font')
-            ->findOneBy(['hash' => $filename, 'variant' => $variant]);
+        $repository = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $lastMod = $repository->getLatestUpdateDate();
+
+        $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
             $token = new CsrfToken($font->getHash() . $font->getVariant(), $token);
@@ -141,42 +144,49 @@ class AssetsController extends AppController
                 switch ($extension) {
                     case 'eot':
                         $fontpath = $font->getEOTAbsolutePath();
-                        $mime = Font::$extensionToMime['eot'];
+                        $mime = Font::MIME_EOT;
                         break;
                     case 'woff':
                         $fontpath = $font->getWOFFAbsolutePath();
-                        $mime = Font::$extensionToMime['woff'];
+                        $mime = Font::MIME_WOFF;
                         break;
                     case 'woff2':
                         $fontpath = $font->getWOFF2AbsolutePath();
-                        $mime = Font::$extensionToMime['woff2'];
+                        $mime = Font::MIME_WOFF2;
                         break;
                     case 'svg':
                         $fontpath = $font->getSVGAbsolutePath();
-                        $mime = Font::$extensionToMime['svg'];
+                        $mime = Font::MIME_SVG;
                         break;
                     case 'otf':
-                    case 'ttf':
+                        $mime = Font::MIME_OTF;
                         $fontpath = $font->getOTFAbsolutePath();
-                        $mime = Font::$extensionToMime['otf'];
+                        break;
+                    case 'ttf':
+                        $mime = Font::MIME_TTF;
+                        $fontpath = $font->getOTFAbsolutePath();
                         break;
                     default:
                         $fontpath = "";
-                        $mime = "text/html";
+                        $mime = "application/octet-stream";
                         break;
                 }
 
                 if ("" != $fontpath) {
                     $response = new Response(
-                        file_get_contents($fontpath),
-                        Response::HTTP_OK,
+                        '',
+                        Response::HTTP_NOT_MODIFIED,
                         ['content-type' => $mime]
                     );
-                    $date = new \DateTime();
-                    $date->modify('+2 hours');
-                    $response->setExpires($date);
-                    $response->setPrivate();
-                    $response->setMaxAge(60 * 60 * 2);
+                    $response->setCache([
+                        'last_modified' => new \DateTime($lastMod),
+                        'max_age' => 60 * 60 * 2,
+                        'public' => false,
+                    ]);
+                    if (!$response->isNotModified($request)) {
+                        $response->setContent(file_get_contents($fontpath));
+                        $response->setStatusCode(Response::HTTP_OK);
+                    }
 
                     return $response;
                 }
@@ -227,14 +237,26 @@ class AssetsController extends AppController
 
         $fonts = $repository->findAll();
 
-        $fontOutput = [];
+        $assignation = [
+            'fonts' => [],
+        ];
 
         foreach ($fonts as $font) {
-            $fontOutput[] = $font->getViewer()
-                ->getCSSFontFace($this->getService('csrfTokenManager'));
+            $variantHash = $font->getHash() . $font->getVariant();
+            $assignation['fonts'][] = [
+                'font' => $font,
+                'site' => SettingsBag::get('site_name'),
+                'fontFolder' => '/' . Font::getFilesFolderName(),
+                'token' => $this->getService('csrfTokenManager')->getToken($variantHash),
+                'variantHash' => $variantHash,
+            ];
         }
-
-        $response->setContent(implode(PHP_EOL, $fontOutput));
+        $response->setContent(
+            $this->getService('twig.environment')->render(
+                'fonts/fontfamily.css.twig',
+                $assignation
+            )
+        );
         $response->setStatusCode(Response::HTTP_OK);
 
         return $response;
