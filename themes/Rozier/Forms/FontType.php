@@ -92,6 +92,7 @@ class FontType extends AbstractType
                                 'application/x-font-otf',
                                 'application/font-ttf',
                                 'application/x-font-ttf',
+                                'application/octet-stream',
                             ],
                             'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
                         ]),
