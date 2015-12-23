@@ -1,11 +1,34 @@
 {% spaceless %}
-<img
-	data-document
-	alt="{{ alt }}"
-	src="{{ url }}"
-	{% if width %}width="{{ width }}" {% endif %}
-	{% if height %}height="{{ height }}" {% endif %}
-	{% if class %}class="{{ class }}" {% endif %}
-	{% if identifier %}id="{{ identifier }}" {% endif %}
-/>
+{% set attributes = [
+    'alt="' ~ alt|url_encode ~ '"',
+] %}
+{% if lazyload %}
+{% set attributes = attributes|merge(['data-src="' ~ url ~ '"']) %}
+    {% if srcset %}
+    {% set attributes = attributes|merge(['data-srcset="' ~ srcset ~ '"']) %}
+    {% endif %}
+{% else %}
+{% set attributes = attributes|merge(['src="' ~ url ~ '"']) %}
+    {% if srcset %}
+    {% set attributes = attributes|merge(['srcset="' ~ srcset ~ '"']) %}
+    {% endif %}
+{% endif %}
+
+{% if width %}
+{% set attributes = attributes|merge(['width="' ~ width ~ '"']) %}
+{% endif %}
+
+{% if height %}
+{% set attributes = attributes|merge(['height="' ~ height ~ '"']) %}
+{% endif %}
+
+{% if class %}
+{% set attributes = attributes|merge(['class="' ~ class ~ '"']) %}
+{% endif %}
+
+{% if identifier %}
+{% set attributes = attributes|merge(['id="' ~ identifier ~ '"']) %}
+{% endif %}
+
+<img {{ attributes|join(' ')|raw }} />
 {% endspaceless %}

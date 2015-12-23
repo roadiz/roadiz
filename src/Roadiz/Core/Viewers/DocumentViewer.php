@@ -77,6 +77,28 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
+     *
+     * @param  array   $args
+     * @param  boolean $absolute
+     * @return string
+     */
+    protected function parseSrcSet(array $args = [], $absolute = false)
+    {
+        if (isset($args['srcset']) && is_array($args['srcset'])) {
+            $srcset = [];
+            foreach ($args['srcset'] as $key => $set) {
+                if (isset($set['format']) && isset($set['rule'])) {
+                    $srcset[] = $this->getDocumentUrlByArray($set['format'], $absolute) . ' ' . $set['rule'];
+                }
+            }
+
+            return implode(', ', $srcset);
+        }
+
+        return false;
+    }
+
+    /**
      * Output a document HTML tag according to its Mime type and
      * the arguments array.
      *
@@ -91,6 +113,7 @@ class DocumentViewer implements ViewableInterface
      *
      * - width
      * - height
+     * - lazyload (true | false) set src in data-src
      * - crop ({w}x{h}, for example : 100x200)
      * - fit ({w}x{h}, for example : 100x200)
      * - rotate (1-359 degrees, for example : 90)
@@ -103,6 +126,11 @@ class DocumentViewer implements ViewableInterface
      * - progressive (boolean)
      * - noProcess (boolean) : Disable image resample
      * - inline : For SVG, display SVG code in Html instead of using <object>
+     * - srcset : Array
+     *     [
+     *         - format: Array
+     *         - rule
+     *     ]
      *
      * ## Audio / Video options
      *
@@ -115,11 +143,21 @@ class DocumentViewer implements ViewableInterface
      */
     public function getDocumentByArray($args = null)
     {
+        $absolute = false;
+
+        if (!empty($args['absolute'])) {
+            $absolute = (boolean) $args['absolute'];
+        }
+
         $assignation = [
             'document' => $this->document,
-            'url' => $this->getDocumentUrlByArray($args),
+            'url' => $this->getDocumentUrlByArray($args, $absolute),
+            'srcset' => $this->parseSrcSet($args, $absolute),
         ];
 
+        if (!empty($args['lazyload'])) {
+            $assignation['lazyload'] = (boolean) $args['lazyload'];
+        }
         if (!empty($args['width'])) {
             $assignation['width'] = (int) $args['width'];
         }
