@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
-use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Config\Loader\LoaderInterface;
