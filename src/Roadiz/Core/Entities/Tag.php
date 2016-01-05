@@ -259,7 +259,7 @@ class Tag extends AbstractDateTimedPositioned
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getTagName() .
-        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
+            " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**

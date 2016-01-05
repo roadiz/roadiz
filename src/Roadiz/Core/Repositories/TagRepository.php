@@ -426,6 +426,7 @@ class TagRepository extends EntityRepository
             INNER JOIN t.translatedTags tt
             WHERE t.id = :tag_id
             AND tt.translation = :translation')
+            ->setMaxResults(1)
             ->setParameter('tag_id', (int) $tagId)
             ->setParameter('translation', $translation);
 
@@ -469,6 +470,7 @@ class TagRepository extends EntityRepository
             INNER JOIN tt.translation tr
             WHERE t.id = :tag_id
             AND tr.defaultTranslation = true')
+            ->setMaxResults(1)
             ->setParameter('tag_id', (int) $tagId);
 
         try {
@@ -749,5 +751,28 @@ class TagRepository extends EntityRepository
         }
 
         return $tag;
+    }
+
+    /**
+     * Get latest position in parent.
+     *
+     * Parent can be null for tag root
+     *
+     * @param  Tag|null $parentTag [description]
+     * @return int
+     */
+    public function findLatestPositionInParent(Tag $parentTag = null)
+    {
+        $query = $this->_em->createQuery('
+            SELECT MAX(t.position)
+            FROM RZ\Roadiz\Core\Entities\Tag t
+            WHERE t.parent = :parent')
+            ->setParameter('parent', $parentTag);
+
+        try {
+            return $query->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
     }
 }
