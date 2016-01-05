@@ -65,6 +65,8 @@ class TagMultiCreationController extends RozierApp
                     ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                     ->findLatestPositionInParent($parentTag);
 
+                $tagsArray = [];
+
                 foreach ($names as $name) {
                     $name = strip_tags(trim($name));
 
@@ -76,8 +78,19 @@ class TagMultiCreationController extends RozierApp
 
                     $translatedTag = new TagTranslation($tag, $translation);
                     $this->getService('em')->persist($translatedTag);
-                    $this->getService('em')->flush();
 
+                    $tagsArray[] = $tag;
+                }
+
+                /*
+                 * Flush only one time.
+                 */
+                $this->getService('em')->flush();
+
+                /*
+                 * Dispatch event and msg
+                 */
+                foreach ($tagsArray as $tag) {
                     /*
                      * Dispatch event
                      */
