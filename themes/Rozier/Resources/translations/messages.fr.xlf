@@ -6219,6 +6219,14 @@
           <source>tags.bulk.deleted</source>
           <target xml:lang="fr" state="translated">Les étiquettes sélectionnées ont été supprimées</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.childrenOrder">
+            <source>tag.childrenOrder</source>
+            <target xml:lang="fr" state="translated">Les étiquettes enfantes sont ordonnées par</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
+            <source>tag.childrenOrderDirection</source>
+            <target xml:lang="fr" state="translated">Direction de l’ordre des étiquettes enfantes</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>
