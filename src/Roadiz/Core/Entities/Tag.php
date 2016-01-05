@@ -92,11 +92,21 @@ class Tag extends AbstractDateTimedPositioned
      */
     protected $color = '#000000';
 
-
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
+
+    /**
+     * @ORM\Column(type="string", name="children_order", options={"default" = "position"})
+     */
+    private $childrenOrder = 'position';
+
+    /**
+     * @ORM\Column(type="string", name="children_order_direction", length=4, options={"default" = "ASC"})
+     */
+    private $childrenOrderDirection = 'ASC';
+
     /**
      * @return boolean
      */
@@ -280,6 +290,54 @@ class Tag extends AbstractDateTimedPositioned
     public function setColor($color)
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of childrenOrder.
+     *
+     * @return mixed
+     */
+    public function getChildrenOrder()
+    {
+        return $this->childrenOrder;
+    }
+
+    /**
+     * Sets the value of childrenOrder.
+     *
+     * @param mixed $childrenOrder the children order
+     *
+     * @return self
+     */
+    public function setChildrenOrder($childrenOrder)
+    {
+        $this->childrenOrder = $childrenOrder;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of childrenOrderDirection.
+     *
+     * @return mixed
+     */
+    public function getChildrenOrderDirection()
+    {
+        return $this->childrenOrderDirection;
+    }
+
+    /**
+     * Sets the value of childrenOrderDirection.
+     *
+     * @param mixed $childrenOrderDirection the children order direction
+     *
+     * @return self
+     */
+    public function setChildrenOrderDirection($childrenOrderDirection)
+    {
+        $this->childrenOrderDirection = $childrenOrderDirection;
 
         return $this;
     }

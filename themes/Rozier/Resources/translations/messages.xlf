@@ -6322,7 +6322,7 @@
       </trans-unit>
 
       <!-- Bulk tags -->
-        <trans-unit xml:space="preserve" id="delete.tags">
+      <trans-unit xml:space="preserve" id="delete.tags">
           <source>delete.tags</source>
           <target></target>
       </trans-unit>
@@ -6338,6 +6338,16 @@
           <source>tags.bulk.deleted</source>
           <target></target>
       </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="tag.childrenOrder">
+            <source>tag.childrenOrder</source>
+            <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
+            <source>tag.childrenOrderDirection</source>
+            <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>
