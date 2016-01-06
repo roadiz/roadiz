@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -40,7 +40,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -70,8 +69,15 @@ class NodesSourcesRepository extends EntityRepository
                     $criteria['tags'] instanceof Collection)) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
-                    $node = NodeRepository::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
-                    $criteria["node.id"] = $node;
+                    // To get an exclusive tag filter
+                    // we need to filter against each tag id
+                    // and to inner join with a different alias for each tag
+                    // with AND operator
+                    foreach ($criteria['tags'] as $index => $tag) {
+                        $alias = 'tg' . $index;
+                        $qb->innerJoin('n.tags', $alias);
+                        $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                    }
                     unset($criteria["tagExclusive"]);
                     unset($criteria['tags']);
                 } else {

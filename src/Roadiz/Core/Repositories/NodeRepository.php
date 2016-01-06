@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -59,8 +58,15 @@ class NodeRepository extends EntityRepository
                     $criteria['tags'] instanceof Collection)) {
                 if (in_array("tagExclusive", array_keys($criteria))
                     && $criteria["tagExclusive"] === true) {
-                    $node = static::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
-                    $criteria["id"] = $node;
+                    // To get an exclusive tag filter
+                    // we need to filter against each tag id
+                    // and to inner join with a different alias for each tag
+                    // with AND operator
+                    foreach ($criteria['tags'] as $index => $tag) {
+                        $alias = 'tg' . $index;
+                        $qb->innerJoin('n.tags', $alias);
+                        $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                    }
                     unset($criteria["tagExclusive"]);
                     unset($criteria['tags']);
                 } else {
@@ -80,41 +86,6 @@ class NodeRepository extends EntityRepository
                 );
             }
         }
-    }
-
-    /**
-     * Search NodeId exclusively.
-     *
-     * @param  array        $tags
-     * @param  EntityManager $em
-     *
-     * @return array
-     */
-    public static function getNodeIdsByTagExcl($tags, EntityManager $em)
-    {
-        $qb = $em->createQueryBuilder();
-
-        $qb->select("nj.id")
-            ->addSelect("COUNT(t.id) as num")
-            ->from("RZ\Roadiz\Core\Entities\Tag", "t")
-            ->leftJoin("t.nodes", "nj");
-        foreach ($tags as $key => $tag) {
-            $qb->orWhere($qb->expr()->eq('t.id', ':tag' . $key));
-        }
-        $qb->groupBy("nj.id");
-        $query = $qb->getQuery();
-        foreach ($tags as $key => $tag) {
-            $query->setParameter("tag" . $key, $tag);
-        }
-        $results = $query->getResult();
-        $count = count($tags);
-        $nodes = [];
-        foreach ($results as $key => $result) {
-            if ($count === (int) $result["num"]) {
-                $nodes[] = $result["id"];
-            }
-        }
-        return $nodes;
     }
 
     /**
@@ -279,7 +250,7 @@ class NodeRepository extends EntityRepository
     ) {
         $backendUser = null !== $authorizationChecker &&
         $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER) &&
-        $preview === true;
+            $preview === true;
 
         if ($backendUser) {
             /*
