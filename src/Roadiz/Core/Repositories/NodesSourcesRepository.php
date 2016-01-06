@@ -64,38 +64,7 @@ class NodesSourcesRepository extends EntityRepository
                 $joinedNode = true;
             }
 
-            if (is_array($criteria['tags']) ||
-                (is_object($criteria['tags']) &&
-                    $criteria['tags'] instanceof Collection)) {
-                if (in_array("tagExclusive", array_keys($criteria))
-                    && $criteria["tagExclusive"] === true) {
-                    // To get an exclusive tag filter
-                    // we need to filter against each tag id
-                    // and to inner join with a different alias for each tag
-                    // with AND operator
-                    foreach ($criteria['tags'] as $index => $tag) {
-                        $alias = 'tg' . $index;
-                        $qb->innerJoin('n.tags', $alias);
-                        $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
-                    }
-                    unset($criteria["tagExclusive"]);
-                    unset($criteria['tags']);
-                } else {
-                    $qb->innerJoin(
-                        'n.tags',
-                        'tg',
-                        'WITH',
-                        'tg.id IN (:tags)'
-                    );
-                }
-            } else {
-                $qb->innerJoin(
-                    'n.tags',
-                    'tg',
-                    'WITH',
-                    'tg.id = :tags'
-                );
-            }
+            $this->buildTagFiltering($criteria, $qb);
         }
     }
 
