@@ -31,11 +31,12 @@
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Tests\KernelDependentCase;
 
 /**
  * NodesSourcesRepositoryTest.
  */
-class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
+class NodesSourcesRepositoryTest extends KernelDependentCase
 {
     /**
      * @dataProvider findBySearchQueryProvider
@@ -43,8 +44,8 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
     public function testFindBySearchQuery($query, $expectedClass)
     {
         $nSources = Kernel::getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                ->findBySearchQuery($query);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findBySearchQuery($query);
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
@@ -60,7 +61,7 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array('Propos', 'GeneratedNodeSources\NSPage'),
-            array('Lorem markdownum', 'GeneratedNodeSources\NSPage')
+            array('Lorem markdownum', 'GeneratedNodeSources\NSPage'),
         );
     }
 
@@ -70,8 +71,8 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
     public function testFindBySearchQueryAndTranslation($query, $expectedClass, Translation $translation)
     {
         $nSources = Kernel::getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                ->findBySearchQueryAndTranslation($query, $translation);
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findBySearchQueryAndTranslation($query, $translation);
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
@@ -90,7 +91,7 @@ class NodesSourcesRepositoryTest extends PHPUnit_Framework_TestCase
 
         return array(
             array('Propos', 'GeneratedNodeSources\NSPage', $english),
-            array('Lorem markdownum', 'GeneratedNodeSources\NSPage', $english)
+            array('Lorem markdownum', 'GeneratedNodeSources\NSPage', $english),
         );
     }
 }

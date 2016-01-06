@@ -736,4 +736,9 @@ class Node extends AbstractDateTimedPositioned
             }
         }
     }
+
+    public function __toString()
+    {
+        return '[Node]' . $this->getId() . " — " . $this->getNodeName(). " <" . $this->getNodeType()->getName() . '>';
+    }
 }

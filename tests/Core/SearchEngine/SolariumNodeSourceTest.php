@@ -1,17 +1,43 @@
 <?php
-
+/**
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file SolariumNodeSourceTest.php
+ * @author Ambroise Maupate
+ */
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
-use RZ\Roadiz\Core\Kernel;
-
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use RZ\Roadiz\Tests\KernelDependentCase;
 use Solarium\Exception\HttpException;
 
 /**
  * SolariumNodeSourceTest.
  */
-class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
+class SolariumNodeSourceTest extends KernelDependentCase
 {
     private static $entityCollection;
     private static $documentCollection;
@@ -21,8 +47,8 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
         $testTitle = "Ipsum Lorem Vehicula";
 
         $nodeSource = Kernel::getService('em')
-                        ->getRepository('GeneratedNodeSources\NSPage')
-                        ->findOneBy(array('title'=>$testTitle));
+            ->getRepository('GeneratedNodeSources\NSPage')
+            ->findOneBy(array('title' => $testTitle));
 
         if (null !== $nodeSource) {
             try {
@@ -41,7 +67,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
                  */
                 // get a select query instance
                 $query = Kernel::getService('solr')->createSelect();
-                $query->setQuery('title:"'.$testTitle.'"');
+                $query->setQuery('title:"' . $testTitle . '"');
 
                 // this executes the query and returns the result
                 $resultset = Kernel::getService('solr')->select($query);
@@ -62,8 +88,8 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
         $testTitle = "Ipsum Lorem Vehicula";
 
         $nodeSource = Kernel::getService('em')
-                        ->getRepository('GeneratedNodeSources\NSPage')
-                        ->findOneBy(array('title'=>$testTitle));
+            ->getRepository('GeneratedNodeSources\NSPage')
+            ->findOneBy(array('title' => $testTitle));
 
         if (null !== $nodeSource) {
             try {
@@ -85,8 +111,8 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
         $testTitle = "Ipsum Lorem Vehicula";
 
         $nodeSource = Kernel::getService('em')
-                        ->getRepository('GeneratedNodeSources\NSPage')
-                        ->findOneBy(array('title'=>$testTitle));
+            ->getRepository('GeneratedNodeSources\NSPage')
+            ->findOneBy(array('title' => $testTitle));
 
         if (null !== $nodeSource) {
             try {
@@ -112,6 +138,8 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         static::$entityCollection = array();
         static::$documentCollection = array();
     }
@@ -141,5 +169,7 @@ class SolariumNodeSourceTest extends PHPUnit_Framework_TestCase
         } catch (HttpException $e) {
             return;
         }
+
+        parent::tearDownAfterClass();
     }
 }

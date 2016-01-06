@@ -1,13 +1,41 @@
 <?php
-
+/**
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file NodeRepositoryTest.php
+ * @author Ambroise Maupate
+ */
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Tests\KernelDependentCase;
 
-class NodeRepositoryTest extends PHPUnit_Framework_TestCase
+class NodeRepositoryTest extends KernelDependentCase
 {
     private static $nodeCollection;
     private static $tagCollection;
@@ -18,14 +46,14 @@ class NodeRepositoryTest extends PHPUnit_Framework_TestCase
     public function testGetByTagInclusive($tagsNames, $expectedNodeCount)
     {
         $tags = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                            ->findByTagName($tagsNames);
+            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->findByTagName($tagsNames);
 
         $nodeCount = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->countBy([
-                                'tags' => $tags,
-                            ]);
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->countBy([
+                'tags' => $tags,
+            ]);
 
         $this->assertEquals($expectedNodeCount, $nodeCount);
     }
@@ -49,15 +77,15 @@ class NodeRepositoryTest extends PHPUnit_Framework_TestCase
     public function testGetByTagExclusive($tagsNames, $expectedNodeCount)
     {
         $tags = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                            ->findByTagName($tagsNames);
+            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->findByTagName($tagsNames);
 
         $nodeCount = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->countBy([
-                                'tags' => $tags,
-                                'tagExclusive' => true,
-                            ]);
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->countBy([
+                'tags' => $tags,
+                'tagExclusive' => true,
+            ]);
 
         $this->assertEquals($expectedNodeCount, $nodeCount);
     }
@@ -82,21 +110,23 @@ class NodeRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         static::$nodeCollection = new ArrayCollection();
         static::$tagCollection = new ArrayCollection();
 
         $type = Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                        ->findOneByName('Page');
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findOneByName('Page');
         $translation = Kernel::getService('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->findDefault();
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findDefault();
 
         /*
          * Make this test available only if Page node-type exists.
          */
         if (null !== $type) {
-            $sourceClass = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+            $sourceClass = NodeType::getGeneratedEntitiesNamespace() . '\\' . $type->getSourceEntityClassName();
 
             $tags = [
                 'unittest-tag-1',
@@ -115,8 +145,8 @@ class NodeRepositoryTest extends PHPUnit_Framework_TestCase
              */
             foreach ($tags as $value) {
                 $tag = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                            ->findOneByTagName($value);
+                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                    ->findOneByTagName($value);
 
                 if (null === $tag) {
                     $tag = new Tag();
@@ -137,30 +167,27 @@ class NodeRepositoryTest extends PHPUnit_Framework_TestCase
              */
             foreach ($nodes as $value) {
                 $node = Kernel::getService('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findOneByNodeName($value[0]);
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findOneByNodeName($value[0]);
 
                 if (null === $node) {
-                    $node = new Node();
+                    $node = new Node($type);
                     $node->setNodeName($value[0]);
-                    $node->setNodeType($type);
                     Kernel::getService('em')->persist($node);
 
                     $ns = new $sourceClass($node, $translation);
                     $ns->setTitle($value[0]);
+                    Kernel::getService('em')->persist($ns);
 
                     static::$nodeCollection->add($node);
-
-                    Kernel::getService('em')->persist($ns);
                 }
-
                 /*
                  * Adding tags
                  */
                 foreach ($value[1] as $tagName) {
                     $tag = Kernel::getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                                ->findOneByTagName($tagName);
+                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                        ->findOneByTagName($tagName);
                     if (null !== $tag) {
                         $node->addTag($tag);
                     }
@@ -186,5 +213,7 @@ class NodeRepositoryTest extends PHPUnit_Framework_TestCase
         }
 
         Kernel::getService('em')->flush();
+
+        parent::tearDownAfterClass();
     }
 }

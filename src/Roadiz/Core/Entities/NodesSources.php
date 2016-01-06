@@ -277,7 +277,7 @@ class NodesSources extends AbstractEntity
 
     public function __toString()
     {
-        return 'NodesSources #' . $this->getId() .
+        return '[NodesSources] #' . $this->getId() .
         ' <' . $this->getTitle() . '>[' . $this->getTranslation()->getLocale() .
         '], type="' . $this->getNode()->getNodeType()->getName() . '"';
     }

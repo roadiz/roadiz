@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,29 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file bootstrap.php
+ * @file KernelDependentCase.php
  * @author Ambroise Maupate
  */
+namespace RZ\Roadiz\Tests;
 
-date_default_timezone_set('Europe/Paris');
-define('ROADIZ_ROOT', dirname(dirname(__FILE__)));
+use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Core\Kernel;
 
-// Include Composer Autoload (relative to project root).
-require ROADIZ_ROOT . "/vendor/autoload.php";
+/**
+*
+*/
+abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
+{
+    public static function setUpBeforeClass()
+    {
+        $kernel = Kernel::getInstance('test', true, false);
+        $kernel->boot();
+        $kernel->container['request'] = Request::createFromGlobals();
+    }
 
+    public static function tearDownAfterClass()
+    {
+        Kernel::getService('em')->close();
+        Kernel::getInstance()->shutdown();
+    }
+}
