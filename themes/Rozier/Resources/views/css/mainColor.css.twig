@@ -27,7 +27,7 @@
  * Custom color on node tree
  * for {{ type.name }}
  */
-.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .non-nestable-handle,
+.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .non-nestable-handle:after,
 .nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .uk-nestable-handle:after {
     border-color:{{ type.color }};
 }

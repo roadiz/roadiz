@@ -1,12 +1,6 @@
-.root-tree {
-    margin: 0px;
-    padding: 0px;
-}
 
 .tagtree {
-
     &-element {
-
         &-inner {
             position: relative;
         }
@@ -84,36 +78,21 @@
 }
 
 #tagtree-widget{
-
-    .uk-nestable{
-        margin: 5px 10px 0 17px;
-
-        &.root-tree{
-
-            &> .uk-nestable-list-item{
-
-                &> .uk-nestable-item{
-                    margin-bottom:2px;
-                }
+    .root-tree{
+        &> .uk-nestable-list-item{
+            &> .uk-nestable-item{
+                padding-left: 6px;
             }
         }
-
+    }
+    .uk-nestable{
         .uk-nestable-list-tag{
             padding-left:13px;
 
-            &> .uk-nestable-list-item-tag{
-
-                .uk-nestable-item-tag{
-                    padding-left:17px;
+            &> .uk-nestable-list-item-tag {
+                .uk-nestable-list-item-tag {
+                    margin-left: 6px;
                 }
-
-                .uk-nestable-list-tag{
-
-                    .uk-nestable-list-item-tag{
-                        margin-left:11px;
-                    }
-                }
-
             }
         }
 
@@ -129,21 +108,19 @@
     }
 }
 
-.uk-nestable-moving body{
+.uk-nestable-list-dragged {
 
-     &> .uk-nestable-tag, &> .uk-nestable-list-tag{
+     .uk-nestable-tag,
+     .uk-nestable-list-tag {
 
-        &.uk-nestable-tag .uk-nestable-list-tag, &.uk-nestable-list-tag{
-            padding-left:13px;
-
-            .uk-nestable-item-tag{
-                padding-left:17px;
+        .uk-nestable-handle {
+            &:after {
+                content: none;
             }
         }
 
         .uk-nestable-handle-tag{
             color:darken(@maintree-global-bg, 30%);
-
             &:after{
                 display: none;
             }

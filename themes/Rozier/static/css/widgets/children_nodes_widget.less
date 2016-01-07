@@ -30,6 +30,20 @@
             display: none;
         }
     }
+
+
+    .root-tree {
+        margin: 0;
+        &>li {
+            padding:0px;
+            border-top: 1px solid #E2E2E2;
+
+            &:first-child {
+                padding:0px;
+            }
+        }
+    }
+
 }
 
 .children-nodes-nav{
@@ -43,7 +57,6 @@
     .uk-icon-rz-node-tree{
         font-size:28px;
     }
-
 
     .uk-navbar-content {
         padding: 11px 10px;
@@ -114,21 +127,19 @@
     }
 }
 
-.children-nodes-tree{
-
+.children-nodes-tree {
    .uk-nestable{
-
         .uk-nestable-list{
             position: relative;
         }
 
-        .uk-nestable-handle{
+        .non-nestable-handle,
+        .uk-nestable-handle {
             width:42px;
             height:55px;
             border-color:@children-nodes-border;
         }
     }
-
     .nodetree-contextualmenu {
 
         top: 0px;
@@ -147,27 +158,11 @@
     }
 }
 
-.nodetree-widget {
-    .children-node-widget{
-        margin:0;
-
-        &>li {
-            padding:0px;
-            border-top: 1px solid #E2E2E2;
-
-            &:first-child {
-                padding:0px;
-            }
-        }
-    }
-}
-
-.children-nodes-tree .uk-nestable,
-.uk-nestable-moving body > .children-node-widget,
-.uk-nestable-moving body > .children-node-widget-list {
+.children-node-widget,
+.children-node-widget-list {
 
     // 1st level
-    &> .uk-nestable-list-item{
+    & > .uk-nestable-list-item{
         position: relative;
         background:#fff;
 
@@ -212,17 +207,9 @@
                         background:@item-border-color;
                         top:-15px; left:-1px;
                     }
-
-                    .stack-node{
-
-                        & > .uk-nestable-handle{
-                            // top:-22px;
-                        }
-                    }
                 }
 
                 &:last-child{
-
                     &:before{
                         left:-1px;
                     }
@@ -248,7 +235,7 @@
 
             .nodetree-element-img{
                 position: absolute;
-                top:8px; left:22px;
+                top:7px; left:1px;
                 width:40px; height:40px;
                 .rounded(100px);
                 overflow: hidden;
@@ -268,7 +255,8 @@
 
             &.unpublished-node{
                 .nodetree-element-img{
-                    top:11px; left:27px;
+                    top:12px;
+                    left:6px;
                     width:30px; height:30px;
                     .rounded(0);
                     .transform(rotate(45deg));
@@ -284,7 +272,6 @@
 
             .nodetree-element-name{
                 vertical-align: top;
-
                 a{
                     padding:0;
                     line-height: 56px;
@@ -297,23 +284,26 @@
                     }
                 }
             }
-
-            &> .uk-nestable-handle:after{
+            & > .non-nestable-handle:after,
+            & > .uk-nestable-handle:after {
                 width:40px; height:40px;
                 top:6px;
                 background-color:#CCCCCC;
                 border: 1px solid #C2C2C2;
             }
 
-            &.unpublished-node > .uk-nestable-handle:after{
-                top:11px; left:7px;
-                width:28px; height:28px;
-                .rounded(3px);
+            &.unpublished-node {
+                & > .non-nestable-handle:after,
+                & > .uk-nestable-handle:after {
+                    top:11px; left:7px;
+                    width:28px; height:28px;
+                    .rounded(3px);
+                }
             }
 
-            &.stack-node{
-
-                & > .uk-nestable-handle{
+            &.stack-node {
+                & > .non-nestable-handle,
+                & > .uk-nestable-handle {
                     position: relative;
                     width:32px;
                     top:7px; left:-7px;
@@ -321,7 +311,9 @@
                     z-index:2;
                 }
 
-                & > .uk-nestable-handle:after, .uk-icon-folder:before {
+                & > .non-nestable-handle:after
+                & > .uk-nestable-handle:after,
+                .uk-icon-folder:before {
                     display: none;
                 }
 
@@ -383,7 +375,7 @@
         }
 
         // 2nd level
-        &> .uk-nestable-list{
+        & > .uk-nestable-list {
             padding-left:24px;
             margin:15px 0 0 17px; // 15px 0 0 17px
 
@@ -478,16 +470,16 @@
         }
     }
 }
-
-
+.uk-nestable-list-dragged {
+    .nodetree-element-img{
+        display: none;
+    }
+}
 // Dragging
 .uk-nestable-moving body{
-
     &> .children-node-widget, &> .children-node-widget-list{
-
         &> .uk-nestable-list-item{
             border-bottom: none;
         }
     }
-
 }

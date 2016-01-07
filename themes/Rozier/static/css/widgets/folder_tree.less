@@ -1,161 +1,153 @@
-.root-tree {
-	margin: 0px;
-	padding: 0px;
-}
-
 
 .foldertree {
 
-	&-element {
+    &-element {
 
-		&-inner {
-			position: relative;
-		}
+        &-inner {
+            position: relative;
+        }
 
-		&-name {
-			vertical-align: middle;
-			font-size: 12px;
-			display: inline-block;
-			position: relative;
-			max-width: 80%;
+        &-name {
+            vertical-align: middle;
+            font-size: 12px;
+            display: inline-block;
+            position: relative;
+            max-width: 80%;
 
-			a {
-				white-space: nowrap;
-				max-width: 100%;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: inline-block;
-				vertical-align: middle;
-			}
-		}
-	}
+            a {
+                white-space: nowrap;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                vertical-align: middle;
+            }
+        }
+    }
 
-	&-contextualmenu {
-		position: absolute;
-		top: 3px; right: 5px;
-		// top: 2px; right: 22px;
+    &-contextualmenu {
+        position: absolute;
+        top: 3px; right: 5px;
+        // top: 2px; right: 22px;
 
-		.uk-icon-caret-down {
-			font-size: 10px;
-			margin: 0 0 0 1px;
-		}
+        .uk-icon-caret-down {
+            font-size: 10px;
+            margin: 0 0 0 1px;
+        }
 
-		.uk-dropdown-small{
-			padding:0;
+        .uk-dropdown-small{
+            padding:0;
 
-			.uk-nav{
+            .uk-nav{
 
-				&> p{
-					padding:0;
-					height:40px; line-height:40px;
+                &> p{
+                    padding:0;
+                    height:40px; line-height:40px;
 
-					&:hover{
-						background: #ebebeb;
-					}
+                    &:hover{
+                        background: #ebebeb;
+                    }
 
-					&> a{
-						display: block;
-		                border-bottom: 1px dashed @contextualdropdown-border-color;
-		                padding-left: 16px;
-		                padding-right: 11px;
-		                font-weight: bold;
+                    &> a{
+                        display: block;
+                        border-bottom: 1px dashed @contextualdropdown-border-color;
+                        padding-left: 16px;
+                        padding-right: 11px;
+                        font-weight: bold;
 
-		                &> i{
-		                	line-height:40px;
-		                }
-					}
-				}
-			}
-		}
+                        &> i{
+                            line-height:40px;
+                        }
+                    }
+                }
+            }
+        }
 
-	}
+    }
 
 }
 
 #foldertree-widget{
+    .uk-nestable {
+        &.root-tree{
 
-	.uk-nestable{
-		margin: 5px 10px 0 17px;
+            &> .uk-nestable-list-item{
 
-		&.root-tree{
+                &> .uk-nestable-item{
+                    margin-bottom:2px;
+                }
+            }
+        }
 
-			&> .uk-nestable-list-item{
+        .uk-nestable-list-folder{
+            padding-left:13px;
 
-				&> .uk-nestable-item{
-					margin-bottom:2px;
-				}
-			}
-		}
+            &> .uk-nestable-list-item-folder{
 
-		.uk-nestable-list-folder{
-	        padding-left:13px;
+                .uk-nestable-item-folder{
+                    padding-left:17px;
+                }
 
-	        &> .uk-nestable-list-item-folder{
+                .uk-nestable-list-folder{
 
-				.uk-nestable-item-folder{
-		        	padding-left:17px;
-		        }
+                    .uk-nestable-list-item-folder{
+                        margin-left:11px;
+                    }
+                }
 
-		        .uk-nestable-list-folder{
+            }
 
-				 	.uk-nestable-list-item-folder{
-						margin-left:11px;
-				 	}
-		        }
+            // &> .uk-nestable-list-item-folder{
 
-	        }
+            //  &> .uk-nestable-list-folder{
+            //      padding-left:17px;
 
-	        // &> .uk-nestable-list-item-folder{
+            //      &> .uk-nestable-list-item-folder{
 
-	        // 	&> .uk-nestable-list-folder{
-	        // 		padding-left:17px;
+                  //    &> .uk-nestable-list-folder{
+                  //        // display: none;
+                  //        // margin-left:10px;
+                  //    }
+                  //   }
+            //  }
+            // }
+        }
 
-	        // 		&> .uk-nestable-list-item-folder{
+        .uk-nestable-handle-folder{
+            vertical-align: middle;
+            color: darken(@maintree-global-bg, 30%);
 
-			      //   	&> .uk-nestable-list-folder{
-			      //   		// display: none;
-			      //   		// margin-left:10px;
-			      //   	}
-			      //   }
-	        // 	}
-	        // }
-	    }
+            &:after{
+                display: none;
+            }
+        }
 
-	    .uk-nestable-handle-folder{
-	        vertical-align: middle;
-	        color: darken(@maintree-global-bg, 30%);
-
-	        &:after{
-	            display: none;
-	        }
-	    }
-
-	}
+    }
 
 }
 
 .uk-nestable-moving body{
 
-	 &> .uk-nestable-folder, &> .uk-nestable-list-folder{
+     &> .uk-nestable-folder, &> .uk-nestable-list-folder{
 
-		&.uk-nestable-folder .uk-nestable-list-folder, &.uk-nestable-list-folder{
-        	padding-left:13px;
+        &.uk-nestable-folder .uk-nestable-list-folder, &.uk-nestable-list-folder{
+            padding-left:13px;
 
-        	.uk-nestable-item-folder{
-        		padding-left:17px;
+            .uk-nestable-item-folder{
+                padding-left:17px;
 
-	        	// .uk-nestable-item{
-	        	// }
-	        }
-		}
+                // .uk-nestable-item{
+                // }
+            }
+        }
 
-		.uk-nestable-handle-folder{
-			color:darken(@maintree-global-bg, 30%);
+        .uk-nestable-handle-folder{
+            color:darken(@maintree-global-bg, 30%);
 
-			&:after{
-				display: none;
-			}
-		}
-	}
+            &:after{
+                display: none;
+            }
+        }
+    }
 
 }
