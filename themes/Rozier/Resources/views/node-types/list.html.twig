@@ -22,7 +22,14 @@
 			<table class="node-types content-table uk-table">
 				<thead>
 			        <tr>
-			            <th>{% trans %}name{% endtrans %}</th>
+			            <th>
+                            {% trans %}name{% endtrans %}
+                            {% if request.query.get("field") == 'name   ' and request.query.get("ordering") == "DESC" %}
+                                <a href="?field=name    &amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                            {% else %}
+                                <a href="?field=name    &amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% endif %}
+                        </th>
 			            <th class="mobile-hidden">{% trans %}nodeType.displayName{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}nodeType.entityName{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}nodeType.numberFields{% endtrans %}</th>

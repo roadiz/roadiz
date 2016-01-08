@@ -58,7 +58,9 @@ class UsersController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\User'
+            'RZ\Roadiz\Core\Entities\User',
+            [],
+            ['username' => 'ASC']
         );
         $listManager->handle();
 
