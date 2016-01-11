@@ -3,8 +3,12 @@
 
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
+  # Nginx
   config.vm.network "forwarded_port", guest: 80, host: 8080
+  # Solr
   config.vm.network "forwarded_port", guest: 8983, host: 8983
+  # Mailcatcher
+  config.vm.network "forwarded_port", guest: 1080, host: 1080
   config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
@@ -28,7 +32,8 @@ Vagrant.configure(2) do |config|
     vb.memory = "1024"
   end
 
-  config.vm.provision "roadiz",   type: :shell, path: "samples/vagrant-provisioning.sh"
-  config.vm.provision "solr",     type: :shell, path: "samples/vagrant-solr-provisioning.sh"
-  config.vm.provision "devtools", type: :shell, path: "samples/vagrant-devtools-provisioning.sh"
+  config.vm.provision "roadiz",      type: :shell, path: "samples/vagrant-provisioning.sh"
+  config.vm.provision "mailcatcher", type: :shell, path: "samples/vagrant-mailcatcher-provisioning.sh"
+  config.vm.provision "solr",        type: :shell, path: "samples/vagrant-solr-provisioning.sh"
+  config.vm.provision "devtools",    type: :shell, path: "samples/vagrant-devtools-provisioning.sh"
 end

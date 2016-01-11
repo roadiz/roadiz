@@ -10,8 +10,10 @@ sudo apt-get -qq update;
 
 # Install Apache Solr - based on article from Tomasz Muras - https://twitter.com/zabuch
 # http://jmuras.com/blog/2012/setup-solr-4-tomcat-ubuntu-server-12-04-lts/
-echo -e "\n--- Installing Apache Solr ---\n"
+echo -e "\n--- Installing Open JDK ---\n"
 sudo apt-get -qq -f -y install openjdk-7-jre-headless unzip > /dev/null 2>&1;
+
+echo -e "\n--- Installing Apache Solr (may take a while, be patient) ---\n"
 cd /tmp/
 sudo wget –q --output-document=solr-$SOLR_VERSION.tgz $SOLR_MIRROR/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz > /dev/null 2>&1
 tar xzf solr-$SOLR_VERSION.tgz
