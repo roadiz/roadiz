@@ -79,7 +79,7 @@ Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain
 ### Use our custom Vagrant box for development
 
 Roadiz comes with a dedicated `Vagrantfile` which is configured to run a *LEMP* stack 
-(nginx + PHP-FPM + MariaDB), an *Apache Solr server* and a *MailCatcher* service. 
+(nginx + PHP7.0-FPM + MariaDB), *phpMyAdmin*, an *Apache Solr server* and a *MailCatcher* service. 
 This will be useful to develop your website on your local computer. Once you’ve cloned Roadiz’ sources
 just do a `vagrant up` in Roadiz’ folder. Then Vagrant will run your code in `/var/www`
 and you will be able to completely use `bin/roadiz` commands without bloating your
@@ -104,9 +104,14 @@ use *Composer* directly on your host machine to take benefit of your cache
 if you have lots of Roadiz websites.
 
 ```bash
-# Just LEMP stack, no MailCatcher, no Solr, no Composer, no NPM, no grunt, no bower
+# Just LEMP stack, no phpMyAdmin, no MailCatcher, no Solr, no Composer, no NPM, no grunt, no bower
 vagrant up --no-provision
 vagrant provision --provision-with roadiz
+
+# If you need phpMyAdmin
+# do not use space after comma
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,phpmyadmin
 
 # If you need Solr
 # do not use space after comma
@@ -127,7 +132,7 @@ When you use default `vagrant up` command, it’s the same as using:
 ```bash
 # Default vagrant up provisioners
 vagrant up --no-provision
-vagrant provision --provision-with roadiz,mailcatcher,solr,devtools
+vagrant provision --provision-with roadiz,phpmyadmin,mailcatcher,solr,devtools
 ```
 
 Pay attention that *mailcatcher* and *solr* provision scripts may take several 

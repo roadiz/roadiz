@@ -14,7 +14,7 @@ echo -e "\n--- Install base packages ---\n"
 sudo locale-gen fr_FR.utf8;
 
 echo -e "\n--- Add some repos to update our distro ---\n"
-sudo add-apt-repository ppa:ondrej/php5 > /dev/null 2>&1
+sudo add-apt-repository ppa:ondrej/php-7.0 > /dev/null 2>&1
 
 echo -e "\n--- Updating packages list ---\n"
 sudo apt-get -qq update;
@@ -29,17 +29,19 @@ sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $
 sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
 
 echo -e "\n--- Install base servers and packages ---\n"
-sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php5-fpm curl > /dev/null 2>&1;
-echo -e "\n--- Install all php5 extensions ---\n"
-sudo apt-get -qq -f -y install php5-cli php5-mysqlnd php5-curl php5-gd php5-intl php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xcache php5-xdebug > /dev/null 2>&1;
+sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
+echo -e "\n--- Install all php7.0 extensions ---\n"
+sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-curl php7.0-gd php7.0-intl php7.0-imap php7.0-mcrypt php7.0-pspell php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc php7.0-xsl php-apcu php-gd php-apcu-bc > /dev/null 2>&1;
+
+echo -e "\n--- Install phpmyadmin manually (not done) ---\n"
 
 echo -e "\n--- Setting up our MySQL user and db ---\n"
 sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME"
 mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
 
 echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
-sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php5/fpm/php.ini
-sed -i "s/display_errors = .*/display_errors = On/" /etc/php5/fpm/php.ini
+sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
+sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/fpm/php.ini
 
 echo -e "\n--- We definitly need to upload large files ---\n"
 sed -i "s/server_tokens off;/server_tokens off;\\n\\tclient_max_body_size 256M;/" /etc/nginx/nginx.conf
@@ -119,7 +121,7 @@ root /var/www;
 location ~ ^/index\.php(/|$) {
   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
   fastcgi_split_path_info ^(.+\.php)(/.+)$;
-  fastcgi_pass unix:/var/run/php5-fpm.sock;
+  fastcgi_pass unix:/var/run/php7.0-fpm.sock;
   include fastcgi_params;
   internal;
 }
@@ -132,7 +134,7 @@ location ~ ^/index\.php(/|$) {
 location ~ ^/(dev|install|preview)\.php(/|$) {
   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
   fastcgi_split_path_info ^(.+\.php)(/.+)$;
-  fastcgi_pass unix:/var/run/php5-fpm.sock;
+  fastcgi_pass unix:/var/run/php7.0-fpm.sock;
   include fastcgi_params;
 }
 location = /favicon.ico { log_not_found off; access_log off; }
@@ -195,7 +197,7 @@ location ~ ^/phpmyadmin/(.+\.php)$ {
   try_files $uri =404;
   root /usr/share/;
   # Point it to the fpm socket;
-  fastcgi_pass unix:/var/run/php5-fpm.sock;
+  fastcgi_pass unix:/var/run/php7.0-fpm.sock;
   fastcgi_index index.php;
   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
   include /etc/nginx/fastcgi_params;
@@ -212,13 +214,13 @@ rewrite ^/* /phpmyadmin last;
 EOF
 
 echo -e "\n--- Configure PHP-FPM default pool ---\n"
-sudo rm /etc/php5/fpm/pool.d/www.conf;
-sudo touch /etc/php5/fpm/pool.d/www.conf;
-sudo cat >> /etc/php5/fpm/pool.d/www.conf <<'EOF'
+sudo rm /etc/php/7.0/fpm/pool.d/www.conf;
+sudo touch /etc/php/7.0/fpm/pool.d/www.conf;
+sudo cat >> /etc/php/7.0/fpm/pool.d/www.conf <<'EOF'
 [www]
 user = www-data
 group = www-data
-listen = /var/run/php5-fpm.sock
+listen = /var/run/php7.0-fpm.sock
 listen.owner = www-data
 listen.group = www-data
 pm = ondemand
@@ -232,7 +234,7 @@ EOF
 
 echo -e "\n--- Restarting Nginx and PHP servers ---\n"
 sudo service nginx restart > /dev/null 2>&1;
-sudo service php5-fpm restart > /dev/null 2>&1;
+sudo service php7.0-fpm restart > /dev/null 2>&1;
 
 ##### CLEAN UP #####
 sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
@@ -251,7 +253,6 @@ echo -e "\nDo not forget to \"composer install\" and to add "
 echo -e "\nyour host IP into install.php and dev.php (generally 10.0.2.2)"
 echo -e "\nto get allowed in install and dev entrypoints."
 echo -e "\n* Type http://localhost:8080/install.php to proceed to install."
-echo -e "\n* Type http://localhost:8080/phpmyadmin for your MySQL db admin."
 echo -e "\n* MySQL User: $DBUSER"
 echo -e "\n* MySQL Password: $DBPASSWD"
 echo -e "\n* MySQL Database: $DBNAME"
