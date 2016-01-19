@@ -35,11 +35,11 @@ before_script:
   - php bin/roadiz install -n --env=install
   - php bin/roadiz themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
   - php bin/roadiz themes:install -n --data "Themes\\DefaultTheme\\DefaultThemeApp"
-  - php bin/roadiz cache -a --env=install
+  - php bin/roadiz cache:clear --env=install
   - php bin/roadiz orm:schema-tool:update -n --force
   - php bin/roadiz themes:install -n --nodes "Themes\\DefaultTheme\\DefaultThemeApp"
-  - php bin/roadiz cache -a --env=install
-  - php bin/roadiz cache -a --env=test
+  - php bin/roadiz cache:clear --env=install
+  - php bin/roadiz cache:clear --env=test
 
 script:
   - ENABLE_SECOND_LEVEL_CACHE=0 bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
