@@ -49,24 +49,24 @@ class ThemeInstallCommand extends Command
     protected function configure()
     {
         $this->setName('themes:install')
-            ->setDescription('Manage themes installation')
-            ->addArgument(
-                'classname',
-                InputArgument::REQUIRED,
-                'Main theme classname (Use / instead of \\ and do not forget starting slash)'
-            )
-            ->addOption(
-                'data',
-                null,
-                InputOption::VALUE_NONE,
-                'Import default data (node-types, roles, settings and tags)'
-            )
-            ->addOption(
-                'nodes',
-                null,
-                InputOption::VALUE_NONE,
-                'Import nodes data. This cannot be done at the same time with --data option.'
-            );
+             ->setDescription('Manage themes installation')
+             ->addArgument(
+                 'classname',
+                 InputArgument::REQUIRED,
+                 'Main theme classname (Use / instead of \\ and do not forget starting slash)'
+             )
+             ->addOption(
+                 'data',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Import default data (node-types, roles, settings and tags)'
+             )
+             ->addOption(
+                 'nodes',
+                 null,
+                 InputOption::VALUE_NONE,
+                 'Import nodes data. This cannot be done at the same time with --data option.'
+             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

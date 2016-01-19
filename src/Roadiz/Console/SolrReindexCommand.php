@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,45 +24,63 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesCommand.php
+ * @file SolrReindexCommand.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
-use Symfony\Component\Console\Command\Command;
+use RZ\Roadiz\Console\SolrCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Command line utils for managing node-types from terminal.
+ * Command line utils for managing nodes from terminal.
  */
-class NodesSourcesCommand extends Command
+class SolrReindexCommand extends SolrCommand
 {
-    private $entityManager;
 
     protected function configure()
     {
-        $this->setName('generate:nsentities')
-             ->setDescription('Generate node-sources entities classes.');
+        $this->setName('solr:reindex')
+            ->setDescription('Reindex Solr search engine index');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->solr = $this->getHelperSet()->get('solr')->getSolr();
+
         $text = "";
 
-        $nodetypes = $this->entityManager
-                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                          ->findAll();
+        if (null !== $this->solr) {
+            if (true === $this->getHelperSet()->get('solr')->ready()) {
+                $confirmation = new ConfirmationQuestion(
+                    '<question>Are you sure to reindex your Node database? (y/N)</question>',
+                    false
+                );
+                if ($this->questionHelper->ask(
+                    $input,
+                    $output,
+                    $confirmation
+                )) {
+                    $stopwatch = new Stopwatch();
+                    $stopwatch->start('global');
+                    $this->reindexNodeSources($output);
+                    $stopwatch->stop('global');
 
-        if (count($nodetypes) > 0) {
-            foreach ($nodetypes as $nt) {
-                $nt->getHandler()->removeSourceEntityClass();
-                $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
+                    $duration = $stopwatch->getEvent('global')->getDuration();
+
+                    $text = PHP_EOL . sprintf('<info>Node database has been re-indexed in %.2d ms.</info>', $duration) . PHP_EOL;
+                }
+            } else {
+                $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
+                $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
             }
         } else {
-            $text = '<info>No available node-types…</info>' . PHP_EOL;
+            $text .= $this->displayBasicConfig();
         }
 
         $output->writeln($text);

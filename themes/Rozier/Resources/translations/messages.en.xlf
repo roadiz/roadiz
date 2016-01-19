@@ -789,38 +789,10 @@
       <trans-unit xml:space="preserve" id="78" approved="yes">
         <source>visible</source>
         <target xml:lang="en">Visible</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">699</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">730</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">798</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypeFieldsController.php</context>
-          <context context-type="linenumber">340</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">337</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">378</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
-          <context context-type="linenumber">375</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
-          <context context-type="linenumber">437</context>
-        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="invisible">
+        <source>invisible</source>
+        <target xml:lang="en" state="translated">Invisible</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="79" approved="yes">
         <source>parent_tagId</source>
@@ -6226,6 +6198,14 @@
       <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
             <source>tag.childrenOrderDirection</source>
             <target xml:lang="en" state="translated">Children tags order direction</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%">
+            <source>node.%name%.status_changed_to.%status%</source>
+            <target xml:lang="en" state="translated">« %name% » node status has been changed to: %status%.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
+            <source>node.%name%.visibility_changed_to.%visible%</source>
+            <target xml:lang="en" state="translated">« %name% » node visibility has been changed to: %visible%.</target>
         </trans-unit>
     </body>
   </file>

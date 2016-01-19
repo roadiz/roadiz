@@ -69,7 +69,7 @@ This is the **recommended** method.
 a custom script will copy for you a default *configuration* file and `dev` and `install` environment entry points.
 3. Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
-execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
+execute `bin/roadiz generate:htaccess` to create `.htaccess` files.**
 4. If Roadiz is not setup on your own computer (*localhost*), add your IP address 
 in the `dev.php` and `install.php` files to authorize your computer to access these two entry points.
 5. Go to your web-browser using *install.php* after your server domain name to launch Install wizard.
@@ -272,10 +272,10 @@ Then when you are sure to perform migration, just do:
 
 ```bash
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache -a --env=prod;
+bin/roadiz cache:clear --env=prod;
 ```
 
-The `cache -a --env=prod` command force Doctrine to purge its metadata cache for the *production* environment.
+The `cache:clear --env=prod` command force Doctrine to purge its metadata cache for the *production* environment.
 **Be careful, this won’t purge APC or XCache. You will need to do it manually.**
 
 ### Managing your own database entities
@@ -301,7 +301,7 @@ If you see your entities being created and no system database erased, just `--ex
 If Doctrine send some error, you probably need to clear metadata cache:
 
 ```bash
-bin/roadiz cache -a --env=prod;
+bin/roadiz cache:clear --env=prod;
 ```
 
 ### Troubleshooting
@@ -321,9 +321,9 @@ order to purge these memory caches.
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```bash
-bin/roadiz core:sources -r
+bin/roadiz generate:nsentities
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache -a --env=prod;
+bin/roadiz cache:clear --env=prod;
 
 ```
 

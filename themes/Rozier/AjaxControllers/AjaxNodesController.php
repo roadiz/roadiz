@@ -35,9 +35,9 @@ use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
@@ -66,7 +66,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         $tags = [];
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         foreach ($node->getTags() as $tag) {
             $tags[] = $tag->getHandler()->getFullPath();
@@ -104,7 +104,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
             $responseArray = null;
@@ -119,8 +119,8 @@ class AjaxNodesController extends AbstractAjaxController
                 case 'duplicate':
                     $newNode = $node->getHandler()->duplicate();
                     /*
-                 * Dispatch event
-                 */
+                     * Dispatch event
+                     */
                     $event = new FilterNodeEvent($newNode);
                     $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
@@ -180,7 +180,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
             $parent = $this->getService('em')
-                           ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $node->setParent($parent);
@@ -196,14 +196,14 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
             $nextNode = $this->getService('em')
-                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
             $prevNode = $this->getService('em')
-                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
@@ -275,7 +275,7 @@ class AjaxNodesController extends AbstractAjaxController
             } else {
                 if ($request->get('nodeId') > 0) {
                     $node = $this->getService('em')
-                                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
+                        ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
                         /*
@@ -307,9 +307,27 @@ class AjaxNodesController extends AbstractAjaxController
                                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
                                 if ($request->get('statusName') == 'status') {
+
+                                    $nodeStatuses = [
+                                        Node::DRAFT => 'draft',
+                                        Node::PENDING => 'pending',
+                                        Node::PUBLISHED => 'published',
+                                        Node::ARCHIVED => 'archived',
+                                        Node::DELETED => 'deleted',
+                                    ];
+                                    $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
+                                        '%name%' => $node->getNodeName(),
+                                        '%status%' => $this->getTranslator()->trans($nodeStatuses[$node->getStatus()]),
+                                    ]);
+                                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                                     $this->getService('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
                                 }
-                                if ($request->get('visible') == 'status') {
+                                if ($request->get('statusName') == 'visible') {
+                                    $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
+                                        '%name%' => $node->getNodeName(),
+                                        '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
+                                    ]);
+                                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                                     $this->getService('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
                                 }
 
