@@ -51,14 +51,8 @@ class CacheCommand extends Command
 
     protected function configure()
     {
-        $this->setName('cache')
+        $this->setName('cache:clear')
             ->setDescription('Manage cache and compiled data.')
-            ->addOption(
-                'infos',
-                'i',
-                InputOption::VALUE_NONE,
-                'Get informations about caches.'
-            )
             ->addOption(
                 'clear-configuration',
                 'g',
@@ -101,12 +95,6 @@ class CacheCommand extends Command
                 InputOption::VALUE_NONE,
                 'Clear cached node-sources Urls.'
             )
-            ->addOption(
-                'clear-all',
-                'a',
-                InputOption::VALUE_NONE,
-                'Clear all caches (Doctrine, configuration, proxies, routes, templates, assets and translations)'
-            )
         ;
     }
 
@@ -135,75 +123,37 @@ class CacheCommand extends Command
             $nodeSourcesUrlsClearer,
         ];
 
-        if ($input->getOption('clear-all')) {
+        $text .= 'Clearing cache for <info>'.$kernel->getEnvironment().'</info> environment.' . PHP_EOL . PHP_EOL;
+
+        if ($input->getOption('clear-configuration')) {
+            $configurationClearer->clear();
+            $text .= '— ' . $configurationClearer->getOutput();
+        } elseif ($input->getOption('clear-doctrine')) {
+            $doctrineClearer->clear();
+            $text .= '— ' . $doctrineClearer->getOutput();
+        } elseif ($input->getOption('clear-routes')) {
+            $routingClearer->clear();
+            $text .= '— ' . $routingClearer->getOutput();
+        } elseif ($input->getOption('clear-assets')) {
+            $assetsClearer->clear();
+            $text .= '— ' . $assetsClearer->getOutput();
+        } elseif ($input->getOption('clear-templates')) {
+            $templatesClearer->clear();
+            $text .= '— ' . $templatesClearer->getOutput();
+        } elseif ($input->getOption('clear-translations')) {
+            $translationsClearer->clear();
+            $text .= '— ' . $translationsClearer->getOutput();
+        } elseif ($input->getOption('clear-nsurls')) {
+            $nodeSourcesUrlsClearer->clear();
+            $text .= '— ' . $nodeSourcesUrlsClearer->getOutput();
+        } else {
             foreach ($clearers as $clearer) {
                 $clearer->clear();
                 $text .= $clearer->getOutput();
             }
-
             $text .= '<info>All caches have been been purged…</info>' . PHP_EOL;
-        } elseif ($input->getOption('clear-configuration')) {
-            $configurationClearer->clear();
-            $text .= $configurationClearer->getOutput();
-        } elseif ($input->getOption('clear-doctrine')) {
-            $doctrineClearer->clear();
-            $text .= $doctrineClearer->getOutput();
-        } elseif ($input->getOption('clear-routes')) {
-            $routingClearer->clear();
-            $text .= $routingClearer->getOutput();
-        } elseif ($input->getOption('clear-assets')) {
-            $assetsClearer->clear();
-            $text .= $assetsClearer->getOutput();
-        } elseif ($input->getOption('clear-templates')) {
-            $templatesClearer->clear();
-            $text .= $templatesClearer->getOutput();
-        } elseif ($input->getOption('clear-translations')) {
-            $translationsClearer->clear();
-            $text .= $translationsClearer->getOutput();
-        } elseif ($input->getOption('clear-nsurls')) {
-            $nodeSourcesUrlsClearer->clear();
-            $text .= $nodeSourcesUrlsClearer->getOutput();
-        } else {
-            $text .= $this->getInformations();
         }
 
         $output->writeln($text);
-    }
-
-    public function getInformations()
-    {
-        $text = '';
-
-        $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-        if (null !== $cacheDriver) {
-            $text .= "<info>Result cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
-        }
-
-        $cacheDriver = $this->entityManager->getConfiguration()->getHydrationCacheImpl();
-        if (null !== $cacheDriver) {
-            $text .= "<info>Hydratation cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
-        }
-
-        $cacheDriver = $this->entityManager->getConfiguration()->getQueryCacheImpl();
-        if (null !== $cacheDriver) {
-            $text .= "<info>Query cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
-        }
-
-        $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-        if (null !== $cacheDriver) {
-            $text .= "<info>Metadata cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
-        }
-
-        if (null !== $this->nsCacheHelper->getCacheProvider()) {
-            $nsCache = $this->nsCacheHelper->getCacheProvider();
-            $text .= "<info>Node-sources URLs cache driver:</info> " . get_class($nsCache) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $nsCache->getNamespace() . PHP_EOL;
-        }
-
-        return $text;
     }
 }
