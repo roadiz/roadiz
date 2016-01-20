@@ -96,10 +96,24 @@ class RoleRepository extends EntityRepository
 
         $rolesNames = $query->getScalarResult();
 
-        foreach ($rolesNames as $role) {
-            $names[] = $role['name'];
-        }
+        return array_map('current', $rolesNames);
+    }
 
-        return $names;
+    /**
+     * Get every Roles names
+     *
+     * @return array
+     */
+    public function getAllRoleName()
+    {
+        $names = [];
+
+        $query = $this->_em->createQuery('
+            SELECT r.name FROM RZ\Roadiz\Core\Entities\Role r
+        ');
+
+        $rolesNames = $query->getScalarResult();
+
+        return array_map('current', $rolesNames);
     }
 }

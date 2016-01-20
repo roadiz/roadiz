@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,34 +24,33 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UsersCommand.php
+ * @file UsersPasswordCommand.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Console\UsersCommand;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Utils\Security\PasswordGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing users from terminal.
  */
-class UsersCommand extends Command
+class UsersPasswordCommand extends UsersCommand
 {
-    private $questionHelper;
-    private $entityManager;
-
     protected function configure()
     {
-        $this->setName('users:list')
-            ->setDescription('List all users or just one')
+        $this->setName('users:password')
+            ->setDescription('Regenerate a new password for user')
             ->addArgument(
                 'username',
-                InputArgument::OPTIONAL,
-                'User name'
+                InputArgument::REQUIRED,
+                'Username'
             );
     }
 
@@ -67,53 +66,31 @@ class UsersCommand extends Command
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->findOneBy(['username' => $name]);
 
-            if ($user !== null) {
-                $text = '<info>' . $user . '</info>' . PHP_EOL;
-            } else {
-                $text = '<error>User “' . $name . '” does not exist… use users:create to add a new user.</error>' . PHP_EOL;
-            }
-        } else {
-            $text = '<info>Installed users…</info>' . PHP_EOL;
-            $users = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
-                ->findAll();
+            if (null !== $user) {
+                $confirmation = new ConfirmationQuestion(
+                    '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question> [y/N]: ',
+                    false
+                );
+                if ($this->questionHelper->ask(
+                    $input,
+                    $output,
+                    $confirmation
+                )) {
+                    $passwordGenerator = new PasswordGenerator();
+                    $user->setPlainPassword($passwordGenerator->generatePassword(12));
+                    $user->getHandler()->encodePassword();
+                    $this->entityManager->flush();
+                    $text = '<info>User password regenerated…</info>' . PHP_EOL;
+                    $text .= 'Password: <info>' . $user->getPlainPassword() . '</info>' . PHP_EOL;
 
-            if (count($users) > 0) {
-                $text .= ' | ' . PHP_EOL;
-                foreach ($users as $user) {
-                    $text .=
-                    ' |_ ' . $user->getUsername()
-                    . ' — <info>' . ($user->isEnabled() ? 'enabled' : 'disabled') . '</info>'
-                    . ' — <comment>' . implode(', ', $user->getRoles()) . '</comment>'
-                        . PHP_EOL;
+                } else {
+                    $text = '<info>[Cancelled]</info> User password was not changed.' . PHP_EOL;
                 }
             } else {
-                $text = '<info>No available users</info>' . PHP_EOL;
+                $text = PHP_EOL . '<error>User “' . $name . '” does not exist.</error>' . PHP_EOL;
             }
         }
 
         $output->writeln($text);
-    }
-
-    /**
-     * Get role by name, and create it if does not exist.
-     *
-     * @param string $roleName
-     *
-     * @return Role
-     */
-    public function getRole($roleName = Role::ROLE_SUPERADMIN)
-    {
-        $role = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Role')
-            ->findOneBy(['name' => $roleName]);
-
-        if ($role === null) {
-            $role = new Role($roleName);
-            $this->entityManager->persist($role);
-            $this->entityManager->flush();
-        }
-
-        return $role;
     }
 }
