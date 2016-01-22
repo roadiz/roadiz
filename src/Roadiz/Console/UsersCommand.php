@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,8 +40,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UsersCommand extends Command
 {
-    private $questionHelper;
-    private $entityManager;
+    protected $questionHelper;
+    protected $entityManager;
 
     protected function configure()
     {
@@ -57,7 +56,6 @@ class UsersCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $name = $input->getArgument('username');

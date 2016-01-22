@@ -782,10 +782,9 @@ class DocumentsController extends RozierApp
                 foreach ($documents as $document) {
                     $folder->addDocument($document);
                 }
-
-                $this->getService('em')->flush();
             }
 
+            $this->getService('em')->flush();
             $msg = $this->getTranslator()->trans('documents.linked_to.folders');
         }
 
@@ -826,10 +825,9 @@ class DocumentsController extends RozierApp
                     foreach ($documents as $document) {
                         $folder->removeDocument($document);
                     }
-
-                    $this->getService('em')->flush();
                 }
             }
+            $this->getService('em')->flush();
 
             $msg = $this->getTranslator()->trans('documents.removed_from.folders');
         }

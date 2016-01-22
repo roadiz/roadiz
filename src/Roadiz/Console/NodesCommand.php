@@ -50,52 +50,52 @@ class NodesCommand extends Command
     protected function configure()
     {
         $this->setName('core:nodes')
-             ->setDescription('Manage nodes')
-             ->addArgument(
-                 'node-name',
-                 InputArgument::OPTIONAL,
-                 'Node name'
-             )
-             ->addArgument(
-                 'node-type',
-                 InputArgument::OPTIONAL,
-                 'Node-type name'
-             )
-             ->addArgument(
-                 'locale',
-                 InputArgument::OPTIONAL,
-                 'Translation locale'
-             )
-             ->addOption(
-                 'create',
-                 'c',
-                 InputOption::VALUE_NONE,
-                 'Create a node'
-             )
-             ->addOption(
-                 'delete',
-                 'D',
-                 InputOption::VALUE_NONE,
-                 'Delete requested node'
-             )
-             ->addOption(
-                 'update',
-                 'u',
-                 InputOption::VALUE_NONE,
-                 'Update requested node'
-             )
-             ->addOption(
-                 'hide',
-                 'H',
-                 InputOption::VALUE_NONE,
-                 'Hide requested node'
-             )
-             ->addOption(
-                 'show',
-                 's',
-                 InputOption::VALUE_NONE,
-                 'Show requested node'
-             );
+            ->setDescription('Manage nodes')
+            ->addArgument(
+                'node-name',
+                InputArgument::OPTIONAL,
+                'Node name'
+            )
+            ->addArgument(
+                'node-type',
+                InputArgument::OPTIONAL,
+                'Node-type name'
+            )
+            ->addArgument(
+                'locale',
+                InputArgument::OPTIONAL,
+                'Translation locale'
+            )
+            ->addOption(
+                'create',
+                'c',
+                InputOption::VALUE_NONE,
+                'Create a node'
+            )
+            ->addOption(
+                'delete',
+                'D',
+                InputOption::VALUE_NONE,
+                'Delete requested node'
+            )
+            ->addOption(
+                'update',
+                'u',
+                InputOption::VALUE_NONE,
+                'Update requested node'
+            )
+            ->addOption(
+                'hide',
+                'H',
+                InputOption::VALUE_NONE,
+                'Hide requested node'
+            )
+            ->addOption(
+                'show',
+                's',
+                InputOption::VALUE_NONE,
+                'Show requested node'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -112,20 +112,20 @@ class NodesCommand extends Command
             $input->getOption('create')
         ) {
             $type = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                         ->findOneBy(['name' => $typeName]);
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->findOneBy(['name' => $typeName]);
             $translation = null;
 
             if ($locale) {
                 $translation = $this->entityManager
-                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                    ->findOneBy(['locale' => $locale]);
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                    ->findOneBy(['locale' => $locale]);
             }
 
             if ($translation === null) {
                 $translation = $this->entityManager
-                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                    ->findOneBy([], ['id' => 'ASC']);
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                    ->findOneBy([], ['id' => 'ASC']);
             }
 
             if ($type !== null &&
@@ -137,8 +137,8 @@ class NodesCommand extends Command
 
         } elseif ($nodeName) {
             $node = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                         ->findOneBy(['nodeName' => $nodeName]);
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->findOneBy(['nodeName' => $nodeName]);
 
             if ($node !== null) {
                 $text .= $node->getOneLineSummary() . $node->getOneLineSourceSummary();
@@ -147,8 +147,8 @@ class NodesCommand extends Command
             }
         } else {
             $nodes = $this->entityManager
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                          ->findAll();
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->findAll();
 
             foreach ($nodes as $key => $node) {
                 $text .= $node->getOneLineSummary();
@@ -178,7 +178,7 @@ class NodesCommand extends Command
         $this->entityManager->persist($node);
 
         // Source
-        $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
+        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $type->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
 
         $fields = $type->getFields();

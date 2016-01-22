@@ -40,6 +40,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class SolrReindexCommand extends SolrCommand
 {
+    protected $questionHelper;
 
     protected function configure()
     {

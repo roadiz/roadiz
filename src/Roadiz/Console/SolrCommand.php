@@ -40,9 +40,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SolrCommand extends Command
 {
-    private $questionHelper;
-    private $entityManager;
-    private $solr;
+    protected $entityManager;
+    protected $solr;
 
     protected function configure()
     {
@@ -52,7 +51,6 @@ class SolrCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->solr = $this->getHelperSet()->get('solr')->getSolr();
 

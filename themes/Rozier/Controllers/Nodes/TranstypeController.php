@@ -29,13 +29,14 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 
 class TranstypeController extends RozierApp
 {
@@ -44,7 +45,7 @@ class TranstypeController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($node);
 
         if (null === $node) {
@@ -53,7 +54,7 @@ class TranstypeController extends RozierApp
 
         $form = $this->createForm(new TranstypeType(), null, [
             'em' => $this->getService('em'),
-            'currentType' => $node->getNodeType()
+            'currentType' => $node->getNodeType(),
         ]);
         $form->handleRequest($request);
 
@@ -61,7 +62,7 @@ class TranstypeController extends RozierApp
             $data = $form->getData();
 
             $newNodeType = $this->getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
+                ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
 
             $this->doTranstype($node, $newNodeType);
             $this->getService('em')->refresh($node);
@@ -86,7 +87,6 @@ class TranstypeController extends RozierApp
         return $this->render('nodes/transtype.html.twig', $this->assignation);
     }
 
-
     protected function doTranstype(Node $node, NodeType $nodeType)
     {
         /*
@@ -94,7 +94,7 @@ class TranstypeController extends RozierApp
          * to find data that can be transfered during transtyping.
          */
         $fieldAssociations = [];
-        $oldFields =  $node->getNodeType()->getFields();
+        $oldFields = $node->getNodeType()->getFields();
         $er = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField');
 
         foreach ($oldFields as $oldField) {
@@ -113,42 +113,49 @@ class TranstypeController extends RozierApp
         }
 
         foreach ($node->getNodeSources() as $existingSource) {
-            $sourceClass = "GeneratedNodeSources\\" . $nodeType->getSourceEntityClassName();
+            $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
             $source = new $sourceClass($node, $existingSource->getTranslation());
             $source->setTitle($existingSource->getTitle());
+            $nsDocuments = new ArrayCollection();
 
             foreach ($fieldAssociations as $fields) {
-                if (!$fields[0]->isVirtual()) {
+                $oldField = $fields[0];
+                $matchingField = $fields[1];
+
+                if (!$oldField->isVirtual()) {
                     /*
                      * Copy simple data from source to another
                      */
-                    $setter = $fields[0]->getSetterName();
-                    $getter = $fields[0]->getGetterName();
+                    $setter = $oldField->getSetterName();
+                    $getter = $oldField->getGetterName();
 
                     $source->$setter($existingSource->$getter());
-                } elseif ($fields[0]->getType() === NodeTypeField::DOCUMENTS_T) {
+                } elseif ($oldField->getType() === NodeTypeField::DOCUMENTS_T) {
                     /*
                      * Copy documents.
                      */
                     $documents = $this->getService('em')
-                                     ->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                     ->findByNodeSourceAndField($existingSource, $fields[0]);
+                        ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                        ->findByNodeSourceAndField($existingSource, $oldField);
 
                     foreach ($documents as $document) {
-                        $nsDoc = new NodesSourcesDocuments($source, $document, $fields[1]);
-                        $source->getDocumentsByFields()->add($nsDoc);
+                        $nsDocuments->add(new NodesSourcesDocuments($source, $document, $matchingField));
                     }
                 }
             }
             // First plan old source deletion.
             $this->getService('em')->remove($existingSource);
-            $this->getService('em')->flush();
+            $node->removeNodeSources($existingSource);
+            $this->getService('em')->flush($existingSource);
 
-            $this->getService('em')->persist($source);
-            foreach ($source->getDocumentsByFields() as $nsDoc) {
+            foreach ($nsDocuments as $nsDoc) {
+                $source->getDocumentsByFields()->add($nsDoc);
                 $this->getService('em')->persist($nsDoc);
             }
-            $this->getService('em')->flush();
+
+            $node->addNodeSources($source);
+            $this->getService('em')->persist($source);
+            $this->getService('em')->flush($source);
         }
 
         $node->setNodeType($nodeType);

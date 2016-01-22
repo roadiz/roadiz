@@ -47,7 +47,6 @@ class SolrOptimizeCommand extends SolrCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->solr = $this->getHelperSet()->get('solr')->getSolr();
 

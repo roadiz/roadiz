@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -604,6 +605,33 @@ class Node extends AbstractDateTimedPositioned
     public function getNodeSources()
     {
         return $this->nodeSources;
+    }
+
+    /**
+     * @param NodesSources $ns
+     *
+     * @return $this
+     */
+    public function removeNodeSources(NodesSources $ns)
+    {
+        if ($this->getNodeSources()->contains($ns)) {
+            $this->getNodeSources()->removeElement($ns);
+        }
+
+        return $this;
+    }
+    /**
+     * @param NodesSources $ns
+     *
+     * @return $this
+     */
+    public function addNodeSources(NodesSources $ns)
+    {
+        if (!$this->getNodeSources()->contains($ns)) {
+            $this->getNodeSources()->add($ns);
+        }
+
+        return $this;
     }
 
     /**

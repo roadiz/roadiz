@@ -93,8 +93,9 @@ class NodeHandler
 
         foreach ($nodesCustomForms as $ncf) {
             Kernel::getService('em')->remove($ncf);
-            Kernel::getService('em')->flush();
         }
+
+        Kernel::getService('em')->flush();
 
         return $this;
     }
@@ -152,8 +153,9 @@ class NodeHandler
 
         foreach ($nodesToNodes as $ntn) {
             Kernel::getService('em')->remove($ntn);
-            Kernel::getService('em')->flush();
         }
+
+        Kernel::getService('em')->flush();
 
         return $this;
     }
