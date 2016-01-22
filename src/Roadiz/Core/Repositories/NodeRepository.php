@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -1039,6 +1040,29 @@ class NodeRepository extends EntityRepository
         }
 
         $this->prepareComparisons($criteria, $qb, $alias);
+
+        return $qb;
+    }
+
+    /**
+     *
+     * @param  array        $criteria
+     * @param  QueryBuilder $qb
+     * @param  string       $alias
+     * @return QueryBuilder
+     */
+    protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
+    {
+        foreach ($criteria as $key => $value) {
+            if ($key == 'translation') {
+                if (!$this->hasJoinedNodesSources($qb, $alias)) {
+                    $qb->innerJoin($alias . '.nodeSources', 'ns');
+                }
+                $qb->andWhere($this->buildComparison($value, 'ns.', $key, $key, $qb));
+            } else {
+                $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $key, $qb));
+            }
+        }
 
         return $qb;
     }

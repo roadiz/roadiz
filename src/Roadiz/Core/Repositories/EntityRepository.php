@@ -543,4 +543,44 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             );
         }
     }
+
+    /**
+     * Ensure that node table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNode(&$qb, $alias)
+    {
+        if (isset($qb->getDQLPart('join')[$alias])) {
+            foreach ($qb->getDQLPart('join')[$alias] as $join) {
+                if (null !== $join && $join->getAlias() == "n") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Ensure that nodes_sources table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNodesSources(&$qb, $alias)
+    {
+        if (isset($qb->getDQLPart('join')[$alias])) {
+            foreach ($qb->getDQLPart('join')[$alias] as $join) {
+                if (null !== $join && $join->getAlias() == "ns") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
