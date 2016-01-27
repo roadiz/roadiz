@@ -760,7 +760,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
          * Force a gravatar image if not defined
          */
         if ($this->getPictureUrl() == '') {
-            $this->setPictureUrl("http://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200");
+            $this->setPictureUrl($this->getGravatarUrl());
         }
     }
 
@@ -775,8 +775,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
          * Force a gravatar image if not defined
          */
         if ($this->getPictureUrl() == '') {
-            $this->setPictureUrl("http://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200");
+            $this->setPictureUrl($this->getGravatarUrl());
         }
+    }
+
+    /**
+     * Get prototype abstract gravatar url.
+     *
+     * @return string
+     */
+    public function getGravatarUrl()
+    {
+        return "//www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200";
     }
 
     /**

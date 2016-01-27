@@ -175,12 +175,7 @@ class Fixtures
             $user->setUsername($data['username']);
             $user->setPlainPassword($data['password']);
             $user->setEmail($data['email']);
-
-            $url = "http://www.gravatar.com/avatar/" .
-            md5(strtolower(trim($user->getEmail()))) .
-            "?d=identicon&s=200";
-
-            $user->setPictureUrl($url);
+            $user->setPictureUrl($user->getGravatarUrl());
 
             $existingGroup = $this->entityManager
                                   ->getRepository('RZ\Roadiz\Core\Entities\Group')
