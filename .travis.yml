@@ -7,12 +7,9 @@ php:
   - 5.5
   - 5.6
   - 7.0
-  - hhvm
 
 matrix:
   allow_failures:
-    - php: 7.0
-    - php: hhvm
     - env: DB=sqlite
 
 env:
@@ -20,7 +17,7 @@ env:
   - DB=pgsql
   - DB=sqlite
 
-before_script:
+install:
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
@@ -29,8 +26,8 @@ before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS roadiz_tests_tmp;create database IF NOT EXISTS roadiz_tests;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then cp conf/config.mysql.travis.yml conf/config.yml; fi"
   - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.yml conf/config.yml; fi"
-  - composer self-update
-  - composer install --no-interaction
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev --no-interaction
   - php bin/roadiz orm:schema-tool:create -n --env=install
   - php bin/roadiz install -n --env=install
   - php bin/roadiz themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
@@ -45,5 +42,5 @@ script:
   - ENABLE_SECOND_LEVEL_CACHE=0 bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
   - bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/* -p ./
 
-after_script:
-  - php bin/coveralls -v
+after_success:
+  - travis_retry php bin/coveralls -v
