@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,53 +24,57 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TranslationsCommand.php
+ * @file NodeTypesAddFieldCommand.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\Console\Command\Command;
+use RZ\Roadiz\Console\NodeTypesCreationCommand;
+use RZ\Roadiz\Core\Entities\NodeType;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command line utils for managing translations from terminal.
+ * Command line utils for managing node-types from terminal.
  */
-class TranslationsCommand extends Command
+class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
 {
-    private $entityManager;
-
     protected function configure()
     {
-        $this->setName('translations:list')
-            ->setDescription('List translations');
+        $this->setName('nodetypes:add-fields')
+            ->setDescription('Add fields to a node-type')
+            ->addArgument(
+                'name',
+                InputArgument::REQUIRED,
+                'Node-type name'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $translations = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findAll();
+        $text = "";
+        $name = $input->getArgument('name');
 
-        if (count($translations) > 0) {
-            $table = $this->getHelper('table');
-            $table->setHeaders(['Id', 'Name', 'Locale', 'Disabled', 'Default']);
-            $tableContent = [];
-            foreach ($translations as $trans) {
-                $tableContent[] = [
-                    $trans->getId(),
-                    $trans->getName(),
-                    $trans->getLocale(),
-                    (!$trans->isAvailable() ? 'X' : ''),
-                    ($trans->isDefaultTranslation() ? 'X' : ''),
-                ];
-            }
-            $table->setRows($tableContent);
-            $table->render($output);
+        $nodetype = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findOneBy(['name' => $name]);
+
+        if ($nodetype !== null) {
+            $latestPosition = $this->entityManager
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                ->findLatestPositionInNodeType($nodetype);
+            $text = $this->addNodeTypeField($nodetype, $latestPosition + 1, $input, $output);
+            $this->entityManager->flush();
+            $nodetype->getHandler()->regenerateEntityClass();
+
+            $output->writeln('Do not forget to update database schema! <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info>');
         } else {
-            $output->writeln('<info>No available translations.</info>' . PHP_EOL);
+            $text .= '<error>Node-type "' . $name . '" does not exist.</error>';
         }
+
+        $output->writeln($text);
     }
 }

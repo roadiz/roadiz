@@ -49,4 +49,28 @@ class NodeTypeFieldRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * Get latest position in nodeType.
+     *
+     * Parent can be null for tag root
+     *
+     * @param  NodeType|null $nodeType
+     *
+     * @return int
+     */
+    public function findLatestPositionInNodeType(NodeType $nodeType)
+    {
+        $query = $this->_em->createQuery('
+            SELECT MAX(ntf.position)
+            FROM RZ\Roadiz\Core\Entities\NodeTypeField ntf
+            WHERE ntf.nodeType = :nodeType')
+            ->setParameter('nodeType', $nodeType);
+
+        try {
+            return $query->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

@@ -201,23 +201,14 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        /*
-         * Get the last index after last node in parent
-         */
-        $this->setPosition($this->getHandler()->cleanPositions());
-    }
-
-    /**
      * @return string
      */
     public function getOneLineSummary()
     {
-        return $this->getId() . " — " . $this->getName() . " — " . $this->getLabel() .
-        " — Indexed : " . ($this->isIndexed() ? 'true' : 'false') . PHP_EOL;
+        return $this->getId() . " — " . $this->getLabel() . ' ['.$this->getName().']' .
+        ' - ' . static::$typeToHuman[$this->getType()] .
+        ($this->isIndexed() ? ' - indexed' : '') .
+        (!$this->isVisible() ? ' - hidden' : '') . PHP_EOL;
     }
 
     /**

@@ -45,6 +45,7 @@ use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -91,6 +92,9 @@ class RoadizApplication extends Application
             new \RZ\Roadiz\Console\TranslationsEnableCommand(),
             new \RZ\Roadiz\Console\TranslationsDisableCommand(),
             new \RZ\Roadiz\Console\NodeTypesCommand(),
+            new \RZ\Roadiz\Console\NodeTypesCreationCommand(),
+            new \RZ\Roadiz\Console\NodeTypesDeleteCommand(),
+            new \RZ\Roadiz\Console\NodeTypesAddFieldCommand(),
             new \RZ\Roadiz\Console\NodesSourcesCommand(),
             new \RZ\Roadiz\Console\NodesCommand(),
             new \RZ\Roadiz\Console\ThemesCommand(),
@@ -143,6 +147,7 @@ class RoadizApplication extends Application
             new DebugFormatterHelper(),
             new ProcessHelper(),
             new KernelHelper($this->kernel),
+            new TableHelper(),
             'question' => new QuestionHelper(),
             'configuration' => new ConfigurationHelper($this->kernel->container['config']),
             'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),

@@ -71,20 +71,29 @@ class UsersCommand extends Command
                 $text = '<error>User “' . $name . '” does not exist… use users:create to add a new user.</error>' . PHP_EOL;
             }
         } else {
-            $text = '<info>Installed users…</info>' . PHP_EOL;
+            $table = $this->getHelper('table');
+
             $users = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
                 ->findAll();
 
             if (count($users) > 0) {
-                $text .= ' | ' . PHP_EOL;
+                $table->setHeaders(['Id', 'Username', 'Email', 'Disabled', 'Expired', 'Locked', 'Groups', 'Roles']);
+                $tableContent = [];
                 foreach ($users as $user) {
-                    $text .=
-                    ' |_ ' . $user->getUsername()
-                    . ' — <info>' . ($user->isEnabled() ? 'enabled' : 'disabled') . '</info>'
-                    . ' — <comment>' . implode(', ', $user->getRoles()) . '</comment>'
-                        . PHP_EOL;
+                    $tableContent[] = [
+                        $user->getId(),
+                        $user->getUsername(),
+                        $user->getEmail(),
+                        (!$user->isEnabled() ? 'X' : ''),
+                        ($user->getExpired() ? 'X' : ''),
+                        (!$user->isAccountNonLocked() ? 'X' : ''),
+                        implode(' ', $user->getGroupNames()),
+                        implode(' ', $user->getRoles()),
+                    ];
                 }
+                $table->setRows($tableContent);
+                $table->render($output);
             } else {
                 $text = '<info>No available users</info>' . PHP_EOL;
             }

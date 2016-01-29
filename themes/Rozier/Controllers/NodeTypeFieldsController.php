@@ -140,10 +140,17 @@ class NodeTypeFieldsController extends RozierApp
         $field = new NodeTypeField();
         $nodeType = $this->getService('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
-        $field->setNodeType($nodeType);
+
 
         if ($nodeType !== null &&
             $field !== null) {
+
+            $latestPosition = $this->getService('em')
+                                   ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                                   ->findLatestPositionInNodeType($nodeType);
+            $field->setNodeType($nodeType);
+            $field->setPosition($latestPosition + 1);
+
             $this->assignation['nodeType'] = $nodeType;
             $this->assignation['field'] = $field;
 
