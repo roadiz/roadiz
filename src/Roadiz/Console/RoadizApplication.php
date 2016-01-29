@@ -86,6 +86,10 @@ class RoadizApplication extends Application
     {
         $commands = [
             new \RZ\Roadiz\Console\TranslationsCommand(),
+            new \RZ\Roadiz\Console\TranslationsCreationCommand(),
+            new \RZ\Roadiz\Console\TranslationsDeleteCommand(),
+            new \RZ\Roadiz\Console\TranslationsEnableCommand(),
+            new \RZ\Roadiz\Console\TranslationsDisableCommand(),
             new \RZ\Roadiz\Console\NodeTypesCommand(),
             new \RZ\Roadiz\Console\NodesSourcesCommand(),
             new \RZ\Roadiz\Console\NodesCommand(),

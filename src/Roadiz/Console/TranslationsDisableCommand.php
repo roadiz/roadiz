@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,44 +24,64 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TranslationsCommand.php
+ * @file TranslationsDisableCommand.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
- * Command line utils for managing translations from terminal.
+ * Command line utils for managing translations.
  */
-class TranslationsCommand extends Command
+class TranslationsDisableCommand extends Command
 {
+    private $questionHelper;
     private $entityManager;
 
     protected function configure()
     {
-        $this->setName('translations:list')
-            ->setDescription('List translations');
+        $this->setName('translations:disable')
+            ->setDescription('Disables a translation')
+            ->addArgument(
+                'locale',
+                InputArgument::REQUIRED,
+                'Translation locale'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $text = "";
+        $locale = $input->getArgument('locale');
 
-        $text = '<info>Existing translations…</info>' . PHP_EOL;
-        $translations = $this->entityManager
+        $translation = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findAll();
+            ->findOneByLocale($locale);
 
-        if (count($translations) > 0) {
-            foreach ($translations as $trans) {
-                $text .= $trans->getOneLineSummary();
+        if ($translation !== null) {
+            $confirmation = new ConfirmationQuestion(
+                '<question>Are you sure to disable ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question> [y/N]:',
+                false
+            );
+            if ($this->questionHelper->ask(
+                $input,
+                $output,
+                $confirmation
+            )) {
+                $translation->setAvailable(false);
+                $this->entityManager->flush();
+                $text .= '<info>Translation disabled.</info>' . PHP_EOL;
             }
         } else {
-            $text = '<info>No available translations.</info>' . PHP_EOL;
+            $text .= '<error>Translation for locale ' . $locale . ' does not exist.</error>' . PHP_EOL;
         }
 
         $output->writeln($text);
