@@ -16,6 +16,7 @@ env:
   - DB=mysql
   - DB=pgsql
   - DB=sqlite
+  - COVERALLS_PARALLEL=true
 
 install:
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
@@ -44,3 +45,6 @@ script:
 
 after_success:
   - travis_retry php bin/coveralls -v
+
+notifications:
+  webhooks: https://coveralls.io/webhook?repo_token=auwcnYiFOeFFp0vxd4Tx158ToE5YvMAHg
