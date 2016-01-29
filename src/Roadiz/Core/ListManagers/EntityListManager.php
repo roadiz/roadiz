@@ -308,19 +308,10 @@ class EntityListManager
             'currentPage' => $this->currentPage,
             'pageCount' => $this->paginator->getPageCount(),
             'itemPerPage' => $this->itemPerPage,
-            'itemCount' => $this->_em
-                ->getRepository($this->entityName)
-                ->countBy($this->filteringArray),
+            'itemCount' => $this->paginator->getTotalCount(),
             'nextPageQuery' => null,
             'previousPageQuery' => null,
         ];
-
-        // Edit item count after a search
-        if ($this->searchPattern != '') {
-            $assign['itemCount'] = $this->_em
-                ->getRepository($this->entityName)
-                ->countSearchBy($this->searchPattern, $this->filteringArray);
-        }
 
         // compute next and prev page URL
         if ($this->currentPage > 1) {

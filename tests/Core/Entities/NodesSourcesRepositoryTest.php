@@ -49,7 +49,6 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
-                //echo PHP_EOL.$source->getTitle();
                 $this->assertEquals(get_class($source), $expectedClass);
             }
         }
@@ -61,7 +60,7 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
     {
         return array(
             array('Propos', 'GeneratedNodeSources\NSPage'),
-            array('Lorem markdownum', 'GeneratedNodeSources\NSPage'),
+            array('About', 'GeneratedNodeSources\NSPage'),
         );
     }
 
@@ -76,7 +75,6 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
-                //echo PHP_EOL.$source->getTitle();
                 $this->assertEquals(get_class($source), $expectedClass);
             }
         }
@@ -91,7 +89,7 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
 
         return array(
             array('Propos', 'GeneratedNodeSources\NSPage', $english),
-            array('Lorem markdownum', 'GeneratedNodeSources\NSPage', $english),
+            array('About', 'GeneratedNodeSources\NSPage', $english),
         );
     }
 }

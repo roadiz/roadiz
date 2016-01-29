@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
@@ -280,7 +281,6 @@ class NodeRepository extends EntityRepository
                 $qb->addOrderBy('n.' . $key, $value);
             }
         }
-
         if (null !== $offset) {
             $qb->setFirstResult($offset);
         }
@@ -357,7 +357,7 @@ class NodeRepository extends EntityRepository
      * @param AuthorizationChecker|null                $authorizationChecker
      * @param boolean                                  $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection|Paginator
      */
     public function findBy(
         array $criteria,
@@ -384,10 +384,19 @@ class NodeRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
-        try {
-            return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return new ArrayCollection();
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (\Doctrine\ORM\NoResultException $e) {
+                return new ArrayCollection();
+            }
         }
     }
     /**
@@ -453,7 +462,6 @@ class NodeRepository extends EntityRepository
             $authorizationChecker,
             $preview
         );
-
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);

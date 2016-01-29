@@ -61,27 +61,25 @@ class NodesSourcesPaginator extends Paginator
     }
 
     /**
-     * Return page count according to criteria.
-     *
-     * **Warning** : EntityRepository must implements *countBy* method
-     *
-     * @return integer
+     * {@inheritdoc}
      */
-    public function getPageCount()
+    public function getTotalCount()
     {
-        if (null !== $this->searchPattern) {
-            $total = $this->em->getRepository($this->entityName)
-                ->countSearchBy($this->searchPattern, $this->criteria);
-        } else {
-            $total = $this->em->getRepository($this->entityName)
-                ->countBy(
-                    $this->criteria,
-                    $this->authorizationChecker,
-                    $this->preview
-                );
+        if (null === $this->totalCount) {
+            if (null !== $this->searchPattern) {
+                $this->totalCount = $this->em->getRepository($this->entityName)
+                    ->countSearchBy($this->searchPattern, $this->criteria);
+            } else {
+                $this->totalCount = $this->em->getRepository($this->entityName)
+                    ->countBy(
+                        $this->criteria,
+                        $this->authorizationChecker,
+                        $this->preview
+                    );
+            }
         }
 
-        return ceil($total / $this->getItemsPerPage());
+        return $this->totalCount;
     }
 
     /**

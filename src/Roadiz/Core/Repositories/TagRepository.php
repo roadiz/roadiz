@@ -29,12 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * {@inheritdoc}
@@ -246,7 +247,7 @@ class TagRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
+     * @param Translation|null $translation
      *
      * @return QueryBuilder
      */
@@ -286,7 +287,7 @@ class TagRepository extends EntityRepository
      * This method allows to pre-filter Nodes with a given translation.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
+     * @param Translation|null $translation
      *
      * @return QueryBuilder
      */
@@ -313,17 +314,16 @@ class TagRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param Translation|null $translation
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection|Paginator
      */
     public function findBy(
         array $criteria,
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        Translation $translation = null,
-        AuthorizationChecker $securityAuthorizationChecker = null
+        Translation $translation = null
     ) {
         $query = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -339,10 +339,19 @@ class TagRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
-        try {
-            return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return null;
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (\Doctrine\ORM\NoResultException $e) {
+                return new ArrayCollection();
+            }
         }
     }
     /**
@@ -351,15 +360,13 @@ class TagRepository extends EntityRepository
      * @param array                                   $criteria
      * @param array|null                              $orderBy
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return Doctrine\Common\Collections\ArrayCollection
      */
     public function findOneBy(
         array $criteria,
         array $orderBy = null,
-        Translation $translation = null,
-        AuthorizationChecker $securityAuthorizationChecker = null
+        Translation $translation = null
     ) {
 
         $query = $this->getContextualQueryWithTranslation(
@@ -387,7 +394,6 @@ class TagRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return int
      */

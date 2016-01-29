@@ -42,6 +42,7 @@ class Paginator
     protected $criteria;
     protected $searchPattern = null;
     protected $em;
+    protected $totalCount = null;
 
     /**
      * @param Doctrine\ORM\EntityManager $em           Entity manager
@@ -57,7 +58,7 @@ class Paginator
     ) {
         $this->em = $em;
         $this->entityName = $entityName;
-        $this->setItemsPerPage($itemPerPages);
+        $this->itemsPerPage = $itemPerPages;
         $this->criteria = $criteria;
 
         if ("" == $this->entityName) {
@@ -89,6 +90,26 @@ class Paginator
     }
 
     /**
+     * Return total entities count for given criteria.
+     *
+     * @return int
+     */
+    public function getTotalCount()
+    {
+        if (null === $this->totalCount) {
+            if (null !== $this->searchPattern) {
+                $this->totalCount = $this->em->getRepository($this->entityName)
+                    ->countSearchBy($this->searchPattern, $this->criteria);
+            } else {
+                $this->totalCount = $this->em->getRepository($this->entityName)
+                    ->countBy($this->criteria);
+            }
+        }
+
+        return $this->totalCount;
+    }
+
+    /**
      * Return page count according to criteria.
      *
      * **Warning** : EntityRepository must implements *countBy* method
@@ -97,15 +118,7 @@ class Paginator
      */
     public function getPageCount()
     {
-        if (null !== $this->searchPattern) {
-            $total = $this->em->getRepository($this->entityName)
-                                                   ->countSearchBy($this->searchPattern, $this->criteria);
-        } else {
-            $total = $this->em->getRepository($this->entityName)
-                                                   ->countBy($this->criteria);
-        }
-
-        return ceil($total / $this->getItemsPerPage());
+        return ceil($this->getTotalCount() / $this->getItemsPerPage());
     }
 
     /**
@@ -122,12 +135,12 @@ class Paginator
             return $this->searchByAtPage($order, $page);
         } else {
             return $this->em->getRepository($this->entityName)
-                                                 ->findBy(
-                                                     $this->criteria,
-                                                     $order,
-                                                     $this->getItemsPerPage(),
-                                                     $this->getItemsPerPage() * ($page - 1)
-                                                 );
+                ->findBy(
+                    $this->criteria,
+                    $order,
+                    $this->getItemsPerPage(),
+                    $this->getItemsPerPage() * ($page - 1)
+                );
         }
     }
 
@@ -142,13 +155,13 @@ class Paginator
     public function searchByAtPage(array $order = [], $page = 1)
     {
         return $this->em->getRepository($this->entityName)
-                                             ->searchBy(
-                                                 $this->searchPattern,
-                                                 $this->criteria,
-                                                 $order,
-                                                 $this->getItemsPerPage(),
-                                                 $this->getItemsPerPage() * ($page - 1)
-                                             );
+            ->searchBy(
+                $this->searchPattern,
+                $this->criteria,
+                $order,
+                $this->getItemsPerPage(),
+                $this->getItemsPerPage() * ($page - 1)
+            );
     }
 
     /**
