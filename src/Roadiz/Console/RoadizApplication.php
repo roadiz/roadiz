@@ -97,6 +97,7 @@ class RoadizApplication extends Application
             new \RZ\Roadiz\Console\NodeTypesAddFieldCommand(),
             new \RZ\Roadiz\Console\NodesSourcesCommand(),
             new \RZ\Roadiz\Console\NodesCommand(),
+            new \RZ\Roadiz\Console\NodesCreationCommand(),
             new \RZ\Roadiz\Console\ThemesCommand(),
             new \RZ\Roadiz\Console\InstallCommand(),
             new \RZ\Roadiz\Console\UsersCommand(),
