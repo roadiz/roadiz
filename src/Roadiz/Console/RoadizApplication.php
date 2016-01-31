@@ -45,7 +45,6 @@ use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -148,7 +147,6 @@ class RoadizApplication extends Application
             new DebugFormatterHelper(),
             new ProcessHelper(),
             new KernelHelper($this->kernel),
-            new TableHelper(),
             'question' => new QuestionHelper(),
             'configuration' => new ConfigurationHelper($this->kernel->container['config']),
             'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),

@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -55,7 +55,7 @@ class TranslationsCommand extends Command
             ->findAll();
 
         if (count($translations) > 0) {
-            $table = $this->getHelper('table');
+            $table = new Table($output);
             $table->setHeaders(['Id', 'Name', 'Locale', 'Disabled', 'Default']);
             $tableContent = [];
             foreach ($translations as $trans) {

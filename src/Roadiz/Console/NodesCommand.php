@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,7 +40,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodesCommand extends Command
 {
-    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -63,10 +62,9 @@ class NodesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('em')->getEntityManager();
         $text = "";
-        $table = $this->getHelper('table');
+        $table = new Table($output);
         $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);
         $tableContent = [];
 

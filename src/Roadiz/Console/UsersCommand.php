@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -71,7 +72,7 @@ class UsersCommand extends Command
                 $text = '<error>User “' . $name . '” does not exist… use users:create to add a new user.</error>' . PHP_EOL;
             }
         } else {
-            $table = $this->getHelper('table');
+            $table = new Table($output);
 
             $users = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\User')
