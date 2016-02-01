@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -40,7 +40,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -65,31 +64,7 @@ class NodesSourcesRepository extends EntityRepository
                 $joinedNode = true;
             }
 
-            if (is_array($criteria['tags']) ||
-                (is_object($criteria['tags']) &&
-                    $criteria['tags'] instanceof Collection)) {
-                if (in_array("tagExclusive", array_keys($criteria))
-                    && $criteria["tagExclusive"] === true) {
-                    $node = NodeRepository::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
-                    $criteria["node.id"] = $node;
-                    unset($criteria["tagExclusive"]);
-                    unset($criteria['tags']);
-                } else {
-                    $qb->innerJoin(
-                        'n.tags',
-                        'tg',
-                        'WITH',
-                        'tg.id IN (:tags)'
-                    );
-                }
-            } else {
-                $qb->innerJoin(
-                    'n.tags',
-                    'tg',
-                    'WITH',
-                    'tg.id = :tags'
-                );
-            }
+            $this->buildTagFiltering($criteria, $qb);
         }
     }
 
@@ -219,26 +194,6 @@ class NodesSourcesRepository extends EntityRepository
         } else {
             return parent::singleDirectComparison($key, $value, $qb, $alias);
         }
-    }
-
-    /**
-     * Ensure that node table is joined only once.
-     *
-     * @param  QueryBuilder $qb
-     * @param  string  $alias
-     * @return boolean
-     */
-    protected function hasJoinedNode(&$qb, $alias)
-    {
-        if (isset($qb->getDQLPart('join')[$alias])) {
-            foreach ($qb->getDQLPart('join')[$alias] as $join) {
-                if (null !== $join && $join->getAlias() == "n") {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**

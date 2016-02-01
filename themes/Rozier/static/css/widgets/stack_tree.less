@@ -5,14 +5,22 @@
 
 /* -------- STYLES -------- */
 
-.stack-tree-widget{
-
-    .nodetree-bulk-selection{
+.root-tree.stack-tree-widget {
+    .nodetree-bulk-selection {
         right:48px;
     }
-
-    .nodetree-element-inner{
+    .nodetree-element-inner {
         padding-right:70px;
     }
 
+    .uk-nestable-item {
+        &.stack-node {
+            & > .non-nestable-handle,
+            & > .uk-nestable-handle{
+                width:36px;
+                top: -6px;
+                left: -3px
+            }
+        }
+    }
 }

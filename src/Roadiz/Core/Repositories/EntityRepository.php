@@ -29,9 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 
 /**
@@ -161,7 +162,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
     {
         foreach ($criteria as $key => $value) {
-            $qb->andWhere($this->buildComparison($value, $alias.'.', $key, $key, $qb));
+            $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $key, $qb));
         }
 
         return $qb;
@@ -500,5 +501,86 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         } catch (\Doctrine\ORM\NoResultException $e) {
             return null;
         }
+    }
+
+    /**
+     * @param  array &$criteria
+     * @param  QueryBuilder &$qb
+     * @param  string $nodeAlias
+     */
+    protected function buildTagFiltering(&$criteria, &$qb, $nodeAlias = 'n')
+    {
+        if (is_array($criteria['tags']) ||
+            (is_object($criteria['tags']) &&
+                $criteria['tags'] instanceof Collection)) {
+            if (in_array("tagExclusive", array_keys($criteria))
+                && $criteria["tagExclusive"] === true) {
+                // To get an exclusive tag filter
+                // we need to filter against each tag id
+                // and to inner join with a different alias for each tag
+                // with AND operator
+                foreach ($criteria['tags'] as $index => $tag) {
+                    $alias = 'tg' . $index;
+                    $qb->innerJoin($nodeAlias . '.tags', $alias);
+                    $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                }
+                unset($criteria["tagExclusive"]);
+                unset($criteria['tags']);
+            } else {
+                $qb->innerJoin(
+                    $nodeAlias . '.tags',
+                    'tg',
+                    'WITH',
+                    'tg.id IN (:tags)'
+                );
+            }
+        } else {
+            $qb->innerJoin(
+                $nodeAlias . '.tags',
+                'tg',
+                'WITH',
+                'tg.id = :tags'
+            );
+        }
+    }
+
+    /**
+     * Ensure that node table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNode(&$qb, $alias)
+    {
+        if (isset($qb->getDQLPart('join')[$alias])) {
+            foreach ($qb->getDQLPart('join')[$alias] as $join) {
+                if (null !== $join && $join->getAlias() == "n") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Ensure that nodes_sources table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNodesSources(&$qb, $alias)
+    {
+        if (isset($qb->getDQLPart('join')[$alias])) {
+            foreach ($qb->getDQLPart('join')[$alias] as $join) {
+                if (null !== $join && $join->getAlias() == "ns") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

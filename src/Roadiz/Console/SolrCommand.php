@@ -33,41 +33,24 @@ use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing nodes from terminal.
  */
 class SolrCommand extends Command
 {
-    private $questionHelper;
-    private $entityManager;
-    private $solr;
+    protected $entityManager;
+    protected $solr;
 
     protected function configure()
     {
-        $this->setName('solr')
-             ->setDescription('Manage Solr search engine index')
-             ->addOption(
-                 'reset',
-                 'R',
-                 InputOption::VALUE_NONE,
-                 'Reset Solr search engine index'
-             )
-             ->addOption(
-                 'reindex',
-                 'r',
-                 InputOption::VALUE_NONE,
-                 'Reindex every NodesSources into Solr'
-             );
+        $this->setName('solr:check')
+            ->setDescription('Check Solr search engine server');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->solr = $this->getHelperSet()->get('solr')->getSolr();
 
@@ -75,54 +58,23 @@ class SolrCommand extends Command
 
         if (null !== $this->solr) {
             if (true === $this->getHelperSet()->get('solr')->ready()) {
-                if ($input->getOption('reset')) {
-                    $confirmation = new ConfirmationQuestion(
-                        '<question>Are you sure to reset Solr index?</question>',
-                        false
-                    );
-                    if ($this->questionHelper->ask(
-                        $input,
-                        $output,
-                        $confirmation
-                    )) {
-                        $update = $this->solr->createUpdate();
-                        $update->addDeleteQuery('*:*');
-                        $update->addCommit();
-                        $this->solr->update($update);
-
-                        $text = '<info>Solr index resetted…</info>' . PHP_EOL;
-                    }
-
-                } elseif ($input->getOption('reindex')) {
-                    $confirmation = new ConfirmationQuestion(
-                        '<question>Are you sure to reindex your Node database?</question>',
-                        false
-                    );
-                    if ($this->questionHelper->ask(
-                        $input,
-                        $output,
-                        $confirmation
-                    )) {
-                        $stopwatch = new Stopwatch();
-                        $stopwatch->start('global');
-                        $this->reindexNodeSources($this->solr, $output);
-                        $stopwatch->stop('global');
-
-                        $duration = $stopwatch->getEvent('global')->getDuration();
-
-                        $text = PHP_EOL . sprintf('<info>Node database has been re-indexed in %.2d ms.</info>', $duration) . PHP_EOL;
-                    }
-                } else {
-                    $text .= '<info>Solr search engine server is running…</info>' . PHP_EOL;
-                }
+                $text .= '<info>Solr search engine server is running…</info>' . PHP_EOL;
             } else {
                 $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
                 $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
             }
         } else {
-            $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
-            $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
-            $text .= '
+            $text .= $this->displayBasicConfig();
+        }
+
+        $output->writeln($text);
+    }
+
+    protected function displayBasicConfig()
+    {
+        $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
+        $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
+        $text .= '
 solr:
     endpoint:
         localhost:
@@ -134,9 +86,21 @@ solr:
             username: ""
             password: ""
             ';
-        }
 
-        $output->writeln($text);
+        return $text;
+    }
+
+    /**
+     * Empty Solr index.
+     *
+     * @param  OutputInterface $output
+     */
+    protected function emptySolr(OutputInterface $output)
+    {
+        $update = $this->solr->createUpdate();
+        $update->addDeleteQuery('*:*');
+        $update->addCommit();
+        $this->solr->update($update);
     }
 
     /**
@@ -145,15 +109,12 @@ solr:
      * @param \Solarium\Client $this->solr
      * @param OutputInterface  $output
      */
-    private function reindexNodeSources(\Solarium\Client $solr, OutputInterface $output)
+    protected function reindexNodeSources(OutputInterface $output)
     {
-        $update = $this->solr->createUpdate();
-
         // Empty first
-        $update->addDeleteQuery('*:*');
-        $this->solr->update($update);
-        $update->addCommit();
+        $this->emptySolr($output);
 
+        $update = $this->solr->createUpdate();
         /*
          * Use buffered insertion
          */
@@ -162,8 +123,8 @@ solr:
 
         // Then index
         $nSources = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                         ->findAll();
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findAll();
 
         $progress = new ProgressBar($output, count($nSources));
         $progress->setFormat('verbose');
@@ -180,8 +141,23 @@ solr:
         $buffer->flush();
 
         // optimize the index
-        $update->addOptimize(true, false, 5);
+        $this->optimizeSolr($output);
 
         $progress->finish();
+    }
+    /**
+     * Send an optimize and commit update query to Solr.
+     *
+     * @param  OutputInterface $output
+     */
+    protected function optimizeSolr(OutputInterface $output)
+    {
+        $optimizeUpdate = $this->solr->createUpdate();
+        $optimizeUpdate->addOptimize(true, true, 5);
+        $this->solr->update($optimizeUpdate);
+
+        $finalCommitUpdate = $this->solr->createUpdate();
+        $finalCommitUpdate->addCommit(true, true, false);
+        $this->solr->update($finalCommitUpdate);
     }
 }

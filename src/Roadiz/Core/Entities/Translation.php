@@ -604,8 +604,9 @@ class Translation extends AbstractDateTimed
      */
     public function getOneLineSummary()
     {
-        return $this->getId() . " — " . $this->getName() . " — " . $this->getLocale() .
-        " — Available : " . ($this->isAvailable() ? 'true' : 'false') . PHP_EOL;
+        return $this->getId() . " — " . $this->getName() . " (" . $this->getLocale() . ')' .
+        " — " . ($this->isAvailable() ? 'Enabled' : 'Disabled') .
+        ($this->isDefaultTranslation() ? ' - Default' : '') .  PHP_EOL;
     }
 
     /**

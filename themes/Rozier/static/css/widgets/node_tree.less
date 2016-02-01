@@ -5,13 +5,7 @@
 
 /* -------- STYLES -------- */
 
-.root-tree {
-    margin: 0px;
-    padding: 0px;
-}
-
 .nodetree {
-
     &-bulk-selection {
         position: absolute;
         display: inline-block;
@@ -47,10 +41,10 @@
             }
         }
         &:hover {
-            .nodetree-contextualmenu {
+
+            & > .uk-nestable-item > .nodetree-contextualmenu {
                 .opacity(1);
             }
-
 
             .nodetree-bulk-selection {
                 input[type="checkbox"] {
@@ -100,39 +94,10 @@
     }
 }
 
-.uk-nestable {
-
-    &-item {
-        margin-bottom: 1px;
-    }
-    &-placeholder {
-        margin-bottom: 1px;
-    }
-    &-list {
-        padding-left: 30px;
-    }
-    &-handle {
-        font-size: 15px;
-        vertical-align: middle;
-    }
-}
-
-.nodetree-widget{
-
-    .nodetree-widget .root-tree>li:first-child{
-
-        &:before{
-            position: absolute;
-            content:'';
-            top: 0px; bottom:0; left: 0px;
-            width:1px;
-        }
-    }
-}
-
 // Different display in main content
 #main-content-scrollable {
-    .stack-tree-widget>li, .stack-tree-widget>li:first-child {
+    .stack-tree-widget>li,
+    .stack-tree-widget>li:first-child {
         padding: 11px 0;
         background-color: #F0F0F0;
         border-color: #D2D2D2;

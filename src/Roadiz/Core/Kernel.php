@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
-use RZ\Roadiz\Core\Events\ResponseHeaderSubscriber;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -59,7 +58,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.12.2";
+    public static $cmsVersion = "0.13.0";
     protected static $instance = null;
 
     public $container = null;
@@ -195,10 +194,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
         if (!$this->isInstallMode()) {
             $this->container['dispatcher']->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
-            $this->container['dispatcher']->addSubscriber(new ResponseHeaderSubscriber(
-                $this->container['securityAuthorizationChecker'],
-                $this->container['securityTokenStorage']
-            ));
 
             if ($this->isPreview()) {
                 $this->container['dispatcher']->addSubscriber(new PreviewModeSubscriber($this->container));

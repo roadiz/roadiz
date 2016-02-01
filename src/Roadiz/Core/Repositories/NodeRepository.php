@@ -31,8 +31,9 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
@@ -54,67 +55,8 @@ class NodeRepository extends EntityRepository
     protected function filterByTag(&$criteria, &$qb)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (is_array($criteria['tags']) ||
-                (is_object($criteria['tags']) &&
-                    $criteria['tags'] instanceof Collection)) {
-                if (in_array("tagExclusive", array_keys($criteria))
-                    && $criteria["tagExclusive"] === true) {
-                    $node = static::getNodeIdsByTagExcl($criteria['tags'], $this->_em);
-                    $criteria["id"] = $node;
-                    unset($criteria["tagExclusive"]);
-                    unset($criteria['tags']);
-                } else {
-                    $qb->innerJoin(
-                        'n.tags',
-                        'tg',
-                        'WITH',
-                        'tg.id IN (:tags)'
-                    );
-                }
-            } else {
-                $qb->innerJoin(
-                    'n.tags',
-                    'tg',
-                    'WITH',
-                    'tg.id = :tags'
-                );
-            }
+            $this->buildTagFiltering($criteria, $qb);
         }
-    }
-
-    /**
-     * Search NodeId exclusively.
-     *
-     * @param  array        $tags
-     * @param  EntityManager $em
-     *
-     * @return array
-     */
-    public static function getNodeIdsByTagExcl($tags, EntityManager $em)
-    {
-        $qb = $em->createQueryBuilder();
-
-        $qb->select("nj.id")
-            ->addSelect("COUNT(t.id) as num")
-            ->from("RZ\Roadiz\Core\Entities\Tag", "t")
-            ->leftJoin("t.nodes", "nj");
-        foreach ($tags as $key => $tag) {
-            $qb->orWhere($qb->expr()->eq('t.id', ':tag' . $key));
-        }
-        $qb->groupBy("nj.id");
-        $query = $qb->getQuery();
-        foreach ($tags as $key => $tag) {
-            $query->setParameter("tag" . $key, $tag);
-        }
-        $results = $query->getResult();
-        $count = count($tags);
-        $nodes = [];
-        foreach ($results as $key => $result) {
-            if ($count === (int) $result["num"]) {
-                $nodes[] = $result["id"];
-            }
-        }
-        return $nodes;
     }
 
     /**
@@ -279,7 +221,7 @@ class NodeRepository extends EntityRepository
     ) {
         $backendUser = null !== $authorizationChecker &&
         $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER) &&
-        $preview === true;
+            $preview === true;
 
         if ($backendUser) {
             /*
@@ -339,7 +281,6 @@ class NodeRepository extends EntityRepository
                 $qb->addOrderBy('n.' . $key, $value);
             }
         }
-
         if (null !== $offset) {
             $qb->setFirstResult($offset);
         }
@@ -416,7 +357,7 @@ class NodeRepository extends EntityRepository
      * @param AuthorizationChecker|null                $authorizationChecker
      * @param boolean                                  $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection|Paginator
      */
     public function findBy(
         array $criteria,
@@ -443,10 +384,19 @@ class NodeRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
-        try {
-            return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
-            return new ArrayCollection();
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (\Doctrine\ORM\NoResultException $e) {
+                return new ArrayCollection();
+            }
         }
     }
     /**
@@ -512,7 +462,6 @@ class NodeRepository extends EntityRepository
             $authorizationChecker,
             $preview
         );
-
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -1099,6 +1048,29 @@ class NodeRepository extends EntityRepository
         }
 
         $this->prepareComparisons($criteria, $qb, $alias);
+
+        return $qb;
+    }
+
+    /**
+     *
+     * @param  array        $criteria
+     * @param  QueryBuilder $qb
+     * @param  string       $alias
+     * @return QueryBuilder
+     */
+    protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
+    {
+        foreach ($criteria as $key => $value) {
+            if ($key == 'translation') {
+                if (!$this->hasJoinedNodesSources($qb, $alias)) {
+                    $qb->innerJoin($alias . '.nodeSources', 'ns');
+                }
+                $qb->andWhere($this->buildComparison($value, 'ns.', $key, $key, $qb));
+            } else {
+                $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $key, $qb));
+            }
+        }
 
         return $qb;
     }

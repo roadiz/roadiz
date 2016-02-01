@@ -45,87 +45,94 @@ class FontType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', [
-                    'label' => 'font.name',
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])
-                ->add('hash', 'text', [
-                    'label' => 'font.cssfamily',
-                ])
-                ->add('variant', new FontVariantsType(), [
-                    'label' => 'font.variant',
-                ])
-                ->add('eotFile', 'file', [
-                    'label' => 'font.eotFile',
-                    'required' => false,
-                    'data_class' => 'Symfony\Component\HttpFoundation\File\UploadedFile',
-                    'constraints' => [
-                        new File([
-                            'mimeTypes' => [
-                                'application/vnd.ms-fontobject',
-                                'application/octet-stream'
-                            ],
-                            'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
-                        ]),
-                    ],
-                ])
-                ->add('svgFile', 'file', [
-                    'label' => 'font.svgFile',
-                    'required' => false,
-                    'multiple' => false,
-                    'constraints' => [
-                        new File([
-                            'mimeTypes' => ['image/svg+xml'],
-                            'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
-                        ]),
-                    ],
-                ])
-                ->add('otfFile', 'file', [
-                    'label' => 'font.otfFile',
-                    'required' => false,
-                    'multiple' => false,
-                    'constraints' => [
-                        new File([
-                            'mimeTypes' => [
-                                'application/font-otf',
-                                'application/x-font-otf',
-                                'application/font-ttf',
-                                'application/x-font-ttf',
-                            ],
-                            'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
-                        ]),
-                    ],
-                ])
-                ->add('woffFile', 'file', [
-                    'label' => 'font.woffFile',
-                    'required' => false,
-                    'multiple' => false,
-                    'constraints' => [
-                        new File([
-                            'mimeTypes' => [
-                                'application/font-woff',
-                                'application/x-font-woff',
-                                "application/octet-stream",
-                            ],
-                            'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
-                        ]),
-                    ],
-                ])
-                ->add('woff2File', 'file', [
-                    'label' => 'font.woff2File',
-                    'required' => false,
-                    'multiple' => false,
-                    'constraints' => [
-                        new File([
-                            'mimeTypes' => [
-                                'application/font-woff2',
-                                "application/octet-stream",
-                            ],
-                            'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
-                        ]),
-                    ],
-                ]);
+                'label' => 'font.name',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('hash', 'text', [
+                'label' => 'font.cssfamily',
+            ])
+            ->add('variant', new FontVariantsType(), [
+                'label' => 'font.variant',
+            ])
+            ->add('eotFile', 'file', [
+                'label' => 'font.eotFile',
+                'required' => false,
+                'data_class' => 'Symfony\Component\HttpFoundation\File\UploadedFile',
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            Font::MIME_EOT,
+                            Font::MIME_DEFAULT,
+                        ],
+                        'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
+                    ]),
+                ],
+            ])
+            ->add('svgFile', 'file', [
+                'label' => 'font.svgFile',
+                'required' => false,
+                'multiple' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            Font::MIME_SVG,
+                        ],
+                        'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
+                    ]),
+                ],
+            ])
+            ->add('otfFile', 'file', [
+                'label' => 'font.otfFile',
+                'required' => false,
+                'multiple' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            Font::MIME_OTF,
+                            Font::MIME_TTF,
+                            'application/font-otf',
+                            'application/x-font-otf',
+                            'application/font-ttf',
+                            'application/x-font-ttf',
+                            'application/vnd.ms-opentype',
+                            'application/font-sfnt',
+                            Font::MIME_DEFAULT,
+                        ],
+                        'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
+                    ]),
+                ],
+            ])
+            ->add('woffFile', 'file', [
+                'label' => 'font.woffFile',
+                'required' => false,
+                'multiple' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            Font::MIME_WOFF,
+                            'application/x-font-woff',
+                            Font::MIME_DEFAULT,
+                        ],
+                        'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
+                    ]),
+                ],
+            ])
+            ->add('woff2File', 'file', [
+                'label' => 'font.woff2File',
+                'required' => false,
+                'multiple' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            Font::MIME_WOFF2,
+                            Font::MIME_DEFAULT,
+                        ],
+                        'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
+                    ]),
+                ],
+            ]);
     }
 
     public function getName()

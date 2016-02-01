@@ -32,8 +32,10 @@ namespace Themes\Rozier\Events;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Client;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -64,6 +66,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeEvents::NODE_UNDELETED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
+            TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
         ];
     }
 
@@ -137,6 +140,28 @@ class SolariumSubscriber implements EventSubscriberInterface
                 );
                 $solrSource->getDocumentFromIndex();
                 $solrSource->updateAndCommit();
+            }
+        }
+    }
+
+    /**
+     * Update solr documents linked to current event Tag.
+     *
+     * @param  FilterTagEvent $event
+     */
+    public function onSolariumTagUpdate(FilterTagEvent $event)
+    {
+        if (null !== $this->solr) {
+            $nodes = $event->getTag()->getNodes();
+            foreach ($nodes as $node) {
+                foreach ($node->getNodeSources() as $nodeSource) {
+                    $solrSource = new SolariumNodeSource(
+                        $nodeSource,
+                        $this->solr
+                    );
+                    $solrSource->getDocumentFromIndex();
+                    $solrSource->updateAndCommit();
+                }
             }
         }
     }

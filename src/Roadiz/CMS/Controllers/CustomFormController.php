@@ -59,15 +59,7 @@ class CustomFormController extends AppController
      */
     public function getStaticResourcesUrl()
     {
-        $staticDomain = SettingsBag::get('static_domain_name');
-
-        if (!empty($staticDomain)) {
-            return $this->getRequest()->getStaticBaseUrl() .
-            '/themes/Rozier/static/';
-        } else {
-            return $this->getRequest()->getBaseUrl() .
-            '/themes/Rozier/static/';
-        }
+        return $this->getService('assetPackages')->getUrl('/themes/Rozier/static/');
     }
 
     /**
@@ -97,7 +89,7 @@ class CustomFormController extends AppController
     public function addAction(Request $request, $customFormId)
     {
         $customForm = $this->getService('em')
-                           ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
+            ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
@@ -141,7 +133,7 @@ class CustomFormController extends AppController
     public function sentAction(Request $request, $customFormId)
     {
         $customForm = $this->getService('em')
-                           ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
+            ->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;

@@ -48,7 +48,7 @@ class PasswordGeneratorTest extends PHPUnit_Framework_TestCase
             [5],
             [6],
             [9],
-            [12]
+            [12],
         ];
     }
 }

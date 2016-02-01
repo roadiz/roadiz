@@ -55,8 +55,15 @@ class DocumentRepository extends EntityRepository
                     $criteria['folders'] instanceof Collection)) {
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
-                    $documents = $this->getDocumentIdsByFolderExcl($criteria['folders']);
-                    $criteria["id"] = $documents;
+                    // To get an exclusive folder filter
+                    // we need to filter against each folder id
+                    // and to inner join with a different alias for each folder
+                    // with AND operator
+                    foreach ($criteria['folders'] as $index => $folder) {
+                        $alias = 'fd' . $index;
+                        $qb->innerJoin('d.folders', $alias);
+                        $qb->andWhere($qb->expr()->eq($alias . '.id', $folder->getId()));
+                    }
                     unset($criteria["folderExclusive"]);
                     unset($criteria['folders']);
                 } else {
@@ -69,46 +76,13 @@ class DocumentRepository extends EntityRepository
                 }
             } else {
                 $qb->innerJoin(
-                    'n.folders',
+                    'd.folders',
                     'fd',
                     'WITH',
                     'fd.id = :folders'
                 );
             }
         }
-    }
-
-    /**
-     * Seach DocumentId exclusively
-     *
-     * @param  array     $folders
-     * @return array
-     */
-    public function getDocumentIdsByFolderExcl($folders)
-    {
-        $qb = $this->_em->createQueryBuilder();
-
-        $qb->select("d.id")
-            ->addSelect("COUNT(fd.id) as num")
-            ->from("RZ\Roadiz\Core\Entities\Folder", "fd")
-            ->leftJoin("fd.documents", "d");
-        foreach ($folders as $key => $folder) {
-            $qb->orWhere($qb->expr()->eq('fd.id', ':folder' . $key));
-        }
-        $qb->groupBy("d.id");
-        $query = $qb->getQuery();
-        foreach ($folders as $key => $folder) {
-            $query->setParameter("folder" . $key, $folder);
-        }
-        $results = $query->getResult();
-        $count = count($folders);
-        $documents = [];
-        foreach ($results as $key => $result) {
-            if ($count === (int) $result["num"]) {
-                $documents[] = $result["id"];
-            }
-        }
-        return $documents;
     }
 
     /**

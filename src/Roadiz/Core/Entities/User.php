@@ -760,7 +760,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
          * Force a gravatar image if not defined
          */
         if ($this->getPictureUrl() == '') {
-            $this->setPictureUrl("http://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200");
+            $this->setPictureUrl($this->getGravatarUrl());
         }
     }
 
@@ -775,8 +775,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
          * Force a gravatar image if not defined
          */
         if ($this->getPictureUrl() == '') {
-            $this->setPictureUrl("http://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200");
+            $this->setPictureUrl($this->getGravatarUrl());
         }
+    }
+
+    /**
+     * Get prototype abstract gravatar url.
+     *
+     * @return string
+     */
+    public function getGravatarUrl()
+    {
+        return "//www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200";
     }
 
     /**
@@ -810,7 +820,9 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function __toString()
     {
         $text = $this->getUsername() . ' <' . $this->getEmail() . '>' . PHP_EOL;
-        $text .= "Roles: " . implode(', ', $this->getRoles());
+        $text .= '— Enabled: ' . ($this->isEnabled() ? 'Yes' : 'No') . PHP_EOL;
+        $text .= '— Expired: ' . ($this->isCredentialsNonExpired() ? 'No' : 'Yes') . PHP_EOL;
+        $text .= "— Roles: " . implode(', ', $this->getRoles());
 
         return $text;
     }

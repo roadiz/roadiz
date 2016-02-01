@@ -97,7 +97,7 @@ class TagsController extends RozierApp
             $translation = $this->getService('defaultTranslation');
         } else {
             $translation = $this->getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if (null !== $translation) {
@@ -107,11 +107,11 @@ class TagsController extends RozierApp
              * that is initialized before calling route method.
              */
             $gtag = $this->getService('em')
-                         ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
             $tt = $this->getService('em')
-                       ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                       ->findOneBy(['translation' => $translation, 'tag' => $gtag]);
+                ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                ->findOneBy(['translation' => $translation, 'tag' => $gtag]);
 
             if (null !== $tt) {
                 /*
@@ -122,8 +122,8 @@ class TagsController extends RozierApp
                 $this->assignation['translatedTag'] = $tt;
                 $this->assignation['translation'] = $translation;
                 $this->assignation['available_translations'] = $this->getService('em')
-                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                     ->findAllAvailable();
+                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                    ->findAllAvailable();
 
                 $form = $this->createForm(new TagTranslationType(), $tt, [
                     'em' => $this->getService('em'),
@@ -213,10 +213,10 @@ class TagsController extends RozierApp
             array_filter($tagsIds);
 
             $tags = $this->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                          ->findBy([
-                              'id' => $tagsIds,
-                          ]);
+                ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                ->findBy([
+                    'id' => $tagsIds,
+                ]);
 
             if (count($tags) > 0) {
                 $form = $this->buildBulkDeleteForm(
@@ -275,6 +275,15 @@ class TagsController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
+
+                /*
+                 * Get latest position to add tags after.
+                 */
+                $latestPosition = $this->getService('em')
+                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                    ->findLatestPositionInParent();
+                $tag->setPosition($latestPosition + 1);
+
                 $this->getService('em')->persist($tag);
                 $this->getService('em')->flush();
 
@@ -319,7 +328,7 @@ class TagsController extends RozierApp
         $translation = $this->getService('defaultTranslation');
 
         $tag = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
             $form = $this->createForm(new TagType(), $tag, [
@@ -369,13 +378,13 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
         $this->getService('em')->refresh($tag);
 
         if (null !== $translationId) {
             $translation = $this->getService('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneBy(['id' => (int) $translationId]);
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->findOneBy(['id' => (int) $translationId]);
         } else {
             $translation = $this->getService('defaultTranslation');
         }
@@ -403,7 +412,7 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS_DELETE');
 
         $tag = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null &&
             !$tag->isLocked()) {
@@ -456,10 +465,10 @@ class TagsController extends RozierApp
 
         if ($translationId !== null) {
             $translation = $this->getService('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
         $parentTag = $this->getService('em')
-                          ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
         $tag = new Tag();
         $tag->setParent($parentTag);
 
@@ -472,6 +481,14 @@ class TagsController extends RozierApp
 
             if ($form->isValid()) {
                 try {
+                    /*
+                     * Get latest position to add tags after.
+                     */
+                    $latestPosition = $this->getService('em')
+                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                        ->findLatestPositionInParent($parentTag);
+                    $tag->setPosition($latestPosition + 1);
+
                     $this->getService('em')->persist($tag);
                     $this->getService('em')->flush();
 
@@ -523,7 +540,7 @@ class TagsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
         $tag = $this->getService('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if (null !== $tag) {
             $translation = $this->getService('defaultTranslation');
@@ -570,12 +587,12 @@ class TagsController extends RozierApp
     private function buildDeleteForm(Tag $tag)
     {
         $builder = $this->createFormBuilder()
-                        ->add('tagId', 'hidden', [
-                            'data' => $tag->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->add('tagId', 'hidden', [
+                'data' => $tag->getId(),
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         return $builder->getForm();
     }
@@ -588,14 +605,14 @@ class TagsController extends RozierApp
         $tagsIds = []
     ) {
         $builder = $this->getService('formFactory')
-                        ->createNamedBuilder('deleteForm')
-                        ->add('tagsIds', 'hidden', [
-                            'data' => implode(',', $tagsIds),
-                            'attr' => ['class' => 'tags-id-bulk-tags'],
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->createNamedBuilder('deleteForm')
+            ->add('tagsIds', 'hidden', [
+                'data' => implode(',', $tagsIds),
+                'attr' => ['class' => 'tags-id-bulk-tags'],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
 
         if (false !== $referer) {
             $builder->add('referer', 'hidden', [
@@ -606,7 +623,7 @@ class TagsController extends RozierApp
         return $builder->getForm();
     }
 
-     /**
+    /**
      * @param array $data
      *
      * @return string
@@ -619,10 +636,10 @@ class TagsController extends RozierApp
             array_filter($tagsIds);
 
             $tags = $this->getService('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                          ->findBy([
-                              'id' => $tagsIds,
-                          ]);
+                ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                ->findBy([
+                    'id' => $tagsIds,
+                ]);
 
             foreach ($tags as $tag) {
                 $tag->getHandler()->removeWithChildrenAndAssociations();

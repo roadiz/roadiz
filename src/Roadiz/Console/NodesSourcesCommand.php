@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Console;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -43,14 +42,8 @@ class NodesSourcesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('core:sources')
-             ->setDescription('Manage node-sources')
-             ->addOption(
-                 'regenerate',
-                 'r',
-                 InputOption::VALUE_NONE,
-                 'Delete and re-generate every nodes-sources entity classes'
-             );
+        $this->setName('generate:nsentities')
+            ->setDescription('Generate node-sources entities classes.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -59,15 +52,13 @@ class NodesSourcesCommand extends Command
         $text = "";
 
         $nodetypes = $this->entityManager
-                          ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                          ->findAll();
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findAll();
 
         if (count($nodetypes) > 0) {
-            if ($input->getOption('regenerate')) {
-                foreach ($nodetypes as $nt) {
-                    $nt->getHandler()->removeSourceEntityClass();
-                    $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
-                }
+            foreach ($nodetypes as $nt) {
+                $nt->getHandler()->removeSourceEntityClass();
+                $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
             }
         } else {
             $text = '<info>No available node-types…</info>' . PHP_EOL;

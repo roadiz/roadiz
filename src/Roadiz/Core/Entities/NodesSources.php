@@ -51,7 +51,7 @@ class NodesSources extends AbstractEntity
     private $handler = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EXTRA_LAZY", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;
@@ -123,7 +123,7 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"})
      */
     private $documentsByFields = null;
 
@@ -149,6 +149,16 @@ class NodesSources extends AbstractEntity
     public function getLogs()
     {
         return $this->logs;
+    }
+
+    /**
+     * @param ArrayCollection|array $logs
+     */
+    public function setLogs($logs)
+    {
+        $this->logs = $logs;
+
+        return $this;
     }
 
     /**
@@ -277,7 +287,7 @@ class NodesSources extends AbstractEntity
 
     public function __toString()
     {
-        return 'NodesSources #' . $this->getId() .
+        return '[NodesSources] #' . $this->getId() .
         ' <' . $this->getTitle() . '>[' . $this->getTranslation()->getLocale() .
         '], type="' . $this->getNode()->getNodeType()->getName() . '"';
     }

@@ -29,144 +29,48 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command line utils for managing translations from terminal.
  */
 class TranslationsCommand extends Command
 {
-    private $questionHelper;
     private $entityManager;
 
     protected function configure()
     {
-        $this->setName('core:translations')
-             ->setDescription('Manage translations')
-             ->addArgument(
-                 'name',
-                 InputArgument::OPTIONAL,
-                 'Translation name'
-             )
-             ->addArgument(
-                 'locale',
-                 InputArgument::OPTIONAL,
-                 'Translation locale'
-             )
-             ->addOption(
-                 'create',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Create a translation'
-             )
-             ->addOption(
-                 'delete',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Delete requested translation'
-             )
-             ->addOption(
-                 'update',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Update requested translation'
-             )
-             ->addOption(
-                 'enable',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Enable requested translation'
-             )
-             ->addOption(
-                 'disable',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Disable requested translation'
-             );
+        $this->setName('translations:list')
+            ->setDescription('List translations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('questionHelper');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $text = "";
-        $name = $input->getArgument('name');
-        $locale = $input->getArgument('locale');
+        $translations = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findAll();
 
-        if ($name) {
-            $translation = $this->entityManager
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                ->findOneBy(['name' => $name]);
-
-            if ($translation !== null) {
-                $text = $translation->getOneLineSummary();
-
-                $confirmation = new ConfirmationQuestion(
-                    '<question>Are you sure to delete ' . $translation->getName() . ' translation?</question>',
-                    false
-                );
-                if ($input->getOption('delete')) {
-                    if ($this->questionHelper->ask(
-                        $input,
-                        $output,
-                        $confirmation
-                    )) {
-                        $this->entityManager->remove($translation);
-                        $this->entityManager->flush();
-                        $text = '<info>Translation deleted…</info>' . PHP_EOL;
-                    }
-                } elseif ($input->getOption('enable')) {
-                    $translation->setAvailable(true);
-                    $this->entityManager->flush();
-
-                    $text .= '<info>' . $translation->getName() . " enabled…</info>" . PHP_EOL;
-                } elseif ($input->getOption('disable')) {
-                    $translation->setAvailable(false);
-                    $this->entityManager->flush();
-
-                    $text .= '<info>' . $translation->getName() . " disabled…</info>" . PHP_EOL;
-                }
-            } else {
-                if ($input->getOption('create')) {
-                    if (!empty($locale)) {
-                        $newTrans = new Translation();
-                        $newTrans->setName($name)
-                                 ->setLocale($locale);
-
-                        $this->entityManager->persist($newTrans);
-                        $this->entityManager->flush();
-
-                        $text = 'New translation : ' . $newTrans->getName() . PHP_EOL .
-                        'Locale : ' . $newTrans->getLocale() . PHP_EOL .
-                        'Available: ' . (string) $newTrans->isAvailable() . PHP_EOL;
-
-                    } else {
-                        $text = '<error>You must define a locale…</error>' . PHP_EOL;
-                    }
-
-                }
+        if (count($translations) > 0) {
+            $table = new Table($output);
+            $table->setHeaders(['Id', 'Name', 'Locale', 'Disabled', 'Default']);
+            $tableContent = [];
+            foreach ($translations as $trans) {
+                $tableContent[] = [
+                    $trans->getId(),
+                    $trans->getName(),
+                    $trans->getLocale(),
+                    (!$trans->isAvailable() ? 'X' : ''),
+                    ($trans->isDefaultTranslation() ? 'X' : ''),
+                ];
             }
+            $table->setRows($tableContent);
+            $table->render($output);
         } else {
-            $text = '<info>Existing translations…</info>' . PHP_EOL;
-            $translations = $this->entityManager
-                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                 ->findAll();
-
-            if (count($translations) > 0) {
-                foreach ($translations as $trans) {
-                    $text .= $trans->getOneLineSummary();
-                }
-            } else {
-                $text = '<info>No available translations…</info>' . PHP_EOL;
-            }
+            $output->writeln('<info>No available translations.</info>' . PHP_EOL);
         }
-
-        $output->writeln($text);
     }
 }

@@ -68,7 +68,31 @@ class TagType extends AbstractType
             ->add('locked', 'checkbox', [
                 'label' => 'locked',
                 'required' => false,
-            ]);
+            ])
+            ->add(
+                'childrenOrder',
+                'choice',
+                [
+                    'label' => 'tag.childrenOrder',
+                    'choices' => [
+                        'position' => 'position',
+                        'tagName' => 'tagName',
+                        'createdAt' => 'createdAt',
+                        'updatedAt' => 'updatedAt',
+                    ],
+                ]
+            )
+            ->add(
+                'childrenOrderDirection',
+                'choice',
+                [
+                    'label' => 'tag.childrenOrderDirection',
+                    'choices' => [
+                        'ASC' => 'ascendant',
+                        'DESC' => 'descendant',
+                    ],
+                ]
+            );
     }
 
     public function getName()

@@ -99,9 +99,10 @@ class NodesSourcesExtension extends \Twig_Extension
         return $ns->getHandler()->getParent();
     }
 
-    public function getParents(NodesSources $ns, array $criteria = null)
+    public function getParents(NodesSources $ns, array $criteria = null, $preview = null)
     {
-        return $ns->getHandler()->getParents($criteria, $this->securityAuthorizationChecker, $this->preview);
+        $preview = $preview !== null ? $preview : $this->preview;
+        return $ns->getHandler()->getParents($criteria, $this->securityAuthorizationChecker, $preview);
     }
 
     public function getTags(NodesSources $ns)

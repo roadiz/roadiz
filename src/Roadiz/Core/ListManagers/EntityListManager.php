@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\ListManagers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use RZ\Roadiz\Core\ListManagers\Paginator;
@@ -214,7 +215,7 @@ class EntityListManager
         } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
             $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
             $this->entityName == "NodesSources" ||
-            strpos($this->entityName, "GeneratedNodeSources") !== false) {
+            strpos($this->entityName, NodeType::getGeneratedEntitiesNamespace()) !== false) {
             $this->paginator = new NodesSourcesPaginator(
                 $this->_em,
                 $this->entityName,
@@ -307,19 +308,10 @@ class EntityListManager
             'currentPage' => $this->currentPage,
             'pageCount' => $this->paginator->getPageCount(),
             'itemPerPage' => $this->itemPerPage,
-            'itemCount' => $this->_em
-                ->getRepository($this->entityName)
-                ->countBy($this->filteringArray),
+            'itemCount' => $this->paginator->getTotalCount(),
             'nextPageQuery' => null,
             'previousPageQuery' => null,
         ];
-
-        // Edit item count after a search
-        if ($this->searchPattern != '') {
-            $assign['itemCount'] = $this->_em
-                ->getRepository($this->entityName)
-                ->countSearchBy($this->searchPattern, $this->filteringArray);
-        }
 
         // compute next and prev page URL
         if ($this->currentPage > 1) {

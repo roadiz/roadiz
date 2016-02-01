@@ -67,7 +67,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                 );
         }
 
-
         switch ($request->get("_action")) {
             /*
              * Inner node edit for nodeTree

@@ -29,6 +29,7 @@ use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Tests\KernelDependentCase;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -36,39 +37,11 @@ use Symfony\Component\HttpFoundation\File\File;
 /**
  *
  */
-class DownscaleImageManagerTest extends PHPUnit_Framework_TestCase
+class DownscaleImageManagerTest extends KernelDependentCase
 {
     protected static $files;
     protected static $documentCollection;
     protected static $imageManager;
-
-    public static function setUpBeforeClass()
-    {
-        static::$documentCollection = new ArrayCollection();
-        $fs = new Filesystem();
-
-        static::$imageManager = new ImageManager();
-        static::$files = [
-            ROADIZ_ROOT . '/tests/Fixtures/Documents/animation.gif',
-            ROADIZ_ROOT . '/tests/Fixtures/Documents/lion.jpg',
-            ROADIZ_ROOT . '/tests/Fixtures/Documents/dices.png',
-        ];
-
-        foreach (static::$files as $file) {
-            $image = new File($file);
-            $document = new Document();
-            $document->setFilename($image->getBasename());
-            $document->setMimeType($image->getMimeType());
-
-            $fs->copy($file, Document::getFilesFolder() . '/' . $document->getFolder() . '/' . $document->getFilename());
-
-            Kernel::getService('em')->persist($document);
-
-            static::$documentCollection->add($document);
-        }
-
-        Kernel::getService('em')->flush();
-    }
 
     public function testConstructor()
     {
@@ -80,19 +53,6 @@ class DownscaleImageManagerTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertNotNull($manager);
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$documentCollection as $document) {
-            $document = Kernel::getService("em")->find("RZ\Roadiz\Core\Entities\Document", $document->getId());
-            Kernel::getService('em')->remove($document);
-        }
-
-        Kernel::getService('em')->flush();
     }
 
     public function testProcessAndOverrideDocument()
@@ -152,5 +112,50 @@ class DownscaleImageManagerTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($originalHashes[$key], $afterHash);
             $this->assertNull($document->getRawDocument());
         }
+    }
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        static::$documentCollection = new ArrayCollection();
+        $fs = new Filesystem();
+
+        static::$imageManager = new ImageManager();
+        static::$files = [
+            ROADIZ_ROOT . '/tests/Fixtures/Documents/animation.gif',
+            ROADIZ_ROOT . '/tests/Fixtures/Documents/lion.jpg',
+            ROADIZ_ROOT . '/tests/Fixtures/Documents/dices.png',
+        ];
+
+        foreach (static::$files as $file) {
+            $image = new File($file);
+            $document = new Document();
+            $document->setFilename($image->getBasename());
+            $document->setMimeType($image->getMimeType());
+
+            $fs->copy($file, Document::getFilesFolder() . '/' . $document->getFolder() . '/' . $document->getFilename());
+
+            Kernel::getService('em')->persist($document);
+
+            static::$documentCollection->add($document);
+        }
+
+        Kernel::getService('em')->flush();
+    }
+
+    /**
+     * Remove test entities.
+     */
+    public static function tearDownAfterClass()
+    {
+        foreach (static::$documentCollection as $document) {
+            $document = Kernel::getService("em")->find("RZ\Roadiz\Core\Entities\Document", $document->getId());
+            Kernel::getService('em')->remove($document);
+        }
+
+        Kernel::getService('em')->flush();
+
+        parent::tearDownAfterClass();
     }
 }

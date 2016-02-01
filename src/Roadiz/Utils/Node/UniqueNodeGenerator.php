@@ -81,7 +81,7 @@ class UniqueNodeGenerator
             $node->setPosition(0.5);
         }
 
-        $sourceClass = "GeneratedNodeSources\\" . $nodeType->getSourceEntityClassName();
+        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         $this->entityManager->persist($source);

@@ -1,13 +1,41 @@
 <?php
-
-use RZ\Roadiz\Core\Entities\NodesSources;
+/**
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file NodesSourcesHandlerTest.php
+ * @author Ambroise Maupate
+ */
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Tests\KernelDependentCase;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 
-class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
+class NodesSourcesHandlerTest extends KernelDependentCase
 {
     /**
      * @dataProvider getUrlProvider
@@ -18,7 +46,7 @@ class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($generator->getUrl(), $expectedUrl);
     }
 
-    public static function getUrlProvider()
+    public function getUrlProvider()
     {
         $sources = array();
 
@@ -48,7 +76,6 @@ class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
 
         $sources[] = array($ns2, '/en/page');
 
-
         /*
          * Test 3 - home node
          */
@@ -76,7 +103,6 @@ class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
         $ns4 = new NodesSources($n4, $t4);
 
         $sources[] = array($ns4, '/en');
-
 
         /*
          * Test 5  - regular node with alias
@@ -123,7 +149,6 @@ class NodesSourcesHandlerTest extends PHPUnit_Framework_TestCase
         $ns7->getHandler()->setParentNodeSource($ns6);
 
         $sources[] = array($ns7, '/page/other-page/sub-page');
-
 
         /*
          * Test 8  - regular node with 1 parent and 2 alias

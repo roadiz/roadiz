@@ -6,22 +6,15 @@ DBHOST="localhost"
 DBNAME="roadiz"
 DBUSER="roadiz"
 DBPASSWD="roadiz"
-# Apache Solr
-SOLR_VERSION="5.3.1"
-SOLR_MIRROR="http://apache.mirrors.ovh.net/ftp.apache.org/dist"
 
 echo -e "\n--- Okay, installing now... ---\n"
-echo -e "\n--- Updating packages list ---\n"
-
 sudo apt-get -qq update;
 
 echo -e "\n--- Install base packages ---\n"
 sudo locale-gen fr_FR.utf8;
 
-
 echo -e "\n--- Add some repos to update our distro ---\n"
 sudo add-apt-repository ppa:ondrej/php5 > /dev/null 2>&1
-sudo add-apt-repository ppa:chris-lea/node.js > /dev/null 2>&1
 
 echo -e "\n--- Updating packages list ---\n"
 sudo apt-get -qq update;
@@ -38,7 +31,7 @@ sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver mul
 echo -e "\n--- Install base servers and packages ---\n"
 sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php5-fpm curl > /dev/null 2>&1;
 echo -e "\n--- Install all php5 extensions ---\n"
-sudo apt-get -qq -f -y install php5-cli php5-mysqlnd php5-curl php5-gd php5-intl php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xcache php5-xdebug phpmyadmin > /dev/null 2>&1;
+sudo apt-get -qq -f -y install php5-cli php5-mysqlnd php5-curl php5-gd php5-intl php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xcache php5-xdebug > /dev/null 2>&1;
 
 echo -e "\n--- Setting up our MySQL user and db ---\n"
 sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME"
@@ -237,44 +230,11 @@ php_value[display_errors] = On
 php_value[error_reporting] = E_ALL
 EOF
 
-# Install Apache Solr - based on article from Tomasz Muras - https://twitter.com/zabuch
-# http://jmuras.com/blog/2012/setup-solr-4-tomcat-ubuntu-server-12-04-lts/
-echo -e "\n--- Installing Apache Solr ---\n"
-sudo apt-get -qq -f -y install openjdk-7-jre-headless unzip > /dev/null 2>&1;
-cd /tmp/
-sudo wget –q --output-document=solr-$SOLR_VERSION.tgz $SOLR_MIRROR/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz > /dev/null 2>&1
-tar xzf solr-$SOLR_VERSION.tgz
-sudo cp -fr solr-$SOLR_VERSION /opt/solr
-sudo cp /opt/solr/bin/init.d/solr /etc/init.d/solr
-sudo sed -i "s/RUNAS=solr/#RUNAS=solr/" /etc/init.d/solr
-sudo mkdir -p /var/solr
-sudo cp /opt/solr/bin/solr.in.sh /var/solr/solr.in.sh
-sudo update-rc.d solr defaults > /dev/null 2>&1;
-sudo update-rc.d solr enable > /dev/null 2>&1;
-sudo service solr start > /dev/null 2>&1;
-
-echo -e "\n--- Create a new Solr core called \"roadiz\"  ---\n"
-sudo /opt/solr/bin/solr create_core -c roadiz > /dev/null 2>&1;
-
-echo -e "\n--- Installing Composer for PHP package management ---\n"
-curl --silent https://getcomposer.org/installer | php > /dev/null 2>&1
-sudo mv composer.phar /usr/local/bin/composer
-
-echo -e "\n--- Installing NodeJS and NPM ---\n"
-sudo apt-get -y install nodejs > /dev/null 2>&1
-curl --silent https://npmjs.org/install.sh | sudo sh > /dev/null 2>&1
-sudo npm update -g npm  > /dev/null 2>&1
-
-echo -e "\n--- Installing javascript components ---\n"
-sudo npm install -g grunt-cli bower > /dev/null 2>&1
-
-echo -e "\n--- Restarting servers ---\n"
+echo -e "\n--- Restarting Nginx and PHP servers ---\n"
 sudo service nginx restart > /dev/null 2>&1;
 sudo service php5-fpm restart > /dev/null 2>&1;
-sudo service solr restart > /dev/null 2>&1;
 
 ##### CLEAN UP #####
-echo -e "\n--- Cleaning up ---\n"
 sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
 sudo apt-get autoremove -y  > /dev/null 2>&1; # remove obsolete packages
 
@@ -284,13 +244,15 @@ export DB_NAME=$DBNAME
 export DB_USER=$DBUSER
 export DB_PASS=$DBPASSWD
 
-echo -e "\n--- Your Roadiz Vagrant is ready in /var/www ---\n"
-echo -e "\nDo not forget to \"composer install\""
-echo -e "\nand to add your host IP into install.php and dev.php"
-echo -e "\nto get allowed in install and dev entrypoints.\n"
-echo -e "\n* Type http://localhost:8080/install.php to proceed to install.\n"
-echo -e "\n* Type http://localhost:8983/solr to use Apache Solr admin."
-echo -e "\n* Type http://localhost:8080/phpmyadmin for your MySQL db admin.\n"
-echo -e "--- MySQL User: $DBUSER\n"
-echo -e "--- MySQL Password: $DBPASSWD\n"
-echo -e "--- MySQL Database: $DBNAME\n"
+echo -e "\n-----------------------------------------------------------------"
+echo -e "\n----------- Your Roadiz Vagrant is ready in /var/www ------------"
+echo -e "\n-----------------------------------------------------------------"
+echo -e "\nDo not forget to \"composer install\" and to add "
+echo -e "\nyour host IP into install.php and dev.php (generally 10.0.2.2)"
+echo -e "\nto get allowed in install and dev entrypoints."
+echo -e "\n* Type http://localhost:8080/install.php to proceed to install."
+echo -e "\n* Type http://localhost:8080/phpmyadmin for your MySQL db admin."
+echo -e "\n* MySQL User: $DBUSER"
+echo -e "\n* MySQL Password: $DBPASSWD"
+echo -e "\n* MySQL Database: $DBNAME"
+echo -e "\n-----------------------------------------------------------------"

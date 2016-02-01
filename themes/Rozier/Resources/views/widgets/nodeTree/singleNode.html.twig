@@ -14,9 +14,17 @@
 
 {% if nodeTree.canReorder %}
 {% set classes = classes|merge(['uk-nestable-list-item']) %}
+{% else %}
+{% set classes = classes|merge(['non-nestable-list-item']) %}
 {% endif %}
 
-{% if not node.isHidingChildren and not node.nodeType.isHidingNodes and node.getChildren.count > 0 %}
+{% if not node.isHidingChildren and not node.nodeType.isHidingNodes %}
+{% set children = nodeTree.getChildrenNodes(node) %}
+{% else %}
+{% set children = false %}
+{% endif %}
+
+{% if children|length > 0 %}
 {% set classes = classes|merge(['has-children']) %}
 {% endif %}
 
@@ -31,6 +39,7 @@
 {% if not node.isPublished %}{% set innerClasses = innerClasses|merge(['unpublished-node']) %}{% endif %}
 {% if not node.isArchived %}{% set innerClasses = innerClasses|merge(['archived-node']) %}{% endif %}
 {% if not node.isLocked %}{% set innerClasses = innerClasses|merge(['locked-node']) %}{% endif %}
+
 
 <li data-node-id="{{ node.getId }}"
     class="{{ classes|join(' ') }}">
@@ -68,9 +77,9 @@
          # Node statuses
          #}
         {# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
-        {% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %}
+        {# {% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %} #}
         {# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
-        {% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %}
+        {# {% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %} #}
 
         <div class="tree-element-name nodetree-element-name">
             {% if node.isHidingChildren %}
@@ -165,19 +174,26 @@
                 </div>
             </nav>
         </div>
-        {% if not node.isHidingChildren %}<div class="minus" data-nestable-action="toggle"></div>{% endif %}
+        {% if children %}
+        <div class="minus" data-nestable-action="toggle"></div>
+        {% endif %}
     </div>
+
+    {% set subListClasses = ['uk-nestable-list'] %}
+    {% if not mainNodeTree and not nodeTree.isStackTree %}
+        {% set subListClasses = subListClasses|merge(['children-node-widget-list']) %}
+    {% endif %}
+    {% if node.isHidingChildren or node.nodeType.isHidingNodes or node.getChildren.count == 0 %}
+        {% set subListClasses = subListClasses|merge(['empty']) %}
+    {% endif %}
     {% spaceless %}
-    <ul class="uk-nestable-list
-        {% if not mainNodeTree and not nodeTree.isStackTree %} children-node-widget-list{% endif %}
-        {% if node.isHidingChildren or node.nodeType.isHidingNodes or node.getChildren.count == 0 %} empty{% endif %}"
-        data-parent-node-id="{{ node.getId }}">
+    <ul class="{{ subListClasses|join(' ') }}" data-parent-node-id="{{ node.getId }}">
     {#
      # For drag&drop ease, we don't create nested lists
      # We will have to check after OR inside drag status
      #}
-    {% if not node.isHidingChildren and not node.nodeType.isHidingNodes %}
-        {% for subNode in nodeTree.getChildrenNodes(node) %}
+    {% if children %}
+        {% for subNode in children %}
             {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
                 "node":subNode,
                 "parent":node,

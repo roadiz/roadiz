@@ -154,6 +154,9 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         if (isset($args['controls'])) {
             $queryString['controls'] = (int) $args['controls'];
         }
+        if (isset($args['background'])) {
+            $queryString['background'] = (int) $args['background'];
+        }
 
         return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);
 

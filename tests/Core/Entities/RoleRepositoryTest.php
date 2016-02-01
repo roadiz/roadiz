@@ -1,10 +1,39 @@
 <?php
-
+/**
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file RoleRepositoryTest.php
+ * @author Ambroise Maupate
+ */
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\RoleRepository;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Tests\KernelDependentCase;
 
-class RoleRepositoryTest extends PHPUnit_Framework_TestCase
+class RoleRepositoryTest extends KernelDependentCase
 {
     private static $entityCollection;
 
@@ -13,15 +42,9 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testRoleValue($name, $expected)
     {
-        echo Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Role')
-            ->countByName($name);
-
         $role = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->findOneByName($name);
-
-        static::$entityCollection[] = $role;
 
         // Assert
         $this->assertEquals($expected, $role->getName());
@@ -38,7 +61,9 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        static::$entityCollection = array();
+        parent::setUpBeforeClass();
+
+        static::$entityCollection = new ArrayCollection();
 
         $roles = array(
             array("role___test", "ROLE_TEST"),
@@ -54,8 +79,9 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
             if (null === $role) {
                 $a = new Role();
                 $a->setName($value[0]);
-
                 Kernel::getService('em')->persist($a);
+
+                static::$entityCollection->add($role);
             }
         }
 
@@ -72,5 +98,6 @@ class RoleRepositoryTest extends PHPUnit_Framework_TestCase
         }
 
         Kernel::getService('em')->flush();
+        parent::tearDownAfterClass();
     }
 }

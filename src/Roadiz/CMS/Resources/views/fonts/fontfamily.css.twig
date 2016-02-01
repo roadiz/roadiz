@@ -1,26 +1,22 @@
-{% set variantHash = font.hash ~ font.variant %}
-{% set token = csrfTokenManager.getToken(variantHash) %}
+{% for item in fonts %}
+{% set font = item.font %}
 @font-face {
     font-family: "{{ font.hash }}";
-
     src: url('{{ url('FontFile', {
             'filename'  : font.hash,
             'variant'   : font.variant,
             'extension' : "eot",
-            'token'     : token
         }) }}');
     src: url('{{ url('FontFile', {
             'filename'  : font.hash,
             'variant'   : font.variant,
             'extension' : "eot",
-            'token'     : token
         }) }}?#iefix') format('embedded-opentype'),
         {% if font.getWOFF2Filename %}
         url('{{ url('FontFile', {
             'filename'  : font.hash,
             'variant'   : font.variant,
             'extension' : "woff2",
-            'token'     : token
         }) }}') format('woff2'),
         {% endif %}
         {% if font.getWOFFFilename %}
@@ -28,7 +24,6 @@
             'filename'  : font.hash,
             'variant'   : font.variant,
             'extension' : "woff",
-            'token'     : token
         }) }}') format('woff'),
         {% endif %}
         {% if font.getOTFFilename %}
@@ -36,7 +31,6 @@
             'filename'  : font.hash,
             'variant'   : font.variant,
             'extension' : "otf",
-            'token'     : token
         }) }}') format('opentype'),
         {% endif %}
         {% if font.getSVGFilename %}
@@ -44,11 +38,10 @@
             'filename'  : font.hash,
             'variant'   : font.variant,
             'extension' : "svg",
-            'token'     : token
         }) }}') format('svg')
         {% endif %};
-
-    {% for key, value in font.fontVariantInfos %}
+{% for key, value in font.fontVariantInfos %}
     font-{{ key }}: {{ value }};
-    {% endfor %}
+{% endfor %}
 }
+{% endfor %}

@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
+use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Events\SolariumSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -180,6 +181,12 @@ class RozierApp extends BackendController
          */
         $container['dispatcher']->addSubscriber(
             new NodesSourcesUrlSubscriber($container['nodesSourcesUrlCacheProvider'])
+        );
+        /*
+         * Add custom event subscriber to Translation result cache
+         */
+        $container['dispatcher']->addSubscriber(
+            new TranslationSubscriber($container['em']->getConfiguration()->getResultCacheImpl())
         );
 
         /*

@@ -43,6 +43,7 @@ class TagTreeWidget extends AbstractWidget
     protected $parentTag = null;
     protected $tags = null;
     protected $translation = null;
+    protected $canReorder = true;
 
     /**
      * @param Request                    $request
@@ -71,11 +72,24 @@ class TagTreeWidget extends AbstractWidget
                  ->findOneBy(['defaultTranslation' => true]);
         }
 
+        $ordering = [
+            'position' => 'ASC',
+        ];
+        if (null !== $this->parentTag &&
+            $this->parentTag->getChildrenOrder() !== 'order' &&
+            $this->parentTag->getChildrenOrder() !== 'position') {
+            $ordering = [
+                $this->parentTag->getChildrenOrder() => $this->parentTag->getChildrenOrderDirection(),
+            ];
+
+            $this->canReorder = false;
+        }
+
         $this->tags = $this->getController()->getService('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
              ->findBy(
                  ['parent' => $this->parentTag, 'translation' => $this->translation],
-                 ['position' => 'ASC']
+                 $ordering
              );
     }
 
@@ -92,9 +106,20 @@ class TagTreeWidget extends AbstractWidget
                  ->findOneBy(['defaultTranslation' => true]);
         }
         if ($parent !== null) {
+
+            $ordering = [
+                'position' => 'ASC',
+            ];
+            if ($parent->getChildrenOrder() !== 'order' &&
+                $parent->getChildrenOrder() !== 'position') {
+                $ordering = [
+                    $parent->getChildrenOrder() => $parent->getChildrenOrderDirection(),
+                ];
+            }
+
             return $this->tags = $this->getController()->getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                        ->findBy(['parent' => $parent], ['position' => 'ASC']);
+                        ->findBy(['parent' => $parent], $ordering);
         }
 
         return null;
@@ -119,5 +144,15 @@ class TagTreeWidget extends AbstractWidget
     public function getTags()
     {
         return $this->tags;
+    }
+
+    /**
+     * Gets the value of canReorder.
+     *
+     * @return boolean
+     */
+    public function getCanReorder()
+    {
+        return $this->canReorder;
     }
 }

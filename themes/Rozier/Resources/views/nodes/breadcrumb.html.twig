@@ -6,7 +6,7 @@
 
 {% spaceless %}
 <ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
-    {% for parent in node.nodeSources.first|parents|reverse %}
+    {% for parent in node.nodeSources.first|parents(null, true)|reverse %}
 
         {% if parent.title %}
             {% set title = parent.title %}

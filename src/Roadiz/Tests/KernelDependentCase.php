@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,64 +24,29 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FontViewer.php
+ * @file KernelDependentCase.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Viewers;
+namespace RZ\Roadiz\Tests;
 
+use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Font;
-use RZ\Roadiz\Core\Bags\SettingsBag;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
- * FontViewer
- */
-class FontViewer implements ViewableInterface
+*
+*/
+abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
 {
-    protected $font = null;
-    protected $twig = null;
-
-    /**
-     * @param RZ\Roadiz\Core\Entities\Font $font
-     */
-    public function __construct(Font $font)
+    public static function setUpBeforeClass()
     {
-        $this->font = $font;
+        $kernel = Kernel::getInstance('test', true, false);
+        $kernel->boot();
+        $kernel->container['request'] = Request::createFromGlobals();
     }
 
-    /**
-     * @return Symfony\Component\Translation\Translator
-     */
-    public function getTranslator()
+    public static function tearDownAfterClass()
     {
-        return null;
-    }
-
-    /**
-     * @return \Twig_Environment
-     */
-    public function getTwig()
-    {
-        return Kernel::getService('twig.environment');
-    }
-
-    /**
-     * Get CSS font-face properties for current font.
-     *
-     * @param CsrfTokenManagerInterface $csrfTokenManager
-     *
-     * @return string CSS output
-     */
-    public function getCSSFontFace(CsrfTokenManagerInterface $csrfTokenManager)
-    {
-        $assignation = [
-            'font' => $this->font,
-            'site' => SettingsBag::get('site_name'),
-            'fontFolder' => '/'.Font::getFilesFolderName(),
-            'csrfTokenManager' => $csrfTokenManager
-        ];
-
-        return $this->getTwig()->render('fonts/fontfamily.css.twig', $assignation);
+        Kernel::getService('em')->close();
+        Kernel::getInstance()->shutdown();
     }
 }

@@ -7,7 +7,7 @@ supportedLocale:
     - en
     - fr
     - ru
-versionRequire: "0.12.0"
+versionRequire: "0.13.0"
 importFiles:
     roles: []
     groups: []

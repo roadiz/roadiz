@@ -72,8 +72,9 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
         $container['router'] = function ($c) {
             $router = new ChainRouter($c['logger']);
-            $router->add($c['staticRouter']);
-            $router->add($c['nodeRouter']);
+            $router->add($c['staticRouter'], 1);
+            $router->add($c['nodeRouter'], 0);
+            $router->setContext($c['requestContext']);
             return $router;
         };
         $container['staticRouter'] = function ($c) {

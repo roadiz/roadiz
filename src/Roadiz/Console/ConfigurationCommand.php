@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Console;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -42,60 +41,52 @@ class ConfigurationCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('config')
-            ->setDescription('Manage configuration from CLI')
-            ->addOption(
-                'generate-htaccess',
-                'g',
-                InputOption::VALUE_NONE,
-                'Generate .htaccess files to protect critical directories'
-            );
+            ->setName('generate:htaccess')
+            ->setDescription('Generate .htaccess files to protect critical directories');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
 
-        if ($input->getOption('generate-htaccess')) {
-            $text .= '<info>Generating .htaccess files…</info>' . PHP_EOL;
+        $text .= '<info>Generating .htaccess files…</info>' . PHP_EOL;
 
-            // Simple deny access files
-            $this->protectFolders([
-                "/conf",
-                "/src",
-                "/samples",
-                "/gen-src",
-                "/files/fonts",
-                "/files/private",
-                "/bin",
-                "/tests",
-                "/cache",
-                "/logs",
-            ], $text);
+        // Simple deny access files
+        $this->protectFolders([
+            "/conf",
+            "/src",
+            "/samples",
+            "/gen-src",
+            "/files/fonts",
+            "/files/private",
+            "/bin",
+            "/tests",
+            "/cache",
+            "/logs",
+        ], $text);
 
-            /*
-             * Protect root
-             */
-            $filePath = ROADIZ_ROOT . "/.htaccess";
-            if (file_exists(ROADIZ_ROOT) &&
-                !file_exists($filePath)) {
-                file_put_contents($filePath, $this->getMainHtaccessContent() . PHP_EOL);
-                $text .= '    — ' . $filePath . PHP_EOL;
-            } else {
-                $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
-            }
+        /*
+         * Protect root
+         */
+        $filePath = ROADIZ_ROOT . "/.htaccess";
+        if (file_exists(ROADIZ_ROOT) &&
+            !file_exists($filePath)) {
+            file_put_contents($filePath, $this->getMainHtaccessContent() . PHP_EOL);
+            $text .= '    — ' . $filePath . PHP_EOL;
+        } else {
+            $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
+        }
 
-            /*
-             * Protect themes
-             */
-            $filePath = ROADIZ_ROOT . "/themes/.htaccess";
-            if (file_exists(ROADIZ_ROOT . "/themes") &&
-                !file_exists($filePath)) {
-                file_put_contents($filePath, $this->getThemesHtaccessContent() . PHP_EOL);
-                $text .= '    — ' . $filePath . PHP_EOL;
-            } else {
-                $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
-            }
+        /*
+         * Protect themes
+         */
+        $filePath = ROADIZ_ROOT . "/themes/.htaccess";
+        if (file_exists(ROADIZ_ROOT . "/themes") &&
+            !file_exists($filePath)) {
+            file_put_contents($filePath, $this->getThemesHtaccessContent() . PHP_EOL);
+            $text .= '    — ' . $filePath . PHP_EOL;
+        } else {
+            $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
         }
 
         $output->writeln($text);

@@ -89,7 +89,11 @@ class UrlExtension extends \Twig_Extension
             return '';
         } else {
             if ($mixed instanceof Document) {
-                return $mixed->getViewer()->getDocumentUrlByArray($criteria);
+                $absolute = false;
+                if (isset($criteria['absolute'])) {
+                    $absolute = (boolean) $criteria['absolute'];
+                }
+                return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
             } elseif ($mixed instanceof NodesSources) {
                 return $this->getNodesSourceUrl($mixed, $criteria);
             } elseif ($mixed instanceof Node) {

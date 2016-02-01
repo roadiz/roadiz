@@ -30,8 +30,9 @@
 
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Tests\KernelDependentCase;
 
-class UserHandlerTest extends PHPUnit_Framework_TestCase
+class UserHandlerTest extends KernelDependentCase
 {
 
     /**
@@ -59,11 +60,5 @@ class UserHandlerTest extends PHPUnit_Framework_TestCase
             ['phpunitUser002', 'phpunit-user2@roadiz.io', 'AvbT8jkc0SscLb'],
             ['phpunitUser003', 'phpunit-user3@roadiz.io', '6dSc4ZRGtJVq0g'],
         ];
-    }
-
-
-    public static function setUpBeforeClass()
-    {
-        date_default_timezone_set('Europe/Paris');
     }
 }

@@ -312,7 +312,7 @@ class NodeType extends AbstractEntity
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getName() .
-        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
+        (!$this->isVisible() ? ' - hidden' : '') . PHP_EOL;
     }
 
     /**

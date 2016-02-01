@@ -99,7 +99,7 @@ class SearchController extends RozierApp
          * no need to prefix tags
          */
         if (isset($data["tags"])) {
-            $data["tags"] = explode(',', $data["tags"]);
+            $data["tags"] = array_map('trim', explode(',', $data["tags"]));
             foreach ($data["tags"] as $key => $value) {
                 $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
             }
@@ -455,6 +455,7 @@ class SearchController extends RozierApp
 
             if ($field->getType() === NodeTypeField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues());
+                $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option['placeholder'] = 'ignore';
@@ -464,8 +465,10 @@ class SearchController extends RozierApp
                     $option["expanded"] = true;
                 }
                 $option["choices"] = $choices;
+
             } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
+                $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = "choice";
                 $option["choices"] = $choices;

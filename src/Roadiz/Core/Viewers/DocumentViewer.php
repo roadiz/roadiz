@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\SvgDocumentViewer;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use RZ\Roadiz\Utils\Asset\Packages;
 
 /**
  * DocumentViewer
@@ -56,6 +57,7 @@ class DocumentViewer implements ViewableInterface
     public function __construct(Document $document)
     {
         $this->document = $document;
+
     }
 
     /**
@@ -75,6 +77,28 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
+     *
+     * @param  array   $args
+     * @param  boolean $absolute
+     * @return string
+     */
+    protected function parseSrcSet(array $args = [], $absolute = false)
+    {
+        if (isset($args['srcset']) && is_array($args['srcset'])) {
+            $srcset = [];
+            foreach ($args['srcset'] as $key => $set) {
+                if (isset($set['format']) && isset($set['rule'])) {
+                    $srcset[] = $this->getDocumentUrlByArray($set['format'], $absolute) . ' ' . $set['rule'];
+                }
+            }
+
+            return implode(', ', $srcset);
+        }
+
+        return false;
+    }
+
+    /**
      * Output a document HTML tag according to its Mime type and
      * the arguments array.
      *
@@ -89,6 +113,7 @@ class DocumentViewer implements ViewableInterface
      *
      * - width
      * - height
+     * - lazyload (true | false) set src in data-src
      * - crop ({w}x{h}, for example : 100x200)
      * - fit ({w}x{h}, for example : 100x200)
      * - rotate (1-359 degrees, for example : 90)
@@ -101,6 +126,11 @@ class DocumentViewer implements ViewableInterface
      * - progressive (boolean)
      * - noProcess (boolean) : Disable image resample
      * - inline : For SVG, display SVG code in Html instead of using <object>
+     * - srcset : Array
+     *     [
+     *         - format: Array
+     *         - rule
+     *     ]
      *
      * ## Audio / Video options
      *
@@ -113,11 +143,21 @@ class DocumentViewer implements ViewableInterface
      */
     public function getDocumentByArray($args = null)
     {
+        $absolute = false;
+
+        if (!empty($args['absolute'])) {
+            $absolute = (boolean) $args['absolute'];
+        }
+
         $assignation = [
             'document' => $this->document,
-            'url' => $this->getDocumentUrlByArray($args),
+            'url' => $this->getDocumentUrlByArray($args, $absolute),
+            'srcset' => $this->parseSrcSet($args, $absolute),
         ];
 
+        if (!empty($args['lazyload'])) {
+            $assignation['lazyload'] = (boolean) $args['lazyload'];
+        }
         if (!empty($args['width'])) {
             $assignation['width'] = (int) $args['width'];
         }
@@ -170,7 +210,7 @@ class DocumentViewer implements ViewableInterface
                 $this->document->getAbsolutePath(),
                 $assignation,
                 $asObject,
-                Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl()
+                Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
             );
             return $viewer->getContent();
         } elseif ($this->document->isImage()) {
@@ -274,7 +314,7 @@ class DocumentViewer implements ViewableInterface
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
-                'url' => Kernel::getService('request')->getBaseUrl() . '/files/' . $source->getRelativeUrl(),
+                'url' => Kernel::getService('assetPackages')->getUrl($source->getRelativeUrl(), Packages::DOCUMENTS),
             ];
         }
 
@@ -302,15 +342,18 @@ class DocumentViewer implements ViewableInterface
      * - noProcess (boolean) : Disable image resample
      *
      * @param array $args
+     * @param boolean $absolute
      *
      * @return string Url
      */
-    public function getDocumentUrlByArray($args = null)
+    public function getDocumentUrlByArray($args = null, $absolute = false)
     {
+        $packageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
+
         if ($args === null ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
-            return Kernel::getService('request')->getStaticBaseUrl() . '/files/' . $this->document->getRelativeUrl();
+            return Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), $packageName);
         } else {
             $slirArgs = [];
 
@@ -354,12 +397,22 @@ class DocumentViewer implements ViewableInterface
                 $slirArgs['p'] = 'p1';
             }
 
-            $url = Kernel::getService('urlGenerator')->generate('interventionRequestProcess', [
+            $routeParams = [
                 'queryString' => implode('-', $slirArgs),
                 'filename' => $this->document->getRelativeUrl(),
-            ], UrlGenerator::ABSOLUTE_PATH);
+            ];
 
-            return Kernel::getService('request')->convertUrlToStaticDomainUrl($url);
+            $url = Kernel::getService('urlGenerator')->generate(
+                'interventionRequestProcess',
+                $routeParams,
+                UrlGenerator::ABSOLUTE_PATH
+            );
+
+            if ($absolute === false) {
+                return Kernel::getService('assetPackages')->getUrl($url);
+            } else {
+                return Kernel::getService('assetPackages')->getUrl($url, Packages::ABSOLUTE);
+            }
         }
     }
 }

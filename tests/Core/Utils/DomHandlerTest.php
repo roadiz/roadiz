@@ -77,10 +77,9 @@ class DomHandlerTest extends PHPUnit_Framework_TestCase
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </body>
-</html>', ['css/bootstrap.min.css', 'css/style.min.css'])
+</html>', ['css/bootstrap.min.css', 'css/style.min.css']),
         );
     }
-
 
     /**
      * @dataProvider replaceExternalStylesheetsWithStyleProvider
@@ -118,8 +117,7 @@ class DomHandlerTest extends PHPUnit_Framework_TestCase
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </body>
-</html>')
+</html>', ),
         );
     }
 }
-

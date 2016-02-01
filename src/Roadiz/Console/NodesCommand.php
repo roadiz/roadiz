@@ -29,173 +29,72 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Command line utils for managing nodes from terminal.
  */
 class NodesCommand extends Command
 {
-    private $questionHelper;
     private $entityManager;
 
     protected function configure()
     {
-        $this->setName('core:nodes')
-             ->setDescription('Manage nodes')
-             ->addArgument(
-                 'node-name',
-                 InputArgument::OPTIONAL,
-                 'Node name'
-             )
-             ->addArgument(
-                 'node-type',
-                 InputArgument::OPTIONAL,
-                 'Node-type name'
-             )
-             ->addArgument(
-                 'locale',
-                 InputArgument::OPTIONAL,
-                 'Translation locale'
-             )
-             ->addOption(
-                 'create',
-                 'c',
-                 InputOption::VALUE_NONE,
-                 'Create a node'
-             )
-             ->addOption(
-                 'delete',
-                 'D',
-                 InputOption::VALUE_NONE,
-                 'Delete requested node'
-             )
-             ->addOption(
-                 'update',
-                 'u',
-                 InputOption::VALUE_NONE,
-                 'Update requested node'
-             )
-             ->addOption(
-                 'hide',
-                 'H',
-                 InputOption::VALUE_NONE,
-                 'Hide requested node'
-             )
-             ->addOption(
-                 'show',
-                 's',
-                 InputOption::VALUE_NONE,
-                 'Show requested node'
-             );
+        $this->setName('nodes:list')
+            ->setDescription('List available nodes')
+            ->addOption(
+                'type',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'Filter by node-type name'
+            )
+            ->addOption(
+                'delete',
+                'D',
+                InputOption::VALUE_NONE,
+                'Delete requested node'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('em')->getEntityManager();
         $text = "";
-        $nodeName = $input->getArgument('node-name');
-        $typeName = $input->getArgument('node-type');
-        $locale = $input->getArgument('locale');
+        $table = new Table($output);
+        $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);
+        $tableContent = [];
 
-        if ($nodeName &&
-            $typeName &&
-            $input->getOption('create')
-        ) {
-            $type = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                         ->findOneBy(['name' => $typeName]);
-            $translation = null;
-
-            if ($locale) {
-                $translation = $this->entityManager
-                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                    ->findOneBy(['locale' => $locale]);
-            }
-
-            if ($translation === null) {
-                $translation = $this->entityManager
-                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                    ->findOneBy([], ['id' => 'ASC']);
-            }
-
-            if ($type !== null &&
-                $translation !== null) {
-                // Node
-                $text = $this->executeNodeCreation($input, $output, $type, $translation);
-            } else {
-            }
-
-        } elseif ($nodeName) {
-            $node = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                         ->findOneBy(['nodeName' => $nodeName]);
-
-            if ($node !== null) {
-                $text .= $node->getOneLineSummary() . $node->getOneLineSourceSummary();
-            } else {
-                $text = '<info>Node “' . $nodeName . '” does not exists…</info>' . PHP_EOL;
+        if ($input->getOption('type')) {
+            $nodeType = $this->entityManager
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->findByName($input->getOption('type'));
+            if (null !== $nodeType) {
+                $nodes = $this->entityManager
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findBy(['nodeType' => $nodeType], ['nodeName' => 'ASC']);
             }
         } else {
             $nodes = $this->entityManager
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                          ->findAll();
-
-            foreach ($nodes as $key => $node) {
-                $text .= $node->getOneLineSummary();
-            }
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->findBy([], ['nodeName' => 'ASC']);
         }
+
+        foreach ($nodes as $node) {
+            $tableContent[] = [
+                $node->getId(),
+                $node->getNodeName(),
+                $node->getNodeType()->getName(),
+                (!$node->isVisible() ? 'X' : ''),
+                ($node->isPublished() ? 'X' : ''),
+            ];
+        }
+        $table->setRows($tableContent);
+        $table->render($output);
 
         $output->writeln($text);
-    }
-
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param NodeType        $type
-     * @param Translation     $translation
-     *
-     * @return string
-     */
-    private function executeNodeCreation(
-        InputInterface $input,
-        OutputInterface $output,
-        NodeType $type,
-        Translation $translation
-    ) {
-        $nodeName = $input->getArgument('node-name');
-        $node = new Node($type);
-        $node->setNodeName($nodeName);
-        $this->entityManager->persist($node);
-
-        // Source
-        $sourceClass = "GeneratedNodeSources\\" . $type->getSourceEntityClassName();
-        $source = new $sourceClass($node, $translation);
-
-        $fields = $type->getFields();
-
-        foreach ($fields as $field) {
-            if (!$field->isVirtual()) {
-                $question = new Question('<question>[Field ' . $field->getLabel() . ']</question> : ', null);
-                $fValue = $this->questionHelper->ask($input, $output, $question);
-                $setterName = $field->getSetterName();
-                $source->$setterName($fValue);
-            }
-        }
-
-        $this->entityManager->persist($source);
-        $this->entityManager->flush();
-        $text = '<info>Node “' . $nodeName . '” created…</info>' . PHP_EOL;
-
-        return $text;
     }
 }

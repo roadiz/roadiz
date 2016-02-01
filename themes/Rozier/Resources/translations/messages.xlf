@@ -789,38 +789,10 @@
       <trans-unit xml:space="preserve" id="78">
         <source>visible</source>
         <target></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">699</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">730</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">798</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypeFieldsController.php</context>
-          <context context-type="linenumber">340</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">337</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">378</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
-          <context context-type="linenumber">375</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
-          <context context-type="linenumber">437</context>
-        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="invisible">
+        <source>invisible</source>
+        <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="79">
         <source>parent_tagId</source>
@@ -6322,7 +6294,7 @@
       </trans-unit>
 
       <!-- Bulk tags -->
-        <trans-unit xml:space="preserve" id="delete.tags">
+      <trans-unit xml:space="preserve" id="delete.tags">
           <source>delete.tags</source>
           <target></target>
       </trans-unit>
@@ -6338,6 +6310,25 @@
           <source>tags.bulk.deleted</source>
           <target></target>
       </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="tag.childrenOrder">
+            <source>tag.childrenOrder</source>
+            <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
+            <source>tag.childrenOrderDirection</source>
+            <target></target>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%">
+            <source>node.%name%.status_changed_to.%status%</source>
+            <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
+            <source>node.%name%.visibility_changed_to.%visible%</source>
+            <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

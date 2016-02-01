@@ -57,7 +57,9 @@ class NodeTypesController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\NodeType'
+            'RZ\Roadiz\Core\Entities\NodeType',
+            [],
+            ['name' => 'ASC']
         );
         $listManager->handle();
 

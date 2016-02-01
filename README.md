@@ -1,7 +1,7 @@
 # Roadiz CMS
 
 [![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/roadiz/roadiz/badge.png?branch=master)](https://coveralls.io/r/roadiz/roadiz?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/roadiz/roadiz/badge.svg?branch=master)](https://coveralls.io/github/roadiz/roadiz?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/roadiz-cms/localized.png)](https://crowdin.com/project/roadiz-cms) 
@@ -69,7 +69,7 @@ This is the **recommended** method.
 a custom script will copy for you a default *configuration* file and `dev` and `install` environment entry points.
 3. Create an *Apache* or *Nginx* virtual host based on files in `samples/` folder.
 **If you don’t have any permission to create a virtual host,
-execute `bin/roadiz config --generate-htaccess` to create `.htaccess` files.**
+execute `bin/roadiz generate:htaccess` to create `.htaccess` files.**
 4. If Roadiz is not setup on your own computer (*localhost*), add your IP address 
 in the `dev.php` and `install.php` files to authorize your computer to access these two entry points.
 5. Go to your web-browser using *install.php* after your server domain name to launch Install wizard.
@@ -79,8 +79,8 @@ Once you’ve installed *Roadiz*, just type `/rz-admin` after your server domain
 ### Use our custom Vagrant box for development
 
 Roadiz comes with a dedicated `Vagrantfile` which is configured to run a *LEMP* stack 
-(nginx + PHP-FPM + MariaDB) and an *Apache Solr server*. This will be useful 
-to develop your website on your local computer. Once you’ve cloned Roadiz’ sources
+(nginx + PHP7.0-FPM + MariaDB), *phpMyAdmin*, an *Apache Solr server* and a *MailCatcher* service. 
+This will be useful to develop your website on your local computer. Once you’ve cloned Roadiz’ sources
 just do a `vagrant up` in Roadiz’ folder. Then Vagrant will run your code in `/var/www`
 and you will be able to completely use `bin/roadiz` commands without bloating your
 computer with lots of binaries.
@@ -88,12 +88,59 @@ computer with lots of binaries.
 Once vagrant box has provisioned you will be able to use:
 
 * `http://localhost:8080/install.php` to proceed to install.
-* `http://localhost:8983/solr` to use Apache Solr admin.
-* `http://localhost:8080/phpmyadmin` for your MySQL db admin.
+* `http://localhost:8983/solr` to use *Apache Solr* admin.
+* `http://localhost:8080/phpmyadmin` for your *MySQL* db admin.
+* `http://localhost:1080` for *MailCatcher*.
 
 Be careful, **Windows users**, this `Vagrantfile` is configured to use a *NFS* fileshare.
 Do not hesitate to disable it if you did not setup a NFS emulator. For OS X and Linux user
 this is built-in your system, so have fun!
+
+#### Provisioners
+
+If you don’t need Apache Solr or any development tools on your Vagrant VM, you can
+choose the `roadiz` provisioner which only set up the LEMP stack. So that you can
+use *Composer* directly on your host machine to take benefit of your cache 
+if you have lots of Roadiz websites.
+
+```bash
+# Just LEMP stack, no phpMyAdmin, no MailCatcher, no Solr, no Composer, no NPM, no grunt, no bower
+vagrant up --no-provision
+vagrant provision --provision-with roadiz
+
+# If you need phpMyAdmin
+# do not use space after comma
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,phpmyadmin
+
+# If you need Solr
+# do not use space after comma
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,solr
+
+# If you need dev tools
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,devtools
+
+# If you need MailCatcher
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,mailcatcher
+```
+
+When you use default `vagrant up` command, it’s the same as using:
+
+```bash
+# Default vagrant up provisioners
+vagrant up --no-provision
+vagrant provision --provision-with roadiz,phpmyadmin,mailcatcher,solr,devtools
+```
+
+Pay attention that *mailcatcher* and *solr* provision scripts may take several 
+minutes to run as they have to download many sources for their installation.
+
+If you already provisioned your Vagrant and you just want to add *mailcatcher* for example,
+you can type `vagrant provision --provision-with mailcatcher`. No data will
+be lost in your Vagrant box.
 
 ### Database connexion
 
@@ -225,10 +272,10 @@ Then when you are sure to perform migration, just do:
 
 ```bash
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache -a --env=prod;
+bin/roadiz cache:clear --env=prod;
 ```
 
-The `cache -a --env=prod` command force Doctrine to purge its metadata cache for the *production* environment.
+The `cache:clear --env=prod` command force Doctrine to purge its metadata cache for the *production* environment.
 **Be careful, this won’t purge APC or XCache. You will need to do it manually.**
 
 ### Managing your own database entities
@@ -254,7 +301,7 @@ If you see your entities being created and no system database erased, just `--ex
 If Doctrine send some error, you probably need to clear metadata cache:
 
 ```bash
-bin/roadiz cache -a --env=prod;
+bin/roadiz cache:clear --env=prod;
 ```
 
 ### Troubleshooting
@@ -274,9 +321,9 @@ order to purge these memory caches.
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```bash
-bin/roadiz core:sources -r
+bin/roadiz generate:nsentities
 bin/roadiz orm:schema-tool:update --force
-bin/roadiz cache -a --env=prod;
+bin/roadiz cache:clear --env=prod;
 
 ```
 
