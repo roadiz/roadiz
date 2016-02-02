@@ -166,23 +166,23 @@ abstract class AbstractHuman extends AbstractDateTimed
     }
 
     /**
-     * @var \DateTime
+     * @var \Datetime
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $birthday;
     /**
-     * @return \DateTime
+     * @return \Datetime
      */
     public function getBirthday()
     {
         return $this->birthday;
     }
     /**
-     * @param \DateTime $birthday
+     * @param \Datetime $birthday
      *
      * @return $this
      */
-    public function setBirthday($birthday)
+    public function setBirthday(\Datetime $birthday)
     {
         $this->birthday = $birthday;
 

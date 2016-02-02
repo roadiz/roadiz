@@ -126,7 +126,9 @@ class NewsletterSubscriber extends AbstractEntity
 
     public function __clone()
     {
-        $this->id = 0;
-        $this->newsletter = null;
+        if ($this->id) {
+            $this->id = null;
+            $this->newsletter = null;
+        }
     }
 }

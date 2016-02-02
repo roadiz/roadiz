@@ -166,8 +166,10 @@ class Newsletter extends AbstractDateTimed
 
     public function __clone()
     {
-        $this->setId(null);
-        $this->node = null;
-        $this->newsletterSubscriber = null;
+        if ($this->id) {
+            $this->id = null;
+            $this->node = null;
+            $this->newsletterSubscriber = null;
+        }
     }
 }

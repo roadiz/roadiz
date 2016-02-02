@@ -301,23 +301,25 @@ class NodesSources extends AbstractEntity
      */
     public function __clone()
     {
-        $this->setId(null);
-        $documentsByFields = $this->getDocumentsByFields();
-        if ($documentsByFields !== null) {
-            $this->documentsByFields = new ArrayCollection();
-            foreach ($documentsByFields as $documentsByField) {
-                $cloneDocumentsByField = clone $documentsByField;
-                $this->documentsByFields->add($cloneDocumentsByField);
-                $cloneDocumentsByField->setNodeSource($this);
+        if ($this->id) {
+            $this->id = null;
+            $documentsByFields = $this->getDocumentsByFields();
+            if ($documentsByFields !== null) {
+                $this->documentsByFields = new ArrayCollection();
+                foreach ($documentsByFields as $documentsByField) {
+                    $cloneDocumentsByField = clone $documentsByField;
+                    $this->documentsByFields->add($cloneDocumentsByField);
+                    $cloneDocumentsByField->setNodeSource($this);
+                }
             }
-        }
-        // Clear url-aliases before cloning.
-        if ($this->urlAliases !== null) {
-            $this->urlAliases->clear();
-        }
-        // Clear logs before cloning.
-        if ($this->logs !== null) {
-            $this->logs->clear();
+            // Clear url-aliases before cloning.
+            if ($this->urlAliases !== null) {
+                $this->urlAliases->clear();
+            }
+            // Clear logs before cloning.
+            if ($this->logs !== null) {
+                $this->logs->clear();
+            }
         }
     }
 }

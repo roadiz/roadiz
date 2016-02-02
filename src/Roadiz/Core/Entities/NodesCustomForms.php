@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -45,80 +45,30 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(columns={"position"})
  * })
  */
-class NodesCustomForms extends AbstractPositioned implements PersistableInterface
+class NodesCustomForms extends AbstractEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
-    private $id;
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    use PositionedTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="customForms", fetch="EAGER")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\Node
+     * @var Node
      */
-    private $node;
-    /**
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    public function getNode()
-    {
-        return $this->node;
-    }
-
-    public function setNode($node)
-    {
-        $this->node = $node;
-    }
+    protected $node;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes", fetch="EAGER")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\CustomForm
+     * @var CustomForm
      */
-    private $customForm;
-    /**
-     * @return RZ\Roadiz\Core\Entities\CustomForm
-     */
-    public function getCustomForm()
-    {
-        return $this->customForm;
-    }
-
-    public function setCustomForm($customForm)
-    {
-        $this->customForm = $customForm;
-    }
+    protected $customForm;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\NodeTypeField
+     * @var NodeTypeField
      */
-    private $field;
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\NodeTypeField
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    public function setField($f)
-    {
-        $this->field = $f;
-    }
-
+    protected $field;
 
     /**
      * Create a new relation between a Node, a CustomForm and a NodeTypeField.
@@ -136,7 +86,81 @@ class NodesCustomForms extends AbstractPositioned implements PersistableInterfac
 
     public function __clone()
     {
-        $this->id = 0;
-        $this->node = null;
+        if ($this->id) {
+            $this->id = null;
+            $this->node = null;
+        }
+    }
+
+    /**
+     * Gets the value of node.
+     *
+     * @return Node
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
+
+    /**
+     * Sets the value of node.
+     *
+     * @param Node $node the node
+     *
+     * @return self
+     */
+    public function setNode(Node $node)
+    {
+        $this->node = $node;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of customForm.
+     *
+     * @return CustomForm
+     */
+    public function getCustomForm()
+    {
+        return $this->customForm;
+    }
+
+    /**
+     * Sets the value of customForm.
+     *
+     * @param CustomForm $customForm the custom form
+     *
+     * @return self
+     */
+    public function setCustomForm(CustomForm $customForm)
+    {
+        $this->customForm = $customForm;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of field.
+     *
+     * @return NodeTypeField
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * Sets the value of field.
+     *
+     * @param NodeTypeField $field the field
+     *
+     * @return self
+     */
+    public function setField(NodeTypeField $field)
+    {
+        $this->field = $field;
+
+        return $this;
     }
 }

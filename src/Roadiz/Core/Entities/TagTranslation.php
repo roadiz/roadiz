@@ -29,8 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * Translated representation of Tags.
@@ -47,7 +49,8 @@ class TagTranslation extends AbstractEntity
     /**
      * @ORM\Column(type="string")
      */
-    private $name;
+    protected $name;
+
     /**
      * @return string
      */
@@ -70,7 +73,8 @@ class TagTranslation extends AbstractEntity
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    protected $description;
+
     /**
      * @return string
      */
@@ -78,6 +82,7 @@ class TagTranslation extends AbstractEntity
     {
         return $this->description;
     }
+
     /**
      * @param string $description
      *
@@ -95,50 +100,14 @@ class TagTranslation extends AbstractEntity
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
      */
-    private $tag = null;
-    /**
-     * @return Tag
-     */
-    public function getTag()
-    {
-        return $this->tag;
-    }
-    /**
-     * @param Tag $tag
-     *
-     * @return $this
-     */
-    public function setTag($tag)
-    {
-        $this->tag = $tag;
-
-        return $this;
-    }
+    protected $tag = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Translation
      */
-    private $translation = null;
-    /**
-     * @return Translation
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
-    /**
-     * @param Translation $translation
-     *
-     * @return $this
-     */
-    public function setTranslation($translation)
-    {
-        $this->translation = $translation;
-
-        return $this;
-    }
+    protected $translation = null;
 
     /**
      * Create a new TagTranslation with its origin Tag and Translation.
@@ -152,5 +121,53 @@ class TagTranslation extends AbstractEntity
         $this->setTranslation($translation);
 
         $this->name = $original->getDirtyTagName() != '' ? $original->getDirtyTagName() : $original->getTagName();
+    }
+
+    /**
+     * Gets the value of tag.
+     *
+     * @return Tag
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    /**
+     * Sets the value of tag.
+     *
+     * @param Tag $tag the tag
+     *
+     * @return self
+     */
+    public function setTag(Tag $tag)
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of translation.
+     *
+     * @return Translation
+     */
+    public function getTranslation()
+    {
+        return $this->translation;
+    }
+
+    /**
+     * Sets the value of translation.
+     *
+     * @param Translation $translation the translation
+     *
+     * @return self
+     */
+    public function setTranslation(Translation $translation)
+    {
+        $this->translation = $translation;
+
+        return $this;
     }
 }

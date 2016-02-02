@@ -29,8 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Core\Entities\CustomFormField;
 
 /**
  * CustomFormField entities are used to create CustomForms with
@@ -46,41 +48,22 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer", inversedBy="answerFields")
      * @ORM\JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var CustomFormAnswer
      */
-    private $customFormAnswer;
-
-    public function setCustomFormAnswer($customFormAnswer)
-    {
-        $this->customFormAnswer = $customFormAnswer;
-        return $this;
-    }
-
-    public function getCustomFormAnswer()
-    {
-        return $this->customFormAnswer;
-    }
+    protected $customFormAnswer;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttribute")
      * @ORM\JoinColumn(name="custom_form_field_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var CustomFormField
      */
-    private $customFormField;
-
-    public function setCustomFormField($customFormField)
-    {
-        $this->customFormField = $customFormField;
-        return $this;
-    }
-
-    public function getCustomFormField()
-    {
-        return $this->customFormField;
-    }
+    protected $customFormField;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var string
      */
-    private $value;
+    protected $value;
 
     /**
      * @return string $value
@@ -98,6 +81,54 @@ class CustomFormFieldAttribute extends AbstractEntity
     public function setValue($value)
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of customFormAnswer.
+     *
+     * @return CustomFormAnswer
+     */
+    public function getCustomFormAnswer()
+    {
+        return $this->customFormAnswer;
+    }
+
+    /**
+     * Sets the value of customFormAnswer.
+     *
+     * @param CustomFormAnswer $customFormAnswer the custom form answer
+     *
+     * @return self
+     */
+    public function setCustomFormAnswer(CustomFormAnswer $customFormAnswer)
+    {
+        $this->customFormAnswer = $customFormAnswer;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of customFormField.
+     *
+     * @return CustomFormField
+     */
+    public function getCustomFormField()
+    {
+        return $this->customFormField;
+    }
+
+    /**
+     * Sets the value of customFormField.
+     *
+     * @param CustomFormField $customFormField the custom form field
+     *
+     * @return self
+     */
+    public function setCustomFormField(CustomFormField $customFormField)
+    {
+        $this->customFormField = $customFormField;
 
         return $this;
     }

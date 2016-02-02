@@ -30,10 +30,11 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Combined AbstractDateTimed and AbstractPositioned.
+ * Combined AbstractDateTimed and PositionedTrait.
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
@@ -45,30 +46,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class AbstractDateTimedPositioned extends AbstractDateTimed
 {
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $position = 0;
-    /**
-     * @return float
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * Set position as a float to enable increment and decrement by O.5
-     * to insert a node between two others.
-     *
-     * @param float $newPosition
-     *
-     * @return $this
-     */
-    public function setPosition($newPosition)
-    {
-        $this->position = (float) $newPosition;
-
-        return $this;
-    }
+    use PositionedTrait;
 }

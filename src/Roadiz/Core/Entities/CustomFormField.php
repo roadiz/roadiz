@@ -162,8 +162,10 @@ class CustomFormField extends AbstractField
 
     public function __clone()
     {
-        $this->id = null;
-        $this->customForm = null;
-        $this->customFormFieldAttribute = new ArrayCollection();
+        if ($this->id) {
+            $this->id = null;
+            $this->customForm = null;
+            $this->customFormFieldAttribute = new ArrayCollection();
+        }
     }
 }

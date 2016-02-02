@@ -32,8 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -699,7 +699,7 @@ class Node extends AbstractDateTimedPositioned
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getNodeName() . " — " . $this->getNodeType()->getName() .
-        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
+            " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
     /**
      * @return string
@@ -742,31 +742,33 @@ class Node extends AbstractDateTimedPositioned
 
     public function __clone()
     {
-        $this->setId(null);
-        $this->nodeName .= "-" . uniqid();
-        $this->home = false;
-        $children = $this->getChildren();
-        if ($children !== null) {
-            $this->children = new ArrayCollection();
-            foreach ($children as $child) {
-                $cloneChild = clone $child;
-                $this->children->add($cloneChild);
-                $cloneChild->setParent($this);
+        if ($this->id) {
+            $this->id = null;
+            $this->nodeName .= "-" . uniqid();
+            $this->home = false;
+            $children = $this->getChildren();
+            if ($children !== null) {
+                $this->children = new ArrayCollection();
+                foreach ($children as $child) {
+                    $cloneChild = clone $child;
+                    $this->children->add($cloneChild);
+                    $cloneChild->setParent($this);
+                }
             }
-        }
-        $nodeSources = $this->getNodeSources();
-        if ($nodeSources !== null) {
-            $this->nodeSources = new ArrayCollection();
-            foreach ($nodeSources as $nodeSource) {
-                $cloneNodeSource = clone $nodeSource;
-                $this->nodeSources->add($cloneNodeSource);
-                $cloneNodeSource->setNode($this);
+            $nodeSources = $this->getNodeSources();
+            if ($nodeSources !== null) {
+                $this->nodeSources = new ArrayCollection();
+                foreach ($nodeSources as $nodeSource) {
+                    $cloneNodeSource = clone $nodeSource;
+                    $this->nodeSources->add($cloneNodeSource);
+                    $cloneNodeSource->setNode($this);
+                }
             }
         }
     }
 
     public function __toString()
     {
-        return '[Node]' . $this->getId() . " — " . $this->getNodeName(). " <" . $this->getNodeType()->getName() . '>';
+        return '[Node]' . $this->getId() . " — " . $this->getNodeName() . " <" . $this->getNodeType()->getName() . '>';
     }
 }
