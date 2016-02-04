@@ -49,24 +49,24 @@ class ThemeInstallCommand extends Command
     protected function configure()
     {
         $this->setName('themes:install')
-             ->setDescription('Manage themes installation')
-             ->addArgument(
-                 'classname',
-                 InputArgument::REQUIRED,
-                 'Main theme classname (Use / instead of \\ and do not forget starting slash)'
-             )
-             ->addOption(
-                 'data',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Import default data (node-types, roles, settings and tags)'
-             )
-             ->addOption(
-                 'nodes',
-                 null,
-                 InputOption::VALUE_NONE,
-                 'Import nodes data. This cannot be done at the same time with --data option.'
-             );
+            ->setDescription('Manage themes installation')
+            ->addArgument(
+                'classname',
+                InputArgument::REQUIRED,
+                'Main theme classname (Use / instead of \\ and do not forget starting slash)'
+            )
+            ->addOption(
+                'data',
+                null,
+                InputOption::VALUE_NONE,
+                'Import default data (node-types, roles, settings and tags)'
+            )
+            ->addOption(
+                'nodes',
+                null,
+                InputOption::VALUE_NONE,
+                'Import nodes data. This cannot be done at the same time with --data option.'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -147,8 +147,8 @@ class ThemeInstallCommand extends Command
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
-            $text .= 'You should do a <info>bin/roadiz core:sources -r</info> to regenerate your node-types source classes.' . PHP_EOL;
-            $text .= 'And a <info>bin/roadiz orm:schema-tool:update --force</info> to apply your changes into database.' . PHP_EOL;
+            $text .= 'You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.' . PHP_EOL;
+            $text .= 'And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.' . PHP_EOL;
 
         } else {
             $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;

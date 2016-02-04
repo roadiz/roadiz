@@ -232,6 +232,15 @@ php_value[display_errors] = On
 php_value[error_reporting] = E_ALL
 EOF
 
+sudo cat >> /etc/php/7.0/fpm/conf.d/20-opcache-recommended.ini <<'EOF'
+opcache.memory_consumption=128
+opcache.interned_strings_buffer=8
+opcache.max_accelerated_files=4000
+opcache.revalidate_freq=60
+opcache.fast_shutdown=1
+opcache.enable_cli=1
+EOF
+
 echo -e "\n--- Restarting Nginx and PHP servers ---\n"
 sudo service nginx restart > /dev/null 2>&1;
 sudo service php7.0-fpm restart > /dev/null 2>&1;
