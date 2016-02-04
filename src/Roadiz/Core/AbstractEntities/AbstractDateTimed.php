@@ -1,7 +1,5 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -24,7 +22,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AbstractDatetimed.php
+ * @file AbstractDateTimed.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
@@ -46,12 +44,12 @@ abstract class AbstractDateTimed extends AbstractEntity
 {
     /**
      * @ORM\Column(type="datetime", name="created_at")
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $createdAt;
 
     /**
-     * @return \Datetime
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -59,11 +57,11 @@ abstract class AbstractDateTimed extends AbstractEntity
     }
 
     /**
-     * @param \Datetime $createdAt
+     * @param \DateTime $createdAt
      *
      * @return $this
      */
-    public function setCreatedAt(\Datetime $createdAt)
+    public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -71,12 +69,12 @@ abstract class AbstractDateTimed extends AbstractEntity
     }
     /**
      * @ORM\Column(type="datetime", name="updated_at")
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $updatedAt;
 
     /**
-     * @return \Datetime
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -84,11 +82,11 @@ abstract class AbstractDateTimed extends AbstractEntity
     }
 
     /**
-     * @param \Datetime $updatedAt
+     * @param \DateTime $updatedAt
      *
      * @return $this
      */
-    public function setUpdatedAt(\Datetime $updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -100,15 +98,15 @@ abstract class AbstractDateTimed extends AbstractEntity
      */
     public function preUpdate()
     {
-        $this->setUpdatedAt(new \Datetime("now"));
+        $this->setUpdatedAt(new \DateTime("now"));
     }
     /**
      * @ORM\PrePersist
      */
     public function prePersist()
     {
-        $this->setUpdatedAt(new \Datetime("now"));
-        $this->setCreatedAt(new \Datetime("now"));
+        $this->setUpdatedAt(new \DateTime("now"));
+        $this->setCreatedAt(new \DateTime("now"));
     }
     /**
      * Set creation and update date to *now*.
@@ -117,8 +115,8 @@ abstract class AbstractDateTimed extends AbstractEntity
      */
     public function resetDates()
     {
-        $this->setCreatedAt(new \Datetime("now"));
-        $this->setUpdatedAt(new \Datetime("now"));
+        $this->setCreatedAt(new \DateTime("now"));
+        $this->setUpdatedAt(new \DateTime("now"));
 
         return $this;
     }
