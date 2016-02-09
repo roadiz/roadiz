@@ -43,8 +43,6 @@ class RequestProcessor
     public function __invoke(array $record)
     {
         $record['extra']['locale'] = $this->request->getLocale();
-        $record['extra']['languages'] = $this->request->getLanguages();
-        $record['extra']['host'] = $this->request->getHost();
         $record['extra']['uri'] = $this->request->getUri();
 
         return $record;
