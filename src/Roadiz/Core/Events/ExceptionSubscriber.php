@@ -108,6 +108,14 @@ class ExceptionSubscriber implements EventSubscriberInterface
          * Log error before displaying a fallback page.
          */
         $class = get_class($e);
+        /*
+         * Get route defined format
+         * to use right response type.
+         */
+        $format = 'html';
+        if ($request->attributes->has('_format')) {
+            $format = $request->attributes->get('_format');
+        }
         $humanMessage = $this->getHumanExceptionTitle($e);
 
         $this->logger->emerg($e->getMessage(), [
@@ -115,7 +123,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             'exception' => $class,
         ]);
 
-        if ($request->isXmlHttpRequest()) {
+        if ($format == "json" || $request->isXmlHttpRequest()) {
             return new \Symfony\Component\HttpFoundation\JsonResponse(
                 [
                     'message' => $e->getMessage(),
