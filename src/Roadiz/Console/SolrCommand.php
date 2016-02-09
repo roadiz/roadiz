@@ -72,7 +72,7 @@ class SolrCommand extends Command
 
     protected function displayBasicConfig()
     {
-        $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
+        $text = '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
         $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
         $text .= '
 solr:
