@@ -514,27 +514,35 @@ class DocumentsController extends RozierApp
                     new FilterDocumentEvent($document)
                 );
 
-                return new JsonResponse([
-                    'success' => true,
-                    'documentId' => $document->getId(),
-                    'thumbnail' => [
-                        'id' => $document->getId(),
-                        'filename' => $document->getFilename(),
-                        'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                        'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                    ],
-                ]);
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse([
+                        'success' => true,
+                        'documentId' => $document->getId(),
+                        'thumbnail' => [
+                            'id' => $document->getId(),
+                            'filename' => $document->getFilename(),
+                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
+                        ],
+                    ]);
+                } else {
+                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                }
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $this->publishErrorMessage($request, $msg);
 
-                return new JsonResponse(
-                    [
-                        "error" => $msg,
-                    ],
-                    Response::HTTP_NOT_FOUND
-                );
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(
+                        [
+                            "error" => $msg,
+                        ],
+                        Response::HTTP_NOT_FOUND
+                    );
+                } else {
+                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                }
             }
         }
         $this->assignation['form'] = $form->createView();
