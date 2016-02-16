@@ -111,7 +111,6 @@ class SolariumNodeSource
             }
 
             return true;
-
         } else {
             throw new \RuntimeException("No Solr document available for current NodeSource", 1);
         }
@@ -219,29 +218,32 @@ class SolariumNodeSource
     /**
      * Update current nodeSource document and commit after.
      *
-     * Use this method only when you need to re-index single NodeSources.
+     * Use this method **only** when you need to re-index a single NodeSources.
      *
      * @return boolean
      */
     public function updateAndCommit()
     {
         $update = $this->client->createUpdate();
+        $this->update($update);
+        $update->addCommit();
+        return $this->client->update($update);
+    }
 
-        if (false === $this->remove($update)) {
-            return $this->indexAndCommit();
-        } else {
-            $this->setDocument($update->createDocument());
-
-            if (true === $this->index()) {
-                // add the documents and a commit command to the update query
-                $update->addDocument($this->getDocument());
-                $update->addCommit();
-
-                return $this->client->update($update);
-            }
-
-            return false;
-        }
+    /**
+     * Update current nodeSource document with existing update.
+     *
+     * Use this method only when you need to re-index bulk NodeSources.
+     *
+     * @param  Query  $update
+     */
+    public function update(Query $update)
+    {
+        $update->addDeleteById($this->document->id);
+        $this->setDocument($update->createDocument());
+        $this->index();
+        // add the document to the update query
+        $update->addDocument($this->document);
     }
 
     /**
@@ -274,7 +276,7 @@ class SolariumNodeSource
     public function remove(Query $update)
     {
         if (null !== $this->document) {
-            $update->addDeleteById($this->getDocument()->id);
+            $update->addDeleteById($this->document->id);
 
             return true;
         } else {
