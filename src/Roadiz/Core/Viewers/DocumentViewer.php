@@ -200,10 +200,10 @@ class DocumentViewer implements ViewableInterface
             return $this->getEmbedByArray($args);
 
         } elseif ($this->document->isSvg()) {
-            $asObject = true;
+            $asObject = false;
             if (isset($args['inline']) &&
-                true === (boolean) $args['inline']) {
-                $asObject = false;
+                false === (boolean) $args['inline']) {
+                $asObject = true;
             }
 
             $viewer = new SvgDocumentViewer(
