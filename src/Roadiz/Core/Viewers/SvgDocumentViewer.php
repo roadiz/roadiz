@@ -42,7 +42,6 @@ class SvgDocumentViewer
         'height',
         'identifier',
         'class',
-        'alt',
     ];
 
     /**
