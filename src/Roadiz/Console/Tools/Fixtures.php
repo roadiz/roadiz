@@ -195,7 +195,7 @@ class Fixtures
      *
      * @return Role
      */
-    protected function getRole($roleName = Role::ROLE_SUPER_ADMIN)
+    protected function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
         $role = $this->entityManager
                      ->getRepository('RZ\Roadiz\Core\Entities\Role')
@@ -213,7 +213,7 @@ class Fixtures
      * Get role by name, and create it if does not exist.
      * @param string $name
      *
-     * @return \RZ\Roadiz\Core\Entities\Role
+     * @return \RZ\Roadiz\Core\Entities\Setting
      */
     protected function getSetting($name)
     {

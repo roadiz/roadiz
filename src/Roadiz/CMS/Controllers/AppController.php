@@ -43,7 +43,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -325,7 +324,7 @@ class AppController extends Controller
      *
      * @param string $message Additionnal message to describe 404 error.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function throw404($message = "")
     {
@@ -520,7 +519,7 @@ class AppController extends Controller
      * currently unavailable.
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function maintenanceAction(Request $request)
     {
