@@ -52,6 +52,7 @@ class NodesSourcesPaginator extends Paginator
 
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {

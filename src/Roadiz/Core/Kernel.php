@@ -425,11 +425,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         return [];
     }
+
     /**
      * Loads the container configuration.
      *
      * @param LoaderInterface $loader A LoaderInterface instance
      *
+     * @return bool
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {

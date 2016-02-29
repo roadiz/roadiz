@@ -327,8 +327,10 @@ class Document extends AbstractDateTimed
     {
         return $this->embedId;
     }
+
     /**
      * @param string $embedId
+     * @return $this
      */
     public function setEmbedId($embedId)
     {
@@ -348,8 +350,10 @@ class Document extends AbstractDateTimed
     {
         return $this->embedPlatform;
     }
+
     /**
      * @param string $embedPlatform
+     * @return $this
      */
     public function setEmbedPlatform($embedPlatform)
     {
@@ -436,6 +440,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @param Document $folder
+     * @return $this
      */
     public function addFolder(Folder $folder)
     {
@@ -462,6 +467,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @param DocumentTranslation $documentTranslation
+     * @return $this
      */
     public function addDocumentTranslation(DocumentTranslation $documentTranslation)
     {

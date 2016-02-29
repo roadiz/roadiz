@@ -313,6 +313,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * Set random string sent to the user email address in order to verify it.
      *
      * @param string $confirmationToken
+     * @return $this
      */
     public function setConfirmationToken($confirmationToken)
     {
@@ -331,6 +332,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * Sets the timestamp that the user requested a password reset.
      *
      * @param \DateTime|null $date
+     * @return $this
      */
     public function setPasswordRequestedAt(\DateTime $date = null)
     {
@@ -534,6 +536,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @param boolean $expired
+     * @return $this
      */
     public function setExpired($expired)
     {
@@ -651,6 +654,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @param boolean $newcredentialsExpired
+     * @return $this
      */
     public function setCredentialsExpired($newcredentialsExpired)
     {

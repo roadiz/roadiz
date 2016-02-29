@@ -170,8 +170,10 @@ class EntityListManager
     {
         return $this->translation;
     }
+
     /**
      * @param Translation $newtranslation
+     * @return $this
      */
     public function setTranslation(Translation $newtranslation = null)
     {
@@ -187,8 +189,10 @@ class EntityListManager
     {
         return $this->authorizationChecker;
     }
+
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {

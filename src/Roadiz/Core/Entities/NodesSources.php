@@ -153,6 +153,7 @@ class NodesSources extends AbstractEntity
 
     /**
      * @param ArrayCollection|array $logs
+     * @return $this
      */
     public function setLogs($logs)
     {

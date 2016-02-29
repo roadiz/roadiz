@@ -88,6 +88,7 @@ class Theme extends AbstractEntity
 
     /**
      * @param boolean $newstaticTheme
+     * @return $this
      */
     public function setStaticTheme($newstaticTheme)
     {
