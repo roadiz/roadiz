@@ -78,6 +78,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
      * @param string $string
      *
      * @return \RZ\Roadiz\Core\Entities\Group
+     * @throws \Exception
      */
     public function deserialize($string)
     {

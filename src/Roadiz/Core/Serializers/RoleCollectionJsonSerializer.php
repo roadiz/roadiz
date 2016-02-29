@@ -73,6 +73,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      * @param string $jsonString
      *
      * @return ArrayCollection
+     * @throws \Exception
      */
     public function deserialize($jsonString)
     {

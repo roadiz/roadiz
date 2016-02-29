@@ -198,8 +198,10 @@ class EntryPointsController extends AppController
          */
         return $this->redirect($request->get('form')['_redirect']);
     }
+
     /**
      * @param Request $request
+     * @throws BadFormRequestException
      */
     protected function validateMandatoryFields(Request $request)
     {
@@ -220,6 +222,7 @@ class EntryPointsController extends AppController
 
     /**
      * @param Request $request
+     * @throws BadFormRequestException
      */
     protected function validateEmail(Request $request)
     {
@@ -322,9 +325,11 @@ class EntryPointsController extends AppController
 
         return SettingsBag::get('email_sender');
     }
+
     /**
      * @param  Request $request
      * @return array
+     * @throws BadFormRequestException
      */
     protected function getUploadedFiles(Request $request)
     {

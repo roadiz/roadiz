@@ -63,7 +63,7 @@ abstract class AbstractEmbedFinder
     /**
      * Crawl and parse an API json feed for current embedID.
      *
-     * @return array|boolean
+     * @return array|bool
      */
     public function getFeed()
     {
@@ -88,7 +88,7 @@ abstract class AbstractEmbedFinder
     /**
      * Crawl an embed API to get a Json feed.
      *
-     * @param string|null $search
+     * @param string|bool $search
      *
      * @return string
      */
@@ -114,7 +114,7 @@ abstract class AbstractEmbedFinder
      * * id
      * * class
      *
-     * @param  array|null $args
+     * @param  array|bool $args
      *
      * @return string
      */
@@ -164,12 +164,15 @@ abstract class AbstractEmbedFinder
 
         return $htmlTag;
     }
+
     /**
      * Create a Document from an embed media
      *
-     * @param \Pimple\Container $container description
+     * @param Container $container description
      *
      * @return Document
+     * @throws EntityAlreadyExistsException
+     * @throws \Exception
      */
     public function createDocumentFromFeed(Container $container)
     {

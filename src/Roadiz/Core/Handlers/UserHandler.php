@@ -59,8 +59,8 @@ class UserHandler
 
     /**
      * Encode current User password.
-     *
      * @return $this
+     * @throws \Exception
      */
     public function encodePassword()
     {

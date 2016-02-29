@@ -54,10 +54,9 @@ class SolariumNodeSource
     /**
      * Create a new SolariumNodeSource.
      *
-     * @param NodesSources     $nodeSource
-     * @param \Solarium_Client $client
+     * @param NodesSources $nodeSource
+     * @param Client $client
      *
-     * @throws \RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException If Solr server does not respond.
      */
     public function __construct($nodeSource, Client $client = null)
     {
@@ -118,8 +117,8 @@ class SolariumNodeSource
 
     /**
      * Get a key/value array representation of current node-source document.
-     *
      * @return array
+     * @throws \Exception
      */
     public function getFieldsAssoc()
     {

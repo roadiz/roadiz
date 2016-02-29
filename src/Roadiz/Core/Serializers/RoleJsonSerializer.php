@@ -59,8 +59,9 @@ class RoleJsonSerializer extends AbstractJsonSerializer
      * Deserializes a json file into a readable array of datas.
      *
      * @param string $jsonString
-     *
      * @return \RZ\Roadiz\Core\Entities\Role
+     *
+     * @throws \Exception
      */
     public function deserialize($jsonString)
     {

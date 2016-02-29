@@ -1000,14 +1000,14 @@ class NodeRepository extends EntityRepository
      * Create a Criteria object from a search pattern and additionnal fields.
      *
      * @param string $pattern Search pattern
-     * @param QueryBuilder|DoctrineORMQueryBuilder $qb QueryBuilder to pass
+     * @param QueryBuilder $qb QueryBuilder to pass
      * @param array $criteria Additionnal criteria
      * @param string $alias SQL query table alias
      * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
+        QueryBuilder $qb,
         array &$criteria = [],
         $alias = "obj"
     ) {

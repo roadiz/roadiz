@@ -37,7 +37,7 @@ class RandomGenerator
     protected $useOpenSsl;
 
     /**
-     * @param LoggerInterfacee|null $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(LoggerInterface $logger = null)
     {

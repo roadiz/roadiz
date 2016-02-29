@@ -61,6 +61,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
      * @param string $jsonString
      *
      * @return \RZ\Roadiz\Core\Entities\UrlAlias
+     * @throws \Exception
      */
     public function deserialize($jsonString)
     {

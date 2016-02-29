@@ -51,7 +51,7 @@ abstract class Controller
     /**
      * Shortcut to return the request service.
      *
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     public function getRequest()
     {
@@ -61,7 +61,7 @@ abstract class Controller
     /**
      * Sets the Container associated with this Controller.
      *
-     * @param \Pimple\Container $container
+     * @param Container $container
      */
     public function setContainer(Container $container)
     {
@@ -71,7 +71,7 @@ abstract class Controller
     /**
      * Get general dependency injection container.
      *
-     * @return \Pimple\Container
+     * @return Container
      */
     public function getContainer()
     {
@@ -212,11 +212,10 @@ abstract class Controller
     /**
      * Make translation variable with the good localization.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $_locale
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException
+     * @param Request $request
+     * @param string $_locale
+     * @return Response
+     * @throws NoTranslationAvailableException
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
@@ -267,12 +266,12 @@ abstract class Controller
      *
      * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
      *
-     * @param  string        $view       Template file path
-     * @param  array         $parameters Twig assignation array
-     * @param  \Symfony\Component\HttpFoundation\Response|null $response Optional Response object to customize response parameters
-     * @param  string        $namespace  Twig loader namespace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param string $view Template file path
+     * @param array $parameters Twig assignation array
+     * @param Response $response Optional Response object to customize response parameters
+     * @param string $namespace Twig loader namespace
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
@@ -365,6 +364,7 @@ abstract class Controller
     {
         return $this->container['formFactory']->create($type, $data, $options);
     }
+
     /**
      * Creates and returns a form builder instance.
      *
@@ -418,7 +418,7 @@ abstract class Controller
     /**
      * Get a user from the tokenStorage.
      *
-     * @return mixed|null
+     * @return mixed
      *
      * @throws \LogicException If tokenStorage is not available
      *

@@ -43,7 +43,7 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
      * Create a simple associative array with
      * an ArrayCollection of SettingGroup.
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $settingGroup
+     * @param ArrayCollection $settingGroups
      *
      * @return array
      */
@@ -74,7 +74,8 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $jsonString
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
+     * @throws \Exception
      */
     public function deserialize($jsonString)
     {

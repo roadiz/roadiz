@@ -65,6 +65,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      * @param string $jsonString
      *
      * @return \RZ\Roadiz\Core\Entities\Setting
+     * @throws \Exception
      */
     public function deserialize($jsonString)
     {
