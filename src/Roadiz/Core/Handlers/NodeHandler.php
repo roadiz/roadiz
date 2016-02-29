@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -360,7 +361,7 @@ class NodeHandler
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -385,7 +386,7 @@ class NodeHandler
             }
 
             return $simpleArray;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
@@ -402,7 +403,7 @@ class NodeHandler
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -425,7 +426,7 @@ class NodeHandler
             }
 
             return $simpleArray;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

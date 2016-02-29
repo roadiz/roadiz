@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
+use Doctrine\ORM\NoResultException;
 
 /**
  * {@inheritdoc}
@@ -48,7 +49,7 @@ class UserRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
@@ -67,7 +68,7 @@ class UserRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }

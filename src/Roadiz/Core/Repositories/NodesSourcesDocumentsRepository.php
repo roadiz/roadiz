@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -52,7 +53,7 @@ class NodesSourcesDocumentsRepository extends EntityRepository
 
         try {
             return (int) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return 0;
         }
     }

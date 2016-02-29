@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
+use Doctrine\ORM\NoResultException;
 
 /**
  * {@inheritdoc}
@@ -49,7 +50,7 @@ class SettingGroupRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
@@ -70,7 +71,7 @@ class SettingGroupRepository extends EntityRepository
 
             return $ids;
 
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }

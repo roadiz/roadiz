@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -352,7 +353,7 @@ class TagRepository extends EntityRepository
         } else {
             try {
                 return $finalQuery->getResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
+            } catch (NoResultException $e) {
                 return new ArrayCollection();
             }
         }
@@ -388,7 +389,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -417,7 +418,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -441,7 +442,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -461,7 +462,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -484,7 +485,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -501,7 +502,7 @@ class TagRepository extends EntityRepository
             WHERE tr.defaultTranslation = true');
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -538,7 +539,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -571,7 +572,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -580,15 +581,15 @@ class TagRepository extends EntityRepository
      * Create a Criteria object from a search pattern and additionnal fields.
      *
      * @param string $pattern Search pattern
-     * @param \Doctrine\ORM\QueryBuilder $qb QueryBuilder to pass
+     * @param QueryBuilder $qb QueryBuilder to pass
      * @param array $criteria Additionnal criteria
      * @param string $alias SQL query table alias
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
+        QueryBuilder $qb,
         array &$criteria = [],
         $alias = "obj"
     ) {
@@ -636,9 +637,9 @@ class TagRepository extends EntityRepository
 
         try {
             return $qb->getQuery()->getSingleScalarResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (Query\QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -780,7 +781,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

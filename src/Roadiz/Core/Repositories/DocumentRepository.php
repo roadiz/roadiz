@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
@@ -402,7 +403,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return new ArrayCollection();
         }
     }
@@ -438,7 +439,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -467,7 +468,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -496,7 +497,7 @@ class DocumentRepository extends EntityRepository
             ->setParameter('raw', false);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -527,7 +528,7 @@ class DocumentRepository extends EntityRepository
             ->setParameter('raw', false);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -550,7 +551,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -602,7 +603,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

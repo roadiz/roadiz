@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register configuration services for dependency injection container.
  */
-abstract class AbstractConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
+abstract class AbstractConfigurationServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param \Pimple\Container $container [description]

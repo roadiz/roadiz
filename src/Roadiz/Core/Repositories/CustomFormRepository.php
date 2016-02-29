@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -48,7 +49,7 @@ class CustomFormRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -70,7 +71,7 @@ class CustomFormRepository extends EntityRepository
                         ->setParameter('node', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -93,7 +94,7 @@ class CustomFormRepository extends EntityRepository
                         ->setParameter('node', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
+use Doctrine\ORM\NoResultException;
 
 /**
  * {@inheritdoc}
@@ -46,7 +47,7 @@ class NodeTypeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -64,7 +65,7 @@ class NodeTypeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
@@ -366,9 +367,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
             try {
                 return $finalQuery->getSingleScalarResult();
-            } catch (\Doctrine\ORM\Query\QueryException $e) {
+            } catch (Query\QueryException $e) {
                 return 0;
-            } catch (\Doctrine\ORM\NoResultException $e) {
+            } catch (NoResultException $e) {
                 return 0;
             }
         }
@@ -470,9 +471,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         try {
             return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (Query\QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -496,9 +497,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (Query\QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

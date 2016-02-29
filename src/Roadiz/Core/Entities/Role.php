@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -40,7 +41,7 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\RoleRepository")
  * @ORM\Table(name="roles")
  */
-class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Role\RoleInterface
+class Role extends AbstractEntity implements RoleInterface
 {
     const ROLE_DEFAULT = 'ROLE_USER';
     const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';

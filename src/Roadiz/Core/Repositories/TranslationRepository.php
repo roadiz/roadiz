@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
 
 /**
  * {@inheritdoc}
@@ -53,7 +54,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -74,7 +75,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -95,7 +96,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
@@ -115,7 +116,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return array_map('current', $query->getScalarResult());
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
@@ -137,7 +138,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return array_map('current', $query->getScalarResult());
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
@@ -161,7 +162,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -185,7 +186,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -211,7 +212,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -237,7 +238,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

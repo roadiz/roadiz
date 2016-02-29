@@ -29,19 +29,25 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\Common\Cache\MemcacheCache;
+use Doctrine\Common\Cache\MemcachedCache;
+use Doctrine\Common\Cache\RedisCache;
+use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 
 /**
  * Register Doctrine services for dependency injection container.
  */
-class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
+class DoctrineServiceProvider implements ServiceProviderInterface
 {
     /**
      * Get cache driver according to config.yml entry.
@@ -68,12 +74,12 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'apc'
             ) {
-                $cache = new \Doctrine\Common\Cache\ApcuCache();
+                $cache = new ApcuCache();
             } elseif (extension_loaded('xcache') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'xcache'
             ) {
-                $cache = new \Doctrine\Common\Cache\XcacheCache();
+                $cache = new XcacheCache();
             } elseif (extension_loaded('memcache') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'memcache'
@@ -85,7 +91,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 } else {
                     $memcache->connect($host);
                 }
-                $cache = new \Doctrine\Common\Cache\MemcacheCache();
+                $cache = new MemcacheCache();
                 $cache->setMemcache($memcache);
             } elseif (extension_loaded('memcached') &&
                 !empty($cacheConfig['type']) &&
@@ -96,7 +102,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 $port = !empty($cacheConfig['port']) ? $cacheConfig['port'] : 11211;
                 $memcached->addServer($host, $port);
 
-                $cache = new \Doctrine\Common\Cache\MemcachedCache();
+                $cache = new MemcachedCache();
                 $cache->setMemcached($memcached);
             } elseif (extension_loaded('redis') &&
                 !empty($cacheConfig['type']) &&
@@ -109,7 +115,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 } else {
                     $redis->connect($host);
                 }
-                $cache = new \Doctrine\Common\Cache\RedisCache();
+                $cache = new RedisCache();
                 $cache->setRedis($redis);
             } else {
                 $cache = new ArrayCache();

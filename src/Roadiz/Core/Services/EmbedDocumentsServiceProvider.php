@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register Embed documents services for dependency injection container.
  */
-class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
+class EmbedDocumentsServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize Doctrine entity manager in DI container.

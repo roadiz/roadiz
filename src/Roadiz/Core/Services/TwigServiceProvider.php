@@ -33,6 +33,8 @@ use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
@@ -50,7 +52,7 @@ use \Parsedown;
 /**
  * Register Twig services for dependency injection container.
  */
-class TwigServiceProvider implements \Pimple\ServiceProviderInterface
+class TwigServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param \Pimple\Container $container [description]
@@ -123,7 +125,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(new UrlExtension(
                 $c['request'],
                 $c['nodesSourcesUrlCacheProvider'],
-                (boolean) \RZ\Roadiz\Core\Bags\SettingsBag::get('force_locale')
+                (boolean) SettingsBag::get('force_locale')
             ));
             $twig->addExtension(new RoadizTranslationExtension($c['request']));
 

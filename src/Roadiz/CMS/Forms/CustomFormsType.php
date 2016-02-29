@@ -108,7 +108,7 @@ class CustomFormsType extends AbstractType
             }
 
             if ($field->getType() === CustomFormField::MARKDOWN_T) {
-                $type = new \RZ\Roadiz\CMS\Forms\MarkdownType();
+                $type = new MarkdownType();
             } elseif ($field->getType() === CustomFormField::DOCUMENTS_T) {
                 $type = "file";
             }

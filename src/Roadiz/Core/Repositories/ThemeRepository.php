@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
+use Doctrine\ORM\NoResultException;
 
 /**
  * {@inheritdoc}
@@ -54,7 +55,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -81,7 +82,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -106,7 +107,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -135,7 +136,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -164,7 +165,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -197,7 +198,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -221,7 +222,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

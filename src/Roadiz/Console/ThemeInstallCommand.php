@@ -30,6 +30,11 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use RZ\Roadiz\CMS\Importers\NodesImporter;
+use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
+use RZ\Roadiz\CMS\Importers\RolesImporter;
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -113,7 +118,7 @@ class ThemeInstallCommand extends Command
         if (false !== $data && isset($data["importFiles"])) {
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
+                    RolesImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
                         $this->entityManager
                     );
@@ -122,7 +127,7 @@ class ThemeInstallCommand extends Command
             }
             if (isset($data["importFiles"]['settings'])) {
                 foreach ($data["importFiles"]['settings'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
+                    SettingsImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
                         $this->entityManager
                     );
@@ -131,7 +136,7 @@ class ThemeInstallCommand extends Command
             }
             if (isset($data["importFiles"]['nodetypes'])) {
                 foreach ($data["importFiles"]['nodetypes'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\NodeTypesImporter::importJsonFile(
+                    NodeTypesImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
                         $this->entityManager
                     );
@@ -140,7 +145,7 @@ class ThemeInstallCommand extends Command
             }
             if (isset($data["importFiles"]['tags'])) {
                 foreach ($data["importFiles"]['tags'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\TagsImporter::importJsonFile(
+                    TagsImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
                         $this->entityManager
                     );
@@ -162,7 +167,7 @@ class ThemeInstallCommand extends Command
         if (false !== $data && isset($data["importFiles"])) {
             if (isset($data["importFiles"]['nodes'])) {
                 foreach ($data["importFiles"]['nodes'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\NodesImporter::importJsonFile(
+                    NodesImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
                         $this->entityManager
                     );

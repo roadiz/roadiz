@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
@@ -38,7 +39,7 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 /**
  * Register assets services for dependency injection container.
  */
-class AssetsServiceProvider implements \Pimple\ServiceProviderInterface
+class AssetsServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container [description]

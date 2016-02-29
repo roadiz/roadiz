@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -39,7 +40,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * Register form services for dependency injection container.
  */
-class FormServiceProvider implements \Pimple\ServiceProviderInterface
+class FormServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {

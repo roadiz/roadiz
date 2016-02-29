@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
@@ -74,7 +75,7 @@ use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 /**
  * Register security services for dependency injection container.
  */
-class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
+class SecurityServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {

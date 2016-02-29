@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -395,7 +396,7 @@ class NodeRepository extends EntityRepository
         } else {
             try {
                 return $finalQuery->getResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
+            } catch (NoResultException $e) {
                 return new ArrayCollection();
             }
         }
@@ -437,7 +438,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -470,7 +471,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -568,7 +569,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -605,7 +606,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -643,7 +644,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -680,7 +681,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -720,7 +721,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -754,7 +755,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -791,7 +792,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -842,7 +843,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -889,7 +890,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -924,7 +925,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -960,7 +961,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1089,7 +1090,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
@@ -1111,7 +1112,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1134,7 +1135,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1164,7 +1165,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1195,7 +1196,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1217,7 +1218,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeB', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1240,7 +1241,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeB', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1270,7 +1271,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1301,7 +1302,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

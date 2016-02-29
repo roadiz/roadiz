@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register Mailer transport instance.
  */
-class MailerServiceProvider implements \Pimple\ServiceProviderInterface
+class MailerServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize Mailer objects.
