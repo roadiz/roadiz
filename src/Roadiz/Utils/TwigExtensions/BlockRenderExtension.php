@@ -94,6 +94,8 @@ class BlockRenderExtension extends \Twig_Extension
             } else {
                 throw new \Exception("Invalid name formatting for your theme.", 1);
             }
+        } else {
+            throw new \Exception("Invalid NodesSources.", 1);
         }
     }
 }
