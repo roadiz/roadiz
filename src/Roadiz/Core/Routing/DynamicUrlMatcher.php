@@ -50,7 +50,7 @@ class DynamicUrlMatcher extends UrlMatcher
     /**
      * @param RouteCollection $routes
      * @param RequestContext  $context
-     * @param Doctrine\ORM\EntityManager $em
+     * @param \Doctrine\ORM\EntityManager $em
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -68,7 +68,7 @@ class DynamicUrlMatcher extends UrlMatcher
     /**
      * Get Theme front controller class FQN.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return \RZ\Roadiz\Core\Entities\Theme
      */
     protected function findTheme()
     {
@@ -96,7 +96,7 @@ class DynamicUrlMatcher extends UrlMatcher
      *
      * @param array &$tokens
      *
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation
      */
     protected function parseTranslation(&$tokens)
     {

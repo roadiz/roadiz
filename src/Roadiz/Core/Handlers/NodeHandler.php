@@ -49,7 +49,7 @@ class NodeHandler
     private $node = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getNode()
     {
@@ -57,7 +57,7 @@ class NodeHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      *
      * @return $this
      */
@@ -215,9 +215,9 @@ class NodeHandler
     /**
      * Get node source by translation.
      *
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNodeSourceByTranslation($translation)
     {
@@ -604,7 +604,7 @@ class NodeHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param  boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getPrevious(
         array $criteria = null,
@@ -653,7 +653,7 @@ class NodeHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param  boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getNext(
         array $criteria = null,

@@ -43,7 +43,7 @@ class RoleJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with Role entity.
      *
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return array
      */
@@ -60,7 +60,7 @@ class RoleJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $jsonString
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return \RZ\Roadiz\Core\Entities\Role
      */
     public function deserialize($jsonString)
     {

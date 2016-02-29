@@ -63,7 +63,7 @@ abstract class AbstractEmbedFinder
     /**
      * Crawl and parse an API json feed for current embedID.
      *
-     * @return array | false
+     * @return array|boolean
      */
     public function getFeed()
     {
@@ -88,7 +88,7 @@ abstract class AbstractEmbedFinder
     /**
      * Crawl an embed API to get a Json feed.
      *
-     * @param string | null $search
+     * @param string|null $search
      *
      * @return string
      */
@@ -114,7 +114,7 @@ abstract class AbstractEmbedFinder
      * * id
      * * class
      *
-     * @param  array | null $args
+     * @param  array|null $args
      *
      * @return string
      */
@@ -167,7 +167,7 @@ abstract class AbstractEmbedFinder
     /**
      * Create a Document from an embed media
      *
-     * @param Pimple\Container $container description
+     * @param \Pimple\Container $container description
      *
      * @return Document
      */

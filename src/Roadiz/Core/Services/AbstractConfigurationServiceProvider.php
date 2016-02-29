@@ -37,7 +37,7 @@ use Pimple\Container;
 abstract class AbstractConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
      */
     public function register(Container $container)
     {

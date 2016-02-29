@@ -50,7 +50,7 @@ class NodesSourcesHandler
     /**
      * Create a new node-source handler with node-source to handle.
      *
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      */
     public function __construct($nodeSource)
     {
@@ -58,7 +58,7 @@ class NodesSourcesHandler
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getParentNodeSource()
     {
@@ -66,7 +66,7 @@ class NodesSourcesHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
      */
     public function setParentNodeSource($newparentNodeSource)
     {
@@ -284,7 +284,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getFirstChild(
         array $criteria = null,
@@ -334,7 +334,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getLastChild(
         array $criteria = null,
@@ -383,7 +383,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getFirstSibling(
         array $criteria = null,
@@ -409,7 +409,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getLastSibling(
         array $criteria = null,
@@ -435,7 +435,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getPrevious(
         array $criteria = null,
@@ -492,7 +492,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNext(
         array $criteria = null,

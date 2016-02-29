@@ -57,7 +57,7 @@ class SolariumNodeSource
      * @param NodesSources     $nodeSource
      * @param \Solarium_Client $client
      *
-     * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException If Solr server does not respond.
+     * @throws \RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException If Solr server does not respond.
      */
     public function __construct($nodeSource, Client $client = null)
     {
@@ -249,7 +249,7 @@ class SolariumNodeSource
     /**
      * Remove any document linked to current node-source.
      *
-     * @param Solarium\QueryType\Update\Query\Query $update
+     * @param \Solarium\QueryType\Update\Query\Query $update
      *
      * @return boolean
      */
@@ -267,7 +267,7 @@ class SolariumNodeSource
     /**
      * Remove current document from SearchEngine index.
      *
-     * @param Solarium\QueryType\Update\Query\Query $update
+     * @param \Solarium\QueryType\Update\Query\Query $update
      *
      * @return boolean
      *
@@ -314,14 +314,14 @@ class SolariumNodeSource
     }
 
     /**
-     * @param Solarium\QueryType\Update\Query\Document\DocumentInterface $document
+     * @param \Solarium\QueryType\Update\Query\Document\DocumentInterface $document
      */
     public function setDocument(DocumentInterface $document)
     {
         $this->document = $document;
     }
     /**
-     * @return Solarium\QueryType\Update\Query\Document\DocumentInterface
+     * @return \Solarium\QueryType\Update\Query\Document\DocumentInterface
      */
     public function getDocument()
     {

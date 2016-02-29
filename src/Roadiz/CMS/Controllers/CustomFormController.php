@@ -81,10 +81,10 @@ class CustomFormController extends AppController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request, $customFormId)
     {
@@ -125,10 +125,10 @@ class CustomFormController extends AppController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int  $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sentAction(Request $request, $customFormId)
     {
@@ -193,8 +193,8 @@ class CustomFormController extends AppController
      * Add a custom form answer into database.
      *
      * @param array $data Data array from POST form
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param Doctrine\ORM\EntityManager $em
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \Doctrine\ORM\EntityManager $em
      *
      * @return array $fieldsData
      */
@@ -247,9 +247,9 @@ class CustomFormController extends AppController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param boolean $forceExpanded
      *
      * @return \Symfony\Component\Form\Form
@@ -273,19 +273,19 @@ class CustomFormController extends AppController
      *     * form
      * * If form is validated, **RedirectResponse** will be returned.
      *
-     * @param Symfony\Component\HttpFoundation\Request          $request
-     * @param RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
-     * @param Symfony\Component\Form\FormFactoryInterface       $formFactory
-     * @param Doctrine\ORM\EntityManager                        $em
-     * @param \Twig_Environment                                 $twigEnv
-     * @param \Swift_Mailer                                     $mailer
-     * @param Symfony\Component\Translation\Translator          $translator
-     * @param Symfony\Component\HttpFoundation\RedirectResponse $redirection
-     * @param Psr\Log\LoggerInterface|null                      $logger
-     * @param boolean                                           $forceExpanded
-     * @param string|null                                       $emailSender
+     * @param \Symfony\Component\HttpFoundation\Request          $request
+     * @param \RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
+     * @param \Symfony\Component\Form\FormFactoryInterface       $formFactory
+     * @param \Doctrine\ORM\EntityManager                        $em
+     * @param \Twig_Environment                                  $twigEnv
+     * @param \Swift_Mailer                                      $mailer
+     * @param \Symfony\Component\Translation\Translator          $translator
+     * @param \Symfony\Component\HttpFoundation\RedirectResponse $redirection
+     * @param \Psr\Log\LoggerInterface|null                      $logger
+     * @param boolean                                            $forceExpanded
+     * @param string|null                                        $emailSender
      *
-     * @return array|Symfony\Component\HttpFoundation\RedirectResponse
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public static function prepareAndHandleCustomFormAssignation(
         Request $request,

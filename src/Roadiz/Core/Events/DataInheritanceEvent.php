@@ -49,7 +49,7 @@ class DataInheritanceEvent
     }
 
     /**
-     * @param Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
+     * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {

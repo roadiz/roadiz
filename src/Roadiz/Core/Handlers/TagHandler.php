@@ -40,7 +40,7 @@ class TagHandler
     private $tag = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function getTag()
     {
@@ -48,7 +48,7 @@ class TagHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param \RZ\Roadiz\Core\Entities\Tag $tag
      *
      * @return $this
      */

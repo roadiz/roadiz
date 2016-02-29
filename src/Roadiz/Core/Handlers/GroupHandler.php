@@ -42,7 +42,7 @@ class GroupHandler
     /**
      * Create a new group handler with group to handle.
      *
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      */
     public function __construct(Group $group)
     {
@@ -50,7 +50,7 @@ class GroupHandler
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Group
+     * @return \RZ\Roadiz\Core\Entities\Group
      */
     public function getGroup()
     {
@@ -58,7 +58,7 @@ class GroupHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
      */
@@ -72,7 +72,7 @@ class GroupHandler
     /**
      * This method does not flush ORM. You'll need to manually call it.
      *
-     * @param RZ\Roadiz\Core\Entities\Group $newGroup
+     * @param \RZ\Roadiz\Core\Entities\Group $newGroup
      *
      * @throws \RuntimeException If newGroup param is null
      */

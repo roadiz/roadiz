@@ -54,8 +54,8 @@ class CustomFormRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node          $node
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\Node          $node
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return array
      */
@@ -76,7 +76,7 @@ class CustomFormRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      * @param string                      $fieldName
      *
      * @return array

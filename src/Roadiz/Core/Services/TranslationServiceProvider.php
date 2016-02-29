@@ -41,9 +41,9 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
     /**
      * Initialize translator services.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      *
-     * @return Pimple\Container
+     * @return \Pimple\Container
      */
     public function register(Container $container)
     {

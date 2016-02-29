@@ -71,9 +71,9 @@ class NodesToNodes extends AbstractEntity
     /**
      * Create a new relation between two Nodes and a NodeTypeField.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $nodeA
-     * @param RZ\Roadiz\Core\Entities\Node $nodeB
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\Node $nodeA
+     * @param \RZ\Roadiz\Core\Entities\Node $nodeB
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
      */
     public function __construct(Node $nodeA, Node $nodeB, NodeTypeField $field)
     {

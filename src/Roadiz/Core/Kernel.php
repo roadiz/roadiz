@@ -284,7 +284,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * @return Pimple\Container
+     * @return \Pimple\Container
      */
     public function getContainer()
     {

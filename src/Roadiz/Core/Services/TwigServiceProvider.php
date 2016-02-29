@@ -53,7 +53,7 @@ use \Parsedown;
 class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
      */
     public function register(Container $container)
     {

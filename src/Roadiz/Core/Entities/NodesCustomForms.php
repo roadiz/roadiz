@@ -72,9 +72,9 @@ class NodesCustomForms extends AbstractEntity
     /**
      * Create a new relation between a Node, a CustomForm and a NodeTypeField.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
      */
     public function __construct(Node $node, CustomForm $customForm, NodeTypeField $field)
     {

@@ -38,8 +38,8 @@ use RZ\Roadiz\Core\Entities\Node;
 class NodesCustomFormsRepository extends EntityRepository
 {
     /**
-     * @param RZ\Roadiz\Core\Entities\Node  $node
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\Node  $node
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return integer
      */

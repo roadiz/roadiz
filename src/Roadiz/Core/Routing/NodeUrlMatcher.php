@@ -180,7 +180,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      *
      * @param array &$tokens
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     protected function parseFromUrlAlias(&$tokens)
     {
@@ -202,7 +202,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param array       &$tokens
      * @param Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     protected function parseNode(array &$tokens, Translation $translation)
     {

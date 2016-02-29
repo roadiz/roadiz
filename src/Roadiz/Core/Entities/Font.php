@@ -470,7 +470,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\FontHandler
+     * @return \RZ\Roadiz\Core\Handlers\FontHandler
      */
     public function getHandler()
     {

@@ -213,7 +213,7 @@ class Fixtures
      * Get role by name, and create it if does not exist.
      * @param string $name
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return \RZ\Roadiz\Core\Entities\Role
      */
     protected function getSetting($name)
     {

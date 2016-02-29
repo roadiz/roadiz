@@ -672,7 +672,7 @@ class Node extends AbstractDateTimedPositioned
     protected $newsletter;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Newsletter
+     * @return \RZ\Roadiz\Core\Entities\Newsletter
      */
     public function getNewsletter()
     {

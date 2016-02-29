@@ -59,7 +59,7 @@ class AppController extends Controller
     /**
      * Theme entity.
      *
-     * @var RZ\Roadiz\Core\Entities\Theme;
+     * @var \RZ\Roadiz\Core\Entities\Theme;
      */
     protected $theme = null;
     /**
@@ -368,7 +368,7 @@ class AppController extends Controller
     /**
      * Append objects to the global dependency injection container.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -429,7 +429,7 @@ class AppController extends Controller
      * @param Request $request
      * @param string  $msg
      * @param string  $level
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
@@ -450,7 +450,7 @@ class AppController extends Controller
      *
      * @param Request $request
      * @param string  $msg
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -463,7 +463,7 @@ class AppController extends Controller
      *
      * @param Request $request
      * @param string  $msg
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -520,7 +520,7 @@ class AppController extends Controller
      * currently unavailable.
      *
      * @param Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function maintenanceAction(Request $request)
     {

@@ -47,7 +47,7 @@ class UserViewer implements ViewableInterface
     protected $twig = null;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param \RZ\Roadiz\Core\Entities\User $user
      */
     public function __construct(User $user)
     {
@@ -55,7 +55,7 @@ class UserViewer implements ViewableInterface
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator
+     * @return \Symfony\Component\Translation\Translator
      */
     public function getTranslator()
     {

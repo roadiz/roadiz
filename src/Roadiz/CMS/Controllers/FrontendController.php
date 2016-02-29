@@ -238,7 +238,7 @@ class FrontendController extends AppController
      *
      * @param  Node $node
      *
-     * @return boolean|Symfony\Component\HttpFoundation\Response
+     * @return boolean|\Symfony\Component\HttpFoundation\Response
      */
     public function validateAccessForNodeWithStatus(Node $node)
     {
@@ -458,7 +458,7 @@ class FrontendController extends AppController
      * Add a request matcher on frontend to make securityTokenStorage
      * available even when no user has logged in.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {

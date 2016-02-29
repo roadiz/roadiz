@@ -45,8 +45,8 @@ class FullTextSearchHandler
     protected $logger = null;
 
     /**
-     * @param Solarium\Client $client
-     * @param Doctrine\ORM\EntityManager $em
+     * @param \Solarium\Client $client
+     * @param \Doctrine\ORM\EntityManager $em
      */
     public function __construct(
         Client $client,

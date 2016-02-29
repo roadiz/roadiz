@@ -41,7 +41,7 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 class AssetsServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
      */
     public function register(Container $container)
     {

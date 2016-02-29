@@ -42,7 +42,7 @@ class CustomFormsType extends AbstractType
     protected $forceExpanded;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      * @param boolean $forceExpanded
      */
     public function __construct(CustomForm $customForm, $forceExpanded = false)

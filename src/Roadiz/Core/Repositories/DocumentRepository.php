@@ -293,7 +293,7 @@ class DocumentRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
      * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return QueryBuilder
@@ -339,7 +339,7 @@ class DocumentRepository extends EntityRepository
      * This method allows to pre-filter Documents with a given translation.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
      * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
      * @return QueryBuilder
@@ -371,10 +371,10 @@ class DocumentRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findBy(
         array $criteria,
@@ -407,10 +407,10 @@ class DocumentRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param array|null                              $orderBy
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findOneBy(
         array $criteria,
@@ -440,9 +440,9 @@ class DocumentRepository extends EntityRepository
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array                                     $criteria
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param AuthorizationChecker|null                 $securityAuthorizationChecker
      *
      * @return int
      */
@@ -468,8 +468,8 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return array|null
      */
@@ -497,7 +497,7 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param string                              $fieldName
      *
      * @return array|null

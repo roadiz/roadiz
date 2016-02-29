@@ -166,14 +166,14 @@ class CustomForm extends AbstractDateTimed
      */
     private $closeDate = null;
     /**
-     * @return datetime
+     * @return \DateTime
      */
     public function getCloseDate()
     {
         return $this->closeDate;
     }
     /**
-     * @param datetime $closeDate
+     * @param \DateTime $closeDate
      *
      * @return $this
      */
@@ -238,7 +238,7 @@ class CustomForm extends AbstractDateTimed
     private $fields;
 
     /**
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getFields()
     {

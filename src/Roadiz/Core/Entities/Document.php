@@ -392,14 +392,14 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return RZ\Roadiz\Core\Viewers\DocumentViewer
+     * @return \RZ\Roadiz\Core\Viewers\DocumentViewer
      */
     public function getViewer()
     {
         return new DocumentViewer($this);
     }
     /**
-     * @return RZ\Roadiz\Core\Handlers\DocumentHandler
+     * @return \RZ\Roadiz\Core\Handlers\DocumentHandler
      */
     public function getHandler()
     {
@@ -413,7 +413,7 @@ class Document extends AbstractDateTimed
     protected $nodesSourcesByFields = null;
 
     /**
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getNodesSourcesByFields()
     {

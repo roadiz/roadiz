@@ -53,7 +53,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a Node.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      *
      * @return array
      */
@@ -181,7 +181,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $string
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function deserialize($string)
     {

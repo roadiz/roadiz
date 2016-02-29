@@ -50,7 +50,7 @@ class RolesBag
      *
      * @param string $roleName
      *
-     * @return RZ\Roadiz\core\Entities\Role
+     * @return \RZ\Roadiz\core\Entities\Role
      */
     public static function get($roleName)
     {

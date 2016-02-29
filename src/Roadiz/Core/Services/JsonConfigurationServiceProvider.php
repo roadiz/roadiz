@@ -39,7 +39,7 @@ use Pimple\Container;
 class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvider
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
      */
     public function register(Container $container)
     {

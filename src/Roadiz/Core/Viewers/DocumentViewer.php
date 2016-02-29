@@ -44,7 +44,7 @@ class DocumentViewer implements ViewableInterface
     private $embedFinder;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Document
+     * @return \RZ\Roadiz\Core\Entities\Document
      */
     public function getDocument()
     {
@@ -52,7 +52,7 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Document $document
+     * @param \RZ\Roadiz\Core\Entities\Document $document
      */
     public function __construct(Document $document)
     {
@@ -61,7 +61,7 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator.
+     * @return \Symfony\Component\Translation\Translator.
      */
     public function getTranslator()
     {

@@ -102,7 +102,7 @@ class Newsletter extends AbstractDateTimed
     private $node;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getNode()
     {
@@ -110,7 +110,7 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      *
      * @return Node
      */

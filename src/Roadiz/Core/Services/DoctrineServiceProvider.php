@@ -129,7 +129,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
      * This method can be called from InstallApp after updating
      * doctrine configuration.
      *
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
      */
     public function register(Container $container)
     {

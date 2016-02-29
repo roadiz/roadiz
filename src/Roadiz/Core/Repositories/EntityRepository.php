@@ -481,7 +481,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param string $pattern  Search pattern
      * @param array  $criteria Additionnal criteria
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function countSearchBy($pattern, array $criteria = [])
     {

@@ -409,7 +409,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findBy(
         array $criteria,
@@ -451,7 +451,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources|null
+     * @return \RZ\Roadiz\Core\Entities\NodesSources|null
      */
     public function findOneBy(
         array $criteria,

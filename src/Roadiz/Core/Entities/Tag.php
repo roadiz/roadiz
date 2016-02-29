@@ -263,7 +263,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\TagHandler
+     * @return \RZ\Roadiz\Core\Handlers\TagHandler
      */
     public function getHandler()
     {

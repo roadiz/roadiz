@@ -172,7 +172,7 @@ class TranslationViewer implements ViewableInterface
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator.
+     * @return \Symfony\Component\Translation\Translator.
      */
     public function getTranslator()
     {

@@ -415,7 +415,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Add a role object to current user.
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -430,7 +430,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Remove role from current user.
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -473,7 +473,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Insert user into group.
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
      */
@@ -488,7 +488,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Remove user from group
-     * @param RZ\Roadiz\Core\Entities\Group  $group
+     * @param \RZ\Roadiz\Core\Entities\Group  $group
      *
      * @return $this
      */
@@ -711,14 +711,14 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
      *
-     * @var RZ\Roadiz\Core\Entities\Node
+     * @var \RZ\Roadiz\Core\Entities\Node
      */
     private $chroot;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $chroot
+     * @param \RZ\Roadiz\Core\Entities\Node $chroot
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function setChroot(Node $chroot = null)
     {
@@ -728,7 +728,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getChroot()
     {
@@ -798,7 +798,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\UserHandler
+     * @return \RZ\Roadiz\Core\Handlers\UserHandler
      */
     public function getHandler()
     {
@@ -806,7 +806,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Viewers\UserViewer
+     * @return \RZ\Roadiz\Core\Viewers\UserViewer
      */
     public function getViewer()
     {

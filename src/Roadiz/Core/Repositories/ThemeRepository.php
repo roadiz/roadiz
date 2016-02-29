@@ -40,7 +40,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return \RZ\Roadiz\Core\Entities\Theme
      */
     public function findAvailableBackend()
     {
@@ -91,7 +91,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findFirstAvailableFrontend()
     {
@@ -116,7 +116,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findAvailableFrontendWithHost($hostname = "*")
     {
@@ -145,7 +145,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findFirstAvailableNonStaticFrontend()
     {
@@ -201,7 +201,7 @@ class ThemeRepository extends EntityRepository
      *
      * @param  string $className
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findOneByClassName($className)
     {

@@ -47,7 +47,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
     private $stopwatch;
 
     /**
-     * @param RZ\Roadiz\Core\Kernel $kernel
+     * @param \RZ\Roadiz\Core\Kernel $kernel
      */
     public function __construct(Kernel $kernel, Stopwatch $stopwatch = null)
     {

@@ -81,7 +81,7 @@ class UsersCreationCommand extends UsersCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return \RZ\Roadiz\Core\Entities\User
      */
     private function executeUserCreation(
         $username,

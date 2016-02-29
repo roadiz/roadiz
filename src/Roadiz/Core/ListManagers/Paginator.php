@@ -45,7 +45,7 @@ class Paginator
     protected $totalCount = null;
 
     /**
-     * @param Doctrine\ORM\EntityManager $em           Entity manager
+     * @param \Doctrine\ORM\EntityManager $em           Entity manager
      * @param string                     $entityName   Full qualified entity classname
      * @param integer                    $itemPerPages Item par pages
      * @param array                      $criteria     Force selection criteria
@@ -150,7 +150,7 @@ class Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function searchByAtPage(array $order = [], $page = 1)
     {

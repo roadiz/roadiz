@@ -51,7 +51,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      * Create a simple associative array with
      * an ArrayCollection of Role.
      *
-     * @param Doctrine\Common\Collections\ArrayCollection $roles
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles
      *
      * @return array
      */

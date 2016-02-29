@@ -72,14 +72,14 @@ class UrlAlias extends AbstractEntity
      */
     private $nodeSource;
     /**
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNodeSource()
     {
         return $this->nodeSource;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      *
      * @return $this
      */

@@ -42,7 +42,7 @@ class FolderRepository extends EntityRepository
      *
      * @param string $folderPath
      *
-     * @return RZ\Roadiz\Core\Entities\Folder
+     * @return \RZ\Roadiz\Core\Entities\Folder
      */
     public function findOrCreateByPath($folderPath)
     {
@@ -91,7 +91,7 @@ class FolderRepository extends EntityRepository
      *
      * @param string $folderPath
      *
-     * @return RZ\Roadiz\Core\Entities\Folder|null
+     * @return \RZ\Roadiz\Core\Entities\Folder|null
      */
     public function findByPath($folderPath)
     {

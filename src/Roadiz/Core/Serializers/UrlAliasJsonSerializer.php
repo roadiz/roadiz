@@ -42,7 +42,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a UrlAlias.
      *
-     * @param RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
+     * @param \RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
      *
      * @return array
      */
@@ -60,7 +60,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $jsonString
      *
-     * @return RZ\Roadiz\Core\Entities\UrlAlias
+     * @return \RZ\Roadiz\Core\Entities\UrlAlias
      */
     public function deserialize($jsonString)
     {

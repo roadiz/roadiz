@@ -105,7 +105,7 @@ class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Ro
     private $groups;
 
     /**
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getGroups()
     {
@@ -113,9 +113,9 @@ class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Ro
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
-     * @return RZ\Roadiz\Core\Entities\Group
+     * @return \RZ\Roadiz\Core\Entities\Group
      */
     public function addGroup(Group $group)
     {
@@ -127,9 +127,9 @@ class Role extends AbstractEntity implements \Symfony\Component\Security\Core\Ro
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
-     * @return RZ\Roadiz\Core\Entities\Group
+     * @return \RZ\Roadiz\Core\Entities\Group
      */
     public function removeGroup(Group $group)
     {

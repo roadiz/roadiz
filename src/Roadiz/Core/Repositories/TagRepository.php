@@ -359,9 +359,9 @@ class TagRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param array|null                              $orderBy
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findOneBy(
         array $criteria,
@@ -393,7 +393,7 @@ class TagRepository extends EntityRepository
      * Just like the countBy method but with relational criteria.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      *
      * @return int
      */
@@ -421,9 +421,9 @@ class TagRepository extends EntityRepository
 
     /**
      * @param integer                             $tagId
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function findWithTranslation($tagId, Translation $translation)
     {
@@ -444,7 +444,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      *
      * @return ArrayCollection
      */
@@ -466,7 +466,7 @@ class TagRepository extends EntityRepository
     /**
      * @param integer $tagId
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function findWithDefaultTranslation($tagId)
     {
@@ -504,8 +504,8 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
-     * @param RZ\Roadiz\Core\Entities\Tag         $parent
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Tag         $parent
      *
      * @return array Doctrine result array
      */
@@ -541,7 +541,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $parent
+     * @param \RZ\Roadiz\Core\Entities\Tag $parent
      *
      * @return ArrayCollection
      */
@@ -620,7 +620,7 @@ class TagRepository extends EntityRepository
      * @param string $pattern  Search pattern
      * @param array  $criteria Additionnal criteria
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -645,7 +645,7 @@ class TagRepository extends EntityRepository
      *
      * @param string $tagPath
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function findOrCreateByPath($tagPath)
     {
@@ -715,7 +715,7 @@ class TagRepository extends EntityRepository
      *
      * @param string $tagPath
      *
-     * @return RZ\Roadiz\Core\Entities\Tag|null
+     * @return \RZ\Roadiz\Core\Entities\Tag|null
      */
     public function findByPath($tagPath)
     {
