@@ -59,8 +59,8 @@ class GroupsImporter implements ImporterInterface
                     /*
                      * then persist each role
                      */
-                    $role = $em->getRepository('RZ\Roadiz\Core\Entities\Role')
-                               ->findOneByName($role->getName());
+                    $em->getRepository('RZ\Roadiz\Core\Entities\Role')
+                       ->findOneByName($role->getName());
                 }
                 $em->persist($group);
                 // Flush before creating group's roles.

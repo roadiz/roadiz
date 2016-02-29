@@ -45,7 +45,6 @@ abstract class AbstractConfigurationServiceProvider implements \Pimple\ServicePr
          * Every path to parse to find doctrine entities
          */
         $container['entitiesPaths'] = function ($c) {
-            $relPaths = [];
             $absPaths = [];
             if (isset($c['config']['entities'])) {
                 $relPaths = $c['config']['entities'];

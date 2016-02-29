@@ -201,7 +201,7 @@ class DownscaleImageManager
              * If raw document size is still outiside new maxSize cap
              * We keep intact raw document, and we just update downscaled doc.
              */
-            $rawDocument = $originalDocument->getRawDocument();
+            $originalDocument->getRawDocument();
             /*
              * Remove existing downscaled document.
              */

@@ -740,7 +740,7 @@ class TagRepository extends EntityRepository
                     ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
                     ->findOneByName($parentName);
                 if (null !== $ttagParent) {
-                    $parentTag = $ttagParent->getTag();
+                    $ttagParent->getTag();
                 }
             }
         }

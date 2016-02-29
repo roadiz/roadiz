@@ -61,7 +61,6 @@ class NodeTypesCreationCommand extends Command
     {
         $this->questionHelper = $this->getHelperSet()->get('question');
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('name');
 
         $nodetype = $this->entityManager
