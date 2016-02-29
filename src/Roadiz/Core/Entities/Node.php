@@ -32,8 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Tag;
+
+
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 

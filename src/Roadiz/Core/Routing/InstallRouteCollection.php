@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
+
 
 class InstallRouteCollection extends DeferredRouteCollection
 {

@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
+
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
+
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use Symfony\Component\Filesystem\Exception\IOException;

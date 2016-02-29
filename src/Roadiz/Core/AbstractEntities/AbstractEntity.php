@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

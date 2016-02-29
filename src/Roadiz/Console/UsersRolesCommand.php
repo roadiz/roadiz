@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Console\UsersCommand;
+
 use RZ\Roadiz\Core\Bags\RolesBag;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

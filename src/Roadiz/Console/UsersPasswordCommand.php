@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Console\UsersCommand;
+
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

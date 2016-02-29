@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Serializers;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Serializers\TagTranslationJsonSerializer;
+
 
 /**
  * Json Serialization handler for Node.

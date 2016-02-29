@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\CMS\Importers\ImporterInterface;
+
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

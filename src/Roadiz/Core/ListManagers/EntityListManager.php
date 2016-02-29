@@ -33,8 +33,8 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\NodePaginator;
-use RZ\Roadiz\Core\ListManagers\Paginator;
+
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 

@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Console\SolrCommand;
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

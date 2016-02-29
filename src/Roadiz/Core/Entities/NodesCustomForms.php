@@ -31,9 +31,8 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

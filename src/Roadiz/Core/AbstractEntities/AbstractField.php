@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
+
+
 use RZ\Roadiz\Utils\StringHandler;
 
 /**

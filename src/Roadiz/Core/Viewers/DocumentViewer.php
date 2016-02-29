@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Viewers\SvgDocumentViewer;
+
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use RZ\Roadiz\Utils\Asset\Packages;
 

@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Console\Tools;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
+
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;

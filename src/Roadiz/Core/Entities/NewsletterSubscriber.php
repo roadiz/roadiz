@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Entities\Newsletter;
-use RZ\Roadiz\Core\Entities\Subscriber;
+
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

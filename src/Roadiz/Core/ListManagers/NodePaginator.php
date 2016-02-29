@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\Paginator;
+
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**

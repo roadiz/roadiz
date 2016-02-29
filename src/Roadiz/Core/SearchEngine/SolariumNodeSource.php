@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use RZ\Roadiz\Core\Entities\Node;
+
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;

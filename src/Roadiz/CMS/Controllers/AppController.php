@@ -31,7 +31,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
-use RZ\Roadiz\CMS\Controllers\Controller;
+
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -43,7 +43,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Route;
+
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
