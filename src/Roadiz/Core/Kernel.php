@@ -113,7 +113,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function register(Container $container)
     {
-        $container['stopwatch'] = function ($c) {
+        $container['stopwatch'] = function () {
             return new Stopwatch();
         };
 
@@ -121,7 +121,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return new DebugPanel($c);
         };
 
-        $container['dispatcher'] = function ($c) {
+        $container['dispatcher'] = function () {
             return new EventDispatcher();
         };
 

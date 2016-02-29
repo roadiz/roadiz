@@ -55,7 +55,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
         };
 
-        $container['requestStack'] = function ($c) {
+        $container['requestStack'] = function () {
             $stack = new RequestStack();
             return $stack;
         };
@@ -66,7 +66,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return $rc;
         };
 
-        $container['resolver'] = function ($c) {
+        $container['resolver'] = function () {
             return new ControllerResolver();
         };
 

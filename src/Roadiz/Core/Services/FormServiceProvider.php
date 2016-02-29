@@ -43,7 +43,7 @@ class FormServiceProvider implements \Pimple\ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['formValidator'] = function ($c) {
+        $container['formValidator'] = function () {
             return Validation::createValidator();
         };
 

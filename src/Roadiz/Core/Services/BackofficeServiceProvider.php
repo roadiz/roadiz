@@ -55,7 +55,7 @@ class BackofficeServiceProvider implements \Pimple\ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['backoffice.entries'] = function ($c) {
+        $container['backoffice.entries'] = function () {
             return [
 
             ];

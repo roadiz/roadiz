@@ -47,7 +47,7 @@ class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvi
         /*
          * Inject app config
          */
-        $container['config'] = function ($c) {
+        $container['config'] = function () {
             $configuration = new Configuration();
 
             if (false !== $configuration->load()) {

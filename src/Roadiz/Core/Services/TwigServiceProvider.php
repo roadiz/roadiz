@@ -64,7 +64,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Return every paths to search for twig templates.
          */
-        $container['twig.loaderFileSystem'] = function ($c) {
+        $container['twig.loaderFileSystem'] = function () {
             $vendorDir = realpath(ROADIZ_ROOT . '/vendor');
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
@@ -141,7 +141,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Twig form renderer extension
          */
-        $container['twig.formRenderer'] = function ($c) {
+        $container['twig.formRenderer'] = function () {
 
             return new TwigRendererEngine([
                 'form_div_layout.html.twig',
@@ -159,7 +159,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Markdown extension
          */
-        $container['twig.markdownExtension'] = function ($c) {
+        $container['twig.markdownExtension'] = function () {
 
             return new \Twig_SimpleFilter('markdown', function ($object) {
                 return Parsedown::instance()->text($object);
@@ -169,7 +169,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * InlineMarkdown extension
          */
-        $container['twig.inlineMarkdownExtension'] = function ($c) {
+        $container['twig.inlineMarkdownExtension'] = function () {
 
             return new \Twig_SimpleFilter('inlineMarkdown', function ($object) {
                 return Parsedown::instance()->line($object);
@@ -179,7 +179,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Central Truncate extension
          */
-        $container['twig.centralTruncateExtension'] = function ($c) {
+        $container['twig.centralTruncateExtension'] = function () {
 
             return new \Twig_SimpleFilter(
                 'centralTruncate',

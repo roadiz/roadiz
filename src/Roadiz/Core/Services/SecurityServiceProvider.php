@@ -185,14 +185,14 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
-        $container['accessMap'] = function ($c) {
+        $container['accessMap'] = function () {
             return new AccessMap();
         };
 
         $container['userProvider'] = function ($c) {
             return new UserProvider($c['em']);
         };
-        $container['userChecker'] = function ($c) {
+        $container['userChecker'] = function () {
             return new UserChecker();
         };
 
@@ -284,7 +284,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['accessDecisionManager']
             );
         };
-        $container['securityTokenStorage'] = function ($c) {
+        $container['securityTokenStorage'] = function () {
             return new TokenStorage();
         };
 
@@ -319,7 +319,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
-        $container['firewallMap'] = function ($c) {
+        $container['firewallMap'] = function () {
             return new FirewallMap();
         };
 
@@ -345,7 +345,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
-        $container['passwordEncoder'] = function ($c) {
+        $container['passwordEncoder'] = function () {
             return new MessageDigestPasswordEncoder('sha512', true, 5000);
         };
 

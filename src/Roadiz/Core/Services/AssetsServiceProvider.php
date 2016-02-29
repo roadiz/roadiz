@@ -45,7 +45,7 @@ class AssetsServiceProvider implements \Pimple\ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['versionStrategy'] = function ($c) {
+        $container['versionStrategy'] = function () {
             return new EmptyVersionStrategy();
         };
 
