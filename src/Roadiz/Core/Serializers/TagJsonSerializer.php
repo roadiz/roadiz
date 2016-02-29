@@ -42,7 +42,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a Tag.
      *
-     * @param \RZ\Roadiz\Core\Entities\Tag $tag
+     * @param \RZ\Roadiz\Core\Entities\Tag[] $tags
      *
      * @return array
      */

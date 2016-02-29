@@ -43,7 +43,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      *
      * @param Request $request
      * @param NodesSources $nodeSource
-     * @param boolear $forceLocale
+     * @param bool $forceLocale
      */
     public function __construct(
         Request $request = null,

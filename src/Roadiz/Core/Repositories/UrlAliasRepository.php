@@ -60,9 +60,10 @@ class UrlAliasRepository extends EntityRepository
     /**
      * Get all url aliases linked to given node.
      *
-     * @param integer $nodeId
+     * @param $alias
      *
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOnePartialByAlias($alias)
     {

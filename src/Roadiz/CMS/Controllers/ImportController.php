@@ -78,6 +78,7 @@ class ImportController extends AppController
     /**
      * Import theme's Settings file.
      *
+     * @param Request $request
      * @param int $themeId
      *
      * @return string
@@ -94,6 +95,7 @@ class ImportController extends AppController
     /**
      * Import theme's Roles file.
      *
+     * @param Request $request
      * @param int $themeId
      *
      * @return string
@@ -110,6 +112,7 @@ class ImportController extends AppController
     /**
      * Import theme's Groups file.
      *
+     * @param Request $request
      * @param int $themeId
      *
      * @return string
@@ -126,6 +129,7 @@ class ImportController extends AppController
     /**
      * Import NodeTypes file.
      *
+     * @param Request $request
      * @param int $themeId
      *
      * @return string
@@ -142,6 +146,7 @@ class ImportController extends AppController
     /**
      * Import Tags file.
      *
+     * @param Request $request
      * @param int $themeId
      *
      * @return string
@@ -158,6 +163,8 @@ class ImportController extends AppController
     /**
      * Import Nodes file.
      *
+     * @param Request $request
+     * @param null $themeId
      *
      * @return string
      */
@@ -220,6 +227,8 @@ class ImportController extends AppController
     }
 
     /**
+     * @param string $message
+     *
      * @return Response
      */
     public function throw404($message = '')

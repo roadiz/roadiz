@@ -453,6 +453,8 @@ class NodeHandler
     /**
      * Return if part of Node offspring.
      *
+     * @param Node $relative
+     *
      * @return bool
      */
     public function isRelatedToNode(Node $relative)

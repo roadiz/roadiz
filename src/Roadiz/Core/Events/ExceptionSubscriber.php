@@ -99,6 +99,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
      * Create an emergency response to be sent instead of error logs.
      *
      * @param \Exception $e
+     * @param Request $request
      *
      * @return Response
      */

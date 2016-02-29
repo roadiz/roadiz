@@ -64,6 +64,7 @@ class BlockRenderExtension extends \Twig_Extension
      * @param array $assignation
      *
      * @return string
+     * @throws \Exception
      */
     public function blockRender(NodesSources $nodeSource, $themeName = "DefaultTheme", $assignation = [])
     {

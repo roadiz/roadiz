@@ -46,9 +46,8 @@ class RoadizRouteCollection extends DeferredRouteCollection
     protected $themeResolver;
 
     /**
-     * @param string $backendClassname
-     * @param array  $frontendThemes
-     * @param string $assetsHost
+     * @param ThemeResolver $themeResolver
+     * @param Stopwatch $stopwatch
      */
     public function __construct(
         ThemeResolver $themeResolver,

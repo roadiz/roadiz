@@ -229,6 +229,7 @@ class TagRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
+     * @param null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
@@ -576,10 +577,10 @@ class TagRepository extends EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
+     * @param string $pattern Search pattern
+     * @param \Doctrine\ORM\QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
      *
      * @return \Doctrine\ORM\QueryBuilder
      */

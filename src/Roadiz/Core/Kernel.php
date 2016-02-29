@@ -73,6 +73,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * @param string $environment
      * @param boolean $debug
+     * @param bool $preview
      */
     public function __construct($environment, $debug, $preview = false)
     {
@@ -272,6 +273,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * Return unique instance of Kernel.
      *
+     * @param string $environment
+     * @param bool $debug
+     * @param bool $preview
+     *
      * @return Kernel
      */
     public static function getInstance($environment = 'prod', $debug = false, $preview = false)
@@ -441,6 +446,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      *
      * @deprecated since version 2.6, to be removed in 3.0.
+     * @param string $class
+     *
+     * @return bool
      */
     public function isClassInActiveBundle($class)
     {

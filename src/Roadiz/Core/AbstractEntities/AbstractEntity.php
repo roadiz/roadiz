@@ -55,7 +55,9 @@ abstract class AbstractEntity implements PersistableInterface
     }
 
     /**
-     * @return integer
+     * @param $id
+     *
+     * @return int
      */
     public function setId($id)
     {

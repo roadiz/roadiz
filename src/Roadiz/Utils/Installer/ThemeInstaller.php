@@ -41,7 +41,7 @@ class ThemeInstaller
     /**
      * get Theme informations.
      *
-     * @param \RZ\Roadiz\Core\Entities\Theme $theme
+     * @param $classname
      *
      * @return array
      */

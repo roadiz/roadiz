@@ -149,10 +149,10 @@ class DocumentRepository extends EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
+     * @param string $pattern Search pattern
+     * @param \Doctrine\ORM\QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -235,6 +235,7 @@ class DocumentRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
+     * @param null $translation
      */
     protected function applyTranslationByFolder(
         array &$criteria,
@@ -286,15 +287,15 @@ class DocumentRepository extends EntityRepository
             }
         }
     }
+
     /**
      * This method allows to pre-filter Documents with a given translation.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
+     * @param Translation $translation
      *
      * @return QueryBuilder
      */
@@ -335,12 +336,12 @@ class DocumentRepository extends EntityRepository
 
         return $qb;
     }
+
     /**
      * This method allows to pre-filter Documents with a given translation.
      *
-     * @param array                                   $criteria
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param Translation $translation
      *
      * @return QueryBuilder
      */
@@ -364,17 +365,18 @@ class DocumentRepository extends EntityRepository
 
         return $qb;
     }
+
     /**
      * Just like the findBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
      * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
+     *
      */
     public function findBy(
         array $criteria,
@@ -402,15 +404,16 @@ class DocumentRepository extends EntityRepository
             return new ArrayCollection();
         }
     }
+
     /**
      * Just like the findOneBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
+     * @param array $criteria
+     * @param array|null $orderBy
      * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
+     *
      */
     public function findOneBy(
         array $criteria,
@@ -437,12 +440,12 @@ class DocumentRepository extends EntityRepository
             return null;
         }
     }
+
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array                                     $criteria
+     * @param array $criteria
      * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                 $securityAuthorizationChecker
      *
      * @return int
      */

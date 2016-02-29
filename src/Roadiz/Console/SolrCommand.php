@@ -106,8 +106,7 @@ solr:
     /**
      * Delete Solr index and loop over every NodesSources to index them again.
      *
-     * @param \Solarium\Client $this->solr
-     * @param OutputInterface  $output
+     * @param OutputInterface $output
      */
     protected function reindexNodeSources(OutputInterface $output)
     {

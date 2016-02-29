@@ -54,9 +54,10 @@ class UniqueUsernameValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $name
+     * @param $username
+     * @param $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function emailExists($username, $entityManager)
     {

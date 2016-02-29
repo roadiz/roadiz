@@ -46,10 +46,11 @@ class DownscaleImageManager
     protected $em;
 
     /**
-     * @param EntityManager $imageDriver
-     * @param string  $imageDriver
+     * @param EntityManager $em
+     * @param LoggerInterface $logger
+     * @param string $imageDriver
      * @param integer $maxPixelSize
-     * @param string  $rawImageSuffix
+     * @param string $rawImageSuffix
      */
     public function __construct(
         EntityManager $em,

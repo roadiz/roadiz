@@ -38,7 +38,7 @@ class SettingGroupRepository extends EntityRepository
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($name)
     {
@@ -55,9 +55,7 @@ class SettingGroupRepository extends EntityRepository
     }
 
     /**
-     * @param string $name
-     *
-     * @return boolean
+     * @return bool
      */
     public function findAllNames()
     {

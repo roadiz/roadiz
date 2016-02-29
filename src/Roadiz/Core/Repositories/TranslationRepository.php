@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * {@inheritdoc}
@@ -145,6 +145,8 @@ class TranslationRepository extends EntityRepository
     /**
      * Get all available translations by locale.
      *
+     * @param $locale
+     *
      * @return ArrayCollection
      */
     public function findByLocaleAndAvailable($locale)
@@ -166,6 +168,8 @@ class TranslationRepository extends EntityRepository
 
     /**
      * Get all available translations by overrideLocale.
+     *
+     * @param $overrideLocale
      *
      * @return ArrayCollection
      */
@@ -189,7 +193,10 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by locale.
      *
+     * @param $locale
+     *
      * @return \RZ\Roadiz\Core\Entities\Translation
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByLocaleAndAvailable($locale)
     {
@@ -212,7 +219,10 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by overrideLocale.
      *
+     * @param $overrideLocale
+     *
      * @return \RZ\Roadiz\Core\Entities\Translation
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByOverrideLocaleAndAvailable($overrideLocale)
     {

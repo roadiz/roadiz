@@ -160,6 +160,7 @@ class NodeRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
+     * @param null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
@@ -290,17 +291,17 @@ class NodeRepository extends EntityRepository
 
         return $qb;
     }
+
     /**
      * Create a securized count query with node.published = true if user is
      * not a Backend user and if authorizationChecker is defined.
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array                                   $criteria
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $authorizationChecker
-     * @param AuthorizationChecker|null                    $authorizationChecker
-     * @param boolean                     $preview
-     *
+     * @param array $criteria
+     * @param Translation $translation
+     * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
@@ -998,12 +999,11 @@ class NodeRepository extends EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param string $pattern Search pattern
+     * @param QueryBuilder|DoctrineORMQueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,

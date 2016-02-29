@@ -79,9 +79,7 @@ class SettingRepository extends EntityRepository
     }
 
     /**
-     * @param string $name
-     *
-     * @return boolean
+     * @return bool
      */
     public function findAllNames()
     {

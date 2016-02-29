@@ -290,7 +290,9 @@ class Fixtures
     /**
      * Install theme and return its ID.
      *
-     * @return integer
+     * @param $classname
+     *
+     * @return int
      */
     public function installFrontendTheme($classname)
     {

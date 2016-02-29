@@ -378,9 +378,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Create a LIKE comparison with entity texts colunms.
      *
-     * @param string                  $pattern
-     * @param DoctrineORMQueryBuilder $qb
-     * @param string                  $alias
+     * @param string $pattern
+     * @param QueryBuilder $qb
+     * @param string $alias
      */
     protected function classicLikeComparison(
         $pattern,
@@ -413,12 +413,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param string $pattern Search pattern
+     * @param QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,

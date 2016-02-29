@@ -50,10 +50,11 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     {
         $this->em = $em;
     }
+
     /**
      * Create a simple associative array with a Node.
      *
-     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node[] $nodes
      *
      * @return array
      */

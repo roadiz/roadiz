@@ -91,7 +91,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @param int $minValue
+     * @param $minLength
      *
      * @return $this
      */

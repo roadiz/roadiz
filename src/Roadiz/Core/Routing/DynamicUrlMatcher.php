@@ -48,9 +48,9 @@ class DynamicUrlMatcher extends UrlMatcher
     protected $logger = null;
 
     /**
-     * @param RouteCollection $routes
-     * @param RequestContext  $context
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param RequestContext $context
+     * @param EntityManager $em
+     * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      */
     public function __construct(

@@ -40,6 +40,8 @@ class RecaptchaValidator extends ConstraintValidator
     /**
      *
      * @see \Symfony\Component\Validator\ConstraintValidator::validate()
+     * @param mixed $data
+     * @param Constraint $constraint
      */
     public function validate($data, Constraint $constraint)
     {
@@ -56,9 +58,10 @@ class RecaptchaValidator extends ConstraintValidator
     /**
      * Makes a request to recaptcha service and checks if recaptcha field is valid.
      *
-     * @param string $challengeField
+     * @param Constraint $constraint
      * @param string $responseField
-     * @return boolean
+     *
+     * @return bool
      */
     protected function check(Constraint $constraint, $responseField)
     {

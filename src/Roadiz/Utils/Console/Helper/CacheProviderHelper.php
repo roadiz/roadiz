@@ -40,7 +40,7 @@ class CacheProviderHelper extends Helper
     private $cacheProvider;
 
     /**
-     * @param CacheProvider|null $solr
+     * @param CacheProvider $cacheProvider
      */
     public function __construct(CacheProvider $cacheProvider)
     {

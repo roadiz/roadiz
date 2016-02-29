@@ -116,7 +116,10 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
+     * @param string $hostname
+     *
      * @return \RZ\Roadiz\Core\Entities\Theme|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findAvailableFrontendWithHost($hostname = "*")
     {
@@ -174,7 +177,10 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @param string $hostname
+     *
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findAvailableNonStaticFrontendWithHost($hostname = "*")
     {

@@ -37,7 +37,7 @@ class TagTranslationJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeSource $nodeSource
+     * @param mixed $tt
      *
      * @return array
      */

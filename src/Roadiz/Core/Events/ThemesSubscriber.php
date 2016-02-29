@@ -44,7 +44,8 @@ class ThemesSubscriber implements EventSubscriberInterface
     private $stopwatch;
 
     /**
-     * @param \RZ\Roadiz\Core\Kernel $kernel
+     * @param Kernel $kernel
+     * @param Stopwatch $stopwatch
      */
     public function __construct(Kernel $kernel, Stopwatch $stopwatch)
     {
