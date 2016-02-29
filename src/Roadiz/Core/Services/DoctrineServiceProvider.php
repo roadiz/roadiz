@@ -68,7 +68,7 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'apc'
             ) {
-                $cache = new \Doctrine\Common\Cache\ApcCache();
+                $cache = new \Doctrine\Common\Cache\ApcuCache();
             } elseif (extension_loaded('xcache') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'xcache'
