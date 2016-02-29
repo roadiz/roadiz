@@ -70,7 +70,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $jsonString
      *
-     * @return RZ\Roadiz\Core\Entities\NodeTypeField
+     * @return \RZ\Roadiz\Core\Entities\NodeTypeField
      */
     public function deserialize($jsonString)
     {

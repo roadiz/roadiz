@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Bags;
 
+use RZ\Roadiz\core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 
 
@@ -50,7 +51,7 @@ class RolesBag
      *
      * @param string $roleName
      *
-     * @return \RZ\Roadiz\core\Entities\Role
+     * @return Role
      */
     public static function get($roleName)
     {

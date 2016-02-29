@@ -32,9 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-
-
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -70,6 +69,7 @@ class Node extends AbstractDateTimedPositioned
      * @ORM\Column(type="string", name="node_name", unique=true)
      */
     private $nodeName;
+
     /**
      * @return string
      */
@@ -77,6 +77,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->nodeName;
     }
+
     /**
      * @param string $nodeName
      *
@@ -127,6 +128,7 @@ class Node extends AbstractDateTimedPositioned
      * @ORM\Column(type="boolean", name="home", nullable=false, options={"default" = false})
      */
     private $home = false;
+
     /**
      * @return boolean
      */
@@ -134,6 +136,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return (boolean) $this->home;
     }
+
     /**
      * @param boolean $home
      *
@@ -145,10 +148,12 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
+
     /**
      * @return boolean
      */
@@ -156,6 +161,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->visible;
     }
+
     /**
      * @param boolean $visible
      *
@@ -199,6 +205,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return ($this->status === Node::PUBLISHED);
     }
+
     /**
      * @return boolean
      */
@@ -206,6 +213,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return ($this->status === Node::PENDING);
     }
+
     /**
      * @return boolean
      */
@@ -213,6 +221,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return ($this->status === Node::DRAFT);
     }
+
     /**
      * @return boolean
      */
@@ -232,6 +241,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @param boolean $pending
      *
@@ -243,6 +253,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
@@ -325,6 +336,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return ($this->status === Node::ARCHIVED);
     }
+
     /**
      * @param boolean $archived
      *
@@ -341,6 +353,7 @@ class Node extends AbstractDateTimedPositioned
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $sterile = false;
+
     /**
      * @return boolean
      */
@@ -348,6 +361,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->sterile;
     }
+
     /**
      * @param boolean $sterile
      *
@@ -384,6 +398,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @ORM\Column(type="string", name="children_order_direction", length=4)
      */
@@ -476,6 +491,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->children;
     }
+
     /**
      * @param Node $child
      *
@@ -489,6 +505,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @param Node $child
      *
@@ -509,6 +526,7 @@ class Node extends AbstractDateTimedPositioned
      * @var ArrayCollection
      */
     private $tags = null;
+
     /**
      * @return ArrayCollection
      */
@@ -516,6 +534,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->tags;
     }
+
     /**
      * @param Tag $tag
      *
@@ -529,6 +548,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @param Tag $tag
      *
@@ -548,6 +568,7 @@ class Node extends AbstractDateTimedPositioned
      * @var ArrayCollection
      */
     private $customForms = null;
+
     /**
      * @return ArrayCollection
      */
@@ -562,6 +583,7 @@ class Node extends AbstractDateTimedPositioned
      * @var ArrayCollection
      */
     private $stackTypes = null;
+
     /**
      * @return ArrayCollection
      */
@@ -569,6 +591,7 @@ class Node extends AbstractDateTimedPositioned
     {
         return $this->stackTypes;
     }
+
     /**
      * @param NodeType $stackType
      *
@@ -582,6 +605,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @param NodeType $stackType
      *
@@ -622,6 +646,7 @@ class Node extends AbstractDateTimedPositioned
 
         return $this;
     }
+
     /**
      * @param NodesSources $ns
      *
@@ -695,6 +720,7 @@ class Node extends AbstractDateTimedPositioned
         $this->customForms = new ArrayCollection();
         $this->setNodeType($nodeType);
     }
+
     /**
      * @return string
      */
@@ -703,6 +729,7 @@ class Node extends AbstractDateTimedPositioned
         return $this->getId() . " — " . $this->getNodeName() . " — " . $this->getNodeType()->getName() .
             " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
+
     /**
      * @return string
      */

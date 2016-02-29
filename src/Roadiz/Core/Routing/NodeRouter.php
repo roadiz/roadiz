@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Stopwatch\Stopwatch;

@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -150,15 +152,15 @@ class DocumentRepository extends EntityRepository
      * Create a Criteria object from a search pattern and additionnal fields.
      *
      * @param string $pattern Search pattern
-     * @param \Doctrine\ORM\QueryBuilder $qb QueryBuilder to pass
+     * @param QueryBuilder $qb QueryBuilder to pass
      * @param array $criteria Additionnal criteria
      * @param string $alias SQL query table alias
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
+        QueryBuilder $qb,
         array &$criteria = [],
         $alias = "obj"
     ) {
@@ -373,7 +375,7 @@ class DocumentRepository extends EntityRepository
      * @param array|null $orderBy
      * @param integer|null $limit
      * @param integer|null $offset
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param Translation|null $translation
      *
      * @return ArrayCollection
      *
@@ -410,7 +412,7 @@ class DocumentRepository extends EntityRepository
      *
      * @param array $criteria
      * @param array|null $orderBy
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param Translation|null $translation
      *
      * @return ArrayCollection
      *
@@ -445,7 +447,7 @@ class DocumentRepository extends EntityRepository
      * Just like the countBy method but with relational criteria.
      *
      * @param array $criteria
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param Translation|null $translation
      *
      * @return int
      */

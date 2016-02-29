@@ -89,7 +89,7 @@ class NodesSourcesPaginator extends Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByAtPage(array $order = [], $page = 1)
     {

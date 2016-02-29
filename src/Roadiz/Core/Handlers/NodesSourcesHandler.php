@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
@@ -227,10 +228,10 @@ class NodesSourcesHandler
     /**
      * Get children nodes sources to lock with current translation.
      *
-     * @param array|null                                      $criteria Additionnal criteria
-     * @param array|null                                      $order Non default ordering
+     * @param array|null                  $criteria Additionnal criteria
+     * @param array|null                  $order Non default ordering
      * @param AuthorizationChecker|null   $authorizationChecker
-     * @param boolean $preview
+     * @param boolean                     $preview
      *
      * @return ArrayCollection NodesSources collection
      */
@@ -280,10 +281,10 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param array|null                $criteria
+     * @param array|null                $order
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      *
      * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
@@ -333,7 +334,7 @@ class NodesSourcesHandler
      * @param  array|null           $criteria
      * @param  array|null           $order
      * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param  boolean $preview
      *
      * @return \RZ\Roadiz\Core\Entities\NodesSources
      */

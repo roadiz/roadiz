@@ -39,7 +39,7 @@ class CustomFormRepository extends EntityRepository
     /**
      * Get all custom-form names from PARTIAL objects.
      *
-     * @return ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findAllNames()
     {

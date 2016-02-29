@@ -375,7 +375,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Names of current User roles
      * to be compatible with symfony security scheme
-     * @var Array
+     * @var array
      */
     private $rolesNames = null;
 

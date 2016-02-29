@@ -46,7 +46,7 @@ class CustomFormFieldHandler
         return $this->customFormField;
     }
     /**
-     * @param CustomFormeField $customFormField
+     * @param CustomFormField $customFormField
      *
      * @return $this
      */
