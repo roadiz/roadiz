@@ -45,10 +45,10 @@ class Paginator
     protected $totalCount = null;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em           Entity manager
-     * @param string                     $entityName   Full qualified entity classname
-     * @param integer                    $itemPerPages Item par pages
-     * @param array                      $criteria     Force selection criteria
+     * @param EntityManager $em           Entity manager
+     * @param string        $entityName   Full qualified entity classname
+     * @param integer       $itemPerPages Item par pages
+     * @param array         $criteria     Force selection criteria
      */
     public function __construct(
         EntityManager $em,
@@ -114,7 +114,7 @@ class Paginator
      *
      * **Warning** : EntityRepository must implements *countBy* method
      *
-     * @return integer
+     * @return float
      */
     public function getPageCount()
     {

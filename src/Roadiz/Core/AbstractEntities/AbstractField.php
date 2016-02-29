@@ -30,8 +30,6 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use Doctrine\ORM\Mapping as ORM;
-
-
 use RZ\Roadiz\Utils\StringHandler;
 
 /**

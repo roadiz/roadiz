@@ -56,7 +56,6 @@ class SolariumNodeSource
      *
      * @param NodesSources $nodeSource
      * @param Client $client
-     *
      */
     public function __construct($nodeSource, Client $client = null)
     {
@@ -91,6 +90,7 @@ class SolariumNodeSource
                 return true;
             }
         }
+        return false;
     }
 
     /**
@@ -219,7 +219,7 @@ class SolariumNodeSource
      *
      * Use this method **only** when you need to re-index a single NodeSources.
      *
-     * @return boolean
+     * @return \Solarium\QueryType\Update\Result
      */
     public function updateAndCommit()
     {

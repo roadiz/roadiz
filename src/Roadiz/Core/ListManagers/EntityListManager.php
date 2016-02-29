@@ -33,8 +33,6 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 

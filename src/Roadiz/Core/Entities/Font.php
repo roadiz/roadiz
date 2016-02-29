@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -160,10 +161,19 @@ class Font extends AbstractDateTimed
         }
     }
 
+    /** @var File */
     protected $eotFile;
+
+    /** @var File */
     protected $woffFile;
+
+    /** @var File */
     protected $woff2File;
+
+    /** @var File */
     protected $otfFile;
+
+    /** @var File */
     protected $svgFile;
 
     /**
@@ -470,17 +480,17 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Handlers\FontHandler
+     * @return FontHandler
      */
     public function getHandler()
     {
-        return new \RZ\Roadiz\Core\Handlers\FontHandler($this);
+        return new FontHandler($this);
     }
 
     /**
      * Gets the value of eotFile.
      *
-     * @return mixed
+     * @return File|null
      */
     public function getEotFile()
     {
@@ -490,7 +500,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of eotFile.
      *
-     * @param mixed $eotFile the eot file
+     * @param File $eotFile the eot file
      *
      * @return self
      */
@@ -504,7 +514,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woffFile.
      *
-     * @return mixed
+     * @return File|null
      */
     public function getWoffFile()
     {
@@ -514,7 +524,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of woffFile.
      *
-     * @param mixed $woffFile the woff file
+     * @param File $woffFile the woff file
      *
      * @return self
      */
@@ -528,7 +538,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woff2File.
      *
-     * @return mixed
+     * @return File|null
      */
     public function getWoff2File()
     {
@@ -538,7 +548,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of woff2File.
      *
-     * @param mixed $woff2File the woff2 file
+     * @param File $woff2File the woff2 file
      *
      * @return self
      */
@@ -552,7 +562,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of otfFile.
      *
-     * @return mixed
+     * @return File|null
      */
     public function getOtfFile()
     {
@@ -562,7 +572,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of otfFile.
      *
-     * @param mixed $otfFile the otf file
+     * @param File $otfFile the otf file
      *
      * @return self
      */
@@ -576,7 +586,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of svgFile.
      *
-     * @return mixed
+     * @return File|null
      */
     public function getSvgFile()
     {
@@ -586,7 +596,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of svgFile.
      *
-     * @param mixed $svgFile the svg file
+     * @param File $svgFile the svg file
      *
      * @return self
      */

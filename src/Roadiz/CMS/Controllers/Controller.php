@@ -166,7 +166,7 @@ abstract class Controller
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public static function getCalledClass()
     {
