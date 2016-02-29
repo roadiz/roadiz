@@ -418,7 +418,7 @@ abstract class Controller
     /**
      * Get a user from the tokenStorage.
      *
-     * @return mixed
+     * @return mixed|null
      *
      * @throws \LogicException If tokenStorage is not available
      *
@@ -430,11 +430,11 @@ abstract class Controller
             throw new \LogicException('No TokenStorage has been registered in your application.');
         }
         if (null === $token = $this->container['securityTokenStorage']->getToken()) {
-            return;
+            return null;
         }
         if (!is_object($user = $token->getUser())) {
             // e.g. anonymous authentication
-            return;
+            return null;
         }
         return $user;
     }

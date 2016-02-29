@@ -105,9 +105,9 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                         )
                     );
                 }
-            } else {
-                return null;
             }
+
+            return null;
         };
 
         $container['session'] = function ($c) {

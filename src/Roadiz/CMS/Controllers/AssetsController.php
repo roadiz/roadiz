@@ -122,11 +122,12 @@ class AssetsController extends AppController
     /**
      * Request a single protected font file from Roadiz.
      *
-     * @param string                                   $filename
-     * @param string                                   $extension
-     * @param string                                   $token
+     * @param Request $request
+     * @param string $filename
+     * @param $variant
+     * @param string $extension
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function fontFileAction(Request $request, $filename, $variant, $extension)
     {
@@ -189,13 +190,12 @@ class AssetsController extends AppController
 
                 return $response;
             }
-        } else {
-            return new Response(
-                "Font doesn't exist " . $filename,
-                Response::HTTP_NOT_FOUND,
-                ['content-type' => 'text/html']
-            );
         }
+        return new Response(
+            "Font doesn't exist " . $filename,
+            Response::HTTP_NOT_FOUND,
+            ['content-type' => 'text/html']
+        );
     }
 
     /**

@@ -335,7 +335,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
-     * @param mixed $criteria Doctrine\Common\Collections\Criteria or array
+     * @param Criteria|mixed|array $criteria  or array
      *
      * @return integer
      */
@@ -372,6 +372,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                 return 0;
             }
         }
+        return 0;
     }
 
     /**
