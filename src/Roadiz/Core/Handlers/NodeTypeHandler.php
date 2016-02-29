@@ -157,8 +157,6 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         } else {
             return "Source class “".$this->nodeType->getSourceEntityClassName()."” already exists.".PHP_EOL;
         }
-
-        return false;
     }
 
     /**
