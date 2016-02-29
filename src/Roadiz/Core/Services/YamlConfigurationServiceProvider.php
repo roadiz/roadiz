@@ -39,7 +39,8 @@ use Pimple\Container;
 class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvider
 {
     /**
-     * @param \Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {

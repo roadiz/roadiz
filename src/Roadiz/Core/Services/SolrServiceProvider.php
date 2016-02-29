@@ -38,7 +38,8 @@ use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
 class SolrServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
-     * @param \Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {

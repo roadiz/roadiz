@@ -38,6 +38,7 @@ abstract class AbstractConfigurationServiceProvider implements \Pimple\ServicePr
 {
     /**
      * @param \Pimple\Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {

@@ -123,13 +123,15 @@ class DoctrineServiceProvider implements \Pimple\ServiceProviderInterface
 
         return $cache;
     }
+
     /**
      * Initialize Doctrine entity manager in DI container.
      *
      * This method can be called from InstallApp after updating
      * doctrine configuration.
      *
-     * @param \Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {

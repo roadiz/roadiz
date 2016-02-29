@@ -89,8 +89,10 @@ class DoctrineHandler extends AbstractProcessingHandler
     {
         return $this->user;
     }
+
     /**
      * @param \RZ\Roadiz\Core\Entities\User $user
+     * @return $this
      */
     public function setUser(User $user)
     {
@@ -106,8 +108,10 @@ class DoctrineHandler extends AbstractProcessingHandler
     {
         return $this->request;
     }
+
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
+     * @return $this
      */
     public function setRequest(Request $request)
     {

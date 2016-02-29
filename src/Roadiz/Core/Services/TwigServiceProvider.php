@@ -54,6 +54,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
 {
     /**
      * @param \Pimple\Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {

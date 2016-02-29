@@ -67,6 +67,7 @@ class NodesSourcesHandler
 
     /**
      * @param \RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
+     * @return $this
      */
     public function setParentNodeSource($newparentNodeSource)
     {

@@ -54,6 +54,7 @@ class NodePaginator extends Paginator
 
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
@@ -72,6 +73,7 @@ class NodePaginator extends Paginator
 
     /**
      * @param  \RZ\Roadiz\Core\Entities\Translation $newtranslation
+     * @return $this
      */
     public function setTranslation(Translation $newtranslation = null)
     {

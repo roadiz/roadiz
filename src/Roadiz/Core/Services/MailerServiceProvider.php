@@ -53,7 +53,8 @@ class MailerServiceProvider implements \Pimple\ServiceProviderInterface
      * Just set `type` to false or remove `mailer` section
      * to enable simple `sendmail` transport.
      *
-     * @param \Pimple\Container $container
+     * @param Container $container
+     * @return Container
      */
     public function register(Container $container)
     {

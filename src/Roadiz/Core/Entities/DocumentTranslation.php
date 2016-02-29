@@ -124,8 +124,10 @@ class DocumentTranslation extends AbstractEntity
     {
         return $this->translation;
     }
+
     /**
      * @param Translation $translation
+     * @return $this
      */
     public function setTranslation(Translation $translation)
     {
@@ -151,6 +153,7 @@ class DocumentTranslation extends AbstractEntity
 
     /**
      * @param Document $document
+     * @return $this
      */
     public function setDocument(Document $document)
     {
