@@ -33,7 +33,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
 
-
 /**
  * Describes a complexe ManyToMany relation
  * between two Nodes and NodeTypeFields.

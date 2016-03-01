@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Bags;
 use RZ\Roadiz\core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 
-
 /**
  * Roles bag used to get quickly a role entity
  * and to create it automatically if it does not exist.

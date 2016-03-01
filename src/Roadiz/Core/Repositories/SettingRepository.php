@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Repositories;
+
 use Doctrine\ORM\NoResultException;
 
 /**

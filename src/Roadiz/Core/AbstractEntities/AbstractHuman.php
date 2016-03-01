@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\AbstractEntities;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Abstract entity for any Human-like objects.
  *

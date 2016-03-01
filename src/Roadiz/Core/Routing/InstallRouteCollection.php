@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-
-
 class InstallRouteCollection extends DeferredRouteCollection
 {
     protected $installClassname;

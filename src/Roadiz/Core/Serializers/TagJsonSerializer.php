@@ -33,7 +33,6 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 
-
 /**
  * Json Serialization handler for Node.
  */

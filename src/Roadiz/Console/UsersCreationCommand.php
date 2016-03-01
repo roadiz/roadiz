@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Input\InputArgument;

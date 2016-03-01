@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
-
-
 class TagApi extends AbstractApi
 {
     /**

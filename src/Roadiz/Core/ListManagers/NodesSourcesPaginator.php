@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

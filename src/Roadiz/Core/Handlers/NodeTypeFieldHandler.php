@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-
-
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
