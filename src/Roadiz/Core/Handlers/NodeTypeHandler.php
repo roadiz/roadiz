@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
@@ -169,13 +170,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
      */
     public function updateSchema()
     {
-        $clearers = [
-            new DoctrineCacheClearer(Kernel::getService('em')),
-        ];
-        foreach ($clearers as $clearer) {
-            $clearer->clear();
-        }
-
+        $this->clearCaches();
         $this->regenerateEntityClass();
 
         return $this;
@@ -200,14 +195,20 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     public function deleteSchema()
     {
         $this->removeSourceEntityClass();
+        $this->clearCaches();
+
+        return $this;
+    }
+
+    protected function clearCaches()
+    {
         $clearers = [
             new DoctrineCacheClearer(Kernel::getService('em')),
+            new OPCacheClearer(),
         ];
         foreach ($clearers as $clearer) {
             $clearer->clear();
         }
-
-        return $this;
     }
 
     /**

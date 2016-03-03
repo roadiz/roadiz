@@ -82,7 +82,10 @@ class TagJsonSerializer extends AbstractJsonSerializer
         $tag->setTagName($data['tag_name']);
         $tag->setVisible($data['visible']);
         $tag->setLocked($data['locked']);
-        $tag->setColor($data['color']);
+
+        if (isset($data['color'])) {
+            $tag->setColor($data['color']);
+        }
 
         foreach ($data["tag_translation"] as $source) {
             $trans = new Translation();

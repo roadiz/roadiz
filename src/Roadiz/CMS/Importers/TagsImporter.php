@@ -87,7 +87,6 @@ class TagsImporter implements ImporterInterface
                     $em->persist($trans);
                 }
                 $tagTranslation->setTranslation($trans);
-                $tagTranslation->setTag(null);
                 $em->persist($tagTranslation);
                 $sourceObj[] = $tagTranslation;
             }

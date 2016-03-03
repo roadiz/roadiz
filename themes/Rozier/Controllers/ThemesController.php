@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,6 +74,9 @@ class ThemesController extends RozierApp
 
         $doctrineClearer = new DoctrineCacheClearer($this->getService('em'));
         $doctrineClearer->clear();
+
+        $opcacheClearer = new OPCacheClearer();
+        $opcacheClearer->clear();
 
         return new JsonResponse(['status' => true]);
     }
@@ -141,7 +145,7 @@ class ThemesController extends RozierApp
             try {
                 $data = $form->getData();
                 return $this->redirect($this->generateUrl('themesSummaryPage', [
-                    'classname' => $data['className']
+                    'classname' => $data['className'],
                 ]));
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
@@ -218,7 +222,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
-                      ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
+            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildEditForm($theme);
@@ -263,7 +267,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->getService('em')
-                      ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
+            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
@@ -307,7 +311,7 @@ class ThemesController extends RozierApp
     protected function buildAddForm(Theme $theme)
     {
         $builder = $this->getService('formFactory')
-                        ->createNamedBuilder('source', 'form', []);
+            ->createNamedBuilder('source', 'form', []);
 
         /*
          * See if its possible to prepend field instead of adding it
@@ -351,9 +355,9 @@ class ThemesController extends RozierApp
     protected function buildSettingForm(Theme $theme, $classname)
     {
         $builder = $this->buildCommonForm($theme)
-                        ->add('classname', 'hidden', [
-                            'data' => $classname,
-                        ]);
+            ->add('classname', 'hidden', [
+                'data' => $classname,
+            ]);
         return $builder->getForm();
     }
 
@@ -379,33 +383,33 @@ class ThemesController extends RozierApp
         ];
 
         $builder = $this->getService('formFactory')
-                        ->createNamedBuilder('source', 'form', $defaults)
-                        ->add('available', 'checkbox', [
-                            'label' => 'available',
-                            'required' => false,
-                        ])
-                        ->add(
-                            'staticTheme',
-                            'checkbox',
-                            [
-                                'label' => 'staticTheme',
-                                'required' => false,
-                                'attr' => [
-                                    'data-desc' => 'staticTheme.does_not.allow.node_url_routes',
-                                ],
-                            ]
-                        )
-                        ->add('hostname', 'text', [
-                            'label' => 'hostname',
-                        ])
-                        ->add('routePrefix', 'text', [
-                            'label' => 'routePrefix',
-                            'required' => false,
-                        ])
-                        ->add('backendTheme', 'checkbox', [
-                            'label' => 'backendTheme',
-                            'required' => false,
-                        ]);
+            ->createNamedBuilder('source', 'form', $defaults)
+            ->add('available', 'checkbox', [
+                'label' => 'available',
+                'required' => false,
+            ])
+            ->add(
+                'staticTheme',
+                'checkbox',
+                [
+                    'label' => 'staticTheme',
+                    'required' => false,
+                    'attr' => [
+                        'data-desc' => 'staticTheme.does_not.allow.node_url_routes',
+                    ],
+                ]
+            )
+            ->add('hostname', 'text', [
+                'label' => 'hostname',
+            ])
+            ->add('routePrefix', 'text', [
+                'label' => 'routePrefix',
+                'required' => false,
+            ])
+            ->add('backendTheme', 'checkbox', [
+                'label' => 'backendTheme',
+                'required' => false,
+            ]);
 
         $d = ($n !== null) ? [$n] : [];
 
@@ -413,8 +417,8 @@ class ThemesController extends RozierApp
             'label' => 'homeNode',
             'required' => false,
             'attr' => [
-                'data-nodetypes' => ''
-            ]
+                'data-nodetypes' => '',
+            ],
         ]);
 
         $d = ($r !== null) ? [$r] : [];
@@ -423,8 +427,8 @@ class ThemesController extends RozierApp
             'label' => 'themeRoot',
             'required' => false,
             'attr' => [
-                'data-nodetypes' => ''
-            ]
+                'data-nodetypes' => '',
+            ],
         ]);
 
         return $builder;
@@ -440,9 +444,9 @@ class ThemesController extends RozierApp
     protected function buildDeleteForm(Theme $theme)
     {
         $builder = $this->createFormBuilder()
-                        ->add('themeId', 'hidden', [
-                            'data' => $theme->getId(),
-                        ]);
+            ->add('themeId', 'hidden', [
+                'data' => $theme->getId(),
+            ]);
 
         return $builder->getForm();
     }
@@ -485,8 +489,8 @@ class ThemesController extends RozierApp
     private function addTheme(Request $request, array &$data)
     {
         $existing = $this->getService('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                         ->findOneBy(['className' => $data["classname"]]);
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+            ->findOneBy(['className' => $data["classname"]]);
 
         if ($existing !== null) {
             throw new EntityAlreadyExistsException(
@@ -500,8 +504,8 @@ class ThemesController extends RozierApp
 
         $importFile = ThemeInstaller::install($request, $data["classname"], $this->getService("em"));
         $theme = $this->getService("em")
-                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
-                      ->findOneByClassName($data["classname"]);
+            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+            ->findOneByClassName($data["classname"]);
         $this->setThemeValue($request, $data, $theme);
 
         $this->getService('em')->flush();
