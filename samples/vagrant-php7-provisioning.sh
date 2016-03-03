@@ -14,7 +14,7 @@ echo -e "\n--- Install base packages ---\n"
 sudo locale-gen fr_FR.utf8;
 
 echo -e "\n--- Add some repos to update our distro ---\n"
-sudo add-apt-repository ppa:ondrej/php-7.0 > /dev/null 2>&1;
+sudo add-apt-repository ppa:ondrej/php > /dev/null 2>&1;
 
 # Use latest nginx for HTTP/2
 sudo touch /etc/apt/sources.list.d/nginx.list;
