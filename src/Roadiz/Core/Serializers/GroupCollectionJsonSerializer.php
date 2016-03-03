@@ -60,7 +60,7 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
     {
         $data = [];
 
-        $groupSerializer = new GroupJsonSerializer();
+        $groupSerializer = new GroupJsonSerializer($this->em);
         foreach ($groups as $group) {
             $data[] = $groupSerializer->toArray($group);
         }
