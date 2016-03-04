@@ -178,11 +178,11 @@ abstract class AbstractHuman extends AbstractDateTimed
         return $this->birthday;
     }
     /**
-     * @param \DateTime $birthday
+     * @param \DateTime|null $birthday
      *
      * @return $this
      */
-    public function setBirthday(\DateTime $birthday)
+    public function setBirthday(\DateTime $birthday = null)
     {
         $this->birthday = $birthday;
 
