@@ -531,7 +531,8 @@ class EntryPointsController extends AppController
         // Give the message a subject
         ->setSubject($subject)
         // Set the From address with an associative array
-        ->setFrom([$assignation['email']])
+        ->setFrom($receiver)
+        ->setReplyTo($assignation['email'])
         // Set the To addresses with an associative array
         ->setTo([$receiver])
         // Give it a body
