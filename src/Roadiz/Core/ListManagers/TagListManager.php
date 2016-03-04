@@ -39,10 +39,10 @@ use Doctrine\ORM\EntityManager;
 class TagListManager extends EntityListManager
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param Doctrine\ORM\EntityManager               $_em
-     * @param array                                    $preFilters
-     * @param array                                    $preOrdering
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Doctrine\ORM\EntityManager               $_em
+     * @param array                                     $preFilters
+     * @param array                                     $preOrdering
      */
     public function __construct(Request $request, EntityManager $_em, $preFilters = [], $preOrdering = [])
     {

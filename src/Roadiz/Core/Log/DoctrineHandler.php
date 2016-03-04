@@ -83,14 +83,16 @@ class DoctrineHandler extends AbstractProcessingHandler
 
 
     /**
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return \RZ\Roadiz\Core\Entities\User
      */
     public function getUser()
     {
         return $this->user;
     }
+
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param \RZ\Roadiz\Core\Entities\User $user
+     * @return $this
      */
     public function setUser(User $user)
     {
@@ -100,14 +102,16 @@ class DoctrineHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @return Symfony\Component\HttpFoundation\Request
+     * @return \Symfony\Component\HttpFoundation\Request
      */
     public function getRequest()
     {
         return $this->request;
     }
+
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
+     * @return $this
      */
     public function setRequest(Request $request)
     {

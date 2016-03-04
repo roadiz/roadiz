@@ -40,7 +40,7 @@ class UserHandler
     private $user;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return \RZ\Roadiz\Core\Entities\User
      */
     public function getUser()
     {
@@ -50,7 +50,7 @@ class UserHandler
     /**
      * Create a new handler with user to handle.
      *
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param \RZ\Roadiz\Core\Entities\User $user
      */
     public function __construct(User $user)
     {
@@ -59,8 +59,8 @@ class UserHandler
 
     /**
      * Encode current User password.
-     *
      * @return $this
+     * @throws \Exception
      */
     public function encodePassword()
     {

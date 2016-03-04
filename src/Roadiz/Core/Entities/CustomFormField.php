@@ -74,7 +74,7 @@ class CustomFormField extends AbstractField
     private $customForm = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\CustomForm
+     * @return \RZ\Roadiz\Core\Entities\CustomForm
      */
     public function getCustomForm()
     {
@@ -82,7 +82,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      *
      * @return $this
      */
@@ -134,7 +134,7 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @return  RZ\Roadiz\Core\Handlers\CustomFormFieldHandler
+     * @return  \RZ\Roadiz\Core\Handlers\CustomFormFieldHandler
      */
     public function getHandler()
     {

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Node;
 
@@ -38,8 +39,8 @@ use RZ\Roadiz\Core\Entities\Node;
 class NodesToNodesRepository extends EntityRepository
 {
     /**
-     * @param RZ\Roadiz\Core\Entities\Node  $node
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\Node  $node
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return integer
      */
@@ -53,7 +54,7 @@ class NodesToNodesRepository extends EntityRepository
 
         try {
             return (int) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return 0;
         }
     }

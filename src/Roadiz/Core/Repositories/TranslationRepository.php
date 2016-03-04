@@ -29,7 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Repositories\EntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
 
 /**
  * {@inheritdoc}
@@ -39,7 +40,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get single default translation.
      *
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation
      */
     public function findDefault()
     {
@@ -53,7 +54,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -74,7 +75,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -95,7 +96,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
@@ -115,7 +116,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return array_map('current', $query->getScalarResult());
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
@@ -137,13 +138,15 @@ class TranslationRepository extends EntityRepository
 
         try {
             return array_map('current', $query->getScalarResult());
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
 
     /**
      * Get all available translations by locale.
+     *
+     * @param $locale
      *
      * @return ArrayCollection
      */
@@ -159,13 +162,15 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
      * Get all available translations by overrideLocale.
+     *
+     * @param $overrideLocale
      *
      * @return ArrayCollection
      */
@@ -181,7 +186,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -189,7 +194,10 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by locale.
      *
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @param $locale
+     *
+     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByLocaleAndAvailable($locale)
     {
@@ -204,7 +212,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -212,7 +220,10 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by overrideLocale.
      *
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @param $overrideLocale
+     *
+     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByOverrideLocaleAndAvailable($overrideLocale)
     {
@@ -227,7 +238,7 @@ class TranslationRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

@@ -43,7 +43,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      *
      * @param Request $request
      * @param NodesSources $nodeSource
-     * @param boolear $forceLocale
+     * @param bool $forceLocale
      */
     public function __construct(
         Request $request = null,
@@ -85,7 +85,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      *
      * It returns a relative url to Roadiz, not relative to your server root.
      *
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param \RZ\Roadiz\Core\Entities\Theme $theme
      *
      * @return string
      */

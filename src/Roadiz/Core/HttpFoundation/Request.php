@@ -47,7 +47,7 @@ class Request extends BaseRequest
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return \RZ\Roadiz\Core\Entities\Theme
      */
     public function getTheme()
     {

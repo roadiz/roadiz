@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -39,7 +40,7 @@ class CustomFormRepository extends EntityRepository
     /**
      * Get all custom-form names from PARTIAL objects.
      *
-     * @return ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findAllNames()
     {
@@ -48,14 +49,14 @@ class CustomFormRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node          $node
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\Node          $node
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return array
      */
@@ -70,13 +71,13 @@ class CustomFormRepository extends EntityRepository
                         ->setParameter('node', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      * @param string                      $fieldName
      *
      * @return array
@@ -93,7 +94,7 @@ class CustomFormRepository extends EntityRepository
                         ->setParameter('node', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

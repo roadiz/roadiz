@@ -32,9 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
-use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
  * Describes a complexe ManyToMany relation
@@ -74,8 +71,8 @@ class NodesSourcesDocuments extends AbstractEntity
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
      * @param mixed                                $nodeSource NodesSources and inherited types
-     * @param RZ\Roadiz\Core\Entities\Document      $document   Document to link
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field      NodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\Document      $document   Document to link
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field      NodeTypeField
      */
     public function __construct(NodesSources $nodeSource, Document $document, NodeTypeField $field)
     {

@@ -33,8 +33,6 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\NodePaginator;
-use RZ\Roadiz\Core\ListManagers\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
@@ -170,8 +168,10 @@ class EntityListManager
     {
         return $this->translation;
     }
+
     /**
      * @param Translation $newtranslation
+     * @return $this
      */
     public function setTranslation(Translation $newtranslation = null)
     {
@@ -187,8 +187,10 @@ class EntityListManager
     {
         return $this->authorizationChecker;
     }
+
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {

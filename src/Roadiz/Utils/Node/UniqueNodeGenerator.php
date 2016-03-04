@@ -57,7 +57,7 @@ class UniqueNodeGenerator
      * @param  Tag|null    $tag
      * @param  boolean     $pushToTop
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function generate(
         NodeType $nodeType,
@@ -95,7 +95,7 @@ class UniqueNodeGenerator
      *
      * @param  Request $request
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function generateFromRequest(Request $request)
     {

@@ -79,8 +79,8 @@ class RoadizApplication extends Application
 
     /**
      * Gets the default commands that should always be available.
-     *
      * @return Command[] An array of default Command instances
+     * @throws \Exception
      */
     protected function getDefaultCommands()
     {

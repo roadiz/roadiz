@@ -117,7 +117,7 @@ class Group extends AbstractEntity
         return $this->rolesNames;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -130,7 +130,7 @@ class Group extends AbstractEntity
         return $this;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */

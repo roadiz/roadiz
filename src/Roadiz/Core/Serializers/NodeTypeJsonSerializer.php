@@ -48,7 +48,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a NodeType.
      *
-     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return array
      */
@@ -79,7 +79,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $string
      *
-     * @return RZ\Roadiz\Core\Entities\NodeType
+     * @return \RZ\Roadiz\Core\Entities\NodeType
      */
     public function deserialize($string)
     {

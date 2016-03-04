@@ -31,7 +31,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
-use RZ\Roadiz\CMS\Controllers\Controller;
+
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -43,7 +43,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -59,7 +58,7 @@ class AppController extends Controller
     /**
      * Theme entity.
      *
-     * @var RZ\Roadiz\Core\Entities\Theme;
+     * @var \RZ\Roadiz\Core\Entities\Theme;
      */
     protected $theme = null;
     /**
@@ -325,7 +324,7 @@ class AppController extends Controller
      *
      * @param string $message Additionnal message to describe 404 error.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function throw404($message = "")
     {
@@ -368,7 +367,7 @@ class AppController extends Controller
     /**
      * Append objects to the global dependency injection container.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -429,7 +428,7 @@ class AppController extends Controller
      * @param Request $request
      * @param string  $msg
      * @param string  $level
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
@@ -450,7 +449,7 @@ class AppController extends Controller
      *
      * @param Request $request
      * @param string  $msg
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -463,7 +462,7 @@ class AppController extends Controller
      *
      * @param Request $request
      * @param string  $msg
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -520,7 +519,7 @@ class AppController extends Controller
      * currently unavailable.
      *
      * @param Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function maintenanceAction(Request $request)
     {

@@ -49,6 +49,7 @@ class CustomFormAnswer extends AbstractEntity
      * @ORM\Column(type="string", name="ip")
      */
     private $ip;
+
     /**
      * @return string
      */
@@ -56,6 +57,7 @@ class CustomFormAnswer extends AbstractEntity
     {
         return $this->ip;
     }
+
     /**
      * @param string $ip
      *
@@ -72,6 +74,7 @@ class CustomFormAnswer extends AbstractEntity
      * @ORM\Column(type="datetime", name="submitted_at")
      */
     private $submittedAt = null;
+
     /**
      * @return \DateTime
      */
@@ -79,8 +82,9 @@ class CustomFormAnswer extends AbstractEntity
     {
         return $this->submittedAt;
     }
+
     /**
-     * @param \DateTime $home
+     * @param $submittedAt
      *
      * @return $this
      */
@@ -120,6 +124,7 @@ class CustomFormAnswer extends AbstractEntity
 
         return $this;
     }
+
     /**
      * @param CustomFormAnswer $field
      *
@@ -154,8 +159,6 @@ class CustomFormAnswer extends AbstractEntity
 
     /**
      * Create a new empty CustomFormAnswer according to given node-type.
-     *
-     * @param CustomFormAnswerType $nodeType
      */
     public function __construct()
     {

@@ -77,8 +77,10 @@ class SettingGroup extends AbstractEntity
     {
         return $this->inMenu;
     }
+
     /**
      * @param boolean $newinMenu
+     * @return $this
      */
     public function setInMenu($newinMenu)
     {
@@ -108,7 +110,7 @@ class SettingGroup extends AbstractEntity
         return $this->settings;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param \RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return $this
      */

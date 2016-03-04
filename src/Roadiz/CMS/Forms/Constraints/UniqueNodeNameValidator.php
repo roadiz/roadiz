@@ -60,8 +60,9 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function urlAliasExists($name, $entityManager)
     {
@@ -71,8 +72,9 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function nodeNameExists($name, $entityManager)
     {

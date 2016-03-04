@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Entities\Node;
+
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
@@ -44,7 +44,7 @@ class NodeTypeHandler
     private $nodeType = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\NodeType
+     * @return \RZ\Roadiz\Core\Entities\NodeType
      */
     public function getNodeType()
     {
@@ -52,7 +52,7 @@ class NodeTypeHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return $this
      */
@@ -66,7 +66,7 @@ class NodeTypeHandler
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
      */
     public function __construct(NodeType $nodeType)
     {
@@ -158,8 +158,6 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
         } else {
             return "Source class “".$this->nodeType->getSourceEntityClassName()."” already exists.".PHP_EOL;
         }
-
-        return false;
     }
 
     /**
@@ -259,7 +257,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
      *
      * This method does not flush ORM. You'll need to manually call it.
      *
-     * @param RZ\Roadiz\Core\Entities\NodeType $newNodeType
+     * @param \RZ\Roadiz\Core\Entities\NodeType $newNodeType
      *
      * @throws \RuntimeException If newNodeType param is null
      */

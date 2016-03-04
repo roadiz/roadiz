@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -160,6 +161,7 @@ class NodeRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
+     * @param null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
@@ -246,7 +248,7 @@ class NodeRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
      * @param boolean                     $preview
      *
@@ -290,17 +292,17 @@ class NodeRepository extends EntityRepository
 
         return $qb;
     }
+
     /**
      * Create a securized count query with node.published = true if user is
      * not a Backend user and if authorizationChecker is defined.
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $authorizationChecker
-     * @param AuthorizationChecker|null                    $authorizationChecker
-     * @param boolean                     $preview
-     *
+     * @param array $criteria
+     * @param Translation $translation
+     * @param AuthorizationChecker $authorizationChecker
+     * @param boolean $preview
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
@@ -353,7 +355,7 @@ class NodeRepository extends EntityRepository
      * @param array|null                               $orderBy
      * @param integer|null                             $limit
      * @param integer|null                             $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                $authorizationChecker
      * @param boolean                                  $preview
      *
@@ -394,7 +396,7 @@ class NodeRepository extends EntityRepository
         } else {
             try {
                 return $finalQuery->getResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
+            } catch (NoResultException $e) {
                 return new ArrayCollection();
             }
         }
@@ -404,11 +406,11 @@ class NodeRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param array|null                              $orderBy
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
      * @param boolean                                  $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findOneBy(
         array $criteria,
@@ -436,7 +438,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -444,7 +446,7 @@ class NodeRepository extends EntityRepository
      * Just like the countBy method but with relational criteria.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
      * @param boolean                                  $preview
      *
@@ -469,7 +471,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -484,10 +486,10 @@ class NodeRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null                    $authorizationChecker
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByWithTranslation(
         array $criteria,
@@ -515,10 +517,10 @@ class NodeRepository extends EntityRepository
      * method will be called instead.
      *
      * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null $authorizationChecker
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findOneByWithTranslation(
         array $criteria,
@@ -537,12 +539,12 @@ class NodeRepository extends EntityRepository
      * Find one Node with its Id and a given translation.
      *
      * @param integer                            $nodeId
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findWithTranslation(
         $nodeId,
@@ -567,7 +569,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -580,7 +582,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findWithDefaultTranslation(
         $nodeId,
@@ -604,7 +606,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -613,12 +615,12 @@ class NodeRepository extends EntityRepository
      * Find one Node with its nodeName and a given translation.
      *
      * @param string                             $nodeName
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findByNodeNameWithTranslation(
         $nodeName,
@@ -642,7 +644,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -655,7 +657,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findByNodeNameWithDefaultTranslation(
         $nodeName,
@@ -679,7 +681,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -687,12 +689,12 @@ class NodeRepository extends EntityRepository
     /**
      * Find the Home node with a given translation.
      *
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findHomeWithTranslation(
         Translation $translation = null,
@@ -719,7 +721,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -731,7 +733,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findHomeWithDefaultTranslation(
         AuthorizationChecker $authorizationChecker = null,
@@ -753,19 +755,19 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node        $node
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Node        $node
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      * @param AuthorizationChecker|null               $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getChildrenWithTranslation(
         Node $node,
@@ -790,19 +792,19 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
-     * @param RZ\Roadiz\Core\Entities\Node        $parent
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Node        $parent
      * @param AuthorizationChecker|null               $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByParentWithTranslation(
         Translation $translation,
@@ -841,18 +843,18 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $parent
+     * @param \RZ\Roadiz\Core\Entities\Node $parent
      * @param AuthorizationChecker|null        $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByParentWithDefaultTranslation(
         Node $parent = null,
@@ -888,18 +890,18 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
+     * @param \RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findOneWithUrlAlias(
         $urlAlias,
@@ -923,7 +925,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -934,7 +936,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node|null
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function findOneWithAliasAndAvailableTranslation(
         $urlAliasAlias,
@@ -959,7 +961,7 @@ class NodeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -998,16 +1000,15 @@ class NodeRepository extends EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param string $pattern Search pattern
+     * @param QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
+        QueryBuilder $qb,
         array &$criteria = [],
         $alias = "obj"
     ) {
@@ -1089,14 +1090,14 @@ class NodeRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node          $node
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\Node          $node
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return array
      */
@@ -1111,13 +1112,13 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      * @param string                      $fieldName
      *
      * @return array
@@ -1134,7 +1135,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeA', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1164,7 +1165,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1195,14 +1196,14 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node          $node
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\Node          $node
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return array
      */
@@ -1217,13 +1218,13 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeB', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      * @param string                      $fieldName
      *
      * @return array
@@ -1240,7 +1241,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('nodeB', $node);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1270,7 +1271,7 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -1301,13 +1302,13 @@ class NodeRepository extends EntityRepository
             ->setParameter('translation', $translation);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      *
      * @return array
      */
@@ -1335,7 +1336,7 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\Node $node
      *
      * @return array
      */

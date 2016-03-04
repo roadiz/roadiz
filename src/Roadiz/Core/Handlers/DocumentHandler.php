@@ -119,7 +119,7 @@ class DocumentHandler
      *
      * **Be careful, this method will send headers.**
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getDownloadResponse()
     {

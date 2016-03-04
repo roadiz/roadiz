@@ -31,8 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * DocumentTranslation.
@@ -125,8 +123,10 @@ class DocumentTranslation extends AbstractEntity
     {
         return $this->translation;
     }
+
     /**
      * @param Translation $translation
+     * @return $this
      */
     public function setTranslation(Translation $translation)
     {
@@ -152,6 +152,7 @@ class DocumentTranslation extends AbstractEntity
 
     /**
      * @param Document $document
+     * @return $this
      */
     public function setDocument(Document $document)
     {

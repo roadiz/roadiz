@@ -40,8 +40,7 @@ class DataInheritanceEvent
     protected $tablesPrefix;
 
     /**
-     * @param string        $tablesPrefix
-     * @param EntityManager $em
+     * @param string $tablesPrefix
      */
     public function __construct($tablesPrefix = '')
     {
@@ -49,7 +48,7 @@ class DataInheritanceEvent
     }
 
     /**
-     * @param Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
+     * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {

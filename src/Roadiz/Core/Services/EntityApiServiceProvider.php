@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Utils\NodeApi;
 use RZ\Roadiz\CMS\Utils\NodeTypeApi;
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
@@ -38,7 +39,7 @@ use RZ\Roadiz\CMS\Utils\TagApi;
 /**
  * Register security services for dependency injection container.
  */
-class EntityApiServiceProvider implements \Pimple\ServiceProviderInterface
+class EntityApiServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {

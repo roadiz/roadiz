@@ -112,7 +112,7 @@ class FrontendController extends AppController
      * @param Request $request
      * @param string|null                              $_locale
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function homeAction(Request $request, $_locale = null)
     {
@@ -238,7 +238,7 @@ class FrontendController extends AppController
      *
      * @param  Node $node
      *
-     * @return boolean|Symfony\Component\HttpFoundation\Response
+     * @return boolean|\Symfony\Component\HttpFoundation\Response
      */
     public function validateAccessForNodeWithStatus(Node $node)
     {
@@ -277,8 +277,8 @@ class FrontendController extends AppController
      * Initialize controller with environment from an other controller
      * in order to avoid initializing same componant again.
      *
-     * @param Translator                                       $translator
-     * @param array                                            $baseAssignation
+     * @param array $baseAssignation
+     * @param Container $themeContainer
      */
     public function __initFromOtherController(
         array &$baseAssignation = null,
@@ -293,8 +293,10 @@ class FrontendController extends AppController
      * for a node-based request.
      *
      * @param Request $request
+     * @param Node $node
+     * @param Translation $translation
+     *
      * @return Response
-     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(
         Request $request,
@@ -435,7 +437,7 @@ class FrontendController extends AppController
     /**
      * Get SEO informations for current node.
      *
-     * @param NodesSources $fallbackNode
+     * @param NodesSources $fallbackNodeSource
      *
      * @return array
      */
@@ -458,7 +460,7 @@ class FrontendController extends AppController
      * Add a request matcher on frontend to make securityTokenStorage
      * available even when no user has logged in.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {

@@ -29,10 +29,12 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -96,6 +98,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
      * Create an emergency response to be sent instead of error logs.
      *
      * @param \Exception $e
+     * @param Request $request
      *
      * @return Response
      */
@@ -121,7 +124,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ]);
 
         if ($format == "json" || $request->isXmlHttpRequest()) {
-            return new \Symfony\Component\HttpFoundation\JsonResponse(
+            return new JsonResponse(
                 [
                     'message' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
@@ -154,7 +157,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     protected function getHumanExceptionTitle(\Exception $e)
     {
-        if ($e instanceof \Doctrine\DBAL\Exception\TableNotFoundException) {
+        if ($e instanceof TableNotFoundException) {
             return "Your database is not synchronised to Roadiz data schema. Did you run install before using Roadiz?";
         }
 

@@ -144,6 +144,7 @@ class StringHandler
      * @param string $secret Secret salt
      *
      * @return string
+     * @throws EmptySaltException
      */
     public static function encodeWithSecret($value, $secret)
     {
@@ -164,6 +165,7 @@ class StringHandler
      * @param string $secret Secret salt
      *
      * @return string
+     * @throws EmptySaltException
      */
     public static function decodeWithSecret($value, $secret)
     {

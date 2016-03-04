@@ -31,8 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Entities\CustomFormAnswer;
-use RZ\Roadiz\Core\Entities\CustomFormField;
 
 /**
  * CustomFormField entities are used to create CustomForms with

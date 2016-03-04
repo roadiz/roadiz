@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Console\UsersCommand;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Input\InputArgument;
@@ -81,7 +80,7 @@ class UsersCreationCommand extends UsersCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return \RZ\Roadiz\Core\Entities\User
      */
     private function executeUserCreation(
         $username,

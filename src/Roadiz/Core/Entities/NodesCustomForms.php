@@ -31,9 +31,8 @@ namespace RZ\Roadiz\Core\Entities;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -73,9 +72,9 @@ class NodesCustomForms extends AbstractEntity
     /**
      * Create a new relation between a Node, a CustomForm and a NodeTypeField.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
      */
     public function __construct(Node $node, CustomForm $customForm, NodeTypeField $field)
     {

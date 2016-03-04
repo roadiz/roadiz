@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Console\Tools;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
+
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -195,7 +195,7 @@ class Fixtures
      *
      * @return Role
      */
-    protected function getRole($roleName = Role::ROLE_SUPER_ADMIN)
+    protected function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
         $role = $this->entityManager
                      ->getRepository('RZ\Roadiz\Core\Entities\Role')
@@ -213,7 +213,7 @@ class Fixtures
      * Get role by name, and create it if does not exist.
      * @param string $name
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return \RZ\Roadiz\Core\Entities\Setting
      */
     protected function getSetting($name)
     {
@@ -290,7 +290,9 @@ class Fixtures
     /**
      * Install theme and return its ID.
      *
-     * @return integer
+     * @param $classname
+     *
+     * @return int
      */
     public function installFrontendTheme($classname)
     {

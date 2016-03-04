@@ -72,14 +72,16 @@ class Folder extends AbstractDateTimedPositioned
     protected $parent = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Folder
+     * @return \RZ\Roadiz\Core\Entities\Folder
      */
     public function getParent()
     {
         return $this->parent;
     }
+
     /**
-     * @param RZ\Roadiz\Core\Entities\Folder $parent
+     * @param \RZ\Roadiz\Core\Entities\Folder $parent
+     * @return $this
      */
     public function setParent(Folder $parent = null)
     {
@@ -103,8 +105,10 @@ class Folder extends AbstractDateTimedPositioned
     {
         return $this->children;
     }
+
     /**
      * @param Folder $child
+     * @return $this
      */
     public function addChild(Folder $child)
     {
@@ -132,6 +136,7 @@ class Folder extends AbstractDateTimedPositioned
 
     /**
      * @param Document $document
+     * @return $this
      */
     public function addDocument(Document $document)
     {
@@ -144,6 +149,7 @@ class Folder extends AbstractDateTimedPositioned
 
     /**
      * @param Document $document
+     * @return $this
      */
     public function removeDocument(Document $document)
     {
@@ -164,7 +170,7 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\FolderHandler
+     * @return \RZ\Roadiz\Core\Handlers\FolderHandler
      */
     public function getHandler()
     {

@@ -27,7 +27,6 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

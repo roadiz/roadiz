@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,7 +54,9 @@ abstract class AbstractEntity implements PersistableInterface
     }
 
     /**
-     * @return integer
+     * @param $id
+     *
+     * @return int
      */
     public function setId($id)
     {

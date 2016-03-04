@@ -40,7 +40,7 @@ class FolderHandler
     private $folder = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Folder
+     * @return \RZ\Roadiz\Core\Entities\Folder
      */
     public function getFolder()
     {
@@ -48,7 +48,7 @@ class FolderHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Folder $folder
+     * @param \RZ\Roadiz\Core\Entities\Folder $folder
      *
      * @return $this
      */

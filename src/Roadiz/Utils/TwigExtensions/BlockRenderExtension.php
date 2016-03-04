@@ -64,6 +64,7 @@ class BlockRenderExtension extends \Twig_Extension
      * @param array $assignation
      *
      * @return string
+     * @throws \Exception
      */
     public function blockRender(NodesSources $nodeSource, $themeName = "DefaultTheme", $assignation = [])
     {
@@ -93,6 +94,8 @@ class BlockRenderExtension extends \Twig_Extension
             } else {
                 throw new \Exception("Invalid name formatting for your theme.", 1);
             }
+        } else {
+            throw new \Exception("Invalid NodesSources.", 1);
         }
     }
 }

@@ -82,7 +82,7 @@ class Configuration
     /**
      * @param array $configuration
      *
-     * @return arry $configuration
+     * @return $this
      */
     public function setConfiguration($configuration)
     {

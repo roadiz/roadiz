@@ -40,7 +40,7 @@ class DoctrineRoleHierarchy extends RoleHierarchy
     /**
      * Constructor.
      *
-     * @param array $hierarchy An array defining the hierarchy
+     * @param EntityManager $em
      */
     public function __construct(EntityManager $em = null)
     {

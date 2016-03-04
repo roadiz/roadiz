@@ -30,20 +30,21 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 
 /**
  * Register Embed documents services for dependency injection container.
  */
-class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
+class TranslationServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize translator services.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      *
-     * @return Pimple\Container
+     * @return \Pimple\Container
      */
     public function register(Container $container)
     {
