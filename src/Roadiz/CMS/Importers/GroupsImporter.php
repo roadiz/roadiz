@@ -49,19 +49,13 @@ class GroupsImporter implements ImporterInterface
     public static function importJsonFile($serializedData, EntityManager $em)
     {
         $serializer = new GroupCollectionJsonSerializer($em);
+        /** @var \RZ\Roadiz\Core\Entities\Group[] $groups */
         $groups = $serializer->deserialize($serializedData);
         foreach ($groups as $group) {
             $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
                                 ->findOneBy(['name' => $group->getName()]);
 
             if (null === $existingGroup) {
-                foreach ($group->getRolesEntities() as $role) {
-                    /*
-                     * then persist each role
-                     */
-                    $em->getRepository('RZ\Roadiz\Core\Entities\Role')
-                       ->findOneByName($role->getName());
-                }
                 $em->persist($group);
                 // Flush before creating group's roles.
                 $em->flush($group);

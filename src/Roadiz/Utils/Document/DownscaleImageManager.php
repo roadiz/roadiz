@@ -199,11 +199,6 @@ class DownscaleImageManager
             }
         } elseif (null !== $processImage) {
             /*
-             * If raw document size is still outiside new maxSize cap
-             * We keep intact raw document, and we just update downscaled doc.
-             */
-            $originalDocument->getRawDocument();
-            /*
              * Remove existing downscaled document.
              */
             $fs->remove($originalDocument->getAbsolutePath());

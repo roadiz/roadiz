@@ -448,7 +448,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @param Document|Folder $folder
+     * @param Folder $folder
      * @return $this
      */
     public function addFolder(Folder $folder)
