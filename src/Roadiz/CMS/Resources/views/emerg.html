@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Roadiz is down</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <style type="text/css">
         * {
           margin: 0;
@@ -22,7 +23,7 @@
           width: 100% !important;
           height: 100%;
           line-height: 1.6;
-            color: #333;
+          color: #666;
         }
 
         /* Let's make sure all tables have defaults */
@@ -39,7 +40,7 @@
         .smiley {
             font-size: 70px;
             margin-top: 40px;
-            color: #666;
+            color: #C3C3C3;
         }
         .body-wrap {
           background-color: #f6f6f6;
@@ -48,14 +49,14 @@
 
         .container {
           display: block !important;
-          max-width: 600px !important;
+          max-width: 700px !important;
           margin: 0 auto !important;
           /* makes it centered */
           clear: both !important;
         }
 
         .content {
-          max-width: 600px;
+          max-width: 700px;
           margin: 0 auto;
           display: block;
           padding: 20px;
@@ -115,15 +116,15 @@
         ------------------------------------- */
         h1, h2, h3 {
           font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-          color: #000;
-          margin: 40px 0 0;
-          line-height: 1.2;
+          color: #666;
+          margin: 20px 0 0;
+          line-height: 1.4;
           font-weight: 400;
         }
 
         code {
           font-family: Courier, monospace;
-          color: #333;
+          color: #666;
         }
 
         h1 {
@@ -157,23 +158,8 @@
             LINKS & BUTTONS
         ------------------------------------- */
         a {
-          color: #348eda;
+          color: #333;
           text-decoration: underline;
-        }
-
-        .btn-primary {
-          text-decoration: none;
-          color: #FFF;
-          background-color: #348eda;
-          border: solid #348eda;
-          border-width: 10px 20px;
-          line-height: 2;
-          font-weight: bold;
-          text-align: center;
-          cursor: pointer;
-          display: inline-block;
-          border-radius: 5px;
-          text-transform: capitalize;
         }
 
         /* -------------------------------------
@@ -207,56 +193,15 @@
           clear: both;
         }
 
-        /* -------------------------------------
-            ALERTS
-            Change the class depending on warning email, good email or bad email
-        ------------------------------------- */
-        .alert {
-          font-size: 16px;
-          color: #fff;
-          font-weight: 500;
-          padding: 20px;
-          text-align: center;
-          border-radius: 3px 3px 0 0;
-        }
-        .alert a {
-          color: #fff;
-          text-decoration: none;
-          font-weight: 500;
-          font-size: 16px;
-        }
-        .alert.alert-warning {
-          background: #ff9f00;
-        }
-        .alert.alert-bad {
-          background: #d0021b;
-        }
-        .alert.alert-good {
-          background: #68b90f;
-        }
-
-        /* -------------------------------------
-            INVOICE
-            Styles for the billing table
-        ------------------------------------- */
-        .invoice {
-          margin: 40px auto;
+        .http-code {
           text-align: left;
-          width: 80%;
-        }
-        .invoice td {
-          padding: 5px 0;
-        }
-        .invoice .invoice-items {
-          width: 100%;
-        }
-        .invoice .invoice-items td {
-          border-top: #eee 1px solid;
-        }
-        .invoice .invoice-items .total td {
-          border-top: 2px solid #333;
-          border-bottom: 2px solid #333;
-          font-weight: 700;
+          border-bottom: 1px solid #CCC;
+          color: #666;
+          font-size: 60px;
+          line-height: 60px;
+          font-weight: lighter;
+          letter-spacing: 0.02em;
+          padding-bottom: 20px;
         }
 
         /* -------------------------------------
@@ -285,25 +230,24 @@
           }
 
           .content, .content-wrapper {
-            padding: 10px !important;
-          }
-
-          .invoice {
-            width: 100% !important;
+            padding: 1.5em !important;
           }
         }
     </style>
 </head>
 <body class="body-wrap">
 <div id="error" class="container">
-    <p class="smiley">:-(</p>
-    <h1>Roadiz has lost its musicians</h1>
-    <h2>{{ humanMessage }}</h2>
+    <div class="content">
+      <p class="smiley">:-(</p>
+      <p class="http-code">{{ httpCode }}</p>
+      <h1>Roadiz has lost its musicians</h1>
+      <h2>{{ humanMessage }}</h2>
 
-    <div id="details">
-        <p>{{ message }}</p>
-        <p>Please contact your site administrator, or post an issue on <a href="https://github.com/roadiz/roadiz/issues">Github</a> with following informations:</p>
-        <div id="trace">{{ details }}</div>
+      <div id="details">
+          <p>{{ message }}</p>
+          <p>Please contact your site administrator, or post an issue on <a href="https://github.com/roadiz/roadiz/issues">Github</a> with following informations:</p>
+          <div id="trace">{{ details }}</div>
+      </div>
     </div>
 </div>
 </body>
