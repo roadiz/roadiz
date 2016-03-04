@@ -373,13 +373,15 @@ class ContactFormManager
              // Give the message a subject
              ->setSubject($this->subject)
              // Set the To addresses with an associative array
+             ->setFrom($this->receiver)
              ->setTo([$this->receiver])
+             ->setReturnPath($this->receiver)
              // Give it a body
              ->setBody($htmldoc->getHTML(), 'text/html');
 
         if (null !== $this->sender) {
             // Set the From address with an associative array
-            $this->message->setFrom([$this->sender]);
+            $this->message->setReplyTo([$this->sender]);
         }
 
         /*
