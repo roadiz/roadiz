@@ -109,13 +109,23 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
             if ($node !== null) {
                 $translation = $node->getNodeSources()->first()->getTranslation();
+                $nodeRouteHelper = new NodeRouteHelper(
+                    $node,
+                    $this->theme,
+                    $this->authorizationChecker,
+                    $this->preview
+                );
 
                 if (!$translation->isAvailable()) {
                     return false;
                 }
 
+                if (false === $nodeRouteHelper->isViewable()) {
+                    return false;
+                }
+
                 return [
-                    '_controller' => $this->theme->getClassName() . '::indexAction',
+                    '_controller' => $nodeRouteHelper->getController() . '::indexAction',
                     '_locale' => $translation->getLocale(), //pass request locale to init translator
                     'node' => $node,
                     'translation' => $translation,
@@ -151,11 +161,21 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 if ($node !== null &&
                     !$node->isHome() &&
                     $this->theme->getHomeNode() !== $node) {
+
+                    $nodeRouteHelper = new NodeRouteHelper(
+                        $node,
+                        $this->theme,
+                        $this->authorizationChecker,
+                        $this->preview
+                    );
                     /*
                      * Try with nodeName
                      */
+                    if (false === $nodeRouteHelper->isViewable()) {
+                        return false;
+                    }
                     $match = [
-                        '_controller' => $this->theme->getClassName() . '::indexAction',
+                        '_controller' => $nodeRouteHelper->getController() . '::indexAction',
                         'node' => $node,
                         'translation' => $translation,
                         '_route' => null,

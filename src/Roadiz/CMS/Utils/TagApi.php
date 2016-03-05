@@ -29,10 +29,12 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
+use RZ\Roadiz\Core\Repositories\TagRepository;
+
 class TagApi extends AbstractApi
 {
     /**
-     * {@inheritdoc}
+     * @return TagRepository
      */
     public function getRepository()
     {

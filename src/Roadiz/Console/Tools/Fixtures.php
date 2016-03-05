@@ -105,7 +105,7 @@ class Fixtures
 
         foreach ($folders as $folder) {
             if (!$fs->exists($folder)) {
-                $fs->mkdir($folder, 0755, true);
+                $fs->mkdir($folder, 0755);
             }
         }
     }

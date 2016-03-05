@@ -49,9 +49,13 @@ class RecaptchaValidator extends ConstraintValidator
         $responseField = $constraint->request->request->get('g-recaptcha-response');
 
         if (empty($responseField)) {
-            $this->context->addViolationAt($propertyPath, $constraint->emptyMessage);
+            $this->context->buildViolation($constraint->emptyMessage)
+                ->atPath($propertyPath)
+                ->addViolation();
         } elseif (false === $this->check($constraint, $responseField)) {
-            $this->context->addViolationAt($propertyPath, $constraint->invalidMessage);
+            $this->context->buildViolation($constraint->invalidMessage)
+                ->atPath($propertyPath)
+                ->addViolation();
         }
     }
 
@@ -68,12 +72,12 @@ class RecaptchaValidator extends ConstraintValidator
         $server = $constraint->request->server;
 
         $data = array(
-            'secret' => $constraint->options['privateKey'],
+            'secret' => $constraint->privateKey,
             'remoteip' => $server->get('REMOTE_ADDR'),
             'response' => $responseField,
         );
 
-        $curl = curl_init($constraint->options['verifyUrl']);
+        $curl = curl_init($constraint->verifyUrl);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);

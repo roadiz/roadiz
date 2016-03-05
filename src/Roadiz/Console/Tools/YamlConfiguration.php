@@ -49,17 +49,12 @@ class YamlConfiguration extends Configuration
      * @param boolean $debug
      * @param string  $path
      */
-    public function __construct($cacheDir, $debug, $path = null)
+    public function __construct($cacheDir, $debug, $path)
     {
-        $this->cacheDir = $cacheDir;
+        parent::__construct($cacheDir, $path);
+
         $this->cachePath = $this->cacheDir . '/configuration.php';
         $this->confCache = new ConfigCache($this->cachePath, $debug);
-
-        if ($path === null) {
-            $this->path = ROADIZ_ROOT . '/conf/config.yml';
-        } else {
-            $this->path = $path;
-        }
     }
 
     /**
@@ -100,7 +95,7 @@ class YamlConfiguration extends Configuration
     }
 
     /**
-     * @return void
+     * @return bool
      */
     public function writeConfiguration()
     {

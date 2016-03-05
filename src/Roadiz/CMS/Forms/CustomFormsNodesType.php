@@ -72,12 +72,10 @@ class CustomFormsNodesType extends AbstractType
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
                     if (null !== $value && null === $customForms[$key]) {
-                        $context->addViolationAt(
-                            null,
-                            'CustomForm #' . $value . ' does not exists',
-                            [],
-                            null
-                        );
+                        $context->buildViolation('CustomForm #{{ value }} does not exists.')
+                            ->atPath(null)
+                            ->setParameter('{{ value }}', $value)
+                            ->addViolation();
                     }
                 }
 
@@ -86,12 +84,10 @@ class CustomFormsNodesType extends AbstractType
 
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $customForm) {
-                    $context->addViolationAt(
-                        null,
-                        'CustomForm ' . $object . ' does not exists',
-                        [],
-                        null
-                    );
+                    $context->buildViolation('CustomForm #{{ value }} does not exists.')
+                        ->atPath(null)
+                        ->setParameter('{{ value }}', $value)
+                        ->addViolation();
                 }
             }
         };

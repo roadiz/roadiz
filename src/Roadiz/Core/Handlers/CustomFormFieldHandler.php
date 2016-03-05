@@ -77,5 +77,7 @@ class CustomFormFieldHandler
         if ($this->customFormField->getCustomForm() !== null) {
             return $this->customFormField->getCustomForm()->getHandler()->cleanFieldsPositions();
         }
+
+        return 1;
     }
 }

@@ -64,7 +64,7 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
             $latestPosition = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                 ->findLatestPositionInNodeType($nodetype);
-            $text = $this->addNodeTypeField($nodetype, $latestPosition + 1, $input, $output);
+            $this->addNodeTypeField($nodetype, $latestPosition + 1, $input, $output);
             $this->entityManager->flush();
             $nodetype->getHandler()->regenerateEntityClass();
 

@@ -55,6 +55,8 @@ class TranslationServiceProvider implements ServiceProviderInterface
         /**
          * This service have to be called once a controller has
          * been matched! Never before.
+         * @param $c
+         * @return
          */
         $container['translator.locale'] = function ($c) {
             if (null !== $c['session']->get('_locale') &&

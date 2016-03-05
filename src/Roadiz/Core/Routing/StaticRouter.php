@@ -47,7 +47,6 @@ class StaticRouter extends Router
         RequestContext $context = null,
         LoggerInterface $logger = null
     ) {
-
         $this->routeCollection = $routeCollection;
         $this->logger = $logger;
         $this->context = $context ?: new RequestContext();

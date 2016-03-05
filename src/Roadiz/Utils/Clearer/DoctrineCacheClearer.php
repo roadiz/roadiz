@@ -43,6 +43,7 @@ class DoctrineCacheClearer extends Clearer
 
     public function __construct(EntityManager $entityManager)
     {
+        parent::__construct('');
         $this->entityManager = $entityManager;
     }
 

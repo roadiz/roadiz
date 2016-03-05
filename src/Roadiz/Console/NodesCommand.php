@@ -87,7 +87,7 @@ class NodesCommand extends Command
             ];
         }
         $table->setRows($tableContent);
-        $table->render($output);
+        $table->render();
 
         $output->writeln($text);
     }

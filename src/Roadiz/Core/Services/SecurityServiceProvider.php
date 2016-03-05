@@ -42,7 +42,6 @@ use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
 use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
 use RZ\Roadiz\Utils\Security\TimedFirewall;
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -115,16 +114,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
             $session = new Session($c['session.storage']);
             $c['request']->setSession($session);
             return $session;
-        };
-
-        /*
-         * Deprecated
-         */
-        $container['csrfProvider'] = function ($c) {
-            return new SessionCsrfProvider(
-                $c['session'],
-                $c['config']["security"]['secret']
-            );
         };
 
         $container['sessionTokenStorage'] = function ($c) {
