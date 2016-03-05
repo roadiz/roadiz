@@ -33,9 +33,8 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,9 +78,21 @@ class FrontendController extends AppController
         'home',
     ];
 
+    /**
+     * @var Node
+     */
     protected $node = null;
+    /**
+     * @var NodesSources
+     */
     protected $nodeSource = null;
+    /**
+     * @var Translation
+     */
     protected $translation = null;
+    /**
+     * @var Container
+     */
     protected $themeContainer = null;
 
     /**
@@ -205,73 +216,6 @@ class FrontendController extends AppController
         $this->assignation['pageMeta'] = $this->getNodeSEO();
     }
 
-    /**
-     * Get controller class path for a given node.
-     *
-     * @param Node $node
-     *
-     * @return string
-     */
-    public function getControllerForNode(Node $node)
-    {
-        $currentClass = get_class($this);
-        $refl = new \ReflectionClass($currentClass);
-        $namespace = $refl->getNamespaceName() . '\\Controllers';
-
-        /*
-         * Determine if we look for a node-type named controller or
-         * a node-named controller.
-         */
-        if (in_array($node->getNodeName(), static::$specificNodesControllers)) {
-            return $namespace . '\\' .
-            StringHandler::classify($node->getNodeName()) .
-                'Controller';
-        } else {
-            return $namespace . '\\' .
-            StringHandler::classify($node->getNodeType()->getName()) .
-                'Controller';
-        }
-    }
-
-    /**
-     * Return a 404 Response or TRUE if node is viewable.
-     *
-     * @param  Node $node
-     *
-     * @return boolean|\Symfony\Component\HttpFoundation\Response
-     */
-    public function validateAccessForNodeWithStatus(Node $node)
-    {
-        /*
-         * For archived and deleted nodes
-         */
-        if ($node->getStatus() > Node::PUBLISHED) {
-            /*
-             * Not allowed to see deleted and archived nodes
-             * even for Admins
-             */
-            return $this->throw404();
-        }
-
-        /*
-         * For unpublished nodes
-         */
-        if ($node->getStatus() < Node::PUBLISHED) {
-            if ($this->isGranted(Role::ROLE_BACKEND_USER) &&
-                $this->getService('kernel')->isPreview()) {
-                return true;
-            }
-            /*
-             * Not allowed to see unpublished nodes
-             */
-            return $this->throw404();
-        }
-
-        /*
-         * Everyone can view published nodes.
-         */
-        return true;
-    }
 
     /**
      * Initialize controller with environment from an other controller
@@ -306,15 +250,23 @@ class FrontendController extends AppController
         $this->getService('stopwatch')->start('handleNodeController');
 
         if ($node !== null) {
-            if (true !== $resp = $this->validateAccessForNodeWithStatus($node)) {
-                return $resp;
+
+            $nodeRouteHelper = new NodeRouteHelper(
+                $node,
+                $this->getTheme(),
+                $this->getService('securityAuthorizationChecker'),
+                $this->getService('kernel')->isPreview()
+            );
+
+            if (true !== $nodeRouteHelper->isViewable()) {
+                return $this->throw404();
             }
 
             /*
              * Determine if we look for a node-type named controller or
              * a node-named controller.
              */
-            $controllerPath = $this->getControllerForNode($node);
+            $controllerPath = $nodeRouteHelper->getController();
 
             if (class_exists($controllerPath) &&
                 method_exists($controllerPath, 'indexAction')) {

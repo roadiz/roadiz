@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -46,23 +47,31 @@ class DynamicUrlMatcher extends UrlMatcher
     protected $repository = null;
     protected $stopwatch = null;
     protected $logger = null;
+    protected $authorizationChecker = null;
+    protected $preview;
 
     /**
      * @param RequestContext $context
      * @param EntityManager $em
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
      */
     public function __construct(
         RequestContext $context,
         EntityManager $em,
         Stopwatch $stopwatch = null,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
         $this->context = $context;
         $this->em = $em;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
+        $this->preview = $preview;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**

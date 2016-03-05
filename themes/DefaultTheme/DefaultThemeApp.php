@@ -148,11 +148,15 @@ class DefaultThemeApp extends FrontendController
         $parent = $this->getHome($this->translation);
 
         if ($parent !== null) {
+            $pageNodeType = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->findOneByName('Page');
             return $this->getService('nodeApi')
                         ->getBy(
                             [
                                 'parent' => $parent,
                                 'translation' => $this->translation,
+                                'nodeType' => $pageNodeType,
                             ],
                             [
                                 'position' => 'ASC',
