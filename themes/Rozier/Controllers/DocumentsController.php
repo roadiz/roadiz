@@ -1066,7 +1066,8 @@ class DocumentsController extends RozierApp
                     /*
                      * Special case for SVG without XML statement
                      */
-                    if ($document->getMimeType() == "text/plain" &&
+                    if (($document->getMimeType() == "text/plain" ||
+                        $document->getMimeType() == 'text/html') &&
                         preg_match("#\.svg$#", $uploadedFile->getClientOriginalName())) {
                         $this->getService('logger')->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
                         $document->setMimeType('image/svg+xml');
@@ -1084,7 +1085,10 @@ class DocumentsController extends RozierApp
                         $this->getService('em')->flush();
                     }
 
-                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+                    $uploadedFile->move(
+                        Document::getFilesFolder() . '/' . $document->getFolder(),
+                        $document->getFilename()
+                    );
 
                     if ($document->isImage()) {
                         $this->getService("dispatcher")->dispatch(
