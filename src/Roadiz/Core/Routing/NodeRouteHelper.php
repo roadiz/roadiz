@@ -32,6 +32,7 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -57,6 +58,10 @@ class NodeRouteHelper
 
     /**
      * NodeRouteHelper constructor.
+     * @param Node $node
+     * @param Theme $theme
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
      */
     public function __construct(Node $node, Theme $theme, AuthorizationChecker $authorizationChecker, $preview = false)
     {

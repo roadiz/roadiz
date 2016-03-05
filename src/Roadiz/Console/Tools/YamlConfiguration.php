@@ -100,7 +100,7 @@ class YamlConfiguration extends Configuration
     }
 
     /**
-     * @return void
+     * @return bool
      */
     public function writeConfiguration()
     {

@@ -29,10 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
@@ -112,7 +109,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
             if ($node !== null) {
                 $translation = $node->getNodeSources()->first()->getTranslation();
-                $nodeRouteHelper = new NodeRouteHelper($node, $this->theme, $this->authorizationChecker, $this->preview);
+                $nodeRouteHelper = new NodeRouteHelper(
+                    $node,
+                    $this->theme,
+                    $this->authorizationChecker,
+                    $this->preview
+                );
 
                 if (!$translation->isAvailable()) {
                     return false;
@@ -160,7 +162,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     !$node->isHome() &&
                     $this->theme->getHomeNode() !== $node) {
 
-                    $nodeRouteHelper = new NodeRouteHelper($node, $this->theme, $this->authorizationChecker, $this->preview);
+                    $nodeRouteHelper = new NodeRouteHelper(
+                        $node,
+                        $this->theme,
+                        $this->authorizationChecker,
+                        $this->preview
+                    );
                     /*
                      * Try with nodeName
                      */

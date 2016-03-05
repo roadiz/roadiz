@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Utils;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
  *
@@ -37,7 +38,7 @@ use RZ\Roadiz\Core\Entities\Node;
 class NodeApi extends AbstractApi
 {
     /**
-     * {@inheritdoc}
+     * @return NodeRepository
      */
     public function getRepository()
     {

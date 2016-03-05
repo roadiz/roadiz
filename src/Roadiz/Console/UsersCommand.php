@@ -94,7 +94,7 @@ class UsersCommand extends Command
                     ];
                 }
                 $table->setRows($tableContent);
-                $table->render($output);
+                $table->render();
             } else {
                 $text = '<info>No available users</info>' . PHP_EOL;
             }

@@ -219,7 +219,7 @@ class FrontendController extends AppController
 
     /**
      * Initialize controller with environment from an other controller
-     * in order to avoid initializing same componant again.
+     * in order to avoid initializing same component again.
      *
      * @param array $baseAssignation
      * @param Container $themeContainer
@@ -348,7 +348,7 @@ class FrontendController extends AppController
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
-         * Use a DI container to delay API requuests
+         * Use a DI container to delay API requests
          */
         $this->themeContainer = new Container();
 
@@ -368,7 +368,7 @@ class FrontendController extends AppController
         $this->storeNodeSourceAndTranslation($nodeSource, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
-         * Use a DI container to delay API requuests
+         * Use a DI container to delay API requests
          */
         $this->themeContainer = new Container();
 

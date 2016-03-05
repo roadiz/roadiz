@@ -267,5 +267,7 @@ class NodeTypeFieldHandler
         if ($this->nodeTypeField->getNodeType() !== null) {
             return $this->nodeTypeField->getNodeType()->getHandler()->cleanFieldsPositions();
         }
+
+        return 1;
     }
 }
