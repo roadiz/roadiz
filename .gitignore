@@ -94,3 +94,6 @@ testDir/
 
 ## PHPStorm
 .idea
+
+## XDebug profile folder
+/.xdebug

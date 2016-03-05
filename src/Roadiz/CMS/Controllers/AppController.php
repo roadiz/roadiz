@@ -33,6 +33,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -154,6 +155,11 @@ class AppController extends Controller
      * @var array
      */
     protected $assignation = [];
+
+    /**
+     * @var Node|null
+     */
+    private $homeNode = null;
 
     /**
      * Initialize controller with its twig environment.
@@ -379,39 +385,47 @@ class AppController extends Controller
         $container['twig.loaderFileSystem']->addPath(static::getViewsFolder(), static::getThemeDir());
     }
 
+    /**
+     * @param Translation|null $translation
+     * @return null|Node
+     */
     protected function getHome(Translation $translation = null)
     {
-        $theme = $this->getTheme();
+        if (null === $this->homeNode) {
+            $theme = $this->getTheme();
 
-        if ($theme !== null) {
-            $home = $theme->getHomeNode();
-            if ($home !== null) {
-                if ($translation !== null) {
-                    return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
-                        ->findWithTranslation(
-                            $home->getId(),
-                            $translation,
-                            $this->container['securityAuthorizationChecker']
-                        );
-                } else {
-                    return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
-                        ->findWithDefaultTranslation(
-                            $home->getId(),
-                            $this->container['securityAuthorizationChecker']
-                        );
+            if ($theme !== null) {
+                $home = $theme->getHomeNode();
+                if ($home !== null) {
+                    if ($translation !== null) {
+                        $this->homeNode = $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                            ->findWithTranslation(
+                                $home->getId(),
+                                $translation,
+                                $this->container['securityAuthorizationChecker']
+                            );
+                    } else {
+                        $this->homeNode = $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                            ->findWithDefaultTranslation(
+                                $home->getId(),
+                                $this->container['securityAuthorizationChecker']
+                            );
+                    }
                 }
             }
+            if ($translation !== null) {
+                $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findHomeWithTranslation(
+                        $translation,
+                        $this->container['securityAuthorizationChecker']
+                    );
+            } else {
+                $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
+            }
         }
-        if ($translation !== null) {
-            return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findHomeWithTranslation(
-                    $translation,
-                    $this->container['securityAuthorizationChecker']
-                );
-        } else {
-            return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
-        }
+
+        return $this->homeNode;
     }
 
     protected function getRoot()

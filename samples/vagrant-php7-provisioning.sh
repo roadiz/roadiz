@@ -79,10 +79,12 @@ sudo openssl req -new -newkey rsa:4096 -days 365 -nodes \
 echo -e "\n--- Configure PHP-FPM default pool ---\n"
 sudo rm /etc/php/7.0/fpm/pool.d/www.conf;
 sudo cp /var/www/samples/vagrant/php-pool.conf /etc/php/7.0/fpm/pool.d/www.conf;
+sudo cp /var/www/samples/vagrant/xdebug.ini /etc/php/7.0/mods-available/xdebug.ini;
 sudo cp /var/www/samples/vagrant/logs.ini /etc/php/7.0/mods-available/logs.ini;
 sudo cp /var/www/samples/vagrant/opcache-recommended.ini /etc/php/7.0/mods-available/opcache-recommended.ini;
 sudo phpenmod -v ALL -s ALL opcache-recommended;
 sudo phpenmod -v ALL -s ALL logs;
+sudo phpenmod -v ALL -s ALL xdebug;
 
 echo -e "\n--- Restarting Nginx and PHP servers ---\n"
 sudo service nginx restart > /dev/null 2>&1;
