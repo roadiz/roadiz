@@ -45,13 +45,9 @@ class Configuration
      * @param string $cacheDir
      * @param string $path
      */
-    public function __construct($cacheDir, $path = null)
+    public function __construct($cacheDir, $path)
     {
         $this->cacheDir = $cacheDir;
-
-        if ($path === null) {
-            $path = ROADIZ_ROOT . '/conf/config.json';
-        }
         $this->path = $path;
     }
 

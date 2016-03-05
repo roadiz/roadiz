@@ -58,6 +58,8 @@ class AssetsServiceProvider implements ServiceProviderInterface
          * - absolute: absolute to root
          * - doc: relative to documents
          * - absolute_doc: absolute to documents
+         * @param $c
+         * @return Packages
          */
         $container['assetPackages'] = function ($c) {
             return new Packages($c['versionStrategy'], $c['requestStack'], SettingsBag::get('static_domain_name'));

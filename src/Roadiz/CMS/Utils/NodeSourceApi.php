@@ -38,10 +38,14 @@ use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
  */
 class NodeSourceApi extends AbstractApi
 {
+    /**
+     * @var string
+     */
     protected $repository = "RZ\Roadiz\Core\Entities\NodesSources";
 
     /**
-     * @return NodesSourcesRepository|mixed
+     * @param array $criteria
+     * @return mixed|NodesSourcesRepository
      */
     protected function getRepositoryName(array $criteria = null)
     {

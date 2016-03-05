@@ -59,9 +59,7 @@ class TimedRouteListener extends RouterListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $this->stopwatch->start('routeListener');
-
-        $return = parent::onKernelRequest($event);
+        parent::onKernelRequest($event);
         $this->stopwatch->stop('routeListener');
-        return $return;
     }
 }

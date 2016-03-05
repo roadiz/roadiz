@@ -58,7 +58,7 @@ abstract class AbstractField extends AbstractEntity
     /**
      * Richtext field is an HTML text using a WYSIWYG editor.
      *
-     * @deprecated Use Markdown type instead. WYSIWYG is evil.
+     * Use Markdown type instead. WYSIWYG is evil.
      */
     const RICHTEXT_T = 3;
     /**

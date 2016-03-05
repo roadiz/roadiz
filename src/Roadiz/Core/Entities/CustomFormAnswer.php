@@ -168,9 +168,9 @@ class CustomFormAnswer extends AbstractEntity
     /**
      * @return string
      */
-    public function getOneLineSummary()
+    public function __toString()
     {
         return $this->getId() . " — " . $this->getIp() .
-            " — Sumitted : " . ($this->getSubmittedAt()) . PHP_EOL;
+        " — Submitted : " . ($this->getSubmittedAt()->format('Y-m-d H:i:s'));
     }
 }

@@ -34,8 +34,10 @@ use Symfony\Component\Validator\Constraint;
 
 class Recaptcha extends Constraint
 {
+    /**
+     * @var Request
+     */
     public $request;
-    public $options;
 
     /**
      * @var string
@@ -48,6 +50,15 @@ class Recaptcha extends Constraint
     public $invalidMessage = 'recaptcha_is_invalid.try_again';
 
     /**
+     * @var string
+     */
+    public $privateKey;
+    /**
+     * @var string
+     */
+    public $verifyUrl;
+
+    /**
      * Construct
      *
      * @param Request $request
@@ -55,7 +66,18 @@ class Recaptcha extends Constraint
      */
     public function __construct(Request $request, array $options)
     {
+        parent::__construct($options);
         $this->request = $request;
-        $this->options = $options;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequiredOptions()
+    {
+        return [
+            'privateKey',
+            'verifyUrl',
+        ];
     }
 }
