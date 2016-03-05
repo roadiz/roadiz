@@ -92,3 +92,5 @@ dist/
 .tmp/
 testDir/
 
+## PHPStorm
+.idea
