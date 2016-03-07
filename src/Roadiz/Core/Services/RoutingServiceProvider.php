@@ -102,7 +102,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['requestContext'],
                 $c['logger'],
                 $c['stopwatch'],
-                $c['securityAuthorizationChecker'],
                 $c['kernel']->isPreview()
             );
         };

@@ -163,7 +163,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['contextListener'] = function ($c) {
             $c['session']; //Force session handler
-
             return new ContextListener(
                 $c['securityTokenStorage'],
                 [
@@ -274,6 +273,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['accessDecisionManager']
             );
         };
+
         $container['securityTokenStorage'] = function () {
             return new TokenStorage();
         };

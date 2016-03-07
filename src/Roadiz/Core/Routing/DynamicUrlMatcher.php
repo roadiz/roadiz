@@ -47,7 +47,6 @@ class DynamicUrlMatcher extends UrlMatcher
     protected $repository = null;
     protected $stopwatch = null;
     protected $logger = null;
-    protected $authorizationChecker = null;
     protected $preview;
 
     /**
@@ -63,7 +62,6 @@ class DynamicUrlMatcher extends UrlMatcher
         EntityManager $em,
         Stopwatch $stopwatch = null,
         LoggerInterface $logger = null,
-        AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
         $this->context = $context;
@@ -71,7 +69,6 @@ class DynamicUrlMatcher extends UrlMatcher
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
         $this->preview = $preview;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**

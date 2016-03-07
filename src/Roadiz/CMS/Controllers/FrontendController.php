@@ -254,7 +254,6 @@ class FrontendController extends AppController
             $nodeRouteHelper = new NodeRouteHelper(
                 $node,
                 $this->getTheme(),
-                $this->getService('securityAuthorizationChecker'),
                 $this->getService('kernel')->isPreview()
             );
 

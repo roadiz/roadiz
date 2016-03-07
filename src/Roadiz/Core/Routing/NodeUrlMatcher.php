@@ -112,7 +112,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 $nodeRouteHelper = new NodeRouteHelper(
                     $node,
                     $this->theme,
-                    $this->authorizationChecker,
                     $this->preview
                 );
 
@@ -165,7 +164,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     $nodeRouteHelper = new NodeRouteHelper(
                         $node,
                         $this->theme,
-                        $this->authorizationChecker,
                         $this->preview
                     );
                     /*

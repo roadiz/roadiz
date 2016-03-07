@@ -43,10 +43,6 @@ class NodeRouter extends Router
     protected $em;
     protected $stopwatch;
     /**
-     * @var AuthorizationChecker
-     */
-    protected $authorizationChecker;
-    /**
      * @var bool
      */
     protected $preview;
@@ -59,7 +55,6 @@ class NodeRouter extends Router
      * @param RequestContext|null $context
      * @param LoggerInterface|null $logger
      * @param Stopwatch|null $stopwatch
-     * @param AuthorizationChecker|null $authorizationChecker
      * @param bool $preview
      */
     public function __construct(
@@ -68,7 +63,6 @@ class NodeRouter extends Router
         RequestContext $context = null,
         LoggerInterface $logger = null,
         Stopwatch $stopwatch = null,
-        AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
         $this->em = $em;
@@ -76,7 +70,6 @@ class NodeRouter extends Router
         $this->logger = $logger;
         $this->context = $context ?: new RequestContext();
         $this->setOptions($options);
-        $this->authorizationChecker = $authorizationChecker;
         $this->preview = $preview;
     }
 
@@ -111,7 +104,6 @@ class NodeRouter extends Router
             $this->em,
             $this->stopwatch,
             $this->logger,
-            $this->authorizationChecker,
             $this->preview
         );
     }

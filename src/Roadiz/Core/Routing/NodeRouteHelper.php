@@ -48,10 +48,6 @@ class NodeRouteHelper
      */
     private $theme;
     /**
-     * @var AuthorizationChecker
-     */
-    private $authorizationChecker;
-    /**
      * @var bool
      */
     private $preview;
@@ -60,14 +56,12 @@ class NodeRouteHelper
      * NodeRouteHelper constructor.
      * @param Node $node
      * @param Theme $theme
-     * @param AuthorizationChecker $authorizationChecker
      * @param bool $preview
      */
-    public function __construct(Node $node, Theme $theme, AuthorizationChecker $authorizationChecker, $preview = false)
+    public function __construct(Node $node, Theme $theme, $preview = false)
     {
         $this->node = $node;
         $this->theme = $theme;
-        $this->authorizationChecker = $authorizationChecker;
         $this->preview = $preview;
     }
 
@@ -108,9 +102,7 @@ class NodeRouteHelper
          * For unpublished nodes
          */
         if ($this->node->getStatus() < Node::PUBLISHED) {
-            if (true === $this->preview &&
-                null !== $this->authorizationChecker &&
-                $this->authorizationChecker->isGranted(Role::ROLE_BACKEND_USER)) {
+            if (true === $this->preview) {
                 return true;
             }
             /*
