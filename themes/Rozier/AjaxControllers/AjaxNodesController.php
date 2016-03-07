@@ -85,7 +85,7 @@ class AjaxNodesController extends AbstractAjaxController
      * @param Request $request
      * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function editAction(Request $request, $nodeId)
     {
@@ -234,7 +234,7 @@ class AjaxNodesController extends AbstractAjaxController
      *
      * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function statusesAction(Request $request)
     {

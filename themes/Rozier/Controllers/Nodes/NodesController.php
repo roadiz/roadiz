@@ -55,8 +55,10 @@ class NodesController extends RozierApp
      * List every nodes.
      *
      * @param Request $request
+     * @param string  $filter
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $filter = null)
     {

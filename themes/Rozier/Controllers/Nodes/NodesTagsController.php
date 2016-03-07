@@ -114,11 +114,12 @@ class NodesTagsController extends RozierApp
     /**
      * Return a deletion form for requested tag depending on the node.
      *
-     * @param \Symfony\Component\HttpFoundation\Requet $request
-     * @param int                                     $nodeId
-     * @param int                                     $tagId
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $tagId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function removeTagAction(Request $request, $nodeId, $tagId)
     {

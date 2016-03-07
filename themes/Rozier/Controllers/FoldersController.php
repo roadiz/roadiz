@@ -69,8 +69,10 @@ class FoldersController extends RozierApp
      * Return an creation form for requested folder.
      *
      * @param Request $request
+     * @param int     $parentFolderId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request, $parentFolderId = null)
     {

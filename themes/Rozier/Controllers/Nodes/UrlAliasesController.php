@@ -53,8 +53,11 @@ class UrlAliasesController extends RozierApp
      *
      * @param Request $request
      * @param int     $nodeId
+     * @param int     $translationId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws EntityAlreadyExistsException
+     * @throws \Twig_Error_Runtime
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {

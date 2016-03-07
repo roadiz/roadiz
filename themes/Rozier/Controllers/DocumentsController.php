@@ -59,8 +59,10 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
+     * @param int     $folderId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $folderId = null)
     {
@@ -369,8 +371,10 @@ class DocumentsController extends RozierApp
      * Embed external document page.
      *
      * @param Request $request
+     * @param int     $folderId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function embedAction(Request $request, $folderId = null)
     {
@@ -422,6 +426,7 @@ class DocumentsController extends RozierApp
      * Get random external document page.
      *
      * @param Request $request
+     * @param int     $folderId
      *
      * @return Response
      */
@@ -458,6 +463,7 @@ class DocumentsController extends RozierApp
      * Download document file.
      *
      * @param Request $request
+     * @param int     $documentId
      *
      * @return Response
      */
@@ -478,8 +484,10 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
+     * @param int     $folderId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function uploadAction(Request $request, $folderId = null)
     {
@@ -664,6 +672,8 @@ class DocumentsController extends RozierApp
     }
 
     /**
+     * @param int $folderId
+     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildUploadForm($folderId = null)
@@ -926,10 +936,15 @@ class DocumentsController extends RozierApp
             throw new \RuntimeException("bad.request", 1);
         }
     }
+
     /**
      * Download a random document.
      *
+     * @param int $folderId
+     *
      * @return Document
+     * @throws \Exception
+     * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
      */
     public function randomDocument($folderId = null)
     {
@@ -1048,12 +1063,14 @@ class DocumentsController extends RozierApp
 
         return $document;
     }
+
     /**
      * Handle upload form data to create a Document.
      *
      * @param \Symfony\Component\Form\Form $data
+     * @param int                          $folderId
      *
-     * @return Document|boolean
+     * @return bool|Document
      */
     private function uploadDocument($data, $folderId = null)
     {

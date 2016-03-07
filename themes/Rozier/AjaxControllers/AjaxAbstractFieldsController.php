@@ -42,9 +42,10 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
     /**
      * Handle actions for any abstract fields.
      *
+     * @param Request       $request
      * @param AbstractField $field
      *
-     * @return Response|null
+     * @return null|Response
      */
     protected function handleFieldActions(Request $request, AbstractField $field = null)
     {

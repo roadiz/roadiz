@@ -245,6 +245,9 @@ class NodesTreesController extends RozierApp
     }
 
     /**
+     * @param bool  $referer
+     * @param array $nodesIds
+     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildBulkDeleteForm(

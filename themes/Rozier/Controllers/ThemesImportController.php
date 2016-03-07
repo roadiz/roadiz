@@ -41,7 +41,8 @@ class ThemesImportController extends ImportController
     /**
      * Import theme's Settings file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
      * @return string
      */
@@ -55,7 +56,8 @@ class ThemesImportController extends ImportController
     /**
      * Import theme's Roles file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
      * @return string
      */
@@ -69,7 +71,8 @@ class ThemesImportController extends ImportController
     /**
      * Import theme's Groups file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
      * @return string
      */
@@ -83,7 +86,8 @@ class ThemesImportController extends ImportController
     /**
      * Import NodeTypes file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
      * @return string
      */
@@ -97,7 +101,8 @@ class ThemesImportController extends ImportController
     /**
      * Import Tags file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
      * @return string
      */
@@ -111,6 +116,8 @@ class ThemesImportController extends ImportController
     /**
      * Import Nodes file.
      *
+     * @param Request $request
+     * @param int     $themeId
      *
      * @return string
      */

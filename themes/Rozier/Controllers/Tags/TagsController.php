@@ -598,6 +598,9 @@ class TagsController extends RozierApp
     }
 
     /**
+     * @param bool  $referer
+     * @param array $tagsIds
+     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildBulkDeleteForm(

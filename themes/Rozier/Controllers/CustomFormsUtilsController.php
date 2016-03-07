@@ -17,6 +17,7 @@ class CustomFormsUtilsController extends RozierApp
      * Export all custom form's answer in a Xlsx file (.rzt).
      *
      * @param Request $request
+     * @param int     $customFormId
      *
      * @return Response
      */
