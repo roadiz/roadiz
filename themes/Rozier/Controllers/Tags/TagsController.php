@@ -50,9 +50,9 @@ class TagsController extends RozierApp
     /**
      * List every tags.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -83,11 +83,11 @@ class TagsController extends RozierApp
     /**
      * Return an edition form for current translated tag.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param integer                                  $tagId
-     * @param integer | null                           $translationId
+     * @param Request        $request
+     * @param integer        $tagId
+     * @param integer | null $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editTranslatedAction(Request $request, $tagId, $translationId = null)
     {
@@ -199,9 +199,9 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkDeleteAction(Request $request)
     {
@@ -254,9 +254,9 @@ class TagsController extends RozierApp
     /**
      * Return an creation form for requested tag.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -316,10 +316,10 @@ class TagsController extends RozierApp
     /**
      * Return a edition form for requested tag settings .
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
+     * @param Request $request
+     * @param int     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editSettingsAction(Request $request, $tagId)
     {
@@ -367,11 +367,11 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $tagId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function treeAction(Request $request, $tagId, $translationId = null)
     {
@@ -402,10 +402,10 @@ class TagsController extends RozierApp
     /**
      * Return a deletion form for requested tag.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
+     * @param Request $request
+     * @param int     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $tagId)
     {
@@ -451,11 +451,11 @@ class TagsController extends RozierApp
     /**
      * Handle tag creation pages.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $tagId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
@@ -531,10 +531,10 @@ class TagsController extends RozierApp
     /**
      * Handle tag nodes page.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
+     * @param Request $request
+     * @param int     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editNodesAction(Request $request, $tagId)
     {
@@ -570,8 +570,8 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param array                      $data
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param array $data
+     * @param Tag   $tag
      */
     private function deleteTag($data, Tag $tag)
     {
@@ -580,7 +580,7 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param Tag $tag
      *
      * @return \Symfony\Component\Form\Form
      */

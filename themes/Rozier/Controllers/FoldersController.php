@@ -46,9 +46,9 @@ class FoldersController extends RozierApp
 {
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -67,9 +67,10 @@ class FoldersController extends RozierApp
 
     /**
      * Return an creation form for requested folder.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return Response
      */
     public function addAction(Request $request, $parentFolderId = null)
     {
@@ -115,10 +116,11 @@ class FoldersController extends RozierApp
 
     /**
      * Return a deletion form for requested folder.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $folderId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $folderId
+     *
+     * @return Response
      */
     public function deleteAction(Request $request, $folderId)
     {
@@ -159,10 +161,11 @@ class FoldersController extends RozierApp
 
     /**
      * Return an edition form for requested folder.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $folderId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $folderId
+     *
+     * @return Response
      */
     public function editAction(Request $request, $folderId)
     {
@@ -206,10 +209,10 @@ class FoldersController extends RozierApp
     /**
      * Return a ZipArchive of requested folder.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $folderId
+     * @param Request $request
+     * @param int     $folderId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function downloadAction(Request $request, $folderId)
     {
@@ -258,7 +261,8 @@ class FoldersController extends RozierApp
 
     /**
      * Build delete folder form with name constraint.
-     * @param RZ\Roadiz\Core\Entities\Folder $folder
+     *
+     * @param Folder $folder
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -273,8 +277,7 @@ class FoldersController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Folder $folder
+     * @param Folder $folder
      *
      * @return void
      */

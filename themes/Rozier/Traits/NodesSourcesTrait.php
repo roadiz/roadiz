@@ -33,7 +33,6 @@ namespace Themes\Rozier\Traits;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
@@ -46,8 +45,8 @@ trait NodesSourcesTrait
     /**
      * Edit node source parameters.
      *
-     * @param array                               $data
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param array        $data
+     * @param NodesSources $nodeSource
      *
      * @return void
      */
@@ -75,7 +74,6 @@ trait NodesSourcesTrait
     /**
      * Update nodeName when title is available.
      *
-     * @param  string       $title
      * @param  NodesSources $nodeSource
      */
     protected function updateNodeName(NodesSources $nodeSource)
@@ -111,10 +109,11 @@ trait NodesSourcesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node         $node
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Node         $node
+     * @param NodesSources $source
      *
      * @return \Symfony\Component\Form\Form
+     * @throws \Exception
      */
     private function buildEditSourceForm(Node $node, NodesSources $source)
     {

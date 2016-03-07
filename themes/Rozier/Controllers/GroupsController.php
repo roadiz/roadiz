@@ -46,9 +46,9 @@ class GroupsController extends RozierApp
     /**
      * List groups action.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -69,9 +69,9 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -104,10 +104,10 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
+     * @param Request $request
+     * @param int     $groupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $groupId)
     {
@@ -147,10 +147,10 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
+     * @param Request $request
+     * @param int     $groupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $groupId)
     {
@@ -195,10 +195,10 @@ class GroupsController extends RozierApp
     /**
      * Return an edition form for requested group.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
+     * @param Request $request
+     * @param int     $groupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editRolesAction(Request $request, $groupId)
     {
@@ -236,11 +236,11 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
-     * @param int                                      $roleId
+     * @param Request $request
+     * @param int     $groupId
+     * @param int     $roleId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeRolesAction(Request $request, $groupId, $roleId)
     {
@@ -282,10 +282,10 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
+     * @param Request $request
+     * @param int     $groupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editUsersAction(Request $request, $groupId)
     {
@@ -323,11 +323,11 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $groupId
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $groupId
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeUsersAction(Request $request, $groupId, $userId)
     {
@@ -390,7 +390,7 @@ class GroupsController extends RozierApp
     /**
      * Build edit group form with name constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -420,7 +420,7 @@ class GroupsController extends RozierApp
     /**
      * Build delete group form with name constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -438,7 +438,7 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -464,7 +464,7 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -495,8 +495,8 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
-     * @param RZ\Roadiz\Core\Entities\Role  $role
+     * @param Group $group
+     * @param Role  $role
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -520,8 +520,8 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
-     * @param RZ\Roadiz\Core\Entities\User  $user
+     * @param Group $group
+     * @param User  $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -547,7 +547,8 @@ class GroupsController extends RozierApp
     /**
      * @param array $data
      *
-     * @return RZ\Roadiz\Core\Entities\Group
+     * @return Group
+     * @throws EntityAlreadyExistsException
      */
     protected function addGroup(array $data)
     {
@@ -577,8 +578,8 @@ class GroupsController extends RozierApp
      * @param array $data
      * @param Group $group
      *
-     * @return RZ\Roadiz\Core\Entities\Group
-     * @throws \RuntimeException
+     * @return Group
+     * @throws EntityAlreadyExistsException
      */
     protected function editGroup(array $data, Group $group)
     {
@@ -603,8 +604,8 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param array $data
+     * @param Group $group
      */
     protected function deleteGroup(array $data, Group $group)
     {
@@ -613,10 +614,10 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param array $data
+     * @param Group $group
      *
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return User
      */
     private function addRole($data, Group $group)
     {
@@ -633,11 +634,11 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Group $group
-     * @param RZ\Roadiz\Core\Entities\Role  $role
+     * @param array $data
+     * @param Group $group
+     * @param Role  $role
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return Role
      */
     private function removeRole($data, Group $group, Role $role)
     {
@@ -653,10 +654,10 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param array $data
+     * @param Group $group
      *
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return User
      */
     private function addUser($data, Group $group)
     {
@@ -674,11 +675,11 @@ class GroupsController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Group $group
-     * @param RZ\Roadiz\Core\EntitiesUser   $user
+     * @param array $data
+     * @param Group $group
+     * @param User  $user
      *
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return User
      */
     private function removeUser($data, Group $group, User $user)
     {

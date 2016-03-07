@@ -33,7 +33,6 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -46,10 +45,11 @@ class CustomFormAnswersController extends RozierApp
 {
     /**
      * List every node-types.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $customFormId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request, $customFormId)
     {
@@ -77,10 +77,12 @@ class CustomFormAnswersController extends RozierApp
 
     /**
      * Return an deletion form for requested node-type.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param         $customFormAnswerId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $customFormAnswerId)
     {
@@ -120,7 +122,7 @@ class CustomFormAnswersController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param CustomFormAnswer $customFormAnswer
      *
      * @return \Symfony\Component\Form\Form
      */

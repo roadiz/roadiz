@@ -30,13 +30,11 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeFieldType;
 use Themes\Rozier\RozierApp;
-use \Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * {@inheritdoc}
@@ -46,10 +44,10 @@ class NodeTypeFieldsController extends RozierApp
     /**
      * List every node-type-fields.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeId
+     * @param Request $request
+     * @param int     $nodeTypeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request, $nodeTypeId)
     {
@@ -73,10 +71,10 @@ class NodeTypeFieldsController extends RozierApp
     /**
      * Return an edition form for requested node-type.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeFieldId
+     * @param Request $request
+     * @param int     $nodeTypeFieldId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
@@ -128,10 +126,10 @@ class NodeTypeFieldsController extends RozierApp
     /**
      * Return an creation form for requested node-type.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeId
+     * @param Request $request
+     * @param int     $nodeTypeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request, $nodeTypeId)
     {
@@ -212,10 +210,10 @@ class NodeTypeFieldsController extends RozierApp
     /**
      * Return an deletion form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeFieldId
+     * @param Request $request
+     * @param int     $nodeTypeFieldId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $nodeTypeFieldId)
     {
@@ -272,7 +270,7 @@ class NodeTypeFieldsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param NodeTypeField $field
      *
      * @return \Symfony\Component\Form\Form
      */

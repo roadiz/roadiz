@@ -30,11 +30,8 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**

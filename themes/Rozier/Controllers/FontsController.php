@@ -47,11 +47,10 @@ use Themes\Rozier\RozierApp;
  */
 class FontsController extends RozierApp
 {
-
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -70,9 +69,10 @@ class FontsController extends RozierApp
 
     /**
      * Return an creation form for requested font.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return Response
      */
     public function addAction(Request $request)
     {
@@ -117,10 +117,11 @@ class FontsController extends RozierApp
 
     /**
      * Return a deletion form for requested font.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $fontId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $fontId
+     *
+     * @return Response
      */
     public function deleteAction(Request $request, $fontId)
     {
@@ -165,10 +166,11 @@ class FontsController extends RozierApp
 
     /**
      * Return an edition form for requested font.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $fontId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $fontId
+     *
+     * @return Response
      */
     public function editAction(Request $request, $fontId)
     {
@@ -228,10 +230,10 @@ class FontsController extends RozierApp
     /**
      * Return a ZipArchive of requested font.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $fontId
+     * @param Request $request
+     * @param int     $fontId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function downloadAction(Request $request, $fontId)
     {
@@ -286,7 +288,8 @@ class FontsController extends RozierApp
 
     /**
      * Build delete font form with name constraint.
-     * @param RZ\Roadiz\Core\Entities\Font $font
+     *
+     * @param Font $font
      *
      * @return \Symfony\Component\Form\Form
      */

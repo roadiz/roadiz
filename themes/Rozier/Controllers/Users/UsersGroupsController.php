@@ -42,10 +42,10 @@ use Themes\Rozier\RozierApp;
 class UsersGroupsController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editGroupsAction(Request $request, $userId)
     {
@@ -89,11 +89,11 @@ class UsersGroupsController extends RozierApp
     /**
      * Return a deletion form for requested group depending on the user.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
-     * @param int                                      $groupId
+     * @param Request $request
+     * @param int     $userId
+     * @param int     $groupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
@@ -138,10 +138,10 @@ class UsersGroupsController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param array $data
+     * @param User  $user
      *
-     * @return RZ\Roadiz\Core\Entities\Group
+     * @return Group
      */
     private function addUserGroup($data, User $user)
     {
@@ -161,10 +161,10 @@ class UsersGroupsController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param array $data
+     * @param User  $user
      *
-     * @return RZ\Roadiz\Core\Entities\Group
+     * @return Group
      */
     private function removeUserGroup($data, User $user)
     {
@@ -184,7 +184,7 @@ class UsersGroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -214,8 +214,8 @@ class UsersGroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User  $user
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param User  $user
+     * @param Group $group
      *
      * @return \Symfony\Component\Form\Form
      */

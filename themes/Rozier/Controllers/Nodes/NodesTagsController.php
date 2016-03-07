@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
@@ -53,10 +52,10 @@ class NodesTagsController extends RozierApp
     /**
      * Return tags form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editTagsAction(Request $request, $nodeId)
     {
@@ -115,11 +114,11 @@ class NodesTagsController extends RozierApp
     /**
      * Return a deletion form for requested tag depending on the node.
      *
-     * @param Symfony\Component\HttpFoundation\Requet $request
+     * @param \Symfony\Component\HttpFoundation\Requet $request
      * @param int                                     $nodeId
      * @param int                                     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeTagAction(Request $request, $nodeId, $tagId)
     {
@@ -168,8 +167,8 @@ class NodesTagsController extends RozierApp
     /**
      * Link a node with a tag.
      *
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param array $data
+     * @param Node  $node
      */
     protected function repopulateNodeTags($data, Node $node)
     {
@@ -192,11 +191,11 @@ class NodesTagsController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\Tag  $tag
+     * @param array $data
+     * @param Node  $node
+     * @param Tag   $tag
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      */
     protected function removeNodeTag($data, Node $node, Tag $tag)
     {
@@ -210,7 +209,7 @@ class NodesTagsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -243,8 +242,8 @@ class NodesTagsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     * @param RZ\Roadiz\Core\Entities\Tag  $tag
+     * @param Node $node
+     * @param Tag  $tag
      *
      * @return \Symfony\Component\Form\Form
      */

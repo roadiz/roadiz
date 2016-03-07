@@ -31,7 +31,6 @@
 
 namespace Themes\Rozier\Controllers\NodeTypes;
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,9 +45,9 @@ class NodeTypesController extends RozierApp
 {
     /**
      * List every node-types.
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {

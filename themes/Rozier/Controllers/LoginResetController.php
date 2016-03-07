@@ -36,9 +36,9 @@ use Themes\Rozier\RozierApp;
 class LoginResetController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function resetAction(Request $request, $token)
     {
@@ -70,9 +70,9 @@ class LoginResetController extends RozierApp
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @param  Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmAction(Request $request)
     {

@@ -31,8 +31,8 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * AjaxSessionMessages.
@@ -42,7 +42,7 @@ class AjaxSessionMessages extends AbstractAjaxController
     /**
      * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function getMessagesAction(Request $request)
     {

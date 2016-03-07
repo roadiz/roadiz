@@ -115,7 +115,7 @@ class TagMultiCreationController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param Tag $tag
      *
      * @return \Symfony\Component\Form\Form
      */

@@ -41,11 +41,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 trait NodesTrait
 {
     /**
-     * @param array                              $data
-     * @param RZ\Roadiz\Core\Entities\NodeType    $type
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param array       $data
+     * @param NodeType    $type
+     * @param Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     protected function createNode($data, NodeType $type, Translation $translation)
     {
@@ -68,7 +68,8 @@ trait NodesTrait
      * @param Node        $parentNode
      * @param Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return Node
+     * @throws \Exception
      */
     protected function createChildNode($data, Node $parentNode = null, Translation $translation = null)
     {
@@ -102,6 +103,8 @@ trait NodesTrait
     /**
      * @param array $data
      * @param Node  $node
+     *
+     * @return NodeType|null
      */
     public function addStackType($data, Node $node)
     {
@@ -124,8 +127,8 @@ trait NodesTrait
     /**
      * Create a new node-source for given translation.
      *
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param array $data
+     * @param Node  $node
      *
      * @return void
      */
@@ -158,7 +161,7 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -192,7 +195,7 @@ trait NodesTrait
         }
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -220,7 +223,7 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $parentNode
+     * @param Node $parentNode
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -258,7 +261,7 @@ trait NodesTrait
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return \Symfony\Component\Form\Form
      */

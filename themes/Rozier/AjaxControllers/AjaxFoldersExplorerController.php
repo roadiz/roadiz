@@ -29,10 +29,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -43,7 +42,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
     /**
      * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function indexAction(Request $request)
     {

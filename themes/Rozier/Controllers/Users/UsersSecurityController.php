@@ -39,10 +39,10 @@ use Themes\Rozier\RozierApp;
 class UsersSecurityController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function securityAction(Request $request, $userId)
     {

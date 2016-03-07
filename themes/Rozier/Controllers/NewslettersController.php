@@ -35,7 +35,6 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesSourcesTrait;
@@ -76,11 +75,11 @@ class NewslettersController extends RozierApp
     /**
      * Handle node creation pages.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $nodeTypeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
@@ -156,11 +155,11 @@ class NewslettersController extends RozierApp
     /**
      * Return an edition form for requested newsletter.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $newsletterId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $newsletterId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $newsletterId, $translationId)
     {

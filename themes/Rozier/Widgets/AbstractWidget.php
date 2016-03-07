@@ -43,14 +43,14 @@ abstract class AbstractWidget
     protected $request;
 
     /**
-     * @return Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     protected function getRequest()
     {
         return $this->request;
     }
     /**
-     * @return RZ\Roadiz\CMS\Controller\Controller
+     * @return Controller
      */
     protected function getController()
     {
@@ -58,8 +58,8 @@ abstract class AbstractWidget
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request Current kernel request
-     * @param RZ\Roadiz\CMS\Controller\Controller $refereeController Referee controller to get Twig, security context from.
+     * @param Request    $request           Current kernel request
+     * @param Controller $refereeController Referee controller to get Twig, security context from.
      */
     public function __construct(Request $request, Controller $refereeController)
     {

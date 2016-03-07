@@ -34,8 +34,8 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\RozierApp;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Themes\Rozier\RozierApp;
 
 /**
  * Redirection controller use to update database schema.
@@ -53,10 +53,10 @@ class SchemaController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $_token
+     * @param Request $request
+     * @param string  $_token
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateNodeTypesSchemaAction(Request $request, $_token)
     {
@@ -69,11 +69,11 @@ class SchemaController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $_token
-     * @param int                                      $nodeTypeId
+     * @param Request $request
+     * @param string  $_token
+     * @param int     $nodeTypeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
     {

@@ -58,9 +58,9 @@ class HistoryController extends RozierApp
     /**
      * List all logs action.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -86,10 +86,10 @@ class HistoryController extends RozierApp
     /**
      * List user logs action.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param integer                                  $userId
+     * @param Request $request
+     * @param integer $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userAction(Request $request, $userId)
     {

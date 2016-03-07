@@ -38,7 +38,6 @@ use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}

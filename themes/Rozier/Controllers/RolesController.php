@@ -45,9 +45,9 @@ class RolesController extends RozierApp
 {
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -69,9 +69,9 @@ class RolesController extends RozierApp
     /**
      * Return an creation form for requested role.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -106,10 +106,10 @@ class RolesController extends RozierApp
     /**
      * Return an deletion form for requested role.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $roleId
+     * @param Request $request
+     * @param int     $roleId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $roleId)
     {
@@ -151,10 +151,10 @@ class RolesController extends RozierApp
     /**
      * Return an edition form for requested role.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $roleId
+     * @param Request $request
+     * @param int     $roleId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $roleId)
     {
@@ -220,7 +220,7 @@ class RolesController extends RozierApp
     /**
      * Build delete role form with name constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -240,7 +240,7 @@ class RolesController extends RozierApp
     /**
      * Build edit role form with name constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -273,7 +273,8 @@ class RolesController extends RozierApp
     /**
      * @param array $data
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return Role
+     * @throws EntityAlreadyExistsException
      */
     protected function addRole(array $data)
     {
@@ -304,10 +305,12 @@ class RolesController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param array $data
+     * @param Role  $role
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return Role
+     * @throws EntityAlreadyExistsException
+     * @throws EntityRequiredException
      */
     protected function editRole(array $data, Role $role)
     {
@@ -342,8 +345,10 @@ class RolesController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Role  $role
+     * @param array $data
+     * @param Role  $role
+     *
+     * @throws EntityRequiredException
      */
     protected function deleteRole(array $data, Role $role)
     {

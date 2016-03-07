@@ -44,11 +44,11 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
 class NodesTreesController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function treeAction(Request $request, $nodeId, $translationId = null)
     {
@@ -136,9 +136,9 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkDeleteAction(Request $request)
     {
@@ -189,9 +189,9 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkStatusAction(Request $request)
     {
@@ -373,9 +373,8 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * [tagNodes description]
-     * @param  [type] $data [description]
-     * @return [type]       [description]
+     * @param  array $data
+     * @return string
      */
     private function tagNodes($data)
     {
@@ -413,9 +412,8 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * [untagNodes description]
-     * @param  [type] $data [description]
-     * @return [type]       [description]
+     * @param  array $data
+     * @return string
      */
     private function untagNodes($data)
     {

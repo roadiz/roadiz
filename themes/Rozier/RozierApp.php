@@ -37,8 +37,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Events\SolariumSubscriber;
+use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -129,9 +129,9 @@ class RozierApp extends BackendController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response $response
+     * @return Response $response
      */
     public function indexAction(Request $request)
     {
@@ -139,9 +139,9 @@ class RozierApp extends BackendController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response $response
+     * @return Response $response
      */
     public function cssAction(Request $request)
     {
@@ -161,7 +161,7 @@ class RozierApp extends BackendController
     /**
      * Append objects to global container.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {

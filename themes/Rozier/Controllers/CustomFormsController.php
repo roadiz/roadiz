@@ -47,9 +47,10 @@ class CustomFormsController extends RozierApp
 {
     /**
      * List every node-types.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -70,10 +71,11 @@ class CustomFormsController extends RozierApp
 
     /**
      * Return an edition form for requested node-type.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request   $request
+     * @param int $customFormId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $customFormId)
     {
@@ -121,9 +123,10 @@ class CustomFormsController extends RozierApp
 
     /**
      * Return an creation form for requested node-type.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -174,10 +177,11 @@ class CustomFormsController extends RozierApp
 
     /**
      * Return an deletion form for requested node-type.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $customFormId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $customFormId)
     {
@@ -216,7 +220,7 @@ class CustomFormsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param CustomForm $customForm
      *
      * @return \Symfony\Component\Form\Form
      */

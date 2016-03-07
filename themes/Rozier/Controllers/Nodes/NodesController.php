@@ -31,8 +31,6 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -56,9 +54,9 @@ class NodesController extends RozierApp
     /**
      * List every nodes.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request, $filter = null)
     {
@@ -132,11 +130,11 @@ class NodesController extends RozierApp
     /**
      * Return an edition form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
@@ -254,11 +252,11 @@ class NodesController extends RozierApp
     /**
      * Handle node creation pages.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $nodeTypeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
@@ -330,11 +328,11 @@ class NodesController extends RozierApp
     /**
      * Handle node creation pages.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addChildAction(Request $request, $nodeId = null, $translationId = null)
     {
@@ -406,10 +404,10 @@ class NodesController extends RozierApp
     /**
      * Return an deletion form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $nodeId)
     {
@@ -505,10 +503,10 @@ class NodesController extends RozierApp
     /**
      * Return an deletion form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function undeleteAction(Request $request, $nodeId)
     {

@@ -30,9 +30,8 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\AjaxControllers\AjaxAbstractFieldsController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * {@inheritdoc}
@@ -46,7 +45,7 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
      * @param Request $request
      * @param int     $nodeTypeFieldId
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
