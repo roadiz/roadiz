@@ -71,7 +71,7 @@ class Recaptcha extends Constraint
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getRequiredOptions()
     {

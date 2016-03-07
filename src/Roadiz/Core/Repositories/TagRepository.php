@@ -232,12 +232,12 @@ class TagRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
-     * @param null $translation
+     * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
         &$finalQuery,
-        &$translation = null
+        Translation &$translation = null
     ) {
         if (null !== $translation) {
             $finalQuery->setParameter('translation', $translation);

@@ -45,7 +45,7 @@ class NodeSourceApi extends AbstractApi
 
     /**
      * @param array $criteria
-     * @return mixed|NodesSourcesRepository
+     * @return string
      */
     protected function getRepositoryName(array $criteria = null)
     {
