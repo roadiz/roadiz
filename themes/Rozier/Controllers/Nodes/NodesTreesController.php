@@ -453,6 +453,11 @@ class NodesTreesController extends RozierApp
     }
 
     /**
+     * @param bool  $referer
+     * @param array $nodesIds
+     * @param int   $status
+     * @param bool  $submit
+     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildBulkStatusForm(

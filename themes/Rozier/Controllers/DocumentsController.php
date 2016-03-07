@@ -712,8 +712,6 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
-     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildLinkFoldersForm()
@@ -879,6 +877,14 @@ class DocumentsController extends RozierApp
         }
     }
 
+    /**
+     * @param array $data
+     * @param int   $folderId
+     *
+     * @return Document
+     * @throws \Exception
+     * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
+     */
     private function embedDocument($data, $folderId = null)
     {
         $handlers = $this->getService('document.platforms');
@@ -1047,7 +1053,7 @@ class DocumentsController extends RozierApp
      *
      * @param \Symfony\Component\Form\Form $data
      *
-     * @return boolean
+     * @return Document|boolean
      */
     private function uploadDocument($data, $folderId = null)
     {

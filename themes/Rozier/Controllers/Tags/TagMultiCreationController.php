@@ -115,8 +115,6 @@ class TagMultiCreationController extends RozierApp
     }
 
     /**
-     * @param Tag $tag
-     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildAddForm()

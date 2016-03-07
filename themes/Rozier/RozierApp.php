@@ -57,7 +57,7 @@ class RozierApp extends BackendController
     protected $themeContainer = null;
 
     /**
-     * @return array $assignation
+     * @return $this
      */
     public function prepareBaseAssignation()
     {

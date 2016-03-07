@@ -171,7 +171,7 @@ trait NodesSourcesTrait
     /**
      * Returns a Symfony Form type according to a node-type field.
      *
-     * @param mixed         $nodeSource
+     * @param NodesSources  $nodeSource
      * @param NodeTypeField $field
      * @param AppController $controller
      *
