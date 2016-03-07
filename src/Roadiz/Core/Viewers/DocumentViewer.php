@@ -31,9 +31,8 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * DocumentViewer

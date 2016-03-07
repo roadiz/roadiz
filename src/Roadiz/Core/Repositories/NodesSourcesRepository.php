@@ -51,9 +51,9 @@ class NodesSourcesRepository extends EntityRepository
     /**
      * Add a tag filtering to queryBuilder.
      *
-     * @param array $criteria
+     * @param array        $criteria
      * @param QueryBuilder $qb
-     * @param $joinedNode
+     * @param boolean      $joinedNode
      */
     protected function filterByTag(&$criteria, &$qb, &$joinedNode)
     {
@@ -202,7 +202,7 @@ class NodesSourcesRepository extends EntityRepository
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param $finalQuery
+     * @param Query $finalQuery
      */
     protected function applyFilterByCriteria(&$criteria, &$finalQuery)
     {
@@ -218,13 +218,14 @@ class NodesSourcesRepository extends EntityRepository
         }
     }
 
+
     /**
-     * @param  array                &$criteria
-     * @param  QueryBuilder         &$qb
-     * @param  AuthorizationChecker|null &$authorizationChecker
-     * @param  boolean $preview
+     * @param array                     $criteria
+     * @param QueryBuilder              $qb
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool                      $preview
      *
-     * @return boolean Already Joined Node relation
+     * @return bool
      */
     protected function filterByAuthorizationChecker(
         &$criteria,

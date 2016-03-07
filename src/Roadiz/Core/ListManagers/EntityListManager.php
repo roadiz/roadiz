@@ -355,7 +355,7 @@ class EntityListManager
     /**
      * Gets the value of preview.
      *
-     * @return mixed
+     * @return boolean
      */
     public function isPreview()
     {

@@ -33,7 +33,6 @@ use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Theme;
-
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Stopwatch\Stopwatch;
 
