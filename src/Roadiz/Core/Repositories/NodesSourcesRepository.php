@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
@@ -409,7 +410,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function findBy(
         array $criteria,
@@ -451,7 +452,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources|null
+     * @return NodesSources|null
      */
     public function findOneBy(
         array $criteria,

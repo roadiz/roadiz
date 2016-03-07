@@ -41,7 +41,7 @@ class RolesBag
     /**
      * Cached roles values.
      *
-     * @var array
+     * @var \RZ\Roadiz\Core\Entities\Role[string]
      */
     protected static $roles = [];
 

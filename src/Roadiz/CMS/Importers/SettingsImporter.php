@@ -49,6 +49,8 @@ class SettingsImporter implements ImporterInterface
     public static function importJsonFile($serializedData, EntityManager $em)
     {
         $serializer = new SettingCollectionJsonSerializer();
+
+        /** @var \RZ\Roadiz\Core\Entities\SettingGroup[] $settingGroups */
         $settingGroups = $serializer->deserialize($serializedData);
 
         $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
@@ -93,7 +95,10 @@ class SettingsImporter implements ImporterInterface
         }
 
         foreach ($newSettings as $settingArray) {
+            /** @var \RZ\Roadiz\Core\Entities\SettingGroup $settingGroup */
             $settingGroup = $settingArray[1];
+
+            /** @var \RZ\Roadiz\Core\Entities\Setting $setting */
             $setting = $settingArray[0];
 
             /*

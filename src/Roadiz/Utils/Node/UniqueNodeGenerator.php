@@ -82,6 +82,8 @@ class UniqueNodeGenerator
         }
 
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
+
+        /** @var \RZ\Roadiz\Core\Entities\NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         $this->entityManager->persist($source);
@@ -128,6 +130,8 @@ class UniqueNodeGenerator
             );
 
             if (null !== $nodeType) {
+                $translation = null;
+
                 if ($request->get('translationId') > 0) {
                     $translation = $this->entityManager->find(
                         'RZ\Roadiz\Core\Entities\Translation',

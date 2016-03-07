@@ -201,9 +201,9 @@ class AssetsController extends AppController
     /**
      * Request the font-face CSS file listing available fonts.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function fontFacesAction(Request $request)
     {

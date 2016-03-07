@@ -89,17 +89,17 @@ class EntityListManager
             if ($preFilters["chroot"] instanceof Node) {
                 $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId(); // get all offspringId
                 if (array_key_exists('parent', $preFilters)) {
-// test if parent key exist
+                    // test if parent key exist
                     if (is_array($preFilters["parent"])) {
-// test if multiple parent id
+                        // test if multiple parent id
                         if (count(array_intersect($preFilters["parent"], $ids))
                             != count($preFilters["parent"])) {
-// test if all parent are in the chroot
+                            // test if all parent are in the chroot
                             $this->filteringArray["parent"] = -1; // -1 for make the search return []
                         }
                     } else {
                         if ($preFilters["parent"] instanceof Node) {
-// make transforme all id in int
+                            // make transforme all id in int
                             $parent = $preFilters["parent"]->getId();
                         } else {
                             $parent = (int) $preFilters["parent"];

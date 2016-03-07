@@ -759,7 +759,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @return NodeTypeHandler
+     * @return NodeHandler
      */
     public function getHandler()
     {

@@ -36,6 +36,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Fonts are entities which store each webfont file for a
@@ -161,19 +162,19 @@ class Font extends AbstractDateTimed
         }
     }
 
-    /** @var File */
+    /** @var UploadedFile */
     protected $eotFile;
 
-    /** @var File */
+    /** @var UploadedFile */
     protected $woffFile;
 
-    /** @var File */
+    /** @var UploadedFile */
     protected $woff2File;
 
-    /** @var File */
+    /** @var UploadedFile */
     protected $otfFile;
 
-    /** @var File */
+    /** @var UploadedFile */
     protected $svgFile;
 
     /**
@@ -490,7 +491,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of eotFile.
      *
-     * @return File|null
+     * @return File
      */
     public function getEotFile()
     {
@@ -514,7 +515,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woffFile.
      *
-     * @return File|null
+     * @return File
      */
     public function getWoffFile()
     {
@@ -538,7 +539,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woff2File.
      *
-     * @return File|null
+     * @return File
      */
     public function getWoff2File()
     {
@@ -562,7 +563,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of otfFile.
      *
-     * @return File|null
+     * @return File
      */
     public function getOtfFile()
     {
@@ -586,7 +587,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of svgFile.
      *
-     * @return File|null
+     * @return File
      */
     public function getSvgFile()
     {

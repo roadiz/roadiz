@@ -117,7 +117,7 @@ abstract class AbstractEmbedFinder
      * * id
      * * class
      *
-     * @param  array|bool $args
+     * @param  array $args
      *
      * @return string
      */

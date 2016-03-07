@@ -105,7 +105,7 @@ class FolderHandler
     /**
      * Return every folder’s parents.
      *
-     * @return array
+     * @return \RZ\Roadiz\Core\Entities\Folder[]
      */
     public function getParents()
     {
@@ -183,6 +183,7 @@ class FolderHandler
      */
     public static function cleanRootFoldersPositions()
     {
+        /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
         $folders = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findBy(['parent' => null], ['position'=>'ASC']);

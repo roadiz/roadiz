@@ -60,7 +60,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
-     * @param $entityManager
+     * @param \Doctrine\ORM\EntityManager entityManager
      *
      * @return bool
      */
@@ -72,7 +72,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
-     * @param $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */

@@ -80,7 +80,7 @@ class ImportController extends AppController
      * @param Request $request
      * @param int $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
@@ -97,7 +97,7 @@ class ImportController extends AppController
      * @param Request $request
      * @param int $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importRolesAction(Request $request, $themeId = null)
     {
@@ -114,7 +114,7 @@ class ImportController extends AppController
      * @param Request $request
      * @param int $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importGroupsAction(Request $request, $themeId = null)
     {
@@ -131,7 +131,7 @@ class ImportController extends AppController
      * @param Request $request
      * @param int $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
@@ -148,7 +148,7 @@ class ImportController extends AppController
      * @param Request $request
      * @param int $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importTagsAction(Request $request, $themeId = null)
     {
@@ -165,7 +165,7 @@ class ImportController extends AppController
      * @param Request $request
      * @param null $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importNodesAction(Request $request, $themeId = null)
     {
@@ -183,7 +183,7 @@ class ImportController extends AppController
      * @param string $classImporter
      * @param int    $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importContent($pathFile, $classImporter, $themeId)
     {

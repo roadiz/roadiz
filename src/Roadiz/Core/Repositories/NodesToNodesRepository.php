@@ -39,8 +39,8 @@ use RZ\Roadiz\Core\Entities\Node;
 class NodesToNodesRepository extends EntityRepository
 {
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node  $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return integer
      */

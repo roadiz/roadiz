@@ -58,7 +58,7 @@ class UniqueFontVariantValidator extends ConstraintValidator
 
     /**
      * @param Font $font
-     * @param $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */

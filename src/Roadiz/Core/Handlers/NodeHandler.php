@@ -50,7 +50,7 @@ class NodeHandler
     private $node = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     public function getNode()
     {
@@ -58,7 +58,7 @@ class NodeHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return $this
      */
@@ -82,7 +82,7 @@ class NodeHandler
     /**
      * Remove every node to custom-forms associations for a given field.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param NodeTypeField $field
      *
      * @return $this
      */
@@ -346,7 +346,7 @@ class NodeHandler
     }
 
     /**
-     * @return ArrayCollection
+     * @return \RZ\Roadiz\Core\Entities\Translation[]|ArrayCollection
      */
     public function getAvailableTranslations()
     {
