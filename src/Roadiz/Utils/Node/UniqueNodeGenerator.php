@@ -29,11 +29,11 @@
  */
 namespace RZ\Roadiz\Utils\Node;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

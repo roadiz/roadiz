@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\ORM\NoResultException;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with tags entities.

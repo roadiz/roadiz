@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
  * {@inheritdoc}

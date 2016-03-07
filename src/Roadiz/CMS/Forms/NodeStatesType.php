@@ -30,9 +30,9 @@
 
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use RZ\Roadiz\Core\Entities\Node;
 
 /**
  * Node state selector form field type.

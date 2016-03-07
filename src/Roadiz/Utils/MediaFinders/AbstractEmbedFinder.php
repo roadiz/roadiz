@@ -32,11 +32,11 @@ namespace RZ\Roadiz\Utils\MediaFinders;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Stream\Stream;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Response;
-use Pimple\Container;
 
 /**
  * abstract class to handle external media via their Json API.

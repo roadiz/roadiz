@@ -30,16 +30,16 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Utils\ContactFormManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use RZ\Roadiz\Utils\ContactFormManager;
-use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 
 /**
  * Base controller.

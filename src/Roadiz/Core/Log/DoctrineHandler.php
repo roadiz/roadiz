@@ -29,13 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Log;
 
-use Monolog\Logger;
-use Monolog\Handler\AbstractProcessingHandler;
-use RZ\Roadiz\Core\Entities\Log;
-use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
+use RZ\Roadiz\Core\Entities\Log;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**

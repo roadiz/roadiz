@@ -29,9 +29,8 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Symfony\Component\HttpFoundation\Request;
-
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Perform basic filtering and search over entity listings.

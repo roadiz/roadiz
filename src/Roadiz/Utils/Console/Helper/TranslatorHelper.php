@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Translation\Translator;
 
 /**
  * TranslatorHelper.

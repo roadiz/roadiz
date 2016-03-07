@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Entities\Translation;
-
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**

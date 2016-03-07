@@ -32,8 +32,8 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Utils\NodeApi;
-use RZ\Roadiz\CMS\Utils\NodeTypeApi;
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
+use RZ\Roadiz\CMS\Utils\NodeTypeApi;
 use RZ\Roadiz\CMS\Utils\TagApi;
 
 /**

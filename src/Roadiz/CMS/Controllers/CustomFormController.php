@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
+use InlineStyle\InlineStyle;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -43,7 +44,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
-use \InlineStyle\InlineStyle;
 
 class CustomFormController extends AppController
 {

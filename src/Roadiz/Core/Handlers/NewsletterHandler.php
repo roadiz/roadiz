@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Newsletter;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with newsletters entities.

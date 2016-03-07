@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
-
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**

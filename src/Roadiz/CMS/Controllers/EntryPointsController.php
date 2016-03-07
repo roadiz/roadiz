@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use RZ\Roadiz\Core\Kernel;
@@ -38,7 +39,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use \InlineStyle\InlineStyle;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**

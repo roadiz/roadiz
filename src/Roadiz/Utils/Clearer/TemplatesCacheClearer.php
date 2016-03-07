@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Utils\Clearer;
 
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * TemplatesCacheClearer.
