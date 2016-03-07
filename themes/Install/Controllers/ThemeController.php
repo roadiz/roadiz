@@ -42,10 +42,10 @@ class ThemeController extends InstallApp
     /**
      * Import theme screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $id
+     * @param Request $request
+     * @param int     $id
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importThemeAction(Request $request, $id)
     {
@@ -63,9 +63,9 @@ class ThemeController extends InstallApp
     /**
      * Install theme screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function themeInstallAction(Request $request)
     {
@@ -89,9 +89,9 @@ class ThemeController extends InstallApp
     /**
      * Theme summary screen
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function themeSummaryAction(Request $request)
     {
@@ -103,9 +103,9 @@ class ThemeController extends InstallApp
     /**
      * Theme install screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function themesAction(Request $request)
     {

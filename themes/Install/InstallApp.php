@@ -45,7 +45,6 @@ use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Installation application
@@ -61,7 +60,7 @@ class InstallApp extends AppController
     /**
      * Append objects to the global dependency injection container.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -73,7 +72,7 @@ class InstallApp extends AppController
     }
 
     /**
-     * @return array $assignation
+     * @return $this
      */
     public function prepareBaseAssignation()
     {
@@ -107,9 +106,9 @@ class InstallApp extends AppController
     /**
      * Welcome screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -136,9 +135,9 @@ class InstallApp extends AppController
     /**
      * Welcome screen redirect.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function redirectIndexAction(Request $request)
     {
@@ -150,9 +149,9 @@ class InstallApp extends AppController
     /**
      * Check requirement screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function requirementsAction(Request $request)
     {
@@ -165,9 +164,9 @@ class InstallApp extends AppController
     /**
      * User creation screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userAction(Request $request)
     {
@@ -214,10 +213,10 @@ class InstallApp extends AppController
     /**
      * User information screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userSummaryAction(Request $request, $userId)
     {
@@ -230,9 +229,9 @@ class InstallApp extends AppController
     /**
      * Install success screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function doneAction(Request $request)
     {
@@ -283,8 +282,8 @@ class InstallApp extends AppController
     /**
      * After done and clearing caches.
      *
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param  Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function afterDoneAction(Request $request)
     {
@@ -294,9 +293,9 @@ class InstallApp extends AppController
     /**
      * Build forms.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Forms
      */
     protected function buildLanguageForm(Request $request)
     {
@@ -322,9 +321,10 @@ class InstallApp extends AppController
 
     /**
      * Build forms
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\Form\Forms
+     * @param Request $request
+     *
+     * @return \Symfony\Component\Form\Forms
      */
     protected function buildUserForm(Request $request)
     {
@@ -360,9 +360,9 @@ class InstallApp extends AppController
     /**
      * Build form for theme and site informations.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Forms
      */
     protected function buildInformationsForm(Request $request)
     {
@@ -443,9 +443,10 @@ class InstallApp extends AppController
 
     /**
      * Build forms
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\Form\Forms
+     * @param Request $request
+     *
+     * @return \Symfony\Component\Form\Forms
      */
     protected function buildDoneForm(Request $request)
     {
