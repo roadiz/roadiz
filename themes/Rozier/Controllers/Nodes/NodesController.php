@@ -580,8 +580,6 @@ class NodesController extends RozierApp
 
             return $this->throw404($msg);
         }
-
-        return $this->throw404($this->getTranslator()->trans('bad.request'));
     }
     /**
      *

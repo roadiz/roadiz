@@ -300,8 +300,6 @@ class RolesController extends RozierApp
         } else {
             throw new \RuntimeException("Role name is not defined", 1);
         }
-
-        return null;
     }
 
     /**
@@ -340,8 +338,6 @@ class RolesController extends RozierApp
         } else {
             throw new \RuntimeException("Role name is not defined", 1);
         }
-
-        return null;
     }
 
     /**

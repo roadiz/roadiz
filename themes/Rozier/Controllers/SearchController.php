@@ -273,8 +273,6 @@ class SearchController extends RozierApp
                     ]
                 ));
             }
-
-            return $response;
         }
 
         return null;

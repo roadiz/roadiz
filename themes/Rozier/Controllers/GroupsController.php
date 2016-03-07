@@ -570,8 +570,6 @@ class GroupsController extends RozierApp
         } else {
             throw new \RuntimeException("Group name is not defined", 1);
         }
-
-        return null;
     }
 
     /**
@@ -599,8 +597,6 @@ class GroupsController extends RozierApp
         } else {
             throw new \RuntimeException("Group name is not defined", 1);
         }
-
-        return null;
     }
 
     /**

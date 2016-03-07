@@ -80,7 +80,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
         $this->assignation['head']['themeName'] = static::$themeName;
 
-        $this->themeContainer['nodeTree'] = function ($c) {
+        $this->themeContainer['nodeTree'] = function () {
             if (is_object($this->getUser())) {
                 $parent = $this->getUser()->getChroot();
             } else {
@@ -88,21 +88,21 @@ class RozierApp extends BackendController
             }
             return new NodeTreeWidget($this->getRequest(), $this, $parent);
         };
-        $this->themeContainer['tagTree'] = function ($c) {
+        $this->themeContainer['tagTree'] = function () {
             return new TagTreeWidget($this->getRequest(), $this);
         };
-        $this->themeContainer['folderTree'] = function ($c) {
+        $this->themeContainer['folderTree'] = function () {
             return new FolderTreeWidget($this->getRequest(), $this);
         };
-        $this->themeContainer['maxFilesize'] = function ($c) {
+        $this->themeContainer['maxFilesize'] = function () {
             return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
         };
 
-        $this->themeContainer['grunt'] = function ($c) {
+        $this->themeContainer['grunt'] = function () {
             return include dirname(__FILE__) . '/static/public/config/assets.config.php';
         };
 
-        $this->themeContainer['settingGroups'] = function ($c) {
+        $this->themeContainer['settingGroups'] = function () {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                 ->findBy(
                     ['inMenu' => true],
@@ -110,7 +110,7 @@ class RozierApp extends BackendController
                 );
         };
 
-        $this->themeContainer['adminImage'] = function ($c) {
+        $this->themeContainer['adminImage'] = function () {
             /*
              * Get admin image
              */
