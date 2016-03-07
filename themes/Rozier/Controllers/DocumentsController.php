@@ -514,27 +514,35 @@ class DocumentsController extends RozierApp
                     new FilterDocumentEvent($document)
                 );
 
-                return new JsonResponse([
-                    'success' => true,
-                    'documentId' => $document->getId(),
-                    'thumbnail' => [
-                        'id' => $document->getId(),
-                        'filename' => $document->getFilename(),
-                        'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                        'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                    ],
-                ]);
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse([
+                        'success' => true,
+                        'documentId' => $document->getId(),
+                        'thumbnail' => [
+                            'id' => $document->getId(),
+                            'filename' => $document->getFilename(),
+                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
+                        ],
+                    ]);
+                } else {
+                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                }
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $this->publishErrorMessage($request, $msg);
 
-                return new JsonResponse(
-                    [
-                        "error" => $msg,
-                    ],
-                    Response::HTTP_NOT_FOUND
-                );
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(
+                        [
+                            "error" => $msg,
+                        ],
+                        Response::HTTP_NOT_FOUND
+                    );
+                } else {
+                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                }
             }
         }
         $this->assignation['form'] = $form->createView();
@@ -1058,7 +1066,8 @@ class DocumentsController extends RozierApp
                     /*
                      * Special case for SVG without XML statement
                      */
-                    if ($document->getMimeType() == "text/plain" &&
+                    if (($document->getMimeType() == "text/plain" ||
+                        $document->getMimeType() == 'text/html') &&
                         preg_match("#\.svg$#", $uploadedFile->getClientOriginalName())) {
                         $this->getService('logger')->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
                         $document->setMimeType('image/svg+xml');
@@ -1076,7 +1085,10 @@ class DocumentsController extends RozierApp
                         $this->getService('em')->flush();
                     }
 
-                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+                    $uploadedFile->move(
+                        Document::getFilesFolder() . '/' . $document->getFolder(),
+                        $document->getFilename()
+                    );
 
                     if ($document->isImage()) {
                         $this->getService("dispatcher")->dispatch(

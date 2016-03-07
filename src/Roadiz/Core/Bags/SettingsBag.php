@@ -72,7 +72,7 @@ class SettingsBag
      *
      * @param string $settingName
      *
-     * @return RZ\Roadiz\Core\Entities\Document|null
+     * @return \RZ\Roadiz\Core\Entities\Document|null
      */
     public static function getDocument($settingName)
     {

@@ -39,7 +39,8 @@ use Pimple\Container;
 class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvider
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
@@ -47,7 +48,7 @@ class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvi
         /*
          * Inject app config
          */
-        $container['config'] = function ($c) {
+        $container['config'] = function () {
             $configuration = new Configuration();
 
             if (false !== $configuration->load()) {

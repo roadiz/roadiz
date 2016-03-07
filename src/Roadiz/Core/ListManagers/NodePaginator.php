@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\Paginator;
+
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -54,6 +54,7 @@ class NodePaginator extends Paginator
 
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
@@ -63,7 +64,7 @@ class NodePaginator extends Paginator
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation
      */
     public function getTranslation()
     {
@@ -71,7 +72,8 @@ class NodePaginator extends Paginator
     }
 
     /**
-     * @param  RZ\Roadiz\Core\Entities\Translation $newtranslation
+     * @param  \RZ\Roadiz\Core\Entities\Translation $newtranslation
+     * @return $this
      */
     public function setTranslation(Translation $newtranslation = null)
     {
@@ -86,7 +88,7 @@ class NodePaginator extends Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByAtPage(array $order = [], $page = 1)
     {

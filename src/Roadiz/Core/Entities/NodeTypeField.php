@@ -58,7 +58,7 @@ class NodeTypeField extends AbstractField
     private $nodeType;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\NodeType
+     * @return \RZ\Roadiz\Core\Entities\NodeType
      */
     public function getNodeType()
     {
@@ -66,7 +66,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
      *
      * @return $this
      */
@@ -91,7 +91,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @param int $minValue
+     * @param $minLength
      *
      * @return $this
      */
@@ -183,7 +183,7 @@ class NodeTypeField extends AbstractField
     private $groupName;
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler
+     * @return \RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler
      */
     public function getHandler()
     {

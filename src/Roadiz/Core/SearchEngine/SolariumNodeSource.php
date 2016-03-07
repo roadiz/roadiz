@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
@@ -54,10 +53,8 @@ class SolariumNodeSource
     /**
      * Create a new SolariumNodeSource.
      *
-     * @param NodesSources     $nodeSource
-     * @param \Solarium_Client $client
-     *
-     * @throws RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException If Solr server does not respond.
+     * @param NodesSources $nodeSource
+     * @param Client $client
      */
     public function __construct($nodeSource, Client $client = null)
     {
@@ -92,6 +89,7 @@ class SolariumNodeSource
                 return true;
             }
         }
+        return false;
     }
 
     /**
@@ -111,7 +109,6 @@ class SolariumNodeSource
             }
 
             return true;
-
         } else {
             throw new \RuntimeException("No Solr document available for current NodeSource", 1);
         }
@@ -119,8 +116,8 @@ class SolariumNodeSource
 
     /**
      * Get a key/value array representation of current node-source document.
-     *
      * @return array
+     * @throws \Exception
      */
     public function getFieldsAssoc()
     {
@@ -219,35 +216,38 @@ class SolariumNodeSource
     /**
      * Update current nodeSource document and commit after.
      *
-     * Use this method only when you need to re-index single NodeSources.
+     * Use this method **only** when you need to re-index a single NodeSources.
      *
-     * @return boolean
+     * @return \Solarium\QueryType\Update\Result
      */
     public function updateAndCommit()
     {
         $update = $this->client->createUpdate();
+        $this->update($update);
+        $update->addCommit();
+        return $this->client->update($update);
+    }
 
-        if (false === $this->remove($update)) {
-            return $this->indexAndCommit();
-        } else {
-            $this->setDocument($update->createDocument());
-
-            if (true === $this->index()) {
-                // add the documents and a commit command to the update query
-                $update->addDocument($this->getDocument());
-                $update->addCommit();
-
-                return $this->client->update($update);
-            }
-
-            return false;
-        }
+    /**
+     * Update current nodeSource document with existing update.
+     *
+     * Use this method only when you need to re-index bulk NodeSources.
+     *
+     * @param  Query  $update
+     */
+    public function update(Query $update)
+    {
+        $update->addDeleteById($this->document->id);
+        $this->setDocument($update->createDocument());
+        $this->index();
+        // add the document to the update query
+        $update->addDocument($this->document);
     }
 
     /**
      * Remove any document linked to current node-source.
      *
-     * @param Solarium\QueryType\Update\Query\Query $update
+     * @param \Solarium\QueryType\Update\Query\Query $update
      *
      * @return boolean
      */
@@ -265,7 +265,7 @@ class SolariumNodeSource
     /**
      * Remove current document from SearchEngine index.
      *
-     * @param Solarium\QueryType\Update\Query\Query $update
+     * @param \Solarium\QueryType\Update\Query\Query $update
      *
      * @return boolean
      *
@@ -274,7 +274,7 @@ class SolariumNodeSource
     public function remove(Query $update)
     {
         if (null !== $this->document) {
-            $update->addDeleteById($this->getDocument()->id);
+            $update->addDeleteById($this->document->id);
 
             return true;
         } else {
@@ -312,14 +312,14 @@ class SolariumNodeSource
     }
 
     /**
-     * @param Solarium\QueryType\Update\Query\Document\DocumentInterface $document
+     * @param \Solarium\QueryType\Update\Query\Document\DocumentInterface $document
      */
     public function setDocument(DocumentInterface $document)
     {
         $this->document = $document;
     }
     /**
-     * @return Solarium\QueryType\Update\Query\Document\DocumentInterface
+     * @return \Solarium\QueryType\Update\Query\Document\DocumentInterface
      */
     public function getDocument()
     {

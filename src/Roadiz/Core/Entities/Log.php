@@ -71,7 +71,7 @@ class Log extends AbstractEntity
     protected $user = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return User
      */
     public function getUser()
     {
@@ -79,11 +79,11 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      *
-     * @return RZ\Roadiz\Core\Entities\User
+     * @return User
      */
-    public function setUser(\RZ\Roadiz\Core\Entities\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -138,7 +138,7 @@ class Log extends AbstractEntity
     /**
      * Get log related node-source.
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNodeSource()
     {
@@ -146,7 +146,8 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $newnodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $newnodeSource
+     * @return $this
      */
     public function setNodeSource($newnodeSource)
     {

@@ -61,6 +61,9 @@ class RecaptchaType extends AbstractType
     /**
      * (non-PHPdoc)
      * @see Symfony\Component\Form.AbstractType::buildView()
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -69,6 +72,7 @@ class RecaptchaType extends AbstractType
 
     /**
      * @see Symfony\Component\Form.AbstractType::configureOptions()
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {

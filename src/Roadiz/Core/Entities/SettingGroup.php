@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -46,6 +46,7 @@ class SettingGroup extends AbstractEntity
      * @ORM\Column(type="string", unique=true)
      */
     private $name;
+
     /**
      * @return string
      */
@@ -76,8 +77,10 @@ class SettingGroup extends AbstractEntity
     {
         return $this->inMenu;
     }
+
     /**
      * @param boolean $newinMenu
+     * @return $this
      */
     public function setInMenu($newinMenu)
     {
@@ -85,7 +88,6 @@ class SettingGroup extends AbstractEntity
 
         return $this;
     }
-
 
     /**
      * @ORM\OneToMany(targetEntity="Setting", mappedBy="settingGroup")
@@ -108,7 +110,7 @@ class SettingGroup extends AbstractEntity
         return $this->settings;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param \RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return $this
      */

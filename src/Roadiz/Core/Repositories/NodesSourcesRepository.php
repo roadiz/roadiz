@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\QueryException;
 use RZ\Roadiz\Core\Entities\Node;
@@ -50,8 +51,9 @@ class NodesSourcesRepository extends EntityRepository
     /**
      * Add a tag filtering to queryBuilder.
      *
-     * @param array        $criteria
+     * @param array $criteria
      * @param QueryBuilder $qb
+     * @param $joinedNode
      */
     protected function filterByTag(&$criteria, &$qb, &$joinedNode)
     {
@@ -200,7 +202,7 @@ class NodesSourcesRepository extends EntityRepository
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param Query $qb
+     * @param $finalQuery
      */
     protected function applyFilterByCriteria(&$criteria, &$finalQuery)
     {
@@ -255,13 +257,12 @@ class NodesSourcesRepository extends EntityRepository
      * Create a securized query with node.published = true if user is
      * not a Backend user.
      *
-     * @param array           $criteria
-     * @param array\null      $orderBy
-     * @param integer|null    $limit
-     * @param integer|null    $offset
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
-     *
      * @return QueryBuilder
      */
     protected function getContextualQuery(
@@ -409,7 +410,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function findBy(
         array $criteria,
@@ -451,7 +452,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources|null
+     * @return NodesSources|null
      */
     public function findOneBy(
         array $criteria,

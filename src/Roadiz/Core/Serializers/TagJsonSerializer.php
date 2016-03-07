@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Serializers;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Serializers\TagTranslationJsonSerializer;
 
 /**
  * Json Serialization handler for Node.
@@ -42,7 +41,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a Tag.
      *
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param \RZ\Roadiz\Core\Entities\Tag[] $tags
      *
      * @return array
      */
@@ -82,7 +81,10 @@ class TagJsonSerializer extends AbstractJsonSerializer
         $tag->setTagName($data['tag_name']);
         $tag->setVisible($data['visible']);
         $tag->setLocked($data['locked']);
-        $tag->setColor($data['color']);
+
+        if (isset($data['color'])) {
+            $tag->setColor($data['color']);
+        }
 
         foreach ($data["tag_translation"] as $source) {
             $trans = new Translation();
@@ -107,7 +109,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $string
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function deserialize($string)
     {

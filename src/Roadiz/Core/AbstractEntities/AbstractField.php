@@ -30,15 +30,17 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * @ORM\MappedSuperclass
+ * @ORM\Table(indexes={
+ *     @ORM\Index(columns={"position"})
+ * })
  */
-abstract class AbstractField extends AbstractPositioned implements PersistableInterface
+abstract class AbstractField extends AbstractEntity
 {
+    use PositionedTrait;
     /**
      * String field is a simple 255 characters long text.
      */
@@ -56,7 +58,7 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
     /**
      * Richtext field is an HTML text using a WYSIWYG editor.
      *
-     * @deprecated Use Markdown type instead. WYSIWYG is evil.
+     * Use Markdown type instead. WYSIWYG is evil.
      */
     const RICHTEXT_T = 3;
     /**
@@ -251,20 +253,6 @@ abstract class AbstractField extends AbstractPositioned implements PersistableIn
         AbstractField::TEXT_T,
         AbstractField::MARKDOWN_T,
     ];
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
-    protected $id;
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @ORM\Column(type="string")

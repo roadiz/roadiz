@@ -52,7 +52,7 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
      * Create a simple associative array with
      * an ArrayCollection of Group.
      *
-     * @param Doctrine\Common\Collections\ArrayCollection $groups
+     * @param \Doctrine\Common\Collections\ArrayCollection $groups
      *
      * @return array
      */
@@ -60,7 +60,7 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
     {
         $data = [];
 
-        $groupSerializer = new GroupJsonSerializer();
+        $groupSerializer = new GroupJsonSerializer($this->em);
         foreach ($groups as $group) {
             $data[] = $groupSerializer->toArray($group);
         }
@@ -71,8 +71,8 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
     /**
      * Deserializes a Json into readable datas
      * @param string $string
-     *
      * @return ArrayCollection
+     * @throws \Exception
      */
     public function deserialize($string)
     {

@@ -1,7 +1,5 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -29,7 +27,6 @@
  */
 namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,7 +45,7 @@ abstract class AbstractDateTimed extends AbstractEntity
      * @ORM\Column(type="datetime", name="created_at")
      * @var \DateTime
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @return \DateTime
@@ -63,7 +60,7 @@ abstract class AbstractDateTimed extends AbstractEntity
      *
      * @return $this
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -73,7 +70,7 @@ abstract class AbstractDateTimed extends AbstractEntity
      * @ORM\Column(type="datetime", name="updated_at")
      * @var \DateTime
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @return \DateTime
@@ -88,7 +85,7 @@ abstract class AbstractDateTimed extends AbstractEntity
      *
      * @return $this
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 

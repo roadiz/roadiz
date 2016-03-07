@@ -32,9 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
-use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Role;
+
+
 use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
@@ -314,6 +313,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * Set random string sent to the user email address in order to verify it.
      *
      * @param string $confirmationToken
+     * @return $this
      */
     public function setConfirmationToken($confirmationToken)
     {
@@ -332,6 +332,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * Sets the timestamp that the user requested a password reset.
      *
      * @param \DateTime|null $date
+     * @return $this
      */
     public function setPasswordRequestedAt(\DateTime $date = null)
     {
@@ -374,7 +375,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Names of current User roles
      * to be compatible with symfony security scheme
-     * @var Array
+     * @var array
      */
     private $rolesNames = null;
 
@@ -416,7 +417,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Add a role object to current user.
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -431,7 +432,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Remove role from current user.
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -474,7 +475,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Insert user into group.
-     * @param RZ\Roadiz\Core\Entities\Group $group
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
      */
@@ -489,7 +490,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Remove user from group
-     * @param RZ\Roadiz\Core\Entities\Group  $group
+     * @param \RZ\Roadiz\Core\Entities\Group  $group
      *
      * @return $this
      */
@@ -535,6 +536,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @param boolean $expired
+     * @return $this
      */
     public function setExpired($expired)
     {
@@ -652,6 +654,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @param boolean $newcredentialsExpired
+     * @return $this
      */
     public function setCredentialsExpired($newcredentialsExpired)
     {
@@ -712,14 +715,14 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
      *
-     * @var RZ\Roadiz\Core\Entities\Node
+     * @var \RZ\Roadiz\Core\Entities\Node
      */
     private $chroot;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $chroot
+     * @param \RZ\Roadiz\Core\Entities\Node $chroot
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function setChroot(Node $chroot = null)
     {
@@ -729,7 +732,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getChroot()
     {
@@ -799,7 +802,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Handlers\UserHandler
+     * @return \RZ\Roadiz\Core\Handlers\UserHandler
      */
     public function getHandler()
     {
@@ -807,7 +810,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return RZ\Roadiz\Core\Viewers\UserViewer
+     * @return \RZ\Roadiz\Core\Viewers\UserViewer
      */
     public function getViewer()
     {

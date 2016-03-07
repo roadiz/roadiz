@@ -29,6 +29,9 @@
  */
 namespace RZ\Roadiz\Utils\MediaFinders;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Stream\Stream;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -63,7 +66,7 @@ abstract class AbstractEmbedFinder
     /**
      * Crawl and parse an API json feed for current embedID.
      *
-     * @return array | false
+     * @return array|bool
      */
     public function getFeed()
     {
@@ -88,7 +91,7 @@ abstract class AbstractEmbedFinder
     /**
      * Crawl an embed API to get a Json feed.
      *
-     * @param string | null $search
+     * @param string|bool $search
      *
      * @return string
      */
@@ -114,7 +117,7 @@ abstract class AbstractEmbedFinder
      * * id
      * * class
      *
-     * @param  array | null $args
+     * @param  array $args
      *
      * @return string
      */
@@ -164,12 +167,15 @@ abstract class AbstractEmbedFinder
 
         return $htmlTag;
     }
+
     /**
      * Create a Document from an embed media
      *
-     * @param Pimple\Container $container description
+     * @param Container $container description
      *
      * @return Document
+     * @throws EntityAlreadyExistsException
+     * @throws \Exception
      */
     public function createDocumentFromFeed(Container $container)
     {
@@ -275,7 +281,7 @@ abstract class AbstractEmbedFinder
     public function downloadFeedFromAPI($url)
     {
         try {
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->get($url);
 
             if (Response::HTTP_OK == $response->getStatusCode()) {
@@ -283,7 +289,7 @@ abstract class AbstractEmbedFinder
             } else {
                 return false;
             }
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+        } catch (RequestException $e) {
             return false;
         }
     }
@@ -306,8 +312,8 @@ abstract class AbstractEmbedFinder
                 $thumbnailName = $this->embedId.'_'.$pathinfo;
 
                 try {
-                    $original = \GuzzleHttp\Stream\Stream::factory(fopen($url, 'r'));
-                    $local = \GuzzleHttp\Stream\Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
+                    $original = Stream::factory(fopen($url, 'r'));
+                    $local = Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
                     $local->write($original->getContents());
 
                     if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
@@ -317,7 +323,7 @@ abstract class AbstractEmbedFinder
                         return false;
                     }
 
-                } catch (\GuzzleHttp\Exception\RequestException $e) {
+                } catch (RequestException $e) {
                     return false;
                 }
             }

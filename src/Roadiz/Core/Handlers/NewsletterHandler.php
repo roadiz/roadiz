@@ -40,7 +40,7 @@ class NewsletterHandler
     private $newsletter = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\newsletter
+     * @return \RZ\Roadiz\Core\Entities\newsletter
      */
     public function getNewsletter()
     {
@@ -48,7 +48,7 @@ class NewsletterHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\newsletter $newsletter
+     * @param \RZ\Roadiz\Core\Entities\newsletter $newsletter
      *
      * @return $this
      */

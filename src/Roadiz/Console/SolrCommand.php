@@ -72,7 +72,7 @@ class SolrCommand extends Command
 
     protected function displayBasicConfig()
     {
-        $text .= '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
+        $text = '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
         $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
         $text .= '
 solr:
@@ -106,8 +106,7 @@ solr:
     /**
      * Delete Solr index and loop over every NodesSources to index them again.
      *
-     * @param \Solarium\Client $this->solr
-     * @param OutputInterface  $output
+     * @param OutputInterface $output
      */
     protected function reindexNodeSources(OutputInterface $output)
     {

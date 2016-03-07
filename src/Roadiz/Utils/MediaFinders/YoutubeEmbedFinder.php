@@ -76,9 +76,14 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()['items'][0]['snippet']['thumbnails']['high']['url'];
-    }
+        $thumbnails = $this->getFeed()['items'][0]['snippet']['thumbnails'];
 
+        if (isset($thumbnails['maxres'])) {
+            return $thumbnails['maxres']['url'];
+        } else {
+            return $thumbnails['high']['url'];
+        }
+    }
 
     /**
      * {@inheritdoc}

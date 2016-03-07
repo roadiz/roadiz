@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
+
 /**
  * {@inheritdoc}
  */
@@ -40,7 +42,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme
+     * @return \RZ\Roadiz\Core\Entities\Theme
      */
     public function findAvailableBackend()
     {
@@ -54,7 +56,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -81,7 +83,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -91,7 +93,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findFirstAvailableFrontend()
     {
@@ -106,7 +108,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -116,7 +118,10 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @param string $hostname
+     *
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findAvailableFrontendWithHost($hostname = "*")
     {
@@ -132,7 +137,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -145,7 +150,7 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findFirstAvailableNonStaticFrontend()
     {
@@ -161,7 +166,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -174,7 +179,10 @@ class ThemeRepository extends EntityRepository
      *
      * This method use Result cache.
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @param string $hostname
+     *
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findAvailableNonStaticFrontendWithHost($hostname = "*")
     {
@@ -191,7 +199,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -201,7 +209,7 @@ class ThemeRepository extends EntityRepository
      *
      * @param  string $className
      *
-     * @return RZ\Roadiz\Core\Entities\Theme|null
+     * @return \RZ\Roadiz\Core\Entities\Theme|null
      */
     public function findOneByClassName($className)
     {
@@ -215,7 +223,7 @@ class ThemeRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

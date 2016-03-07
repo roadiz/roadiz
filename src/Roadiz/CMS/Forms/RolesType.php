@@ -42,7 +42,7 @@ class RolesType extends AbstractType
 
     /**
      * {@inheritdoc}
-     * @param Doctrine\Common\Collections\ArrayCollection $roles Existing roles name array (used to display only available roles to parent entity)
+     * @param \Doctrine\Common\Collections\ArrayCollection $roles Existing roles name array (used to display only available roles to parent entity)
      */
     public function __construct($roles = null)
     {

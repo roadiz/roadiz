@@ -93,6 +93,7 @@ class TranslationViewer implements ViewableInterface
         $name = "";
         $forceLocale = (boolean) SettingsBag::get('force_locale');
 
+        /** @var \Rz\Roadiz\Core\Entities\Node $node */
         if (in_array("node", array_keys($attr), true)) {
             $node = $attr["node"];
         } else {
@@ -172,7 +173,7 @@ class TranslationViewer implements ViewableInterface
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator.
+     * @return \Symfony\Component\Translation\Translator.
      */
     public function getTranslator()
     {

@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
@@ -41,7 +42,6 @@ use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
 use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
 use RZ\Roadiz\Utils\Security\TimedFirewall;
-use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -74,7 +74,7 @@ use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 /**
  * Register security services for dependency injection container.
  */
-class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
+class SecurityServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
@@ -105,25 +105,15 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                         )
                     );
                 }
-            } else {
-                return null;
             }
+
+            return null;
         };
 
         $container['session'] = function ($c) {
             $session = new Session($c['session.storage']);
             $c['request']->setSession($session);
             return $session;
-        };
-
-        /*
-         * Deprecated
-         */
-        $container['csrfProvider'] = function ($c) {
-            return new SessionCsrfProvider(
-                $c['session'],
-                $c['config']["security"]['secret']
-            );
         };
 
         $container['sessionTokenStorage'] = function ($c) {
@@ -185,14 +175,14 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
-        $container['accessMap'] = function ($c) {
+        $container['accessMap'] = function () {
             return new AccessMap();
         };
 
         $container['userProvider'] = function ($c) {
             return new UserProvider($c['em']);
         };
-        $container['userChecker'] = function ($c) {
+        $container['userChecker'] = function () {
             return new UserChecker();
         };
 
@@ -284,7 +274,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
                 $c['accessDecisionManager']
             );
         };
-        $container['securityTokenStorage'] = function ($c) {
+        $container['securityTokenStorage'] = function () {
             return new TokenStorage();
         };
 
@@ -319,7 +309,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
-        $container['firewallMap'] = function ($c) {
+        $container['firewallMap'] = function () {
             return new FirewallMap();
         };
 
@@ -345,7 +335,7 @@ class SecurityServiceProvider implements \Pimple\ServiceProviderInterface
             );
         };
 
-        $container['passwordEncoder'] = function ($c) {
+        $container['passwordEncoder'] = function () {
             return new MessageDigestPasswordEncoder('sha512', true, 5000);
         };
 

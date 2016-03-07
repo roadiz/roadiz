@@ -46,7 +46,7 @@ class CustomFormFieldHandler
         return $this->customFormField;
     }
     /**
-     * @param CustomFormeField $customFormField
+     * @param CustomFormField $customFormField
      *
      * @return $this
      */
@@ -77,5 +77,7 @@ class CustomFormFieldHandler
         if ($this->customFormField->getCustomForm() !== null) {
             return $this->customFormField->getCustomForm()->getHandler()->cleanFieldsPositions();
         }
+
+        return 1;
     }
 }

@@ -166,14 +166,14 @@ class CustomForm extends AbstractDateTimed
      */
     private $closeDate = null;
     /**
-     * @return datetime
+     * @return \DateTime
      */
     public function getCloseDate()
     {
         return $this->closeDate;
     }
     /**
-     * @param datetime $closeDate
+     * @param \DateTime $closeDate
      *
      * @return $this
      */
@@ -238,7 +238,7 @@ class CustomForm extends AbstractDateTimed
     private $fields;
 
     /**
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getFields()
     {
@@ -373,19 +373,21 @@ class CustomForm extends AbstractDateTimed
 
     public function __clone()
     {
-        $this->setId(null);
-        $suffix = "-" . uniqid();
-        $this->name .= $suffix;
-        $this->displayName .= $suffix;
-        $this->customFormAnswers = new ArrayCollection();
-        $fields = $this->getFields();
-        if ($fields !== null) {
-            $this->fields = new ArrayCollection();
-            foreach ($fields as $field) {
-                $cloneField = clone $field;
-                $this->fields->add($cloneField);
+        if ($this->id) {
+            $this->id = null;
+            $suffix = "-" . uniqid();
+            $this->name .= $suffix;
+            $this->displayName .= $suffix;
+            $this->customFormAnswers = new ArrayCollection();
+            $fields = $this->getFields();
+            if ($fields !== null) {
+                $this->fields = new ArrayCollection();
+                foreach ($fields as $field) {
+                    $cloneField = clone $field;
+                    $this->fields->add($cloneField);
+                }
             }
+            $this->nodes = new ArrayCollection();
         }
-        $this->nodes = new ArrayCollection();
     }
 }

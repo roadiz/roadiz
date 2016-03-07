@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\CMS\Importers\ImporterInterface;
+
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -60,6 +62,12 @@ class NodesImporter implements ImporterInterface
         return true;
     }
 
+    /**
+     * @param Node          $node
+     * @param EntityManager $em
+     *
+     * @return Node|null
+     */
     protected static function browseTree($node, EntityManager $em)
     {
         try {
@@ -72,8 +80,12 @@ class NodesImporter implements ImporterInterface
                 return null;
             }
 
+            /** @var Node[] $childObj */
             $childObj = [];
+
+            /** @var NodesSources[] $sourceObj */
             $sourceObj = [];
+
             foreach ($node->getChildren() as $child) {
                 $childObj[] = static::browseTree($child, $em);
             }

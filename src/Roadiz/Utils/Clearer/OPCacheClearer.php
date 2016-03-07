@@ -1,7 +1,5 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -24,44 +22,34 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AbstractPositioned.php
+ * @file OPCacheClearer.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\AbstractEntities;
+namespace RZ\Roadiz\Utils\Clearer;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Abstract class which describe a positioned entity
- *
- * @ORM\MappedSuperclass
- */
-abstract class AbstractPositioned
+class OPCacheClearer implements ClearerInterface
 {
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $position = 0.0;
+    protected $output;
 
-    /**
-     * @return float
-     */
-    public function getPosition()
+    public function clear()
     {
-        return $this->position;
-    }
-
-    /**
-     * @param float $newPosition
-     *
-     * @return $this
-     */
-    public function setPosition($newPosition)
-    {
-        if ($newPosition > -1) {
-            $this->position = (float) $newPosition;
+        if (function_exists('opcache_reset') &&
+            true === opcache_reset()) {
+            $this->output = 'PHP OPCache has been reset.';
+        } else {
+            $this->output = 'PHP OPCache is disabled.';
         }
 
-        return $this;
+        return false;
+    }
+
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    public function getCacheDir()
+    {
+        return '';
     }
 }

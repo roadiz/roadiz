@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
+
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 
@@ -47,7 +47,6 @@ class StaticRouter extends Router
         RequestContext $context = null,
         LoggerInterface $logger = null
     ) {
-
         $this->routeCollection = $routeCollection;
         $this->logger = $logger;
         $this->context = $context ?: new RequestContext();

@@ -31,6 +31,9 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -149,16 +152,16 @@ class DocumentRepository extends EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
+     * @param string $pattern Search pattern
+     * @param QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
+        QueryBuilder $qb,
         array &$criteria = [],
         $alias = "obj"
     ) {
@@ -235,6 +238,7 @@ class DocumentRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
+     * @param null $translation
      */
     protected function applyTranslationByFolder(
         array &$criteria,
@@ -286,15 +290,15 @@ class DocumentRepository extends EntityRepository
             }
         }
     }
+
     /**
      * This method allows to pre-filter Documents with a given translation.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
+     * @param Translation $translation
      *
      * @return QueryBuilder
      */
@@ -335,12 +339,12 @@ class DocumentRepository extends EntityRepository
 
         return $qb;
     }
+
     /**
      * This method allows to pre-filter Documents with a given translation.
      *
-     * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $securityAuthorizationChecker
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param Translation $translation
      *
      * @return QueryBuilder
      */
@@ -364,17 +368,18 @@ class DocumentRepository extends EntityRepository
 
         return $qb;
     }
+
     /**
      * Just like the findBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
+     * @param Translation|null $translation
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
+     *
      */
     public function findBy(
         array $criteria,
@@ -398,19 +403,20 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return new ArrayCollection();
         }
     }
+
     /**
      * Just like the findOneBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param Translation|null $translation
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
+     *
      */
     public function findOneBy(
         array $criteria,
@@ -433,16 +439,16 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
+
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $securityAuthorizationChecker
+     * @param array $criteria
+     * @param Translation|null $translation
      *
      * @return int
      */
@@ -462,14 +468,14 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param \RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
      * @return array|null
      */
@@ -491,13 +497,13 @@ class DocumentRepository extends EntityRepository
             ->setParameter('raw', false);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param string                              $fieldName
      *
      * @return array|null
@@ -522,7 +528,7 @@ class DocumentRepository extends EntityRepository
             ->setParameter('raw', false);
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -545,7 +551,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -597,7 +603,7 @@ class DocumentRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

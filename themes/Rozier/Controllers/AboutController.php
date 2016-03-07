@@ -37,6 +37,7 @@ use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
@@ -372,6 +373,8 @@ class AboutController extends RozierApp
             new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
             new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
             new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
+            new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
+            new OPCacheClearer(),
         ];
         foreach ($clearers as $clearer) {
             $clearer->clear();

@@ -80,7 +80,7 @@ class EntryPointsController extends AppController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string                                   $method
      *
      * @return boolean | array  Return true if request is valid, else return error array
@@ -119,9 +119,9 @@ class EntryPointsController extends AppController
      * * image/png
      * * image/gif
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @param  \Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contactFormAction(Request $request)
     {
@@ -198,8 +198,10 @@ class EntryPointsController extends AppController
          */
         return $this->redirect($request->get('form')['_redirect']);
     }
+
     /**
      * @param Request $request
+     * @throws BadFormRequestException
      */
     protected function validateMandatoryFields(Request $request)
     {
@@ -220,6 +222,7 @@ class EntryPointsController extends AppController
 
     /**
      * @param Request $request
+     * @throws BadFormRequestException
      */
     protected function validateEmail(Request $request)
     {
@@ -235,7 +238,7 @@ class EntryPointsController extends AppController
         }
     }
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array $uploadedFiles
      *
      * @return array
@@ -322,9 +325,11 @@ class EntryPointsController extends AppController
 
         return SettingsBag::get('email_sender');
     }
+
     /**
      * @param  Request $request
      * @return array
+     * @throws BadFormRequestException
      */
     protected function getUploadedFiles(Request $request)
     {
@@ -431,13 +436,13 @@ class EntryPointsController extends AppController
      * {{ form(contactForm) }}
      * </pre>
      *
-     * @param Symfony\Component\HttpFoundation\Request $request             Contact page request
-     * @param boolean                                  $redirect            Redirect to contact page after sending?
-     * @param string                                   $customRedirectUrl   Redirect to a custom url
-     * @param string                                   $customEmailReceiver Send contact form to a custom email (or emails)
-     * @param string                                   $customEmailSubject  Customize email subject
+     * @param \Symfony\Component\HttpFoundation\Request $request             Contact page request
+     * @param boolean                                   $redirect            Redirect to contact page after sending?
+     * @param string                                    $customRedirectUrl   Redirect to a custom url
+     * @param string                                    $customEmailReceiver Send contact form to a custom email (or emails)
+     * @param string                                    $customEmailSubject  Customize email subject
      *
-     * @return Symfony\Component\Form\FormBuilder
+     * @return \Symfony\Component\Form\FormBuilder
      */
     public static function getContactFormBuilder(
         Request $request,

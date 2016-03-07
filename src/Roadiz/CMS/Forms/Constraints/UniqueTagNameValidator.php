@@ -58,8 +58,9 @@ class UniqueTagNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function tagNameExists($name, $entityManager)
     {

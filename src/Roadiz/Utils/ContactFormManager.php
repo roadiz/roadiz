@@ -333,8 +333,8 @@ class ContactFormManager
 
     /**
      * Send contact form data by email.
-     *
-     * @return boolean
+     * @return bool
+     * @throws \Exception
      */
     protected function send()
     {
@@ -460,7 +460,8 @@ class ContactFormManager
      *
      * @param string $receiver the receiver
      *
-     * @return self
+     * @return ContactFormManager
+     * @throws \Exception
      */
     public function setReceiver($receiver)
     {
@@ -487,8 +488,8 @@ class ContactFormManager
      * Sets the value of sender.
      *
      * @param string $sender the sender
-     *
-     * @return self
+     * @return ContactFormManager
+     * @throws \Exception
      */
     protected function setSender($sender)
     {

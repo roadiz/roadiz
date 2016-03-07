@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Tag;
 
@@ -40,7 +41,7 @@ class TagHandler
     private $tag = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function getTag()
     {
@@ -48,7 +49,7 @@ class TagHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param \RZ\Roadiz\Core\Entities\Tag $tag
      *
      * @return $this
      */
@@ -131,7 +132,7 @@ class TagHandler
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -156,7 +157,7 @@ class TagHandler
             }
 
             return $simpleArray;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
@@ -174,7 +175,7 @@ class TagHandler
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -198,7 +199,7 @@ class TagHandler
             }
 
             return $simpleArray;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register Mailer transport instance.
  */
-class MailerServiceProvider implements \Pimple\ServiceProviderInterface
+class MailerServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize Mailer objects.
@@ -53,7 +54,8 @@ class MailerServiceProvider implements \Pimple\ServiceProviderInterface
      * Just set `type` to false or remove `mailer` section
      * to enable simple `sendmail` transport.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
+     * @return Container
      */
     public function register(Container $container)
     {

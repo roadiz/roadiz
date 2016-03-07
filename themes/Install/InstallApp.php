@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
@@ -258,6 +259,7 @@ class InstallApp extends AppController
                         new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
                         // Force clear prod configuration too
                         new ConfigurationCacheClearer(ROADIZ_ROOT . '/cache/prod'),
+                        new OPCacheClearer(),
                     ];
                     foreach ($clearers as $clearer) {
                         $clearer->clear();

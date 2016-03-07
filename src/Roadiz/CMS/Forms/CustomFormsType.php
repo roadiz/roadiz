@@ -42,7 +42,7 @@ class CustomFormsType extends AbstractType
     protected $forceExpanded;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      * @param boolean $forceExpanded
      */
     public function __construct(CustomForm $customForm, $forceExpanded = false)
@@ -108,7 +108,7 @@ class CustomFormsType extends AbstractType
             }
 
             if ($field->getType() === CustomFormField::MARKDOWN_T) {
-                $type = new \RZ\Roadiz\CMS\Forms\MarkdownType();
+                $type = new MarkdownType();
             } elseif ($field->getType() === CustomFormField::DOCUMENTS_T) {
                 $type = "file";
             }

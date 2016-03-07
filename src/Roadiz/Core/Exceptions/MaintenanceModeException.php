@@ -47,7 +47,7 @@ class MaintenanceModeException extends \Exception
     protected $message = 'Website is currently under maintenance. We will be back shortly.';
 
     /**
-     * @param RZ\Roadiz\CMS\Controllers\AppController $controller
+     * @param \RZ\Roadiz\CMS\Controllers\AppController $controller
      * @param string $message
      * @param int $code
      */

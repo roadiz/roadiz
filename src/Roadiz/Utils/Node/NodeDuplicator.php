@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 
 /**
@@ -42,6 +43,12 @@ class NodeDuplicator
     private $em = null;
     private $originalNode = null;
 
+    /**
+     * NodeDuplicator constructor.
+     *
+     * @param Node          $originalNode
+     * @param EntityManager $em
+     */
     public function __construct(
         Node $originalNode,
         EntityManager $em
@@ -78,6 +85,7 @@ class NodeDuplicator
      */
     private function doDuplicate(Node $node)
     {
+        /** @var Node[] $childrenArray */
         $childrenArray = [];
 
         /*
@@ -145,6 +153,7 @@ class NodeDuplicator
     private function doDuplicateSource(Node $node)
     {
         $newSources = new ArrayCollection();
+        /** @var NodesSources[] $nodeSources */
         $nodeSources = new ArrayCollection($node->getNodeSources()->toArray());
 
         $node->getNodeSources()->clear();

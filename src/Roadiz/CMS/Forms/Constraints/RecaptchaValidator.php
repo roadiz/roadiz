@@ -40,6 +40,8 @@ class RecaptchaValidator extends ConstraintValidator
     /**
      *
      * @see \Symfony\Component\Validator\ConstraintValidator::validate()
+     * @param mixed $data
+     * @param Constraint $constraint
      */
     public function validate($data, Constraint $constraint)
     {
@@ -47,30 +49,35 @@ class RecaptchaValidator extends ConstraintValidator
         $responseField = $constraint->request->request->get('g-recaptcha-response');
 
         if (empty($responseField)) {
-            $this->context->addViolationAt($propertyPath, $constraint->emptyMessage);
+            $this->context->buildViolation($constraint->emptyMessage)
+                ->atPath($propertyPath)
+                ->addViolation();
         } elseif (false === $this->check($constraint, $responseField)) {
-            $this->context->addViolationAt($propertyPath, $constraint->invalidMessage);
+            $this->context->buildViolation($constraint->invalidMessage)
+                ->atPath($propertyPath)
+                ->addViolation();
         }
     }
 
     /**
      * Makes a request to recaptcha service and checks if recaptcha field is valid.
      *
-     * @param string $challengeField
+     * @param Constraint $constraint
      * @param string $responseField
-     * @return boolean
+     *
+     * @return bool
      */
     protected function check(Constraint $constraint, $responseField)
     {
         $server = $constraint->request->server;
 
         $data = array(
-            'secret' => $constraint->options['privateKey'],
+            'secret' => $constraint->privateKey,
             'remoteip' => $server->get('REMOTE_ADDR'),
             'response' => $responseField,
         );
 
-        $curl = curl_init($constraint->options['verifyUrl']);
+        $curl = curl_init($constraint->verifyUrl);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);

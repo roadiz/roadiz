@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
+
 /**
  * {@inheritdoc}
  */
@@ -38,7 +40,7 @@ class SettingGroupRepository extends EntityRepository
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($name)
     {
@@ -49,15 +51,13 @@ class SettingGroupRepository extends EntityRepository
 
         try {
             return (boolean) $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }
 
     /**
-     * @param string $name
-     *
-     * @return boolean
+     * @return bool
      */
     public function findAllNames()
     {
@@ -72,7 +72,7 @@ class SettingGroupRepository extends EntityRepository
 
             return $ids;
 
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return false;
         }
     }

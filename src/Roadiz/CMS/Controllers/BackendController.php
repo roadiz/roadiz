@@ -53,7 +53,7 @@ class BackendController extends AppController
     /**
      * Append objects to global container.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {

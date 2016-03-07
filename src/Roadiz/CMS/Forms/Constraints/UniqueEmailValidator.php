@@ -54,9 +54,10 @@ class UniqueEmailValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $name
+     * @param $email
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function emailExists($email, $entityManager)
     {

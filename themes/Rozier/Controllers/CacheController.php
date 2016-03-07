@@ -31,12 +31,13 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -65,6 +66,7 @@ class CacheController extends RozierApp
                 new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
                 new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
                 new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
+                new OPCacheClearer(),
             ];
             foreach ($clearers as $clearer) {
                 $clearer->clear();

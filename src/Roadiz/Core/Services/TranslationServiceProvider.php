@@ -30,20 +30,21 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 
 /**
  * Register Embed documents services for dependency injection container.
  */
-class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
+class TranslationServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize translator services.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      *
-     * @return Pimple\Container
+     * @return \Pimple\Container
      */
     public function register(Container $container)
     {
@@ -54,6 +55,8 @@ class TranslationServiceProvider implements \Pimple\ServiceProviderInterface
         /**
          * This service have to be called once a controller has
          * been matched! Never before.
+         * @param $c
+         * @return
          */
         $container['translator.locale'] = function ($c) {
             if (null !== $c['session']->get('_locale') &&

@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
-use RZ\Roadiz\Core\Entities\NodeType;
+
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
@@ -49,7 +50,7 @@ class NodeHandler
     private $node = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     public function getNode()
     {
@@ -57,7 +58,7 @@ class NodeHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return $this
      */
@@ -81,7 +82,7 @@ class NodeHandler
     /**
      * Remove every node to custom-forms associations for a given field.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param NodeTypeField $field
      *
      * @return $this
      */
@@ -215,9 +216,9 @@ class NodeHandler
     /**
      * Get node source by translation.
      *
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param \RZ\Roadiz\Core\Entities\Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNodeSourceByTranslation($translation)
     {
@@ -345,7 +346,7 @@ class NodeHandler
     }
 
     /**
-     * @return ArrayCollection
+     * @return \RZ\Roadiz\Core\Entities\Translation[]|ArrayCollection
      */
     public function getAvailableTranslations()
     {
@@ -360,7 +361,7 @@ class NodeHandler
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -385,7 +386,7 @@ class NodeHandler
             }
 
             return $simpleArray;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }
@@ -402,7 +403,7 @@ class NodeHandler
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -425,7 +426,7 @@ class NodeHandler
             }
 
             return $simpleArray;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -452,6 +453,8 @@ class NodeHandler
 
     /**
      * Return if part of Node offspring.
+     *
+     * @param Node $relative
      *
      * @return bool
      */
@@ -604,7 +607,7 @@ class NodeHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param  boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getPrevious(
         array $criteria = null,
@@ -653,7 +656,7 @@ class NodeHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param  boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     public function getNext(
         array $criteria = null,

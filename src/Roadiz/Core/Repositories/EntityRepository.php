@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
@@ -335,7 +336,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
-     * @param mixed $criteria Doctrine\Common\Collections\Criteria or array
+     * @param Criteria|mixed|array $criteria  or array
      *
      * @return integer
      */
@@ -366,20 +367,21 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
             try {
                 return $finalQuery->getSingleScalarResult();
-            } catch (\Doctrine\ORM\Query\QueryException $e) {
+            } catch (Query\QueryException $e) {
                 return 0;
-            } catch (\Doctrine\ORM\NoResultException $e) {
+            } catch (NoResultException $e) {
                 return 0;
             }
         }
+        return 0;
     }
 
     /**
      * Create a LIKE comparison with entity texts colunms.
      *
-     * @param string                  $pattern
-     * @param DoctrineORMQueryBuilder $qb
-     * @param string                  $alias
+     * @param string $pattern
+     * @param QueryBuilder $qb
+     * @param string $alias
      */
     protected function classicLikeComparison(
         $pattern,
@@ -412,12 +414,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
-     *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @param string $pattern Search pattern
+     * @param QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
@@ -470,9 +471,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         try {
             return $finalQuery->getResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (Query\QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -481,7 +482,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param string $pattern  Search pattern
      * @param array  $criteria Additionnal criteria
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -496,9 +497,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (Query\QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

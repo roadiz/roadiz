@@ -40,7 +40,7 @@ class SolrHelper extends Helper
     private $solr;
 
     /**
-     * @param Solarium\Client|null $solr
+     * @param \Solarium\Client|null $solr
      */
     public function __construct(Client $solr = null)
     {
@@ -48,7 +48,7 @@ class SolrHelper extends Helper
     }
 
     /**
-     * @return Solarium\Client
+     * @return \Solarium\Client
      */
     public function getSolr()
     {

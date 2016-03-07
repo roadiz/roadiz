@@ -31,9 +31,9 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
-use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -43,7 +43,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -59,7 +58,7 @@ class AppController extends Controller
     /**
      * Theme entity.
      *
-     * @var RZ\Roadiz\Core\Entities\Theme;
+     * @var \RZ\Roadiz\Core\Entities\Theme;
      */
     protected $theme = null;
     /**
@@ -156,6 +155,11 @@ class AppController extends Controller
      * @var array
      */
     protected $assignation = [];
+
+    /**
+     * @var Node|null
+     */
+    private $homeNode = null;
 
     /**
      * Initialize controller with its twig environment.
@@ -325,7 +329,7 @@ class AppController extends Controller
      *
      * @param string $message Additionnal message to describe 404 error.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function throw404($message = "")
     {
@@ -368,7 +372,7 @@ class AppController extends Controller
     /**
      * Append objects to the global dependency injection container.
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -381,39 +385,47 @@ class AppController extends Controller
         $container['twig.loaderFileSystem']->addPath(static::getViewsFolder(), static::getThemeDir());
     }
 
+    /**
+     * @param Translation|null $translation
+     * @return null|Node
+     */
     protected function getHome(Translation $translation = null)
     {
-        $theme = $this->getTheme();
+        if (null === $this->homeNode) {
+            $theme = $this->getTheme();
 
-        if ($theme !== null) {
-            $home = $theme->getHomeNode();
-            if ($home !== null) {
-                if ($translation !== null) {
-                    return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
-                        ->findWithTranslation(
-                            $home->getId(),
-                            $translation,
-                            $this->container['securityAuthorizationChecker']
-                        );
-                } else {
-                    return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
-                        ->findWithDefaultTranslation(
-                            $home->getId(),
-                            $this->container['securityAuthorizationChecker']
-                        );
+            if ($theme !== null) {
+                $home = $theme->getHomeNode();
+                if ($home !== null) {
+                    if ($translation !== null) {
+                        $this->homeNode = $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                            ->findWithTranslation(
+                                $home->getId(),
+                                $translation,
+                                $this->container['securityAuthorizationChecker']
+                            );
+                    } else {
+                        $this->homeNode = $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                            ->findWithDefaultTranslation(
+                                $home->getId(),
+                                $this->container['securityAuthorizationChecker']
+                            );
+                    }
                 }
             }
+            if ($translation !== null) {
+                $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findHomeWithTranslation(
+                        $translation,
+                        $this->container['securityAuthorizationChecker']
+                    );
+            } else {
+                $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
+            }
         }
-        if ($translation !== null) {
-            return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findHomeWithTranslation(
-                    $translation,
-                    $this->container['securityAuthorizationChecker']
-                );
-        } else {
-            return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
-        }
+
+        return $this->homeNode;
     }
 
     protected function getRoot()
@@ -429,7 +441,7 @@ class AppController extends Controller
      * @param Request $request
      * @param string  $msg
      * @param string  $level
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
@@ -450,7 +462,7 @@ class AppController extends Controller
      *
      * @param Request $request
      * @param string  $msg
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -463,7 +475,7 @@ class AppController extends Controller
      *
      * @param Request $request
      * @param string  $msg
-     * @param RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
      */
     public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -520,7 +532,7 @@ class AppController extends Controller
      * currently unavailable.
      *
      * @param Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function maintenanceAction(Request $request)
     {

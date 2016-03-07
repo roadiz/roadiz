@@ -1,7 +1,5 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -24,21 +22,45 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file Permission.php
+ * @file PositionedTrait.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Entities;
+namespace RZ\Roadiz\Core\AbstractEntities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Not implemented yet
- *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="permissions")
+ * Trait which describe a positioned entity
  */
-class Permission extends AbstractEntity
+trait PositionedTrait
 {
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $position = 0.0;
 
+    /**
+     * @return float
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set position as a float to enable increment and decrement by O.5
+     * to insert a node between two others.
+     *
+     * @param float $newPosition
+     *
+     * @return $this
+     */
+    public function setPosition($newPosition)
+    {
+        if ($newPosition > -1) {
+            $this->position = (float) $newPosition;
+        }
+
+        return $this;
+    }
 }

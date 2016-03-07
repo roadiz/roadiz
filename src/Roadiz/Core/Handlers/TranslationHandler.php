@@ -40,7 +40,7 @@ class TranslationHandler
     private $translation = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return Translation
      */
     public function getTranslation()
     {
@@ -48,7 +48,7 @@ class TranslationHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Translation $translation
      *
      * @return $this
      */

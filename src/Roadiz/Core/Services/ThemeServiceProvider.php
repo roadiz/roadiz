@@ -30,12 +30,13 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 
 /**
  * Register Theme services for dependency injection container.
  */
-class ThemeServiceProvider implements \Pimple\ServiceProviderInterface
+class ThemeServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {

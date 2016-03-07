@@ -40,6 +40,7 @@ interface ImporterInterface
      * Import json file.
      *
      * @param string $template
+     * @param EntityManager $em
      *
      * @return bool
      */

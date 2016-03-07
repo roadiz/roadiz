@@ -30,14 +30,16 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register configuration services for dependency injection container.
  */
-abstract class AbstractConfigurationServiceProvider implements \Pimple\ServiceProviderInterface
+abstract class AbstractConfigurationServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
@@ -45,7 +47,6 @@ abstract class AbstractConfigurationServiceProvider implements \Pimple\ServicePr
          * Every path to parse to find doctrine entities
          */
         $container['entitiesPaths'] = function ($c) {
-            $relPaths = [];
             $absPaths = [];
             if (isset($c['config']['entities'])) {
                 $relPaths = $c['config']['entities'];

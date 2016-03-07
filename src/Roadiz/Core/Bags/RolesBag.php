@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Bags;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\core\Entities\Role;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Roles bag used to get quickly a role entity
@@ -41,7 +41,7 @@ class RolesBag
     /**
      * Cached roles values.
      *
-     * @var array
+     * @var \RZ\Roadiz\Core\Entities\Role[string]
      */
     protected static $roles = [];
 
@@ -50,7 +50,7 @@ class RolesBag
      *
      * @param string $roleName
      *
-     * @return RZ\Roadiz\core\Entities\Role
+     * @return Role
      */
     public static function get($roleName)
     {

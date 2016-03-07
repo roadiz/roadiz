@@ -29,6 +29,9 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\CMS\Importers\GroupsImporter;
+use RZ\Roadiz\CMS\Importers\RolesImporter;
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
@@ -92,7 +95,7 @@ class InstallCommand extends Command
 
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\RolesImporter::importJsonFile(
+                    RolesImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename),
                         $this->entityManager
                     );
@@ -101,7 +104,7 @@ class InstallCommand extends Command
             }
             if (isset($data["importFiles"]['groups'])) {
                 foreach ($data["importFiles"]['groups'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\GroupsImporter::importJsonFile(
+                    GroupsImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename),
                         $this->entityManager
                     );
@@ -110,7 +113,7 @@ class InstallCommand extends Command
             }
             if (isset($data["importFiles"]['settings'])) {
                 foreach ($data["importFiles"]['settings'] as $filename) {
-                    \RZ\Roadiz\CMS\Importers\SettingsImporter::importJsonFile(
+                    SettingsImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename),
                         $this->entityManager
                     );

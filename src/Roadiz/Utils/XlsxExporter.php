@@ -86,7 +86,7 @@ class XlsxExporter
 
         $headerkeys = $keys;
 
-        foreach ($data as $key => $answer) {
+        foreach ($data as $answer) {
             /*
              * If headers have changed
              * we print them

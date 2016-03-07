@@ -33,9 +33,8 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,9 +78,21 @@ class FrontendController extends AppController
         'home',
     ];
 
+    /**
+     * @var Node
+     */
     protected $node = null;
+    /**
+     * @var NodesSources
+     */
     protected $nodeSource = null;
+    /**
+     * @var Translation
+     */
     protected $translation = null;
+    /**
+     * @var Container
+     */
     protected $themeContainer = null;
 
     /**
@@ -112,7 +123,7 @@ class FrontendController extends AppController
      * @param Request $request
      * @param string|null                              $_locale
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function homeAction(Request $request, $_locale = null)
     {
@@ -205,80 +216,13 @@ class FrontendController extends AppController
         $this->assignation['pageMeta'] = $this->getNodeSEO();
     }
 
-    /**
-     * Get controller class path for a given node.
-     *
-     * @param Node $node
-     *
-     * @return string
-     */
-    public function getControllerForNode(Node $node)
-    {
-        $currentClass = get_class($this);
-        $refl = new \ReflectionClass($currentClass);
-        $namespace = $refl->getNamespaceName() . '\\Controllers';
-
-        /*
-         * Determine if we look for a node-type named controller or
-         * a node-named controller.
-         */
-        if (in_array($node->getNodeName(), static::$specificNodesControllers)) {
-            return $namespace . '\\' .
-            StringHandler::classify($node->getNodeName()) .
-                'Controller';
-        } else {
-            return $namespace . '\\' .
-            StringHandler::classify($node->getNodeType()->getName()) .
-                'Controller';
-        }
-    }
-
-    /**
-     * Return a 404 Response or TRUE if node is viewable.
-     *
-     * @param  Node $node
-     *
-     * @return boolean|Symfony\Component\HttpFoundation\Response
-     */
-    public function validateAccessForNodeWithStatus(Node $node)
-    {
-        /*
-         * For archived and deleted nodes
-         */
-        if ($node->getStatus() > Node::PUBLISHED) {
-            /*
-             * Not allowed to see deleted and archived nodes
-             * even for Admins
-             */
-            return $this->throw404();
-        }
-
-        /*
-         * For unpublished nodes
-         */
-        if ($node->getStatus() < Node::PUBLISHED) {
-            if ($this->isGranted(Role::ROLE_BACKEND_USER) &&
-                $this->getService('kernel')->isPreview()) {
-                return true;
-            }
-            /*
-             * Not allowed to see unpublished nodes
-             */
-            return $this->throw404();
-        }
-
-        /*
-         * Everyone can view published nodes.
-         */
-        return true;
-    }
 
     /**
      * Initialize controller with environment from an other controller
-     * in order to avoid initializing same componant again.
+     * in order to avoid initializing same component again.
      *
-     * @param Translator                                       $translator
-     * @param array                                            $baseAssignation
+     * @param array $baseAssignation
+     * @param Container $themeContainer
      */
     public function __initFromOtherController(
         array &$baseAssignation = null,
@@ -293,8 +237,10 @@ class FrontendController extends AppController
      * for a node-based request.
      *
      * @param Request $request
+     * @param Node $node
+     * @param Translation $translation
+     *
      * @return Response
-     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If no front-end controller is available
      */
     protected function handle(
         Request $request,
@@ -304,15 +250,23 @@ class FrontendController extends AppController
         $this->getService('stopwatch')->start('handleNodeController');
 
         if ($node !== null) {
-            if (true !== $resp = $this->validateAccessForNodeWithStatus($node)) {
-                return $resp;
+
+            $nodeRouteHelper = new NodeRouteHelper(
+                $node,
+                $this->getTheme(),
+                $this->getService('securityAuthorizationChecker'),
+                $this->getService('kernel')->isPreview()
+            );
+
+            if (true !== $nodeRouteHelper->isViewable()) {
+                return $this->throw404();
             }
 
             /*
              * Determine if we look for a node-type named controller or
              * a node-named controller.
              */
-            $controllerPath = $this->getControllerForNode($node);
+            $controllerPath = $nodeRouteHelper->getController();
 
             if (class_exists($controllerPath) &&
                 method_exists($controllerPath, 'indexAction')) {
@@ -394,7 +348,7 @@ class FrontendController extends AppController
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
-         * Use a DI container to delay API requuests
+         * Use a DI container to delay API requests
          */
         $this->themeContainer = new Container();
 
@@ -414,7 +368,7 @@ class FrontendController extends AppController
         $this->storeNodeSourceAndTranslation($nodeSource, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
-         * Use a DI container to delay API requuests
+         * Use a DI container to delay API requests
          */
         $this->themeContainer = new Container();
 
@@ -435,7 +389,7 @@ class FrontendController extends AppController
     /**
      * Get SEO informations for current node.
      *
-     * @param NodesSources $fallbackNode
+     * @param NodesSources $fallbackNodeSource
      *
      * @return array
      */
@@ -458,7 +412,7 @@ class FrontendController extends AppController
      * Add a request matcher on frontend to make securityTokenStorage
      * available even when no user has logged in.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {

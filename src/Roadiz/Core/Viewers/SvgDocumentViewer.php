@@ -42,7 +42,6 @@ class SvgDocumentViewer
         'height',
         'identifier',
         'class',
-        'alt',
     ];
 
     /**
@@ -123,7 +122,11 @@ class SvgDocumentViewer
                 }
             }
         }
-        return $this->xml->asXML();
+
+        /*
+         * Remove xml DOCTYPE to comply to W3C HTML Validator
+         */
+        return preg_replace('#^<\?xml[^\?]+\?>#', '', $this->xml->asXML());
     }
 
     protected function getObjectSvg()

@@ -44,7 +44,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      * Create a simple associative array with NodeTypeField
      * entity.
      *
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField
      *
      * @return array
      */
@@ -70,7 +70,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $jsonString
      *
-     * @return RZ\Roadiz\Core\Entities\NodeTypeField
+     * @return \RZ\Roadiz\Core\Entities\NodeTypeField
      */
     public function deserialize($jsonString)
     {
