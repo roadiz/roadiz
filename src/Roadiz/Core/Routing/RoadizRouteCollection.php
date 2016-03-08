@@ -64,7 +64,9 @@ class RoadizRouteCollection extends DeferredRouteCollection
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('routeCollection');
         }
-        if (empty($this->getResources())) {
+
+        $resources = $this->getResources();
+        if (empty($resources)) {
             /*
              * Adding Backend routes
              */
