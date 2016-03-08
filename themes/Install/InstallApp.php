@@ -295,7 +295,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Form
      */
     protected function buildLanguageForm(Request $request)
     {
@@ -324,7 +324,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Form
      */
     protected function buildUserForm(Request $request)
     {
@@ -362,7 +362,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Form
      */
     protected function buildInformationsForm(Request $request)
     {
@@ -446,7 +446,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Form
      */
     protected function buildDoneForm(Request $request)
     {

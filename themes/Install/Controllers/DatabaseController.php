@@ -238,7 +238,7 @@ class DatabaseController extends InstallApp
      * @param Request       $request
      * @param Configuration $conf
      *
-     * @return \Symfony\Component\Form\Forms
+     * @return \Symfony\Component\Form\Form
      */
     protected function buildDatabaseForm(Request $request, Configuration $conf)
     {
