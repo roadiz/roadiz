@@ -110,7 +110,7 @@ class NodesSourcesPaginator extends Paginator
     /**
      * Gets the value of preview.
      *
-     * @return mixed
+     * @return boolean
      */
     public function getPreview()
     {

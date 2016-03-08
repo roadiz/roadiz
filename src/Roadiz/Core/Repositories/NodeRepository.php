@@ -160,9 +160,9 @@ class NodeRepository extends EntityRepository
     /**
      * Bind translation parameter to final query
      *
-     * @param array $criteria
-     * @param Query $finalQuery
-     * @param null $translation
+     * @param array            $criteria
+     * @param Query            $finalQuery
+     * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
@@ -177,9 +177,9 @@ class NodeRepository extends EntityRepository
     /**
      * Create filters according to any translation criteria OR argument.
      *
-     * @param array        $criteria
-     * @param QueryBuilder $qb
-     * @param Translation  $translation
+     * @param array            $criteria
+     * @param QueryBuilder     $qb
+     * @param Translation|null $translation
      */
     protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
     {
@@ -210,11 +210,12 @@ class NodeRepository extends EntityRepository
             }
         }
     }
+
     /**
-     * @param array                &$criteria
-     * @param QueryBuilder         &$qb
-     * @param AuthorizationChecker|null &$authorizationChecker
-     * @param boolean $preview
+     * @param array                     $criteria
+     * @param QueryBuilder              $qb
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      */
     protected function filterByAuthorizationChecker(
         &$criteria,
@@ -300,10 +301,11 @@ class NodeRepository extends EntityRepository
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array $criteria
-     * @param Translation $translation
-     * @param AuthorizationChecker $authorizationChecker
-     * @param boolean $preview
+     * @param array                     $criteria
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
+     *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
@@ -578,10 +580,10 @@ class NodeRepository extends EntityRepository
     /**
      * Find one Node with its Id and the default translation.
      *
-     * @param integer              $nodeId
+     * @param integer                   $nodeId
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
      * @return Node|null
      */
@@ -653,10 +655,10 @@ class NodeRepository extends EntityRepository
     /**
      * Find one Node with its nodeName and the default translation.
      *
-     * @param string               $nodeName
+     * @param string                    $nodeName
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
      * @return Node|null
      */
@@ -974,9 +976,9 @@ class NodeRepository extends EntityRepository
      * A not null authorizationChecker will always filter
      * node.status to PUBLISHED or lower.
      *
-     * @param  string               &$txtQuery
+     * @param  string                    $txtQuery
      * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
+     * @param  boolean                   $preview
      *
      * @return string
      */
@@ -999,12 +1001,13 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
+     * Create a Criteria object from a search pattern and additional fields.
      *
-     * @param string $pattern Search pattern
-     * @param QueryBuilder $qb QueryBuilder to pass
-     * @param array $criteria Additionnal criteria
-     * @param string $alias SQL query table alias
+     * @param string       $pattern  Search pattern
+     * @param QueryBuilder $qb       QueryBuilder to pass
+     * @param array        $criteria Additional criteria
+     * @param string       $alias    SQL query table alias
+     *
      * @return QueryBuilder
      */
     protected function createSearchBy(
@@ -1059,6 +1062,7 @@ class NodeRepository extends EntityRepository
      * @param  array        $criteria
      * @param  QueryBuilder $qb
      * @param  string       $alias
+     *
      * @return QueryBuilder
      */
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
@@ -1097,8 +1101,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node                                   $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return array
      */
@@ -1144,7 +1148,7 @@ class NodeRepository extends EntityRepository
     /**
      * @param Node          $node
      * @param NodeTypeField $field
-     * @param Translation $translation
+     * @param Translation   $translation
      *
      * @return array
      */
@@ -1172,8 +1176,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node $node
-     * @param string $fieldName
+     * @param Node        $node
+     * @param string      $fieldName
      * @param Translation $translation
      *
      * @return array
@@ -1203,8 +1207,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node                                   $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return array
      */
@@ -1250,7 +1254,7 @@ class NodeRepository extends EntityRepository
     /**
      * @param Node          $node
      * @param NodeTypeField $field
-     * @param Translation $translation
+     * @param Translation   $translation
      *
      * @return array
      */
@@ -1278,8 +1282,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node $node
-     * @param string $fieldName
+     * @param Node        $node
+     * @param string      $fieldName
      * @param Translation $translation
      *
      * @return array

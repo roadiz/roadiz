@@ -44,7 +44,7 @@ class NodePaginator extends Paginator
     protected $translation = null;
 
     /**
-     * @return AuthorizationChecker [description]
+     * @return AuthorizationChecker
      */
     public function getAuthorizationChecker()
     {
@@ -133,7 +133,7 @@ class NodePaginator extends Paginator
     /**
      * Gets the value of preview.
      *
-     * @return mixed
+     * @return boolean
      */
     public function getPreview()
     {
