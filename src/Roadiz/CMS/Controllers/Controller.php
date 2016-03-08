@@ -371,7 +371,7 @@ abstract class Controller
      * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
      *
-     * @return FormBuilder
+     * @return \Symfony\Component\Form\FormBuilder
      */
     protected function createFormBuilder($data = null, array $options = array())
     {
