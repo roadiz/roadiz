@@ -34,9 +34,9 @@ namespace Themes\DefaultTheme;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
  * DefaultThemeApp class
@@ -134,7 +134,7 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     protected function assignMainNavigation()
     {

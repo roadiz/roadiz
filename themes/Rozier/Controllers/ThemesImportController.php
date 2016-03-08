@@ -44,7 +44,7 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
@@ -59,7 +59,7 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importRolesAction(Request $request, $themeId = null)
     {
@@ -74,7 +74,7 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importGroupsAction(Request $request, $themeId = null)
     {
@@ -89,7 +89,7 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
@@ -104,7 +104,7 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importTagsAction(Request $request, $themeId = null)
     {
@@ -119,7 +119,7 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importNodesAction(Request $request, $themeId = null)
     {

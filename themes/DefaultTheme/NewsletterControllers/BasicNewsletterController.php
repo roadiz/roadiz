@@ -31,9 +31,8 @@
 
 namespace Themes\DefaultTheme\NewsletterControllers;
 
-use Themes\DefaultTheme\DefaultThemeApp;
-
 use Symfony\Component\HttpFoundation\Request;
+use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
  * Class to generate html form BasicNewsletter newsletter nodetype.
@@ -43,8 +42,8 @@ class BasicNewsletterController extends DefaultThemeApp
     /**
      * Generate HTML. The function name makeHtml is important because it will be automaticaly use bye NewsletterUtilsController
      *
-     * @param Symfony\Component\HttpFoundation\Request  $request
-     * @param RZ\Roadiz\Core\Entities\Newsletter        $newsletter
+     * @param Request                             $request
+     * @param \RZ\Roadiz\Core\Entities\Newsletter $newsletter
      *
      * @return string
      */
