@@ -57,7 +57,8 @@ class DatabaseController extends InstallApp
     {
         $config = new YamlConfiguration(
             $this->getService('kernel')->getCacheDir(),
-            $this->getService('kernel')->isDebug()
+            $this->getService('kernel')->isDebug(),
+            $this->getService('kernel')->getRootDir() . '/conf/config.yml'
         );
         if (false === $config->load()) {
             $config->setConfiguration($config->getDefaultConfiguration());
@@ -85,6 +86,7 @@ class DatabaseController extends InstallApp
                         $fixtures = new Fixtures(
                             $this->getService('em'),
                             $this->getService('kernel')->getCacheDir(),
+                            $this->getService('kernel')->getRootDir() . '/conf/config.yml',
                             $this->getService('kernel')->isDebug(),
                             $request
                         );
@@ -191,6 +193,7 @@ class DatabaseController extends InstallApp
         $fixtures = new Fixtures(
             $this->getService('em'),
             $this->getService('kernel')->getCacheDir(),
+            $this->getService('kernel')->getRootDir() . '/conf/config.yml',
             $this->getService('kernel')->isDebug(),
             $request
         );

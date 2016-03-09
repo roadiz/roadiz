@@ -196,6 +196,7 @@ class ThemeInstallCommand extends Command
             $fixtures = new Fixtures(
                 $this->entityManager,
                 $kernel->getCacheDir(),
+                $kernel->getRootDir() . '/conf/config.yml',
                 $kernel->isDebug()
             );
             $fixtures->installFrontendTheme($classname);

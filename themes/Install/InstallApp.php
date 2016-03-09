@@ -184,6 +184,7 @@ class InstallApp extends AppController
                     $fixtures = new Fixtures(
                         $this->getService('em'),
                         $this->getService('kernel')->getCacheDir(),
+                        $this->getService('kernel')->getRootDir() . '/conf/config.yml',
                         $this->getService('kernel')->isDebug(),
                         $request
                     );

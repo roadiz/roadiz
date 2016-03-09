@@ -51,16 +51,19 @@ class Fixtures
     protected $request;
     protected $cacheDir;
     protected $debug;
+    protected $configPath;
 
     /**
      * @param EntityManager $entityManager
-     * @param string        $cacheDir
-     * @param boolean       $debug
-     * @param Request|null  $request
+     * @param string $cacheDir
+     * @param string $configPath
+     * @param boolean $debug
+     * @param Request|null $request
      */
     public function __construct(
         EntityManager $entityManager,
         $cacheDir,
+        $configPath,
         $debug = true,
         Request $request = null
     ) {
@@ -68,6 +71,7 @@ class Fixtures
         $this->request = $request;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
+        $this->configPath = $configPath;
     }
 
     /**
@@ -267,7 +271,11 @@ class Fixtures
          * Update timezone
          */
         if (!empty($data['timezone'])) {
-            $conf = new YamlConfiguration($this->cacheDir, $this->debug);
+            $conf = new YamlConfiguration(
+                $this->cacheDir,
+                $this->debug,
+                $this->configPath
+            );
             if (false === $conf->load()) {
                 $conf->setConfiguration($conf->getDefaultConfiguration());
             }
