@@ -60,7 +60,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (null !== $this->logger) {
                 $this->logger->debug('NodeUrlMatcher has matched node (' . $ret['node']->getNodeName() . ').', $ret);
             }
-
             return $ret;
         } else {
             if (null !== $this->theme) {
@@ -95,7 +94,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $tokens = explode('/', $decodedUrl);
             // Remove empty tokens (especially when a trailing slash is present)
             $tokens = array_values(array_filter($tokens));
-            $node = null;
             /*
              * Try with URL Aliases
              */

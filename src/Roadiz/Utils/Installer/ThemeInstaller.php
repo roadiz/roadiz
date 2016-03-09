@@ -69,6 +69,7 @@ class ThemeInstaller
             $em,
             "",
             "",
+            false,
             $request
         );
         $data["className"] = $classname;

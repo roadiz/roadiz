@@ -60,7 +60,7 @@ abstract class AbstractApi
     /**
      * Return an array of entities matching criteria array.
      *
-     * @param array $criteria
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\Tools\Pagination\Paginator|array $criteria
      *
      * @return array
      */

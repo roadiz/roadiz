@@ -48,8 +48,11 @@ class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvi
         /*
          * Inject app config
          */
-        $container['config'] = function () {
-            $configuration = new Configuration();
+        $container['config'] = function ($c) {
+            $configuration = new Configuration(
+                $c['kernel']->getCacheDir(),
+                $c['kernel']->getRootDir() . '/conf/config.yml'
+            );
 
             if (false !== $configuration->load()) {
                 return $configuration->getConfiguration();
