@@ -97,6 +97,7 @@
                 'mainColor':      '{{ head.mainColor }}',
                 'mapsStyle':      {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
                 'googleClientId': '{{ head.googleClientId }}',
+                'defaultMapLocation': {{ head.mapsLocation|default('null')|raw }},
                 'messages': {
                     'forbiddenPage':     '{{ 'forbidden.page'|trans() }}',
                     'see_all':           '{{ 'see_all'|trans() }}',

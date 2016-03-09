@@ -76,6 +76,7 @@ class RozierApp extends BackendController
         //Settings
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name') . ' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
+        $this->assignation['head']['mapsLocation'] = SettingsBag::get('maps_default_location') ? SettingsBag::get('maps_default_location') : null;
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
         $this->assignation['head']['themeName'] = static::$themeName;

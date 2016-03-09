@@ -22,6 +22,12 @@
                 "visible": true
             },
             {
+                "name": "maps_default_location",
+                "value": "{\"lat\":45.769785, \"lng\":4.833967, \"zoom\":14}",
+                "type": 23,
+                "visible": true
+            },
+            {
                 "name": "use_cdn",
                 "value": true,
                 "type": 5,
