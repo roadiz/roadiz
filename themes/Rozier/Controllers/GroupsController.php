@@ -613,7 +613,7 @@ class GroupsController extends RozierApp
      * @param array $data
      * @param Group $group
      *
-     * @return User
+     * @return Role
      */
     private function addRole($data, Group $group)
     {

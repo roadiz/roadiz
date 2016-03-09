@@ -214,7 +214,8 @@ abstract class Controller
      *
      * @param Request $request
      * @param string $_locale
-     * @return Response
+     *
+     * @return Translation
      * @throws NoTranslationAvailableException
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
