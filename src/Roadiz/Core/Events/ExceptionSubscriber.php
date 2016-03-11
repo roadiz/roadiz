@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -71,6 +72,14 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         // You get the exception object from the received event
         $exception = $event->getException();
+
+        /*
+         * Get previous exception if thrown in Twig execution context.
+         */
+        if ($exception instanceof \Twig_Error_Runtime &&
+            null !== $exception->getPrevious()) {
+            $exception = $exception->getPrevious();
+        }
 
         if ($exception instanceof MaintenanceModeException &&
             null !== $ctrl = $exception->getController()) {
@@ -157,6 +166,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     protected function getHumanExceptionTitle(\Exception $e)
     {
+        if ($e instanceof NotFoundHttpException) {
+            return "Resource not found.";
+        }
+
         if ($e instanceof TableNotFoundException) {
             return "Your database is not synchronised to Roadiz data schema. Did you run install before using Roadiz?";
         }
