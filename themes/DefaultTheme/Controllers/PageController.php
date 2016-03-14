@@ -44,11 +44,11 @@ class PageController extends DefaultThemeApp
     /**
      * Default action for any Page node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Core\Entities\Node              $node
-     * @param RZ\Roadiz\Core\Entities\Translation       $translation
+     * @param Request     $request
+     * @param Node        $node
+     * @param Translation $translation
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(
         Request $request,

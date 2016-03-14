@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -72,14 +71,14 @@ class UrlAlias extends AbstractEntity
      */
     private $nodeSource;
     /**
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNodeSource()
     {
         return $this->nodeSource;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      *
      * @return $this
      */

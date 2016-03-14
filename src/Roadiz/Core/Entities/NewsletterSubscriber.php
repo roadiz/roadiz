@@ -29,10 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Entities\Newsletter;
-use RZ\Roadiz\Core\Entities\Subscriber;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * Describes a simple ManyToMany relation
@@ -50,12 +48,12 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", inversedBy="newsletterSubscriber")
      * @ORM\JoinColumn(name="newsletter_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\Newsletter
+     * @var \RZ\Roadiz\Core\Entities\Newsletter
      */
     private $newsletter;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Newsletter
+     * @return \RZ\Roadiz\Core\Entities\Newsletter
      */
     public function getNewsletter()
     {
@@ -70,12 +68,12 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Subscriber", inversedBy="newsletterSubscriber")
      * @ORM\JoinColumn(name="subscriber_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\Subscriber
+     * @var \RZ\Roadiz\Core\Entities\Subscriber
      */
     private $subscriber;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Subscriber
+     * @return \RZ\Roadiz\Core\Entities\Subscriber
      */
     public function getSubscriber()
     {
@@ -115,8 +113,8 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * Create a new relation between Newsletter, a Subscriber.
      *
-     * @param RZ\Roadiz\Core\Entities\Newsletter $newsletter
-     * @param RZ\Roadiz\Core\Entities\Subscriber $subscriber
+     * @param \RZ\Roadiz\Core\Entities\Newsletter $newsletter
+     * @param \RZ\Roadiz\Core\Entities\Subscriber $subscriber
      */
     public function __construct(Newsletter $newsletter, Subscriber $subscriber)
     {
@@ -126,7 +124,9 @@ class NewsletterSubscriber extends AbstractEntity
 
     public function __clone()
     {
-        $this->id = 0;
-        $this->newsletter = null;
+        if ($this->id) {
+            $this->id = null;
+            $this->newsletter = null;
+        }
     }
 }

@@ -30,11 +30,11 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use Symfony\Component\Form\AbstractType;
 use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use RZ\Roadiz\Core\Entities\CustomFormField;
 
 class CustomFormsType extends AbstractType
 {
@@ -42,7 +42,7 @@ class CustomFormsType extends AbstractType
     protected $forceExpanded;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      * @param boolean $forceExpanded
      */
     public function __construct(CustomForm $customForm, $forceExpanded = false)
@@ -108,7 +108,7 @@ class CustomFormsType extends AbstractType
             }
 
             if ($field->getType() === CustomFormField::MARKDOWN_T) {
-                $type = new \RZ\Roadiz\CMS\Forms\MarkdownType();
+                $type = new MarkdownType();
             } elseif ($field->getType() === CustomFormField::DOCUMENTS_T) {
                 $type = "file";
             }

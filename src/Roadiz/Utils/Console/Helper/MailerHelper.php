@@ -62,9 +62,8 @@ class MailerHelper extends Helper
      * The return value is the number of recipients who were accepted for
      * delivery.
      *
-     * @param Swift_Mime_Message $message
-     * @param array              $failedRecipients An array of failures by-reference
-     *
+     * @param \Swift_Mime_Message $message
+     * @param array $failedRecipients An array of failures by-reference
      * @return int
      */
     public function send(\Swift_Mime_Message $message, &$failedRecipients = null)

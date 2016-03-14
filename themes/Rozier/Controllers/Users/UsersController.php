@@ -46,9 +46,9 @@ class UsersController extends RozierApp
     /**
      * List every users.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -73,10 +73,10 @@ class UsersController extends RozierApp
     /**
      * Return an edition form for requested user.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $userId)
     {
@@ -130,10 +130,10 @@ class UsersController extends RozierApp
     /**
      * Return an edition form for requested user details.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editDetailsAction(Request $request, $userId)
     {
@@ -184,9 +184,9 @@ class UsersController extends RozierApp
     /**
      * Return an creation form for requested user.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -227,10 +227,10 @@ class UsersController extends RozierApp
     /**
      * Return a deletion form for requested user.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $userId)
     {
@@ -268,7 +268,7 @@ class UsersController extends RozierApp
         }
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      */
     private function updateProfileImage(User $user)
     {
@@ -284,8 +284,8 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param array $data
+     * @param User  $user
      */
     private function deleteUser($data, User $user)
     {
@@ -294,7 +294,7 @@ class UsersController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      *
      * @return \Symfony\Component\Form\Form
      */

@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with folders entities.
@@ -40,7 +40,7 @@ class FolderHandler
     private $folder = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Folder
+     * @return \RZ\Roadiz\Core\Entities\Folder
      */
     public function getFolder()
     {
@@ -48,7 +48,7 @@ class FolderHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Folder $folder
+     * @param \RZ\Roadiz\Core\Entities\Folder $folder
      *
      * @return $this
      */
@@ -105,7 +105,7 @@ class FolderHandler
     /**
      * Return every folder’s parents.
      *
-     * @return array
+     * @return \RZ\Roadiz\Core\Entities\Folder[]
      */
     public function getParents()
     {
@@ -183,6 +183,7 @@ class FolderHandler
      */
     public static function cleanRootFoldersPositions()
     {
+        /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
         $folders = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findBy(['parent' => null], ['position'=>'ASC']);

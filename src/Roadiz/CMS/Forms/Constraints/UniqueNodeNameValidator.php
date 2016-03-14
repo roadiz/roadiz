@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Symfony\Component\Validator\Constraint;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueNodeNameValidator extends ConstraintValidator
@@ -60,8 +60,9 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function urlAliasExists($name, $entityManager)
     {
@@ -71,8 +72,9 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function nodeNameExists($name, $entityManager)
     {

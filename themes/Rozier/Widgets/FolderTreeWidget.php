@@ -33,7 +33,6 @@ namespace Themes\Rozier\Widgets;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\Widgets\AbstractWidget;
 
 /**
  * Prepare a Folder tree according to Folder hierarchy and given options.
@@ -44,9 +43,9 @@ class FolderTreeWidget extends AbstractWidget
     protected $folders = null;
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController
-     * @param RZ\Roadiz\Core\Entities\Folder $parent
+     * @param Request    $request
+     * @param Controller $refereeController
+     * @param Folder     $parent
      */
     public function __construct(
         Request $request,
@@ -73,7 +72,7 @@ class FolderTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Folder $parent
+     * @param Folder $parent
      *
      * @return ArrayCollection
      */
@@ -84,7 +83,7 @@ class FolderTreeWidget extends AbstractWidget
                     ->findBy(['parent' => $parent], ['position' => 'ASC']);
     }
     /**
-     * @return RZ\Roadiz\Core\Entities\Folder
+     * @return Folder
      */
     public function getRootFolder()
     {

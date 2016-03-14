@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
-use RZ\Roadiz\CMS\Utils\AbstractApi;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 
@@ -38,10 +37,14 @@ use RZ\Roadiz\Core\Entities\NodeType;
  */
 class NodeSourceApi extends AbstractApi
 {
+    /**
+     * @var string
+     */
     protected $repository = "RZ\Roadiz\Core\Entities\NodesSources";
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @return string
      */
     protected function getRepositoryName(array $criteria = null)
     {

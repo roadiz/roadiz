@@ -32,7 +32,10 @@ namespace RZ\Roadiz\Core\Services;
 use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
+use Parsedown;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
@@ -45,15 +48,15 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use \Parsedown;
 
 /**
  * Register Twig services for dependency injection container.
  */
-class TwigServiceProvider implements \Pimple\ServiceProviderInterface
+class TwigServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param \Pimple\Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
@@ -64,7 +67,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Return every paths to search for twig templates.
          */
-        $container['twig.loaderFileSystem'] = function ($c) {
+        $container['twig.loaderFileSystem'] = function () {
             $vendorDir = realpath(ROADIZ_ROOT . '/vendor');
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
@@ -122,7 +125,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
             $twig->addExtension(new UrlExtension(
                 $c['request'],
                 $c['nodesSourcesUrlCacheProvider'],
-                (boolean) \RZ\Roadiz\Core\Bags\SettingsBag::get('force_locale')
+                (boolean) SettingsBag::get('force_locale')
             ));
             $twig->addExtension(new RoadizTranslationExtension($c['request']));
 
@@ -141,7 +144,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Twig form renderer extension
          */
-        $container['twig.formRenderer'] = function ($c) {
+        $container['twig.formRenderer'] = function () {
 
             return new TwigRendererEngine([
                 'form_div_layout.html.twig',
@@ -159,7 +162,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Markdown extension
          */
-        $container['twig.markdownExtension'] = function ($c) {
+        $container['twig.markdownExtension'] = function () {
 
             return new \Twig_SimpleFilter('markdown', function ($object) {
                 return Parsedown::instance()->text($object);
@@ -169,7 +172,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * InlineMarkdown extension
          */
-        $container['twig.inlineMarkdownExtension'] = function ($c) {
+        $container['twig.inlineMarkdownExtension'] = function () {
 
             return new \Twig_SimpleFilter('inlineMarkdown', function ($object) {
                 return Parsedown::instance()->line($object);
@@ -179,7 +182,7 @@ class TwigServiceProvider implements \Pimple\ServiceProviderInterface
         /*
          * Central Truncate extension
          */
-        $container['twig.centralTruncateExtension'] = function ($c) {
+        $container['twig.centralTruncateExtension'] = function () {
 
             return new \Twig_SimpleFilter(
                 'centralTruncate',

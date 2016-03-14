@@ -33,7 +33,6 @@ namespace Themes\Rozier\Widgets;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\Widgets\AbstractWidget;
 
 /**
  * Prepare a Tag tree according to Tag hierarchy and given options.
@@ -46,9 +45,9 @@ class TagTreeWidget extends AbstractWidget
     protected $canReorder = true;
 
     /**
-     * @param Request                    $request
-     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController
-     * @param RZ\Roadiz\Core\Entities\Tag $parent
+     * @param Request    $request
+     * @param Controller $refereeController
+     * @param Tag        $parent
      */
     public function __construct(
         Request $request,
@@ -94,7 +93,7 @@ class TagTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $parent
+     * @param Tag $parent
      *
      * @return ArrayCollection
      */
@@ -125,14 +124,14 @@ class TagTreeWidget extends AbstractWidget
         return null;
     }
     /**
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      */
     public function getRootTag()
     {
         return $this->parentTag;
     }
     /**
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation
      */
     public function getTranslation()
     {

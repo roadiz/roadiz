@@ -33,7 +33,6 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -43,7 +42,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     /**
      * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function indexAction(Request $request)
     {

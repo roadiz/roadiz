@@ -109,7 +109,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Delete solr documents for each Node sources.
      *
-     * @param  FilterNodesSourcesEvent $event
+     * @param  FilterNodeEvent $event
      */
     public function onSolariumNodeDelete(FilterNodeEvent $event)
     {
@@ -128,7 +128,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Update or create solr documents for each Node sources.
      *
-     * @param  FilterNodesSourcesEvent $event
+     * @param FilterNodeEvent $event
      */
     public function onSolariumNodeUpdate(FilterNodeEvent $event)
     {
@@ -152,7 +152,9 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumTagUpdate(FilterTagEvent $event)
     {
         if (null !== $this->solr) {
+            $update = $this->solr->createUpdate();
             $nodes = $event->getTag()->getNodes();
+
             foreach ($nodes as $node) {
                 foreach ($node->getNodeSources() as $nodeSource) {
                     $solrSource = new SolariumNodeSource(
@@ -160,9 +162,19 @@ class SolariumSubscriber implements EventSubscriberInterface
                         $this->solr
                     );
                     $solrSource->getDocumentFromIndex();
-                    $solrSource->updateAndCommit();
+                    $solrSource->update($update);
                 }
             }
+            $this->solr->update($update);
+
+            // then optimize
+            $optimizeUpdate = $this->solr->createUpdate();
+            $optimizeUpdate->addOptimize(true, true, 5);
+            $this->solr->update($optimizeUpdate);
+            // and commit
+            $finalCommitUpdate = $this->solr->createUpdate();
+            $finalCommitUpdate->addCommit(true, true, false);
+            $this->solr->update($finalCommitUpdate);
         }
     }
 }

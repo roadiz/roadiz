@@ -59,8 +59,10 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param $nodeType
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function nameExists($name, $nodeType, $entityManager)
     {

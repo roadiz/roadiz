@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
@@ -38,14 +39,15 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 /**
  * Register assets services for dependency injection container.
  */
-class AssetsServiceProvider implements \Pimple\ServiceProviderInterface
+class AssetsServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
-        $container['versionStrategy'] = function ($c) {
+        $container['versionStrategy'] = function () {
             return new EmptyVersionStrategy();
         };
 
@@ -56,6 +58,8 @@ class AssetsServiceProvider implements \Pimple\ServiceProviderInterface
          * - absolute: absolute to root
          * - doc: relative to documents
          * - absolute_doc: absolute to documents
+         * @param $c
+         * @return Packages
          */
         $container['assetPackages'] = function ($c) {
             return new Packages($c['versionStrategy'], $c['requestStack'], SettingsBag::get('static_domain_name'));

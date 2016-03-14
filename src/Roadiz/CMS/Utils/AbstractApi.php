@@ -43,7 +43,7 @@ abstract class AbstractApi
     protected $container;
 
     /**
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public function __construct(Container $container)
     {
@@ -53,14 +53,14 @@ abstract class AbstractApi
     /**
      * Return entity path for current API.
      *
-     * @return Doctrine\ORM\EntityRepository
+     * @return \Doctrine\ORM\EntityRepository
      */
     abstract public function getRepository();
 
     /**
      * Return an array of entities matching criteria array.
      *
-     * @param array $criteria
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\Tools\Pagination\Paginator|array $criteria
      *
      * @return array
      */

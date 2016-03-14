@@ -40,6 +40,7 @@ class NodesSourcesUrlsCacheClearer extends Clearer
 
     public function __construct(CacheProvider $cacheProvider)
     {
+        parent::__construct('');
         $this->cacheProvider = $cacheProvider;
     }
 

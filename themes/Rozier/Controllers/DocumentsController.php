@@ -40,7 +40,6 @@ use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,9 +58,11 @@ class DocumentsController extends RozierApp
     ];
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
+     * @param int     $folderId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $folderId = null)
     {
@@ -122,10 +123,10 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $documentId
+     * @param Request $request
+     * @param int     $documentId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $documentId)
     {
@@ -193,10 +194,10 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $documentId
+     * @param Request $request
+     * @param int     $documentId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function previewAction(Request $request, $documentId)
     {
@@ -221,10 +222,10 @@ class DocumentsController extends RozierApp
     /**
      * Return an deletion form for requested document.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $documentId
+     * @param Request $request
+     * @param int     $documentId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $documentId)
     {
@@ -271,9 +272,9 @@ class DocumentsController extends RozierApp
     /**
      * Return an deletion form for multiple docs.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function bulkDeleteAction(Request $request)
     {
@@ -321,9 +322,9 @@ class DocumentsController extends RozierApp
     /**
      * Return an deletion form for multiple docs.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function bulkDownloadAction(Request $request)
     {
@@ -370,8 +371,10 @@ class DocumentsController extends RozierApp
      * Embed external document page.
      *
      * @param Request $request
+     * @param int     $folderId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function embedAction(Request $request, $folderId = null)
     {
@@ -423,6 +426,7 @@ class DocumentsController extends RozierApp
      * Get random external document page.
      *
      * @param Request $request
+     * @param int     $folderId
      *
      * @return Response
      */
@@ -459,6 +463,7 @@ class DocumentsController extends RozierApp
      * Download document file.
      *
      * @param Request $request
+     * @param int     $documentId
      *
      * @return Response
      */
@@ -478,9 +483,11 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
+     * @param int     $folderId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function uploadAction(Request $request, $folderId = null)
     {
@@ -514,27 +521,35 @@ class DocumentsController extends RozierApp
                     new FilterDocumentEvent($document)
                 );
 
-                return new JsonResponse([
-                    'success' => true,
-                    'documentId' => $document->getId(),
-                    'thumbnail' => [
-                        'id' => $document->getId(),
-                        'filename' => $document->getFilename(),
-                        'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                        'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                    ],
-                ]);
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse([
+                        'success' => true,
+                        'documentId' => $document->getId(),
+                        'thumbnail' => [
+                            'id' => $document->getId(),
+                            'filename' => $document->getFilename(),
+                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
+                        ],
+                    ]);
+                } else {
+                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                }
 
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $this->publishErrorMessage($request, $msg);
 
-                return new JsonResponse(
-                    [
-                        "error" => $msg,
-                    ],
-                    Response::HTTP_NOT_FOUND
-                );
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(
+                        [
+                            "error" => $msg,
+                        ],
+                        Response::HTTP_NOT_FOUND
+                    );
+                } else {
+                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                }
             }
         }
         $this->assignation['form'] = $form->createView();
@@ -546,10 +561,10 @@ class DocumentsController extends RozierApp
     /**
      * Return a node list using this document.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $documentId
+     * @param Request $request
+     * @param int     $documentId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function usageAction(Request $request, $documentId)
     {
@@ -569,7 +584,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Document $doc
+     * @param Document $doc
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -627,7 +642,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Document $document
+     * @param Document $document
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -657,7 +672,9 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @return Symfony\Component\Form\Form
+     * @param int $folderId
+     *
+     * @return \Symfony\Component\Form\Form
      */
     private function buildUploadForm($folderId = null)
     {
@@ -683,7 +700,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @return Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\Form
      */
     private function buildEmbedForm()
     {
@@ -705,8 +722,6 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
-     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildLinkFoldersForm()
@@ -837,7 +852,7 @@ class DocumentsController extends RozierApp
     /**
      * @param array $documents
      *
-     * @return @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     private function downloadDocuments($documents)
     {
@@ -872,6 +887,14 @@ class DocumentsController extends RozierApp
         }
     }
 
+    /**
+     * @param array $data
+     * @param int   $folderId
+     *
+     * @return Document
+     * @throws \Exception
+     * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
+     */
     private function embedDocument($data, $folderId = null)
     {
         $handlers = $this->getService('document.platforms');
@@ -913,10 +936,15 @@ class DocumentsController extends RozierApp
             throw new \RuntimeException("bad.request", 1);
         }
     }
+
     /**
      * Download a random document.
      *
-     * @return RZ\Roadiz\Core\Entities\Document
+     * @param int $folderId
+     *
+     * @return Document
+     * @throws \Exception
+     * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
      */
     public function randomDocument($folderId = null)
     {
@@ -937,8 +965,8 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param array                           $data
-     * @param RZ\Roadiz\Core\Entities\Document $document
+     * @param array    $data
+     * @param Document $document
      */
     private function editDocument($data, Document $document)
     {
@@ -1035,12 +1063,14 @@ class DocumentsController extends RozierApp
 
         return $document;
     }
+
     /**
      * Handle upload form data to create a Document.
      *
-     * @param Symfony\Component\Form\Form $data
+     * @param \Symfony\Component\Form\Form $data
+     * @param int                          $folderId
      *
-     * @return boolean
+     * @return bool|Document
      */
     private function uploadDocument($data, $folderId = null)
     {
@@ -1058,7 +1088,8 @@ class DocumentsController extends RozierApp
                     /*
                      * Special case for SVG without XML statement
                      */
-                    if ($document->getMimeType() == "text/plain" &&
+                    if (($document->getMimeType() == "text/plain" ||
+                        $document->getMimeType() == 'text/html') &&
                         preg_match("#\.svg$#", $uploadedFile->getClientOriginalName())) {
                         $this->getService('logger')->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
                         $document->setMimeType('image/svg+xml');
@@ -1076,7 +1107,10 @@ class DocumentsController extends RozierApp
                         $this->getService('em')->flush();
                     }
 
-                    $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+                    $uploadedFile->move(
+                        Document::getFilesFolder() . '/' . $document->getFolder(),
+                        $document->getFilename()
+                    );
 
                     if ($document->isImage()) {
                         $this->getService("dispatcher")->dispatch(

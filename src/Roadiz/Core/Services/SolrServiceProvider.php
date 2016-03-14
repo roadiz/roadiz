@@ -30,21 +30,24 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
+use Solarium\Client;
 
 /**
  * Register Solr services for dependency injection container.
  */
-class SolrServiceProvider implements \Pimple\ServiceProviderInterface
+class SolrServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
         $container['solr'] = function ($c) {
             if (isset($c['config']['solr']['endpoint'])) {
-                $solrService = new \Solarium\Client($c['config']['solr']);
+                $solrService = new Client($c['config']['solr']);
                 $solrService->setDefaultEndpoint('localhost');
                 return $solrService;
             } else {

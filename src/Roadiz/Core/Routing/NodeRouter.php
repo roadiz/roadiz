@@ -31,28 +31,46 @@ namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class NodeRouter extends Router
 {
     protected $em;
     protected $stopwatch;
+    /**
+     * @var bool
+     */
+    protected $preview;
 
+    /**
+     * NodeRouter constructor.
+     *
+     * @param EntityManager $em
+     * @param array $options
+     * @param RequestContext|null $context
+     * @param LoggerInterface|null $logger
+     * @param Stopwatch|null $stopwatch
+     * @param bool $preview
+     */
     public function __construct(
         EntityManager $em,
         array $options = [],
         RequestContext $context = null,
         LoggerInterface $logger = null,
-        Stopwatch $stopwatch = null
+        Stopwatch $stopwatch = null,
+        $preview = false
     ) {
         $this->em = $em;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
         $this->context = $context ?: new RequestContext();
         $this->setOptions($options);
+        $this->preview = $preview;
     }
 
     /**
@@ -60,7 +78,7 @@ class NodeRouter extends Router
      */
     public function getRouteCollection()
     {
-        return null;
+        return new RouteCollection();
     }
 
     /**
@@ -85,7 +103,8 @@ class NodeRouter extends Router
             $this->context,
             $this->em,
             $this->stopwatch,
-            $this->logger
+            $this->logger,
+            $this->preview
         );
     }
 

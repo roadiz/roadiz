@@ -30,9 +30,9 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Handlers\GroupHandler;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A group gather User and Roles.
@@ -117,7 +117,7 @@ class Group extends AbstractEntity
         return $this->rolesNames;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
@@ -130,7 +130,7 @@ class Group extends AbstractEntity
         return $this;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */

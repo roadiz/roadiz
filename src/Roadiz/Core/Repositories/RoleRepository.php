@@ -39,7 +39,7 @@ class RoleRepository extends EntityRepository
     /**
      * @param string $roleName
      *
-     * @return RZ\Roadiz\Core\Entities\Role or null
+     * @return Role or null
      */
     public function countByName($roleName)
     {
@@ -56,7 +56,7 @@ class RoleRepository extends EntityRepository
     /**
      * @param string $roleName
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return Role
      */
     public function findOneByName($roleName)
     {

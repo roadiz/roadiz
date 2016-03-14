@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -86,7 +85,7 @@ class NodeTypesCommand extends Command
                     ];
                 }
                 $table->setRows($tableContent);
-                $table->render($output);
+                $table->render();
             } else {
                 $text .= '<error>"' . $name . '" node type does not exist.</error>' . PHP_EOL;
             }
@@ -108,7 +107,7 @@ class NodeTypesCommand extends Command
                 }
 
                 $table->setRows($tableContent);
-                $table->render($output);
+                $table->render();
             } else {
                 $text .= '<info>No available node-types…</info>' . PHP_EOL;
             }

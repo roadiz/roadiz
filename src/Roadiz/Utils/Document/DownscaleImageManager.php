@@ -46,10 +46,11 @@ class DownscaleImageManager
     protected $em;
 
     /**
-     * @param EntityManager $imageDriver
-     * @param string  $imageDriver
+     * @param EntityManager $em
+     * @param LoggerInterface $logger
+     * @param string $imageDriver
      * @param integer $maxPixelSize
-     * @param string  $rawImageSuffix
+     * @param string $rawImageSuffix
      */
     public function __construct(
         EntityManager $em,
@@ -197,11 +198,6 @@ class DownscaleImageManager
                 return $originalDocument;
             }
         } elseif (null !== $processImage) {
-            /*
-             * If raw document size is still outiside new maxSize cap
-             * We keep intact raw document, and we just update downscaled doc.
-             */
-            $rawDocument = $originalDocument->getRawDocument();
             /*
              * Remove existing downscaled document.
              */

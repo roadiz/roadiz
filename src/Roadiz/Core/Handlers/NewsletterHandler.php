@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\Newsletter;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with newsletters entities.
@@ -40,7 +40,7 @@ class NewsletterHandler
     private $newsletter = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\newsletter
+     * @return \RZ\Roadiz\Core\Entities\newsletter
      */
     public function getNewsletter()
     {
@@ -48,7 +48,7 @@ class NewsletterHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\newsletter $newsletter
+     * @param \RZ\Roadiz\Core\Entities\newsletter $newsletter
      *
      * @return $this
      */

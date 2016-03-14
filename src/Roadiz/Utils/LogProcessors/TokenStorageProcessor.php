@@ -47,10 +47,7 @@ class TokenStorageProcessor
             if (is_object($user)) {
                 $record['extra']['user'] = [];
                 $record['extra']['user']['username'] = $user->getUsername();
-                $record['extra']['user']['email'] = $user->getEmail();
                 $record['extra']['user']['roles'] = $user->getRoles();
-            } else {
-                $record['extra']['user'] = $user;
             }
         }
 

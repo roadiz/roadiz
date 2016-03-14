@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * DocumentTranslation.
@@ -43,7 +43,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $name;
+    protected $name;
     /**
      * @return string
      */
@@ -66,7 +66,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    protected $description;
     /**
      * @return string
      */
@@ -112,18 +112,21 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var  Translation
      */
     protected $translation;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return Translation
      */
     public function getTranslation()
     {
         return $this->translation;
     }
+
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Translation $translation
+     * @return $this
      */
     public function setTranslation(Translation $translation)
     {
@@ -135,11 +138,12 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Document
      */
     protected $document;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Document
+     * @return Document
      */
     public function getDocument()
     {
@@ -147,9 +151,10 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Document $document
+     * @param Document $document
+     * @return $this
      */
-    public function setDocument($document)
+    public function setDocument(Document $document)
     {
         $this->document = $document;
 

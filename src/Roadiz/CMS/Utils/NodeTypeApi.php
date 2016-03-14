@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
-use RZ\Roadiz\CMS\Utils\AbstractApi;
-
 /**
  *
  */

@@ -31,11 +31,11 @@
 
 namespace Themes\Rozier\Controllers;
 
+use InlineStyle\InlineStyle;
 use RZ\Roadiz\Utils\DomHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
-use \InlineStyle\InlineStyle;
 
 /**
  * {@inheritdoc}
@@ -46,10 +46,10 @@ class NewslettersUtilsController extends RozierApp
     /**
      * Duplicate node by ID
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $newsletterId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function duplicateAction(Request $request, $newsletterId)
     {
@@ -136,10 +136,10 @@ class NewslettersUtilsController extends RozierApp
     /**
      * Preview a newsletter
      *
-     * @param Symfony\Component\HttpFoundation\Request  $request
-     * @param int                                       $newsletterId
+     * @param Request $request
+     * @param int     $newsletterId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function previewAction(Request $request, $newsletterId)
     {
@@ -158,11 +158,11 @@ class NewslettersUtilsController extends RozierApp
     /**
      * Export the newsletter in HTML with or without inline CSS
      *
-     * @param Symfony\Component\HttpFoundation\Request  $request
-     * @param int                                       $newsletterId
-     * @param int                                       $inline
+     * @param Request $request
+     * @param int     $newsletterId
+     * @param int     $inline
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAction(Request $request, $newsletterId, $inline)
     {

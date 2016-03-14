@@ -43,7 +43,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      * Create a simple associative array with Setting
      * entity.
      *
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param \RZ\Roadiz\Core\Entities\Setting $setting
      *
      * @return array
      */
@@ -64,7 +64,8 @@ class SettingJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $jsonString
      *
-     * @return RZ\Roadiz\Core\Entities\Setting
+     * @return \RZ\Roadiz\Core\Entities\Setting
+     * @throws \Exception
      */
     public function deserialize($jsonString)
     {

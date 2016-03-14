@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register Embed documents services for dependency injection container.
  */
-class BackofficeServiceProvider implements \Pimple\ServiceProviderInterface
+class BackofficeServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize backoffice admin entries.
@@ -49,13 +50,13 @@ class BackofficeServiceProvider implements \Pimple\ServiceProviderInterface
      *     'subentries' => null
      *
      *
-     * @param Pimple\Container $container
+     * @param \Pimple\Container $container
      *
-     * @return Pimple\Container
+     * @return \Pimple\Container
      */
     public function register(Container $container)
     {
-        $container['backoffice.entries'] = function ($c) {
+        $container['backoffice.entries'] = function () {
             return [
 
             ];

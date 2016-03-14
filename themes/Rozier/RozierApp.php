@@ -37,8 +37,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Events\SolariumSubscriber;
+use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -57,7 +57,7 @@ class RozierApp extends BackendController
     protected $themeContainer = null;
 
     /**
-     * @return array $assignation
+     * @return $this
      */
     public function prepareBaseAssignation()
     {
@@ -76,11 +76,12 @@ class RozierApp extends BackendController
         //Settings
         $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name') . ' backstage';
         $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
+        $this->assignation['head']['mapsLocation'] = SettingsBag::get('maps_default_location') ? SettingsBag::get('maps_default_location') : null;
         $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
         $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
         $this->assignation['head']['themeName'] = static::$themeName;
 
-        $this->themeContainer['nodeTree'] = function ($c) {
+        $this->themeContainer['nodeTree'] = function () {
             if (is_object($this->getUser())) {
                 $parent = $this->getUser()->getChroot();
             } else {
@@ -88,21 +89,21 @@ class RozierApp extends BackendController
             }
             return new NodeTreeWidget($this->getRequest(), $this, $parent);
         };
-        $this->themeContainer['tagTree'] = function ($c) {
+        $this->themeContainer['tagTree'] = function () {
             return new TagTreeWidget($this->getRequest(), $this);
         };
-        $this->themeContainer['folderTree'] = function ($c) {
+        $this->themeContainer['folderTree'] = function () {
             return new FolderTreeWidget($this->getRequest(), $this);
         };
-        $this->themeContainer['maxFilesize'] = function ($c) {
+        $this->themeContainer['maxFilesize'] = function () {
             return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
         };
 
-        $this->themeContainer['grunt'] = function ($c) {
+        $this->themeContainer['grunt'] = function () {
             return include dirname(__FILE__) . '/static/public/config/assets.config.php';
         };
 
-        $this->themeContainer['settingGroups'] = function ($c) {
+        $this->themeContainer['settingGroups'] = function () {
             return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                 ->findBy(
                     ['inMenu' => true],
@@ -110,7 +111,7 @@ class RozierApp extends BackendController
                 );
         };
 
-        $this->themeContainer['adminImage'] = function ($c) {
+        $this->themeContainer['adminImage'] = function () {
             /*
              * Get admin image
              */
@@ -129,9 +130,9 @@ class RozierApp extends BackendController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response $response
+     * @return Response $response
      */
     public function indexAction(Request $request)
     {
@@ -139,9 +140,9 @@ class RozierApp extends BackendController
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response $response
+     * @return Response $response
      */
     public function cssAction(Request $request)
     {
@@ -161,7 +162,7 @@ class RozierApp extends BackendController
     /**
      * Append objects to global container.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {

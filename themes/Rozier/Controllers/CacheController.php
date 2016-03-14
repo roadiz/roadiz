@@ -31,12 +31,13 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -46,9 +47,9 @@ use Themes\Rozier\RozierApp;
 class CacheController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteDoctrineCache(Request $request)
     {
@@ -65,6 +66,7 @@ class CacheController extends RozierApp
                 new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
                 new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
                 new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
+                new OPCacheClearer(),
             ];
             foreach ($clearers as $clearer) {
                 $clearer->clear();
@@ -101,7 +103,7 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @return Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteDoctrineForm()
     {
@@ -111,9 +113,9 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAssetsCache(Request $request)
     {
@@ -141,7 +143,7 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @return Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteAssetsForm()
     {

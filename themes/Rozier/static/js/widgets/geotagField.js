@@ -44,9 +44,14 @@ GeotagField.prototype.bindSingleField = function(element) {
 
     var $input = $(element),
         $label = $input.parent().find('.uk-form-label'),
-        labelText = $label[0].innerHTML;
+        labelText = $label[0].innerHTML,
+        jsonCode = null;
 
-    var jsonCode = {'lat':45.769785, 'lng':4.833967, 'zoom':14}; // default location
+    if (Rozier.defaultMapLocation) {
+        jsonCode = Rozier.defaultMapLocation;
+    } else {
+        jsonCode = {'lat':45.769785, 'lng':4.833967, 'zoom':14}; // default location
+    }
     var fieldId = 'geotag-canvas-'+GeotagField.uniqid();
     var fieldAddressId = fieldId+'-address';
     var resetButtonId = fieldId+'-reset';

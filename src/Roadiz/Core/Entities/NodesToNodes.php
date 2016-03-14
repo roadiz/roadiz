@@ -29,11 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
 
 /**
  * Describes a complexe ManyToMany relation
@@ -44,87 +42,37 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(columns={"position"})
  * })
  */
-class NodesToNodes extends AbstractPositioned implements PersistableInterface
+class NodesToNodes extends AbstractEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
-    private $id;
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    use PositionedTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes", fetch="EAGER")
      * @ORM\JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\Node
+     * @var Node
      */
-    private $nodeA;
-    /**
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    public function getNodeA()
-    {
-        return $this->nodeA;
-    }
-
-    public function setNodeA($nodeA)
-    {
-        $this->nodeA = $nodeA;
-    }
+    protected $nodeA;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes", fetch="EAGER")
      * @ORM\JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\Node
+     * @var Node
      */
-    private $nodeB;
-    /**
-     * @return RZ\Roadiz\Core\Entities\Node
-     */
-    public function getNodeB()
-    {
-        return $this->nodeB;
-    }
-
-    public function setNodeB($nodeB)
-    {
-        $this->nodeB = $nodeB;
-    }
+    protected $nodeB;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\NodeTypeField
+     * @var NodeTypeField
      */
-    private $field;
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\NodeTypeField
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    public function setField($f)
-    {
-        $this->field = $f;
-    }
-
+    protected $field;
 
     /**
      * Create a new relation between two Nodes and a NodeTypeField.
      *
-     * @param RZ\Roadiz\Core\Entities\Node $nodeA
-     * @param RZ\Roadiz\Core\Entities\Node $nodeB
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\Node $nodeA
+     * @param \RZ\Roadiz\Core\Entities\Node $nodeB
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
      */
     public function __construct(Node $nodeA, Node $nodeB, NodeTypeField $field)
     {
@@ -135,7 +83,81 @@ class NodesToNodes extends AbstractPositioned implements PersistableInterface
 
     public function __clone()
     {
-        $this->id = 0;
-        $this->nodeA = null;
+        if ($this->id) {
+            $this->id = null;
+            $this->nodeA = null;
+        }
+    }
+
+    /**
+     * Gets the value of nodeA.
+     *
+     * @return Node
+     */
+    public function getNodeA()
+    {
+        return $this->nodeA;
+    }
+
+    /**
+     * Sets the value of nodeA.
+     *
+     * @param Node $nodeA the node
+     *
+     * @return self
+     */
+    public function setNodeA(Node $nodeA)
+    {
+        $this->nodeA = $nodeA;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of nodeB.
+     *
+     * @return Node
+     */
+    public function getNodeB()
+    {
+        return $this->nodeB;
+    }
+
+    /**
+     * Sets the value of nodeB.
+     *
+     * @param Node $nodeB the node
+     *
+     * @return self
+     */
+    public function setNodeB(Node $nodeB)
+    {
+        $this->nodeB = $nodeB;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of field.
+     *
+     * @return NodeTypeField
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * Sets the value of field.
+     *
+     * @param NodeTypeField $field the field
+     *
+     * @return self
+     */
+    public function setField(NodeTypeField $field)
+    {
+        $this->field = $field;
+
+        return $this;
     }
 }

@@ -31,6 +31,9 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -229,11 +232,12 @@ class TagRepository extends EntityRepository
      *
      * @param array $criteria
      * @param Query $finalQuery
+     * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
         &$finalQuery,
-        &$translation = null
+        Translation &$translation = null
     ) {
         if (null !== $translation) {
             $finalQuery->setParameter('translation', $translation);
@@ -243,10 +247,10 @@ class TagRepository extends EntityRepository
     /**
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
+     * @param array            $criteria
+     * @param array|null       $orderBy
+     * @param integer|null     $limit
+     * @param integer|null     $offset
      * @param Translation|null $translation
      *
      * @return QueryBuilder
@@ -349,7 +353,7 @@ class TagRepository extends EntityRepository
         } else {
             try {
                 return $finalQuery->getResult();
-            } catch (\Doctrine\ORM\NoResultException $e) {
+            } catch (NoResultException $e) {
                 return new ArrayCollection();
             }
         }
@@ -359,9 +363,9 @@ class TagRepository extends EntityRepository
      *
      * @param array                                   $criteria
      * @param array|null                              $orderBy
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param Translation|null $translation
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function findOneBy(
         array $criteria,
@@ -385,15 +389,15 @@ class TagRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param array            $criteria
+     * @param Translation|null $translation
      *
      * @return int
      */
@@ -414,16 +418,16 @@ class TagRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param integer                             $tagId
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param integer     $tagId
+     * @param Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      */
     public function findWithTranslation($tagId, Translation $translation)
     {
@@ -438,13 +442,13 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Translation $translation
      *
      * @return ArrayCollection
      */
@@ -458,7 +462,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -466,7 +470,7 @@ class TagRepository extends EntityRepository
     /**
      * @param integer $tagId
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      */
     public function findWithDefaultTranslation($tagId)
     {
@@ -481,7 +485,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getSingleResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -498,14 +502,14 @@ class TagRepository extends EntityRepository
             WHERE tr.defaultTranslation = true');
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
-     * @param RZ\Roadiz\Core\Entities\Tag         $parent
+     * @param Translation $translation
+     * @param Tag         $parent
      *
      * @return array Doctrine result array
      */
@@ -535,13 +539,13 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $parent
+     * @param \RZ\Roadiz\Core\Entities\Tag $parent
      *
      * @return ArrayCollection
      */
@@ -568,7 +572,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -576,16 +580,16 @@ class TagRepository extends EntityRepository
     /**
      * Create a Criteria object from a search pattern and additionnal fields.
      *
-     * @param string                  $pattern  Search pattern
-     * @param DoctrineORMQueryBuilder $qb       QueryBuilder to pass
-     * @param array                   $criteria Additionnal criteria
-     * @param string                  $alias    SQL query table alias
+     * @param string $pattern Search pattern
+     * @param QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createSearchBy(
         $pattern,
-        \Doctrine\ORM\QueryBuilder $qb,
+        QueryBuilder $qb,
         array &$criteria = [],
         $alias = "obj"
     ) {
@@ -620,7 +624,7 @@ class TagRepository extends EntityRepository
      * @param string $pattern  Search pattern
      * @param array  $criteria Additionnal criteria
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -633,9 +637,9 @@ class TagRepository extends EntityRepository
 
         try {
             return $qb->getQuery()->getSingleScalarResult();
-        } catch (\Doctrine\ORM\Query\QueryException $e) {
+        } catch (Query\QueryException $e) {
             return null;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }
@@ -645,7 +649,7 @@ class TagRepository extends EntityRepository
      *
      * @param string $tagPath
      *
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function findOrCreateByPath($tagPath)
     {
@@ -715,7 +719,7 @@ class TagRepository extends EntityRepository
      *
      * @param string $tagPath
      *
-     * @return RZ\Roadiz\Core\Entities\Tag|null
+     * @return \RZ\Roadiz\Core\Entities\Tag|null
      */
     public function findByPath($tagPath)
     {
@@ -740,7 +744,7 @@ class TagRepository extends EntityRepository
                     ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
                     ->findOneByName($parentName);
                 if (null !== $ttagParent) {
-                    $parentTag = $ttagParent->getTag();
+                    $ttagParent->getTag();
                 }
             }
         }
@@ -777,7 +781,7 @@ class TagRepository extends EntityRepository
 
         try {
             return $query->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return null;
         }
     }

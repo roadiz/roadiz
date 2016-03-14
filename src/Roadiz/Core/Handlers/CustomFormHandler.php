@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with node-type entities.
@@ -40,7 +40,7 @@ class CustomFormHandler
     private $customForm = null;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\CustomForm
+     * @return \RZ\Roadiz\Core\Entities\CustomForm
      */
     public function getCustomForm()
     {
@@ -48,7 +48,7 @@ class CustomFormHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      *
      * @return $this
      */
@@ -62,7 +62,7 @@ class CustomFormHandler
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      */
     public function __construct(CustomForm $customForm)
     {

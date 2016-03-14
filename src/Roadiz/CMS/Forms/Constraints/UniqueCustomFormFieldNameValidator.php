@@ -60,7 +60,10 @@ class UniqueCustomFormFieldNameValidator extends ConstraintValidator
     /**
      * @param string $name
      *
-     * @return boolean
+     * @param $customForm
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @return bool
      */
     protected function nameExists($name, $customForm, $entityManager)
     {

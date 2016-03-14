@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,13 +44,13 @@ class ThemesCommand extends Command
 
     protected function configure()
     {
-        $this->setName('themes:infos')
-             ->setDescription('Installed themes')
-             ->addArgument(
-                 'classname',
-                 InputArgument::OPTIONAL,
-                 'Main theme classname'
-             );
+        $this->setName('themes:list')
+            ->setDescription('Installed themes')
+            ->addArgument(
+                'classname',
+                InputArgument::OPTIONAL,
+                'Main theme classname (Use / instead of \\ and do not forget starting slash)'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,34 +59,41 @@ class ThemesCommand extends Command
         $text = "";
         $name = $input->getArgument('classname');
 
-        if ($name) {
-            $theme = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                          ->findOneBy(['className' => $name]);
-            $text .=
-            ' |_ ' . $theme->getClassName()
-            . ' — <info>' . ($theme->isAvailable() ? 'enabled' : 'disabled') . '</info>'
-            . ' — <comment>' . ($theme->isBackendTheme() ? 'Backend' : 'Frontend') . '</comment>'
-            . PHP_EOL;
+        $table = new Table($output);
+        $table->setHeaders(['Class (with / instead of \)', 'Enabled', 'Type']);
+        $tableContent = [];
 
+        if ($name) {
+            /*
+             * Replace slash by anti-slashes
+             */
+            $name = str_replace('/', '\\', $name);
+            $theme = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->findOneBy(['className' => $name]);
+            $tableContent[] = [
+                str_replace('\\', '/', $theme->getClassName()),
+                ($theme->isAvailable() ? 'X' : ''),
+                ($theme->isBackendTheme() ? 'Backend' : 'Frontend'),
+            ];
         } else {
-            $text = '<info>Installed themes…</info>' . PHP_EOL;
-            $themes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                           ->findAll();
+            $themes = $this->entityManager
+                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->findAll();
 
             if (count($themes) > 0) {
-                $text .= ' | ' . PHP_EOL;
                 foreach ($themes as $theme) {
-                    $text .=
-                    ' |_ ' . $theme->getClassName()
-                    . ' — <info>' . ($theme->isAvailable() ? 'enabled' : 'disabled') . '</info>'
-                    . ' — <comment>' . ($theme->isBackendTheme() ? 'Backend' : 'Frontend') . '</comment>'
-                    . PHP_EOL;
+                    $tableContent[] = [
+                        str_replace('\\', '/', $theme->getClassName()),
+                        ($theme->isAvailable() ? 'X' : ''),
+                        ($theme->isBackendTheme() ? 'Backend' : 'Frontend'),
+                    ];
                 }
             } else {
                 $text = '<info>No available themes</info>' . PHP_EOL;
             }
         }
-
+        $table->setRows($tableContent);
+        $table->render();
         $output->writeln($text);
     }
 }

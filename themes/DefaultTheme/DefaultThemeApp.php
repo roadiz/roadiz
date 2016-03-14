@@ -34,9 +34,9 @@ namespace Themes\DefaultTheme;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use \RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 
 /**
  * DefaultThemeApp class
@@ -134,7 +134,7 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     protected function assignMainNavigation()
     {
@@ -148,11 +148,15 @@ class DefaultThemeApp extends FrontendController
         $parent = $this->getHome($this->translation);
 
         if ($parent !== null) {
+            $pageNodeType = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->findOneByName('Page');
             return $this->getService('nodeApi')
                         ->getBy(
                             [
                                 'parent' => $parent,
                                 'translation' => $this->translation,
+                                'nodeType' => $pageNodeType,
                             ],
                             [
                                 'position' => 'ASC',

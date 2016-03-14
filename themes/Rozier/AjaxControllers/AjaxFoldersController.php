@@ -32,10 +32,8 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
-
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * {@inheritdoc}
@@ -49,7 +47,7 @@ class AjaxFoldersController extends AbstractAjaxController
      * @param Request $request
      * @param int     $folderId
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function editAction(Request $request, $folderId)
     {

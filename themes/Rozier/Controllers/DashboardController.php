@@ -39,9 +39,9 @@ use Themes\Rozier\RozierApp;
 class DashboardController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response $response
+     * @return \Symfony\Component\HttpFoundation\Response $response
      */
     public function indexAction(Request $request)
     {

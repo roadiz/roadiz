@@ -57,9 +57,10 @@ class UniqueFontVariantValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $name
+     * @param Font $font
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function variantExists(Font $font, $entityManager)
     {

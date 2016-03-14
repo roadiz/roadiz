@@ -33,7 +33,6 @@ use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Routing\DeferredRouteCollection;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -46,9 +45,8 @@ class RoadizRouteCollection extends DeferredRouteCollection
     protected $themeResolver;
 
     /**
-     * @param string $backendClassname
-     * @param array  $frontendThemes
-     * @param string $assetsHost
+     * @param ThemeResolver $themeResolver
+     * @param Stopwatch $stopwatch
      */
     public function __construct(
         ThemeResolver $themeResolver,
@@ -66,7 +64,9 @@ class RoadizRouteCollection extends DeferredRouteCollection
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('routeCollection');
         }
-        if (empty($this->resources)) {
+
+        $resources = $this->getResources();
+        if (empty($resources)) {
             /*
              * Adding Backend routes
              */

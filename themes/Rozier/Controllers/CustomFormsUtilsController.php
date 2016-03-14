@@ -16,9 +16,10 @@ class CustomFormsUtilsController extends RozierApp
     /**
      * Export all custom form's answer in a Xlsx file (.rzt).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
+     * @param int     $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAction(Request $request, $customFormId)
     {
@@ -64,10 +65,10 @@ class CustomFormsUtilsController extends RozierApp
     /**
      * Duplicate custom form by ID
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
+     * @param Request $request
+     * @param int     $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function duplicateAction(Request $request, $customFormId)
     {

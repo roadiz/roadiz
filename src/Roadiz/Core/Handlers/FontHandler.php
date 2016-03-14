@@ -39,14 +39,14 @@ class FontHandler
     protected $font = null;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Font $font
+     * @param \RZ\Roadiz\Core\Entities\Font $font
      */
     public function __construct(Font $font)
     {
         $this->font = $font;
     }
     /**
-     * @return RZ\Roadiz\Core\Entities\Font Current font entity
+     * @return \RZ\Roadiz\Core\Entities\Font Current font entity
      */
     public function getFont()
     {

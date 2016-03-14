@@ -43,9 +43,9 @@ class LoginRequestController extends RozierApp
     const CONFIRMATION_TTL = 300;
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -88,9 +88,9 @@ class LoginRequestController extends RozierApp
     }
 
     /**
-     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @param  Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmAction(Request $request)
     {
@@ -98,9 +98,6 @@ class LoginRequestController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Group $group
-     * @param RZ\Roadiz\Core\Entities\Role  $role
-     *
      * @return \Symfony\Component\Form\Form
      */
     private function buildLoginRequestForm()

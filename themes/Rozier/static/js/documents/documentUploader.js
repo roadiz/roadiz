@@ -2,23 +2,15 @@ var DocumentUploader = function (options) {
     var _this = this;
 
     _this.options = {
-        'onSuccess' : function (data) {
-            //console.log("Success file");
-            //console.log(data);
-        },
-        'onError' : function (data) {
-            console.log("Failed file");
-            console.log(data);
-        },
-        'onAdded' : function (file) {
-            //console.log("Added file");
-        },
-        'url':           Rozier.routes.documentsUploadPage,
-        'selector':      "#upload-dropzone-document",
-        'paramName':     "form[attachment]",
+        'onSuccess' : function (data) {},
+        'onError' : function (data) {},
+        'onAdded' : function (file) {},
+        'url': Rozier.routes.documentsUploadPage,
+        'selector': "#upload-dropzone-document",
+        'paramName': "form[attachment]",
         'uploadMultiple':false,
-        'maxFilesize':   64,
-        'autoDiscover':  false,
+        'maxFilesize': 64,
+        'autoDiscover': false,
         'headers': {"_token": Rozier.ajaxToken},
         'dictDefaultMessage': "Drop files here to upload or click to open your explorer",
         'dictFallbackMessage': "Your browser does not support drag'n'drop file uploads.",
@@ -77,7 +69,6 @@ DocumentUploader.prototype.init = function() {
                 _this.options.onAdded(file);
             });
             this.on("success", function(file, data) {
-                console.log(data);
                 _this.options.onSuccess(data);
                 Rozier.getMessages();
             });
@@ -85,10 +76,12 @@ DocumentUploader.prototype.init = function() {
                 _this.options.onError(JSON.parse(data));
                 Rozier.getMessages();
             });
+            this.on("error", function(file, errorMessage, xhr) {
+                console.log(errorMessage);
+            });
         }
     };
     Dropzone.autoDiscover = _this.options.autoDiscover;
-
 
     var dropZone = new Dropzone(
         _this.options.selector,

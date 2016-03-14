@@ -34,7 +34,7 @@ use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 use RZ\Roadiz\CMS\Forms\CompareDateType;
 use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
-use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Utils\XlsxExporter;
@@ -245,7 +245,7 @@ class SearchController extends RozierApp
                                 );
         $builderNodeType->add(
             "nodetype",
-            new \RZ\Roadiz\CMS\Forms\NodeTypesType,
+            new NodeTypesType,
             [
                                 'placeholder' => "",
                                 'required' => false,
@@ -273,8 +273,6 @@ class SearchController extends RozierApp
                     ]
                 ));
             }
-
-            return $response;
         }
 
         return null;

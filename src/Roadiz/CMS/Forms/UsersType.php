@@ -42,7 +42,7 @@ class UsersType extends AbstractType
     /**
      * {@inheritdoc}
      *
-     * @param Doctrine\Common\Collections\ArrayCollection $users
+     * @param \Doctrine\Common\Collections\ArrayCollection $users
      */
     public function __construct($users = null)
     {

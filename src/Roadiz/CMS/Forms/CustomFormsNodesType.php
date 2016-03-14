@@ -67,31 +67,26 @@ class CustomFormsNodesType extends AbstractType
 
             if (is_array($object)) {
                 $customForms = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
-                ->findBy(['id' => $object]);
+                                                   ->findBy(['id' => $object]);
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
                     if (null !== $value && null === $customForms[$key]) {
-                        $context->addViolationAt(
-                            null,
-                            'CustomForm #' . $value . ' does not exists',
-                            [],
-                            null
-                        );
+                        $context->buildViolation('CustomForm #{{ value }} does not exists.')
+                                ->atPath(null)
+                                ->setParameter('{{ value }}', $value)
+                                ->addViolation();
                     }
                 }
 
             } else {
                 $customForm = $this->entityManager->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $object);
-
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $customForm) {
-                    $context->addViolationAt(
-                        null,
-                        'CustomForm ' . $object . ' does not exists',
-                        [],
-                        null
-                    );
+                    $context->buildViolation('CustomForm #{{ value }} does not exists.')
+                            ->atPath(null)
+                            ->setParameter('{{ value }}', $object)
+                            ->addViolation();
                 }
             }
         };

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use RZ\Roadiz\Core\ListManagers\Paginator;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -52,6 +51,7 @@ class NodesSourcesPaginator extends Paginator
 
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
@@ -88,7 +88,7 @@ class NodesSourcesPaginator extends Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByAtPage(array $order = [], $page = 1)
     {
@@ -110,7 +110,7 @@ class NodesSourcesPaginator extends Paginator
     /**
      * Gets the value of preview.
      *
-     * @return mixed
+     * @return boolean
      */
     public function getPreview()
     {

@@ -32,11 +32,13 @@ namespace Themes\Rozier\Controllers;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Subscriber\Cache\CacheStorage;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
@@ -96,7 +98,7 @@ class AboutController extends RozierApp
         try {
             $url = "https://api.github.com/repos/roadiz/roadiz/releases";
 
-            $client = new \GuzzleHttp\Client(['defaults' => ['debug' => false]]);
+            $client = new Client(['defaults' => ['debug' => false]]);
 
             // needs a composer require guzzlehttp/cache-subscriber
             CacheSubscriber::attach($client, array(
@@ -111,7 +113,7 @@ class AboutController extends RozierApp
             } else {
                 return false;
             }
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+        } catch (RequestException $e) {
             return false;
         }
     }
@@ -204,6 +206,7 @@ class AboutController extends RozierApp
      * @param  Request $request
      *
      * @return JsonResponse
+     * @throws \Exception
      */
     public function downloadAction(Request $request)
     {
@@ -247,6 +250,7 @@ class AboutController extends RozierApp
      * @param  Request $request
      *
      * @return JsonResponse
+     * @throws \Exception
      */
     public function unarchiveAction(Request $request)
     {
@@ -284,6 +288,7 @@ class AboutController extends RozierApp
             'nextStepDescription' => $this->getTranslator()->trans('update_roadiz.move_new_files'),
         ]);
     }
+
     /**
      * Move files from temporary folder to their dest folder.
      *
@@ -292,6 +297,7 @@ class AboutController extends RozierApp
      * @param  Request $request
      *
      * @return JsonResponse
+     * @throws \Exception
      */
     public function moveFilesAction(Request $request)
     {
@@ -372,6 +378,8 @@ class AboutController extends RozierApp
             new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
             new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
             new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
+            new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
+            new OPCacheClearer(),
         ];
         foreach ($clearers as $clearer) {
             $clearer->clear();

@@ -5615,8 +5615,10 @@
           <source>maps_style</source>
           <target></target>
       </trans-unit>
-
-
+      <trans-unit xml:space="preserve" id="maps_default_location">
+        <source>maps_default_location</source>
+        <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="user.status">
           <source>user.status</source>

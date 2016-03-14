@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\AbstractEntities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 
 /**
  * Abstract entity for any Human-like objects.
@@ -178,11 +177,11 @@ abstract class AbstractHuman extends AbstractDateTimed
         return $this->birthday;
     }
     /**
-     * @param \DateTime $birthday
+     * @param \DateTime|null $birthday
      *
      * @return $this
      */
-    public function setBirthday($birthday)
+    public function setBirthday(\DateTime $birthday = null)
     {
         $this->birthday = $birthday;
 

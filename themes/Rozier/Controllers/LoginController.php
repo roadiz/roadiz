@@ -42,11 +42,10 @@ use Themes\Rozier\RozierApp;
  */
 class LoginController extends RozierApp
 {
-
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -63,9 +62,9 @@ class LoginController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function checkAction(Request $request)
     {
@@ -73,9 +72,9 @@ class LoginController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function logoutAction(Request $request)
     {
@@ -83,9 +82,9 @@ class LoginController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function imageAction(Request $request)
     {

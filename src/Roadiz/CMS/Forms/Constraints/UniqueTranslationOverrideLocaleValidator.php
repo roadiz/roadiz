@@ -59,8 +59,9 @@ class UniqueTranslationOverrideLocaleValidator extends ConstraintValidator
 
     /**
      * @param string $name
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
-     * @return boolean
+     * @return bool
      */
     protected function nameExists($name, $entityManager)
     {

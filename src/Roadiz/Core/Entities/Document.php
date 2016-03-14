@@ -224,6 +224,7 @@ class Document extends AbstractDateTimed
     {
         return $this->getMimeType() == 'image/svg+xml' || $this->getMimeType() == 'image/svg';
     }
+
     /**
      * Is current document a video.
      *
@@ -233,6 +234,7 @@ class Document extends AbstractDateTimed
     {
         return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'video';
     }
+
     /**
      * Is current document an audio file.
      *
@@ -247,6 +249,7 @@ class Document extends AbstractDateTimed
      * @ORM\Column(type="string")
      */
     private $folder;
+
     /**
      * @return string
      */
@@ -254,10 +257,11 @@ class Document extends AbstractDateTimed
     {
         return $this->folder;
     }
+
     /**
      * Set folder name.
      *
-     * @param string $forlder
+     * @param $folder
      *
      * @return $this
      */
@@ -289,6 +293,7 @@ class Document extends AbstractDateTimed
     {
         return $this->isPrivate() ? $this->getPrivateAbsolutePath() : $this->getPublicAbsolutePath();
     }
+
     /**
      * Only return public absolute file path.
      *
@@ -302,6 +307,7 @@ class Document extends AbstractDateTimed
             return null;
         }
     }
+
     /**
      * Only return private absolute file path.
      *
@@ -320,6 +326,7 @@ class Document extends AbstractDateTimed
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
      */
     protected $embedId = null;
+
     /**
      * @return string
      */
@@ -327,8 +334,10 @@ class Document extends AbstractDateTimed
     {
         return $this->embedId;
     }
+
     /**
      * @param string $embedId
+     * @return $this
      */
     public function setEmbedId($embedId)
     {
@@ -341,6 +350,7 @@ class Document extends AbstractDateTimed
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
      */
     protected $embedPlatform = null;
+
     /**
      * @return string
      */
@@ -348,8 +358,10 @@ class Document extends AbstractDateTimed
     {
         return $this->embedPlatform;
     }
+
     /**
      * @param string $embedPlatform
+     * @return $this
      */
     public function setEmbedPlatform($embedPlatform)
     {
@@ -372,6 +384,7 @@ class Document extends AbstractDateTimed
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $private = false;
+
     /**
      * @return boolean
      */
@@ -392,14 +405,14 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return RZ\Roadiz\Core\Viewers\DocumentViewer
+     * @return \RZ\Roadiz\Core\Viewers\DocumentViewer
      */
     public function getViewer()
     {
         return new DocumentViewer($this);
     }
     /**
-     * @return RZ\Roadiz\Core\Handlers\DocumentHandler
+     * @return \RZ\Roadiz\Core\Handlers\DocumentHandler
      */
     public function getHandler()
     {
@@ -413,7 +426,7 @@ class Document extends AbstractDateTimed
     protected $nodesSourcesByFields = null;
 
     /**
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getNodesSourcesByFields()
     {
@@ -435,7 +448,8 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @param Document $folder
+     * @param Folder $folder
+     * @return $this
      */
     public function addFolder(Folder $folder)
     {
@@ -462,6 +476,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @param DocumentTranslation $documentTranslation
+     * @return $this
      */
     public function addDocumentTranslation(DocumentTranslation $documentTranslation)
     {
@@ -495,6 +510,7 @@ class Document extends AbstractDateTimed
     {
         return ROADIZ_ROOT . '/' . static::getFilesFolderName();
     }
+
     /**
      * @return string
      */
@@ -502,6 +518,7 @@ class Document extends AbstractDateTimed
     {
         return 'files';
     }
+
     /**
      * @return string
      */
@@ -509,6 +526,7 @@ class Document extends AbstractDateTimed
     {
         return ROADIZ_ROOT . '/' . static::getPrivateFilesFolderName();
     }
+
     /**
      * @return string
      */

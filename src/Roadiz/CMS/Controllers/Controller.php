@@ -30,16 +30,16 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Utils\ContactFormManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use RZ\Roadiz\Utils\ContactFormManager;
-use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 
 /**
  * Base controller.
@@ -51,7 +51,7 @@ abstract class Controller
     /**
      * Shortcut to return the request service.
      *
-     * @return Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     public function getRequest()
     {
@@ -61,7 +61,7 @@ abstract class Controller
     /**
      * Sets the Container associated with this Controller.
      *
-     * @param Pimple\Container $container
+     * @param Container $container
      */
     public function setContainer(Container $container)
     {
@@ -71,7 +71,7 @@ abstract class Controller
     /**
      * Get general dependency injection container.
      *
-     * @return Pimple\Container
+     * @return Container
      */
     public function getContainer()
     {
@@ -95,7 +95,7 @@ abstract class Controller
     /**
      * Alias for `$this->container['securityAuthorizationChecker']`.
      *
-     * @return Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     * @return \Symfony\Component\Security\Core\Authorization\AuthorizationChecker
      */
     public function getAuthorizationChecker()
     {
@@ -105,7 +105,7 @@ abstract class Controller
     /**
      * Alias for `$this->container['securityTokenStorage']`.
      *
-     * @return Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     * @return \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
      */
     public function getTokenStorage()
     {
@@ -115,7 +115,7 @@ abstract class Controller
     /**
      * Alias for `$this->container['em']`.
      *
-     * @return Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManager
      */
     public function em()
     {
@@ -123,7 +123,7 @@ abstract class Controller
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator
+     * @return \Symfony\Component\Translation\Translator
      */
     public function getTranslator()
     {
@@ -158,7 +158,7 @@ abstract class Controller
      * @param  string $url
      * @param  integer $status
      *
-     * @return Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function redirect($url, $status = Response::HTTP_FOUND)
     {
@@ -166,7 +166,7 @@ abstract class Controller
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public static function getCalledClass()
     {
@@ -197,7 +197,7 @@ abstract class Controller
      *
      * @param  Request $request
      *
-     * @return Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function removeTrailingSlashAction(Request $request)
     {
@@ -212,11 +212,11 @@ abstract class Controller
     /**
      * Make translation variable with the good localization.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $_locale
+     * @param Request $request
+     * @param string $_locale
      *
-     * @return Symfony\Component\HttpFoundation\Response
-     * @throws RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException
+     * @return Translation
+     * @throws NoTranslationAvailableException
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
@@ -267,12 +267,12 @@ abstract class Controller
      *
      * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
      *
-     * @param  string        $view       Template file path
-     * @param  array         $parameters Twig assignation array
-     * @param  Symfony\Component\HttpFoundation\Response|null $response Optional Response object to customize response parameters
-     * @param  string        $namespace  Twig loader namespace
-     *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param string $view Template file path
+     * @param array $parameters Twig assignation array
+     * @param Response $response Optional Response object to customize response parameters
+     * @param string $namespace Twig loader namespace
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
@@ -365,13 +365,14 @@ abstract class Controller
     {
         return $this->container['formFactory']->create($type, $data, $options);
     }
+
     /**
      * Creates and returns a form builder instance.
      *
      * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
      *
-     * @return FormBuilder
+     * @return \Symfony\Component\Form\FormBuilder
      */
     protected function createFormBuilder($data = null, array $options = array())
     {
@@ -430,11 +431,11 @@ abstract class Controller
             throw new \LogicException('No TokenStorage has been registered in your application.');
         }
         if (null === $token = $this->container['securityTokenStorage']->getToken()) {
-            return;
+            return null;
         }
         if (!is_object($user = $token->getUser())) {
             // e.g. anonymous authentication
-            return;
+            return null;
         }
         return $user;
     }

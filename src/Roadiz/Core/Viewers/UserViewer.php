@@ -32,11 +32,11 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
+use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use \InlineStyle\InlineStyle;
 
 /**
  * UserViewer
@@ -47,7 +47,7 @@ class UserViewer implements ViewableInterface
     protected $twig = null;
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param \RZ\Roadiz\Core\Entities\User $user
      */
     public function __construct(User $user)
     {
@@ -55,7 +55,7 @@ class UserViewer implements ViewableInterface
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator
+     * @return \Symfony\Component\Translation\Translator
      */
     public function getTranslator()
     {

@@ -74,12 +74,10 @@ class DocumentsType extends AbstractType
                     if (isset($documents[$key]) &&
                         null !== $value &&
                         null === $documents[$key]) {
-                        $context->addViolationAt(
-                            null,
-                            'Document #' . $value . ' does not exists',
-                            [],
-                            null
-                        );
+                        $context->buildViolation('Document #{{ value }} does not exists.')
+                            ->atPath(null)
+                            ->setParameter('{{ value }}', $value)
+                            ->addViolation();
                     }
                 }
 
@@ -88,12 +86,10 @@ class DocumentsType extends AbstractType
 
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $document) {
-                    $context->addViolationAt(
-                        null,
-                        'Document ' . $object . ' does not exists',
-                        [],
-                        null
-                    );
+                    $context->buildViolation('Document #{{ value }} does not exists.')
+                        ->atPath(null)
+                        ->setParameter('{{ value }}', $object)
+                        ->addViolation();
                 }
             }
         };

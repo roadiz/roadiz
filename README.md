@@ -37,11 +37,12 @@ of PHP with a op-code cache.
 * ``php5-gd`` extension
 * ``php5-intl`` extension
 * ``php5-curl`` extension
-* PHP cache (*APC/XCache*) + Var cache (strongly recommended) or *Memcached*
+* PHP cache (*OPcache/APC/XCache*) + Var cache (strongly recommended) or *Memcached*. If you’re using *PHP7*, you can setup *OPcache* + *APCu* for user cache
 * Be sure that PHP has a read/write access to:
     * `/cache` folder
     * `/conf` folder
     * `/files` folder
+    * `/gen-src` folder
 
 ##### For Apache users
 
@@ -321,14 +322,27 @@ order to purge these memory caches.
 After each Roadiz upgrade you should upgrade your node-sources entity classes and upgrade database schema.
 
 ```bash
-bin/roadiz generate:nsentities
-bin/roadiz orm:schema-tool:update --force
+bin/roadiz generate:nsentities;
+bin/roadiz orm:schema-tool:update --force;
 bin/roadiz cache:clear --env=prod;
-
 ```
 
 If you are using a *OPCode var cache* like *APC*, *XCache*, you should purge it as Roadiz stores doctrine
 configuration there for better performances.
+
+#### Running Roadiz behind a reverse proxy
+
+If you are behind a reverse-proxy like *Varnish* or *Nginx proxy* on a *Docker* environment,
+IP addresses, domain name and proto (https/http) could not be correctly set. So you will have to tell
+Roadiz to trust your proxy in order to use `X_FORWARDED_*` env vars.
+
+Add this line to your `index.php` and `preview.php` files after `$request = Request::createFromGlobals();` line.
+
+```php
+$request = Request::createFromGlobals(); // Existing line to get request
+// Trust incoming request IP as your reverse proxy
+Request::setTrustedProxies(array($request->server->get('REMOTE_ADDR')));
+```
 
 ### Licenses
 

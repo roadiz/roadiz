@@ -41,7 +41,7 @@ class ThemeInstaller
     /**
      * get Theme informations.
      *
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param $classname
      *
      * @return array
      */
@@ -55,9 +55,9 @@ class ThemeInstaller
     /**
      * Install theme.
      *
-     * @param Symfony\Component\HttpFoundation\Request  $request
+     * @param \Symfony\Component\HttpFoundation\Request  $request
      * @param string                                    $classname
-     * @param Doctrine\ORM\EntityManager                $em
+     * @param \Doctrine\ORM\EntityManager                $em
      *
      * @return bool
      */
@@ -65,7 +65,13 @@ class ThemeInstaller
     {
         $data = static::getThemeInformation($classname);
 
-        $fix = new Fixtures($em, "", $request);
+        $fix = new Fixtures(
+            $em,
+            "",
+            "",
+            false,
+            $request
+        );
         $data["className"] = $classname;
         $fix->installTheme($data);
 
@@ -92,8 +98,8 @@ class ThemeInstaller
         }
 
         $importFile = false;
-        foreach ($data["importFiles"] as $name => $filenames) {
-            foreach ($filenames as $filename) {
+        foreach ($data["importFiles"] as $name => $fileNames) {
+            if (!empty($fileNames)) {
                 $importFile = true;
                 break;
             }

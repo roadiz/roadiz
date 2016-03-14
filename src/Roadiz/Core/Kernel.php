@@ -42,6 +42,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -58,7 +59,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.13.1";
+    public static $cmsVersion = "0.13.2";
     protected static $instance = null;
 
     public $container = null;
@@ -73,6 +74,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * @param string $environment
      * @param boolean $debug
+     * @param bool $preview
      */
     public function __construct($environment, $debug, $preview = false)
     {
@@ -113,7 +115,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function register(Container $container)
     {
-        $container['stopwatch'] = function ($c) {
+        $container['stopwatch'] = function () {
             return new Stopwatch();
         };
 
@@ -121,7 +123,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return new DebugPanel($c);
         };
 
-        $container['dispatcher'] = function ($c) {
+        $container['dispatcher'] = function () {
             return new EventDispatcher();
         };
 
@@ -272,6 +274,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * Return unique instance of Kernel.
      *
+     * @param string $environment
+     * @param bool $debug
+     * @param bool $preview
+     *
      * @return Kernel
      */
     public static function getInstance($environment = 'prod', $debug = false, $preview = false)
@@ -284,7 +290,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * @return Pimple\Container
+     * @return \Pimple\Container
      */
     public function getContainer()
     {
@@ -425,11 +431,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         return [];
     }
+
     /**
      * Loads the container configuration.
      *
      * @param LoaderInterface $loader A LoaderInterface instance
      *
+     * @return bool
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
@@ -439,6 +447,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      *
      * @deprecated since version 2.6, to be removed in 3.0.
+     * @param string $class
+     *
+     * @return bool
      */
     public function isClassInActiveBundle($class)
     {

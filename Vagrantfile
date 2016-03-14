@@ -4,6 +4,7 @@
 Vagrant.configure(2) do |config|
     config.vm.box = "ubuntu/trusty64"
     config.vm.network "forwarded_port", guest: 80, host: 8080 # Nginx
+    config.vm.network "forwarded_port", guest: 443, host: 4430 # Nginx SSL
     config.vm.network "forwarded_port", guest: 8983, host: 8983 # Solr
     config.vm.network "forwarded_port", guest: 1080, host: 1080 # Mailcatcher
     config.vm.network "private_network", ip: "192.168.33.10"

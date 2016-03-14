@@ -33,8 +33,6 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\NodePaginator;
-use RZ\Roadiz\Core\ListManagers\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
@@ -91,17 +89,17 @@ class EntityListManager
             if ($preFilters["chroot"] instanceof Node) {
                 $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId(); // get all offspringId
                 if (array_key_exists('parent', $preFilters)) {
-// test if parent key exist
+                    // test if parent key exist
                     if (is_array($preFilters["parent"])) {
-// test if multiple parent id
+                        // test if multiple parent id
                         if (count(array_intersect($preFilters["parent"], $ids))
                             != count($preFilters["parent"])) {
-// test if all parent are in the chroot
+                            // test if all parent are in the chroot
                             $this->filteringArray["parent"] = -1; // -1 for make the search return []
                         }
                     } else {
                         if ($preFilters["parent"] instanceof Node) {
-// make transforme all id in int
+                            // make transforme all id in int
                             $parent = $preFilters["parent"]->getId();
                         } else {
                             $parent = (int) $preFilters["parent"];
@@ -170,8 +168,10 @@ class EntityListManager
     {
         return $this->translation;
     }
+
     /**
      * @param Translation $newtranslation
+     * @return $this
      */
     public function setTranslation(Translation $newtranslation = null)
     {
@@ -187,8 +187,10 @@ class EntityListManager
     {
         return $this->authorizationChecker;
     }
+
     /**
      * @param AuthorizationChecker $authorizationChecker
+     * @return $this
      */
     public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
     {
@@ -353,7 +355,7 @@ class EntityListManager
     /**
      * Gets the value of preview.
      *
-     * @return mixed
+     * @return boolean
      */
     public function isPreview()
     {

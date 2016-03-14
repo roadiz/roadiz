@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Node;
@@ -44,8 +45,9 @@ class FullTextSearchHandler
     protected $logger = null;
 
     /**
-     * @param Solarium\Client $client
-     * @param Doctrine\ORM\EntityManager $em
+     * @param Client $client
+     * @param EntityManager $em
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Client $client,
@@ -96,13 +98,16 @@ class FullTextSearchHandler
                     $queryTxt .= sprintf(' (tags_txt:"%s"~%d)', $q, $proximity);
                 }
             }
-
+            $filterQueries = [];
             $query->setQuery($queryTxt);
-
             foreach ($args as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
-                        $query->addFilterQuery(["key" => "fq" . $k, "query" => $v]);
+                        $filterQueries["fq" . $k] = $v;
+                        $query->addFilterQuery([
+                            "key" => "fq" . $k,
+                            "query" => $v,
+                        ]);
                     }
                 } else {
                     $query->addParam($key, $value);
@@ -112,7 +117,12 @@ class FullTextSearchHandler
             $query->setRows($rows);
 
             if (null !== $this->logger) {
-                $this->logger->debug('[Solr] Request node-sources search…', ['query' => $queryTxt]);
+
+                $this->logger->debug('[Solr] Request node-sources search…', [
+                    'query' => $queryTxt,
+                    'filters' => $filterQueries,
+                    'params' => $query->getParams(),
+                ]);
             }
 
             $resultset = $this->client->select($query);
@@ -167,14 +177,26 @@ class FullTextSearchHandler
                     }
                 }
             }
+            unset($args['tags']);
         }
 
         if (!empty($args['nodeType'])) {
-            if ($args['nodeType'] instanceof NodeType) {
+            if (is_array($args['nodeType']) || $args['nodeType'] instanceof Collection) {
+                $orQuery = [];
+                foreach ($args['nodeType'] as $nodeType) {
+                    if ($nodeType instanceof NodeType) {
+                        $orQuery[] = $nodeType->getName();
+                    } else {
+                        $orQuery[] = $nodeType;
+                    }
+                }
+                $args["fq"][] = "node_type_s:(" . implode(' OR ', $orQuery) . ')';
+            } elseif ($args['nodeType'] instanceof NodeType) {
                 $args["fq"][] = "node_type_s:" . $args['nodeType']->getName();
             } else {
                 $args["fq"][] = "node_type_s:" . $args['nodeType'];
             }
+            unset($args['nodeType']);
         }
 
         if (isset($args['status'])) {

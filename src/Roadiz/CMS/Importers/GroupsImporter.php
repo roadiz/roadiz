@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\CMS\Importers\ImporterInterface;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 
 /**
@@ -49,19 +48,13 @@ class GroupsImporter implements ImporterInterface
     public static function importJsonFile($serializedData, EntityManager $em)
     {
         $serializer = new GroupCollectionJsonSerializer($em);
+        /** @var \RZ\Roadiz\Core\Entities\Group[] $groups */
         $groups = $serializer->deserialize($serializedData);
         foreach ($groups as $group) {
             $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
                                 ->findOneBy(['name' => $group->getName()]);
 
             if (null === $existingGroup) {
-                foreach ($group->getRolesEntities() as $role) {
-                    /*
-                     * then persist each role
-                     */
-                    $role = $em->getRepository('RZ\Roadiz\Core\Entities\Role')
-                               ->findOneByName($role->getName());
-                }
                 $em->persist($group);
                 // Flush before creating group's roles.
                 $em->flush($group);

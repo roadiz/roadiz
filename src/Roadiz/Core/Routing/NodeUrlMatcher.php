@@ -60,7 +60,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (null !== $this->logger) {
                 $this->logger->debug('NodeUrlMatcher has matched node (' . $ret['node']->getNodeName() . ').', $ret);
             }
-
             return $ret;
         } else {
             if (null !== $this->theme) {
@@ -95,7 +94,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $tokens = explode('/', $decodedUrl);
             // Remove empty tokens (especially when a trailing slash is present)
             $tokens = array_values(array_filter($tokens));
-            $node = null;
             /*
              * Try with URL Aliases
              */
@@ -109,13 +107,22 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
             if ($node !== null) {
                 $translation = $node->getNodeSources()->first()->getTranslation();
+                $nodeRouteHelper = new NodeRouteHelper(
+                    $node,
+                    $this->theme,
+                    $this->preview
+                );
 
                 if (!$translation->isAvailable()) {
                     return false;
                 }
 
+                if (false === $nodeRouteHelper->isViewable()) {
+                    return false;
+                }
+
                 return [
-                    '_controller' => $this->theme->getClassName() . '::indexAction',
+                    '_controller' => $nodeRouteHelper->getController() . '::indexAction',
                     '_locale' => $translation->getLocale(), //pass request locale to init translator
                     'node' => $node,
                     'translation' => $translation,
@@ -151,11 +158,20 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 if ($node !== null &&
                     !$node->isHome() &&
                     $this->theme->getHomeNode() !== $node) {
+
+                    $nodeRouteHelper = new NodeRouteHelper(
+                        $node,
+                        $this->theme,
+                        $this->preview
+                    );
                     /*
                      * Try with nodeName
                      */
+                    if (false === $nodeRouteHelper->isViewable()) {
+                        return false;
+                    }
                     $match = [
-                        '_controller' => $this->theme->getClassName() . '::indexAction',
+                        '_controller' => $nodeRouteHelper->getController() . '::indexAction',
                         'node' => $node,
                         'translation' => $translation,
                         '_route' => null,
@@ -180,7 +196,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      *
      * @param array &$tokens
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     protected function parseFromUrlAlias(&$tokens)
     {
@@ -202,7 +218,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param array       &$tokens
      * @param Translation $translation
      *
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node
      */
     protected function parseNode(array &$tokens, Translation $translation)
     {

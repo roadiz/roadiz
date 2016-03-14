@@ -49,15 +49,16 @@ class DatabaseController extends InstallApp
     /**
      * Install database screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function databaseAction(Request $request)
     {
         $config = new YamlConfiguration(
             $this->getService('kernel')->getCacheDir(),
-            $this->getService('kernel')->isDebug()
+            $this->getService('kernel')->isDebug(),
+            $this->getService('kernel')->getRootDir() . '/conf/config.yml'
         );
         if (false === $config->load()) {
             $config->setConfiguration($config->getDefaultConfiguration());
@@ -85,6 +86,7 @@ class DatabaseController extends InstallApp
                         $fixtures = new Fixtures(
                             $this->getService('em'),
                             $this->getService('kernel')->getCacheDir(),
+                            $this->getService('kernel')->getRootDir() . '/conf/config.yml',
                             $this->getService('kernel')->isDebug(),
                             $request
                         );
@@ -132,9 +134,9 @@ class DatabaseController extends InstallApp
     /**
      * Perform database schema migration.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -182,15 +184,16 @@ class DatabaseController extends InstallApp
     /**
      * Perform database fixtures importation.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function databaseFixturesAction(Request $request)
     {
         $fixtures = new Fixtures(
             $this->getService('em'),
             $this->getService('kernel')->getCacheDir(),
+            $this->getService('kernel')->getRootDir() . '/conf/config.yml',
             $this->getService('kernel')->isDebug(),
             $request
         );
@@ -207,9 +210,9 @@ class DatabaseController extends InstallApp
 
     /**
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function updateSchemaAction(Request $request)
     {
@@ -220,9 +223,9 @@ class DatabaseController extends InstallApp
     }
     /**
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
     public function clearDoctrineCacheAction(Request $request)
     {
@@ -234,10 +237,11 @@ class DatabaseController extends InstallApp
 
     /**
      * Build forms
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param RZ\Roadiz\Console\Tools\Configuration $conf
      *
-     * @return Symfony\Component\Form\Forms
+     * @param Request       $request
+     * @param Configuration $conf
+     *
+     * @return \Symfony\Component\Form\Form
      */
     protected function buildDatabaseForm(Request $request, Configuration $conf)
     {

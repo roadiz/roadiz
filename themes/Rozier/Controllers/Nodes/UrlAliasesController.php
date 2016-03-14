@@ -32,16 +32,16 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
-use RZ\Roadiz\Core\Events\UrlAliasEvents;
 
 /**
  * {@inheritdoc}
@@ -51,10 +51,13 @@ class UrlAliasesController extends RozierApp
     /**
      * Return aliases form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws EntityAlreadyExistsException
+     * @throws \Twig_Error_Runtime
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
@@ -224,10 +227,12 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param array $data
+     * @param Node  $node
      *
-     * @return RZ\Roadiz\Core\Entities\UrlAlias
+     * @return UrlAlias
+     * @throws EntityAlreadyExistsException
+     * @throws NoTranslationAvailableException
      */
     private function addNodeUrlAlias($data, Node $node)
     {
@@ -273,8 +278,8 @@ class UrlAliasesController extends RozierApp
     /**
      * Edit NodesSources SEO fields.
      *
-     * @param array                               $data
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param array                                 $data
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      *
      * @return boolean
      */
@@ -316,10 +321,11 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param array                           $data
-     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
+     * @param array    $data
+     * @param UrlAlias $ua
      *
-     * @return boolean
+     * @return bool
+     * @throws EntityAlreadyExistsException
      */
     private function editUrlAlias($data, UrlAlias $ua)
     {
@@ -350,8 +356,8 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param array                           $data
-     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
+     * @param array    $data
+     * @param UrlAlias $ua
      */
     private function deleteUrlAlias($data, UrlAlias $ua)
     {
@@ -362,7 +368,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -389,7 +395,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
+     * @param UrlAlias $ua
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -417,7 +423,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $ns
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $ns
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -456,7 +462,7 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\UrlAlias $ua
+     * @param UrlAlias $ua
      *
      * @return \Symfony\Component\Form\Form
      */

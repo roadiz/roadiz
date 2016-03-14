@@ -68,7 +68,7 @@ class TranslationsCommand extends Command
                 ];
             }
             $table->setRows($tableContent);
-            $table->render($output);
+            $table->render();
         } else {
             $output->writeln('<info>No available translations.</info>' . PHP_EOL);
         }

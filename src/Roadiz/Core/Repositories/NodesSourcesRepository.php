@@ -32,8 +32,9 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\QueryException;
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
@@ -52,6 +53,7 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
+     * @param boolean      $joinedNode
      */
     protected function filterByTag(&$criteria, &$qb, &$joinedNode)
     {
@@ -200,7 +202,7 @@ class NodesSourcesRepository extends EntityRepository
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param Query $qb
+     * @param Query $finalQuery
      */
     protected function applyFilterByCriteria(&$criteria, &$finalQuery)
     {
@@ -216,13 +218,14 @@ class NodesSourcesRepository extends EntityRepository
         }
     }
 
+
     /**
-     * @param  array                &$criteria
-     * @param  QueryBuilder         &$qb
-     * @param  AuthorizationChecker|null &$authorizationChecker
-     * @param  boolean $preview
+     * @param array                     $criteria
+     * @param QueryBuilder              $qb
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool                      $preview
      *
-     * @return boolean Already Joined Node relation
+     * @return bool
      */
     protected function filterByAuthorizationChecker(
         &$criteria,
@@ -255,13 +258,12 @@ class NodesSourcesRepository extends EntityRepository
      * Create a securized query with node.published = true if user is
      * not a Backend user.
      *
-     * @param array           $criteria
-     * @param array\null      $orderBy
-     * @param integer|null    $limit
-     * @param integer|null    $offset
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer|null $limit
+     * @param integer|null $offset
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
-     *
      * @return QueryBuilder
      */
     protected function getContextualQuery(
@@ -409,7 +411,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function findBy(
         array $criteria,
@@ -451,7 +453,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources|null
+     * @return NodesSources|null
      */
     public function findOneBy(
         array $criteria,

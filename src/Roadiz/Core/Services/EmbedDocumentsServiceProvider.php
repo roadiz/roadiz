@@ -30,11 +30,12 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Register Embed documents services for dependency injection container.
  */
-class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
+class EmbedDocumentsServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize Doctrine entity manager in DI container.
@@ -42,11 +43,12 @@ class EmbedDocumentsServiceProvider implements \Pimple\ServiceProviderInterface
      * This method can be called from InstallApp after updating
      * doctrine configuration.
      *
-     * @param Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
-        $container['document.platforms'] = function ($c) {
+        $container['document.platforms'] = function () {
             return [
                 'youtube' =>     '\RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder',
                 'vimeo' =>       '\RZ\Roadiz\Utils\MediaFinders\VimeoEmbedFinder',

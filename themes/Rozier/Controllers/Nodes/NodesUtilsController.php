@@ -48,10 +48,10 @@ class NodesUtilsController extends RozierApp
     /**
      * Export a Node in a Json file (.rzn).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAction(Request $request, $nodeId)
     {
@@ -86,9 +86,9 @@ class NodesUtilsController extends RozierApp
     /**
      * Export all Node in a Json file (.rzn).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAllAction(Request $request)
     {
@@ -127,10 +127,10 @@ class NodesUtilsController extends RozierApp
     /**
      * Duplicate node by ID
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
+     * @param Request $request
+     * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function duplicateAction(Request $request, $nodeId)
     {

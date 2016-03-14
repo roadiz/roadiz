@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraint;
 class ValidAccountEmail extends Constraint
 {
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     public $entityManager = null;
 

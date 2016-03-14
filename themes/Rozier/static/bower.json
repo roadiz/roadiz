@@ -31,7 +31,7 @@
     "mousetrap": "~1.4.6",
     "codemirror": "~5.8.0",
     "marked": "~0.3.3",
-    "dropzone": "~4.0.1",
+    "dropzone": "~4.2.0",
     "jquery.actual":"~1.0.17",
     "CanvasLoader":"~0.9.1",
     "jquery-tag-editor": "~1.0.18"

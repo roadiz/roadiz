@@ -45,10 +45,10 @@ class Paginator
     protected $totalCount = null;
 
     /**
-     * @param Doctrine\ORM\EntityManager $em           Entity manager
-     * @param string                     $entityName   Full qualified entity classname
-     * @param integer                    $itemPerPages Item par pages
-     * @param array                      $criteria     Force selection criteria
+     * @param EntityManager $em           Entity manager
+     * @param string        $entityName   Full qualified entity classname
+     * @param integer       $itemPerPages Item par pages
+     * @param array         $criteria     Force selection criteria
      */
     public function __construct(
         EntityManager $em,
@@ -114,7 +114,7 @@ class Paginator
      *
      * **Warning** : EntityRepository must implements *countBy* method
      *
-     * @return integer
+     * @return float
      */
     public function getPageCount()
     {
@@ -127,7 +127,7 @@ class Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function findByAtPage(array $order = [], $page = 1)
     {
@@ -150,7 +150,7 @@ class Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function searchByAtPage(array $order = [], $page = 1)
     {

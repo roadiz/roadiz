@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
@@ -50,7 +51,7 @@ class NodesSourcesHandler
     /**
      * Create a new node-source handler with node-source to handle.
      *
-     * @param RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      */
     public function __construct($nodeSource)
     {
@@ -58,7 +59,7 @@ class NodesSourcesHandler
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getParentNodeSource()
     {
@@ -66,7 +67,8 @@ class NodesSourcesHandler
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
+     * @return $this
      */
     public function setParentNodeSource($newparentNodeSource)
     {
@@ -226,10 +228,10 @@ class NodesSourcesHandler
     /**
      * Get children nodes sources to lock with current translation.
      *
-     * @param array|null                                      $criteria Additionnal criteria
-     * @param array|null                                      $order Non default ordering
+     * @param array|null                  $criteria Additionnal criteria
+     * @param array|null                  $order Non default ordering
      * @param AuthorizationChecker|null   $authorizationChecker
-     * @param boolean $preview
+     * @param boolean                     $preview
      *
      * @return ArrayCollection NodesSources collection
      */
@@ -279,12 +281,12 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param array|null                $criteria
+     * @param array|null                $order
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getFirstChild(
         array $criteria = null,
@@ -332,9 +334,9 @@ class NodesSourcesHandler
      * @param  array|null           $criteria
      * @param  array|null           $order
      * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param  boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getLastChild(
         array $criteria = null,
@@ -383,7 +385,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getFirstSibling(
         array $criteria = null,
@@ -409,7 +411,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getLastSibling(
         array $criteria = null,
@@ -435,7 +437,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getPrevious(
         array $criteria = null,
@@ -492,7 +494,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return RZ\Roadiz\Core\Entities\NodesSources
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getNext(
         array $criteria = null,

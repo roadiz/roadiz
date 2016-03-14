@@ -44,10 +44,11 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
     protected $manager;
 
     /**
-     * @param EntityManager $imageDriver
-     * @param string  $imageDriver
-     * @param integer $maxPixelSize
-     * @param string  $rawImageSuffix
+     * @param EntityManager        $em
+     * @param LoggerInterface      $logger
+     * @param EntityManager|string $imageDriver
+     * @param integer              $maxPixelSize
+     * @param string               $rawImageSuffix
      */
     public function __construct(
         EntityManager $em,

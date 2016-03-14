@@ -33,6 +33,7 @@ use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
@@ -121,9 +122,10 @@ class CacheCommand extends Command
             $templatesClearer,
             $translationsClearer,
             $nodeSourcesUrlsClearer,
+            new OPCacheClearer(),
         ];
 
-        $text .= 'Clearing cache for <info>'.$kernel->getEnvironment().'</info> environment.' . PHP_EOL . PHP_EOL;
+        $text .= 'Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment.' . PHP_EOL . PHP_EOL;
 
         if ($input->getOption('clear-configuration')) {
             $configurationClearer->clear();
@@ -151,7 +153,7 @@ class CacheCommand extends Command
                 $clearer->clear();
                 $text .= $clearer->getOutput();
             }
-            $text .= '<info>All caches have been been purged…</info>' . PHP_EOL;
+            $text .= PHP_EOL . '<info>All caches have been been purged…</info>' . PHP_EOL;
         }
 
         $output->writeln($text);

@@ -51,12 +51,6 @@ class NodesCommand extends Command
                 't',
                 InputOption::VALUE_REQUIRED,
                 'Filter by node-type name'
-            )
-            ->addOption(
-                'delete',
-                'D',
-                InputOption::VALUE_NONE,
-                'Delete requested node'
             );
     }
 
@@ -93,7 +87,7 @@ class NodesCommand extends Command
             ];
         }
         $table->setRows($tableContent);
-        $table->render($output);
+        $table->render();
 
         $output->writeln($text);
     }

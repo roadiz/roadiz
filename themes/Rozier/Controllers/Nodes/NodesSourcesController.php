@@ -30,11 +30,9 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesSourcesTrait;
@@ -51,11 +49,11 @@ class NodesSourcesController extends RozierApp
     /**
      * Return an edition form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
@@ -130,10 +128,10 @@ class NodesSourcesController extends RozierApp
     /**
      * Return an remove form for requested nodeSource.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeSourceId
+     * @param Request $request
+     * @param int     $nodeSourceId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeAction(Request $request, $nodeSourceId)
     {

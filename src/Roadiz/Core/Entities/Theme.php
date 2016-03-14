@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * Themes describe a database entity to store
@@ -88,6 +88,7 @@ class Theme extends AbstractEntity
 
     /**
      * @param boolean $newstaticTheme
+     * @return $this
      */
     public function setStaticTheme($newstaticTheme)
     {
@@ -134,6 +135,7 @@ class Theme extends AbstractEntity
      */
     public function getInformations()
     {
+        /** @var string|\RZ\Roadiz\CMS\Controllers\AppController $class */
         $class = $this->getClassName();
 
         if (class_exists($class)) {
@@ -233,14 +235,14 @@ class Theme extends AbstractEntity
     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
     * @ORM\JoinColumn(name="homenode_id", referencedColumnName="id", onDelete="SET NULL")
     *
-    * @var RZ\Roadiz\Core\Entities\Node
+    * @var \RZ\Roadiz\Core\Entities\Node
     */
     private $homeNode;
 
     /**
-    * @param RZ\Roadiz\Core\Entities\Node $homeNode
+    * @param \RZ\Roadiz\Core\Entities\Node $homeNode
     *
-    * @return RZ\Roadiz\Core\Entities\Node
+    * @return \RZ\Roadiz\Core\Entities\Node
     */
     public function setHomeNode(Node $homeNode = null)
     {
@@ -250,7 +252,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-    * @return RZ\Roadiz\Core\Entities\Node
+    * @return \RZ\Roadiz\Core\Entities\Node
     */
     public function getHomeNode()
     {
@@ -261,14 +263,14 @@ class Theme extends AbstractEntity
     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="SET NULL")
     *
-    * @var RZ\Roadiz\Core\Entities\Node
+    * @var \RZ\Roadiz\Core\Entities\Node
     */
     private $root;
 
     /**
-    * @param RZ\Roadiz\Core\Entities\Node $root
+    * @param \RZ\Roadiz\Core\Entities\Node $root
     *
-    * @return RZ\Roadiz\Core\Entities\Node
+    * @return \RZ\Roadiz\Core\Entities\Node
     */
     public function setRoot(Node $root = null)
     {
@@ -278,7 +280,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-    * @return RZ\Roadiz\Core\Entities\Node
+    * @return \RZ\Roadiz\Core\Entities\Node
     */
     public function getRoot()
     {

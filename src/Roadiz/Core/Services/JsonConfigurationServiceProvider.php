@@ -29,9 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Pimple\Container;
 use RZ\Roadiz\Console\Tools\Configuration;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use Pimple\Container;
 
 /**
  * Register configuration services for dependency injection container.
@@ -39,7 +39,8 @@ use Pimple\Container;
 class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvider
 {
     /**
-     * @param Pimple\Container $container [description]
+     * @param Container $container [description]
+     * @return Container
      */
     public function register(Container $container)
     {
@@ -48,7 +49,10 @@ class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvi
          * Inject app config
          */
         $container['config'] = function ($c) {
-            $configuration = new Configuration();
+            $configuration = new Configuration(
+                $c['kernel']->getCacheDir(),
+                $c['kernel']->getRootDir() . '/conf/config.yml'
+            );
 
             if (false !== $configuration->load()) {
                 return $configuration->getConfiguration();

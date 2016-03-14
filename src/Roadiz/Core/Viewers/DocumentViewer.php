@@ -31,9 +31,8 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Viewers\SvgDocumentViewer;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * DocumentViewer
@@ -44,7 +43,7 @@ class DocumentViewer implements ViewableInterface
     private $embedFinder;
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Document
+     * @return \RZ\Roadiz\Core\Entities\Document
      */
     public function getDocument()
     {
@@ -52,7 +51,7 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Document $document
+     * @param \RZ\Roadiz\Core\Entities\Document $document
      */
     public function __construct(Document $document)
     {
@@ -61,7 +60,7 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * @return Symfony\Component\Translation\Translator.
+     * @return \Symfony\Component\Translation\Translator.
      */
     public function getTranslator()
     {
@@ -200,10 +199,10 @@ class DocumentViewer implements ViewableInterface
             return $this->getEmbedByArray($args);
 
         } elseif ($this->document->isSvg()) {
-            $asObject = true;
+            $asObject = false;
             if (isset($args['inline']) &&
-                true === (boolean) $args['inline']) {
-                $asObject = false;
+                false === (boolean) $args['inline']) {
+                $asObject = true;
             }
 
             $viewer = new SvgDocumentViewer(
@@ -402,16 +401,24 @@ class DocumentViewer implements ViewableInterface
                 'filename' => $this->document->getRelativeUrl(),
             ];
 
-            $url = Kernel::getService('urlGenerator')->generate(
-                'interventionRequestProcess',
-                $routeParams,
-                UrlGenerator::ABSOLUTE_PATH
-            );
-
+            /*
+             * Direct return generated URL or path
+             * no need to use Assets package because it would
+             * duplicate path name if your website is not hosted at your
+             * server root.
+             */
             if ($absolute === false) {
-                return Kernel::getService('assetPackages')->getUrl($url);
+                return Kernel::getService('urlGenerator')->generate(
+                    'interventionRequestProcess',
+                    $routeParams,
+                    UrlGenerator::ABSOLUTE_PATH
+                );
             } else {
-                return Kernel::getService('assetPackages')->getUrl($url, Packages::ABSOLUTE);
+                return Kernel::getService('urlGenerator')->generate(
+                    'interventionRequestProcess',
+                    $routeParams,
+                    UrlGenerator::ABSOLUTE_URL
+                );
             }
         }
     }

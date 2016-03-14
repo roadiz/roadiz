@@ -39,7 +39,7 @@ class BadFormRequestException extends \Exception
 
     /**
      * @param string $message
-     * @param integer $statusCode
+     * @param int $code
      * @param string $statusText
      * @param string $fieldErrored
      */

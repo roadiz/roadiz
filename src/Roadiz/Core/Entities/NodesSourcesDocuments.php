@@ -29,11 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
-use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
 
 /**
  * Describes a complexe ManyToMany relation
@@ -44,92 +42,39 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(columns={"position"})
  * })
  */
-class NodesSourcesDocuments extends AbstractPositioned implements PersistableInterface
+class NodesSourcesDocuments extends AbstractEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
-    private $id;
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    use PositionedTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="documentsByFields", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\NodesSources
+     * @var NodesSources
      */
-    private $nodeSource;
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\NodesSources
-     */
-    public function getNodeSource()
-    {
-        return $this->nodeSource;
-    }
-
-    public function setNodeSource($ns)
-    {
-        $this->nodeSource = $ns;
-    }
+    protected $nodeSource;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\Document
+     * @var Document
      */
-    private $document;
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    public function setDocument($doc)
-    {
-        $this->document = $doc;
-    }
-
+    protected $document;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var RZ\Roadiz\Core\Entities\NodeTypeField
+     * @var NodeTypeField
      */
-    private $field;
-
-    /**
-     * @return RZ\Roadiz\Core\Entities\NodeTypeField
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-
-    public function setField($f)
-    {
-        $this->field = $f;
-    }
-
+    protected $field;
 
     /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
      * @param mixed                                $nodeSource NodesSources and inherited types
-     * @param RZ\Roadiz\Core\Entities\Document      $document   Document to link
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField $field      NodeTypeField
+     * @param \RZ\Roadiz\Core\Entities\Document      $document   Document to link
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field      NodeTypeField
      */
-    public function __construct($nodeSource, Document $document, NodeTypeField $field)
+    public function __construct(NodesSources $nodeSource, Document $document, NodeTypeField $field)
     {
         $this->nodeSource = $nodeSource;
         $this->document = $document;
@@ -138,7 +83,81 @@ class NodesSourcesDocuments extends AbstractPositioned implements PersistableInt
 
     public function __clone()
     {
-        $this->id = 0;
-        $this->nodeSource = null;
+        if ($this->id) {
+            $this->id = null;
+            $this->nodeSource = null;
+        }
+    }
+
+    /**
+     * Gets the value of nodeSource.
+     *
+     * @return NodesSources
+     */
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
+
+    /**
+     * Sets the value of nodeSource.
+     *
+     * @param NodesSources $nodeSource the node source
+     *
+     * @return self
+     */
+    public function setNodeSource(NodesSources $nodeSource)
+    {
+        $this->nodeSource = $nodeSource;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of document.
+     *
+     * @return Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * Sets the value of document.
+     *
+     * @param Document $document the document
+     *
+     * @return self
+     */
+    public function setDocument(Document $document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of field.
+     *
+     * @return NodeTypeField
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * Sets the value of field.
+     *
+     * @param NodeTypeField $field the field
+     *
+     * @return self
+     */
+    public function setField(NodeTypeField $field)
+    {
+        $this->field = $field;
+
+        return $this;
     }
 }

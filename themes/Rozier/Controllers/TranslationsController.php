@@ -50,9 +50,10 @@ class TranslationsController extends RozierApp
 
     /**
      * List every translations.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -106,10 +107,11 @@ class TranslationsController extends RozierApp
 
     /**
      * Return an edition form for requested translation.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param integer                                  $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param integer $translationId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $translationId)
     {
@@ -158,9 +160,10 @@ class TranslationsController extends RozierApp
 
     /**
      * Return an creation form for requested translation.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -198,10 +201,11 @@ class TranslationsController extends RozierApp
 
     /**
      * Return an deletion form for requested translation.
-     * @param Symfony\Component\HttpFoundation\Request $request
+     *
+     * @param Request $request
      * @param int                                      $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $translationId)
     {
@@ -247,10 +251,10 @@ class TranslationsController extends RozierApp
     }
 
     /**
-     * @param array                              $data
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param array       $data
+     * @param Translation $translation
      *
-     * @return void
+     * @throws \Exception
      */
     private function deleteTranslation($data, Translation $translation)
     {
@@ -271,7 +275,7 @@ class TranslationsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Translation $translation
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -293,7 +297,7 @@ class TranslationsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Translation $translation
      *
      * @return \Symfony\Component\Form\Form
      */

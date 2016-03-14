@@ -219,7 +219,7 @@ class NodeType extends AbstractEntity
     private $fields;
 
     /**
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getFields()
     {
@@ -331,7 +331,7 @@ class NodeType extends AbstractEntity
     /**
      * Get every searchable node-type fields as a Doctrine ArrayCollection.
      *
-     * @return Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getSearchableFields()
     {
@@ -346,7 +346,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @return  RZ\Roadiz\Core\Handlers\NodeTypeHandler
+     * @return  \RZ\Roadiz\Core\Handlers\NodeTypeHandler
      */
     public function getHandler()
     {

@@ -44,10 +44,10 @@ class UsersRolesController extends RozierApp
     /**
      * Return an edition form for requested user.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
+     * @param Request $request
+     * @param int     $userId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editRolesAction(Request $request, $userId)
     {
@@ -91,11 +91,11 @@ class UsersRolesController extends RozierApp
     /**
      * Return a deletion form for requested role depending on the user.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $userId
-     * @param int                                      $roleId
+     * @param Request $request
+     * @param int     $userId
+     * @param int     $roleId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
@@ -139,10 +139,10 @@ class UsersRolesController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param array $data
+     * @param User  $user
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return Role
      */
     private function addUserRole($data, User $user)
     {
@@ -160,10 +160,10 @@ class UsersRolesController extends RozierApp
     }
 
     /**
-     * @param array                       $data
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param array $data
+     * @param User  $user
      *
-     * @return RZ\Roadiz\Core\Entities\Role
+     * @return Role
      */
     private function removeUserRole($data, User $user)
     {
@@ -183,7 +183,7 @@ class UsersRolesController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -213,8 +213,8 @@ class UsersRolesController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\User $user
-     * @param RZ\Roadiz\Core\Entities\Role $role
+     * @param User $user
+     * @param Role $role
      *
      * @return \Symfony\Component\Form\Form
      */
