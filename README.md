@@ -37,11 +37,12 @@ of PHP with a op-code cache.
 * ``php5-gd`` extension
 * ``php5-intl`` extension
 * ``php5-curl`` extension
-* PHP cache (*APC/XCache*) + Var cache (strongly recommended) or *Memcached*
+* PHP cache (*OPcache/APC/XCache*) + Var cache (strongly recommended) or *Memcached*. If you’re using *PHP7*, you can setup *OPcache* + *APCu* for user cache
 * Be sure that PHP has a read/write access to:
     * `/cache` folder
     * `/conf` folder
     * `/files` folder
+    * `/gen-src` folder
 
 ##### For Apache users
 
