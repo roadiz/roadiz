@@ -56,9 +56,9 @@ class NodeTreeType extends AbstractType
     /**
      * {@inheritdoc}
      *
-     * @param RZ\Roadiz\Core\Entities\NodesSources     $source
-     * @param RZ\Roadiz\Core\Entities\NodeTypeField    $field
-     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController
+     * @param NodesSources  $source
+     * @param NodeTypeField $field
+     * @param Controller    $refereeController
      */
     public function __construct(
         NodesSources $source,

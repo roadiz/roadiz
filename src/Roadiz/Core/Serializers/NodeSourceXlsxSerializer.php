@@ -60,7 +60,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param array|NodesSources $nodeSource
+     * @param NodesSources $nodeSource
      *
      * @return array
      */
@@ -93,6 +93,11 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
         return $data;
     }
 
+    /**
+     * @param NodesSources $nodeSource
+     *
+     * @return array
+     */
     protected function getSourceFields($nodeSource)
     {
         $fields = $this->getFields($nodeSource->getNode()->getNodeType());

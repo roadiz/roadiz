@@ -43,11 +43,11 @@ use Themes\Rozier\RozierApp;
 class DocumentTranslationsController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $documentId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $documentId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $documentId, $translationId = null)
     {
@@ -137,11 +137,11 @@ class DocumentTranslationsController extends RozierApp
     /**
      * Return an deletion form for requested document.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $documentId
-     * @param int                                      $translationId
+     * @param Request $request
+     * @param int     $documentId
+     * @param int     $translationId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $documentId, $translationId)
     {
@@ -192,7 +192,7 @@ class DocumentTranslationsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\DocumentTranslation $doc
+     * @param DocumentTranslation $doc
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -212,7 +212,7 @@ class DocumentTranslationsController extends RozierApp
         return $builder->getForm();
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\DocumentTranslation $document
+     * @param DocumentTranslation $document
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -242,8 +242,8 @@ class DocumentTranslationsController extends RozierApp
     }
 
     /**
-     * @param array                                      $data
-     * @param RZ\Roadiz\Core\Entities\DocumentTranslation $document
+     * @param array               $data
+     * @param DocumentTranslation $document
      */
     private function editDocument($data, DocumentTranslation $document)
     {

@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
  * {@inheritdoc}
@@ -39,8 +39,8 @@ use RZ\Roadiz\Core\Entities\Node;
 class NodesToNodesRepository extends EntityRepository
 {
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node  $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return integer
      */

@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * Themes describe a database entity to store
@@ -135,6 +135,7 @@ class Theme extends AbstractEntity
      */
     public function getInformations()
     {
+        /** @var string|\RZ\Roadiz\CMS\Controllers\AppController $class */
         $class = $this->getClassName();
 
         if (class_exists($class)) {

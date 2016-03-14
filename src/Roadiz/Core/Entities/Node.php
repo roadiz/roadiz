@@ -33,7 +33,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
-use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -759,7 +758,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @return NodeTypeHandler
+     * @return NodeHandler
      */
     public function getHandler()
     {

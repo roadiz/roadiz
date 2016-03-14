@@ -37,7 +37,6 @@ use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -51,7 +50,7 @@ class AjaxTagsController extends AbstractAjaxController
      * @param Request $request
      * @param int     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function editAction(Request $request, $tagId)
     {

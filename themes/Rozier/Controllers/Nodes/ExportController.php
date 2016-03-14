@@ -45,6 +45,7 @@ class ExportController extends RozierApp
      * Export all Node in a XLSX file (Excel).
      *
      * @param Request $request
+     * @param int     $translationId
      *
      * @return Response
      */

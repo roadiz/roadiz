@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with users entities.
@@ -40,7 +40,7 @@ class UserHandler
     private $user;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\User
+     * @return User
      */
     public function getUser()
     {
@@ -50,7 +50,7 @@ class UserHandler
     /**
      * Create a new handler with user to handle.
      *
-     * @param \RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      */
     public function __construct(User $user)
     {

@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use Psr\Log\LoggerInterface;
-
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 

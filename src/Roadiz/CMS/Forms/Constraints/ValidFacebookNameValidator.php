@@ -29,9 +29,9 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 
 class ValidFacebookNameValidator extends ConstraintValidator
 {

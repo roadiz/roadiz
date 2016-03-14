@@ -264,7 +264,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param  string $name
      * @param  string $key
      * @param  array $value
-     * @return QueryBuilder
+     *
+     * @return Query\Expr\Func
      */
     protected function directExprIn(QueryBuilder $qb, $name, $key, $value)
     {
@@ -506,7 +507,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param  array &$criteria
-     * @param  QueryBuilder &$qb
+     * @param  QueryBuilder $qb
      * @param  string $nodeAlias
      */
     protected function buildTagFiltering(&$criteria, &$qb, $nodeAlias = 'n')

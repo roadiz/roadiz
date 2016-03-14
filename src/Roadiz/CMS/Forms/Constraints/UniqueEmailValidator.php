@@ -55,7 +55,7 @@ class UniqueEmailValidator extends ConstraintValidator
 
     /**
      * @param $email
-     * @param $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */

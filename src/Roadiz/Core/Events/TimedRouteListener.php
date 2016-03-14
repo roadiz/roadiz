@@ -32,8 +32,8 @@ namespace RZ\Roadiz\Core\Events;
 use Psr\Log\LoggerInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 

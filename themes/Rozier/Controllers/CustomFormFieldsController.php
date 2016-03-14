@@ -30,7 +30,6 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -45,10 +44,10 @@ class CustomFormFieldsController extends RozierApp
     /**
      * List every node-type-fields.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int $customFormId
+     * @param Request $request
+     * @param int     $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request, $customFormId)
     {
@@ -72,10 +71,10 @@ class CustomFormFieldsController extends RozierApp
     /**
      * Return an edition form for requested node-type.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormFieldId
+     * @param Request $request
+     * @param int     $customFormFieldId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $customFormFieldId)
     {
@@ -122,10 +121,10 @@ class CustomFormFieldsController extends RozierApp
     /**
      * Return an creation form for requested node-type.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormId
+     * @param Request $request
+     * @param int     $customFormId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request, $customFormId)
     {
@@ -192,10 +191,10 @@ class CustomFormFieldsController extends RozierApp
     /**
      * Return an deletion form for requested node.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormFieldId
+     * @param Request $request
+     * @param int     $customFormFieldId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $customFormFieldId)
     {
@@ -245,7 +244,7 @@ class CustomFormFieldsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\CustomFormField $field
+     * @param CustomFormField $field
      *
      * @return \Symfony\Component\Form\Form
      */

@@ -31,9 +31,8 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,9 +47,9 @@ class SettingsUtilsController extends RozierApp
     /**
      * Export all settings in a Json file (.rzt).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAllAction(Request $request)
     {
@@ -92,9 +91,9 @@ class SettingsUtilsController extends RozierApp
     /**
      * Import a Json file (.rzt) containing setting and setting group.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importJsonFileAction(Request $request)
     {

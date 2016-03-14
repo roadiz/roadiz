@@ -29,10 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use Doctrine\ORM\Mapping as ORM;
-
-
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 
 /**

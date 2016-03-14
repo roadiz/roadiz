@@ -32,11 +32,11 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
+use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use \InlineStyle\InlineStyle;
 
 /**
  * UserViewer

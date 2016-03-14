@@ -98,8 +98,8 @@ class ThemeInstaller
         }
 
         $importFile = false;
-        foreach ($data["importFiles"] as $name => $filenames) {
-            foreach ($filenames as $filename) {
+        foreach ($data["importFiles"] as $name => $fileNames) {
+            if (!empty($fileNames)) {
                 $importFile = true;
                 break;
             }

@@ -46,12 +46,12 @@ use Themes\Rozier\RozierApp;
  */
 class SettingsController extends RozierApp
 {
-
     /**
      * List every settings.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -65,10 +65,10 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $settingGroupId
+     * @param Request $request
+     * @param int     $settingGroupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function byGroupAction(Request $request, $settingGroupId)
     {
@@ -157,10 +157,11 @@ class SettingsController extends RozierApp
 
     /**
      * Return an edition form for requested setting.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $settingId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $settingId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $settingId)
     {
@@ -202,9 +203,10 @@ class SettingsController extends RozierApp
 
     /**
      * Return an creation form for requested setting.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -245,10 +247,11 @@ class SettingsController extends RozierApp
 
     /**
      * Return an deletion form for requested setting.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $settingId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $settingId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $settingId)
     {
@@ -286,10 +289,11 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param array                          $data
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param array   $data
+     * @param Setting $setting
      *
-     * @return boolean
+     * @return bool
+     * @throws EntityAlreadyExistsException
      */
     private function editSetting($data, Setting $setting)
     {
@@ -363,10 +367,11 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param array                          $data
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param array   $data
+     * @param Setting $setting
      *
-     * @return boolean
+     * @return bool
+     * @throws EntityAlreadyExistsException
      */
     private function addSetting($data, Setting $setting)
     {
@@ -400,8 +405,8 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param array                          $data
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param array   $data
+     * @param Setting $setting
      *
      * @return boolean
      */
@@ -414,7 +419,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -459,7 +464,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -532,9 +537,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     *
-     * @param  Setting $setting [description]
-     * @return [type]           [description]
+     * @param Setting $setting
      */
     protected function getFormTypeFromSettingType(Setting $setting)
     {
@@ -552,7 +555,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -581,7 +584,7 @@ class SettingsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Setting $setting
+     * @param Setting $setting
      *
      * @return \Symfony\Component\Form\Form
      */

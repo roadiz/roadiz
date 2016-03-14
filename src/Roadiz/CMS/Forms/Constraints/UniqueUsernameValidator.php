@@ -55,7 +55,7 @@ class UniqueUsernameValidator extends ConstraintValidator
 
     /**
      * @param $username
-     * @param $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */

@@ -29,11 +29,10 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
-
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
  * {@inheritdoc}

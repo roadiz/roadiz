@@ -32,8 +32,9 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -159,9 +160,9 @@ class NodeRepository extends EntityRepository
     /**
      * Bind translation parameter to final query
      *
-     * @param array $criteria
-     * @param Query $finalQuery
-     * @param null $translation
+     * @param array            $criteria
+     * @param Query            $finalQuery
+     * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
         array &$criteria,
@@ -176,9 +177,9 @@ class NodeRepository extends EntityRepository
     /**
      * Create filters according to any translation criteria OR argument.
      *
-     * @param array        $criteria
-     * @param QueryBuilder $qb
-     * @param Translation  $translation
+     * @param array            $criteria
+     * @param QueryBuilder     $qb
+     * @param Translation|null $translation
      */
     protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
     {
@@ -209,11 +210,12 @@ class NodeRepository extends EntityRepository
             }
         }
     }
+
     /**
-     * @param array                &$criteria
-     * @param QueryBuilder         &$qb
-     * @param AuthorizationChecker|null &$authorizationChecker
-     * @param boolean $preview
+     * @param array                     $criteria
+     * @param QueryBuilder              $qb
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      */
     protected function filterByAuthorizationChecker(
         &$criteria,
@@ -244,13 +246,13 @@ class NodeRepository extends EntityRepository
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $authorizationChecker
-     * @param boolean                     $preview
+     * @param array                     $criteria
+     * @param array|null                $orderBy
+     * @param integer|null              $limit
+     * @param integer|null              $offset
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      *
      * @return QueryBuilder
      */
@@ -299,10 +301,11 @@ class NodeRepository extends EntityRepository
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array $criteria
-     * @param Translation $translation
-     * @param AuthorizationChecker $authorizationChecker
-     * @param boolean $preview
+     * @param array                     $criteria
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
+     *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
@@ -351,13 +354,13 @@ class NodeRepository extends EntityRepository
      * * `tags => [$tag1, $tag2]`
      * * `tags => [$tag1, $tag2], tagExclusive => true`
      *
-     * @param array                                    $criteria
-     * @param array|null                               $orderBy
-     * @param integer|null                             $limit
-     * @param integer|null                             $offset
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                $authorizationChecker
-     * @param boolean                                  $preview
+     * @param array                     $criteria
+     * @param array|null                $orderBy
+     * @param integer|null              $limit
+     * @param integer|null              $offset
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      *
      * @return ArrayCollection|Paginator
      */
@@ -404,11 +407,11 @@ class NodeRepository extends EntityRepository
     /**
      * Just like the findOneBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $authorizationChecker
-     * @param boolean                                  $preview
+     * @param array                     $criteria
+     * @param array|null                $orderBy
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -445,10 +448,10 @@ class NodeRepository extends EntityRepository
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $authorizationChecker
-     * @param boolean                                  $preview
+     * @param array                     $criteria
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
      *
      * @return int
      */
@@ -482,12 +485,12 @@ class NodeRepository extends EntityRepository
      * If no translation nor authorizationChecker is given, the vanilla `findBy`
      * method will be called instead.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
-     * @param integer|null                            $limit
-     * @param integer|null                            $offset
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
-     * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param array                     $criteria
+     * @param array|null                $orderBy
+     * @param integer|null              $limit
+     * @param integer|null              $offset
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -516,11 +519,11 @@ class NodeRepository extends EntityRepository
      * If no translation nor authorizationChecker is given, the vanilla `findOneBy`
      * method will be called instead.
      *
-     * @param array                                   $criteria
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param array                     $criteria
+     * @param Translation|null          $translation
      * @param AuthorizationChecker|null $authorizationChecker
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findOneByWithTranslation(
         array $criteria,
@@ -538,13 +541,13 @@ class NodeRepository extends EntityRepository
     /**
      * Find one Node with its Id and a given translation.
      *
-     * @param integer                            $nodeId
-     * @param \RZ\Roadiz\Core\Entities\Translation $translation
+     * @param integer                   $nodeId
+     * @param Translation               $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findWithTranslation(
         $nodeId,
@@ -577,12 +580,12 @@ class NodeRepository extends EntityRepository
     /**
      * Find one Node with its Id and the default translation.
      *
-     * @param integer              $nodeId
+     * @param integer                   $nodeId
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findWithDefaultTranslation(
         $nodeId,
@@ -614,13 +617,13 @@ class NodeRepository extends EntityRepository
     /**
      * Find one Node with its nodeName and a given translation.
      *
-     * @param string                             $nodeName
-     * @param \RZ\Roadiz\Core\Entities\Translation $translation
+     * @param string                    $nodeName
+     * @param Translation               $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findByNodeNameWithTranslation(
         $nodeName,
@@ -652,12 +655,12 @@ class NodeRepository extends EntityRepository
     /**
      * Find one Node with its nodeName and the default translation.
      *
-     * @param string               $nodeName
+     * @param string                    $nodeName
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findByNodeNameWithDefaultTranslation(
         $nodeName,
@@ -689,12 +692,12 @@ class NodeRepository extends EntityRepository
     /**
      * Find the Home node with a given translation.
      *
-     * @param \RZ\Roadiz\Core\Entities\Translation|null $translation
+     * @param Translation|null          $translation
      * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findHomeWithTranslation(
         Translation $translation = null,
@@ -733,7 +736,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findHomeWithDefaultTranslation(
         AuthorizationChecker $authorizationChecker = null,
@@ -761,11 +764,11 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node        $node
-     * @param \RZ\Roadiz\Core\Entities\Translation $translation
-     * @param AuthorizationChecker|null               $authorizationChecker When not null, only PUBLISHED node
+     * @param Node                      $node
+     * @param Translation               $translation
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -798,11 +801,11 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Translation $translation
-     * @param \RZ\Roadiz\Core\Entities\Node        $parent
-     * @param AuthorizationChecker|null               $authorizationChecker When not null, only PUBLISHED node
+     * @param Translation               $translation
+     * @param Node                      $parent
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -849,10 +852,10 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $parent
-     * @param AuthorizationChecker|null        $authorizationChecker When not null, only PUBLISHED node
+     * @param Node                      $parent
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
      * will be request or with a lower status
-     * @param boolean $preview
+     * @param boolean                   $preview
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -901,7 +904,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findOneWithUrlAlias(
         $urlAlias,
@@ -936,7 +939,7 @@ class NodeRepository extends EntityRepository
      * will be request or with a lower status
      * @param boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function findOneWithAliasAndAvailableTranslation(
         $urlAliasAlias,
@@ -973,9 +976,9 @@ class NodeRepository extends EntityRepository
      * A not null authorizationChecker will always filter
      * node.status to PUBLISHED or lower.
      *
-     * @param  string               &$txtQuery
+     * @param  string                    $txtQuery
      * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
+     * @param  boolean                   $preview
      *
      * @return string
      */
@@ -998,12 +1001,13 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
+     * Create a Criteria object from a search pattern and additional fields.
      *
-     * @param string $pattern Search pattern
-     * @param QueryBuilder $qb QueryBuilder to pass
-     * @param array $criteria Additionnal criteria
-     * @param string $alias SQL query table alias
+     * @param string       $pattern  Search pattern
+     * @param QueryBuilder $qb       QueryBuilder to pass
+     * @param array        $criteria Additional criteria
+     * @param string       $alias    SQL query table alias
+     *
      * @return QueryBuilder
      */
     protected function createSearchBy(
@@ -1058,6 +1062,7 @@ class NodeRepository extends EntityRepository
      * @param  array        $criteria
      * @param  QueryBuilder $qb
      * @param  string       $alias
+     *
      * @return QueryBuilder
      */
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
@@ -1096,8 +1101,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node          $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return array
      */
@@ -1118,8 +1123,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
-     * @param string                      $fieldName
+     * @param Node   $node
+     * @param string $fieldName
      *
      * @return array
      */
@@ -1143,7 +1148,7 @@ class NodeRepository extends EntityRepository
     /**
      * @param Node          $node
      * @param NodeTypeField $field
-     * @param Translation $translation
+     * @param Translation   $translation
      *
      * @return array
      */
@@ -1171,8 +1176,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node $node
-     * @param string $fieldName
+     * @param Node        $node
+     * @param string      $fieldName
      * @param Translation $translation
      *
      * @return array
@@ -1202,8 +1207,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node          $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return array
      */
@@ -1224,8 +1229,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
-     * @param string                      $fieldName
+     * @param Node   $node
+     * @param string $fieldName
      *
      * @return array
      */
@@ -1249,7 +1254,7 @@ class NodeRepository extends EntityRepository
     /**
      * @param Node          $node
      * @param NodeTypeField $field
-     * @param Translation $translation
+     * @param Translation   $translation
      *
      * @return array
      */
@@ -1277,8 +1282,8 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node $node
-     * @param string $fieldName
+     * @param Node        $node
+     * @param string      $fieldName
      * @param Translation $translation
      *
      * @return array
@@ -1308,7 +1313,7 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return array
      */
@@ -1336,7 +1341,7 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return array
      */

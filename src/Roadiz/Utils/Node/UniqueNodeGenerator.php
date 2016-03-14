@@ -29,11 +29,11 @@
  */
 namespace RZ\Roadiz\Utils\Node;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -82,6 +82,8 @@ class UniqueNodeGenerator
         }
 
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
+
+        /** @var \RZ\Roadiz\Core\Entities\NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         $this->entityManager->persist($source);
@@ -128,6 +130,8 @@ class UniqueNodeGenerator
             );
 
             if (null !== $nodeType) {
+                $translation = null;
+
                 if ($request->get('translationId') > 0) {
                     $translation = $this->entityManager->find(
                         'RZ\Roadiz\Core\Entities\Translation',

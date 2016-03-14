@@ -333,7 +333,7 @@ class ContactFormManager
 
     /**
      * Send contact form data by email.
-     * @return bool
+     * @return int
      * @throws \Exception
      */
     protected function send()

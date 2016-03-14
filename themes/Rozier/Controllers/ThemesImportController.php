@@ -41,9 +41,10 @@ class ThemesImportController extends ImportController
     /**
      * Import theme's Settings file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
@@ -55,9 +56,10 @@ class ThemesImportController extends ImportController
     /**
      * Import theme's Roles file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importRolesAction(Request $request, $themeId = null)
     {
@@ -69,9 +71,10 @@ class ThemesImportController extends ImportController
     /**
      * Import theme's Groups file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importGroupsAction(Request $request, $themeId = null)
     {
@@ -83,9 +86,10 @@ class ThemesImportController extends ImportController
     /**
      * Import NodeTypes file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
@@ -97,9 +101,10 @@ class ThemesImportController extends ImportController
     /**
      * Import Tags file.
      *
-     * @param int $themeId
+     * @param Request $request
+     * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importTagsAction(Request $request, $themeId = null)
     {
@@ -111,8 +116,10 @@ class ThemesImportController extends ImportController
     /**
      * Import Nodes file.
      *
+     * @param Request $request
+     * @param int     $themeId
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importNodesAction(Request $request, $themeId = null)
     {

@@ -46,9 +46,9 @@ class RolesUtilsController extends RozierApp
     /**
      * Export all Group datas and roles in a Json file (.rzt).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAllAction(Request $request)
     {
@@ -83,10 +83,10 @@ class RolesUtilsController extends RozierApp
     /**
      * Export a Role in a Json file (.rzt).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $roleId
+     * @param Request $request
+     * @param int     $roleId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAction(Request $request, $roleId)
     {
@@ -120,9 +120,9 @@ class RolesUtilsController extends RozierApp
     /**
      * Import a Json file (.rzt) containing Roles.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importJsonFileAction(Request $request)
     {

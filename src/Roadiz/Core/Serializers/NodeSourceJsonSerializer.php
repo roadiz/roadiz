@@ -43,7 +43,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeSource $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      *
      * @return array
      */
@@ -69,6 +69,11 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         return $data;
     }
 
+    /**
+     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     *
+     * @return array
+     */
     protected function getSourceFields($nodeSource)
     {
         $fields = $nodeSource->getNode()->getNodeType()->getFields();

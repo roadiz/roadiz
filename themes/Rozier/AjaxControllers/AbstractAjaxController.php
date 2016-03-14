@@ -30,10 +30,10 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Themes\Rozier\RozierApp;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Themes\Rozier\RozierApp;
 
 /**
  * Extends common back-office controller, but add a request validation
@@ -42,8 +42,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 abstract class AbstractAjaxController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param string                                   $method
+     * @param Request $request
+     * @param string  $method
      *
      * @return boolean | array  Return true if request is valid, else return error array
      */

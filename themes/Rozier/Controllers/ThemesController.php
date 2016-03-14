@@ -39,7 +39,6 @@ use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Type;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -49,9 +48,9 @@ class ThemesController extends RozierApp
 {
     /**
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateSchemaAction(Request $request)
     {
@@ -64,9 +63,9 @@ class ThemesController extends RozierApp
     }
     /**
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function clearDoctrineCacheAction(Request $request)
     {
@@ -84,10 +83,10 @@ class ThemesController extends RozierApp
     /**
      * Import theme screen.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $id
+     * @param Request $request
+     * @param int     $id
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importAction(Request $request, $id)
     {
@@ -104,9 +103,9 @@ class ThemesController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -129,9 +128,9 @@ class ThemesController extends RozierApp
     /**
      * Return a creation form for requested theme.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -163,9 +162,9 @@ class ThemesController extends RozierApp
     /**
      * Return a summary for requested theme.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function summaryAction(Request $request)
     {
@@ -179,9 +178,9 @@ class ThemesController extends RozierApp
     /**
      * Return a setting form for requested theme.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function settingAction(Request $request)
     {
@@ -212,10 +211,10 @@ class ThemesController extends RozierApp
     /**
      * Returns an edition form for the requested theme.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param integer                                  $themeId
+     * @param Request $request
+     * @param integer $themeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $themeId)
     {
@@ -257,10 +256,10 @@ class ThemesController extends RozierApp
     /**
      * Return a deletion form for requested theme.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param integer                                  $themeId
+     * @param Request $request
+     * @param integer $themeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $themeId)
     {
@@ -304,7 +303,7 @@ class ThemesController extends RozierApp
     /**
      * Build add theme form with classname constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -335,7 +334,7 @@ class ThemesController extends RozierApp
     /**
      * Build edit theme form with classname constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -347,8 +346,8 @@ class ThemesController extends RozierApp
     /**
      * Build setting theme form with classname constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
-     * @param string                        $classname
+     * @param Theme  $theme
+     * @param string $classname
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -437,7 +436,7 @@ class ThemesController extends RozierApp
     /**
      * Build delete theme form with classname constraint.
      *
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param Theme $theme
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -482,9 +481,11 @@ class ThemesController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request  $request
-     * @param array                                     $data
-     * @param string                                    $className
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws EntityAlreadyExistsException
      */
     private function addTheme(Request $request, array &$data)
     {
@@ -529,9 +530,9 @@ class ThemesController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request  $request
-     * @param array                                     $data
-     * @param RZ\Roadiz\Core\Entities\Theme             $theme
+     * @param Request $request
+     * @param array   $data
+     * @param Theme   $theme
      *
      * @return boolean
      */
@@ -551,8 +552,8 @@ class ThemesController extends RozierApp
     }
 
     /**
-     * @param array                        $data
-     * @param RZ\Roadiz\Core\Entities\Theme $theme
+     * @param array $data
+     * @param Theme $theme
      */
     protected function deleteTheme(array $data, Theme $theme)
     {

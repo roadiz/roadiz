@@ -30,16 +30,16 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Utils\ContactFormManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use RZ\Roadiz\Utils\ContactFormManager;
-use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 
 /**
  * Base controller.
@@ -214,7 +214,8 @@ abstract class Controller
      *
      * @param Request $request
      * @param string $_locale
-     * @return Response
+     *
+     * @return Translation
      * @throws NoTranslationAvailableException
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
@@ -371,7 +372,7 @@ abstract class Controller
      * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
      *
-     * @return FormBuilder
+     * @return \Symfony\Component\Form\FormBuilder
      */
     protected function createFormBuilder($data = null, array $options = array())
     {

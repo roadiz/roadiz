@@ -34,7 +34,6 @@ use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\Widgets\AbstractWidget;
 
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
@@ -53,10 +52,10 @@ class NodeTreeWidget extends AbstractWidget
     protected $canReorder = true;
 
     /**
-     * @param Request                            $request           Current kernel request
-     * @param RZ\Roadiz\CMS\Controllers\Controller $refereeController Calling controller
-     * @param RZ\Roadiz\Core\Entities\Node        $parent            Entry point of NodeTreeWidget, set null if it's root
-     * @param RZ\Roadiz\Core\Entities\Translation $translation       NodeTree translation
+     * @param Request     $request           Current kernel request
+     * @param Controller  $refereeController Calling controller
+     * @param Node        $parent            Entry point of NodeTreeWidget, set null if it's root
+     * @param Translation $translation       NodeTree translation
      */
     public function __construct(
         Request $request,
@@ -79,7 +78,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @return RZ\Roadiz\Core\Entities\Tag
+     * @return \RZ\Roadiz\Core\Entities\Tag
      */
     public function getTag()
     {
@@ -87,7 +86,9 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\Tag $tag
+     * @param \RZ\Roadiz\Core\Entities\Tag $tag
+     *
+     * @return $this
      */
     public function setTag($tag)
     {
@@ -106,6 +107,8 @@ class NodeTreeWidget extends AbstractWidget
 
     /**
      * @param boolean $newstackTree
+     *
+     * @return $this
      */
     public function setStackTree($newstackTree)
     {
@@ -168,7 +171,7 @@ class NodeTreeWidget extends AbstractWidget
         return $listManager;
     }
     /**
-     * @param RZ\Roadiz\Core\Entities\Node $parent
+     * @param Node $parent
      *
      * @return ArrayCollection
      */
@@ -177,7 +180,7 @@ class NodeTreeWidget extends AbstractWidget
         return $this->getListManager($parent)->getEntities();
     }
     /**
-     * @return RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     public function getRootNode()
     {
@@ -189,7 +192,7 @@ class NodeTreeWidget extends AbstractWidget
         return $this->filters;
     }
     /**
-     * @return RZ\Roadiz\Core\Entities\Translation
+     * @return Translation
      */
     public function getTranslation()
     {

@@ -29,9 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Pimple\Container;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
-use Pimple\Container;
 
 /**
  * Register configuration services for dependency injection container.

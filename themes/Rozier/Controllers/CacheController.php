@@ -47,9 +47,9 @@ use Themes\Rozier\RozierApp;
 class CacheController extends RozierApp
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteDoctrineCache(Request $request)
     {
@@ -103,7 +103,7 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @return Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteDoctrineForm()
     {
@@ -113,9 +113,9 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAssetsCache(Request $request)
     {
@@ -143,7 +143,7 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @return Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\Form
      */
     private function buildDeleteAssetsForm()
     {

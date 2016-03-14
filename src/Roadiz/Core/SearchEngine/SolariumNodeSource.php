@@ -29,13 +29,13 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Parsedown;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
-use \Parsedown;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.

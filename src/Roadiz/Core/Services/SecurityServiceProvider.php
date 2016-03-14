@@ -62,12 +62,12 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
-use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\RememberMeListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
+use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 

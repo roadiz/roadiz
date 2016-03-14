@@ -41,12 +41,12 @@ use Themes\Rozier\RozierApp;
  */
 class SettingGroupsController extends RozierApp
 {
-
     /**
      * List every settingGroups.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
@@ -69,10 +69,11 @@ class SettingGroupsController extends RozierApp
 
     /**
      * Return an edition form for requested settingGroup.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $settingGroupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $settingGroupId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $settingGroupId)
     {
@@ -117,9 +118,10 @@ class SettingGroupsController extends RozierApp
 
     /**
      * Return an creation form for requested settingGroup.
-     * @param Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -163,10 +165,11 @@ class SettingGroupsController extends RozierApp
 
     /**
      * Return an deletion form for requested settingGroup.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $settingGroupId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param int     $settingGroupId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $settingGroupId)
     {
@@ -207,10 +210,11 @@ class SettingGroupsController extends RozierApp
     }
 
     /**
-     * @param array                          $data
-     * @param RZ\Roadiz\Core\Entities\SettingGroup $settingGroup
+     * @param array        $data
+     * @param SettingGroup $settingGroup
      *
-     * @return boolean
+     * @return bool
+     * @throws EntityAlreadyExistsException
      */
     private function editSettingGroup($data, SettingGroup $settingGroup)
     {
@@ -246,10 +250,11 @@ class SettingGroupsController extends RozierApp
     }
 
     /**
-     * @param array                          $data
-     * @param RZ\Roadiz\Core\Entities\SettingGroup $settingGroup
+     * @param array        $data
+     * @param SettingGroup $settingGroup
      *
-     * @return boolean
+     * @return bool
+     * @throws EntityAlreadyExistsException
      */
     private function addSettingGroup($data, SettingGroup $settingGroup)
     {
@@ -281,8 +286,8 @@ class SettingGroupsController extends RozierApp
     }
 
     /**
-     * @param array                          $data
-     * @param RZ\Roadiz\Core\Entities\SettingGroup $settingGroup
+     * @param array        $data
+     * @param SettingGroup $settingGroup
      *
      * @return boolean
      */
@@ -295,7 +300,7 @@ class SettingGroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\SettingGroup $settingGroup
+     * @param SettingGroup $settingGroup
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -322,7 +327,7 @@ class SettingGroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\SettingGroup $settingGroup
+     * @param SettingGroup $settingGroup
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -364,7 +369,7 @@ class SettingGroupsController extends RozierApp
     }
 
     /**
-     * @param RZ\Roadiz\Core\Entities\SettingGroup $settingGroup
+     * @param SettingGroup $settingGroup
      *
      * @return \Symfony\Component\Form\Form
      */

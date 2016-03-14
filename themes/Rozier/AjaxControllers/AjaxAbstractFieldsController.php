@@ -33,7 +33,6 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -43,9 +42,10 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
     /**
      * Handle actions for any abstract fields.
      *
+     * @param Request       $request
      * @param AbstractField $field
      *
-     * @return Response|null
+     * @return null|Response
      */
     protected function handleFieldActions(Request $request, AbstractField $field = null)
     {
@@ -94,7 +94,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
 
     /**
      * @param array         $parameters
-     * @param CustomFormField $field
+     * @param AbstractField $field
      */
     protected function updatePosition($parameters, AbstractField $field = null)
     {

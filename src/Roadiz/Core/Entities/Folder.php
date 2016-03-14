@@ -30,9 +30,9 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Folders entity represent a directory on server with datetime and naming.

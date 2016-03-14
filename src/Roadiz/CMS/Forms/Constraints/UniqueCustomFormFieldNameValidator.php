@@ -61,7 +61,7 @@ class UniqueCustomFormFieldNameValidator extends ConstraintValidator
      * @param string $name
      *
      * @param $customForm
-     * @param $entityManager
+     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */

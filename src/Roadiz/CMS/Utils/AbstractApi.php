@@ -43,7 +43,7 @@ abstract class AbstractApi
     protected $container;
 
     /**
-     * @param \Pimple\Container $container
+     * @param Container $container
      */
     public function __construct(Container $container)
     {

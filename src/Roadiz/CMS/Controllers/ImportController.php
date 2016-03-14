@@ -40,7 +40,7 @@ class ImportController extends AppController
     /**
      * @param  string  $classImporter
      * @param  Request $request
-     * @param  integer  $themeId
+     * @param  integer $themeId
      *
      * @return Response
      */
@@ -78,9 +78,9 @@ class ImportController extends AppController
      * Import theme's Settings file.
      *
      * @param Request $request
-     * @param int $themeId
+     * @param int     $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
@@ -95,9 +95,9 @@ class ImportController extends AppController
      * Import theme's Roles file.
      *
      * @param Request $request
-     * @param int $themeId
+     * @param int     $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importRolesAction(Request $request, $themeId = null)
     {
@@ -112,9 +112,9 @@ class ImportController extends AppController
      * Import theme's Groups file.
      *
      * @param Request $request
-     * @param int $themeId
+     * @param int     $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importGroupsAction(Request $request, $themeId = null)
     {
@@ -129,9 +129,9 @@ class ImportController extends AppController
      * Import NodeTypes file.
      *
      * @param Request $request
-     * @param int $themeId
+     * @param int     $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
@@ -146,9 +146,9 @@ class ImportController extends AppController
      * Import Tags file.
      *
      * @param Request $request
-     * @param int $themeId
+     * @param int     $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importTagsAction(Request $request, $themeId = null)
     {
@@ -163,9 +163,9 @@ class ImportController extends AppController
      * Import Nodes file.
      *
      * @param Request $request
-     * @param null $themeId
+     * @param int     $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importNodesAction(Request $request, $themeId = null)
     {
@@ -183,7 +183,7 @@ class ImportController extends AppController
      * @param string $classImporter
      * @param int    $themeId
      *
-     * @return string
+     * @return Response
      */
     public function importContent($pathFile, $classImporter, $themeId)
     {

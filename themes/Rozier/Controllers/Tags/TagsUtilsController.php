@@ -32,11 +32,10 @@
 namespace Themes\Rozier\Controllers\Tags;
 
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
-use Themes\Rozier\RozierApp;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Themes\Rozier\RozierApp;
 
 /**
  * {@inheritdoc}
@@ -47,10 +46,10 @@ class TagsUtilsController extends RozierApp
     /**
      * Export a Tag in a Json file (.rzn).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
+     * @param Request $request
+     * @param int     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAction(Request $request, $tagId)
     {
@@ -85,10 +84,10 @@ class TagsUtilsController extends RozierApp
     /**
      * Export a Tag in a Json file (.rzn).
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $tagId
+     * @param Request $request
+     * @param int     $tagId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportAllAction(Request $request, $tagId)
     {

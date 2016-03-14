@@ -38,7 +38,6 @@ use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\Rozier\AjaxControllers\AbstractAjaxController;
 
 /**
  * {@inheritdoc}
@@ -86,7 +85,7 @@ class AjaxNodesController extends AbstractAjaxController
      * @param Request $request
      * @param int     $nodeId
      *
-     * @return Symfony\Component\HttpFoundation\Response JSON response
+     * @return Response JSON response
      */
     public function editAction(Request $request, $nodeId)
     {
@@ -235,7 +234,7 @@ class AjaxNodesController extends AbstractAjaxController
      *
      * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function statusesAction(Request $request)
     {
@@ -409,8 +408,6 @@ class AjaxNodesController extends AbstractAjaxController
         }
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
-
-        $responseArray = [];
 
         try {
             $generator = new UniqueNodeGenerator($this->getService('em'));

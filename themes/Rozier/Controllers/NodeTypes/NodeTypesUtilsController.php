@@ -45,10 +45,10 @@ class NodeTypesUtilsController extends RozierApp
     /**
      * Export a Json file containing NodeType datas and fields.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $nodeTypeId
+     * @param Request $request
+     * @param int     $nodeTypeId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
@@ -80,9 +80,9 @@ class NodeTypesUtilsController extends RozierApp
     /**
      * Import a Json file (.rzt) containing NodeType datas and fields.
      *
-     * @param Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importJsonFileAction(Request $request)
     {

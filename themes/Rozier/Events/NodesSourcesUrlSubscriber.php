@@ -32,8 +32,8 @@ namespace Themes\Rozier\Events;
 use Doctrine\Common\Cache\CacheProvider;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use RZ\Roadiz\Core\Events\TranslationEvents;
+use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

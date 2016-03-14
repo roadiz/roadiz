@@ -109,7 +109,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Delete solr documents for each Node sources.
      *
-     * @param  FilterNodesSourcesEvent $event
+     * @param  FilterNodeEvent $event
      */
     public function onSolariumNodeDelete(FilterNodeEvent $event)
     {
@@ -128,7 +128,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Update or create solr documents for each Node sources.
      *
-     * @param  FilterNodesSourcesEvent $event
+     * @param FilterNodeEvent $event
      */
     public function onSolariumNodeUpdate(FilterNodeEvent $event)
     {

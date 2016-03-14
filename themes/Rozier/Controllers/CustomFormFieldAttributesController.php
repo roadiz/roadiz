@@ -43,10 +43,10 @@ class CustomFormFieldAttributesController extends RozierApp
 {
     /**
      * List every node-types.
-     * @param Symfony\Component\HttpFoundation\Request $request
-     * @param int                                      $customFormAnswerId
+     * @param Request $request
+     * @param int     $customFormAnswerId
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request, $customFormAnswerId)
     {
