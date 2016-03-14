@@ -17,6 +17,7 @@
                 {% if document.image or document.svg or document.video %}
                 <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                 <div class="document-source"><code>{{ document|url(thumbnailFormat) }}</code></div>
+                <div class="document-source"><code>{{ document|url(thumbnailFormat|merge({absolute:true})) }}</code></div>
 
                 {% if document.mimeType == 'image/gif' %}
                 <hr />

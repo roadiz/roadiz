@@ -401,16 +401,24 @@ class DocumentViewer implements ViewableInterface
                 'filename' => $this->document->getRelativeUrl(),
             ];
 
-            $url = Kernel::getService('urlGenerator')->generate(
-                'interventionRequestProcess',
-                $routeParams,
-                UrlGenerator::ABSOLUTE_PATH
-            );
-
+            /*
+             * Direct return generated URL or path
+             * no need to use Assets package because it would
+             * duplicate path name if your website is not hosted at your
+             * server root.
+             */
             if ($absolute === false) {
-                return Kernel::getService('assetPackages')->getUrl($url);
+                return Kernel::getService('urlGenerator')->generate(
+                    'interventionRequestProcess',
+                    $routeParams,
+                    UrlGenerator::ABSOLUTE_PATH
+                );
             } else {
-                return Kernel::getService('assetPackages')->getUrl($url, Packages::ABSOLUTE);
+                return Kernel::getService('urlGenerator')->generate(
+                    'interventionRequestProcess',
+                    $routeParams,
+                    UrlGenerator::ABSOLUTE_URL
+                );
             }
         }
     }
