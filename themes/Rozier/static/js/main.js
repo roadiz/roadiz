@@ -153,12 +153,12 @@ Rozier.maintreeElementNameRightClick = function(e){
     var _this = this;
 
     var $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu');
-
-    if($contextualMenu[0].className.indexOf('uk-open') == -1) {
-        addClass($contextualMenu[0], 'uk-open');
+    if ($contextualMenu.length) {
+        if($contextualMenu[0].className.indexOf('uk-open') == -1) {
+            addClass($contextualMenu[0], 'uk-open');
+        }
+        else removeClass($contextualMenu[0], 'uk-open');
     }
-    else removeClass($contextualMenu[0], 'uk-open');
-
 
     return false;
 
