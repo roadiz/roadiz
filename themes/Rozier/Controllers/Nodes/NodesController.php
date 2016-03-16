@@ -252,6 +252,41 @@ class NodesController extends RozierApp
     }
 
     /**
+     * @param Request $request
+     * @param $nodeId
+     * @param $typeId
+     * @return Response
+     */
+    public function removeStackTypeAction(Request $request, $nodeId, $typeId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        /** @var Node $node */
+        $node = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Node', $nodeId);
+        $type = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\NodeType', $typeId);
+
+        if (null !== $node && null !== $type) {
+            $node->removeStackType($type);
+            $this->getService('em')->flush();
+
+            $msg = $this->getTranslator()->trans(
+                'stack_type.%type%.has_been_removed.%name%',
+                [
+                    '%name%' => $node->getNodeName(),
+                    '%type%' => $type->getDisplayName(),
+                ]
+            );
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->generateUrl('nodesEditPage', ['nodeId'=>$node->getId()]));
+        } else {
+            return $this->throw404();
+        }
+    }
+
+    /**
      * Handle node creation pages.
      *
      * @param Request $request

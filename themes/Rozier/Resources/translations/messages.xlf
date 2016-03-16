@@ -6331,6 +6331,10 @@
             <source>node.%name%.visibility_changed_to.%visible%</source>
             <target></target>
         </trans-unit>
+        <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
+            <source>stack_type.%type%.has_been_removed.%name%</source>
+            <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

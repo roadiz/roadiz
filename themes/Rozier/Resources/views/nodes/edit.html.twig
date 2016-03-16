@@ -73,7 +73,11 @@
                 {% for type in node.stackTypes %}
                 <tr>
                     <td>{{ type.displayName }}</td>
-                    <td><a class="uk-button"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</a></td>
+                    <td>
+                        <form action="{{ path('nodesRemoveStackTypePage', {nodeId:node.id, typeId:type.id}) }}" method="POST">
+                            <button type="submit" class="uk-button"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
