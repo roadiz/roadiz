@@ -56,7 +56,7 @@ class SolariumNodeSource
      * @param NodesSources $nodeSource
      * @param Client $client
      */
-    public function __construct($nodeSource, Client $client = null)
+    public function __construct(NodesSources $nodeSource, Client $client = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
@@ -237,7 +237,7 @@ class SolariumNodeSource
      */
     public function update(Query $update)
     {
-        $update->addDeleteById($this->document->id);
+        $this->clean($update);
         $this->setDocument($update->createDocument());
         $this->index();
         // add the document to the update query
