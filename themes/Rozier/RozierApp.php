@@ -355,7 +355,7 @@ class RozierApp extends BackendController
                         'icon' => 'uk-icon-rz-newsletters',
                         'roles' => ['ROLE_ACCESS_NEWSLETTERS'],
                     ],
-                    'manage.subscribers' => [
+                    /*'manage.subscribers' => [
                         'name' => 'manage.subscribers',
                         'path' => null,
                         'icon' => 'uk-icon-rz-subscribers',
@@ -366,7 +366,7 @@ class RozierApp extends BackendController
                         'path' => null,
                         'icon' => 'uk-icon-rz-comments',
                         'roles' => ['ROLE_ACCESS_COMMENTS'],
-                    ],
+                    ],*/
                 ],
             ];
 

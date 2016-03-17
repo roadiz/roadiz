@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -45,10 +46,9 @@ class AjaxNodeTreeController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request, "GET")) {
-            return new Response(
-                json_encode($notValid),
-                Response::HTTP_FORBIDDEN,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -126,10 +126,9 @@ class AjaxNodeTreeController extends AbstractAjaxController
             'nodeTree' => $this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation),
         ];
 
-        return new Response(
-            json_encode($responseArray),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
         );
     }
 }

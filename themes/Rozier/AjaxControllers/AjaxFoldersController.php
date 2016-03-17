@@ -32,6 +32,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -55,10 +56,9 @@ class AjaxFoldersController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request)) {
-            return new Response(
-                json_encode($notValid),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -75,7 +75,7 @@ class AjaxFoldersController extends AbstractAjaxController
              */
             switch ($request->get('_action')) {
                 case 'updatePosition':
-                    $responseArray = $this->updatePosition($request->request->all(), $folder);
+                    $this->updatePosition($request->request->all(), $folder);
                     break;
             }
 
@@ -89,10 +89,9 @@ class AjaxFoldersController extends AbstractAjaxController
                 ];
             }
 
-            return new Response(
-                json_encode($responseArray),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $responseArray,
+                Response::HTTP_OK
             );
         }
 
@@ -103,10 +102,9 @@ class AjaxFoldersController extends AbstractAjaxController
             'responseText' => $this->getTranslator()->trans('folder.does_not_exist')
         ];
 
-        return new Response(
-            json_encode($responseArray),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
         );
     }
 
@@ -116,10 +114,9 @@ class AjaxFoldersController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new Response(
-                json_encode($notValid),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -149,10 +146,9 @@ class AjaxFoldersController extends AbstractAjaxController
             }
         }
 
-        return new Response(
-            json_encode($responseArray),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
         );
     }
 
