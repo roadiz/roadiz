@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
 *
@@ -137,11 +138,7 @@ class UniqueNodeGenerator
                         'RZ\Roadiz\Core\Entities\Translation',
                         (int) $request->get('translationId')
                     );
-                } elseif (null !== $parent) {
-                    $translation = $parent->getNodeSources()->first()->getTranslation();
-                }
-
-                if (null === $translation) {
+                } else {
                     $translation = $this->entityManager
                                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                         ->findDefault();
@@ -155,10 +152,10 @@ class UniqueNodeGenerator
                     $pushToTop
                 );
             } else {
-                throw new \RuntimeException("Node-type does not exist.", 1);
+                throw new BadRequestHttpException("Node-type does not exist.");
             }
         } else {
-            throw new \RuntimeException("No node-type ID has been given.", 1);
+            throw new BadRequestHttpException("No node-type ID has been given.");
         }
     }
 }
