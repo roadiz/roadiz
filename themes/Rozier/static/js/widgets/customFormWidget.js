@@ -92,6 +92,7 @@ CustomFormWidget.prototype.onExplorerToggle = function(event) {
             url: Rozier.routes.customFormsAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {
@@ -136,6 +137,7 @@ CustomFormWidget.prototype.onExplorerSearch = function($originWidget, event) {
             url: Rozier.routes.customFormsAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {
@@ -178,6 +180,7 @@ CustomFormWidget.prototype.onExplorerNextPage = function(filters, $originWidget,
             url: Rozier.routes.customFormsAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {

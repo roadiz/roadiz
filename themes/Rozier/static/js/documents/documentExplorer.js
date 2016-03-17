@@ -85,6 +85,7 @@ DocumentExplorer.prototype.toggleFolders = function(event) {
             url: Rozier.routes.foldersAjaxExplorer,
             type: 'GET',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .done(function(data) {
@@ -240,6 +241,7 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {
@@ -285,6 +287,7 @@ DocumentExplorer.prototype.onExplorerNextPage = function(filters, event) {
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {

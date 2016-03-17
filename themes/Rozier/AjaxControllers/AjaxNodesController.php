@@ -58,8 +58,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (true !== $notValid = $this->validateRequest($request, 'GET')) {
             return new JsonResponse(
                 $notValid,
-                Response::HTTP_FORBIDDEN,
-                ['content-type' => 'application/javascript']
+                Response::HTTP_FORBIDDEN
             );
         }
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
@@ -73,8 +72,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         return new JsonResponse(
             $tags,
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+            Response::HTTP_OK
         );
     }
 
@@ -95,8 +93,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (true !== $notValid = $this->validateRequest($request)) {
             return new JsonResponse(
                 $notValid,
-                Response::HTTP_FORBIDDEN,
-                ['content-type' => 'application/javascript']
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -145,8 +142,7 @@ class AjaxNodesController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+                Response::HTTP_OK
             );
         }
 
@@ -160,8 +156,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         return new JsonResponse(
             $responseArray,
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+            Response::HTTP_OK
         );
     }
 
@@ -244,8 +239,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (true !== $notValid = $this->validateRequest($request)) {
             return new JsonResponse(
                 $notValid,
-                Response::HTTP_FORBIDDEN,
-                ['content-type' => 'application/javascript']
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -389,8 +383,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         return new JsonResponse(
             $responseArray,
-            $responseArray['statusCode'],
-            ['content-type' => 'application/javascript']
+            $responseArray['statusCode']
         );
     }
 
@@ -402,8 +395,7 @@ class AjaxNodesController extends AbstractAjaxController
         if (true !== $notValid = $this->validateRequest($request)) {
             return new JsonResponse(
                 $notValid,
-                Response::HTTP_FORBIDDEN,
-                ['content-type' => 'application/javascript']
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -442,8 +434,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         return new JsonResponse(
             $responseArray,
-            $responseArray['statusCode'],
-            ['content-type' => 'application/javascript']
+            $responseArray['statusCode']
         );
     }
 }

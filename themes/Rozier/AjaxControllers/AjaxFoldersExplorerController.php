@@ -52,7 +52,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
         if (true !== $notValid = $this->validateRequest($request, 'GET')) {
             return new JsonResponse(
                 $notValid,
-                Response::HTTP_OK
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -69,16 +69,16 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
                             ]
                         );
 
-                        $responseArray = [
-                        'status' => 'confirm',
-                        'statusCode' => 200,
-                        'folders' => $this->recurseFolders($folders),
-                        ];
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'folders' => $this->recurseFolders($folders),
+        ];
 
-                        return new JsonResponse(
-                            $responseArray,
-                            Response::HTTP_OK
-                        );
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
     }
 
     protected function recurseFolders($folders = null)

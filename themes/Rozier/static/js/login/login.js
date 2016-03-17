@@ -21,6 +21,7 @@
         $.ajax({
             url: splashRequest,
             type: 'GET',
+            cache: false,
             dataType: 'json'
         })
         .done(function(data) {

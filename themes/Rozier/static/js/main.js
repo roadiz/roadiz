@@ -153,12 +153,12 @@ Rozier.maintreeElementNameRightClick = function(e){
     var _this = this;
 
     var $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu');
-
-    if($contextualMenu[0].className.indexOf('uk-open') == -1) {
-        addClass($contextualMenu[0], 'uk-open');
+    if ($contextualMenu.length) {
+        if($contextualMenu[0].className.indexOf('uk-open') == -1) {
+            addClass($contextualMenu[0], 'uk-open');
+        }
+        else removeClass($contextualMenu[0], 'uk-open');
     }
-    else removeClass($contextualMenu[0], 'uk-open');
-
 
     return false;
 
@@ -195,6 +195,7 @@ Rozier.getMessages = function () {
         url: Rozier.routes.ajaxSessionMessages,
         type: 'GET',
         dataType: 'json',
+        cache: false,
         data: {
             "_action": 'messages',
             "_token": Rozier.ajaxToken
@@ -289,6 +290,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
         $.ajax({
             url: url,
             type: 'get',
+            cache: false,
             dataType: 'json',
             data: postData,
         })

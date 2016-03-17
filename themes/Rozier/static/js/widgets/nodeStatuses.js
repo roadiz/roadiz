@@ -72,6 +72,7 @@ NodeStatuses.prototype.onChange = function(event) {
                 url: Rozier.routes.nodesStatusesAjax,
                 type: 'post',
                 dataType: 'json',
+                cache: false,
                 data: postData
             })
             .done(function(data) {
