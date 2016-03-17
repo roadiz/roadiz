@@ -79,6 +79,7 @@ NodeExplorer.prototype.onExplorerSearch = function(event) {
             url: Rozier.routes.nodesAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {
@@ -126,6 +127,7 @@ NodeExplorer.prototype.onExplorerNextPage = function(filters, event) {
             url: Rozier.routes.nodesAjaxExplorer,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: ajaxData
         })
         .success(function(data) {

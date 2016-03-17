@@ -122,6 +122,7 @@ Lazyload.prototype.loadContent = function(state, location) {
         url: location.href,
         type: 'get',
         dataType: 'html',
+        cache: false,
         data: state.headerData
     })
     .done(function(data) {

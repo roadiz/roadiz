@@ -195,6 +195,7 @@ Rozier.getMessages = function () {
         url: Rozier.routes.ajaxSessionMessages,
         type: 'GET',
         dataType: 'json',
+        cache: false,
         data: {
             "_action": 'messages',
             "_token": Rozier.ajaxToken
@@ -289,6 +290,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
         $.ajax({
             url: url,
             type: 'get',
+            cache: false,
             dataType: 'json',
             data: postData,
         })

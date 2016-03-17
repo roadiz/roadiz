@@ -151,6 +151,7 @@ ChildrenNodesField.prototype.refreshNodeTree = function($nodeTree, rootNodeId, t
             url: url,
             type: 'get',
             dataType: 'json',
+            cache: false,
             data: postData,
         })
         .done(function(data) {
