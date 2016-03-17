@@ -49,7 +49,7 @@ class ParsedownExtension extends \Twig_Extension
      */
     public function markdown($text)
     {
-        return $this->parsedow->text($text);
+        return $this->parsedown->text($text);
     }
 
     /**
@@ -58,7 +58,7 @@ class ParsedownExtension extends \Twig_Extension
      */
     public function inlineMarkdown($text)
     {
-        return $this->parsedow->line($text);
+        return $this->parsedown->line($text);
     }
 
     /**
