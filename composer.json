@@ -77,7 +77,8 @@
         "monolog/monolog":"~1.17",
         "ambroisemaupate/intervention-request":"0.*",
         "intervention/image": "~2.3.2",
-        "symfony/asset": "2.8.*"
+        "symfony/asset": "2.8.*",
+        "erusev/parsedown-extra": "^0.7.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",

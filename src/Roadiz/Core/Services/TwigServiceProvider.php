@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
-use Parsedown;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -41,6 +40,7 @@ use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
+use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
@@ -101,13 +101,12 @@ class TwigServiceProvider implements ServiceProviderInterface
                 ))
             );
 
-            $twig->addFilter($c['twig.markdownExtension']);
-            $twig->addFilter($c['twig.inlineMarkdownExtension']);
             $twig->addFilter($c['twig.centralTruncateExtension']);
 
             /*
              * Extensions
              */
+            $twig->addExtension(new ParsedownExtension());
             $twig->addExtension(new HttpFoundationExtension($c['requestStack']));
             $twig->addExtension(new SecurityExtension($c['securityAuthorizationChecker']));
             $twig->addExtension(new TranslationExtension($c['translator']));
@@ -157,26 +156,6 @@ class TwigServiceProvider implements ServiceProviderInterface
         $container['twig.routingExtension'] = function ($c) {
 
             return new RoutingExtension($c['urlGenerator']);
-        };
-
-        /*
-         * Markdown extension
-         */
-        $container['twig.markdownExtension'] = function () {
-
-            return new \Twig_SimpleFilter('markdown', function ($object) {
-                return Parsedown::instance()->text($object);
-            }, ['is_safe' => ['html']]);
-        };
-
-        /*
-         * InlineMarkdown extension
-         */
-        $container['twig.inlineMarkdownExtension'] = function () {
-
-            return new \Twig_SimpleFilter('inlineMarkdown', function ($object) {
-                return Parsedown::instance()->line($object);
-            }, ['is_safe' => ['html']]);
         };
 
         /*
