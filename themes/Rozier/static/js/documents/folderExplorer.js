@@ -72,6 +72,7 @@ FolderExplorer.prototype.onFolderClick = function(event) {
         url: Rozier.routes.documentsAjaxExplorer,
         type: 'get',
         dataType: 'json',
+        cache: false,
         data: ajaxData
     })
     .success(function(data) {

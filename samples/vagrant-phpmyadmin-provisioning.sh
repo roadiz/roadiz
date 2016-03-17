@@ -50,5 +50,5 @@ EOF
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\n------------------- Your phpmyadmin is ready --------------------"
 echo -e "\n-----------------------------------------------------------------"
-echo -e "\n* Type http://localhost:8088/phpmyadmin for your MySQL db admin."
+echo -e "\n* Type http://localhost:8080/phpmyadmin for your MySQL db admin."
 echo -e "\n-----------------------------------------------------------------"

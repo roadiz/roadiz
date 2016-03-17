@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
@@ -41,6 +42,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -166,8 +168,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     protected function getHumanExceptionTitle(\Exception $e)
     {
-        if ($e instanceof NotFoundHttpException) {
+        if ($e instanceof ResourceNotFoundException ||
+            $e instanceof NotFoundHttpException) {
             return "Resource not found.";
+        }
+
+        if ($e instanceof ConnectionException) {
+            return "Your database is not reachable. Did you run install before using Roadiz?";
         }
 
         if ($e instanceof TableNotFoundException) {
@@ -187,6 +194,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         if ($exception instanceof HttpExceptionInterface) {
             return $exception->getStatusCode();
+        } elseif ($exception instanceof ResourceNotFoundException) {
+            return Response::HTTP_NOT_FOUND;
         } elseif ($exception instanceof MaintenanceModeException) {
             return Response::HTTP_SERVICE_UNAVAILABLE;
         } elseif ($exception instanceof AccessDeniedException ||

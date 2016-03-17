@@ -122,7 +122,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 }
 
                 return [
-                    '_controller' => $nodeRouteHelper->getController() . '::indexAction',
+                    '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
                     '_locale' => $translation->getLocale(), //pass request locale to init translator
                     'node' => $node,
                     'translation' => $translation,
@@ -171,7 +171,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         return false;
                     }
                     $match = [
-                        '_controller' => $nodeRouteHelper->getController() . '::indexAction',
+                        '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
                         'node' => $node,
                         'translation' => $translation,
                         '_route' => null,

@@ -42,7 +42,7 @@ AutoUpdate.prototype.loadStep = function(progress, url, description) {
         url: url,
         type: 'get',
         dataType: 'json',
-        //data: {param1: 'value1'},
+        cache: false,
     })
     .done(function(data) {
         //console.log(data);

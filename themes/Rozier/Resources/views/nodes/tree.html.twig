@@ -21,16 +21,16 @@
                data-children-parent-node="{{ node.id }}"
                {% if specificNodeTree.tag %}data-filter-tag="{{ specificNodeTree.tag.id }}"{% endif %}
                class="uk-button rz-no-ajax-link rz-add-child-node"
-               href="#"><i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': stackType.getDisplayName|lower}) }}</a>
+               href="#"><i class="uk-icon-rz-plus-simple"></i> {{ stackType.displayName }}</a>
             {% endfor %}
         </div>
         {% endif %}
     </header>
 
     {% include '@Rozier/nodes/filtersBar.html.twig' with {
-        filters:         specificNodeTree.filters,
+        filters: specificNodeTree.filters,
         deleteNodesForm: deleteNodesForm,
-        tagNodesForm:    tagNodesForm,
+        tagNodesForm: tagNodesForm,
         statusNodesForm: statusNodesForm
     } only %}
 

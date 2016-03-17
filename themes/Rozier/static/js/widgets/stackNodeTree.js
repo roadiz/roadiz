@@ -158,6 +158,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
         _this.currentRequest = $.ajax({
             url: url,
             type: 'get',
+            cache: false,
             dataType: 'json',
             data: postData,
         })

@@ -51,6 +51,10 @@ class NodeRouteHelper
      * @var bool
      */
     private $preview;
+    /**
+     * @var string
+     */
+    private $controller;
 
     /**
      * NodeRouteHelper constructor.
@@ -72,12 +76,21 @@ class NodeRouteHelper
      */
     public function getController()
     {
-        $refl = new \ReflectionClass($this->theme->getClassName());
-        $namespace = $refl->getNamespaceName() . '\\Controllers';
+        if (null === $this->controller) {
+            $refl = new \ReflectionClass($this->theme->getClassName());
+            $namespace = $refl->getNamespaceName() . '\\Controllers';
 
-        return $namespace . '\\' .
-        StringHandler::classify($this->node->getNodeType()->getName()) .
-        'Controller';
+            $this->controller = $namespace . '\\' .
+            StringHandler::classify($this->node->getNodeType()->getName()) .
+            'Controller';
+        }
+
+        return $this->controller;
+    }
+
+    public function getMethod()
+    {
+        return 'indexAction';
     }
 
     /**
@@ -87,6 +100,12 @@ class NodeRouteHelper
      */
     public function isViewable()
     {
+        if (!class_exists($this->getController())) {
+            return false;
+        }
+        if (!method_exists($this->getController(), $this->getMethod())) {
+            return false;
+        }
         /*
          * For archived and deleted nodes
          */

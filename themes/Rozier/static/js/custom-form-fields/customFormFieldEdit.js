@@ -60,6 +60,7 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
             $.ajax({
                 url: e.currentTarget.href,
                 type: 'get',
+                cache: false,
                 dataType: 'html'
             })
             .done(function(data) {

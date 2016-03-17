@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -58,10 +59,9 @@ class AjaxTagsController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request)) {
-            return new Response(
-                json_encode($notValid),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -90,10 +90,9 @@ class AjaxTagsController extends AbstractAjaxController
                 ];
             }
 
-            return new Response(
-                json_encode($responseArray),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $responseArray,
+                Response::HTTP_OK
             );
         }
 
@@ -103,10 +102,9 @@ class AjaxTagsController extends AbstractAjaxController
             'responseText' => 'Tag ' . $tagId . ' does not exists',
         ];
 
-        return new Response(
-            json_encode($responseArray),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
         );
     }
 
@@ -116,10 +114,9 @@ class AjaxTagsController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new Response(
-                json_encode($notValid),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -155,10 +152,9 @@ class AjaxTagsController extends AbstractAjaxController
             }
         }
 
-        return new Response(
-            json_encode($responseArray),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
         );
     }
 

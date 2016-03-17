@@ -31,6 +31,7 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Node;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,10 +51,9 @@ class AjaxNodesExplorerController extends AbstractAjaxController
          * Validate
          */
         if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new Response(
-                json_encode($notValid),
-                Response::HTTP_OK,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $notValid,
+                Response::HTTP_FORBIDDEN
             );
         }
 
@@ -108,10 +108,9 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'filters' => $listManager->getAssignation(),
         ];
 
-        return new Response(
-            json_encode($responseArray),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
         );
     }
 }

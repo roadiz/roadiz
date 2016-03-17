@@ -5525,6 +5525,10 @@
           <source>maps_style</source>
           <target xml:lang="en">Default Google Maps styles</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_default_location">
+        <source>maps_default_location</source>
+        <target xml:lang="en" state="translated">Maps default location</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="user.status" approved="yes">
           <source>user.status</source>
           <target xml:lang="en">Status</target>
@@ -6206,6 +6210,10 @@
       <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
             <source>node.%name%.visibility_changed_to.%visible%</source>
             <target xml:lang="en" state="translated">« %name% » node visibility has been changed to: %visible%.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
+            <source>stack_type.%type%.has_been_removed.%name%</source>
+            <target xml:lang="en" state="translated">Stack type "%type%" has been removed from "%name%" node.</target>
         </trans-unit>
     </body>
   </file>

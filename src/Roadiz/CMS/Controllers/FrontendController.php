@@ -256,29 +256,18 @@ class FrontendController extends AppController
                 $this->getTheme(),
                 $this->getService('kernel')->isPreview()
             );
+            $controllerPath = $nodeRouteHelper->getController();
+            $method = $nodeRouteHelper->getMethod();
 
             if (true !== $nodeRouteHelper->isViewable()) {
-                return $this->throw404();
-            }
-
-            /*
-             * Determine if we look for a node-type named controller or
-             * a node-named controller.
-             */
-            $controllerPath = $nodeRouteHelper->getController();
-
-            if (class_exists($controllerPath) &&
-                method_exists($controllerPath, 'indexAction')) {
-                $ctrl = new $controllerPath();
-                $this->getService('logger')->debug("Initialize " . $controllerPath . " controller…");
-            } else {
                 $msg = "No front-end controller found for '" .
                 $node->getNodeName() .
-                    "' node. You need to create a " . $controllerPath . ".";
+                "' node. You need to create a " . $controllerPath . ".";
 
-                $this->getService('logger')->debug($msg);
                 return $this->throw404($msg);
             }
+
+            $ctrl = new $controllerPath();
 
             /*
              * Inject current Kernel to the matched Controller
@@ -297,7 +286,7 @@ class FrontendController extends AppController
                 );
             }
             $this->getService('stopwatch')->stop('handleNodeController');
-            return $ctrl->indexAction(
+            return $ctrl->$method(
                 $request,
                 $node,
                 $translation
