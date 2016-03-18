@@ -1320,7 +1320,6 @@ class NodeRepository extends EntityRepository
     public function findAllOffspringIdByNode(Node $node)
     {
         $theOffprings = [];
-
         $in = [$node->getId()];
 
         do {

@@ -318,7 +318,13 @@ class NodeHandler
      */
     public function publishWithChildren()
     {
-        $this->node->setStatus(Node::PUBLISHED);
+        /*
+         * Publish only if node is Draft or pending
+         * NOT deleted nor archived.
+         */
+        if ($this->node->getStatus() < Node::PUBLISHED) {
+            $this->node->setStatus(Node::PUBLISHED);
+        }
 
         foreach ($this->node->getChildren() as $node) {
             $node->getHandler()->publishWithChildren();
