@@ -30,16 +30,8 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler;
-use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Http\Firewall\LogoutListener;
-use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
-use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
-use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
-use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+use RZ\Roadiz\Utils\Security\FirewallEntry;
 
 /**
  * Special controller app file for backend themes.
@@ -59,81 +51,28 @@ class BackendController extends AppController
     {
         parent::setupDependencyInjection($container);
 
-        /*
-         * Prepare app firewall
-         */
-        $requestMatcher = new RequestMatcher('^/rz-admin');
-        // allows configuration of different access control rules for specific parts of the website.
-        $container['accessMap']->add($requestMatcher, [
-            Role::ROLE_BACKEND_USER,
-            Role::ROLE_SUPERADMIN,
-        ]);
+        $firewallBasePattern = '^/rz-admin';
+        $firewallBasePath = '/rz-admin';
+        $firewallLogin = '/login';
+        $firewallLogout = $firewallBasePath . '/logout';
+        $firewallLoginCheck = $firewallBasePath . '/login_check';
+        $firewallBaseRole = Role::ROLE_BACKEND_USER;
 
-        /*
-         * Listener
-         */
-        $logoutListener = new LogoutListener(
-            $container['securityTokenStorage'],
-            $container['httpUtils'],
-            new DefaultLogoutSuccessHandler(
-                $container['httpUtils'],
-                '/login'
-            ),
-            [
-                'logout_path' => '/rz-admin/logout',
-            ]
+        $firewallEntry = new FirewallEntry(
+            $container,
+            $firewallBasePattern,
+            $firewallBasePath,
+            $firewallLogin,
+            $firewallLogout,
+            $firewallLoginCheck,
+            $firewallBaseRole
         );
-        //Symfony\Component\Security\Http\Logout\SessionLogoutHandler
-        $logoutListener->addHandler(new SessionLogoutHandler());
-        $logoutListener->addHandler($container['cookieClearingLogoutHandler']);
+        $firewallEntry->withSwitchUserListener();
 
-        $listeners = [
-            // manages the AuthorizationChecker persistence through a session
-            $container['contextListener'],
-            // logout users
-            $logoutListener,
-            $container['rememberMeListener'],
-            // authentication via a simple form composed of a username and a password
-            new UsernamePasswordFormAuthenticationListener(
-                $container['securityTokenStorage'],
-                $container['authentificationManager'],
-                new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
-                $container['httpUtils'],
-                Kernel::SECURITY_DOMAIN,
-                new AuthenticationSuccessHandler(
-                    $container['httpUtils'],
-                    $container['em'],
-                    $container['tokenBasedRememberMeServices'],
-                    [
-                        'always_use_default_target_path' => false,
-                        'default_target_path' => '/rz-admin',
-                        'login_path' => '/login',
-                        'target_path_parameter' => '_target_path',
-                        'use_referer' => true,
-                    ]
-                ),
-                new AuthenticationFailureHandler(
-                    $container['httpKernel'],
-                    $container['httpUtils'],
-                    [
-                        'failure_path' => '/login',
-                        'failure_forward' => false,
-                        'login_path' => '/login',
-                        'failure_path_parameter' => '_failure_path',
-                    ],
-                    $container['logger']
-                ),
-                [
-                    'check_path' => '/rz-admin/login_check',
-                ],
-                $container['logger'],
-                $container['dispatcher'],
-                null
-            ),
-            $container['securityAccessListener'],
-            $container["switchUser"],
-        ];
-
-        $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
+        $container['firewallMap']->add(
+            $firewallEntry->getRequestMatcher(),
+            $firewallEntry->getListeners(),
+            $container['firewallExceptionListener']
+        );
     }
 }
