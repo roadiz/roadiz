@@ -563,6 +563,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId)
             ->setParameter('translation', $translation);
 
@@ -601,6 +602,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId);
 
         if (null !== $authorizationChecker) {
@@ -638,6 +640,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeName', $nodeName)
             ->setParameter('translation', $translation);
 
@@ -676,6 +679,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeName', $nodeName);
 
         if (null !== $authorizationChecker) {
@@ -716,6 +720,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('translation', $translation);
 
         if (null !== $authorizationChecker) {
@@ -750,7 +755,7 @@ class NodeRepository extends EntityRepository
 
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
-        $query = $this->_em->createQuery($txtQuery);
+        $query = $this->_em->createQuery($txtQuery)->setMaxResults(1);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);

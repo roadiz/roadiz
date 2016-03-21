@@ -616,7 +616,8 @@ class NodesSourcesRepository extends EntityRepository
                     WHERE ns.node = :node
                     AND ns.translation = :translation')
                     ->setParameter('node', $nodeSource->getNode()->getParent())
-                    ->setParameter('translation', $nodeSource->getTranslation());
+                    ->setParameter('translation', $nodeSource->getTranslation())
+                    ->setMaxResults(1);
 
                 return $query->getSingleResult();
             } catch (NoResultException $e) {
