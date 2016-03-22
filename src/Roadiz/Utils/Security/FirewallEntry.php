@@ -12,7 +12,6 @@
 
 namespace RZ\Roadiz\Utils\Security;
 
-
 use Pimple\Container;
 use RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;

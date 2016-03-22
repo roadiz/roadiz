@@ -275,9 +275,7 @@ class NodesSourcesRepository extends EntityRepository
         $preview = false
     ) {
         $joinedNodeType = false;
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'ns')
-            ->add('from', $this->getEntityName() . ' ns');
+        $qb = $this->createQueryBuilder('ns');
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -332,9 +330,8 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select($qb->expr()->countDistinct('ns.id'))
-            ->add('from', $this->getEntityName() . ' ns');
+        $qb = $this->createQueryBuilder('ns');
+        $qb->select($qb->expr()->countDistinct('ns.id'));
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -583,7 +580,6 @@ class NodesSourcesRepository extends EntityRepository
     public function findByLatestUpdated($maxResult = 5)
     {
         $query = $this->createQueryBuilder('ns');
-        $query->select('ns');
         $query->addSelect('log');
         $query->innerJoin('ns.logs', 'log');
         $query->setMaxResults($maxResult);

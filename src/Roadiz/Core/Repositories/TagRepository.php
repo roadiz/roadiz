@@ -263,9 +263,8 @@ class TagRepository extends EntityRepository
         Translation $translation = null
     ) {
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'tg, tt')
-            ->add('from', $this->getEntityName() . ' tg');
+        $qb = $this->createQueryBuilder('tg');
+        $qb->add('select', 'tg, tt');
 
         $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
@@ -300,9 +299,8 @@ class TagRepository extends EntityRepository
         Translation $translation = null
     ) {
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select($qb->expr()->countDistinct('tg.id'))
-            ->add('from', $this->getEntityName() . ' tg');
+        $qb = $this->createQueryBuilder('tg');
+        $qb->select($qb->expr()->countDistinct('tg.id'));
 
         $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
@@ -628,9 +626,8 @@ class TagRepository extends EntityRepository
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->createQueryBuilder('t');
         $qb->add('select', 'count(t)')
-            ->add('from', $this->getEntityName() . ' t')
             ->innerJoin('t.translatedTags', 'obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);

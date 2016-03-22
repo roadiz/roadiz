@@ -266,9 +266,8 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'n, ns')
-            ->add('from', $this->getEntityName() . ' n');
+        $qb = $this->createQueryBuilder('n');
+        $qb->add('select', 'n, ns');
 
         $this->filterByTranslation($criteria, $qb, $translation);
 
@@ -315,9 +314,8 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select($qb->expr()->countDistinct('n.id'))
-            ->add('from', $this->getEntityName() . ' n');
+        $qb = $this->createQueryBuilder('n');
+        $qb->select($qb->expr()->countDistinct('n.id'));
 
         $this->filterByTranslation($criteria, $qb, $translation);
         /*
