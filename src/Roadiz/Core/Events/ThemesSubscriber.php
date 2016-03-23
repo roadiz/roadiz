@@ -74,25 +74,27 @@ class ThemesSubscriber implements EventSubscriberInterface
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        /*
-         * Register Themes dependency injection
-         */
-        if (!$this->kernel->isInstallMode()) {
-            $this->stopwatch->start('backendDependencyInjection');
-            // Register back-end security scheme
-            $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
-            if (null !== $beClass) {
-                $beClass::setupDependencyInjection($this->kernel->getContainer());
+        if ($event->isMasterRequest()) {
+            /*
+             * Register Themes dependency injection
+             */
+            if (!$this->kernel->isInstallMode()) {
+                $this->stopwatch->start('backendDependencyInjection');
+                // Register back-end security scheme
+                $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
+                if (null !== $beClass) {
+                    $beClass::setupDependencyInjection($this->kernel->getContainer());
+                }
+                $this->stopwatch->stop('backendDependencyInjection');
             }
-            $this->stopwatch->stop('backendDependencyInjection');
-        }
 
-        $this->stopwatch->start('themeDependencyInjection');
-        // Register front-end security scheme
-        foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
-            $feClass = $theme->getClassName();
-            $feClass::setupDependencyInjection($this->kernel->getContainer());
+            $this->stopwatch->start('themeDependencyInjection');
+            // Register front-end security scheme
+            foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
+                $feClass = $theme->getClassName();
+                $feClass::setupDependencyInjection($this->kernel->getContainer());
+            }
+            $this->stopwatch->stop('themeDependencyInjection');
         }
-        $this->stopwatch->stop('themeDependencyInjection');
     }
 }
