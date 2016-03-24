@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -105,6 +106,10 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     {
         $nodetype = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                          ->findOneByName($data["node_type"]);
+
+        if (null === $nodetype) {
+            throw new EntityNotFoundException('NodeType "' . $data["node_type"] . '" is not found on your website. Please import it before.');
+        }
 
         $node = new Node($nodetype);
         $node->setNodeName($data['node_name']);
