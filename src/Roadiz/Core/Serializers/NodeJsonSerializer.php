@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 /**
  * Json Serialization handler for Node.
@@ -103,8 +104,22 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
+     * @return bool
+     */
+    protected function hasHome()
+    {
+        if(null !== $this->em->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findHomeWithDefaultTranslation()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param $data
      * @return Node
+     * @throws EntityAlreadyExistsException
      * @throws EntityNotFoundException
      */
     protected function makeNodeRec($data)
@@ -112,8 +127,17 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $nodetype = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                          ->findOneByName($data["node_type"]);
 
+        /*
+         * Check if node-type exists before importing nodes
+         */
         if (null === $nodetype) {
             throw new EntityNotFoundException('NodeType "' . $data["node_type"] . '" is not found on your website. Please import it before.');
+        }
+        /*
+         * Check if home already exists
+         */
+        if ($data['home'] === true && $this->hasHome()) {
+            throw new EntityAlreadyExistsException('Node "' . $data["node_name"] . '" cannot be imported, your website already defines a home node.');
         }
 
         $node = new Node($nodetype);
