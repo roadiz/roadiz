@@ -102,6 +102,11 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         return $array;
     }
 
+    /**
+     * @param $data
+     * @return Node
+     * @throws EntityNotFoundException
+     */
     protected function makeNodeRec($data)
     {
         $nodetype = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
@@ -170,6 +175,11 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             foreach ($data["tags"] as $tag) {
                 $tmp = $this->em->getRepository('RZ\Roadiz\Core\Entities\Tag')
                             ->findOneBy(["tagName" => $tag]);
+
+                if (null === $tmp) {
+                    throw new EntityNotFoundException('Tag "' . $tag . '" is not found on your website. Please import it before.');
+                }
+
                 $node->getTags()->add($tmp);
             }
         }
