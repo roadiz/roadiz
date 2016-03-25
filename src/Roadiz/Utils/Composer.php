@@ -40,6 +40,7 @@ class Composer
     {
         static::copyDefaultConfiguration();
         static::copyDevEnvironment();
+        static::copyClearCacheEntryPoint();
     }
 
     public static function postInstall()
@@ -47,6 +48,7 @@ class Composer
         static::copyDefaultConfiguration();
         static::copyInstallEnvironment();
         static::copyDevEnvironment();
+        static::copyClearCacheEntryPoint();
     }
 
     public static function copyDefaultConfiguration()
@@ -82,6 +84,18 @@ class Composer
         if (!$fs->exists($devFile) &&
             $fs->exists($devFileSrc)) {
             $fs->copy($devFileSrc, $devFile);
+        }
+    }
+
+    public static function copyClearCacheEntryPoint()
+    {
+        $fs = new Filesystem();
+        $clearCacheFile = 'clear_cache.php';
+        $clearCacheFileSrc = 'samples/clear_cache.php.sample';
+
+        if (!$fs->exists($clearCacheFile) &&
+            $fs->exists($clearCacheFileSrc)) {
+            $fs->copy($clearCacheFileSrc, $clearCacheFile);
         }
     }
 }

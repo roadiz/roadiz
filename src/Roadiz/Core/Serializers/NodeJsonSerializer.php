@@ -108,7 +108,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     protected function hasHome()
     {
-        if(null !== $this->em->getRepository('RZ\Roadiz\Core\Entities\Node')
+        if (null !== $this->em->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findHomeWithDefaultTranslation()) {
             return true;
         }

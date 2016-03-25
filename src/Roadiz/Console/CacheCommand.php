@@ -37,6 +37,7 @@ use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\XCacheClearer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -123,6 +124,7 @@ class CacheCommand extends Command
             $translationsClearer,
             $nodeSourcesUrlsClearer,
             new OPCacheClearer(),
+            new XCacheClearer(),
         ];
 
         $text .= 'Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment.' . PHP_EOL . PHP_EOL;

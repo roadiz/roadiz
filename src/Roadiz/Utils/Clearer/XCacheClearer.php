@@ -1,7 +1,5 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -24,42 +22,35 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file index.php
+ * @file XCacheClearer.php
  * @author Ambroise Maupate
  */
+namespace RZ\Roadiz\Utils\Clearer;
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\HttpFoundation\Request;
+class XCacheClearer implements ClearerInterface
+{
+    protected $output;
 
-if (version_compare(phpversion(), '5.4.3', '<')) {
-    echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 5.4.3';
-    exit(1);
+    public function clear()
+    {
+        if (function_exists('xcache_clear_cache') &&
+            defined('XC_TYPE_PHP') &&
+            true === xcache_clear_cache(XC_TYPE_PHP)) {
+            $this->output = 'PHP XCache OP cache has been reset.';
+        } else {
+            $this->output = 'PHP XCache is disabled.';
+        }
+
+        return false;
+    }
+
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    public function getCacheDir()
+    {
+        return '';
+    }
 }
-
-$allowedIp = [
-    //'10.0.2.2', // vagrant host
-    '127.0.0.1', 'fe80::1', '::1' // localhost
-];
-
-// This check prevents access to debug front controllers that are deployed by accident to production servers.
-// Feel free to remove this, extend it, or make something more sophisticated.
-if (isset($_SERVER['HTTP_CLIENT_IP'])
-    || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
-    || !(in_array(@$_SERVER['REMOTE_ADDR'], $allowedIp) || php_sapi_name() === 'cli-server')
-) {
-    header('HTTP/1.0 403 Forbidden');
-    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
-}
-
-define('ROADIZ_ROOT', dirname(__FILE__));
-// Include Composer Autoload (relative to project root).
-require("vendor/autoload.php");
-
-
-$kernel = Kernel::getInstance('dev', true);
-$request = Request::createFromGlobals();
-
-$response = $kernel->handle($request);
-$response->send();
-$kernel->terminate($request, $response);
