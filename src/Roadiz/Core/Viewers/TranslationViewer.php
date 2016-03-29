@@ -144,7 +144,15 @@ class TranslationViewer implements ViewableInterface
                  */
                 if (true === $forceLocale ||
                     !$translation->isDefaultTranslation()) {
-                    $name = $attr["_route"] . "Locale";
+
+                    $name = $attr["_route"];
+                    /*
+                     * Search for a Locale suffixed route
+                     */
+                    if (null !== Kernel::getService('router')->getRouteCollection()->get($attr["_route"] . "Locale")) {
+                        $name = $attr["_route"] . "Locale";
+                    }
+
                     $attr["_route_params"]["_locale"] = $translation->getLocale();
                 } else {
                     $name = $attr["_route"];
@@ -152,6 +160,7 @@ class TranslationViewer implements ViewableInterface
                         unset($attr["_route_params"]["_locale"]);
                     }
                 }
+
                 $url = Kernel::getService("urlGenerator")->generate(
                     $name,
                     array_merge($attr["_route_params"], $query),
