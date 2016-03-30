@@ -155,6 +155,10 @@ abstract class AbstractField extends AbstractEntity
      * Textarea to write CSS syntaxed code
      */
     const CSS_T = 24;
+    /**
+     * Textarea to write CSS syntaxed code
+     */
+    const COUNTRY_T = 25;
 
     /**
      * Associates abstract field type to a readable string.
@@ -184,6 +188,7 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::MULTI_GEOTAG_T => 'multiple.geographic.coordinates.type',
         AbstractField::JSON_T => 'json.type',
         AbstractField::CSS_T => 'css.type',
+        AbstractField::COUNTRY_T => 'country.type',
     ];
     /**
      * Associates abstract field type to a Doctrine type.
@@ -212,6 +217,7 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::MULTI_GEOTAG_T => 'text',
         AbstractField::JSON_T => 'text',
         AbstractField::CSS_T => 'text',
+        AbstractField::COUNTRY_T => 'string',
     ];
     /**
      * Associates abstract field type to a Symfony Form type.
@@ -240,6 +246,7 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::CUSTOM_FORMS_T => 'custom_forms',
         AbstractField::JSON_T => 'json_text',
         AbstractField::CSS_T => 'css_text',
+        AbstractField::COUNTRY_T => 'country',
     ];
 
     /**
