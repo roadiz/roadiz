@@ -120,7 +120,7 @@ class FirewallEntry
                 'default_target_path' => $this->firewallBasePath,
                 'login_path' => $this->firewallLogin,
                 'target_path_parameter' => '_target_path',
-                'use_referer' => true,
+                'use_referer' => false,
             ]
         );
         $this->authenticationFailureHandler = new $authenticationFailureHandlerClass(
