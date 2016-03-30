@@ -173,7 +173,7 @@ class TranslationViewer implements ViewableInterface
                     'name' => $name,
                     'url' => $url,
                     'locale' => $translation->getLocale(),
-                    'active' => ($this->translation == $translation) ? true : false,
+                    'active' => ($this->translation->getLocale() == $translation->getLocale()) ? true : false,
                     'translation' => $translation->getName(),
                 ];
             }
