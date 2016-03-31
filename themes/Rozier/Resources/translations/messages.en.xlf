@@ -4184,6 +4184,10 @@
         <source>children-nodes.type</source>
         <target xml:lang="en">Children nodes</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="country.type">
+        <source>country.type</source>
+        <target xml:lang="en" state="translated">Country (ISO 3166-1 alpha-2)</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445" approved="yes">
         <source>add.a.%nodeType%</source>
