@@ -90,8 +90,21 @@ class DocumentViewer implements ViewableInterface
                     $srcset[] = $this->getDocumentUrlByArray($set['format'], $absolute) . ' ' . $set['rule'];
                 }
             }
-
             return implode(', ', $srcset);
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @param  array  $args sizes
+     * @return string
+     */
+    protected function parseSizes(array $args = [])
+    {
+        if (isset($args['sizes']) && is_array($args['sizes'])) {
+            return implode(', ', $args['sizes']);
         }
 
         return false;
@@ -127,8 +140,13 @@ class DocumentViewer implements ViewableInterface
      * - inline : For SVG, display SVG code in Html instead of using <object>
      * - srcset : Array
      *     [
-     *         - format: Array
+     *         - format: Array (same options as image)
      *         - rule
+     *     ]
+     * - sizes : Array
+     *     [
+     *         - "size1"
+     *         - "size2"
      *     ]
      *
      * ## Audio / Video options
@@ -152,6 +170,7 @@ class DocumentViewer implements ViewableInterface
             'document' => $this->document,
             'url' => $this->getDocumentUrlByArray($args, $absolute),
             'srcset' => $this->parseSrcSet($args, $absolute),
+            'sizes' => $this->parseSizes($args),
         ];
 
         if (!empty($args['lazyload'])) {
