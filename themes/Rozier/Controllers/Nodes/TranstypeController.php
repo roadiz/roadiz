@@ -31,19 +31,29 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
 
 class TranstypeController extends RozierApp
 {
+    /**
+     * @param Request $request
+     * @param $nodeId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
+     */
     public function transtypeAction(Request $request, $nodeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var Node $node */
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->getService('em')->refresh($node);
@@ -52,6 +62,7 @@ class TranstypeController extends RozierApp
             return $this->throw404();
         }
 
+        /** @var Form $form */
         $form = $this->createForm(new TranstypeType(), null, [
             'em' => $this->getService('em'),
             'currentType' => $node->getNodeType(),
@@ -75,7 +86,10 @@ class TranstypeController extends RozierApp
 
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',
-                ['nodeId' => $node->getId(), 'translationId' => $node->getNodeSources()->first()->getTranslation()->getId()]
+                [
+                    'nodeId' => $node->getId(),
+                    'translationId' => $node->getNodeSources()->first()->getTranslation()->getId(),
+                ]
             ));
         }
 
@@ -87,6 +101,10 @@ class TranstypeController extends RozierApp
         return $this->render('nodes/transtype.html.twig', $this->assignation);
     }
 
+    /**
+     * @param Node $node
+     * @param NodeType $nodeType
+     */
     protected function doTranstype(Node $node, NodeType $nodeType)
     {
         /*
@@ -112,8 +130,19 @@ class TranstypeController extends RozierApp
             }
         }
 
+        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
+
+        /*
+         * Testing if new nodeSource class is available
+         * and cache have been cleared before actually performing
+         * transtype, not to get an orphan node.
+         */
+        $this->mockTranstype($nodeType);
+
+        /*
+         * Perform actual transtyping
+         */
         foreach ($node->getNodeSources() as $existingSource) {
-            $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
             $source = new $sourceClass($node, $existingSource->getTranslation());
             $source->setTitle($existingSource->getTitle());
             $nsDocuments = new ArrayCollection();
@@ -159,6 +188,41 @@ class TranstypeController extends RozierApp
         }
 
         $node->setNodeType($nodeType);
+        $this->getService('em')->flush();
+    }
+
+    /**
+     * @param NodeType $nodeType
+     */
+    protected function mockTranstype(NodeType $nodeType)
+    {
+        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
+
+        /*
+         * Testing if new nodeSource class is available
+         * and cache have been cleared before actually performing
+         * transtype, not to get an orphan node.
+         */
+        $node = new Node();
+        $node->setNodeName('testing_before_transtype');
+        $this->getService('em')->persist($node);
+
+        $translation = new Translation();
+        $translation->setAvailable(false);
+        $translation->setLocale('test');
+        $translation->setName('test');
+        $this->getService('em')->persist($translation);
+
+        /** @var NodesSources $testSource */
+        $testSource = new $sourceClass($node, $translation);
+        $testSource->setTitle('testing_before_transtype');
+        $this->getService('em')->persist($testSource);
+        $this->getService('em')->flush();
+
+        // then remove it if OK
+        $this->getService('em')->remove($testSource);
+        $this->getService('em')->remove($node);
+        $this->getService('em')->remove($translation);
         $this->getService('em')->flush();
     }
 }
