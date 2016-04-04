@@ -276,7 +276,6 @@ class AboutController extends RozierApp
             $zip->close();
 
             $request->getSession()->set('roadiz_update_folder', $dir);
-
         } else {
             throw new \Exception($this->getTranslator()->trans('cannot_update_roadiz.temp_archive_does_not_exist'), 1);
         }

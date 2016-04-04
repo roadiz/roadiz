@@ -119,7 +119,6 @@ class DatabaseController extends InstallApp
                         $this->assignation['error'] = true;
                         $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
                     }
-
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage();
@@ -162,7 +161,6 @@ class DatabaseController extends InstallApp
                 return $this->redirect($this->generateUrl(
                     'installDatabaseFixturesPage'
                 ));
-
             } catch (\PDOException $e) {
                 if (strstr($e->getMessage(), 'SQLSTATE[')) {
                     preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);

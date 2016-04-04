@@ -78,7 +78,6 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
                 ],
                 Response::HTTP_SERVICE_UNAVAILABLE
             );
-
         } else {
             $response = new RedirectResponse($request->getSchemeAndHttpHost());
             $response->setStatusCode(Response::HTTP_FORBIDDEN);

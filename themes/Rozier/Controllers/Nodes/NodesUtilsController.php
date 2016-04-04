@@ -158,7 +158,6 @@ class NodesUtilsController extends RozierApp
                         'nodesEditPage',
                         ["nodeId" => $newNode->getId()]
                     ));
-
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',

@@ -181,7 +181,6 @@ class NodeTypeFieldHandler
 
         return $this;
     }'.PHP_EOL;
-
         }
 
         return '';
@@ -205,7 +204,6 @@ class NodeTypeFieldHandler
     {
         return '.$assignation.';
     }'.PHP_EOL;
-
         } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
             return '
     /**

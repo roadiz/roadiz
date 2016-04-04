@@ -181,7 +181,6 @@ class SearchController extends RozierApp
 
             $this->assignation['filters'] = $listManager->getAssignation();
             $this->assignation['nodes'] = $listManager->getEntities();
-
         }
 
         $this->assignation['form'] = $form->createView();
@@ -463,7 +462,6 @@ class SearchController extends RozierApp
                     $option["expanded"] = true;
                 }
                 $option["choices"] = $choices;
-
             } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);

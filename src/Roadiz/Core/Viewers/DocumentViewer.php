@@ -216,7 +216,6 @@ class DocumentViewer implements ViewableInterface
             true === $args['embed'] &&
             $this->isEmbedPlatformSupported()) {
             return $this->getEmbedByArray($args);
-
         } elseif ($this->document->isSvg()) {
             $asObject = false;
             if (isset($args['inline']) &&

@@ -71,7 +71,6 @@ class SettingGroupRepository extends EntityRepository
             }
 
             return $ids;
-
         } catch (NoResultException $e) {
             return false;
         }

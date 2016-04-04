@@ -348,7 +348,6 @@ class DocumentsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     return $this->downloadDocuments($documents);
-
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('documents.cannot_download');
                     $this->publishErrorMessage($request, $msg);
@@ -407,7 +406,6 @@ class DocumentsController extends RozierApp
                     DocumentEvents::DOCUMENT_CREATED,
                     new FilterDocumentEvent($document)
                 );
-
             } catch (\Exception $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -446,7 +444,6 @@ class DocumentsController extends RozierApp
                 DocumentEvents::DOCUMENT_CREATED,
                 new FilterDocumentEvent($document)
             );
-
         } catch (\Exception $e) {
             $this->publishErrorMessage(
                 $request,
@@ -535,7 +532,6 @@ class DocumentsController extends RozierApp
                 } else {
                     return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
                 }
-
             } else {
                 $msg = $this->getTranslator()->trans('document.cannot_persist');
                 $this->publishErrorMessage($request, $msg);
@@ -881,7 +877,6 @@ class DocumentsController extends RozierApp
             unlink($tmpFileName);
 
             return $response;
-
         } else {
             return $this->throw404();
         }
@@ -927,11 +922,9 @@ class DocumentsController extends RozierApp
                 }
 
                 return $document;
-
             } else {
                 throw new \RuntimeException("embedId.does_not_exist", 1);
             }
-
         } else {
             throw new \RuntimeException("bad.request", 1);
         }

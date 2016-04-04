@@ -144,7 +144,6 @@ class SettingGroupsController extends RozierApp
                         ['%name%' => $settingGroup->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }

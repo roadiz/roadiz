@@ -79,7 +79,6 @@ class UsersPasswordCommand extends UsersCommand
                     $this->entityManager->flush();
                     $text = '<info>User password regenerated…</info>' . PHP_EOL;
                     $text .= 'Password: <info>' . $user->getPlainPassword() . '</info>' . PHP_EOL;
-
                 } else {
                     $text = '<info>[Cancelled]</info> User password was not changed.' . PHP_EOL;
                 }

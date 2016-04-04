@@ -158,7 +158,6 @@ class CustomFormsController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'customFormsHomePage'
                     ));
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                     return $this->redirect($this->generateUrl(

@@ -190,7 +190,6 @@ class DownscaleImageManager
                     $this->em->flush();
 
                     return $originalDocument;
-
                 } else {
                     return false;
                 }

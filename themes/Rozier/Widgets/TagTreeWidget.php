@@ -105,7 +105,6 @@ class TagTreeWidget extends AbstractWidget
                  ->findOneBy(['defaultTranslation' => true]);
         }
         if ($parent !== null) {
-
             $ordering = [
                 'position' => 'ASC',
             ];

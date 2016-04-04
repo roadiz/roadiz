@@ -77,7 +77,6 @@ class NewslettersUtilsController extends RozierApp
                                                     "translationId" => $translation->getId(),
                                                 ]
                                             ));
-
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',

@@ -59,7 +59,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
                 $this->feed = false;
                 return false;
             }
-
         } catch (ClientException $e) {
             $this->feed = false;
             return false;

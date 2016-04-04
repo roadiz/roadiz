@@ -121,7 +121,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             } else {
                 $res = $qb->expr()->in($prefix . $key, ':' . $baseKey);
             }
-
         } elseif (is_bool($value)) {
             $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif ('NOT NULL' == $value) {
@@ -323,7 +322,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             } else {
                 $finalQuery->setParameter($key, $value);
             }
-
         } elseif (is_bool($value)) {
             $finalQuery->setParameter($key, $value);
         } elseif ('NOT NULL' == $value) {

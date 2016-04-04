@@ -80,7 +80,6 @@ class DocumentsType extends AbstractType
                             ->addViolation();
                     }
                 }
-
             } else {
                 $document = $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
 

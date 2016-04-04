@@ -296,7 +296,6 @@ class NodesSourcesRepository extends EntityRepository
                     $simpleKey = str_replace('node.', '', $key);
 
                     $qb->addOrderBy('n.' . $simpleKey, $value);
-
                 } else {
                     $qb->addOrderBy('ns.' . $key, $value);
                 }

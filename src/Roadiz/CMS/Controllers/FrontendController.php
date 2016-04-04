@@ -250,7 +250,6 @@ class FrontendController extends AppController
         $this->getService('stopwatch')->start('handleNodeController');
 
         if ($node !== null) {
-
             $nodeRouteHelper = new NodeRouteHelper(
                 $node,
                 $this->getTheme(),

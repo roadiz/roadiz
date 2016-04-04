@@ -78,7 +78,6 @@ class NodesType extends AbstractType
                             ->addViolation();
                     }
                 }
-
             } else {
                 $node = $this->entityManager->find('RZ\Roadiz\Core\Entities\Node', (int) $object);
 

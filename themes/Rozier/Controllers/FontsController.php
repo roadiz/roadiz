@@ -97,7 +97,6 @@ class FontsController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('font.%name%.created', ['%name%' => $font->getName()]);
                 $this->publishConfirmMessage($request, $msg);
-
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
@@ -145,7 +144,6 @@ class FontsController extends RozierApp
                         ['%name%' => $font->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityRequiredException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
@@ -209,7 +207,6 @@ class FontsController extends RozierApp
                         ['%name%' => $font->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
