@@ -485,19 +485,19 @@ class SettingsController extends RozierApp
 
         $builder = $this->createFormBuilder($defaults)
                         ->add(
-                            'name',
-                            'text',
-                            [
-                                'label' => 'name',
-                                'constraints' => [new NotBlank()],
-                            ]
-                        )
-                        ->add(
                             'id',
                             'hidden',
                             [
                                 'data' => $setting->getId(),
                                 'required' => true,
+                            ]
+                        )
+                        ->add(
+                            'name',
+                            'text',
+                            [
+                                'label' => 'name',
+                                'constraints' => [new NotBlank()],
                             ]
                         )
                         ->add(

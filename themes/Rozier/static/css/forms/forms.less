@@ -93,15 +93,6 @@
         }
     }
 
-    .uk-form-row > div input[type=radio]{
-        margin-left:12px;
-
-        &:first-of-type{
-            margin-left:0;
-        }
-
-    }
-
     // File
     input[type=file]{
         font-size:12px;
@@ -117,15 +108,6 @@
         &:checked:before{
             color: darken(@contrast-color, 10%);
         }
-    }
-
-    .uk-form-row > div input[type=checkbox]{
-        margin-left:12px;
-
-        &:first-of-type{
-            margin-left:0;
-        }
-
     }
 
     textarea{
@@ -164,8 +146,9 @@
         }
 
         select{
+            width: 110%;
+            max-width: 110%;
 
-            width: 110%; max-width: 110%;
             height:36px;
             padding:8px 15px;
             background-color: transparent;
@@ -203,12 +186,10 @@
 
     .form-col-choice{
         min-width: 100px;
-        max-width: 600px;
     }
 
     .form-col-money {
         min-width: 100px;
-        max-width: 200px;
 
         input {
             max-width: 150px;
@@ -216,22 +197,23 @@
     }
 
     // Labels
-    .uk-form-row > .uk-form-label {
+    .uk-form-label {
         font-size: 12px;
         color: @grey-form-label;
+        font-weight: normal;
 
         &:before {
             content: "— ";
             color: @grey-form-before;
         }
-    }
 
-    .uk-form-row > div .uk-form-label{
-        display: inline-block;
-        font-size: 12px;
-        line-height: 12px;
-        font-weight: normal;
-        color: @grey-form-label;
+        &.required {
+            &:after {
+                content: "*";
+                color:#ADADAD;
+                padding: 0px 2px;
+            }
+        }
     }
 
     legend{
@@ -289,7 +271,7 @@
         margin-bottom: 12px;
 
         & > div {
-            margin-bottom: 20px;
+            //margin-bottom: 20px;
 
             & > input[type="text"],
             & > input[type="password"],
@@ -302,27 +284,13 @@
             &.documents-widget,
             &.children-nodes-widget,
             &.nodes-widget {
-                margin-top: 40px !important;
+                //margin-top: 40px !important;
             }
         }
     }
 
     .uk-margin-small-top {
         margin-top: 10px !important;
-    }
-
-    .uk-form-row{
-        position: relative;
-
-        &.required {
-            & > label {
-                &:after {
-                    content:" *";
-                    font-weight: bold;
-                    color: rgb(173, 0, 0);
-                }
-            }
-        }
     }
 
     &.uk-form-horizontal {
@@ -359,7 +327,47 @@
     .form-col-hidden .uk-form-label{
         display: none;
     }
+}
 
+.uk-form-row{
+    position: relative;
+
+    & + .uk-form-row {
+        margin-top: 1.5em;
+    }
+
+    &.required {
+        & > label {
+            &:after {
+                content:" *";
+                font-weight: bold;
+                color: rgb(173, 0, 0);
+            }
+        }
+    }
+
+    // Multi form row
+    & > div {
+        .uk-form-label {
+            line-height: 12px;
+            display: inline-block;
+            font-weight: normal;
+        }
+        input[type=checkbox]{
+            margin-left:12px;
+
+            &:first-of-type{
+                margin-left:0;
+            }
+        }
+        input[type=radio] {
+            margin-left:12px;
+
+            &:first-of-type{
+                margin-left:0;
+            }
+        }
+    }
 }
 
 .uk-form-translation-default{
