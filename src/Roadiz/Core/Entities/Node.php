@@ -309,6 +309,25 @@ class Node extends AbstractDateTimedPositioned
     protected $hideChildren = false;
 
     /**
+     * @return mixed
+     */
+    public function getHideChildren()
+    {
+        return $this->hideChildren;
+    }
+
+    /**
+     * @param mixed $hideChildren
+     * @return Node
+     */
+    public function setHideChildren($hideChildren)
+    {
+        $this->hideChildren = (boolean) $hideChildren;
+        return $this;
+    }
+
+
+    /**
      * @return boolean
      */
     public function isHidingChildren()

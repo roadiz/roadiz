@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -160,7 +161,7 @@ class NodesController extends RozierApp
             if (null !== $translationForm) {
                 $translationForm->handleRequest($request);
 
-                if ($translationForm->isValid()) {
+                if ($translationForm->isSubmitted() && $translationForm->isValid()) {
                     try {
                         $this->translateNode($translationForm->getData(), $node);
                         $msg = $this->getTranslator()->trans('node.%name%.translated', [
@@ -186,7 +187,7 @@ class NodesController extends RozierApp
             if (null !== $stackTypesForm) {
                 $stackTypesForm->handleRequest($request);
 
-                if ($stackTypesForm->isValid()) {
+                if ($stackTypesForm->isSubmitted() && $stackTypesForm->isValid()) {
                     try {
                         $type = $this->addStackType($stackTypesForm->getData(), $node);
                         $msg = $this->getTranslator()->trans(
@@ -219,7 +220,7 @@ class NodesController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->getService('em')->flush();
                     /*
@@ -310,20 +311,18 @@ class NodesController extends RozierApp
 
         if ($type !== null &&
             $translation !== null) {
-            $form = $this->getService('formFactory')
-                ->createBuilder()
-                ->add('nodeName', 'text', [
-                    'label' => $this->getTranslator()->trans('nodeName'),
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])
-                ->getForm();
+            $node = new Node($type);
+
+            /** @var Form $form */
+            $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [
+                'nodeName' => '',
+                'em' => $this->getService('em'),
+            ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $node = $this->createNode($form->getData(), $type, $translation);
+                    $node = $this->createNode($form->get('title')->getData(), $type, $translation, $node);
                     /*
                      * Dispatch event
                      */
@@ -394,12 +393,19 @@ class NodesController extends RozierApp
         }
 
         if (null !== $translation) {
-            $form = $this->buildAddChildForm($parentNode, $translation);
+            $node = new Node();
+            $node->setParent($parentNode);
+
+            /** @var Form $form */
+            $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [
+                'nodeName' => '',
+                'em' => $this->getService('em'),
+            ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $node = $this->createChildNode($form->getData(), $parentNode, $translation);
+                    $node = $this->createNode($form->get('title')->getData(), $translation, $node);
                     /*
                      * Dispatch event
                      */
@@ -460,7 +466,8 @@ class NodesController extends RozierApp
             $form = $this->buildDeleteForm($node);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
                 /*
                  * Dispatch event
@@ -511,7 +518,7 @@ class NodesController extends RozierApp
         $form = $this->buildEmptyTrashForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $chroot = $user->getChroot();
             $criteria = ['status' => Node::DELETED];
@@ -558,7 +565,8 @@ class NodesController extends RozierApp
             $form = $this->buildDeleteForm($node);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['nodeId'] == $node->getId()) {
                 /*
                  * Dispatch event
@@ -636,7 +644,7 @@ class NodesController extends RozierApp
                     ],
                 ])->getForm();
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $node->getHandler()->publishWithChildren();
                 $this->getService('em')->flush();
 
