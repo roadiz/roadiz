@@ -54,7 +54,7 @@
                 {% set thumbnail = source.documentsByFields.first.document %}
                 {% if thumbnail and (thumbnail.image or thumbnail.svg) and not thumbnail.private %}
                 <figure class="nodetree-element-img">
-                    {{ thumbnail|display({"width":60, "height":60, "fit":"60x60", "quality":80}) }}
+                    {{ thumbnail|display({"fit":"60x60", "quality":80}) }}
                 </figure>
                 {% endif %}
             {% endif %}
