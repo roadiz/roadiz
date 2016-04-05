@@ -136,7 +136,6 @@ class TranslationViewer implements ViewableInterface
                 if (!empty($query)) {
                     $url .= "?" . http_build_query($query);
                 }
-
             } elseif (!empty($attr["_route"])) {
                 /*
                  * Use suffixed route if locales are forced or
@@ -144,7 +143,6 @@ class TranslationViewer implements ViewableInterface
                  */
                 if (true === $forceLocale ||
                     !$translation->isDefaultTranslation()) {
-
                     $name = $attr["_route"];
                     /*
                      * Search for a Locale suffixed route

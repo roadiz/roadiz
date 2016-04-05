@@ -127,7 +127,6 @@ class NodeTypesUtilsController extends RozierApp
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.created');
                         $this->publishConfirmMessage($request, $msg);
-
                     } else {
                         /*
                          * Node-type already exists.

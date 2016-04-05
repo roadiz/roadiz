@@ -287,7 +287,6 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
                     Kernel::getService('em')->persist($newField);
                 }
             }
-
         } else {
             throw new \RuntimeException("New node-type is null", 1);
         }

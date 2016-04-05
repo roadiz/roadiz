@@ -166,7 +166,6 @@ class RolesUtilsController extends RozierApp
                             'rolesImportPage'
                         ));
                     }
-
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);

@@ -197,7 +197,6 @@ class NodesController extends RozierApp
                             ]
                         );
                         $this->publishConfirmMessage($request, $msg);
-
                     } catch (EntityAlreadyExistsException $e) {
                         $this->publishErrorMessage($request, $e->getMessage());
                     }
@@ -609,7 +608,6 @@ class NodesController extends RozierApp
                 'nodesEditSourcePage',
                 ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
             ));
-
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
 
@@ -655,7 +653,6 @@ class NodesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('nodes/publishAll.html.twig', $this->assignation);
-
         } else {
             return $this->throw404();
         }

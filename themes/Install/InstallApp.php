@@ -203,7 +203,6 @@ class InstallApp extends AppController
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage();
                 }
-
             }
             $this->assignation['userForm'] = $userForm->createView();
         }
@@ -272,7 +271,6 @@ class InstallApp extends AppController
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
                 }
-
             }
             $this->assignation['doneForm'] = $doneForm->createView();
         }

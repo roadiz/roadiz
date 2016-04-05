@@ -164,7 +164,6 @@ class NodeTypesController extends RozierApp
                             '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                         ]
                     ));
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                     return $this->redirect($this->generateUrl(

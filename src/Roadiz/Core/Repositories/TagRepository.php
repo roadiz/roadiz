@@ -200,7 +200,6 @@ class TagRepository extends EntityRepository
             isset($criteria['translation.id'])) {
             $qb->innerJoin('tg.translatedTags', 'tt');
             $qb->innerJoin('tt.translation', 't');
-
         } else {
             if (null !== $translation) {
                 /*

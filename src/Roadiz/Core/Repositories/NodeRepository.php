@@ -189,7 +189,6 @@ class NodeRepository extends EntityRepository
             isset($criteria['translation.available'])) {
             $qb->innerJoin('n.nodeSources', 'ns');
             $qb->innerJoin('ns.translation', 't');
-
         } else {
             if (null !== $translation) {
                 /*

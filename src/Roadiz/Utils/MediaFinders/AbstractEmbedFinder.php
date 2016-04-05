@@ -322,7 +322,6 @@ abstract class AbstractEmbedFinder
                     } else {
                         return false;
                     }
-
                 } catch (RequestException $e) {
                     return false;
                 }

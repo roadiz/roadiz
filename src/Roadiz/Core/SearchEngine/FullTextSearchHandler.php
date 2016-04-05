@@ -117,7 +117,6 @@ class FullTextSearchHandler
             $query->setRows($rows);
 
             if (null !== $this->logger) {
-
                 $this->logger->debug('[Solr] Request node-sources search…', [
                     'query' => $queryTxt,
                     'filters' => $filterQueries,

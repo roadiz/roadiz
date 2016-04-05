@@ -88,7 +88,6 @@ class RolesController extends RozierApp
                     ['%name%' => $role->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
-
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
@@ -130,7 +129,6 @@ class RolesController extends RozierApp
                         ['%name%' => $role->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityRequiredException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {
@@ -177,7 +175,6 @@ class RolesController extends RozierApp
                         ['%name%' => $role->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {

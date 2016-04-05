@@ -251,7 +251,7 @@ When you import your existing database, before performing any database migration
 you **must** regenerate first all node-sources PHP classes.
 
 ```bash
-bin/roadiz core:sources -r
+bin/roadiz generate:nsentities
 ```
 
 This will parse every node-types from your existing database and recreate PHP classes in `gen-src/GeneratedNodeSources` folder.

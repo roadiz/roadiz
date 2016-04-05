@@ -223,7 +223,6 @@ class CustomFormController extends AppController
 
                 $fieldAttr->setValue($strDate);
                 $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
-
             } else if (is_array($data[$field->getName()])) {
                 $values = $data[$field->getName()];
 
@@ -233,7 +232,6 @@ class CustomFormController extends AppController
                 $displayValues = implode(', ', $values);
                 $fieldAttr->setValue($displayValues);
                 $fieldsData[] = ["name" => $field->getLabel(), "value" => $displayValues];
-
             } else {
                 $fieldAttr->setValue(strip_tags($data[$field->getName()]));
                 $fieldsData[] = ["name" => $field->getLabel(), "value" => $data[$field->getName()]];

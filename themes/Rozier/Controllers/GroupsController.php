@@ -88,7 +88,6 @@ class GroupsController extends RozierApp
                     ['%name%' => $group->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
-
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             } catch (\RuntimeException $e) {
@@ -129,7 +128,6 @@ class GroupsController extends RozierApp
                         ['%name%' => $group->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -140,7 +138,6 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/delete.html.twig', $this->assignation);
-
         } else {
             return $this->throw404();
         }
@@ -174,7 +171,6 @@ class GroupsController extends RozierApp
                         ['%name%' => $group->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {

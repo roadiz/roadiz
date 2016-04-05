@@ -165,7 +165,6 @@ class CustomFormFieldsController extends RozierApp
                             'customFormId' => $customFormId,
                         ]
                     ));
-
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
                     $request->getSession()->getFlashBag()->add('error', $msg);

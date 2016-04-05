@@ -121,7 +121,6 @@ class HistoryController extends RozierApp
             $this->assignation['user'] = $user;
 
             return $this->render('history/list.html.twig', $this->assignation);
-
         } else {
             return $this->throw404();
         }

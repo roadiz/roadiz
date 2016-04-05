@@ -97,7 +97,6 @@ class TranstypeType extends AbstractType
             }
 
             return $choices;
-
         } catch (\Doctrine\ORM\NoResultException $e) {
             return [];
         }

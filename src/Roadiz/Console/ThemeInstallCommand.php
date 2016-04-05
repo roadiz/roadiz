@@ -157,7 +157,6 @@ class ThemeInstallCommand extends Command
             $text .= PHP_EOL;
             $text .= 'You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.' . PHP_EOL;
             $text .= 'And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.' . PHP_EOL;
-
         } else {
             $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;
         }

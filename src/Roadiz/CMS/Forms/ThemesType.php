@@ -72,7 +72,6 @@ class ThemesType extends AbstractType
              * Bad Theme !
              */
             $choices[$classname] = $data['name'];
-
         }
         foreach ($themes as $theme) {
             if (array_key_exists($theme->getClassName(), $choices)) {

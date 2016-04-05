@@ -78,7 +78,6 @@ class CustomFormsNodesType extends AbstractType
                                 ->addViolation();
                     }
                 }
-
             } else {
                 $customForm = $this->entityManager->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $object);
                 // Vérifie si le nom est bidon

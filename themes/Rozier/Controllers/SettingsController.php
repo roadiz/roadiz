@@ -85,7 +85,6 @@ class SettingsController extends RozierApp
             }
 
             return $this->render('settings/list.html.twig', $this->assignation);
-
         } else {
             return $this->throw404();
         }
@@ -149,7 +148,6 @@ class SettingsController extends RozierApp
                 'form' => $form->createView(),
                 'document' => $document,
             ];
-
         }
 
         return null;
@@ -226,7 +224,6 @@ class SettingsController extends RozierApp
                     $this->addSetting($form->getData(), $setting);
                     $msg = $this->getTranslator()->trans('setting.%name%.created', ['%name%' => $setting->getName()]);
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -630,7 +627,7 @@ class SettingsController extends RozierApp
                         new Type('integer'),
                     ],
                 ];
-                    case NodeTypeField::DECIMAL_T:
+            case NodeTypeField::DECIMAL_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -638,7 +635,7 @@ class SettingsController extends RozierApp
                         new Type('double'),
                     ],
                 ];
-                    case NodeTypeField::COLOUR_T:
+            case NodeTypeField::COLOUR_T:
                 return [
                     'label' => $label,
                     'required' => false,
@@ -647,7 +644,7 @@ class SettingsController extends RozierApp
                     ],
                 ];
 
-                    default:
+            default:
                 return [
                     'label' => $label,
                     'required' => false,

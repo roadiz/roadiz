@@ -98,7 +98,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     if (true === (boolean) $request->get('stackTree')) {
                         $this->assignation['nodeTree']->setStackTree(true);
                     }
-
                 } else {
                     throw new \RuntimeException("No root node specified", 1);
                 }

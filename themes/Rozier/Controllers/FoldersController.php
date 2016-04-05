@@ -103,7 +103,6 @@ class FoldersController extends RozierApp
                     ['%name%' => $folder->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
-
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -144,7 +143,6 @@ class FoldersController extends RozierApp
                         ['%name%' => $folder->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -192,7 +190,6 @@ class FoldersController extends RozierApp
                         ['%name%' => $folder->getName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }

@@ -87,7 +87,6 @@ class BlockRenderExtension extends \Twig_Extension
                     );
 
                     return $response->getContent();
-
                 } else {
                     throw new \Exception($class . "::blockAction() action does not exist.", 1);
                 }

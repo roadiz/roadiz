@@ -203,7 +203,6 @@ class UrlAliasesController extends RozierApp
                      */
                     $event = new FilterUrlAliasEvent($ua);
                     $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage(), $source);
                 } catch (NoTranslationAvailableException $e) {

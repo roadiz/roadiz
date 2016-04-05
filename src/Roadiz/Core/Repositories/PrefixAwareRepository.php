@@ -135,7 +135,6 @@ class PrefixAwareRepository extends EntityRepository
                                 $qb->leftJoin($field, $prefix);
                                 break;
                         }
-
                     }
 
                     $lastPrefix = $prefix;
