@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "./", "/var/www", nfs: true, mount_options: ['actimeo=1']
     config.vm.provider "virtualbox" do |vb|
         vb.memory = 1024
-        vb.cpus = 2
+        vb.cpus = 1
     end
 
     config.vm.provision "roadiz",      type: :shell, path: "samples/vagrant-php7-provisioning.sh"

@@ -197,25 +197,25 @@ class TranstypeController extends RozierApp
     protected function mockTranstype(NodeType $nodeType)
     {
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
-
+        $uniqueId = uniqid();
         /*
          * Testing if new nodeSource class is available
          * and cache have been cleared before actually performing
          * transtype, not to get an orphan node.
          */
         $node = new Node();
-        $node->setNodeName('testing_before_transtype');
+        $node->setNodeName('testing_before_transtype' . $uniqueId);
         $this->getService('em')->persist($node);
 
         $translation = new Translation();
-        $translation->setAvailable(false);
-        $translation->setLocale('test');
-        $translation->setName('test');
+        $translation->setAvailable(true);
+        $translation->setLocale('test' . $uniqueId);
+        $translation->setName('test' . $uniqueId);
         $this->getService('em')->persist($translation);
 
         /** @var NodesSources $testSource */
         $testSource = new $sourceClass($node, $translation);
-        $testSource->setTitle('testing_before_transtype');
+        $testSource->setTitle('testing_before_transtype' . $uniqueId);
         $this->getService('em')->persist($testSource);
         $this->getService('em')->flush();
 
