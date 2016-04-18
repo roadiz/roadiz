@@ -60,6 +60,7 @@ class Composer
         if (!$fs->exists($configFile) &&
             $fs->exists($configFileSrc)) {
             $fs->copy($configFileSrc, $configFile);
+            echo 'Copying conf/config.yml default configuration.' . PHP_EOL;
         }
     }
 
@@ -72,6 +73,7 @@ class Composer
         if (!$fs->exists($installFile) &&
             $fs->exists($installFileSrc)) {
             $fs->copy($installFileSrc, $installFile);
+            echo 'Copying install.php entry point.' . PHP_EOL;
         }
     }
 
@@ -84,6 +86,7 @@ class Composer
         if (!$fs->exists($devFile) &&
             $fs->exists($devFileSrc)) {
             $fs->copy($devFileSrc, $devFile);
+            echo 'Copying dev.php entry point.' . PHP_EOL;
         }
     }
 
@@ -96,6 +99,7 @@ class Composer
         if (!$fs->exists($clearCacheFile) &&
             $fs->exists($clearCacheFileSrc)) {
             $fs->copy($clearCacheFileSrc, $clearCacheFile);
+            echo 'Copying clear_cache.php entry point.' . PHP_EOL;
         }
     }
 }
