@@ -55,7 +55,7 @@ trait NodesTrait
         $nodeName = StringHandler::slugify($title);
         if (null !== $this->getService('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                          ->findByNodeName($nodeName)) {
+                          ->findOneByNodeName($nodeName)) {
             $nodeName .= '-' . uniqid();
         }
 
