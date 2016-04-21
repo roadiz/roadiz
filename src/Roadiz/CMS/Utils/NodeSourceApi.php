@@ -33,14 +33,15 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
- *
+ * Class NodeSourceApi
+ * @package RZ\Roadiz\CMS\Utils
  */
 class NodeSourceApi extends AbstractApi
 {
     /**
      * @var string
      */
-    protected $repository = "RZ\Roadiz\Core\Entities\NodesSources";
+    protected $repository = 'RZ\Roadiz\Core\Entities\NodesSources';
 
     /**
      * @param array $criteria
@@ -56,7 +57,7 @@ class NodeSourceApi extends AbstractApi
 
             unset($criteria['node.nodeType']);
         } else {
-            $rep = "RZ\Roadiz\Core\Entities\NodesSources";
+            $rep = 'RZ\Roadiz\Core\Entities\NodesSources';
         }
 
         $this->repository = $rep;

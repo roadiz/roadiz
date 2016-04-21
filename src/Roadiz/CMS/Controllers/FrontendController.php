@@ -409,6 +409,7 @@ class FrontendController extends AppController
          * Prepare app firewall
          */
         $requestMatcher = new RequestMatcher('^/');
+        $container['accessMap']->add($requestMatcher, ['IS_AUTHENTICATED_ANONYMOUSLY']);
 
         $listeners = [
             // manages the TokenStorage persistence through a session

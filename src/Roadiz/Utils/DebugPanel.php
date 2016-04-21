@@ -41,6 +41,10 @@ class DebugPanel implements EventSubscriberInterface
 {
     protected $container = null;
 
+    /**
+     * DebugPanel constructor.
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -59,28 +63,30 @@ class DebugPanel implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-            $this->container['stopwatch']->stop('controllerHandling');
-        }
+        if ($event->isMasterRequest()) {
+            if ($this->container['stopwatch']->isStarted('controllerHandling')) {
+                $this->container['stopwatch']->stop('controllerHandling');
+            }
 
-        if ($this->container['stopwatch']->isStarted('twigRender')) {
-            $this->container['stopwatch']->stop('twigRender');
-        }
+            if ($this->container['stopwatch']->isStarted('twigRender')) {
+                $this->container['stopwatch']->stop('twigRender');
+            }
 
-        $response = $event->getResponse();
+            $response = $event->getResponse();
 
-        if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {
-            $content = str_replace('<!-- ##debug_panel## -->', $this->getDebugView(), $response->getContent());
-            $response->setContent($content);
-            $event->setResponse($response);
-        } elseif (false !== strpos($response->getContent(), '</body>')) {
-            $content = str_replace('</body>', $this->getDebugView() . "</body>", $response->getContent());
-            $response->setContent($content);
-            $event->setResponse($response);
+            if (false !== strpos($response->getContent(), '<!-- ##debug_panel## -->')) {
+                $content = str_replace('<!-- ##debug_panel## -->', $this->getDebugView(), $response->getContent());
+                $response->setContent($content);
+                $event->setResponse($response);
+            } elseif (false !== strpos($response->getContent(), '</body>')) {
+                $content = str_replace('</body>', $this->getDebugView() . "</body>", $response->getContent());
+                $response->setContent($content);
+                $event->setResponse($response);
+            }
         }
     }
 

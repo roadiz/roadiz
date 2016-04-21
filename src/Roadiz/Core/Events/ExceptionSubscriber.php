@@ -46,11 +46,20 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * Class ExceptionSubscriber
+ * @package RZ\Roadiz\Core\Events
+ */
 class ExceptionSubscriber implements EventSubscriberInterface
 {
     protected $logger;
     protected $debug;
 
+    /**
+     * ExceptionSubscriber constructor.
+     * @param LoggerInterface $logger
+     * @param bool $debug
+     */
     public function __construct(LoggerInterface $logger, $debug = false)
     {
         $this->logger = $logger;
@@ -70,38 +79,43 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param GetResponseForExceptionEvent $event
+     */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        // You get the exception object from the received event
-        $exception = $event->getException();
+        if ($event->isMasterRequest()) {
+            // You get the exception object from the received event
+            $exception = $event->getException();
 
-        /*
-         * Get previous exception if thrown in Twig execution context.
-         */
-        if ($exception instanceof \Twig_Error_Runtime &&
-            null !== $exception->getPrevious()) {
-            $exception = $exception->getPrevious();
-        }
-
-        if ($exception instanceof MaintenanceModeException &&
-            null !== $ctrl = $exception->getController()) {
-            $response = $ctrl->maintenanceAction($event->getRequest());
-            // Set http code according to status
-            $response->setStatusCode($this->getHttpStatusCode($exception));
-            $event->setResponse($response);
-        } else {
-            // Customize your response object to display the exception details
-            $response = $this->getEmergencyResponse($exception, $event->getRequest());
-            // Set http code according to status
-            $response->setStatusCode($this->getHttpStatusCode($exception));
-            // HttpExceptionInterface is a special type of exception that
-            // holds status code and header details
-            if ($exception instanceof HttpExceptionInterface) {
-                $response->headers->replace($exception->getHeaders());
+            /*
+             * Get previous exception if thrown in Twig execution context.
+             */
+            if ($exception instanceof \Twig_Error_Runtime &&
+                null !== $exception->getPrevious()) {
+                $exception = $exception->getPrevious();
             }
 
-            // Send the modified response object to the event
-            $event->setResponse($response);
+            if ($exception instanceof MaintenanceModeException &&
+                null !== $ctrl = $exception->getController()) {
+                $response = $ctrl->maintenanceAction($event->getRequest());
+                // Set http code according to status
+                $response->setStatusCode($this->getHttpStatusCode($exception));
+                $event->setResponse($response);
+            } else {
+                // Customize your response object to display the exception details
+                $response = $this->getEmergencyResponse($exception, $event->getRequest());
+                // Set http code according to status
+                $response->setStatusCode($this->getHttpStatusCode($exception));
+                // HttpExceptionInterface is a special type of exception that
+                // holds status code and header details
+                if ($exception instanceof HttpExceptionInterface) {
+                    $response->headers->replace($exception->getHeaders());
+                }
+
+                // Send the modified response object to the event
+                $event->setResponse($response);
+            }
         }
     }
 
@@ -166,6 +180,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param \Exception $e
+     * @return string
+     */
     protected function getHumanExceptionTitle(\Exception $e)
     {
         if ($e instanceof ResourceNotFoundException ||
@@ -190,6 +208,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
         return "A problem occured on our website. We are working on this to be back soon.";
     }
 
+    /**
+     * @param \Exception $exception
+     * @return int
+     */
     protected function getHttpStatusCode(\Exception $exception)
     {
         if ($exception instanceof HttpExceptionInterface) {

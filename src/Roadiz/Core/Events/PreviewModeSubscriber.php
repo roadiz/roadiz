@@ -37,12 +37,17 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- *
+ * Class PreviewModeSubscriber
+ * @package RZ\Roadiz\Core\Events
  */
 class PreviewModeSubscriber implements EventSubscriberInterface
 {
     protected $container;
 
+    /**
+     * PreviewModeSubscriber constructor.
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -59,13 +64,19 @@ class PreviewModeSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param FilterControllerEvent $event
+     * @throws PreviewNotAllowedException
+     */
     public function onControllerMatched(FilterControllerEvent $event)
     {
-        if (null === $this->container['securityTokenStorage']->getToken() ||
-            !is_object($this->container['securityTokenStorage']->getToken()->getUser())) {
-            throw new PreviewNotAllowedException();
-        } elseif (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
-            throw new PreviewNotAllowedException();
+        if ($event->isMasterRequest()) {
+            if (null === $this->container['securityTokenStorage']->getToken() ||
+                !is_object($this->container['securityTokenStorage']->getToken()->getUser())) {
+                throw new PreviewNotAllowedException();
+            } elseif (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
+                throw new PreviewNotAllowedException();
+            }
         }
     }
 

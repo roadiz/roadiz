@@ -37,10 +37,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Class MaintenanceModeSubscriber
+ * @package RZ\Roadiz\Core\Events
+ */
 class MaintenanceModeSubscriber implements EventSubscriberInterface
 {
     protected $container;
 
+    /**
+     * @return array
+     */
     protected function getAuthorizedRoutes()
     {
         return [
@@ -51,6 +58,10 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * MaintenanceModeSubscriber constructor.
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -65,16 +76,22 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param FilterControllerEvent $event
+     * @throws MaintenanceModeException
+     */
     public function onControllerMatched(FilterControllerEvent $event)
     {
-        if (!in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes()) &&
-            (boolean) SettingsBag::get('maintenance_mode') === true) {
-            if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
-                $matchedCtrl = $event->getController()[0];
-                if ($matchedCtrl instanceof AppController) {
-                    throw new MaintenanceModeException($matchedCtrl);
-                } else {
-                    throw new MaintenanceModeException();
+        if ($event->isMasterRequest()) {
+            if (!in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes()) &&
+                (boolean) SettingsBag::get('maintenance_mode') === true) {
+                if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
+                    $matchedCtrl = $event->getController()[0];
+                    if ($matchedCtrl instanceof AppController) {
+                        throw new MaintenanceModeException($matchedCtrl);
+                    } else {
+                        throw new MaintenanceModeException();
+                    }
                 }
             }
         }

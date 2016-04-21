@@ -229,7 +229,12 @@ class AppController extends Controller
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $view
+     * @param array $parameters
+     * @param Response|null $response
+     * @param string $namespace
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
@@ -398,14 +403,14 @@ class AppController extends Controller
                 $home = $theme->getHomeNode();
                 if ($home !== null) {
                     if ($translation !== null) {
-                        $this->homeNode = $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                        $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findWithTranslation(
                                 $home->getId(),
                                 $translation,
                                 $this->container['securityAuthorizationChecker']
                             );
                     } else {
-                        $this->homeNode = $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node")
+                        $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findWithDefaultTranslation(
                                 $home->getId(),
                                 $this->container['securityAuthorizationChecker']
@@ -428,6 +433,9 @@ class AppController extends Controller
         return $this->homeNode;
     }
 
+    /**
+     * @return Node
+     */
     protected function getRoot()
     {
         $theme = $this->getTheme();

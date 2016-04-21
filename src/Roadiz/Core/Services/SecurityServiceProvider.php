@@ -331,7 +331,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['httpKernel'],
                 $c['httpUtils'],
                 '/login',
-                true
+                true // Use forward, Be careful, Token will be set to null in sub-request!
             );
         };
 

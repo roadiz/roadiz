@@ -28,6 +28,10 @@ use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
+/**
+ * Class FirewallEntry
+ * @package RZ\Roadiz\Utils\Security
+ */
 class FirewallEntry
 {
     /**
@@ -99,7 +103,6 @@ class FirewallEntry
         $authenticationSuccessHandlerClass = 'RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler',
         $authenticationFailureHandlerClass = 'RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler'
     ) {
-
         $this->firewallBasePattern = $firewallBasePattern;
         $this->firewallBasePath = $firewallBasePath;
         $this->firewallLogin = $firewallLogin;
@@ -192,15 +195,17 @@ class FirewallEntry
     }
 
     /**
+     * @param bool $useForward Use true to forward request instead of redirecting. Be careful, Token will be set to null
+     * in sub-request!
      * @return ExceptionListener
      */
-    public function getExceptionListener()
+    public function getExceptionListener($useForward = false)
     {
         $formEntryPoint = new FormAuthenticationEntryPoint(
             $this->container['httpKernel'],
             $this->container['httpUtils'],
             $this->firewallLogin,
-            true
+            $useForward
         );
 
         return new ExceptionListener(

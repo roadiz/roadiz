@@ -188,27 +188,30 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     protected function initEvents()
     {
-        $this->container['dispatcher']->addSubscriber($this->container['routeListener']);
-        $this->container['dispatcher']->addSubscriber($this->container['firewall']);
-        $this->container['dispatcher']->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
-        $this->container['dispatcher']->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
-        $this->container['dispatcher']->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
+        /** @var EventDispatcher $dispatcher */
+        $dispatcher = $this->container['dispatcher'];
+
+        $dispatcher->addSubscriber($this->container['routeListener']);
+        $dispatcher->addSubscriber($this->container['firewall']);
+        $dispatcher->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
+        $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
+        $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 
         if (!$this->isInstallMode()) {
-            $this->container['dispatcher']->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
+            $dispatcher->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
 
             if ($this->isPreview()) {
-                $this->container['dispatcher']->addSubscriber(new PreviewModeSubscriber($this->container));
+                $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));
             }
         }
 
-        $this->container['dispatcher']->addSubscriber(new MaintenanceModeSubscriber($this->container));
+        $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
         if ($this->isDebug()) {
-            $this->container['dispatcher']->addSubscriber($this->container['debugPanel']);
+            $dispatcher->addSubscriber($this->container['debugPanel']);
         }
     }
 
