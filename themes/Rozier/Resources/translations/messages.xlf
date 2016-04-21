@@ -6339,6 +6339,11 @@
             <source>stack_type.%type%.has_been_removed.%name%</source>
             <target></target>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+            <source>form_has_errors.check_you_fields</source>
+            <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

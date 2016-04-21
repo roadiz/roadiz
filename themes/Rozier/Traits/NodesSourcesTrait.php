@@ -304,7 +304,7 @@ trait NodesSourcesTrait
             case NodeTypeField::INTEGER_T:
                 $options = array_merge_recursive($options, [
                     'constraints' => [
-                        new Type('integer'),
+                        new Type('numeric'),
                     ],
                 ]);
                 break;
@@ -318,7 +318,7 @@ trait NodesSourcesTrait
             case NodeTypeField::DECIMAL_T:
                 $options = array_merge_recursive($options, [
                     'constraints' => [
-                        new Type('double'),
+                        new Type('numeric'),
                     ],
                 ]);
                 break;
