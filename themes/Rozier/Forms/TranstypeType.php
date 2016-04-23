@@ -29,6 +29,8 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -80,7 +82,7 @@ class TranstypeType extends AbstractType
         $resolver->setAllowedTypes('currentType', 'RZ\Roadiz\Core\Entities\NodeType');
     }
 
-    protected function getAvailableTypes($em, NodeType $currentType)
+    protected function getAvailableTypes(EntityManager $em, NodeType $currentType)
     {
         $qb = $em->createQueryBuilder();
         $qb->select('n')
@@ -97,7 +99,7 @@ class TranstypeType extends AbstractType
             }
 
             return $choices;
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }

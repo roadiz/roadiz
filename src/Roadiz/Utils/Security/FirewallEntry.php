@@ -112,7 +112,7 @@ class FirewallEntry
         $this->container = $container;
 
         $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
-        $this->container['accessMap']->add($this->requestMatcher, [$firewallBaseRole]);
+        $this->container['accessMap']->add($this->requestMatcher, [$this->firewallBaseRole]);
 
         $this->authenticationSuccessHandler = new $authenticationSuccessHandlerClass(
             $this->container['httpUtils'],
@@ -153,7 +153,7 @@ class FirewallEntry
                 $this->authenticationSuccessHandler,
                 $this->authenticationFailureHandler,
                 [
-                    'check_path' => $firewallLoginCheck,
+                    'check_path' => $this->firewallLoginCheck,
                 ],
                 $this->container['logger'],
                 $this->container['dispatcher'],

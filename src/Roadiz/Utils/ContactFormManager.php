@@ -222,7 +222,7 @@ class ContactFormManager
                     'statusCode' => Response::HTTP_BAD_REQUEST,
                     'status' => 'danger',
                     'message' => $this->translator->trans($this->failMessage),
-                    'errors' => $this->form->getErrorsAsString(),
+                    'errors' => (string) $this->form->getErrors(),
                 ];
                 return new JsonResponse($responseArray);
             } else {

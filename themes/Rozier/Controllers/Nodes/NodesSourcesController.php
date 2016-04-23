@@ -92,7 +92,7 @@ class NodesSourcesController extends RozierApp
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted()) {
-                    if ($form->isValid()){
+                    if ($form->isValid()) {
                         $this->editNodeSource($form->getData(), $source);
                         /*
                          * Dispatch event
@@ -150,8 +150,9 @@ class NodesSourcesController extends RozierApp
     protected function getErrorsAsArray(Form $form)
     {
         $errors = [];
-        foreach ($form->getErrors() as $error)
+        foreach ($form->getErrors() as $error) {
             $errors[] = $error->getMessage();
+        }
 
         foreach ($form->all() as $key => $child) {
             $err = $this->getErrorsAsArray($child);

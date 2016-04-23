@@ -12,7 +12,6 @@
 
 namespace Themes\Rozier\Forms\Node;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
 use RZ\Roadiz\Core\Entities\Node;
