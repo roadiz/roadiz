@@ -65,10 +65,11 @@ class FullTextSearchHandler
      * @param integer $rows
      * @param boolean $searchTags
      * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
+     * @param integer $page
      *
      * @return array
      */
-    private function solrSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000)
+    private function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
     {
         if (!empty($q)) {
             $query = $this->client->createSelect();
@@ -115,6 +116,12 @@ class FullTextSearchHandler
             }
             $query->addSort('score', $query::SORT_DESC);
             $query->setRows($rows);
+            /**
+             * Add start if not first page.
+             */
+            if ($page > 1) {
+                $query->setStart($page * $rows);
+            }
 
             if (null !== $this->logger) {
                 $this->logger->debug('[Solr] Request node-sources search…', [
@@ -124,34 +131,17 @@ class FullTextSearchHandler
                 ]);
             }
 
-            $resultset = $this->client->select($query);
-            $reponse = json_decode($resultset->getResponse()->getBody(), true);
-
-            $doc = array_map(
-                function ($n) use ($reponse) {
-                    if (isset($reponse["highlighting"])) {
-                        return [
-                            "nodeSource" => $this->em->find(
-                                'RZ\Roadiz\Core\Entities\NodesSources',
-                                (int) $n["node_source_id_i"]
-                            ),
-                            "highlighting" => $reponse["highlighting"][$n['id']],
-                        ];
-                    }
-                    return $this->em->find(
-                        'RZ\Roadiz\Core\Entities\NodesSources',
-                        $n["node_source_id_i"]
-                    );
-                },
-                $reponse['response']['docs']
-            );
-
-            return $doc;
+            $solrRequest = $this->client->select($query);
+            return json_decode($solrRequest->getResponse()->getBody(), true);
         } else {
             return null;
         }
     }
 
+    /**
+     * @param $args
+     * @return mixed
+     */
     private function argFqProcess(&$args)
     {
         if (!isset($args["fq"])) {
@@ -227,11 +217,12 @@ class FullTextSearchHandler
      * @param array $args
      * @param int $rows
      * @param boolean $searchTags Search in tags too, even if a node don’t match
-     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
+     * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
+     * @param int $page
      *
      * @return array
      */
-    public function searchWithHighlight($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000)
+    public function searchWithHighlight($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
@@ -242,7 +233,8 @@ class FullTextSearchHandler
         $tmp["hl.simple.post"] = "</span>";
         $args = array_merge($tmp, $args);
 
-        return $this->solrSearch($q, $args, $rows, $searchTags, $proximity);
+        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
+        return $this->parseSolrResponse($response);
     }
 
     /**
@@ -271,16 +263,83 @@ class FullTextSearchHandler
      * @param array  $args
      * @param int  $rows
      * @param boolean $searchTags Search in tags too, even if a node don’t match
-     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
+     * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
+     * @param int $page
      *
      * @return array
      */
-    public function search($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000)
+    public function search($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
     {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:NodesSources";
         $tmp = [];
         $args = array_merge($tmp, $args);
-        return $this->solrSearch($q, $args, $rows, $searchTags, $proximity);
+
+        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
+        return $this->parseSolrResponse($response);
+    }
+
+    /**
+     * @param $q
+     * @param array $args
+     * @param int $rows
+     * @param bool $searchTags
+     * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
+     * @return int
+     */
+    public function count($q, $args = [], $rows = 0, $searchTags = false, $proximity = 10000000)
+    {
+        $args = $this->argFqProcess($args);
+        $args["fq"][] = "document_type_s:NodesSources";
+        $tmp = [];
+        $args = array_merge($tmp, $args);
+
+        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity);
+        return $this->parseResultCount($response);
+    }
+
+    /**
+     * @param $response
+     * @return null
+     */
+    private function parseSolrResponse($response)
+    {
+        if (null !== $response) {
+            $doc = array_map(
+                function ($n) use ($response) {
+                    if (isset($response["highlighting"])) {
+                        return [
+                            "nodeSource" => $this->em->find(
+                                'RZ\Roadiz\Core\Entities\NodesSources',
+                                (int) $n["node_source_id_i"]
+                            ),
+                            "highlighting" => $response["highlighting"][$n['id']],
+                        ];
+                    }
+                    return $this->em->find(
+                        'RZ\Roadiz\Core\Entities\NodesSources',
+                        $n["node_source_id_i"]
+                    );
+                },
+                $response['response']['docs']
+            );
+
+            return $doc;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $response
+     * @return int
+     */
+    private function parseResultCount($response)
+    {
+        if (null !== $response && isset($response['response']['numFound'])) {
+            return (int) $response['response']['numFound'];
+        }
+
+        return 0;
     }
 }
