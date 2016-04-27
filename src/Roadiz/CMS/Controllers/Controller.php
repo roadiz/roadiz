@@ -245,6 +245,7 @@ abstract class Controller
         } else {
             $translation = $this->container['defaultTranslation'];
         }
+        
         $request->setLocale($translation->getLocale());
         return $translation;
     }

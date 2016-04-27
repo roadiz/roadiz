@@ -59,12 +59,14 @@ class TranslationServiceProvider implements ServiceProviderInterface
          * @return
          */
         $container['translator.locale'] = function ($c) {
-            if (null !== $c['session']->get('_locale') &&
+            if (null !== $c['request']->getLocale()) {
+                return $c['request']->getLocale();
+            } elseif (null !== $c['session']->get('_locale') &&
                 $c['session']->get('_locale') != "") {
                 return $c['session']->get('_locale');
-            } else {
-                return $c['request']->getLocale();
             }
+
+            return null;
         };
 
         $container['translator'] = function ($c) {

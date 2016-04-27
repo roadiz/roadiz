@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
+use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -82,8 +83,11 @@ class TwigServiceProvider implements ServiceProviderInterface
             ]);
         };
 
-        /*
-         * Main twig environment
+        /**
+         * Main twig environment.
+         *
+         * @param $c
+         * @return \Twig_Environment
          */
         $container['twig.environment'] = function ($c) {
             $c['stopwatch']->start('initTwig');
@@ -91,57 +95,96 @@ class TwigServiceProvider implements ServiceProviderInterface
                 'debug' => $c['kernel']->isDebug(),
                 'cache' => $c['twig.cacheFolder'],
             ]);
-
             $c['twig.formRenderer']->setEnvironment($twig);
 
-            $twig->addExtension(
-                new FormExtension(new TwigRenderer(
-                    $c['twig.formRenderer'],
-                    $c['csrfTokenManager']
-                ))
-            );
-
-            $twig->addFilter($c['twig.centralTruncateExtension']);
-
-            /*
-             * Extensions
-             */
-            $twig->addExtension(new ParsedownExtension());
-            $twig->addExtension(new HttpFoundationExtension($c['requestStack']));
-            $twig->addExtension(new SecurityExtension($c['securityAuthorizationChecker']));
-            $twig->addExtension(new TranslationExtension($c['translator']));
-            $twig->addExtension(new \Twig_Extensions_Extension_Intl());
-            $twig->addExtension($c['twig.routingExtension']);
-            $twig->addExtension(new \Twig_Extensions_Extension_Text());
-            $twig->addExtension(new BlockRenderExtension($c));
-            if (true !== $c['kernel']->isInstallMode()) {
-                $twig->addExtension(new NodesSourcesExtension(
-                    $c['securityAuthorizationChecker'],
-                    $c['kernel']->isPreview()
-                ));
+            foreach ($c['twig.extensions'] as $extension) {
+                if ($extension instanceof \Twig_Extension) {
+                    $twig->addExtension($extension);
+                } else {
+                    throw new \RuntimeException('Try to add Twig extension which does not extends Twig_Extension.');
+                }
             }
-            $twig->addExtension(new DocumentExtension());
-            $twig->addExtension(new UrlExtension(
+
+            foreach ($c['twig.filters'] as $filter) {
+                if ($filter instanceof \Twig_SimpleFilter) {
+                    $twig->addFilter($filter);
+                } else {
+                    throw new \RuntimeException('Try to add Twig filter which does not extends Twig_SimpleFilter.');
+                }
+            }
+
+            $c['stopwatch']->stop('initTwig');
+            return $twig;
+        };
+
+        /**
+         * Twig filters.
+         *
+         * We separate filters from environment to be able to
+         * extend them without waking up Twig.
+         *
+         * @param $c
+         * @return ArrayCollection
+         */
+        $container['twig.filters'] = function($c) {
+            $filters = new ArrayCollection();
+            $filters->add($c['twig.centralTruncateExtension']);
+
+            return $filters;
+        };
+
+        /**
+         * Twig extensions.
+         *
+         * We separate extensions from environment to be able to
+         * extend them without waking up Twig.
+         *
+         * @param $c
+         * @return ArrayCollection
+         */
+        $container['twig.extensions'] = function($c) {
+            $extensions = new ArrayCollection();
+            $extensions->add(new FormExtension(new TwigRenderer(
+                $c['twig.formRenderer'],
+                $c['csrfTokenManager']
+            )));
+
+            $extensions->add(new ParsedownExtension());
+            $extensions->add(new HttpFoundationExtension($c['requestStack']));
+            $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
+            $extensions->add(new TranslationExtension($c['translator']));
+            $extensions->add(new \Twig_Extensions_Extension_Intl());
+            $extensions->add($c['twig.routingExtension']);
+            $extensions->add(new \Twig_Extensions_Extension_Text());
+            $extensions->add(new BlockRenderExtension($c));
+            $extensions->add(new DocumentExtension());
+            $extensions->add(new UrlExtension(
                 $c['request'],
                 $c['nodesSourcesUrlCacheProvider'],
                 (boolean) SettingsBag::get('force_locale')
             ));
-            $twig->addExtension(new RoadizTranslationExtension($c['request']));
+            $extensions->add(new RoadizTranslationExtension($c['request']));
 
             if (null !== $c['twig.cacheExtension']) {
-                $twig->addExtension($c['twig.cacheExtension']);
+                $extensions->add($c['twig.cacheExtension']);
             }
-
+            if (true !== $c['kernel']->isInstallMode()) {
+                $extensions->add(new NodesSourcesExtension(
+                    $c['securityAuthorizationChecker'],
+                    $c['kernel']->isPreview()
+                ));
+            }
             if (true === $c['kernel']->isDebug()) {
-                $twig->addExtension(new \Twig_Extension_Debug());
+                $extensions->add(new \Twig_Extension_Debug());
             }
-            $c['stopwatch']->stop('initTwig');
 
-            return $twig;
+            return $extensions;
         };
 
-        /*
-         * Twig form renderer extension
+        /**
+         * Twig form renderer extension.
+         *
+         * @return TwigRendererEngine
          */
         $container['twig.formRenderer'] = function () {
 
