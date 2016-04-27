@@ -126,7 +126,7 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @param $c
          * @return ArrayCollection
          */
-        $container['twig.filters'] = function($c) {
+        $container['twig.filters'] = function ($c) {
             $filters = new ArrayCollection();
             $filters->add($c['twig.centralTruncateExtension']);
 
@@ -142,7 +142,7 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @param $c
          * @return ArrayCollection
          */
-        $container['twig.extensions'] = function($c) {
+        $container['twig.extensions'] = function ($c) {
             $extensions = new ArrayCollection();
             $extensions->add(new FormExtension(new TwigRenderer(
                 $c['twig.formRenderer'],
