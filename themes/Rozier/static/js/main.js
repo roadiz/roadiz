@@ -456,7 +456,12 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
     var parent_node_id = null;
     if (element.parents('.nodetree-element').length) {
         parent_node_id = parseInt(element.parents('.nodetree-element').eq(0).attr('data-node-id'));
+    } else if (element.parents('.stack-tree-widget').length) {
+        parent_node_id = parseInt(element.parents('.stack-tree-widget').eq(0).attr('data-parent-node-id'));
+    } else if (element.parents('.children-node-widget').length) {
+        parent_node_id = parseInt(element.parents('.children-node-widget').eq(0).attr('data-parent-node-id'));
     }
+
     /*
      * When dropping to route
      * set parentNodeId to NULL
@@ -492,6 +497,8 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
     else if(element.prev().length && typeof element.prev().attr('data-node-id') !== "undefined") {
         postData.prevNodeId = parseInt(element.prev().attr('data-node-id'));
     }
+
+    console.log(postData);
 
     $.ajax({
         url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
