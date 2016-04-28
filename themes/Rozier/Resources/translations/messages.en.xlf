@@ -6219,6 +6219,18 @@
             <source>stack_type.%type%.has_been_removed.%name%</source>
             <target xml:lang="en" state="translated">Stack type "%type%" has been removed from "%name%" node.</target>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+            <source>form_has_errors.check_you_fields</source>
+            <target xml:lang="en" state="translated">Your form has errors, check highlighted fields.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="no_more_translation_available">
+            <source>no_more_translation_available</source>
+            <target xml:lang="en" state="translated">No more translation is available for current node.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="translate_offspring">
+            <source>translate_offspring</source>
+            <target xml:lang="en" state="translated">Translate node hierarchy</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

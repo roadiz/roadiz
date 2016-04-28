@@ -6344,6 +6344,15 @@
             <source>form_has_errors.check_you_fields</source>
             <target></target>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="no_more_translation_available">
+            <source>no_more_translation_available</source>
+            <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="translate_offspring">
+            <source>translate_offspring</source>
+            <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

@@ -6219,6 +6219,18 @@
             <source>stack_type.%type%.has_been_removed.%name%</source>
             <target xml:lang="fr" state="translated">Le type de pile «%type%» a été retiré du nœud «%name%»</target>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+            <source>form_has_errors.check_you_fields</source>
+            <target xml:lang="fr" state="translated">Votre formulaire contient des erreurs, vérifiez les champs correspondants.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="no_more_translation_available">
+            <source>no_more_translation_available</source>
+            <target xml:lang="fr" state="translated">Aucune autre traduction n’est disponible.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="translate_offspring">
+            <source>translate_offspring</source>
+            <target xml:lang="fr" state="translated">Traduire toute l’arborescence</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>
