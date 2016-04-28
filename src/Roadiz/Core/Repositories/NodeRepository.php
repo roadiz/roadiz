@@ -1398,4 +1398,87 @@ class NodeRepository extends EntityRepository
             $authorizationChecker
         );
     }
+
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAvailableTranslationForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->innerJoin('t.nodeSources', 'ns')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->setParameter('nodeId', $node->getId());
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAvailableTranslationIdForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t.id')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->innerJoin('t.nodeSources', 'ns')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->setParameter('nodeId', $node->getId());
+
+        try {
+            $complexArray = $qb->getQuery()->getScalarResult();
+            return array_map('current', $complexArray);
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findUnavailableTranslationForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findUnavailableTranslationIdForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t.id')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+
+        try {
+            $complexArray = $qb->getQuery()->getScalarResult();
+            return array_map('current', $complexArray);
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
 }

@@ -622,4 +622,28 @@ class NodesSourcesRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * @param Node $node
+     * @param Translation $translation
+     * @return mixed|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByNodeAndTranslation(Node $node, Translation $translation)
+    {
+        $qb = $this->createQueryBuilder('ns');
+
+        $qb->select('ns')
+            ->andWhere($qb->expr()->eq('ns.node', ':node'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setMaxResults(1)
+            ->setParameter('node', $node)
+            ->setParameter('translation', $translation);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
 }

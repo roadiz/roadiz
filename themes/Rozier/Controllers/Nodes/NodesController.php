@@ -154,30 +154,9 @@ class NodesController extends RozierApp
             $this->assignation['source'] = $node->getNodeSources()->first();
             $this->assignation['translation'] = $translation;
 
-            /*
-             * Handle translation form
-             */
-            $translationForm = $this->buildTranslateForm($node);
-            if (null !== $translationForm) {
-                $translationForm->handleRequest($request);
-
-                if ($translationForm->isSubmitted() && $translationForm->isValid()) {
-                    try {
-                        $this->translateNode($translationForm->getData(), $node);
-                        $msg = $this->getTranslator()->trans('node.%name%.translated', [
-                            '%name%' => $node->getNodeName(),
-                        ]);
-                        $this->publishConfirmMessage($request, $msg);
-                    } catch (EntityAlreadyExistsException $e) {
-                        $this->publishErrorMessage($request, $e->getMessage());
-                    }
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditSourcePage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationForm->getData()['translationId']]
-                    ));
-                }
-                $this->assignation['translationForm'] = $translationForm->createView();
+            $this->assignation['available_translations'] = [];
+            foreach ($node->getNodeSources() as $ns) {
+                $this->assignation['available_translations'][] = $ns->getTranslation();
             }
 
             /*

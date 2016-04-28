@@ -24,17 +24,17 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeTypeTransformer.php
+ * @file TranslationTransformer.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Forms\DataTransformer;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
-class NodeTypeTransformer implements DataTransformerInterface
+class TranslationTransformer implements DataTransformerInterface
 {
     private $manager;
 
@@ -48,42 +48,42 @@ class NodeTypeTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param NodeType $nodeType
+     * @param Translation $translation
      * @return int|string
      */
-    public function transform($nodeType)
+    public function transform($translation)
     {
-        if (null === $nodeType) {
+        if (null === $translation) {
             return '';
         }
-        return $nodeType->getId();
+        return $translation->getId();
     }
 
     /**
-     * @param mixed $nodeTypeId
-     * @return null|NodeType
+     * @param mixed $translationId
+     * @return null|Translation
      */
-    public function reverseTransform($nodeTypeId)
+    public function reverseTransform($translationId)
     {
-        if (!$nodeTypeId) {
+        if (!$translationId) {
             return null;
         }
 
-        $nodeType = $this->manager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->find($nodeTypeId)
+        $translation = $this->manager
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->find($translationId)
         ;
 
-        if (null === $nodeType) {
+        if (null === $translation) {
             // causes a validation error
             // this message is not shown to the user
             // see the invalid_message option
             throw new TransformationFailedException(sprintf(
-                'A node-type with id "%s" does not exist!',
-                $nodeTypeId
+                'A translation with id "%s" does not exist!',
+                $translationId
             ));
         }
 
-        return $nodeType;
+        return $translation;
     }
 }

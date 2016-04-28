@@ -351,89 +351,46 @@ class NodeHandler
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Translation[]|ArrayCollection
+     * Alias for NodeRepository::findAvailableTranslationForNode.
+     *
+     * @return \RZ\Roadiz\Core\Entities\Translation[]
      */
     public function getAvailableTranslations()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('
-            SELECT t
-            FROM RZ\Roadiz\Core\Entities\Translation t
-            INNER JOIN t.nodeSources ns
-            INNER JOIN ns.node n
-            WHERE n.id = :node_id')
-            ->setParameter('node_id', $this->node->getId());
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findAvailableTranslationForNode($this->node);
     }
     /**
+     * Alias for NodeRepository::findAvailableTranslationIdForNode.
+     *
      * @return array Array of Translation id
      */
     public function getAvailableTranslationsId()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('
-            SELECT t.id FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.translation t
-            WHERE n.id = :node_id')
-            ->setParameter('node_id', $this->node->getId());
-
-        try {
-            $simpleArray = [];
-            $complexArray = $query->getScalarResult();
-            foreach ($complexArray as $subArray) {
-                $simpleArray[] = $subArray['id'];
-            }
-
-            return $simpleArray;
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                       ->findAvailableTranslationIdForNode($this->node);
     }
 
     /**
-     * @return ArrayCollection
+     * Alias for NodeRepository::findUnavailableTranslationForNode.
+     *
+     * @return array
      */
     public function getUnavailableTranslations()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
-                                       WHERE t.id NOT IN (:translations_id)')
-            ->setParameter('translations_id', $this->getAvailableTranslationsId());
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findUnavailableTranslationForNode($this->node);
     }
 
     /**
+     * Alias for NodeRepository::findUnavailableTranslationIdForNode.
+     *
      * @return array Array of Translation id
      */
-    public function getUnavailableTranslationsId()
+    public function findUnavailableTranslationIdForNode()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
-                                       WHERE t.id NOT IN (:translations_id)')
-            ->setParameter('translations_id', $this->getAvailableTranslationsId());
-
-        try {
-            $simpleArray = [];
-            $complexArray = $query->getScalarResult();
-            foreach ($complexArray as $subArray) {
-                $simpleArray[] = $subArray['id'];
-            }
-
-            return $simpleArray;
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findUnavailableTranslationIdForNode($this->node);
     }
 
     /**

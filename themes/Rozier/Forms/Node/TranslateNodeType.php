@@ -24,98 +24,82 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AddNodeType.php
+ * @file TranslateNodeType.php
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\Forms\Node;
 
-use RZ\Roadiz\CMS\Forms\NodeTypesType;
-use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
-use RZ\Roadiz\Core\Entities\Node;
+use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Add node form type.
- *
+ * Class TranslateNodeType
  * @package Themes\Rozier\Forms\Node
  */
-class AddNodeType extends AbstractType
+class TranslateNodeType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', [
-            'label' => 'title',
-            'mapped' => false,
-            'constraints' => [
-                new NotBlank(),
-            ],
-        ])
-        ->add('nodeType', new NodeTypesType(), [
-            'label' => 'nodeType',
-            'constraints' => [
-                new NotBlank(),
-            ],
-        ])
-        ->add('dynamicNodeName', 'checkbox', [
-            'label' => 'node.dynamicNodeName',
-            'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
-        ])
-        ->add('visible', 'checkbox', [
-            'label' => 'visible',
-            'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
-        ])
-        ->add('locked', 'checkbox', [
-            'label' => 'locked',
-            'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
-        ])
-        ->add('hideChildren', 'checkbox', [
-            'label' => 'hiding-children',
-            'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
-        ])
-        ->add('status', 'choice', [
-            'label' => 'node.status',
-            'required' => true,
-            'choices_as_values' => true,
-            'choices' => [
-                'draft' => Node::DRAFT,
-                'pending' => Node::PENDING,
-                'published' => Node::PUBLISHED,
-                'archived' => Node::ARCHIVED,
-            ],
-        ])
-        ;
+        /** @var ObjectManager $em */
+        $em = $options['em'];
+        $translations = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+                           ->findUnavailableTranslationForNode($options['node']);
+        
+        
+        $choices = [];
 
-        $builder->get('nodeType')
-                ->addModelTransformer(new NodeTypeTransformer($options['em']));
+        foreach ($translations as $translation) {
+            $choices[$translation->getId()] = $translation->getName();
+        }
+
+        $builder->add('translation', 'choice', [
+            'label' => 'translation',
+            'choices' => $choices,
+            'required' => true,
+            'multiple' => false,
+        ])
+        ->add('translate_offspring', 'checkbox', [
+            'label' => 'translate_offspring',
+            'required' => false,
+        ]);
+
+        $builder->get('translation')
+            ->addModelTransformer(new TranslationTransformer($options['em']));
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return 'childnode';
+        return 'translate_node';
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'label' => false,
-            'nodeName' => '',
             'attr' => [
-                'class' => 'uk-form childnode-form',
+                'class' => 'uk-form node-translation-form',
             ],
         ]);
 
         $resolver->setRequired([
+            'node',
             'em',
         ]);
 
+        $resolver->setAllowedTypes('node', 'RZ\Roadiz\Core\Entities\Node');
         $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
-        $resolver->setAllowedTypes('nodeName', 'string');
     }
 }
