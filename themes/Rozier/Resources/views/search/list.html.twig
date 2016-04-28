@@ -13,7 +13,6 @@
     {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu">
-
         {% form_theme nodeTypeForm '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" id="search-node-type-form" action="#" method="get" {{ form_enctype(nodeTypeForm) }}>
             {{ form_widget(nodeTypeForm) }}
@@ -69,7 +68,7 @@
                         <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ node.nodeType.color }};"></span><a href="{{ path('nodesEditPage', { nodeId: node.getId }) }}">{{ node.getNodeName }}</a></td>
                         {% endif %}
                         <td class="mobile-hidden">{{ node.getNodeType.getDisplayName }}</td>
-                        <td class="mobile-hidden">  <!-- style="text-align:center;" -->
+                        <td class="mobile-hidden">
                             {% spaceless %}
                                 {% if node.isDraft == true %}
                                 <div class="uk-button-status uk-button-draft" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
