@@ -30,6 +30,9 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\Form\Form;
@@ -61,6 +64,7 @@ class NodesSourcesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
+        /** @var Translation $translation */
         $translation = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
@@ -70,9 +74,10 @@ class NodesSourcesController extends RozierApp
              * if not doctrine will grab a cache tag because of NodeTreeWidget
              * that is initialized before calling route method.
              */
+            /** @var Node $gnode */
             $gnode = $this->getService('em')
                           ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-
+            /** @var NodesSources $source */
             $source = $this->getService('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
@@ -173,7 +178,7 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
-        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
+        $ns = $this->getService("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
 
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
@@ -189,6 +194,7 @@ class NodesSourcesController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Node $node */
             $node = $ns->getNode();
             if ($node->getNodeSources()->count() <= 1) {
                 $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [

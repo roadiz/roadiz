@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Folder;
 
 /**
@@ -99,6 +100,61 @@ class FolderRepository extends EntityRepository
         $folderName = $folders[count($folders) - 1];
 
         return $this->findOneByName($folderName);
+    }
 
+    /**
+     * @param Folder $folder
+     * @return Folder[]
+     */
+    public function findAllChildrenFromFolder(Folder $folder)
+    {
+        $ids = $this->findAllChildrenIdFromFolder($folder);
+        if (count($ids) > 0) {
+            $qb = $this->createQueryBuilder('f');
+            $qb->select('f')
+                ->where($qb->expr()->in('f.id', ':ids'))
+                ->setParameter(':ids', $ids);
+
+            try {
+                return $qb->getQuery()->getResult();
+            } catch (NoResultException $e) {
+                return [];
+            }
+        }
+        return [];
+    }
+
+    /**
+     * @param Folder $folder
+     * @return array
+     */
+    public function findAllChildrenIdFromFolder(Folder $folder)
+    {
+        $idsArray = $this->findChildrenIdFromFolder($folder);
+
+        foreach ($folder->getChildren() as $child) {
+            $idsArray = array_merge($idsArray, $this->findAllChildrenIdFromFolder($child));
+        }
+
+        return $idsArray;
+    }
+
+    /**
+     * @param Folder $folder
+     * @return array
+     */
+    public function findChildrenIdFromFolder(Folder $folder)
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->select('f.id')
+            ->where($qb->expr()->eq('f.parent', ':parent'))
+            ->setParameter(':parent', $folder);
+
+        try {
+            $ids = $qb->getQuery()->getScalarResult();
+            return array_map('current', $ids);
+        } catch (NoResultException $e) {
+            return [];
+        }
     }
 }

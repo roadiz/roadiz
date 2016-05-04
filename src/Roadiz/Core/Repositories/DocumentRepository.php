@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -398,10 +399,20 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByFolder($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
-        try {
-            return $finalQuery->getResult();
-        } catch (NoResultException $e) {
-            return new ArrayCollection();
+
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (NoResultException $e) {
+                return new ArrayCollection();
+            }
         }
     }
 
