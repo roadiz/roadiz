@@ -1,0 +1,10 @@
+<nav class="folder-navbar-navigation navbar-navigation uk-navbar">
+	<ul class="uk-navbar-nav">
+		<li class="{% if current == 'edit' %}uk-active{% endif %}" >
+			<a href="{{ path('foldersEditPage', { folderId: folder.id }) }}">{% trans %}edit.folder{% endtrans %}</a>
+		</li>
+		<li class="{% if current == 'list' %}uk-active{% endif %}" >
+			<a href="{{ path('documentsHomePage', { folderId: folder.id }) }}">{% trans %}documents{% endtrans %}</a>
+		</li>
+	</ul>
+</nav>

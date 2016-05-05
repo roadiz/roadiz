@@ -1,0 +1,11 @@
+<nav class="folder-translation-bar translation-bar uk-navbar">
+    {% spaceless %}
+	<ul class="uk-navbar-nav">
+		{% for translation in available_translations %}
+		    <li class="{% if current == translation.id %}uk-active{% endif %}">
+		    	<a href="{{ path('foldersEditTranslationPage', { folderId: folder.id, translationId:translation.id }) }}">{{ translation.locale }}</a>
+		    </li>
+		{% endfor %}
+	</ul>
+    {% endspaceless %}
+</nav>

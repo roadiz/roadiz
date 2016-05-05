@@ -4,7 +4,9 @@
 <section class="content-global content-nav-and-filters">
 	<header class="content-header header-document header-document-list">
         {% if folder %}
-        <h1 class="content-title">{{ folder.name|truncate(25, true, '[…]') }}</h1>
+            {% set folderName = folder.translatedFolders.first.name|default(folder.folderName) %}
+            <h1 class="content-title">{{ folderName|truncate(25, true, '[…]') }}</h1>
+            {% include '@Rozier/folders/navBar.html.twig' with {'folder':folder, current:'list'} %}
         {% elseif orphans %}
         <h1 class="content-title">{% trans %}unused_documents{% endtrans %}</h1>
         {% else %}

@@ -2,6 +2,12 @@ foldersEditPage:
     path:     /edit/{folderId}
     defaults: { _controller: Themes\Rozier\Controllers\FoldersController::editAction }
     requirements: { folderId : "[0-9]+" }
+foldersEditTranslationPage:
+    path:     /edit/{folderId}/translation/{translationId}
+    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::editTranslationAction }
+    requirements:
+        folderId : "[0-9]+"
+        translationId : "[0-9]+"
 foldersDownloadPage:
     path:     /download/{folderId}
     defaults: { _controller: Themes\Rozier\Controllers\FoldersController::downloadAction }

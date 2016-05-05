@@ -3,7 +3,7 @@
 {% block content %}
 <section class="content-global delete-folder">
 	<header class="content-header header-document header-document-preview">
-        <h1 class="content-title document-delete-title">{{ "delete.folder.%name%"|trans({'%name%': folder.getName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title document-delete-title">{{ "delete.folder.%name%"|trans({'%name%': folder.folderName})|truncate(25, true, '[…]') }}</h1>
     </header>
     <article class="content content-delete content-no-action-menu">
 		{% form_theme form '@Rozier/forms.html.twig' %}

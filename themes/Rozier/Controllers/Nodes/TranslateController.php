@@ -124,21 +124,23 @@ class TranslateController extends RozierApp
                          ->findOneByNodeAndTranslation($node, $translation);
         if (null === $existing) {
             $baseSource = $node->getNodeSources()->first();
-            $source = clone $baseSource;
+            if (null !== $baseSource) {
+                $source = clone $baseSource;
 
-            foreach ($source->getDocumentsByFields() as $document) {
-                $this->getService('em')->persist($document);
+                foreach ($source->getDocumentsByFields() as $document) {
+                    $this->getService('em')->persist($document);
+                }
+                $source->setTranslation($translation);
+                $source->setNode($node);
+
+                $this->getService('em')->persist($source);
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodesSourcesEvent($source);
+                $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
             }
-            $source->setTranslation($translation);
-            $source->setNode($node);
-
-            $this->getService('em')->persist($source);
-
-            /*
-             * Dispatch event
-             */
-            $event = new FilterNodesSourcesEvent($source);
-            $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
         }
     }
 

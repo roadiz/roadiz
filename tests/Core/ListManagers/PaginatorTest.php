@@ -40,6 +40,7 @@ class PaginatorTest extends KernelDependentCase
             Kernel::getService('em'),
             'RZ\Roadiz\Core\Entities\Node'
         );
+        /** @var \Doctrine\ORM\Query $query */
         $query = Kernel::getService('em')->createQuery('SELECT COUNT(n.id) FROM RZ\Roadiz\Core\Entities\Node n');
         $this->assertEquals($query->getSingleScalarResult(), $paginator->getTotalCount());
     }

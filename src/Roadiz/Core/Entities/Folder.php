@@ -33,37 +33,37 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Folders entity represent a directory on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
- * @ORM\Table(name="folders")
+ * @ORM\Table(name="folders", indexes={
+ *     @ORM\Index(columns={"visible"}),
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"created_at"}),
+ *     @ORM\Index(columns={"updated_at"})
+ * })
  */
 class Folder extends AbstractDateTimedPositioned
 {
     /**
-     * @ORM\Column(type="string", unique=true, nullable=false)
+     * @ORM\Column(name="folder_name", type="string", unique=true, nullable=false)
+     * @var string
      */
-    private $name;
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+    private $folderName;
 
-        return $this;
-    }
+    /**
+     * @var string
+     */
+    private $dirtyFolderName;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @var boolean
+     */
+    private $visible = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Folder", inversedBy="children")
@@ -86,7 +86,6 @@ class Folder extends AbstractDateTimedPositioned
     public function setParent(Folder $parent = null)
     {
         $this->parent = $parent;
-
         return $this;
     }
 
@@ -96,7 +95,7 @@ class Folder extends AbstractDateTimedPositioned
      * @var ArrayCollection
      *
      */
-    protected $children;
+    private $children;
 
     /**
      * @return ArrayCollection
@@ -119,6 +118,11 @@ class Folder extends AbstractDateTimedPositioned
         return $this;
     }
 
+    /**
+     * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    private $translatedFolders;
 
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
@@ -161,13 +165,89 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
+     * @return boolean
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     * @param boolean $visible
+     * @return Folder
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = (boolean) $visible;
+        return $this;
+    }
+
+    /**
      * Create a new Folder.
      */
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->translatedFolders = new ArrayCollection();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTranslatedFolders()
+    {
+        return $this->translatedFolders;
+    }
+
+    /**
+     * @param mixed $translatedFolders
+     * @return Folder
+     */
+    public function setTranslatedFolders($translatedFolders)
+    {
+        $this->translatedFolders = $translatedFolders;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFolderName()
+    {
+        return $this->folderName;
+    }
+
+    /**
+     * @param string $folderName
+     * @return Folder
+     */
+    public function setFolderName($folderName)
+    {
+        $this->dirtyFolderName = $folderName;
+        $this->folderName = StringHandler::slugify($folderName);
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getDirtyFolderName()
+    {
+        return $this->dirtyFolderName;
+    }
+
+    /**
+     * @param string $dirtyFolderName
+     * @return Folder
+     */
+    public function setDirtyFolderName($dirtyFolderName)
+    {
+        $this->dirtyFolderName = $dirtyFolderName;
+        return $this;
+    }
+
 
     /**
      * @return \RZ\Roadiz\Core\Handlers\FolderHandler

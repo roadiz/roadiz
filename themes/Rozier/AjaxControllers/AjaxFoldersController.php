@@ -108,6 +108,10 @@ class AjaxFoldersController extends AbstractAjaxController
         );
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function searchAction(Request $request)
     {
         /*
@@ -140,7 +144,7 @@ class AjaxFoldersController extends AbstractAjaxController
                             [],
                             10
                         );
-
+            /** @var Folder $folder */
             foreach ($folders as $folder) {
                 $responseArray[] = $folder->getHandler()->getFullPath();
             }
@@ -153,8 +157,8 @@ class AjaxFoldersController extends AbstractAjaxController
     }
 
     /**
-     * @param array $parameters
-     * @param Folder   $folder
+     * @param $parameters
+     * @param Folder $folder
      */
     protected function updatePosition($parameters, Folder $folder)
     {
@@ -165,6 +169,7 @@ class AjaxFoldersController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
+            /** @var Folder $parent */
             $parent = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['newParent']);
 
@@ -180,6 +185,7 @@ class AjaxFoldersController extends AbstractAjaxController
          */
         if (!empty($parameters['nextFolderId']) &&
             $parameters['nextFolderId'] > 0) {
+            /** @var Folder $nextFolder */
             $nextFolder = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['nextFolderId']);
             if ($nextFolder !== null) {
@@ -187,6 +193,7 @@ class AjaxFoldersController extends AbstractAjaxController
             }
         } elseif (!empty($parameters['prevFolderId']) &&
             $parameters['prevFolderId'] > 0) {
+            /** @var Folder $prevFolder */
             $prevFolder = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['prevFolderId']);
             if ($prevFolder !== null) {

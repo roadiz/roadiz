@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,46 +24,41 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file UniqueFolderNameValidator.php
+ * @file FolderTranslationType.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\CMS\Forms\Constraints;
+namespace Themes\Rozier\Forms;
 
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UniqueFolderNameValidator extends ConstraintValidator
+/**
+ * Class FolderTranslationType
+ * @package Themes\Rozier\Forms
+ */
+class FolderTranslationType extends AbstractType
 {
-    public function validate($value, Constraint $constraint)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /*
-         * If value is already the node name
-         * do nothing.
-         */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
-            return;
-        }
-
-        if (null !== $constraint->entityManager) {
-            if (true === $this->entityExists($value, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
-            }
-        } else {
-            $this->context->addViolation('UniqueFolderNameValidator constraint requires a valid EntityManager');
-        }
+        $builder->add('name', 'text', [
+            'label' => 'name',
+        ]);
     }
 
-    /**
-     * @param string $name
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     *
-     * @return bool
-     */
-    protected function entityExists($name, $entityManager)
+    public function getName()
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                                ->findOneByFolderName($name);
+        return 'folder_translation';
+    }
 
-        return (null !== $entity);
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'label' => false,
+            'data_class' => 'RZ\Roadiz\Core\Entities\FolderTranslation',
+            'attr' => [
+                'class' => 'uk-form folder-form',
+            ],
+        ]);
     }
 }

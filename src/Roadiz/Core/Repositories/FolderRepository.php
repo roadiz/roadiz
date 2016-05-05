@@ -30,7 +30,11 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\QueryException;
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\FolderTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * {@inheritdoc}
@@ -58,10 +62,10 @@ class FolderRepository extends EntityRepository
         if (count($folders) > 1) {
             $parentName = $folders[count($folders) - 2];
 
-            $parentFolder = $this->findOneByName($parentName);
+            $parentFolder = $this->findOneByFolderName($parentName);
         }
 
-        $folder = $this->findOneByName($folderName);
+        $folder = $this->findOneByFolderName($folderName);
 
 
         if (null === $folder) {
@@ -70,13 +74,22 @@ class FolderRepository extends EntityRepository
              * before linking it to the node
              */
             $folder = new Folder();
-            $folder->setName($folderName);
+            $folder->setFolderName($folderName);
 
             if (null !== $parentFolder) {
                 $folder->setParent($parentFolder);
             }
 
+            /*
+             * Add folder translation
+             * with given name
+             */
+            $translation = $this->_em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                     ->findDefault();
+            $folderTranslation = new FolderTranslation($folder, $translation);
+
             $this->_em->persist($folder);
+            $this->_em->persist($folderTranslation);
             $this->_em->flush();
         }
 
@@ -99,21 +112,29 @@ class FolderRepository extends EntityRepository
 
         $folderName = $folders[count($folders) - 1];
 
-        return $this->findOneByName($folderName);
+        return $this->findOneByFolderName($folderName);
     }
 
     /**
      * @param Folder $folder
-     * @return Folder[]
+     * @param Translation|null $translation
+     * @return array
      */
-    public function findAllChildrenFromFolder(Folder $folder)
+    public function findAllChildrenFromFolder(Folder $folder, Translation $translation = null)
     {
         $ids = $this->findAllChildrenIdFromFolder($folder);
         if (count($ids) > 0) {
             $qb = $this->createQueryBuilder('f');
-            $qb->select('f')
-                ->where($qb->expr()->in('f.id', ':ids'))
+            $qb->addSelect('f')
+                ->andWhere($qb->expr()->in('f.id', ':ids'))
                 ->setParameter(':ids', $ids);
+
+            if (null !== $translation && $translation instanceof Translation) {
+                $qb->addSelect('tf')
+                    ->innerJoin('f.translatedFolders', 'tf')
+                    ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
+                    ->setParameter(':translation', $translation);
+            }
 
             try {
                 return $qb->getQuery()->getResult();
@@ -122,6 +143,34 @@ class FolderRepository extends EntityRepository
             }
         }
         return [];
+    }
+
+    /**
+     * @param $folderName
+     * @param Translation|null $translation
+     * @return mixed|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByFolderName($folderName, Translation $translation = null)
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->addSelect('f')
+            ->andWhere($qb->expr()->in('f.folderName', ':name'))
+            ->setMaxResults(1)
+            ->setParameter(':name', $folderName);
+
+        if (null !== $translation && $translation instanceof Translation) {
+            $qb->addSelect('tf')
+                ->innerJoin('f.translatedFolders', 'tf')
+                ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
+                ->setParameter(':translation', $translation);
+        }
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
     }
 
     /**
@@ -155,6 +204,71 @@ class FolderRepository extends EntityRepository
             return array_map('current', $ids);
         } catch (NoResultException $e) {
             return [];
+        }
+    }
+
+    /**
+     * Create a Criteria object from a search pattern and additionnal fields.
+     *
+     * @param string $pattern Search pattern
+     * @param QueryBuilder $qb QueryBuilder to pass
+     * @param array $criteria Additionnal criteria
+     * @param string $alias SQL query table alias
+     *
+     * @return QueryBuilder
+     */
+    protected function createSearchBy(
+        $pattern,
+        QueryBuilder $qb,
+        array &$criteria = [],
+        $alias = "obj"
+    ) {
+
+        $this->classicLikeComparison($pattern, $qb, $alias);
+
+        /*
+         * Search in translations
+         */
+        $qb->leftJoin('obj.translatedFolders', 'tf');
+        $criteriaFields = [];
+        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\FolderTranslation');
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $this->searchableTypes)) {
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+            }
+        }
+        foreach ($criteriaFields as $key => $value) {
+            $fullKey = sprintf('LOWER(%s)', 'tf.' . $key);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
+        }
+
+        $qb = $this->prepareComparisons($criteria, $qb, $alias);
+
+        return $qb;
+    }
+
+    /**
+     * @param string $pattern
+     * @param array $criteria
+     * @return null
+     */
+    public function countSearchBy($pattern, array $criteria = [])
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->add('select', 'count(f)')
+            ->innerJoin('f.translatedFolders', 'obj');
+
+        $qb = $this->createSearchBy($pattern, $qb, $criteria);
+
+        try {
+            return $qb->getQuery()->getSingleScalarResult();
+        } catch (QueryException $e) {
+            return null;
+        } catch (NoResultException $e) {
+            return null;
         }
     }
 }

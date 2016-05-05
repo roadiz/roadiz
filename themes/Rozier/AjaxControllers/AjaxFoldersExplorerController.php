@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,10 +63,10 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
                         ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                         ->findBy(
                             [
-                            'parent' => null,
+                                'parent' => null,
                             ],
                             [
-                            'position' => 'ASC',
+                                'position' => 'ASC',
                             ]
                         );
 
@@ -85,11 +86,12 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
     {
         $foldersArray = [];
         if ($folders !== null) {
+            /** @var Folder $folder */
             foreach ($folders as $folder) {
                 $children = $this->recurseFolders($folder->getChildren());
                 $foldersArray[] = [
                     'id' => $folder->getId(),
-                    'name' => $folder->getName(),
+                    'name' => $folder->getFolderName(),
                     'children' => $children,
                 ];
             }

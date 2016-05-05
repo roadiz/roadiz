@@ -135,10 +135,10 @@ class FolderHandler
         $path = [];
 
         foreach ($parents as $parent) {
-            $path[] = $parent->getName();
+            $path[] = $parent->getFolderName();
         }
 
-        $path[] = $this->folder->getName();
+        $path[] = $this->folder->getFolderName();
 
         return implode('/', $path);
     }
