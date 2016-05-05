@@ -219,6 +219,15 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
+     * @return string
+     * @deprecated Use getFolderName() method instead to differenciate from FolderTranslation’ name.
+     */
+    public function getName()
+    {
+        return $this->getFolderName();
+    }
+
+    /**
      * @param string $folderName
      * @return Folder
      */
@@ -229,7 +238,16 @@ class Folder extends AbstractDateTimedPositioned
         return $this;
     }
 
-
+    /**
+     * @param string $folderName
+     * @return Folder
+     * @deprecated Use setFolderName() method instead to differenciate from FolderTranslation’ name.
+     */
+    public function setName($folderName)
+    {
+        return $this->setFolderName($folderName);
+    }
+    
     /**
      * @return string
      */
