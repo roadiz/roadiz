@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,17 +28,30 @@
  * @file NodesSourcesTrait.php
  * @author Maxime Constantinian
  */
-
 namespace Themes\Rozier\Traits;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\CMS\Forms\CssType;
+use RZ\Roadiz\CMS\Forms\CustomFormsNodesType;
+use RZ\Roadiz\CMS\Forms\DocumentsType;
+use RZ\Roadiz\CMS\Forms\EnumerationType;
+use RZ\Roadiz\CMS\Forms\JsonType;
+use RZ\Roadiz\CMS\Forms\MarkdownType;
+use RZ\Roadiz\CMS\Forms\MultipleEnumerationType;
+use RZ\Roadiz\CMS\Forms\NodesType;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Type;
+use Themes\Rozier\Forms\NodeTreeType;
 
 trait NodesSourcesTrait
 {
@@ -78,6 +91,8 @@ trait NodesSourcesTrait
      */
     protected function updateNodeName(NodesSources $nodeSource)
     {
+        /** @var EntityManager $em */
+        $em = $this->getService('em');
         $title = $nodeSource->getTitle();
 
         /*
@@ -93,11 +108,11 @@ trait NodesSourcesTrait
              * node name wont be updated if name already taken
              */
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
-                false === (boolean) $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
+                false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
+                false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
                 $nodeSource->getNode()->setNodeName($title);
 
-                $this->getService('em')->flush();
+                $em->flush();
 
                 /*
                  * Dispatch event
@@ -109,9 +124,8 @@ trait NodesSourcesTrait
     }
 
     /**
-     * @param Node         $node
+     * @param Node $node
      * @param NodesSources $source
-     *
      * @return \Symfony\Component\Form\Form
      * @throws \Exception
      */
@@ -124,6 +138,7 @@ trait NodesSourcesTrait
         $sourceDefaults = [
             'title' => $source->getTitle(),
         ];
+        /** @var NodeTypeField $field */
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $getter = $field->getGetterName();
@@ -135,10 +150,11 @@ trait NodesSourcesTrait
                 }
             }
         }
-
+        
         /*
          * Create subform for source
          */
+        /** @var FormBuilder $sourceBuilder */
         $sourceBuilder = $this->getService('formFactory')
                               ->createNamedBuilder('source', 'form', $sourceDefaults);
         /*
@@ -157,6 +173,7 @@ trait NodesSourcesTrait
                 ],
             ]
         );
+        /** @var NodeTypeField $field */
         foreach ($fields as $field) {
             $sourceBuilder->add(
                 $field->getName(),
@@ -164,6 +181,8 @@ trait NodesSourcesTrait
                 $this->getFormOptionsFromFieldType($field)
             );
         }
+
+
 
         return $sourceBuilder->getForm();
     }
@@ -181,41 +200,43 @@ trait NodesSourcesTrait
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
+                /** @var Document[] $documents */
                 $documents = $nodeSource->getHandler()
                                         ->getDocumentsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\DocumentsType($documents, $this->getService('em'));
+                return new DocumentsType($documents, $this->getService('em'));
             case NodeTypeField::NODES_T:
+                /** @var Node[] $nodes */
                 $nodes = $nodeSource->getNode()->getHandler()
                                     ->getNodesFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\NodesType($nodes, $this->getService('em'));
+                return new NodesType($nodes, $this->getService('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
+                /** @var CustomForm[] $customForms */
                 $customForms = $nodeSource->getNode()->getHandler()
                                           ->getCustomFormsFromFieldName($field->getName());
 
-                return new \RZ\Roadiz\CMS\Forms\CustomFormsNodesType($customForms, $this->getService('em'));
+                return new CustomFormsNodesType($customForms, $this->getService('em'));
             case NodeTypeField::CHILDREN_T:
                 /*
              * NodeTreeType is a virtual type which is only available
              * with Rozier backend theme.
              */
-                return new \Themes\Rozier\Forms\NodeTreeType(
+                return new NodeTreeType(
                     $nodeSource,
                     $field,
                     $controller
                 );
             case NodeTypeField::JSON_T:
-                return new \RZ\Roadiz\CMS\Forms\JsonType();
+                return new JsonType();
             case NodeTypeField::CSS_T:
-                return new \RZ\Roadiz\CMS\Forms\CssType();
+                return new CssType();
             case NodeTypeField::MARKDOWN_T:
-                return new \RZ\Roadiz\CMS\Forms\MarkdownType();
+                return new MarkdownType();
             case NodeTypeField::ENUM_T:
-                return new \RZ\Roadiz\CMS\Forms\EnumerationType($field);
+                return new EnumerationType($field);
             case NodeTypeField::MULTIPLE_T:
-                return new \RZ\Roadiz\CMS\Forms\MultipleEnumerationType($field);
-
+                return new MultipleEnumerationType($field);
             default:
                 return NodeTypeField::$typeToForm[$field->getType()];
         }

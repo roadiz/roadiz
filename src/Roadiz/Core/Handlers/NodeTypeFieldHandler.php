@@ -92,7 +92,8 @@ class NodeTypeFieldHandler
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
             $ormParams = [
                 'type' => '"' . NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] . '"',
-                'nullable' => 'true'
+                'nullable' => 'true',
+                'name' => '"' . $this->nodeTypeField->getName() . '"',
             ];
 
             if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
