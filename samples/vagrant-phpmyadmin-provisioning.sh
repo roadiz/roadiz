@@ -2,6 +2,14 @@
 #
 export DEBIAN_FRONTEND=noninteractive
 
+DBPASSWD="roadiz"
+
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $DBPASSWD"
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $DBPASSWD"
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $DBPASSWD"
+sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
+
 TEMP_DIR="/home/vagrant"
 PHPMYADMIN_DIR="/usr/share/phpmyadmin"
 PHPMYADMIN_ARCHIVE="phpMyAdmin-4.5.3.1-all-languages"
