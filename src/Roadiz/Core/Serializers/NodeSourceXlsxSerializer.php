@@ -34,16 +34,20 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * XLSX Serialization handler for NodeSource.
  */
 class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 {
+    /** @var EntityManager */
     protected $em;
+
+    /** @var Request */
     protected $request;
+
     protected $forceLocale = false;
     protected $addUrls = false;
     protected $onlyTexts = false;
@@ -60,8 +64,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param NodesSources $nodeSource
-     *
+     * @param NodesSources|Collection|array $nodeSource
      * @return array
      */
     public function toArray($nodeSource)
@@ -95,10 +98,9 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
     /**
      * @param NodesSources $nodeSource
-     *
      * @return array
      */
-    protected function getSourceFields($nodeSource)
+    protected function getSourceFields(NodesSources $nodeSource)
     {
         $fields = $this->getFields($nodeSource->getNode()->getNodeType());
 
@@ -114,6 +116,10 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
         return $sourceDefaults;
     }
 
+    /**
+     * @param NodeType $nodeType
+     * @return array
+     */
     protected function getFields(NodeType $nodeType)
     {
         $criteria = [
@@ -169,6 +175,10 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
         $this->onlyTexts = (boolean) $onlyTexts;
     }
 
+    /**
+     * @param Request $request
+     * @param bool $forceLocale
+     */
     public function addUrls(Request $request, $forceLocale = false)
     {
         $this->addUrls = true;

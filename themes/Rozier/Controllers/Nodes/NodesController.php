@@ -144,6 +144,7 @@ class NodesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
+        /** @var Node $node */
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -194,6 +195,7 @@ class NodesController extends RozierApp
             /*
              * Handle main form
              */
+            /** @var Form $form */
             $form = $this->createForm(new Forms\NodeType(), $node, [
                 'em' => $this->getService('em'),
                 'nodeName' => $node->getNodeName(),
@@ -212,7 +214,8 @@ class NodesController extends RozierApp
                     $msg = $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%' => $node->getNodeName(),
                     ]);
-                    $this->publishConfirmMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -258,7 +261,7 @@ class NodesController extends RozierApp
                     '%type%' => $type->getDisplayName(),
                 ]
             );
-            $this->publishConfirmMessage($request, $msg);
+            $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
             return $this->redirect($this->generateUrl('nodesEditPage', ['nodeId'=>$node->getId()]));
         } else {
@@ -313,7 +316,7 @@ class NodesController extends RozierApp
                         'node.%name%.created',
                         ['%name%' => $node->getNodeName()]
                     );
-                    $this->publishConfirmMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
                     return $this->redirect($this->generateUrl(
                         'nodesEditPage',
@@ -435,6 +438,7 @@ class NodesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
+        /** @var Node $node */
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -462,7 +466,7 @@ class NodesController extends RozierApp
                     'node.%name%.deleted',
                     ['%name%' => $node->getNodeName()]
                 );
-                $this->publishConfirmMessage($request, $msg);
+                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
                 if ($request->query->has('referer')) {
                     /*
@@ -509,7 +513,7 @@ class NodesController extends RozierApp
             $nodes = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
                 ->findBy($criteria);
-            
+
             /** @var Node $node */
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();
@@ -541,6 +545,7 @@ class NodesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
+        /** @var Node $node */
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -567,7 +572,7 @@ class NodesController extends RozierApp
                     'node.%name%.undeleted',
                     ['%name%' => $node->getNodeName()]
                 );
-                $this->publishConfirmMessage($request, $msg);
+                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */

@@ -104,3 +104,11 @@ nodesPublishAllAction:
     path:     /publish-all/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::publishAllAction }
     requirements: { nodeId : "[0-9]+" }
+nodesHistoryPage:
+    path:     /history/{nodeId}/{page}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\HistoryController::historyAction
+        page : "1"
+    requirements:
+        nodeId : "[0-9]+"
+        page : "[0-9]+"

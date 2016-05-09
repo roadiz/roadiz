@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file TranstypeController.php
- * @author Ambroise Maupate
+ * @author ambroisemaupate
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
@@ -36,11 +36,17 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
 
+/**
+ * Class TranstypeController
+ * @package Themes\Rozier\Controllers\Nodes
+ */
 class TranstypeController extends RozierApp
 {
     /**
@@ -72,17 +78,24 @@ class TranstypeController extends RozierApp
         if ($form->isValid()) {
             $data = $form->getData();
 
+            /** @var NodeType $newNodeType */
             $newNodeType = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
 
             $this->doTranstype($node, $newNodeType);
             $this->getService('em')->refresh($node);
 
+            /*
+             * Dispatch event
+             */
+            $event = new FilterNodeEvent($node);
+            $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+
             $msg = $this->getTranslator()->trans('%node%.transtyped_to.%type%', [
                 '%node%' => $node->getNodeName(),
                 '%type%' => $newNodeType->getName(),
             ]);
-            $this->publishConfirmMessage($request, $msg);
+            $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',

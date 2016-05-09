@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SolrCommand.php
- * @author Ambroise Maupate
+ * @author ambroisemaupate
  */
 namespace RZ\Roadiz\Console;
 
