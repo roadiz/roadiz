@@ -97,6 +97,7 @@ class RoadizApplication extends Application
             new NodesSourcesCommand(),
             new NodesCommand(),
             new NodesCreationCommand(),
+            new NodesDetailsCommand(),
             new ThemesCommand(),
             new InstallCommand(),
             new UsersCommand(),

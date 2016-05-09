@@ -83,6 +83,7 @@ class NodesSourcesController extends RozierApp
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
             if (null !== $source) {
+                $this->getService('em')->refresh($source);
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;
