@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file TranslateController.php
- * @author Ambroise Maupate
+ * @author ambroisemaupate
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
@@ -83,9 +83,9 @@ class TranslateController extends RozierApp
                         $msg = $this->getTranslator()->trans('node.%name%.translated', [
                             '%name%' => $node->getNodeName(),
                         ]);
-                        $this->publishConfirmMessage($request, $msg);
+                        $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                     } catch (EntityAlreadyExistsException $e) {
-                        $this->publishErrorMessage($request, $e->getMessage());
+                        $this->publishErrorMessage($request, $e->getMessage(), $node->getNodeSources()->first());
                     }
 
                     return $this->redirect($this->generateUrl(

@@ -6231,6 +6231,10 @@
             <source>translate_offspring</source>
             <target xml:lang="fr" state="translated">Traduire toute l’arborescence</target>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+            <source>node.%name%.undeleted</source>
+            <target xml:lang="fr" state="translated">Le nœud «%name%» a été sorti de la corbeille</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

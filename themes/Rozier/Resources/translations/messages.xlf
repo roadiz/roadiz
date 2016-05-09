@@ -6353,6 +6353,10 @@
             <source>translate_offspring</source>
             <target></target>
         </trans-unit>
+        <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+            <source>node.%name%.undeleted</source>
+            <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

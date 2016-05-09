@@ -37,7 +37,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
- * {@inheritdoc}
+ * Class ExportController
+ * @package Themes\Rozier\Controllers\Nodes
  */
 class ExportController extends RozierApp
 {
