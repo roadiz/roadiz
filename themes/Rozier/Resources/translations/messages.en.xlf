@@ -6231,6 +6231,10 @@
             <source>translate_offspring</source>
             <target xml:lang="en" state="translated">Translate node hierarchy</target>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+            <source>node.%name%.undeleted</source>
+            <target xml:lang="en" state="translated">Node %name% has been undeleted</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

@@ -215,7 +215,6 @@ class NodesController extends RozierApp
                         '%name%' => $node->getNodeName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
