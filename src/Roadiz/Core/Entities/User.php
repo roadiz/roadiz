@@ -713,14 +713,14 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
      *
-     * @var \RZ\Roadiz\Core\Entities\Node
+     * @var Node
      */
     private $chroot;
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $chroot
+     * @param Node $chroot
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     public function setChroot(Node $chroot = null)
     {
@@ -730,7 +730,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     public function getChroot()
     {

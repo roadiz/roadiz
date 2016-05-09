@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -508,9 +509,15 @@ class NodesController extends RozierApp
             $nodes = $this->getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
                 ->findBy($criteria);
+            
+            /** @var Node $node */
             foreach ($nodes as $node) {
                 $node->getHandler()->removeWithChildrenAndAssociations();
             }
+            /*
+             * Final flush
+             */
+            Kernel::getService('em')->flush();
 
             $msg = $this->getTranslator()->trans('node.trash.emptied');
             $this->publishConfirmMessage($request, $msg);

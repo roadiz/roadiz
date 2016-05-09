@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
@@ -245,7 +246,7 @@ abstract class Controller
         } else {
             $translation = $this->container['defaultTranslation'];
         }
-        
+
         $request->setLocale($translation->getLocale());
         return $translation;
     }
@@ -420,7 +421,7 @@ abstract class Controller
     /**
      * Get a user from the tokenStorage.
      *
-     * @return mixed
+     * @return User|null
      *
      * @throws \LogicException If tokenStorage is not available
      *

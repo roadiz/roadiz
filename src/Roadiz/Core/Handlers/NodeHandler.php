@@ -256,6 +256,8 @@ class NodeHandler
      * Remove current node with its children recursively and
      * its associations.
      *
+     * This method DOES NOT flush entityManager
+     *
      * @return $this
      */
     public function removeWithChildrenAndAssociations()
@@ -264,11 +266,6 @@ class NodeHandler
         $this->removeAssociations();
 
         Kernel::getService('em')->remove($this->node);
-
-        /*
-         * Final flush
-         */
-        Kernel::getService('em')->flush();
 
         return $this;
     }
