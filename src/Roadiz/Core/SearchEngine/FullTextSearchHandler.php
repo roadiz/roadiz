@@ -84,7 +84,7 @@ class FullTextSearchHandler
              * @see http://www.solrtutorial.com/solr-query-syntax.html
              */
             if ($singleWord) {
-                $queryTxt = sprintf('(title:*%s*)^1.5 (collection_txt:*%s*)', $q, $q);
+                $queryTxt = sprintf('(title:"*%s*")^1.5 (collection_txt:"*%s*")', $q, $q);
             } else {
                 $queryTxt = sprintf('(title:"%s"~%d)^1.5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
             }
@@ -94,7 +94,7 @@ class FullTextSearchHandler
              */
             if ($searchTags) {
                 if ($singleWord) {
-                    $queryTxt .= sprintf(' (tags_txt:*%s*)', $q);
+                    $queryTxt .= sprintf(' (tags_txt:"*%s*")', $q);
                 } else {
                     $queryTxt .= sprintf(' (tags_txt:"%s"~%d)', $q, $proximity);
                 }
