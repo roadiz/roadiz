@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Node\NodeDuplicator;
 
 /**
  * Handle operations with newsletters entities.
@@ -74,8 +75,8 @@ class NewsletterHandler
      */
     public function duplicate()
     {
-
-        $newNode = $this->newsletter->getNode()->getHandler()->duplicate();
+        $duplicator = new NodeDuplicator($this->newsletter->getNode(), Kernel::getService('em'));
+        $newNode = $duplicator->duplicate();
         Kernel::getService('em')->persist($newNode);
 
         Kernel::getService('em')->refresh($this->newsletter);

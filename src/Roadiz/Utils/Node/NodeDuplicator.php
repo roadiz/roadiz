@@ -34,6 +34,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
+use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * Handle node duplication.
@@ -70,7 +71,7 @@ class NodeDuplicator
 
         $newNode = $this->doDuplicate($node);
         if ($parent !== null) {
-            $parent = $this->em->find("RZ\Roadiz\Core\Entities\Node", $parent->getId());
+            $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
             $newNode->setParent($parent);
         }
         $this->em->flush();
@@ -122,7 +123,6 @@ class NodeDuplicator
          */
         $this->doDuplicateNodeRelations($node);
 
-        $this->em->flush();
         return $node;
     }
 
@@ -159,6 +159,7 @@ class NodeDuplicator
         $node->getNodeSources()->clear();
         foreach ($nodeSources as $nodeSource) {
             $nodeSource->setNode(null);
+            /** @var Translation $tran */
             $tran = $this->em->merge($nodeSource->getTranslation());
             $nodeSource->setTranslation($tran);
             $this->em->persist($nodeSource);
@@ -174,8 +175,6 @@ class NodeDuplicator
             }
             $newSources->add($nodeSource);
         }
-        // Flush only outside of loop
-        $this->em->flush();
 
         return $newSources;
     }

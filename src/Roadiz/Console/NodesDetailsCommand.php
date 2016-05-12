@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;

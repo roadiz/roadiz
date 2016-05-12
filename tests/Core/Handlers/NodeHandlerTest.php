@@ -67,7 +67,9 @@ class NodeHandlerTest extends KernelDependentCase
             Kernel::getService("em")->flush();
 
             $nbNode = count(static::$runtimeCollection);
-            $duplicatedNode = $node->getHandler()->duplicate();
+
+            $duplicator = new \RZ\Roadiz\Utils\Node\NodeDuplicator($node, Kernel::getService("em"));
+            $duplicatedNode = $duplicator->duplicate();
 
             $this->assertEquals($node->getNodeSources()->count(), $duplicatedNode->getNodeSources()->count());
             $this->assertEquals($node->getChildren()->count(), $duplicatedNode->getChildren()->count());
