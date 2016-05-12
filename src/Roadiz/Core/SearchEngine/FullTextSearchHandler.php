@@ -120,7 +120,7 @@ class FullTextSearchHandler
              * Add start if not first page.
              */
             if ($page > 1) {
-                $query->setStart($page * $rows);
+                $query->setStart(($page - 1) * $rows);
             }
 
             if (null !== $this->logger) {
