@@ -764,16 +764,20 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * Set node position before persisting.
+     *
      * @ORM\PrePersist
      */
     public function prePersist()
     {
         parent::prePersist();
 
-        /*
-         * Get the last index after last node in parent
-         */
-        $this->setPosition($this->getHandler()->cleanPositions());
+        if ($this->getPosition() < 0) {
+            /*
+             * Get the last index after last node in parent
+             */
+            $this->setPosition($this->getHandler()->cleanPositions());
+        }
     }
 
     /**
@@ -787,6 +791,9 @@ class Node extends AbstractDateTimedPositioned
         return $this->handler;
     }
 
+    /**
+     * Clone current node and ist relations.
+     */
     public function __clone()
     {
         if ($this->id) {
@@ -814,6 +821,9 @@ class Node extends AbstractDateTimedPositioned
         }
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return '[Node]' . $this->getId() . " — " . $this->getNodeName() . " <" . $this->getNodeType()->getName() . '>';

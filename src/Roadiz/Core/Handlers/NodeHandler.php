@@ -463,6 +463,8 @@ class NodeHandler
     /**
      * Clean position for current node siblings.
      *
+     * Warning, this method does not flush.
+     *
      * @return int Return the next position after the **last** node
      */
     public function cleanPositions()
@@ -477,6 +479,8 @@ class NodeHandler
     /**
      * Reset current node children positions.
      *
+     * Warning, this method does not flush.
+     *
      * @return int Return the next position after the **last** node
      */
     public function cleanChildrenPositions()
@@ -488,13 +492,13 @@ class NodeHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
-
         return $i;
     }
 
     /**
      * Reset every root nodes positions.
+     *
+     * Warning, this method does not flush.
      *
      * @return int Return the next position after the **last** node
      */
@@ -505,12 +509,11 @@ class NodeHandler
             ->findBy(['parent' => null], ['position' => 'ASC']);
 
         $i = 1;
+        /** @var Node $child */
         foreach ($nodes as $child) {
             $child->setPosition($i);
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -522,7 +525,7 @@ class NodeHandler
      */
     public function getAllOffspringId()
     {
-        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findAllOffspringIdByNode($this->node);
     }
 
@@ -537,6 +540,7 @@ class NodeHandler
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findBy(['home' => true]);
 
+        /** @var Node $default */
         foreach ($defaults as $default) {
             $default->setHome(false);
         }
@@ -554,7 +558,6 @@ class NodeHandler
     public function duplicate()
     {
         $duplicator = new NodeDuplicator($this->node, Kernel::getService('em'));
-
         return $duplicator->duplicate();
     }
 

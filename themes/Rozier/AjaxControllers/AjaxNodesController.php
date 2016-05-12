@@ -217,6 +217,8 @@ class AjaxNodesController extends AbstractAjaxController
             NodeHandler::cleanRootNodesPositions();
         }
 
+        $this->getService('em')->flush();
+
         /*
          * Dispatch event
          */
