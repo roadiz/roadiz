@@ -2,7 +2,10 @@
 <nav class="tree-widget nodetree-widget">
     {% if mainNodeTree %}
         <div class="tree-head nodetree-head">
-             <h4>{% trans %}nodeTree{% endtrans %}</h4>
+            <h4>
+                {% trans %}nodeTree{% endtrans %}
+                <a class="see-all-root-tree" data-uk-tooltip="{animation:true}" title="{% trans %}see_all{% endtrans %}" href="{{ path('nodesTreePage') }}"><i class="uk-icon-search"></i></a>
+            </h4>
             {% if not nodeTree.getRootNode %}
                 <a href="{{ path('nodesAddChildPage') }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.node{% endtrans %}</a>
             {% else %}

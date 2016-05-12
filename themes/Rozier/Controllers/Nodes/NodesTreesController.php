@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -50,13 +51,16 @@ class NodesTreesController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function treeAction(Request $request, $nodeId, $translationId = null)
+    public function treeAction(Request $request, $nodeId = null, $translationId = null)
     {
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
-
-        $node = $this->getService('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-        $this->getService('em')->refresh($node);
+        if ($nodeId > 0) {
+            $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
+            $node = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            $this->getService('em')->refresh($node);
+        } else {
+            $node = null;
+        }
 
         if (null !== $translationId) {
             $translation = $this->getService('em')
@@ -66,78 +70,76 @@ class NodesTreesController extends RozierApp
             $translation = $this->getService('defaultTranslation');
         }
 
+        $widget = new NodeTreeWidget($request, $this, $node, $translation);
+
+        if ($request->get('tagId') && $request->get('tagId') > 0) {
+            $filterTag = $this->getService('em')
+                              ->find(
+                                  '\RZ\Roadiz\Core\Entities\Tag',
+                                  (int) $request->get('tagId')
+                              );
+
+            $this->assignation['filterTag'] = $filterTag;
+
+            $widget->setTag($filterTag);
+        }
+
+        $widget->setStackTree(true);
+        $widget->getNodes(); //pre-fetch nodes for enable filters
+
         if (null !== $node) {
-            $widget = new NodeTreeWidget($request, $this, $node, $translation);
-
-            if ($request->get('tagId') && $request->get('tagId') > 0) {
-                $filterTag = $this->getService('em')
-                                  ->find(
-                                      '\RZ\Roadiz\Core\Entities\Tag',
-                                      (int) $request->get('tagId')
-                                  );
-
-                $this->assignation['filterTag'] = $filterTag;
-
-                $widget->setTag($filterTag);
-            }
-
-            $widget->setStackTree(true);
-            $widget->getNodes(); //pre-fetch nodes for enable filters
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $node->getNodeSources()->first();
-            $this->assignation['translation'] = $translation;
-            $this->assignation['specificNodeTree'] = $widget;
-
-            /*
-             * Handle bulk tag form
-             */
-            $tagNodesForm = $this->buildBulkTagForm();
-            $tagNodesForm->handleRequest($request);
-            if ($tagNodesForm->isValid()) {
-                $data = $tagNodesForm->getData();
-
-                if ($tagNodesForm->get('submitTag')->isClicked()) {
-                    $msg = $this->tagNodes($data);
-                } elseif ($tagNodesForm->get('submitUntag')->isClicked()) {
-                    $msg = $this->untagNodes($data);
-                } else {
-                    $msg = $this->getTranslator()->trans('wrong.request');
-                }
-
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl(
-                    'nodesTreePage',
-                    ['nodeId' => $nodeId, 'translationId' => $translationId]
-                ));
-            }
-            $this->assignation['tagNodesForm'] = $tagNodesForm->createView();
-
-            /*
-             * Handle bulk status
-             */
-            if ($this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-                $statusBulkNodes = $this->buildBulkStatusForm($request->getRequestUri());
-                $this->assignation['statusNodesForm'] = $statusBulkNodes->createView();
-            }
-
-            if ($this->isGranted('ROLE_ACCESS_NODES_DELETE')) {
-                /*
-                 * Handle bulk delete form
-                 */
-                $deleteNodesForm = $this->buildBulkDeleteForm($request->getRequestUri());
-                $this->assignation['deleteNodesForm'] = $deleteNodesForm->createView();
-            }
-
-            return $this->render('nodes/tree.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+        $this->assignation['translation'] = $translation;
+        $this->assignation['specificNodeTree'] = $widget;
+
+        /*
+         * Handle bulk tag form
+         */
+        $tagNodesForm = $this->buildBulkTagForm();
+        $tagNodesForm->handleRequest($request);
+        if ($tagNodesForm->isValid()) {
+            $data = $tagNodesForm->getData();
+
+            if ($tagNodesForm->get('submitTag')->isClicked()) {
+                $msg = $this->tagNodes($data);
+            } elseif ($tagNodesForm->get('submitUntag')->isClicked()) {
+                $msg = $this->untagNodes($data);
+            } else {
+                $msg = $this->getTranslator()->trans('wrong.request');
+            }
+
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->generateUrl(
+                'nodesTreePage',
+                ['nodeId' => $nodeId, 'translationId' => $translationId]
+            ));
+        }
+        $this->assignation['tagNodesForm'] = $tagNodesForm->createView();
+
+        /*
+         * Handle bulk status
+         */
+        if ($this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+            $statusBulkNodes = $this->buildBulkStatusForm($request->getRequestUri());
+            $this->assignation['statusNodesForm'] = $statusBulkNodes->createView();
+        }
+
+        if ($this->isGranted('ROLE_ACCESS_NODES_DELETE')) {
+            /*
+             * Handle bulk delete form
+             */
+            $deleteNodesForm = $this->buildBulkDeleteForm($request->getRequestUri());
+            $this->assignation['deleteNodesForm'] = $deleteNodesForm->createView();
+        }
+
+        return $this->render('nodes/tree.html.twig', $this->assignation);
     }
 
     /**
      * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkDeleteAction(Request $request)
@@ -161,10 +163,8 @@ class NodesTreesController extends RozierApp
                     $nodesIds
                 );
                 $form->handleRequest($request);
-
-                if ($form->isValid()) {
+                if ($request->get('confirm') == true && $form->isSubmitted() && $form->isValid()) {
                     $msg = $this->bulkDeleteNodes($form->getData());
-
                     $this->publishConfirmMessage($request, $msg);
 
                     if (!empty($form->getData()['referer'])) {
@@ -272,6 +272,7 @@ class NodesTreesController extends RozierApp
 
         return $builder->getForm();
     }
+
     /**
      * @param array $data
      *

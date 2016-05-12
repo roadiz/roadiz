@@ -133,7 +133,13 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
         var $rootTree = $($nodeTree.find('.root-tree')[0]);
 
         if (typeof rootNodeId === "undefined") {
-            rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
+            if (!$rootTree.attr("data-parent-node-id")) {
+                rootNodeId = null;
+            } else {
+                rootNodeId = parseInt($rootTree.attr("data-parent-node-id"));
+            }
+        } else {
+            rootNodeId = parseInt(rootNodeId);
         }
 
         Rozier.lazyload.canvasLoader.show();
@@ -141,7 +147,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
             "_token":       Rozier.ajaxToken,
             "_action":      'requestNodeTree',
             "stackTree":    true,
-            "parentNodeId": parseInt(rootNodeId)
+            "parentNodeId": rootNodeId
         };
 
         var url = Rozier.routes.nodesTreeAjax;
@@ -154,6 +160,8 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
         if (isset(tagId)) {
             postData.tagId = parseInt(tagId);
         }
+
+        console.log(postData);
 
         _this.currentRequest = $.ajax({
             url: url,
