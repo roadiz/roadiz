@@ -29,6 +29,10 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use Solarium\Plugin\BufferedAdd\BufferedAdd;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -84,5 +88,48 @@ class SolrReindexCommand extends SolrCommand
         }
 
         $output->writeln($text);
+    }
+
+    /**
+     * Delete Solr index and loop over every NodesSources to index them again.
+     *
+     * @param OutputInterface $output
+     */
+    protected function reindexNodeSources(OutputInterface $output)
+    {
+        // Empty first
+        $this->emptySolr($output);
+
+        $update = $this->solr->createUpdate();
+        /*
+         * Use buffered insertion
+         */
+        /** @var BufferedAdd $buffer */
+        $buffer = $this->solr->getPlugin('bufferedadd');
+        $buffer->setBufferSize(100);
+
+        // Then index
+        $nSources = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->findAll();
+
+        $progress = new ProgressBar($output, count($nSources));
+        $progress->setFormat('verbose');
+        $progress->start();
+
+        /** @var NodesSources $ns */
+        foreach ($nSources as $ns) {
+            $solariumNS = new SolariumNodeSource($ns, $this->solr);
+            $solariumNS->setDocument($update->createDocument());
+            $solariumNS->index();
+            $buffer->addDocument($solariumNS->getDocument());
+            $progress->advance();
+        }
+
+        $buffer->flush();
+
+        // optimize the index
+        $this->optimizeSolr($output);
+        $progress->finish();
     }
 }

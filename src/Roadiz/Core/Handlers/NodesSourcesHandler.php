@@ -540,7 +540,7 @@ class NodesSourcesHandler
     /**
      * Get node tags with current source translation.
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function getTags()
     {
