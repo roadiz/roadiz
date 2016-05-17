@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
 use Themes\Rozier\Events\SolariumSubscriber;
@@ -188,6 +189,12 @@ class RozierApp extends BackendController
          */
         $container['dispatcher']->addSubscriber(
             new TranslationSubscriber($container['em']->getConfiguration()->getResultCacheImpl())
+        );
+        /*
+         * Add custom event subscriber to manage universal node-type fields
+         */
+        $container['dispatcher']->addSubscriber(
+            new NodesSourcesUniversalSubscriber($container['em'])
         );
 
         /*

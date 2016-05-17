@@ -59,6 +59,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
         $data['type'] = $nodeTypeField->getType();
         $data['indexed'] = $nodeTypeField->isIndexed();
         $data['virtual'] = $nodeTypeField->isVirtual();
+        $data['universal'] = $nodeTypeField->isUniversal();
         $data['default_values'] = $nodeTypeField->getDefaultValues();
         $data['group_name'] = $nodeTypeField->getGroupName();
 
@@ -84,13 +85,12 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
             'type',
             'indexed',
             'virtual',
+            'universal',
             'defaultValues',
             'groupName',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
-
         $serializer = new Serializer([$normalizer], [$encoder]);
-
         return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\NodeTypeField', 'json');
     }
 }

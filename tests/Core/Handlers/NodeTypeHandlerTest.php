@@ -89,7 +89,7 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         $ntf1->setName('Title');
         $ntf1->setType(NodeTypeField::MARKDOWN_T);
         $ntf1->setDefaultValues('value1, value2');
-
+        $ntf1->setUniversal(false);
         $nt2->addField($ntf1);
 
         return array(

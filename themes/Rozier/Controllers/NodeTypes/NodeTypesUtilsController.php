@@ -31,7 +31,9 @@
 
 namespace Themes\Rozier\Controllers\NodeTypes;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -72,6 +74,39 @@ class NodeTypesUtilsController extends RozierApp
                 $nodeType->getName() . '.rzt'
             )
         ); // Rezo-Zero Type
+        $response->prepare($request);
+
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return BinaryFileResponse
+     */
+    public function exportAllAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+
+        $nodeTypes = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findAll();
+
+        $serializer = new NodeTypeJsonSerializer();
+        $zipArchive = new \ZipArchive();
+        $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        $zipArchive->open($tmpfname, \ZipArchive::CREATE);
+
+        /** @var NodeType $nodeType */
+        foreach ($nodeTypes as $nodeType) {
+            $zipArchive->addFromString($nodeType->getName() . '.rzt', $serializer->serialize($nodeType));
+        }
+
+        $zipArchive->close();
+        $response = new BinaryFileResponse($tmpfname);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'nodetypes-' . date('Y-m-d-H-i-s') . '.zip'
+        );
         $response->prepare($request);
 
         return $response;

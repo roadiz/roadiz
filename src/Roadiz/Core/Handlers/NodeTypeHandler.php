@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
@@ -264,19 +265,36 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     {
         if (null !== $newNodeType) {
             /*
-             * options
+             * Override display name
              */
             if ("" != $newNodeType->getDisplayName()) {
                 $this->nodeType->setDisplayName($newNodeType->getDisplayName());
             }
+            /*
+             * Override description
+             */
             if ("" != $newNodeType->getDescription()) {
                 $this->nodeType->setDescription($newNodeType->getDescription());
             }
+            /*
+             * Override color
+             */
+            if ("" != $newNodeType->getColor()) {
+                $this->nodeType->setColor($newNodeType->getColor());
+            }
+            /*
+             * Override booleans
+             */
+            $this->nodeType->setVisible($newNodeType->isVisible());
+            $this->nodeType->setHidingNodes($newNodeType->isHidingNodes());
+            $this->nodeType->setNewsletterType($newNodeType->isNewsletterType());
+
             /*
              * make fields diff
              */
             $existingFieldsNames = $this->nodeType->getFieldsNames();
 
+            /** @var NodeTypeField $newField */
             foreach ($newNodeType->getFields() as $newField) {
                 if (false === in_array($newField->getName(), $existingFieldsNames)) {
                     /*
@@ -285,6 +303,25 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
                      */
                     $newField->setNodeType($this->nodeType);
                     Kernel::getService('em')->persist($newField);
+                } else {
+                    /*
+                     * Field already exists.
+                     * Updating it.
+                     */
+                    /** @var NodeTypeField $oldField */
+                    $oldField = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                        ->findOneBy([
+                            'nodeType' => $this->nodeType,
+                            'name' => $newField->getName(),
+                        ]);
+                    if (null !== $oldField) {
+                        $oldField->setVisible($newField->isVisible());
+                        $oldField->setIndexed($newField->isIndexed());
+                        $oldField->setUniversal($newField->isUniversal());
+                        $oldField->setDefaultValues($newField->getDefaultValues());
+                        $oldField->setDescription($newField->getDescription());
+                        $oldField->setLabel($newField->getLabel());
+                    }
                 }
             }
         } else {

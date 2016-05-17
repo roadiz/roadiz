@@ -394,10 +394,10 @@ class NodesSourcesHandler
         $preview = false
     ) {
         if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $authorizationChecker);
+            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $authorizationChecker, $preview);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getFirstChild($criteria, $order, $authorizationChecker);
+            return $this->getFirstChild($criteria, $order, $authorizationChecker, $preview);
         }
     }
 
@@ -420,10 +420,10 @@ class NodesSourcesHandler
         $preview = false
     ) {
         if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $authorizationChecker);
+            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $authorizationChecker, $preview);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getLastChild($criteria, $order, $authorizationChecker);
+            return $this->getLastChild($criteria, $order, $authorizationChecker, $preview);
         }
     }
 

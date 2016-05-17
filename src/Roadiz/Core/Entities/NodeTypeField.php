@@ -43,7 +43,8 @@ use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
  *         @ORM\Index(columns={"indexed"}),
  *         @ORM\Index(columns={"position"}),
  *         @ORM\Index(columns={"group_name"}),
- *         @ORM\Index(columns={"type"})
+ *         @ORM\Index(columns={"type"}),
+ *         @ORM\Index(columns={"universal"})
  *     },
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={"name", "node_type_id"})}
  * )
@@ -51,6 +52,14 @@ use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
  */
 class NodeTypeField extends AbstractField
 {
+    /**
+     * If current field data should be the same over translations or not.
+     *
+     * @var bool
+     * @ORM\Column(name="universal", type="boolean", nullable=false, options={"default" = false})
+     */
+    private $universal = false;
+
     /**
      * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
@@ -232,6 +241,33 @@ class NodeTypeField extends AbstractField
     {
         $this->groupName = trim(strip_tags($groupName));
 
+        return $this;
+    }
+
+    /**
+     * @see Same as isUniversal
+     * @return mixed
+     */
+    public function getUniversal()
+    {
+        return $this->universal;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUniversal()
+    {
+        return $this->universal;
+    }
+
+    /**
+     * @param bool $universal
+     * @return NodeTypeField
+     */
+    public function setUniversal($universal)
+    {
+        $this->universal = (bool) $universal;
         return $this;
     }
 }

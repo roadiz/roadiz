@@ -131,7 +131,14 @@ trait NodesSourcesTrait
      */
     private function buildEditSourceForm(Node $node, NodesSources $source)
     {
-        $fields = $node->getNodeType()->getFields();
+        if ($source->getTranslation()->isDefaultTranslation()) {
+            $fields = $node->getNodeType()->getFields();
+        } else {
+            $fields = $this->getService('em')
+                           ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                           ->findAllNotUniversal($node->getNodeType());
+        }
+
         /*
          * Create source default values
          */
@@ -150,7 +157,7 @@ trait NodesSourcesTrait
                 }
             }
         }
-        
+
         /*
          * Create subform for source
          */
@@ -181,8 +188,6 @@ trait NodesSourcesTrait
                 $this->getFormOptionsFromFieldType($field)
             );
         }
-
-
 
         return $sourceBuilder->getForm();
     }
@@ -262,6 +267,9 @@ trait NodesSourcesTrait
                 'autocomplete' => 'off',
             ],
         ];
+        if ($field->isUniversal()) {
+            $options['attr']['data-universal'] = true;
+        }
         if ('' !== $field->getDescription()) {
             $options['attr']['data-desc'] = $field->getDescription();
         }

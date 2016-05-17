@@ -85,6 +85,10 @@ class NodeTypeFieldType extends AbstractType
             'label' => 'indexed',
             'required' => false,
         ])
+        ->add('universal', 'checkbox', [
+            'label' => 'universal',
+            'required' => false,
+        ])
         ->add(
             'defaultValues',
             'text',

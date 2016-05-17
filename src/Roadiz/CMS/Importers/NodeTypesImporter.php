@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 
 /**
@@ -50,6 +51,7 @@ class NodeTypesImporter implements ImporterInterface
         $return = false;
         $serializer = new NodeTypeJsonSerializer();
         $nodeType = $serializer->deserialize($serializedData);
+        /** @var NodeType $existingNodeType */
         $existingNodeType = $em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                                ->findOneByName($nodeType->getName());
         if ($existingNodeType === null) {
