@@ -97,7 +97,7 @@ class NodeTypeFieldHandler
             ];
 
             if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
-                $ormParams['precision'] = 10;
+                $ormParams['precision'] = 18;
                 $ormParams['scale'] = 3;
             } elseif ($this->nodeTypeField->getType() == NodeTypeField::BOOLEAN_T) {
                 $ormParams['nullable'] = 'false';
