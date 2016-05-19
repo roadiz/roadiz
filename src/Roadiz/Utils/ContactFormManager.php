@@ -260,6 +260,9 @@ class ContactFormManager
         }
     }
 
+    /**
+     * @param Form $form
+     */
     protected function handleFormData(Form $form)
     {
         /*
@@ -274,22 +277,8 @@ class ContactFormManager
             );
         }
 
-        $fields = [];
         $formData = $form->getData();
-
-        /*
-         * text values
-         */
-        foreach ($formData as $key => $value) {
-            if ($key[0] == '_' || $value instanceof UploadedFile) {
-                continue;
-            } elseif (!empty($value)) {
-                $fields[] = [
-                    'name' => strip_tags($key),
-                    'value' => (strip_tags($value)),
-                ];
-            }
-        }
+        $fields = $this->flattenFormData($formData, []);
 
         /*
          * Sender email
@@ -330,6 +319,34 @@ class ContactFormManager
             'fields' => $fields,
         ];
     }
+
+    /**
+     * @param array $formData
+     * @param array $fields
+     * @return array
+     */
+    protected function flattenFormData(array $formData, array $fields)
+    {
+        foreach ($formData as $key => $value) {
+            if ($key[0] == '_' || $value instanceof UploadedFile) {
+                continue;
+            } elseif (is_array($value) && count($value) > 0) {
+                $fields[] = [
+                    'name' => strip_tags($key),
+                    'value' => '',
+                ];
+                $fields = $this->flattenFormData($value, $fields);
+            } elseif (!empty($value)) {
+                $fields[] = [
+                    'name' => strip_tags($key),
+                    'value' => (strip_tags($value)),
+                ];
+            }
+        }
+
+        return $fields;
+    }
+
 
     /**
      * Send contact form data by email.

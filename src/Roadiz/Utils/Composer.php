@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,25 +30,44 @@
 namespace RZ\Roadiz\Utils;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Composer\Script\Event;
 
 /**
- *
+ * Class Composer
+ * @package RZ\Roadiz\Utils
  */
 class Composer
 {
-    public static function postUpdate()
-    {
-        static::copyDefaultConfiguration();
-        static::copyDevEnvironment();
-        static::copyClearCacheEntryPoint();
-    }
-
-    public static function postInstall()
+    /**
+     * Occurs after the update command has been executed,
+     * or after the install command has been executed without a lock file present.
+     *
+     * @param Event $event
+     */
+    public static function postUpdate(Event $event)
     {
         static::copyDefaultConfiguration();
         static::copyInstallEnvironment();
         static::copyDevEnvironment();
         static::copyClearCacheEntryPoint();
+    }
+
+    /**
+     * Occurs after the install command has been executed with a lock file present.
+     *
+     * @param Event $event
+     */
+    public static function postInstall(Event $event)
+    {
+        static::copyDefaultConfiguration();
+        static::copyInstallEnvironment();
+        static::copyDevEnvironment();
+        static::copyClearCacheEntryPoint();
+    }
+
+    public static function warmCache(Event $event)
+    {
+        // make cache toasty
     }
 
     public static function copyDefaultConfiguration()

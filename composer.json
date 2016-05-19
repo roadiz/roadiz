@@ -107,11 +107,11 @@
     },
     "bin": ["bin/roadiz"],
     "scripts": {
-        "post-update-cmd": [
-            "RZ\\Roadiz\\Utils\\Composer::postUpdate"
-        ],
         "post-install-cmd": [
             "RZ\\Roadiz\\Utils\\Composer::postInstall"
+        ],
+        "post-update-cmd": [
+            "RZ\\Roadiz\\Utils\\Composer::postUpdate"
         ]
     }
 }
