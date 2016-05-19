@@ -333,12 +333,13 @@ class ContactFormManager
             } elseif (is_array($value) && count($value) > 0) {
                 $fields[] = [
                     'name' => strip_tags($key),
-                    'value' => '',
+                    'value' => null,
                 ];
                 $fields = $this->flattenFormData($value, $fields);
             } elseif (!empty($value)) {
+                $name = is_numeric($key) ? null : strip_tags($key);
                 $fields[] = [
-                    'name' => strip_tags($key),
+                    'name' => $name,
                     'value' => (strip_tags($value)),
                 ];
             }
