@@ -55,6 +55,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
             'FontFile',
             'FontFaceCSS',
             'loginImagePage',
+            'interventionRequestProcess',
         ];
     }
 
