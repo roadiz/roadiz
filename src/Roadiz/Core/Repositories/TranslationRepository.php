@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NoResultException;
-use RZ\Roadiz\Core\Entities\Node;
 
 /**
  * {@inheritdoc}

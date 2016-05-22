@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;

@@ -31,7 +31,6 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -163,7 +162,7 @@ class NodesTreesController extends RozierApp
                     $nodesIds
                 );
                 $form->handleRequest($request);
-                if ($request->get('confirm') == true && $form->isSubmitted() && $form->isValid()) {
+                if ($request->get('confirm') && $form->isSubmitted() && $form->isValid()) {
                     $msg = $this->bulkDeleteNodes($form->getData());
                     $this->publishConfirmMessage($request, $msg);
 

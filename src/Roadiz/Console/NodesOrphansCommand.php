@@ -44,7 +44,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodesOrphansCommand extends Command
 {
-    private $questionHelper;
     /**
      * @var EntityManager
      */
@@ -64,7 +63,6 @@ class NodesOrphansCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('em')->getEntityManager();
 
         $qb = $this->entityManager->createQueryBuilder();

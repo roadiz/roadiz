@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Utils;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Composer\Script\Event;
 
 /**
  * Class Composer
@@ -41,10 +40,8 @@ class Composer
     /**
      * Occurs after the update command has been executed,
      * or after the install command has been executed without a lock file present.
-     *
-     * @param Event $event
      */
-    public static function postUpdate(Event $event)
+    public static function postUpdate()
     {
         static::copyDefaultConfiguration();
         static::copyInstallEnvironment();
@@ -54,20 +51,13 @@ class Composer
 
     /**
      * Occurs after the install command has been executed with a lock file present.
-     *
-     * @param Event $event
      */
-    public static function postInstall(Event $event)
+    public static function postInstall()
     {
         static::copyDefaultConfiguration();
         static::copyInstallEnvironment();
         static::copyDevEnvironment();
         static::copyClearCacheEntryPoint();
-    }
-
-    public static function warmCache(Event $event)
-    {
-        // make cache toasty
     }
 
     public static function copyDefaultConfiguration()
