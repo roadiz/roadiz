@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,9 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * Description
- *
  * @file DefaultThemeApp.php
  * @author Ambroise Maupate
  */
-
 namespace Themes\DefaultTheme;
 
 use Pimple\Container;
@@ -39,7 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * DefaultThemeApp class
+ * Class DefaultThemeApp
+ * @package Themes\DefaultTheme
  */
 class DefaultThemeApp extends FrontendController
 {
@@ -56,6 +54,11 @@ class DefaultThemeApp extends FrontendController
         // instead of a node-type controller
     ];
 
+    /**
+     * @param Request $request
+     * @param null $_locale
+     * @return Response
+     */
     public function homeAction(
         Request $request,
         $_locale = null
@@ -74,9 +77,6 @@ class DefaultThemeApp extends FrontendController
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extendAssignation()
     {
         parent::extendAssignation();
@@ -168,7 +168,8 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $message
+     * @return Response
      */
     public function throw404($message = "")
     {
@@ -184,14 +185,13 @@ class DefaultThemeApp extends FrontendController
     }
 
     /**
-     * {@inheritdoc}
+     * @param Container $container
      */
     public static function setupDependencyInjection(Container $container)
     {
         parent::setupDependencyInjection($container);
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
-
             /*
              * Add a test entry in your Backoffice
              * Remove this in your theme if you don’t

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,18 +24,20 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
  * @file BasicNewsletterController.php
  * @author Maxime Constantinian
  */
-
 namespace Themes\DefaultTheme\NewsletterControllers;
 
 use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
+ * Class BasicNewsletterController.
+ *
  * Class to generate html form BasicNewsletter newsletter nodetype.
+ *
+ * @package Themes\DefaultTheme\NewsletterControllers
  */
 class BasicNewsletterController extends DefaultThemeApp
 {
