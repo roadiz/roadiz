@@ -34,14 +34,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
- *
+ * Class BasicBlockController
+ * @package Themes\DefaultTheme\Controllers\Blocks
  */
 class BasicBlockController extends DefaultThemeApp
 {
+    /**
+     * @param Request $request
+     * @param NodesSources $source
+     * @param array $assignation
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
+     */
     public function blockAction(Request $request, NodesSources $source, $assignation = [])
     {
         $this->prepareNodeSourceAssignation($source, $source->getTranslation());
-
         $this->assignation = array_merge($this->assignation, $assignation);
 
         return $this->render('blocks/basicblock.html.twig', $this->assignation);

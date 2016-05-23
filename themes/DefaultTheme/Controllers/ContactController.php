@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,6 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- *
  * @file ContactController.php
  * @author Ambroise Maupate
  */
@@ -39,11 +37,20 @@ use Symfony\Component\Validator\Constraints\File;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
- * Contact form page.
+ * Class ContactController
+ * @package Themes\DefaultTheme\Controllers
  */
 class ContactController extends DefaultThemeApp
 {
-
+    /**
+     * @param Request $request
+     * @param Node|null $node
+     * @param Translation|null $translation
+     * @param null $_locale
+     * @param null $_route
+     * @return null|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
+     */
     public function indexAction(
         Request $request,
         Node $node = null,
