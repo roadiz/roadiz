@@ -15,7 +15,7 @@
             {% set returnPath = path('nodesHomePage') %}
         {% endif %}
 		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form id="nodes-bulk-delete-form" class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+		<form id="nodes-bulk-delete-form" class="uk-form uk-form-stacked" action="{{ action }}?confirm=1" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 		    <fieldset data-uk-margin>
 		    	<legend>{% trans %}are_you_sure.delete.these.nodes{% endtrans %}</legend>

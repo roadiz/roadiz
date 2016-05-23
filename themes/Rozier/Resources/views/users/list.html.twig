@@ -33,8 +33,8 @@
                                 <a href="?field=email&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
                             {% endif %}
                         </th>
-                        <th class="mobile-hidden">{% trans %}user.roles{% endtrans %}</th>
-                        <th class="mobile-hidden">{% trans %}user.status{% endtrans %}</th>
+                        <th class="mobile-hidden uk-visible-xlarge">{% trans %}user.roles{% endtrans %}</th>
+                        <th class="mobile-hidden uk-visible-large">{% trans %}user.status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
@@ -44,8 +44,8 @@
                         <td class="mobile-hidden"><img width="45" height="45" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
                         <td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
                         <td>{{ user.getEmail }}</td>
-                        <td class="mobile-hidden">{% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}</td>
-                        <td class="mobile-hidden user-status">
+                        <td class="mobile-hidden uk-visible-xlarge">{% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}</td>
+                        <td class="mobile-hidden uk-visible-large user-status">
                             {% if user.enabled %}
                             <div class="uk-button-status" title="{% trans %}user.enabled{% endtrans %}" data-uk-tooltip="{animation:true}">
                                 <i class="uk-icon-check"></i>

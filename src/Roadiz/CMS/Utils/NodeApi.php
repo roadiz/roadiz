@@ -33,7 +33,8 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
- *
+ * Class NodeApi
+ * @package RZ\Roadiz\CMS\Utils
  */
 class NodeApi extends AbstractApi
 {
@@ -42,7 +43,7 @@ class NodeApi extends AbstractApi
      */
     public function getRepository()
     {
-        return $this->container['em']->getRepository("RZ\Roadiz\Core\Entities\Node");
+        return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node');
     }
     /**
      * {@inheritdoc}

@@ -168,7 +168,6 @@ class DocumentTranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', ['%name%' => $document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', ['%name%' => $document->getFilename()]);
                     $request->getSession()->getFlashBag()->add('error', $msg);

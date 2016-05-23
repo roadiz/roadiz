@@ -62,7 +62,7 @@ class UniqueFolderNameValidator extends ConstraintValidator
     protected function entityExists($name, $entityManager)
     {
         $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                                ->findOneByName($name);
+                                ->findOneByFolderName($name);
 
         return (null !== $entity);
     }

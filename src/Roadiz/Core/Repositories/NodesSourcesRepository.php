@@ -275,9 +275,7 @@ class NodesSourcesRepository extends EntityRepository
         $preview = false
     ) {
         $joinedNodeType = false;
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'ns')
-            ->add('from', $this->getEntityName() . ' ns');
+        $qb = $this->createQueryBuilder('ns');
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -298,7 +296,6 @@ class NodesSourcesRepository extends EntityRepository
                     $simpleKey = str_replace('node.', '', $key);
 
                     $qb->addOrderBy('n.' . $simpleKey, $value);
-
                 } else {
                     $qb->addOrderBy('ns.' . $key, $value);
                 }
@@ -332,9 +329,8 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select($qb->expr()->countDistinct('ns.id'))
-            ->add('from', $this->getEntityName() . ' ns');
+        $qb = $this->createQueryBuilder('ns');
+        $qb->select($qb->expr()->countDistinct('ns.id'));
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -583,7 +579,6 @@ class NodesSourcesRepository extends EntityRepository
     public function findByLatestUpdated($maxResult = 5)
     {
         $query = $this->createQueryBuilder('ns');
-        $query->select('ns');
         $query->addSelect('log');
         $query->innerJoin('ns.logs', 'log');
         $query->setMaxResults($maxResult);
@@ -616,13 +611,38 @@ class NodesSourcesRepository extends EntityRepository
                     WHERE ns.node = :node
                     AND ns.translation = :translation')
                     ->setParameter('node', $nodeSource->getNode()->getParent())
-                    ->setParameter('translation', $nodeSource->getTranslation());
+                    ->setParameter('translation', $nodeSource->getTranslation())
+                    ->setMaxResults(1);
 
                 return $query->getSingleResult();
             } catch (NoResultException $e) {
                 return null;
             }
         } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param Translation $translation
+     * @return mixed|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByNodeAndTranslation(Node $node, Translation $translation)
+    {
+        $qb = $this->createQueryBuilder('ns');
+
+        $qb->select('ns')
+            ->andWhere($qb->expr()->eq('ns.node', ':node'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setMaxResults(1)
+            ->setParameter('node', $node)
+            ->setParameter('translation', $translation);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
             return null;
         }
     }

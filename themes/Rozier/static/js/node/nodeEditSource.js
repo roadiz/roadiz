@@ -143,7 +143,7 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
     Rozier.lazyload.canvasLoader.show();
 
     setTimeout(function () {
-        var formData = new FormData(_this.$form[0]);
+        var formData = new FormData(_this.$form.get(0));
 
         $.ajax({
             url: window.location.href,
@@ -153,11 +153,17 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
             cache : false,
             contentType: false
         })
-        .done(function() {
-            console.log("Saved node-source with success.");
+        .done(function(data) {
+            _this.cleanErrors();
         })
-        .fail(function() {
-            console.log("Error during save.");
+        .fail(function(data) {
+            _this.displayErrors(data.responseJSON.errors);
+            UIkit.notify({
+                message : data.responseJSON.message,
+                status  : 'danger',
+                timeout : 2000,
+                pos     : 'top-center'
+            });
         })
         .always(function() {
             Rozier.lazyload.canvasLoader.hide();
@@ -167,6 +173,35 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
     }, 300);
 
     return false;
+};
+
+NodeEditSource.prototype.cleanErrors = function() {
+    var _this = this;
+
+    var $previousErrors = $('.form-errored');
+    $previousErrors.each(function (index) {
+        $previousErrors.eq(index).removeClass('form-errored');
+        $previousErrors.eq(index).find('.error-message').remove();
+    });
+};
+
+
+NodeEditSource.prototype.displayErrors = function(errors) {
+    var _this = this;
+
+    /*
+     * First clean fields
+     */
+    _this.cleanErrors();
+
+    for (var key in errors) {
+        var classKey = key.replace('_', '-');
+        $field = $('.form-col-' + classKey);
+        if ($field.length) {
+            $field.addClass('form-errored');
+            $field.append('<p class="error-message uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> ' + errors[key][0] + '</p>');
+        }
+    }
 };
 
 NodeEditSource.prototype.onInputKeyDown = function(event) {
@@ -199,7 +234,6 @@ NodeEditSource.prototype.childrenNodeWidgetFlip = function(index){
         _this.$dropdown = $(_this.$formRow[index]).find('.uk-dropdown-small');
         _this.$dropdown.addClass('uk-dropdown-up');
     }
-
 };
 
 

@@ -142,7 +142,6 @@ class NodeTypeFieldsController extends RozierApp
 
         if ($nodeType !== null &&
             $field !== null) {
-
             $latestPosition = $this->getService('em')
                                    ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                                    ->findLatestPositionInNodeType($nodeType);
@@ -184,7 +183,6 @@ class NodeTypeFieldsController extends RozierApp
                             ),
                         ]
                     ));
-
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
                     $request->getSession()->getFlashBag()->add('error', $msg);

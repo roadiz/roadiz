@@ -140,12 +140,10 @@ class ThemeController extends InstallApp
                             'installUserPage'
                         ));
                     }
-
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
                     $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
                 }
-
             }
             $this->assignation['infosForm'] = $infosForm->createView();
         }

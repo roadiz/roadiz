@@ -201,7 +201,6 @@ class ImportController extends AppController
 
                 $dir = explode('\\', $theme->getClassName());
                 $path = ROADIZ_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
-
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);

@@ -647,9 +647,38 @@ class Document extends AbstractDateTimed
     public function getOrientation()
     {
         if ($this->isImage()) {
+            $size = $this->getImageSize();
+            return $size['width'] >= $size['height'] ? 'landscape' : 'portrait';
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getImageSize()
+    {
+        if ($this->isImage()) {
             $manager = new ImageManager();
             $imageProcess = $manager->make($this->getAbsolutePath());
-            return $imageProcess->width() >= $imageProcess->height() ? 'landscape' : 'portrait';
+            return [
+                'width' => $imageProcess->width(),
+                'height' => $imageProcess->height(),
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getImageSizeRatio()
+    {
+        if ($this->isImage()) {
+            $size = $this->getImageSize();
+            return $size['width']/$size['height'];
         }
 
         return null;

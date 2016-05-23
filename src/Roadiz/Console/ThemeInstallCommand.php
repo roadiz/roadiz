@@ -30,12 +30,14 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -113,7 +115,7 @@ class ThemeInstallCommand extends Command
 
     protected function importThemeData($classname, &$text)
     {
-        $data = $this->getThemeConfig($classname);
+        $data = $this->getThemeConfig();
 
         if (false !== $data && isset($data["importFiles"])) {
             if (isset($data["importFiles"]['roles'])) {
@@ -152,9 +154,9 @@ class ThemeInstallCommand extends Command
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
+            $text .= PHP_EOL;
             $text .= 'You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.' . PHP_EOL;
             $text .= 'And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.' . PHP_EOL;
-
         } else {
             $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;
         }
@@ -162,16 +164,22 @@ class ThemeInstallCommand extends Command
 
     protected function importThemeNodes($classname, &$text)
     {
-        $data = $this->getThemeConfig($classname);
+        $data = $this->getThemeConfig();
 
         if (false !== $data && isset($data["importFiles"])) {
             if (isset($data["importFiles"]['nodes'])) {
                 foreach ($data["importFiles"]['nodes'] as $filename) {
-                    NodesImporter::importJsonFile(
-                        file_get_contents($this->themeRoot . "/" . $filename),
-                        $this->entityManager
-                    );
-                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    try {
+                        NodesImporter::importJsonFile(
+                            file_get_contents($this->themeRoot . "/" . $filename),
+                            $this->entityManager
+                        );
+                        $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    } catch (EntityAlreadyExistsException $e) {
+                        $text .= '     — <error>' . $e->getMessage() . '</error>' . PHP_EOL;
+                    } catch (EntityNotFoundException $e) {
+                        $text .= '     — <error>' . $e->getMessage() . '</error>' . PHP_EOL;
+                    }
                 }
             }
         } else {
@@ -179,7 +187,7 @@ class ThemeInstallCommand extends Command
         }
     }
 
-    protected function getThemeConfig($classname)
+    protected function getThemeConfig()
     {
         return Yaml::parse($this->themeRoot . "/config.yml");
     }

@@ -92,11 +92,12 @@ class NodeTypeFieldHandler
         if (NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] !== null) {
             $ormParams = [
                 'type' => '"' . NodeTypeField::$typeToDoctrine[$this->nodeTypeField->getType()] . '"',
-                'nullable' => 'true'
+                'nullable' => 'true',
+                'name' => '"' . $this->nodeTypeField->getName() . '"',
             ];
 
             if ($this->nodeTypeField->getType() == NodeTypeField::DECIMAL_T) {
-                $ormParams['precision'] = 10;
+                $ormParams['precision'] = 18;
                 $ormParams['scale'] = 3;
             } elseif ($this->nodeTypeField->getType() == NodeTypeField::BOOLEAN_T) {
                 $ormParams['nullable'] = 'false';
@@ -181,7 +182,6 @@ class NodeTypeFieldHandler
 
         return $this;
     }'.PHP_EOL;
-
         }
 
         return '';
@@ -205,7 +205,6 @@ class NodeTypeFieldHandler
     {
         return '.$assignation.';
     }'.PHP_EOL;
-
         } elseif (AbstractField::DOCUMENTS_T === $this->nodeTypeField->getType()) {
             return '
     /**

@@ -60,7 +60,10 @@ class EnumerationType extends AbstractType
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
+            'strict' => true,
+            'multiple' => false,
+            'choices_as_values' => true,
         ]);
     }
     /**

@@ -30,8 +30,13 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -59,6 +64,7 @@ class NodesSourcesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
+        /** @var Translation $translation */
         $translation = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
@@ -68,16 +74,16 @@ class NodesSourcesController extends RozierApp
              * if not doctrine will grab a cache tag because of NodeTreeWidget
              * that is initialized before calling route method.
              */
+            /** @var Node $gnode */
             $gnode = $this->getService('em')
                           ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-
+            /** @var NodesSources $source */
             $source = $this->getService('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
-            $this->assignation['securityAuthorizationChecker'] = $this->getService("securityAuthorizationChecker");
-
             if (null !== $source) {
+                $this->getService('em')->refresh($source);
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;
@@ -91,30 +97,48 @@ class NodesSourcesController extends RozierApp
                 $form = $this->buildEditSourceForm($node, $source);
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
-                    $this->editNodeSource($form->getData(), $source);
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterNodesSourcesEvent($source);
-                    $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+                if ($form->isSubmitted()) {
+                    if ($form->isValid()) {
+                        $this->editNodeSource($form->getData(), $source);
+                        /*
+                         * Dispatch event
+                         */
+                        $event = new FilterNodesSourcesEvent($source);
+                        $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
+                        /*
+                         * Update nodeName against source title.
+                         */
+                        $this->updateNodeName($source);
+
+                        $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
+                            '%node_source%' => $source->getNode()->getNodeName(),
+                            '%translation%' => $source->getTranslation()->getName(),
+                        ]);
+
+                        $this->publishConfirmMessage($request, $msg, $source);
+
+                        if ($request->isXmlHttpRequest()) {
+                            return new JsonResponse(['status' => 'success', 'errors' => []]);
+                        }
+
+                        return $this->redirect($this->generateUrl(
+                            'nodesEditSourcePage',
+                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
+                        ));
+                    }
 
                     /*
-                     * Update nodeName against source title.
+                     * Handle errors when Ajax POST requests
                      */
-                    $this->updateNodeName($source);
-
-                    $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
-                        '%node_source%' => $source->getNode()->getNodeName(),
-                        '%translation%' => $source->getTranslation()->getName(),
-                    ]);
-
-                    $this->publishConfirmMessage($request, $msg, $source);
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditSourcePage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
-                    ));
+                    if ($request->isXmlHttpRequest()) {
+                        $errors = $this->getErrorsAsArray($form);
+                        return new JsonResponse([
+                            'status' => 'fail',
+                            'errors' => $errors,
+                            'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                        ], JsonResponse::HTTP_BAD_REQUEST);
+                    }
                 }
 
                 $this->assignation['form'] = $form->createView();
@@ -123,6 +147,26 @@ class NodesSourcesController extends RozierApp
             }
         }
         return $this->throw404();
+    }
+
+    /**
+     * @param Form $form
+     * @return array
+     */
+    protected function getErrorsAsArray(Form $form)
+    {
+        $errors = [];
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        foreach ($form->all() as $key => $child) {
+            $err = $this->getErrorsAsArray($child);
+            if ($err) {
+                $errors[$key] = $err;
+            }
+        }
+        return $errors;
     }
 
     /**
@@ -135,7 +179,7 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
-        $ns = $this->getService("em")->find("RZ\Roadiz\Core\Entities\NodesSources", $nodeSourceId);
+        $ns = $this->getService("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
 
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
@@ -148,10 +192,10 @@ class NodesSourcesController extends RozierApp
                         ]);
 
         $form = $builder->getForm();
-
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Node $node */
             $node = $ns->getNode();
             if ($node->getNodeSources()->count() <= 1) {
                 $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [

@@ -31,9 +31,11 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 /**
@@ -48,6 +50,8 @@ class NodesImporter implements ImporterInterface
      * @param EntityManager $em
      *
      * @return bool
+     * @throws EntityAlreadyExistsException
+     * @throws EntityNotFoundException
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
@@ -62,10 +66,10 @@ class NodesImporter implements ImporterInterface
     }
 
     /**
-     * @param Node          $node
+     * @param Node $node
      * @param EntityManager $em
-     *
-     * @return Node|null
+     * @return null|Node
+     * @throws EntityAlreadyExistsException
      */
     protected static function browseTree($node, EntityManager $em)
     {
@@ -76,7 +80,7 @@ class NodesImporter implements ImporterInterface
             $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
                            ->findOneByNodeName($node->getNodeName());
             if (null !== $existing) {
-                return null;
+                throw new EntityAlreadyExistsException('"' . $node->getNodeName() . '" already exists.');
             }
 
             /** @var Node[] $childObj */
@@ -119,7 +123,7 @@ class NodesImporter implements ImporterInterface
 
             return $node;
         } catch (UniqueConstraintViolationException $e) {
-            return null;
+            throw new EntityAlreadyExistsException($e->getMessage());
         }
     }
 }

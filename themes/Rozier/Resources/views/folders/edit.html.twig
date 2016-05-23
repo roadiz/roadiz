@@ -1,10 +1,18 @@
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% set folderName = folder.translatedFolders.first.name|default(folder.folderName) %}
 
 {% block content %}
 <section class="content-global edit-folder">
 
     <header class="content-header header-folder header-folder-add">
-        <h1 class="content-title folder-add-title">{{ "edit.folder.%name%"|trans({'%name%': folder.getName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title folder-add-title">
+            {{ "edit.folder.%name%"|trans({'%name%': folderName})|truncate(25, true, '[…]') }}
+            {% if translation %}
+                ({{ translation.locale }})
+            {% endif %}
+        </h1>
+        {% include '@Rozier/folders/navBar.html.twig' with {'folder':folder, current:'edit'} %}
+        {% include '@Rozier/folders/translationBar.html.twig' with {'folder':folder, "current":translation.id} %}
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('foldersHomePage') }}" title="{% trans %}back_to.folders{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 

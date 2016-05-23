@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
@@ -69,7 +70,7 @@ class UrlAliasesController extends RozierApp
             $translation = $this->getService('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
-
+        /** @var NodesSources $source */
         $source = $this->getService('em')
                        ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
@@ -203,7 +204,6 @@ class UrlAliasesController extends RozierApp
                      */
                     $event = new FilterUrlAliasEvent($ua);
                     $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
-
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage(), $source);
                 } catch (NoTranslationAvailableException $e) {

@@ -6,6 +6,11 @@
 		    	<a class="node-translation-navigation-link uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.getId, translationId:translation.getId }) }}">{{ translation.getLocale }}</a>
 		    </li>
 		{% endfor %}
+        <li class="node-translation-bar-item uk-navbar-item">
+            <a href="{{ path('nodesTranslatePage', { nodeId: node.getId }) }}"
+               title="{% trans %}translate.node{% endtrans %}"
+               data-uk-tooltip="{animation:true}"><i class="uk-icon uk-icon-plus"></i></a>
+        </li>
 	</ul>
     {% endspaceless %}
 </nav>

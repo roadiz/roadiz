@@ -58,6 +58,8 @@ class NodeDuplicator
     }
 
     /**
+     *
+     * Warning this method flush entityManager at its end.
      * @return Node
      */
     public function duplicate()
@@ -68,53 +70,42 @@ class NodeDuplicator
         $node = clone $this->originalNode;
         $this->em->clear($node);
 
-        $newNode = $this->doDuplicate($node);
         if ($parent !== null) {
-            $parent = $this->em->find("RZ\Roadiz\Core\Entities\Node", $parent->getId());
-            $newNode->setParent($parent);
+            $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
+            $node->setParent($parent);
         }
+        $node = $this->doDuplicate($node);
         $this->em->flush();
-        $this->em->refresh($newNode);
+        $this->em->refresh($node);
 
-        return $newNode;
+        return $node;
     }
 
     /**
-     * @param  Node   $node
+     * Warning, do not do any FLUSH here to preserve transactionnal integrity.
+     *
+     * @param  Node $node
      * @return Node
      */
     private function doDuplicate(Node $node)
     {
-        /** @var Node[] $childrenArray */
-        $childrenArray = [];
-
-        /*
-         * Duplicate recursive children
-         */
-        $childs = new ArrayCollection($node->getChildren()->toArray());
-        $node->getChildren()->clear();
-        foreach ($childs as $child) {
-            $childrenArray[] = $this->doDuplicate($child);
-        }
-
-        /*
-         * Duplicate sources
-         */
-        $sourceCollection = $this->doDuplicateSource($node);
-
-        $nodetype = $this->em->merge($node->getNodeType());
-        $node->setNodeType($nodetype);
-        $node->setParent(null);
-
-        /*
-         * Persist duplicated node
-         */
-        $this->em->persist($node);
-        foreach ($childrenArray as $child) {
+        foreach ($node->getChildren() as $child) {
             $child->setParent($node);
+            $this->doDuplicate($child);
         }
-        foreach ($sourceCollection as $source) {
-            $source->setNode($node);
+
+        /** @var NodesSources $nodeSource */
+        foreach ($node->getNodeSources() as $nodeSource) {
+            $this->em->persist($nodeSource);
+
+            foreach ($nodeSource->getDocumentsByFields() as $nsDoc) {
+                $nsDoc->setNodeSource($nodeSource);
+                $doc = $this->em->merge($nsDoc->getDocument());
+                $nsDoc->setDocument($doc);
+                $f = $this->em->merge($nsDoc->getField());
+                $nsDoc->setField($f);
+                $this->em->persist($nsDoc);
+            }
         }
 
         /*
@@ -122,12 +113,18 @@ class NodeDuplicator
          */
         $this->doDuplicateNodeRelations($node);
 
-        $this->em->flush();
+        /*
+         * Persist duplicated node
+         */
+        $this->em->persist($node);
+
         return $node;
     }
 
     /**
      * Duplicate Node to Node relationship.
+     *
+     * Warning, do not do any FLUSH here to preserve transactionnal integrity.
      *
      * @param Node   $node
      * @return Node
@@ -142,41 +139,5 @@ class NodeDuplicator
         }
 
         return $node;
-    }
-
-    /**
-     * Duplicate node’s sources.
-     *
-     * @param  Node   $node
-     * @return ArrayCollection
-     */
-    private function doDuplicateSource(Node $node)
-    {
-        $newSources = new ArrayCollection();
-        /** @var NodesSources[] $nodeSources */
-        $nodeSources = new ArrayCollection($node->getNodeSources()->toArray());
-
-        $node->getNodeSources()->clear();
-        foreach ($nodeSources as $nodeSource) {
-            $nodeSource->setNode(null);
-            $tran = $this->em->merge($nodeSource->getTranslation());
-            $nodeSource->setTranslation($tran);
-            $this->em->persist($nodeSource);
-            $nsdocs = $nodeSource->getDocumentsByFields();
-
-            foreach ($nsdocs as $nsdoc) {
-                $nsdoc->setNodeSource($nodeSource);
-                $doc = $this->em->merge($nsdoc->getDocument());
-                $nsdoc->setDocument($doc);
-                $f = $this->em->merge($nsdoc->getField());
-                $nsdoc->setField($f);
-                $this->em->persist($nsdoc);
-            }
-            $newSources->add($nodeSource);
-        }
-        // Flush only outside of loop
-        $this->em->flush();
-
-        return $newSources;
     }
 }

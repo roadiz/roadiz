@@ -93,7 +93,6 @@ class GroupHandler
                     $this->group->addRole($role);
                 }
             }
-
         } else {
             throw new \RuntimeException("New group is null", 1);
         }

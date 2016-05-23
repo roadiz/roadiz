@@ -149,7 +149,6 @@ class GroupsUtilsController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'groupsHomePage'
                     ));
-
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);

@@ -85,7 +85,6 @@ class SettingsBag
 
                 static::$settings[$settingName] = Kernel::getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Document', (int) $id);
-
             } catch (\Exception $e) {
                 return false;
             }

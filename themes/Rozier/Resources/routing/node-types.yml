@@ -20,6 +20,10 @@ nodesTypesExportPage:
     path:     /export/{nodeTypeId}
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportJsonFileAction }
     requirements: { nodeTypeId : "[0-9]+" }
+nodesTypesExportAllPage:
+    path:     /export/all
+    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportAllAction }
+
 nodeTypesSchemaUpdate:
     path:     /update-schema/{_token}
     defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction }

@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -97,24 +98,22 @@ class NewslettersController extends RozierApp
 
         if ($type !== null &&
             $trans !== null) {
+
+            /** @var Form $form */
             $form = $this->getService('formFactory')
                          ->createBuilder()
-                         ->add('nodeName', 'text', [
-                             'label' => 'nodeName',
+                         ->add('title', 'text', [
+                             'label' => 'title',
                              'constraints' => [
                                  new NotBlank(),
-                                 new UniqueNodeName([
-                                     'entityManager' => $this->getService('em'),
-                                 ]),
                              ],
                          ])
                 ->getForm();
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $data = $form->getData();
-                    $node = $this->createNode($data, $type, $trans);
+                    $node = $this->createNode($form->get('title')->getData(), $trans, null, $type);
 
                     $newsletter = new Newsletter($node);
                     $newsletter->setStatus(Newsletter::DRAFT);

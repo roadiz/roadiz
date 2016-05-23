@@ -34,6 +34,10 @@ use RZ\Roadiz\Core\Entities\NodeType;
 
 class NodeTypeFieldRepository extends EntityRepository
 {
+    /**
+     * @param NodeType|null $nodeType
+     * @return array|null
+     */
     public function findAvailableGroupsForNodeType(NodeType $nodeType = null)
     {
         $query = $this->_em->createQuery('
@@ -48,6 +52,46 @@ class NodeTypeFieldRepository extends EntityRepository
             return $query->getScalarResult();
         } catch (NoResultException $e) {
             return null;
+        }
+    }
+
+    /**
+     * @param NodeType $nodeType
+     * @return array
+     */
+    public function findAllNotUniversal(NodeType $nodeType)
+    {
+        $qb = $this->createQueryBuilder('ntf');
+        $qb->andWhere($qb->expr()->eq('ntf.nodeType', ':nodeType'))
+            ->andWhere($qb->expr()->eq('ntf.universal', ':universal'))
+            ->orderBy('ntf.position', 'ASC')
+            ->setParameter(':nodeType', $nodeType)
+            ->setParameter(':universal', false);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param NodeType $nodeType
+     * @return array
+     */
+    public function findAllUniversal(NodeType $nodeType)
+    {
+        $qb = $this->createQueryBuilder('ntf');
+        $qb->andWhere($qb->expr()->eq('ntf.nodeType', ':nodeType'))
+            ->andWhere($qb->expr()->eq('ntf.universal', ':universal'))
+            ->orderBy('ntf.position', 'ASC')
+            ->setParameter(':nodeType', $nodeType)
+            ->setParameter(':universal', true);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
         }
     }
 

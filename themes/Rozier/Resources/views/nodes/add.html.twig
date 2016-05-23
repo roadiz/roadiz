@@ -15,11 +15,13 @@
         	{% form_theme form '@Rozier/forms.html.twig' %}
         	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
         	    {{ form_widget(form) }}
+                <fieldset data-uk-margin>
                 {% spaceless %}
                 <button class="uk-button uk-button-primary" type="submit">
                     <i class="uk-icon-plus"></i> {% trans %}add.a.node{% endtrans %}
                 </button>
                 {% endspaceless %}
+                </fieldset>
         	</form>
         {% else %}
             <div class="content-inner">

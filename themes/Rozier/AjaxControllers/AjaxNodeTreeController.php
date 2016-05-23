@@ -75,32 +75,30 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                      '\RZ\Roadiz\Core\Entities\Node',
                                      (int) $request->get('parentNodeId')
                                  );
-
-                    $this->assignation['nodeTree'] = new NodeTreeWidget(
-                        $this->getRequest(),
-                        $this,
-                        $node,
-                        $translation
-                    );
-
-                    if ($request->get('tagId') && $request->get('tagId') > 0) {
-                        $filterTag = $this->getService('em')
-                                            ->find(
-                                                '\RZ\Roadiz\Core\Entities\Tag',
-                                                (int) $request->get('tagId')
-                                            );
-
-                        $this->assignation['nodeTree']->setTag($filterTag);
-                    }
-
-                    $this->assignation['mainNodeTree'] = false;
-
-                    if (true === (boolean) $request->get('stackTree')) {
-                        $this->assignation['nodeTree']->setStackTree(true);
-                    }
-
                 } else {
-                    throw new \RuntimeException("No root node specified", 1);
+                    $node = null;
+                }
+                $this->assignation['nodeTree'] = new NodeTreeWidget(
+                    $this->getRequest(),
+                    $this,
+                    $node,
+                    $translation
+                );
+
+                if ($request->get('tagId') && $request->get('tagId') > 0) {
+                    $filterTag = $this->getService('em')
+                                        ->find(
+                                            '\RZ\Roadiz\Core\Entities\Tag',
+                                            (int) $request->get('tagId')
+                                        );
+
+                    $this->assignation['nodeTree']->setTag($filterTag);
+                }
+
+                $this->assignation['mainNodeTree'] = false;
+
+                if (true === (boolean) $request->get('stackTree')) {
+                    $this->assignation['nodeTree']->setStackTree(true);
                 }
 
                 break;

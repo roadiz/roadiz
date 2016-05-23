@@ -10,7 +10,7 @@
 <section class="content-global">
 
     <header class="content-header header-node header-node-edit-source">
-        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "authorizationChecker": authorizationChecker} only %}
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-source-title">
             {{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}

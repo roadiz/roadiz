@@ -1,0 +1,43 @@
+{% if node.getNodeSources.first.getTitle %}
+{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% else %}
+{% set currentTitle = node.getNodeName %}
+{% endif %}
+
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global">
+    <header class="content-header header-node header-node-edit">
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "authorizationChecker": authorizationChecker} only %}
+        <h1 class="content-title node-edit-title">
+            {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
+        </h1>
+        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": null} %}
+        {% include '@Rozier/nodes/translationBar.html.twig' with {"current": null} %}
+    </header>
+
+    <article class="content content-node-edit-source">
+        <div class="content-table-cont">
+        {% if form %}
+            {% form_theme form '@Rozier/forms.html.twig' %}
+            <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+                <fieldset data-uk-margin>
+                    {% spaceless %}
+                        <button class="uk-button uk-button-primary" type="submit">
+                            <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                            <span class="label"><span class="label-text">{% trans %}translate{% endtrans %}</span></span>
+                        </button>
+                    {% endspaceless %}
+                </fieldset>
+            </form>
+        {% else %}
+            <p class="uk-alert uk-alert-warning"><i class="uk-icon uk-icon-warning"></i> {% trans %}no_more_translation_available{% endtrans %}</p>
+        {% endif %}
+        </div>
+    </article>
+</section>
+{% endblock %}

@@ -23,6 +23,7 @@
 			            <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
 			            <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}group{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
 			        </tr>
 			    </thead>
@@ -37,6 +38,11 @@
 						<td class="mobile-hidden">{{ field.label }}</td>
 						<td class="mobile-hidden">{{ field.typeName|trans }}</td>
                         <td class="mobile-hidden">{{ field.groupName|trans }}</td>
+                        <td class="mobile-hidden">
+                            {% if not field.Visible %}<i title="{{ 'invisible'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-eye-slash"></i>{% endif %}
+                            {% if field.Universal %}<i title="{{ 'universal'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-flag"></i>{% endif %}
+                            {% if field.Indexed %}<i title="{{ 'indexed'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-filter"></i>{% endif %}
+                        </td>
 						<td>
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>

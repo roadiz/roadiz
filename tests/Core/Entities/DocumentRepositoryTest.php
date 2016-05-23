@@ -44,6 +44,7 @@ class DocumentRepositoryTest extends KernelDependentCase
      */
     public function testDocumentFolders($documentFilename, $expectedFolderCount)
     {
+        /** @var Document $document */
         $document = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findOneByFilename($documentFilename);
@@ -67,7 +68,7 @@ class DocumentRepositoryTest extends KernelDependentCase
     {
         $folders = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-            ->findByName($foldersNames);
+            ->findByFolderName($foldersNames);
 
         $documentCount = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
@@ -98,7 +99,7 @@ class DocumentRepositoryTest extends KernelDependentCase
     {
         $folders = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-            ->findByName($foldersNames);
+            ->findByFolderName($foldersNames);
 
         $documentCount = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
@@ -157,11 +158,11 @@ class DocumentRepositoryTest extends KernelDependentCase
         foreach ($folders as $value) {
             $folder = Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                ->findOneByName($value);
+                ->findOneByFolderName($value);
 
             if (null === $folder) {
                 $folder = new Folder();
-                $folder->setName($value);
+                $folder->setFolderName($value);
                 Kernel::getService('em')->persist($folder);
 
                 static::$folderCollection->add($folder);
@@ -193,9 +194,10 @@ class DocumentRepositoryTest extends KernelDependentCase
              * Adding folders
              */
             foreach ($value[1] as $folderName) {
+                /** @var Folder $folder */
                 $folder = Kernel::getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                    ->findOneByName($folderName);
+                    ->findOneByFolderName($folderName);
                 if (null !== $folder) {
                     $document->addFolder($folder);
                     $folder->addDocument($document);

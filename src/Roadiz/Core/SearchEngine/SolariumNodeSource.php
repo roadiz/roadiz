@@ -104,11 +104,14 @@ class SolariumNodeSource
         if (null !== $this->document) {
             $this->document->id = uniqid(); //or something else suitably unique
 
-            foreach ($this->getFieldsAssoc() as $key => $value) {
-                $this->document->$key = $value;
+            try {
+                foreach ($this->getFieldsAssoc() as $key => $value) {
+                    $this->document->$key = $value;
+                }
+                return true;
+            } catch (\RuntimeException $e) {
+                return false;
             }
-
-            return true;
         } else {
             throw new \RuntimeException("No Solr document available for current NodeSource", 1);
         }
@@ -119,14 +122,14 @@ class SolariumNodeSource
      * @return array
      * @throws \Exception
      */
-    public function getFieldsAssoc()
+    protected function getFieldsAssoc()
     {
         $assoc = [];
         $collection = [];
         $node = $this->nodeSource->getNode();
 
         if (null === $node) {
-            throw new \Exception("No node relation found for source: " . $this->nodeSource->getTitle(), 1);
+            throw new \RuntimeException("No node relation found for source: " . $this->nodeSource->getTitle(), 1);
         }
 
         // Need a documentType field

@@ -32,10 +32,15 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\FolderTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\Forms\FolderTranslationType;
 use Themes\Rozier\Forms\FolderType;
 use Themes\Rozier\RozierApp;
 
@@ -87,7 +92,7 @@ class FoldersController extends RozierApp
                 $folder->setParent($parentFolder);
             }
         }
-
+        /** @var Form $form */
         $form = $this->createForm(new FolderType(), $folder, [
             'em' => $this->getService('em'),
         ]);
@@ -95,15 +100,19 @@ class FoldersController extends RozierApp
 
         if ($form->isValid()) {
             try {
+                /** @var Translation $translation */
+                $translation = $this->getService('defaultTranslation');
+                $folderTranslation = new FolderTranslation($folder, $translation);
                 $this->getService('em')->persist($folder);
+                $this->getService('em')->persist($folderTranslation);
+
                 $this->getService('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
                     'folder.%name%.created',
-                    ['%name%' => $folder->getName()]
+                    ['%name%' => $folder->getFolderName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
-
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -128,6 +137,7 @@ class FoldersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Folder $folder */
         $folder = $this->getService('em')
                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -141,10 +151,9 @@ class FoldersController extends RozierApp
                     $this->deleteFolder($folder);
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.deleted',
-                        ['%name%' => $folder->getName()]
+                        ['%name%' => $folder->getFolderName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -173,26 +182,27 @@ class FoldersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Folder $folder */
         $folder = $this->getService('em')
                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
+            /** @var Form $form */
             $form = $this->createForm(new FolderType(), $folder, [
                 'em' => $this->getService('em'),
-                'name' => $folder->getName(),
+                'name' => $folder->getFolderName(),
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->getService('em')->flush();
 
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.updated',
-                        ['%name%' => $folder->getName()]
+                        ['%name%' => $folder->getFolderName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -202,12 +212,82 @@ class FoldersController extends RozierApp
 
             $this->assignation['folder'] = $folder;
             $this->assignation['form'] = $form->createView();
+            $this->assignation['available_translations'] = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->findAllAvailable();
 
             return $this->render('folders/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+        return $this->throw404();
     }
+
+    /**
+     * @param Request $request
+     * @param $folderId
+     * @param $translationId
+     * @return Response
+     * @throws \Twig_Error_Runtime
+     */
+    public function editTranslationAction(Request $request, $folderId, $translationId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        /** @var Folder $folder */
+        $folder = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+
+        /** @var Translation $translation */
+        $translation = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+
+        /** @var FolderTranslation $folderTranslation */
+        $folderTranslation = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\FolderTranslation')
+            ->findOneBy([
+                'folder' => $folder,
+                'translation' => $translation,
+            ]);
+
+        if (null === $folderTranslation) {
+            $folderTranslation = new FolderTranslation($folder, $translation);
+        }
+
+        if (null !== $folder && null !== $translation) {
+            /** @var Form $form */
+            $form = $this->createForm(new FolderTranslationType(), $folderTranslation);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $this->getService('em')->merge($folderTranslation);
+                    $this->getService('em')->flush();
+                    $msg = $this->getTranslator()->trans(
+                        'folder.%name%.updated',
+                        ['%name%' => $folder->getFolderName()]
+                    );
+                    $this->publishConfirmMessage($request, $msg);
+                } catch (\RuntimeException $e) {
+                    $this->publishErrorMessage($request, $e->getMessage());
+                }
+
+                return $this->redirect($this->generateUrl('foldersEditTranslationPage', [
+                    'folderId' => $folderId,
+                    'translationId' => $translationId,
+                ]));
+            }
+
+            $this->assignation['folder'] = $folder;
+            $this->assignation['translation'] = $translation;
+            $this->assignation['form'] = $form->createView();
+            $this->assignation['available_translations'] = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->findAllAvailable();
+
+            return $this->render('folders/edit.html.twig', $this->assignation);
+        }
+        return $this->throw404();
+    }
+
     /**
      * Return a ZipArchive of requested folder.
      *
@@ -220,6 +300,7 @@ class FoldersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Folder $folder */
         $folder = $this->getService('em')
                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -234,7 +315,7 @@ class FoldersController extends RozierApp
                               ->findBy([
                                   'folders' => [$folder],
                               ]);
-
+            /** @var Document $document */
             foreach ($documents as $document) {
                 $zip->addFile($document->getAbsolutePath(), $document->getFilename());
             }
@@ -242,7 +323,7 @@ class FoldersController extends RozierApp
             // Close and send to users
             $zip->close();
 
-            $filename = StringHandler::slugify($folder->getName()) . '.zip';
+            $filename = StringHandler::slugify($folder->getFolderName()) . '.zip';
 
             $response = new Response(
                 file_get_contents($file),

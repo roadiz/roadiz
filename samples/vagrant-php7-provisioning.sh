@@ -14,7 +14,7 @@ echo -e "\n--- Install base packages ---\n"
 sudo locale-gen fr_FR.utf8;
 
 echo -e "\n--- Add some repos to update our distro ---\n"
-sudo add-apt-repository ppa:ondrej/php > /dev/null 2>&1;
+LC_ALL=C.UTF-8 sudo add-apt-repository ppa:ondrej/php > /dev/null 2>&1;
 
 # Use latest nginx for HTTP/2
 sudo touch /etc/apt/sources.list.d/nginx.list;
@@ -26,15 +26,11 @@ wget -q -O- http://nginx.org/keys/nginx_signing.key | sudo apt-key add - > /dev/
 
 echo -e "\n--- Updating packages list ---\n"
 sudo apt-get -qq update;
+sudo apt-get -qq -y upgrade > /dev/null 2>&1;
 
 echo -e "\n--- Install MySQL specific packages and settings ---\n"
 sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password password $DBPASSWD"
 sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password_again password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
 
 echo -e "\n--- Install base servers and packages ---\n"
 sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
@@ -45,8 +41,6 @@ sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-cur
                                 php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc \
                                 php7.0-xsl php-apcu php-gd php-apcu-bc php-xdebug php-mbstring php-zip > /dev/null 2>&1;
 
-echo -e "\n--- Install phpmyadmin manually (not done) ---\n"
-
 echo -e "\n--- Setting up our MySQL user and db ---\n"
 sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME"
 mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
@@ -54,6 +48,9 @@ mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'loc
 echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
 sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/fpm/php.ini
+
+echo -e "\n--- Fix php-fpm startup PID path ---\n"
+sudo sed -i "s/\/run\/php\/php7.0-fpm.pid/\/run\/php7.0-fpm.pid/" /etc/php/7.0/fpm/php-fpm.conf
 
 echo -e "\n--- We definitly need to upload large files ---\n"
 sed -i "s/server_tokens off;/server_tokens off;\\n\\tclient_max_body_size 256M;/" /etc/nginx/nginx.conf

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,14 +34,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
 use Themes\Rozier\RozierApp;
 
+/**
+ * Class AdminController
+ * @package Themes\DefaultTheme\Controllers
+ */
 class AdminController extends RozierApp
 {
-
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
+     */
     public function listAction(
         Request $request
     ) {
-
-        $this->getService('stopwatch')->start('twigRender');
         /*
          * Use a namespace to force using this theme template
          * and not a other theme one if its filename is the same.

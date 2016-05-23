@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,8 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,10 +38,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- *
+ * Class TranstypeType
+ * @package Themes\Rozier\Forms
  */
 class TranstypeType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -55,11 +62,17 @@ class TranstypeType extends AbstractType
         );
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'transtype';
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -80,25 +93,29 @@ class TranstypeType extends AbstractType
         $resolver->setAllowedTypes('currentType', 'RZ\Roadiz\Core\Entities\NodeType');
     }
 
-    protected function getAvailableTypes($em, NodeType $currentType)
+    /**
+     * @param EntityManager $em
+     * @param NodeType $currentType
+     * @return array
+     */
+    protected function getAvailableTypes(EntityManager $em, NodeType $currentType)
     {
         $qb = $em->createQueryBuilder();
         $qb->select('n')
            ->from('RZ\Roadiz\Core\Entities\NodeType', 'n')
            ->where($qb->expr()->neq('n.id', $currentType->getId()))
-           ->orderBy('n.name', 'ASC');
+           ->orderBy('n.displayName', 'ASC');
 
         try {
             $types = $qb->getQuery()->getResult();
 
             $choices = [];
             foreach ($types as $type) {
-                $choices[$type->getId()] = $type->getName();
+                $choices[$type->getId()] = $type->getDisplayName();
             }
 
             return $choices;
-
-        } catch (\Doctrine\ORM\NoResultException $e) {
+        } catch (NoResultException $e) {
             return [];
         }
     }

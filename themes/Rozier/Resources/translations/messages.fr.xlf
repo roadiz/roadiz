@@ -4184,6 +4184,10 @@
         <source>children-nodes.type</source>
         <target xml:lang="fr">Nœuds enfants</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="country.type">
+        <source>country.type</source>
+        <target xml:lang="fr" state="translated">Pays (ISO 3166-1 alpha-2)</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445" approved="yes">
         <source>add.a.%nodeType%</source>
@@ -4640,6 +4644,10 @@
       <trans-unit xml:space="preserve" id="export.all.nodes" approved="yes">
         <source>export.all.nodes</source>
         <target xml:lang="fr">Exporter tout</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.all">
+        <source>export.all</source>
+        <target xml:lang="fr" state="translated">Tout exporter</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="drop.files.here.to.upload.or.click.to.open.your.explorer" approved="yes">
           <source>drop.files.here.to.upload.or.click.to.open.your.explorer</source>
@@ -6214,6 +6222,27 @@
       <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
             <source>stack_type.%type%.has_been_removed.%name%</source>
             <target xml:lang="fr" state="translated">Le type de pile «%type%» a été retiré du nœud «%name%»</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+            <source>form_has_errors.check_you_fields</source>
+            <target xml:lang="fr" state="translated">Votre formulaire contient des erreurs, vérifiez les champs correspondants.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="no_more_translation_available">
+            <source>no_more_translation_available</source>
+            <target xml:lang="fr" state="translated">Aucune autre traduction n’est disponible.</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="translate_offspring">
+            <source>translate_offspring</source>
+            <target xml:lang="fr" state="translated">Traduire toute l’arborescence</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+            <source>node.%name%.undeleted</source>
+            <target xml:lang="fr" state="translated">Le nœud «%name%» a été sorti de la corbeille</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="universal">
+            <source>universal</source>
+            <target xml:lang="fr" state="translated">Universel</target>
+            <note>Universal node-type fields are common over translations.</note>
         </trans-unit>
     </body>
   </file>

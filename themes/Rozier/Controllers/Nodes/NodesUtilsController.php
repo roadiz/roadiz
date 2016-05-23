@@ -31,9 +31,11 @@
 
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
+use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -136,10 +138,13 @@ class NodesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var Node $existingNode */
+        $existingNode = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
         try {
-            $existingNode = $this->getService('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-            $newNode = $existingNode->getHandler()->duplicate();
+            $duplicator = new NodeDuplicator($existingNode, $this->getService('em'));
+            $newNode = $duplicator->duplicate();
 
             /*
              * Dispatch event
@@ -151,14 +156,13 @@ class NodesUtilsController extends RozierApp
                 '%name%' => $existingNode->getNodeName(),
             ]);
 
-            $this->publishConfirmMessage($request, $msg);
+            $this->publishConfirmMessage($request, $msg, $newNode->getNodeSources()->first());
 
             return $this->redirect($this->getService('urlGenerator')
                     ->generate(
                         'nodesEditPage',
                         ["nodeId" => $newNode->getId()]
                     ));
-
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',

@@ -121,7 +121,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             } else {
                 $res = $qb->expr()->in($prefix . $key, ':' . $baseKey);
             }
-
         } elseif (is_bool($value)) {
             $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif ('NOT NULL' == $value) {
@@ -163,7 +162,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
     {
         foreach ($criteria as $key => $value) {
-            $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $key, $qb));
+            $baseKey = str_replace('.', '_', $key);
+            $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $baseKey, $qb));
         }
 
         return $qb;
@@ -322,7 +322,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             } else {
                 $finalQuery->setParameter($key, $value);
             }
-
         } elseif (is_bool($value)) {
             $finalQuery->setParameter($key, $value);
         } elseif ('NOT NULL' == $value) {
@@ -348,14 +347,10 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
             return $collection->count();
         } elseif (is_array($criteria)) {
-            $qb = $this->_em->createQueryBuilder();
-            $qb->select($qb->expr()->countDistinct('obj.id'))
-                ->add('from', $this->getEntityName() . ' obj');
+            $qb = $this->createQueryBuilder('obj');
+            $qb->select($qb->expr()->countDistinct('obj.id'));
 
-            foreach ($criteria as $key => $value) {
-                $baseKey = str_replace('.', '_', $key);
-                $qb->andWhere($this->buildComparison($value, 'obj.', $key, $baseKey, $qb));
-            }
+            $qb = $this->prepareComparisons($criteria, $qb, 'obj');
 
             $finalQuery = $qb->getQuery();
 
@@ -449,10 +444,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         $limit = null,
         $offset = null
     ) {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'obj')
-            ->add('from', $this->getEntityName() . ' obj');
-
+        $qb = $this->createQueryBuilder('obj');
         $qb = $this->createSearchBy($pattern, $qb, $criteria, 'obj');
 
         // Add ordering
@@ -487,9 +479,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'count(distinct obj.id)')
-            ->add('from', $this->getEntityName() . ' obj');
+        $qb = $this->createQueryBuilder('obj');
+        $qb->add('select', 'count(distinct obj.id)');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
@@ -553,7 +544,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param  string  $alias
      * @return boolean
      */
-    protected function hasJoinedNode(&$qb, $alias)
+    protected function hasJoinedNode(QueryBuilder $qb, $alias)
     {
         if (isset($qb->getDQLPart('join')[$alias])) {
             foreach ($qb->getDQLPart('join')[$alias] as $join) {
@@ -573,7 +564,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param  string  $alias
      * @return boolean
      */
-    protected function hasJoinedNodesSources(&$qb, $alias)
+    protected function hasJoinedNodesSources(QueryBuilder $qb, $alias)
     {
         if (isset($qb->getDQLPart('join')[$alias])) {
             foreach ($qb->getDQLPart('join')[$alias] as $join) {

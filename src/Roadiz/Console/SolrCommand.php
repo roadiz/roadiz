@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,13 @@
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file SolrCommand.php
- * @author Ambroise Maupate
+ * @author ambroisemaupate
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use Doctrine\ORM\EntityManager;
+use Solarium\Client;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,7 +40,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SolrCommand extends Command
 {
+    /** @var EntityManager */
     protected $entityManager;
+
+    /** @var Client */
     protected $solr;
 
     protected function configure()
@@ -103,47 +106,6 @@ solr:
         $this->solr->update($update);
     }
 
-    /**
-     * Delete Solr index and loop over every NodesSources to index them again.
-     *
-     * @param OutputInterface $output
-     */
-    protected function reindexNodeSources(OutputInterface $output)
-    {
-        // Empty first
-        $this->emptySolr($output);
-
-        $update = $this->solr->createUpdate();
-        /*
-         * Use buffered insertion
-         */
-        $buffer = $this->solr->getPlugin('bufferedadd');
-        $buffer->setBufferSize(100);
-
-        // Then index
-        $nSources = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-            ->findAll();
-
-        $progress = new ProgressBar($output, count($nSources));
-        $progress->setFormat('verbose');
-        $progress->start();
-
-        foreach ($nSources as $ns) {
-            $solariumNS = new SolariumNodeSource($ns, $this->solr);
-            $solariumNS->setDocument($update->createDocument());
-            $solariumNS->index();
-            $buffer->addDocument($solariumNS->getDocument());
-            $progress->advance();
-        }
-
-        $buffer->flush();
-
-        // optimize the index
-        $this->optimizeSolr($output);
-
-        $progress->finish();
-    }
     /**
      * Send an optimize and commit update query to Solr.
      *

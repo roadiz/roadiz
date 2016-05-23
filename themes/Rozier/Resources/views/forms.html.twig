@@ -110,6 +110,8 @@
         {% endif %}
     {% endspaceless %}
 {% endblock markdown_widget %}
+
+
 {% block json_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
@@ -119,6 +121,8 @@
         {% endif %}
     {% endspaceless %}
 {% endblock json_widget %}
+
+
 {% block css_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
@@ -131,7 +135,7 @@
 
 {% block tags_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top tags-widget" data-tag-widget {{ block('widget_attributes') }}>
+    <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -166,7 +170,7 @@
 
 {% block documents_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top documents-widget" data-document-widget {{ block('widget_attributes') }}>
+    <div class="uk-form-row documents-widget" data-document-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -202,7 +206,7 @@
 
 {% block nodes_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top nodes-widget" data-node-widget {{ block('widget_attributes') }}>
+    <div class="uk-form-row nodes-widget" data-node-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -236,7 +240,7 @@
 
 {% block custom_forms_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
+    <div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -309,7 +313,7 @@
 {# Children node tree field #}
 {% block childrennodes_widget %}
     {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top children-nodes-widget" data-children-nodes-widget {{ block('widget_attributes') }}>
+    <div class="uk-form-row children-nodes-widget" data-children-nodes-widget {{ block('widget_attributes') }}>
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
@@ -367,12 +371,14 @@
             {% set label_attr = label_attr|merge({'for': id}) %}
         {%- endif %}
         {% if required -%}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('uk-form-label') ~ ' required')|trim}) %}
+        {%- else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('uk-form-label'))|trim}) %}
         {%- endif %}
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
-        <label class="uk-form-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans }}</label>
     {%- endif %}
 {%- endblock form_label %}
 
@@ -441,3 +447,4 @@
         {{- form_widget(form) -}}
     </div>
 {%- endblock form_row %}
+

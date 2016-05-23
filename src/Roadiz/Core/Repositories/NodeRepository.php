@@ -189,7 +189,6 @@ class NodeRepository extends EntityRepository
             isset($criteria['translation.available'])) {
             $qb->innerJoin('n.nodeSources', 'ns');
             $qb->innerJoin('ns.translation', 't');
-
         } else {
             if (null !== $translation) {
                 /*
@@ -266,9 +265,8 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', 'n, ns')
-            ->add('from', $this->getEntityName() . ' n');
+        $qb = $this->createQueryBuilder('n');
+        $qb->add('select', 'n, ns');
 
         $this->filterByTranslation($criteria, $qb, $translation);
 
@@ -315,9 +313,8 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
 
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select($qb->expr()->countDistinct('n.id'))
-            ->add('from', $this->getEntityName() . ' n');
+        $qb = $this->createQueryBuilder('n');
+        $qb->select($qb->expr()->countDistinct('n.id'));
 
         $this->filterByTranslation($criteria, $qb, $translation);
         /*
@@ -563,6 +560,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId)
             ->setParameter('translation', $translation);
 
@@ -601,6 +599,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId);
 
         if (null !== $authorizationChecker) {
@@ -638,6 +637,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeName', $nodeName)
             ->setParameter('translation', $translation);
 
@@ -676,6 +676,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('nodeName', $nodeName);
 
         if (null !== $authorizationChecker) {
@@ -716,6 +717,7 @@ class NodeRepository extends EntityRepository
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
         $query = $this->_em->createQuery($txtQuery)
+            ->setMaxResults(1)
             ->setParameter('translation', $translation);
 
         if (null !== $authorizationChecker) {
@@ -750,7 +752,7 @@ class NodeRepository extends EntityRepository
 
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
-        $query = $this->_em->createQuery($txtQuery);
+        $query = $this->_em->createQuery($txtQuery)->setMaxResults(1);
 
         if (null !== $authorizationChecker) {
             $query->setParameter('status', Node::PUBLISHED);
@@ -1320,7 +1322,6 @@ class NodeRepository extends EntityRepository
     public function findAllOffspringIdByNode(Node $node)
     {
         $theOffprings = [];
-
         $in = [$node->getId()];
 
         do {
@@ -1396,5 +1397,88 @@ class NodeRepository extends EntityRepository
             $translation,
             $authorizationChecker
         );
+    }
+
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAvailableTranslationForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->innerJoin('t.nodeSources', 'ns')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->setParameter('nodeId', $node->getId());
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAvailableTranslationIdForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t.id')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->innerJoin('t.nodeSources', 'ns')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->setParameter('nodeId', $node->getId());
+
+        try {
+            $complexArray = $qb->getQuery()->getScalarResult();
+            return array_map('current', $complexArray);
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findUnavailableTranslationForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findUnavailableTranslationIdForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t.id')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+
+        try {
+            $complexArray = $qb->getQuery()->getScalarResult();
+            return array_map('current', $complexArray);
+        } catch (NoResultException $e) {
+            return [];
+        }
     }
 }

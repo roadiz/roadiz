@@ -56,7 +56,7 @@
 
                 {% if deleteNodesForm %}
                     {% form_theme deleteNodesForm '@Rozier/forms.html.twig' %}
-                    <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="get" {{ form_enctype(deleteNodesForm) }}>
+                    <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="post" {{ form_enctype(deleteNodesForm) }}>
                         {{ form_widget(deleteNodesForm) }}
 
                         <button type="submit"

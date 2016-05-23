@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -256,6 +255,8 @@ class NodeHandler
      * Remove current node with its children recursively and
      * its associations.
      *
+     * This method DOES NOT flush entityManager
+     *
      * @return $this
      */
     public function removeWithChildrenAndAssociations()
@@ -264,11 +265,6 @@ class NodeHandler
         $this->removeAssociations();
 
         Kernel::getService('em')->remove($this->node);
-
-        /*
-         * Final flush
-         */
-        Kernel::getService('em')->flush();
 
         return $this;
     }
@@ -318,7 +314,13 @@ class NodeHandler
      */
     public function publishWithChildren()
     {
-        $this->node->setStatus(Node::PUBLISHED);
+        /*
+         * Publish only if node is Draft or pending
+         * NOT deleted nor archived.
+         */
+        if ($this->node->getStatus() < Node::PUBLISHED) {
+            $this->node->setStatus(Node::PUBLISHED);
+        }
 
         foreach ($this->node->getChildren() as $node) {
             $node->getHandler()->publishWithChildren();
@@ -345,89 +347,46 @@ class NodeHandler
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Translation[]|ArrayCollection
+     * Alias for NodeRepository::findAvailableTranslationForNode.
+     *
+     * @return \RZ\Roadiz\Core\Entities\Translation[]
      */
     public function getAvailableTranslations()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('
-            SELECT t
-            FROM RZ\Roadiz\Core\Entities\Translation t
-            INNER JOIN t.nodeSources ns
-            INNER JOIN ns.node n
-            WHERE n.id = :node_id')
-            ->setParameter('node_id', $this->node->getId());
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findAvailableTranslationForNode($this->node);
     }
     /**
+     * Alias for NodeRepository::findAvailableTranslationIdForNode.
+     *
      * @return array Array of Translation id
      */
     public function getAvailableTranslationsId()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('
-            SELECT t.id FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.translation t
-            WHERE n.id = :node_id')
-            ->setParameter('node_id', $this->node->getId());
-
-        try {
-            $simpleArray = [];
-            $complexArray = $query->getScalarResult();
-            foreach ($complexArray as $subArray) {
-                $simpleArray[] = $subArray['id'];
-            }
-
-            return $simpleArray;
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                       ->findAvailableTranslationIdForNode($this->node);
     }
 
     /**
-     * @return ArrayCollection
+     * Alias for NodeRepository::findUnavailableTranslationForNode.
+     *
+     * @return array
      */
     public function getUnavailableTranslations()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
-                                       WHERE t.id NOT IN (:translations_id)')
-            ->setParameter('translations_id', $this->getAvailableTranslationsId());
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findUnavailableTranslationForNode($this->node);
     }
 
     /**
+     * Alias for NodeRepository::findUnavailableTranslationIdForNode.
+     *
      * @return array Array of Translation id
      */
-    public function getUnavailableTranslationsId()
+    public function findUnavailableTranslationIdForNode()
     {
-        $query = Kernel::getService('em')
-            ->createQuery('SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
-                                       WHERE t.id NOT IN (:translations_id)')
-            ->setParameter('translations_id', $this->getAvailableTranslationsId());
-
-        try {
-            $simpleArray = [];
-            $complexArray = $query->getScalarResult();
-            foreach ($complexArray as $subArray) {
-                $simpleArray[] = $subArray['id'];
-            }
-
-            return $simpleArray;
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findUnavailableTranslationIdForNode($this->node);
     }
 
     /**
@@ -503,6 +462,8 @@ class NodeHandler
     /**
      * Clean position for current node siblings.
      *
+     * Warning, this method does not flush.
+     *
      * @return int Return the next position after the **last** node
      */
     public function cleanPositions()
@@ -517,6 +478,8 @@ class NodeHandler
     /**
      * Reset current node children positions.
      *
+     * Warning, this method does not flush.
+     *
      * @return int Return the next position after the **last** node
      */
     public function cleanChildrenPositions()
@@ -528,13 +491,13 @@ class NodeHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
-
         return $i;
     }
 
     /**
      * Reset every root nodes positions.
+     *
+     * Warning, this method does not flush.
      *
      * @return int Return the next position after the **last** node
      */
@@ -545,12 +508,11 @@ class NodeHandler
             ->findBy(['parent' => null], ['position' => 'ASC']);
 
         $i = 1;
+        /** @var Node $child */
         foreach ($nodes as $child) {
             $child->setPosition($i);
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -562,7 +524,7 @@ class NodeHandler
      */
     public function getAllOffspringId()
     {
-        return Kernel::getService('em')->getRepository("RZ\Roadiz\Core\Entities\Node")
+        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findAllOffspringIdByNode($this->node);
     }
 
@@ -577,6 +539,7 @@ class NodeHandler
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findBy(['home' => true]);
 
+        /** @var Node $default */
         foreach ($defaults as $default) {
             $default->setHome(false);
         }
@@ -594,7 +557,6 @@ class NodeHandler
     public function duplicate()
     {
         $duplicator = new NodeDuplicator($this->node, Kernel::getService('em'));
-
         return $duplicator->duplicate();
     }
 

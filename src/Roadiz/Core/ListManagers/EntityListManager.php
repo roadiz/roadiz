@@ -213,7 +213,6 @@ class EntityListManager
             $this->paginator->setTranslation($this->translation);
             $this->paginator->setAuthorizationChecker($this->authorizationChecker);
             $this->paginator->setPreview($this->preview);
-
         } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
             $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
             $this->entityName == "NodesSources" ||

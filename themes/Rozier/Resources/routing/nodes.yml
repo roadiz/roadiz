@@ -22,6 +22,10 @@ nodesTranstypePage:
     path:     /edit/{nodeId}/transtype
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\TranstypeController::transtypeAction }
     requirements: { nodeId : "[0-9]+" }
+nodesTranslatePage:
+    path:     /translate/{nodeId}
+    defaults: { _controller: Themes\Rozier\Controllers\Nodes\TranslateController::translateAction }
+    requirements: { nodeId : "[0-9]+" }
 nodesEditSourcePage:
     path:     /edit/{nodeId}/source/{translationId}
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesSourcesController::editSourceAction }
@@ -50,8 +54,11 @@ nodesEditSEOPage:
     requirements: { nodeId : "[0-9]+" }
 nodesTreePage:
     path:     /tree/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::treeAction }
-    requirements: { nodeId : "[0-9]+" }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::treeAction
+        nodeId : null
+    requirements:
+        nodeId : "[0-9]+"
 nodesBulkDeletePage:
     path:     /bulk-delete
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkDeleteAction }
@@ -100,3 +107,11 @@ nodesPublishAllAction:
     path:     /publish-all/{nodeId}
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::publishAllAction }
     requirements: { nodeId : "[0-9]+" }
+nodesHistoryPage:
+    path:     /history/{nodeId}/{page}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\HistoryController::historyAction
+        page : "1"
+    requirements:
+        nodeId : "[0-9]+"
+        page : "[0-9]+"

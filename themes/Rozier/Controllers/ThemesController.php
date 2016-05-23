@@ -281,7 +281,6 @@ class ThemesController extends RozierApp
                         ['%name%' => $theme->getClassName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
-
                 } catch (EntityRequiredException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 } catch (\RuntimeException $e) {

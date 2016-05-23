@@ -105,7 +105,6 @@ class CustomFormsUtilsController extends RozierApp
                         'customFormsEditPage',
                         ["customFormId" => $newCustomForm->getId()]
                     ));
-
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add(
                 'error',

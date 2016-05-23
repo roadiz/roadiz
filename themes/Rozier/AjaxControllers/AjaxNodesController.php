@@ -217,6 +217,8 @@ class AjaxNodesController extends AbstractAjaxController
             NodeHandler::cleanRootNodesPositions();
         }
 
+        $this->getService('em')->flush();
+
         /*
          * Dispatch event
          */
@@ -264,7 +266,6 @@ class AjaxNodesController extends AbstractAjaxController
                     'status' => 'danger',
                     'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
                 ];
-
             } else {
                 if ($request->get('nodeId') > 0) {
                     $node = $this->getService('em')
@@ -300,7 +301,6 @@ class AjaxNodesController extends AbstractAjaxController
                                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
                                 if ($request->get('statusName') == 'status') {
-
                                     $nodeStatuses = [
                                         Node::DRAFT => 'draft',
                                         Node::PENDING => 'pending',
@@ -341,7 +341,6 @@ class AjaxNodesController extends AbstractAjaxController
                                     'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
                                 ];
                             }
-
                         } else {
                             $responseArray = [
                                 'statusCode' => Response::HTTP_FORBIDDEN,
@@ -351,7 +350,6 @@ class AjaxNodesController extends AbstractAjaxController
                                 ]),
                             ];
                         }
-
                     } else {
                         $responseArray = [
                             'statusCode' => Response::HTTP_FORBIDDEN,
@@ -361,7 +359,6 @@ class AjaxNodesController extends AbstractAjaxController
                             ]),
                         ];
                     }
-
                 } else {
                     $responseArray = [
                         'statusCode' => Response::HTTP_FORBIDDEN,
@@ -370,7 +367,6 @@ class AjaxNodesController extends AbstractAjaxController
                     ];
                 }
             }
-
         } else {
             $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,
@@ -421,7 +417,6 @@ class AjaxNodesController extends AbstractAjaxController
                     ]
                 ),
             ];
-
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans($e->getMessage());
 

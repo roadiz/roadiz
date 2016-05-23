@@ -4,16 +4,23 @@
 <section class="content-global stack-tree">
 
     <header class="content-header header-node header-nodes-tree">
-        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
+        {% if node %}
+            {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
+        {% endif %}
         <h1 class="content-title node-edit-title">
-            {{ source.getTitle|truncate(25, true, '[…]') }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}
-            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
+            {% if node %}
+                {{ source.getTitle|truncate(25, true, '[…]') }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}
+                {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
+            {% else %}
+                {{ 'tree'|trans }}
+            {% endif %}
         </h1>
 
         {% include '@Rozier/widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
         {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tree'} %}
-
+        {% if node %}
+            {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tree'} %}
+        {% endif %}
         {% if node.stackTypes|length %}
         <div class="content-header-action-menu stack-tree-quick-creation">
             {% for stackType in node.stackTypes %}
@@ -43,8 +50,8 @@
             'request':request,
         } only %}
     </article>
-
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
-
+    {% if node %}
+        {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% endif %}
 </section>
 {% endblock %}

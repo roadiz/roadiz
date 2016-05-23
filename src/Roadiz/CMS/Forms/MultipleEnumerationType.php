@@ -61,7 +61,9 @@ class MultipleEnumerationType extends AbstractType
 
         $resolver->setDefaults([
             'choices' => $choices,
-            'multiple' => true
+            'strict' => true,
+            'multiple' => true,
+            'choices_as_values' => true,
         ]);
     }
     /**

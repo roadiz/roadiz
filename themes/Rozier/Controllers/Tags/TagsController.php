@@ -153,7 +153,6 @@ class TagsController extends RozierApp
                 }
 
                 $this->assignation['form'] = $form->createView();
-
             } else {
                 /*
                  * If translation does not exist, we created it.
@@ -186,7 +185,6 @@ class TagsController extends RozierApp
                             'translationId' => $translation->getId(),
                         ]
                     ));
-
                 } else {
                     return $this->throw404();
                 }
@@ -275,7 +273,6 @@ class TagsController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-
                 /*
                  * Get latest position to add tags after.
                  */
@@ -563,7 +560,6 @@ class TagsController extends RozierApp
             $this->assignation['translation'] = $translation;
 
             return $this->render('tags/nodes.html.twig', $this->assignation);
-
         } else {
             return $this->throw404();
         }

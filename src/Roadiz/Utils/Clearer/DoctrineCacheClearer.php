@@ -82,6 +82,6 @@ class DoctrineCacheClearer extends Clearer
         $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $proxyFactory = $this->entityManager->getProxyFactory();
         $proxyFactory->generateProxyClasses($meta, ROADIZ_ROOT . '/gen-src/Proxies');
-        $this->output .= 'Doctrine proxy classes has been purged.' . PHP_EOL;
+        $this->output .= 'Doctrine proxy classes has been recreated.' . PHP_EOL;
     }
 }

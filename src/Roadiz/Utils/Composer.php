@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,21 +32,32 @@ namespace RZ\Roadiz\Utils;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- *
+ * Class Composer
+ * @package RZ\Roadiz\Utils
  */
 class Composer
 {
+    /**
+     * Occurs after the update command has been executed,
+     * or after the install command has been executed without a lock file present.
+     */
     public static function postUpdate()
     {
         static::copyDefaultConfiguration();
+        static::copyInstallEnvironment();
         static::copyDevEnvironment();
+        static::copyClearCacheEntryPoint();
     }
 
+    /**
+     * Occurs after the install command has been executed with a lock file present.
+     */
     public static function postInstall()
     {
         static::copyDefaultConfiguration();
         static::copyInstallEnvironment();
         static::copyDevEnvironment();
+        static::copyClearCacheEntryPoint();
     }
 
     public static function copyDefaultConfiguration()
@@ -58,6 +69,7 @@ class Composer
         if (!$fs->exists($configFile) &&
             $fs->exists($configFileSrc)) {
             $fs->copy($configFileSrc, $configFile);
+            echo 'Copying conf/config.yml default configuration.' . PHP_EOL;
         }
     }
 
@@ -70,6 +82,7 @@ class Composer
         if (!$fs->exists($installFile) &&
             $fs->exists($installFileSrc)) {
             $fs->copy($installFileSrc, $installFile);
+            echo 'Copying install.php entry point.' . PHP_EOL;
         }
     }
 
@@ -82,6 +95,20 @@ class Composer
         if (!$fs->exists($devFile) &&
             $fs->exists($devFileSrc)) {
             $fs->copy($devFileSrc, $devFile);
+            echo 'Copying dev.php entry point.' . PHP_EOL;
+        }
+    }
+
+    public static function copyClearCacheEntryPoint()
+    {
+        $fs = new Filesystem();
+        $clearCacheFile = 'clear_cache.php';
+        $clearCacheFileSrc = 'samples/clear_cache.php.sample';
+
+        if (!$fs->exists($clearCacheFile) &&
+            $fs->exists($clearCacheFileSrc)) {
+            $fs->copy($clearCacheFileSrc, $clearCacheFile);
+            echo 'Copying clear_cache.php entry point.' . PHP_EOL;
         }
     }
 }

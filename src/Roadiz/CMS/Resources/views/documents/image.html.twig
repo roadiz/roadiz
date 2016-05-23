@@ -7,18 +7,24 @@
     {% if srcset %}
     {% set attributes = attributes|merge(['data-srcset="' ~ srcset ~ '"']) %}
     {% endif %}
+    {% if sizes %}
+    {% set attributes = attributes|merge(['sizes="' ~ sizes ~ '"']) %}
+    {% endif %}
 {% else %}
 {% set attributes = attributes|merge(['src="' ~ url ~ '"']) %}
     {% if srcset %}
     {% set attributes = attributes|merge(['srcset="' ~ srcset ~ '"']) %}
     {% endif %}
+    {% if sizes %}
+    {% set attributes = attributes|merge(['sizes="' ~ sizes ~ '"']) %}
+    {% endif %}
 {% endif %}
 
-{% if width %}
+{% if width and not sizes %}
 {% set attributes = attributes|merge(['width="' ~ width ~ '"']) %}
 {% endif %}
 
-{% if height %}
+{% if height and not sizes %}
 {% set attributes = attributes|merge(['height="' ~ height ~ '"']) %}
 {% endif %}
 

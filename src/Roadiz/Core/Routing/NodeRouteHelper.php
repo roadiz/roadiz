@@ -32,10 +32,8 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 class NodeRouteHelper
 {
