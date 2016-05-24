@@ -115,6 +115,17 @@ class FullTextSearchHandler
                 }
             }
             $query->addSort('score', $query::SORT_DESC);
+            /*
+             * Only need these fields as Doctrine
+             * will do the rest.
+             */
+            $query->addFields([
+                'id',
+                'document_type_s',
+                'node_source_id_i',
+                'node_name_s',
+                'locale_s',
+            ]);
             $query->setRows($rows);
             /**
              * Add start if not first page.
@@ -228,9 +239,9 @@ class FullTextSearchHandler
         $args["fq"][] = "document_type_s:NodesSources";
         $tmp = [];
         $tmp["hl"] = true;
-        $tmp["hl.fl"] = "*";
+        $tmp["hl.fl"] = "collection_txt";
         $tmp["hl.simple.pre"] = '<span class="solr-highlight">';
-        $tmp["hl.simple.post"] = "</span>";
+        $tmp["hl.simple.post"] = '</span>';
         $args = array_merge($tmp, $args);
 
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
