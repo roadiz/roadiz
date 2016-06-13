@@ -92,9 +92,25 @@ class FirewallEntry
      */
     private $listeners;
     /**
+     * @var array
+     */
+    private $additionnalListeners;
+    /**
      * @var RequestMatcher
      */
     private $requestMatcher;
+    /**
+     * @var boolean
+     */
+    private $useReferer = false;
+    /**
+     * @var string
+     */
+    private $authenticationSuccessHandlerClass;
+    /**
+     * @var string
+     */
+    private $authenticationFailureHandlerClass;
 
     /**
      * FirewallEntry constructor.
@@ -128,56 +144,21 @@ class FirewallEntry
         $this->firewallBaseRole = $firewallBaseRole;
         $this->container = $container;
 
+        $this->authenticationSuccessHandlerClass = $authenticationSuccessHandlerClass;
+        $this->authenticationFailureHandlerClass = $authenticationFailureHandlerClass;
+
         $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
         $this->container['accessMap']->add($this->requestMatcher, [$this->firewallBaseRole]);
 
-        $this->authenticationSuccessHandler = new $authenticationSuccessHandlerClass(
-            $this->container['httpUtils'],
-            $this->container['em'],
-            $this->container['tokenBasedRememberMeServices'],
-            [
-                'always_use_default_target_path' => false,
-                'default_target_path' => $this->firewallBasePath,
-                'login_path' => $this->firewallLogin,
-                'target_path_parameter' => '_target_path',
-                'use_referer' => false,
-            ]
-        );
-        $this->authenticationFailureHandler = new $authenticationFailureHandlerClass(
-            $this->container['httpKernel'],
-            $this->container['httpUtils'],
-            [
-                'failure_path' => $this->firewallLogin,
-                'failure_forward' => false,
-                'login_path' => $this->firewallLogin,
-                'failure_path_parameter' => '_failure_path',
-            ],
-            $this->container['logger']
-        );
         $this->listeners = [
             // manages the SecurityContext persistence through a session
             $this->container['contextListener'],
             // logout users
             $this->getLogoutListener(),
             $this->container['rememberMeListener'],
-            // authentication via a simple form composed of a username and a password
-            new UsernamePasswordFormAuthenticationListener(
-                $this->container['securityTokenStorage'],
-                $this->container['authentificationManager'],
-                new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
-                $this->container['httpUtils'],
-                Kernel::SECURITY_DOMAIN,
-                $this->authenticationSuccessHandler,
-                $this->authenticationFailureHandler,
-                [
-                    'check_path' => $this->firewallLoginCheck,
-                ],
-                $this->container['logger'],
-                $this->container['dispatcher'],
-                null
-            ),
-            $this->container['securityAccessListener'],
+            // other listeners are optional…
         ];
+        $this->additionnalListeners = [];
     }
 
     /**
@@ -185,13 +166,26 @@ class FirewallEntry
      */
     public function withAnonymousAuthenticationListener()
     {
-        $this->listeners[] = new AnonymousAuthenticationListener($this->container['securityTokenStorage'], '');
+        $this->additionnalListeners[] = new AnonymousAuthenticationListener($this->container['securityTokenStorage'], '');
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withSwitchUserListener()
     {
-        $this->listeners[] = $this->container["switchUser"];
+        $this->additionnalListeners[] = $this->container["switchUser"];
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function withReferer()
+    {
+        $this->useReferer = true;
+
         return $this;
     }
 
@@ -208,7 +202,57 @@ class FirewallEntry
      */
     public function getListeners()
     {
-        return $this->listeners;
+        return array_merge($this->listeners, [
+            // authentication via a simple form composed of a username and a password
+            $this->getAuthentificationListener(),
+            $this->container['securityAccessListener'],
+        ], $this->additionnalListeners);
+    }
+
+    /**
+     * @return UsernamePasswordFormAuthenticationListener
+     */
+    protected function getAuthentificationListener()
+    {
+        $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
+            $this->container['httpUtils'],
+            $this->container['em'],
+            $this->container['tokenBasedRememberMeServices'],
+            [
+                'always_use_default_target_path' => false,
+                'default_target_path' => $this->firewallBasePath,
+                'login_path' => $this->firewallLogin,
+                'target_path_parameter' => '_target_path',
+                'use_referer' => $this->useReferer,
+            ]
+        );
+        $this->authenticationFailureHandler = new $this->authenticationFailureHandlerClass(
+            $this->container['httpKernel'],
+            $this->container['httpUtils'],
+            [
+                'failure_path' => $this->firewallLogin,
+                'failure_forward' => false,
+                'login_path' => $this->firewallLogin,
+                'failure_path_parameter' => '_failure_path',
+            ],
+            $this->container['logger']
+        );
+
+        return new UsernamePasswordFormAuthenticationListener(
+            $this->container['securityTokenStorage'],
+            $this->container['authentificationManager'],
+            new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
+            $this->container['httpUtils'],
+            Kernel::SECURITY_DOMAIN,
+            $this->authenticationSuccessHandler,
+            $this->authenticationFailureHandler,
+            [
+                'check_path' => $this->firewallLoginCheck,
+            ],
+            $this->container['logger'],
+            $this->container['dispatcher'],
+            null
+        );
     }
 
     /**

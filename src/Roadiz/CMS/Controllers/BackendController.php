@@ -68,6 +68,7 @@ class BackendController extends AppController
             $firewallBaseRole
         );
         $firewallEntry->withSwitchUserListener();
+        $firewallEntry->withReferer();
 
         $container['firewallMap']->add(
             $firewallEntry->getRequestMatcher(),
