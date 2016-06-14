@@ -44,6 +44,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class AddNodeType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title', 'text', [
@@ -52,14 +56,20 @@ class AddNodeType extends AbstractType
             'constraints' => [
                 new NotBlank(),
             ],
-        ])
-        ->add('nodeType', new NodeTypesType(), [
-            'label' => 'nodeType',
-            'constraints' => [
-                new NotBlank(),
-            ],
-        ])
-        ->add('dynamicNodeName', 'checkbox', [
+        ]);
+
+        if ($options['showNodeType'] === true) {
+            $builder->add('nodeType', new NodeTypesType(), [
+                'label' => 'nodeType',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
+            $builder->get('nodeType')
+                ->addModelTransformer(new NodeTypeTransformer($options['em']));
+        }
+
+        $builder->add('dynamicNodeName', 'checkbox', [
             'label' => 'node.dynamicNodeName',
             'required' => false,
             'attr' => ['class' => 'rz-boolean-checkbox'],
@@ -91,21 +101,25 @@ class AddNodeType extends AbstractType
             ],
         ])
         ;
-
-        $builder->get('nodeType')
-                ->addModelTransformer(new NodeTypeTransformer($options['em']));
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'childnode';
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'label' => false,
             'nodeName' => '',
+            'showNodeType' => true,
             'attr' => [
                 'class' => 'uk-form childnode-form',
             ],
@@ -117,5 +131,6 @@ class AddNodeType extends AbstractType
 
         $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
         $resolver->setAllowedTypes('nodeName', 'string');
+        $resolver->setAllowedTypes('showNodeType', 'boolean');
     }
 }

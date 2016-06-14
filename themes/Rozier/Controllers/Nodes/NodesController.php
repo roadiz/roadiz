@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -304,7 +305,8 @@ class NodesController extends RozierApp
 
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $node = $this->createNode($form->get('title')->getData(), $type, $translation, $node);
+                    $node = $this->createNode($form->get('title')->getData(), $translation, $node);
+                    $this->getService('em')->refresh($node);
                     /*
                      * Dispatch event
                      */
@@ -322,12 +324,7 @@ class NodesController extends RozierApp
                         ['nodeId' => $node->getId()]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesAddPage',
-                        ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
-                    ));
+                    $form->addError(new FormError($e->getMessage()));
                 }
             }
 
@@ -388,6 +385,8 @@ class NodesController extends RozierApp
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $node = $this->createNode($form->get('title')->getData(), $translation, $node);
+                    $this->getService('em')->refresh($node);
+
                     /*
                      * Dispatch event
                      */
@@ -398,19 +397,14 @@ class NodesController extends RozierApp
                         'child_node.%name%.created',
                         ['%name%' => $node->getNodeName()]
                     );
-                    $this->publishConfirmMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
                     return $this->redirect($this->generateUrl(
                         'nodesEditPage',
                         ['nodeId' => $node->getId()]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesAddChildPage',
-                        ['nodeId' => $nodeId, 'translationId' => $translationId]
-                    ));
+                    $form->addError(new FormError($e->getMessage()));
                 }
             }
 
@@ -604,7 +598,7 @@ class NodesController extends RozierApp
 
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',
-                ['nodeId' => $source->getNode()->getId(), 'translationId' => $translation->getId()]
+                ['nodeId' => $source->getNode()->getId(), 'translationId' => $source->getTranslation()->getId()]
             ));
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
@@ -621,7 +615,7 @@ class NodesController extends RozierApp
     public function publishAllAction(Request $request, $nodeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
-
+        /** @var Node $node */
         $node = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
