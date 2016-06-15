@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentEvents;
@@ -43,7 +44,9 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 use Themes\Rozier\RozierApp;
 
@@ -59,9 +62,8 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int     $folderId
-     *
-     * @return Response
+     * @param null $folderId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $folderId = null)
@@ -654,6 +656,17 @@ class DocumentsController extends RozierApp
             ->add('filename', 'text', [
                 'label' => 'filename',
                 'required' => false,
+                'constraints' => [
+                    // must ends with file extension
+                    new Regex([
+                        'pattern' => '/\.[a-z0-9]+$/i',
+                        'htmlPattern' => ".[a-z0-9]+$",
+                        'message' => 'value_is_not_a_valid_filename'
+                    ]),
+                    new UniqueFilename([
+                        'document' => $document,
+                    ]),
+                ],
             ])
             ->add('private', 'checkbox', [
                 'label' => 'private',
@@ -662,6 +675,9 @@ class DocumentsController extends RozierApp
             ->add('newDocument', 'file', [
                 'label' => 'overwrite.document',
                 'required' => false,
+                'constraints' => [
+                    new File()
+                ],
             ]);
 
         return $builder->getForm();

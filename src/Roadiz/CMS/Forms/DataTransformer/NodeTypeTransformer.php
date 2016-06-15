@@ -34,6 +34,10 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
+/**
+ * Class NodeTypeTransformer
+ * @package RZ\Roadiz\CMS\Forms\DataTransformer
+ */
 class NodeTypeTransformer implements DataTransformerInterface
 {
     private $manager;

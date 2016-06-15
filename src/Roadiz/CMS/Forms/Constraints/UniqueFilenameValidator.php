@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +24,44 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file index.php
- * @author Ambroise Maupate
+ * @file UniqueFilenameValidator.php
+ * @author ambroisemaupate
  */
 
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\HttpFoundation\Request;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-if (version_compare(phpversion(), '5.4.3', '<')) {
-    echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 5.4.3';
-    exit(1);
+use RZ\Roadiz\Core\Entities\Document;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+
+/**
+ * Class UniqueFilenameValidator
+ * @package RZ\Roadiz\CMS\Forms\Constraints
+ */
+class UniqueFilenameValidator extends ConstraintValidator
+{
+    /**
+     * @param mixed $value
+     * @param Constraint $constraint
+     */
+    public function validate($value, Constraint $constraint)
+    {
+        /** @var Document $document */
+        $document = $constraint->document;
+        /*
+         * If value is already the node name
+         * do nothing.
+         */
+        if (null !== $document &&
+            $value == $document->getFilename()) {
+            return;
+        }
+
+        $fs = new Filesystem();
+        $folder = dirname($document->getAbsolutePath());
+        if ($fs->exists($folder . '/' . $value)) {
+            $this->context->addViolation($constraint->message);
+        }
+    }
 }
-
-/*
- * This is preview entry point.
- *
- * This allows Backend users to preview nodes pages
- * that has not been published yet.
- */
-define('ROADIZ_ROOT', dirname(__FILE__));
-// Include Composer Autoload (relative to project root).
-require("vendor/autoload.php");
-
-$kernel = Kernel::getInstance('prod', false, true);
-$request = Request::createFromGlobals();
-
-$response = $kernel->handle($request);
-$response->send();
-$kernel->terminate($request, $response);

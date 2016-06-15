@@ -376,11 +376,17 @@ class FrontendController extends AppController
     /**
      * Get SEO informations for current node.
      *
+     * This method must return a 3-fields array with:
+     *
+     * * `title`
+     * * `description`
+     * * `keywords`
+     *
      * @param NodesSources $fallbackNodeSource
      *
      * @return array
      */
-    public function getNodeSEO($fallbackNodeSource = null)
+    public function getNodeSEO(NodesSources $fallbackNodeSource = null)
     {
         if (null !== $this->nodeSource) {
             return $this->nodeSource->getHandler()->getSEO();
@@ -390,7 +396,11 @@ class FrontendController extends AppController
             return $fallbackNodeSource->getHandler()->getSEO();
         }
 
-        return [];
+        return [
+            'title' => '',
+            'description' => '',
+            'keywords' => '',
+        ];
     }
 
     /**

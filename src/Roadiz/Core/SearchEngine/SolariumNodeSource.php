@@ -42,6 +42,39 @@ use Solarium\QueryType\Update\Query\Query;
  */
 class SolariumNodeSource
 {
+    public static $availableLocalizedTextFields = [
+        'en',
+        'ar',
+        'bg',
+        'ca',
+        'cz',
+        'da',
+        'de',
+        'el',
+        'es',
+        'eu',
+        'fa',
+        'fi',
+        'fr',
+        'ga',
+        'gl',
+        'hi',
+        'hu',
+        'hy',
+        'id',
+        'it',
+        'ja',
+        'lv',
+        'nl',
+        'no',
+        'pt',
+        'ro',
+        'ru',
+        'sv',
+        'th',
+        'tr',
+    ];
+
     const DOCUMENT_TYPE = 'NodesSources';
     const IDENTIFIER_KEY = 'node_source_id_i';
 
@@ -156,6 +189,8 @@ class SolariumNodeSource
 
         $searchableFields = $node->getNodeType()->getSearchableFields();
 
+        $locale = $this->nodeSource->getTranslation()->getLocale();
+        $lang = \Locale::getPrimaryLanguage($locale);
         /*
          * Only one content fields to search in.
          */
@@ -169,16 +204,17 @@ class SolariumNodeSource
              */
             $content = strip_tags(Parsedown::instance()->text($content));
 
-            if ('content' == $name) {
-                $assoc['content'] = $content;
+            /*
+             * Use locale to create field name
+             * with right language
+             */
+            if (in_array($lang, static::$availableLocalizedTextFields)) {
+                $name .= '_txt_' . $lang;
             } else {
-                /*
-                 * Use locale to create field name
-                 * with right language
-                 */
                 $name .= '_t';
-                $assoc[$name] = $content;
             }
+            
+            $assoc[$name] = $content;
 
             $collection[] = $content;
         }

@@ -52,6 +52,11 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     {
         return [
             'loginPage',
+            'loginRequestPage',
+            'loginRequestConfirmPage',
+            'loginResetConfirmPage',
+            'loginResetPage',
+            'logoutPage',
             'FontFile',
             'FontFaceCSS',
             'loginImagePage',

@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -131,12 +132,7 @@ class NewslettersController extends RozierApp
                         'newslettersIndexPage'
                     ));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-
-                    return $this->redirect($this->generateUrl(
-                        'newsletterAddPage',
-                        ['nodeTypeId' => $nodeTypeId, 'translationId' => $translationId]
-                    ));
+                    $form->addError(new FormError($e->getMessage()));
                 }
             }
 

@@ -6244,6 +6244,16 @@
             <target xml:lang="en" state="translated">Universal</target>
             <note>Universal node-type fields are common over translations.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename">
+            <source>value_is_not_a_valid_filename</source>
+            <target xml:lang="en" state="translated">Please enter a valid file name with an extension.</target>
+            <note>In document edit page when you rename your file without file extension.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="filename.alreadyExists">
+            <source>filename.alreadyExists</source>
+            <target xml:lang="en" state="translated">File name is already used.</target>
+            <note>In document edit page when you rename your file but filename already exists in folder.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

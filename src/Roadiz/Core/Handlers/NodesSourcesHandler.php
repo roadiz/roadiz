@@ -555,6 +555,12 @@ class NodesSourcesHandler
     /**
      * Get current node-source SEO data.
      *
+     * This method returns a 3-fields array with:
+     *
+     * * title
+     * * description
+     * * keywords
+     *
      * @return array
      */
     public function getSEO()

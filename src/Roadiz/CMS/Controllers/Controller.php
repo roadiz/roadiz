@@ -315,7 +315,7 @@ abstract class Controller
      *
      * @return Response A Response instance
      */
-    protected function forward($controller, array $path = array(), array $query = array())
+    protected function forward($controller, array $path = [], array $query = [])
     {
         $path['_controller'] = $controller;
         $subRequest = $this->container['request']->duplicate($query, null, $path);
@@ -363,7 +363,7 @@ abstract class Controller
      *
      * @return Form
      */
-    protected function createForm($type, $data = null, array $options = array())
+    protected function createForm($type, $data = null, array $options = [])
     {
         return $this->container['formFactory']->create($type, $data, $options);
     }
@@ -376,7 +376,7 @@ abstract class Controller
      *
      * @return \Symfony\Component\Form\FormBuilder
      */
-    protected function createFormBuilder($data = null, array $options = array())
+    protected function createFormBuilder($data = null, array $options = [])
     {
         return $this->container['formFactory']->createBuilder('form', $data, $options);
     }
