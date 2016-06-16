@@ -31,17 +31,17 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
+/**
+ * Class NodesCleanNamesCommand
+ * @package RZ\Roadiz\Console
+ */
 class NodesCleanNamesCommand extends Command
 {
     /** @var  EntityManager */
@@ -71,8 +71,8 @@ class NodesCleanNamesCommand extends Command
                     'translation' => $translation,
                 ]);
 
-            $output->writeln('<info>This command will rename EVERY nodes (except for locked and not dynamic ones) names accroding to their node-source for current default translation.</info>');
-            $output->writeln('<info>' . count($nodes) . '</info> nodes could be affected.');
+            $output->writeln('<info>This command will rename EVERY nodes (except for locked and not dynamic ones) names according to their node-source for current default translation.</info>');
+            $output->writeln('<info>' . count($nodes) . '</info> nodes might be affected.');
 
             $question1 = new ConfirmationQuestion('<question>Are you sure to proceed? This could break many page URLs!</question> [y/N]: ', false);
             $confirmed = $questionHelper->ask(
@@ -96,11 +96,11 @@ class NodesCleanNamesCommand extends Command
 
                     /*
                      * Proceed to rename only if best name is not the current
-                     * node-name.
+                     * node-name AND if it is not ALREADY suffixed with a unique ID.
                      */
-                    if ($prefixNameSlug != $node->getNodeName()) {
-                        $alreadyUsed = $this->isNodeNameAlreadyUsed($prefixName);
-
+                    if ($prefixNameSlug != $node->getNodeName() &&
+                        !NodeNameChecker::isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
+                        $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($prefixName, $this->entityManager);
                         if(!$alreadyUsed) {
                             $output->writeln($node->getNodeName(). ' ---> ' . $prefixNameSlug);
                             $node->setNodeName($prefixName);
@@ -119,20 +119,5 @@ class NodesCleanNamesCommand extends Command
                 $output->writeln('<info>Renaming cancelled…</info>');
             }
         }
-    }
-
-    /**
-     * @param $nodeName
-     * @return bool
-     */
-    protected function isNodeNameAlreadyUsed($nodeName) {
-        $nodeName = StringHandler::slugify($nodeName);
-
-        if (false === (boolean) $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($nodeName) &&
-            false === (boolean) $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($nodeName)) {
-            return false;
-        }
-
-        return true;
     }
 }

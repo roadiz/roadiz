@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +47,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Validator\Constraints\Email;
@@ -110,12 +111,14 @@ trait NodesSourcesTrait
             true === $nodeSource->getNode()->isDynamicNodeName() &&
             $nodeSource->getTranslation()->isDefaultTranslation()) {
             $testingNodeName = StringHandler::slugify($title);
-            $alreadyUsed = $this->isNodeNameAlreadyUsed($title);
 
             /*
-             * node name wont be updated if name already taken
+             * Node name wont be updated if name already taken OR
+             * if it is ALREADY suffixed with a unique ID.
              */
-            if ($testingNodeName != $nodeSource->getNode()->getNodeName()) {
+            if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
+                $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->getService('em'));
                 if(!$alreadyUsed) {
                     $nodeSource->getNode()->setNodeName($title);
                 } else {
@@ -128,24 +131,10 @@ trait NodesSourcesTrait
                  */
                 $event = new FilterNodeEvent($nodeSource->getNode());
                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            } else {
+                $this->getService('logger')->debug('Node name has not be changed.');
             }
         }
-    }
-
-    /**
-     * @param $nodeName
-     * @return bool
-     */
-    protected function isNodeNameAlreadyUsed($nodeName) {
-        $nodeName = StringHandler::slugify($nodeName);
-        /** @var EntityManager $em */
-        $em = $this->getService('em');
-        if (false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($nodeName) &&
-            false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($nodeName)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
