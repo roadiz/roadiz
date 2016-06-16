@@ -49,7 +49,7 @@ class TranslationRepository extends EntityRepository
             WHERE t.defaultTranslation = true
             AND t.available = true
         ');
-
+        $query->setMaxResults(1);
         $query->useResultCache(true, 1800, 'RZTranslationDefault');
 
         try {
