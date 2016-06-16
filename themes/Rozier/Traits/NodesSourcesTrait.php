@@ -72,12 +72,21 @@ trait NodesSourcesTrait
             $nodeSource->setTitle("");
         }
 
-        $fields = $nodeSource->getNode()->getNodeType()->getFields();
-        foreach ($fields as $field) {
-            if (isset($data[$field->getName()])) {
-                $this->setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
-            } else {
-                $this->setValueFromFieldType(null, $nodeSource, $field);
+        /*
+         * List form data to get actual node type fields.
+         * Important to do this instead of listing node fields first because of
+         * universal fields that could be absent from Form.
+         */
+        foreach ($data as $name => $singleData) {
+            $field = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                ->findOneBy([
+                    'nodeType' => $nodeSource->getNode()->getNodeType(),
+                    'name' => $name,
+                ]);
+
+            if ($field !== null) {
+                $this->setValueFromFieldType($singleData, $nodeSource, $field);
             }
         }
 
@@ -135,8 +144,8 @@ trait NodesSourcesTrait
             $fields = $node->getNodeType()->getFields();
         } else {
             $fields = $this->getService('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-                           ->findAllNotUniversal($node->getNodeType());
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                ->findAllNotUniversal($node->getNodeType());
         }
 
         /*
@@ -163,7 +172,7 @@ trait NodesSourcesTrait
          */
         /** @var FormBuilder $sourceBuilder */
         $sourceBuilder = $this->getService('formFactory')
-                              ->createNamedBuilder('source', 'form', $sourceDefaults);
+            ->createNamedBuilder('source', 'form', $sourceDefaults);
         /*
          * Add title and default fields
          */
@@ -207,19 +216,19 @@ trait NodesSourcesTrait
             case NodeTypeField::DOCUMENTS_T:
                 /** @var Document[] $documents */
                 $documents = $nodeSource->getHandler()
-                                        ->getDocumentsFromFieldName($field->getName());
+                    ->getDocumentsFromFieldName($field->getName());
 
                 return new DocumentsType($documents, $this->getService('em'));
             case NodeTypeField::NODES_T:
                 /** @var Node[] $nodes */
                 $nodes = $nodeSource->getNode()->getHandler()
-                                    ->getNodesFromFieldName($field->getName());
+                    ->getNodesFromFieldName($field->getName());
 
                 return new NodesType($nodes, $this->getService('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
                 /** @var CustomForm[] $customForms */
                 $customForms = $nodeSource->getNode()->getHandler()
-                                          ->getCustomFormsFromFieldName($field->getName());
+                    ->getCustomFormsFromFieldName($field->getName());
 
                 return new CustomFormsNodesType($customForms, $this->getService('em'));
             case NodeTypeField::CHILDREN_T:
