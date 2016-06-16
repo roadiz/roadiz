@@ -100,8 +100,6 @@ trait NodesSourcesTrait
      */
     protected function updateNodeName(NodesSources $nodeSource)
     {
-        /** @var EntityManager $em */
-        $em = $this->getService('em');
         $title = $nodeSource->getTitle();
 
         /*
@@ -112,16 +110,18 @@ trait NodesSourcesTrait
             true === $nodeSource->getNode()->isDynamicNodeName() &&
             $nodeSource->getTranslation()->isDefaultTranslation()) {
             $testingNodeName = StringHandler::slugify($title);
+            $alreadyUsed = $this->isNodeNameAlreadyUsed($title);
 
             /*
              * node name wont be updated if name already taken
              */
-            if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
-                false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
-                $nodeSource->getNode()->setNodeName($title);
-
-                $em->flush();
+            if ($testingNodeName != $nodeSource->getNode()->getNodeName()) {
+                if(!$alreadyUsed) {
+                    $nodeSource->getNode()->setNodeName($title);
+                } else {
+                    $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
+                }
+                $this->getService('em')->flush();
 
                 /*
                  * Dispatch event
@@ -130,6 +130,22 @@ trait NodesSourcesTrait
                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
             }
         }
+    }
+
+    /**
+     * @param $nodeName
+     * @return bool
+     */
+    protected function isNodeNameAlreadyUsed($nodeName) {
+        $nodeName = StringHandler::slugify($nodeName);
+        /** @var EntityManager $em */
+        $em = $this->getService('em');
+        if (false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($nodeName) &&
+            false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($nodeName)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
