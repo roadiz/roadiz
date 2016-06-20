@@ -101,7 +101,7 @@ class NodesCleanNamesCommand extends Command
                     if ($prefixNameSlug != $node->getNodeName() &&
                         !NodeNameChecker::isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
                         $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($prefixName, $this->entityManager);
-                        if(!$alreadyUsed) {
+                        if (!$alreadyUsed) {
                             $output->writeln($node->getNodeName(). ' ---> ' . $prefixNameSlug);
                             $node->setNodeName($prefixName);
                         } else {
@@ -114,7 +114,6 @@ class NodesCleanNamesCommand extends Command
                 }
 
                 $output->writeln('<info>Renaming done! ' . $renameCount . ' nodes have been affected.</info> Do not forget to reindex your Solr documents if you are using it.');
-
             } else {
                 $output->writeln('<info>Renaming cancelled…</info>');
             }
