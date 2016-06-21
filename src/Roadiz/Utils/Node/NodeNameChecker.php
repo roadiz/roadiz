@@ -46,7 +46,8 @@ abstract class NodeNameChecker
      * @param string $nodeName Node name to test
      * @return bool
      */
-    public static function isNodeNameWithUniqId($canonicalNodeName, $nodeName) {
+    public static function isNodeNameWithUniqId($canonicalNodeName, $nodeName)
+    {
         $pattern = '#^' . preg_quote($canonicalNodeName) . '\-[0-9a-z]{13}$#';
         $returnState = preg_match_all($pattern, $nodeName);
 
@@ -64,7 +65,8 @@ abstract class NodeNameChecker
      * @param EntityManager $entityManager
      * @return bool
      */
-    public static function isNodeNameAlreadyUsed($nodeName, EntityManager $entityManager) {
+    public static function isNodeNameAlreadyUsed($nodeName, EntityManager $entityManager)
+    {
         $nodeName = StringHandler::slugify($nodeName);
 
         if (false === (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($nodeName) &&

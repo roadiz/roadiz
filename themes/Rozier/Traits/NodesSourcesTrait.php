@@ -119,7 +119,7 @@ trait NodesSourcesTrait
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
                 !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
                 $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->getService('em'));
-                if(!$alreadyUsed) {
+                if (!$alreadyUsed) {
                     $nodeSource->getNode()->setNodeName($title);
                 } else {
                     $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
