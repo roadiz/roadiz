@@ -10,10 +10,10 @@
 
 /* -------- STYLES -------- */
 
-.uk-button{
-    height: 36px;
-    font-size: 12px;
-    line-height: 36px;
+.uk-button {
+    height: 30px;
+    font-size: 11px;
+    line-height: 30px;
     font-weight: bold;
     .border-radius(0px);
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
@@ -30,14 +30,30 @@
     }
 
     [class*=uk-icon-]{
-        font-size:14px;
+        font-size:12px;
         margin:0 4px 0 0;
     }
 
     [class*=uk-icon-rz-] {
-      font-size: 16px;
+      font-size: 14px;
     }
+}
 
+@media screen and (min-width: 960px) {
+    .uk-button {
+        height: 36px;
+        font-size: 12px;
+        line-height: 36px;
+
+        [class*=uk-icon-]{
+            font-size:14px;
+            margin:0 4px 0 0;
+        }
+
+        [class*=uk-icon-rz-] {
+            font-size: 16px;
+        }
+    }
 }
 
 .uk-button-mini {
