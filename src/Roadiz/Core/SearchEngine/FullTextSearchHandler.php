@@ -35,6 +35,7 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 use Solarium\Client;
 use Solarium\Core\Query\Helper;
 
@@ -213,6 +214,15 @@ class FullTextSearchHandler
         } else {
             $args["fq"][] = "node_status_i:" . (string) (Node::PUBLISHED);
         }
+        
+        /*
+         * Filter by translation
+         */
+        if (isset($args['translation']) &&
+            $args['translation'] instanceof Translation) {
+            $args["fq"][] = "locale_s:" . $args['translation']->getLocale();
+        }
+
         return $args;
     }
 
