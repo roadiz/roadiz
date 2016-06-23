@@ -71,7 +71,9 @@ class NodesType extends AbstractType
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon
-                    if (null !== $value && null === $nodes[$key]) {
+                    if (null !== $value &&
+                        isset($nodes[$key]) &&
+                        null === $nodes[$key]) {
                         $context->buildViolation('Node #{{ value }} does not exists.')
                             ->atPath(null)
                             ->setParameter('{{ value }}', $value)
