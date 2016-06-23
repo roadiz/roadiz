@@ -56,6 +56,11 @@ class NodesTreesController extends RozierApp
             $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
             $node = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
+            if (null === $node) {
+                return $this->throw404();
+            }
+
             $this->getService('em')->refresh($node);
         } else {
             $node = null;
