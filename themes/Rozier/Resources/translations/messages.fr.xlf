@@ -4669,9 +4669,9 @@
           <source>you.cant.upload.files.of.this.type</source>
           <target xml:lang="fr">Vous ne pouvez pas téléverser de fichiers de ce type.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code" approved="yes">
-          <source>server.responded.with.{{statuscode}}.code</source>
-          <target xml:lang="fr">Le serveur a répondu avec le code {{statuscode}}.</target>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statusCode}}.code">
+          <source>server.responded.with.{{statusCode}}.code</source>
+          <target xml:lang="fr" state="translated">Le serveur a répondu avec le code {{statusCode}}</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="cancel.upload" approved="yes">
           <source>cancel.upload</source>

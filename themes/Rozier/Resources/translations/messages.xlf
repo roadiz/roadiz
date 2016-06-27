@@ -4719,8 +4719,8 @@
           <source>you.cant.upload.files.of.this.type</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code">
-          <source>server.responded.with.{{statuscode}}.code</source>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statusCode}}.code">
+          <source>server.responded.with.{{statusCode}}.code</source>
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="cancel.upload">
