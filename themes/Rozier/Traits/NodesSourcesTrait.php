@@ -140,18 +140,35 @@ trait NodesSourcesTrait
     /**
      * @param Node $node
      * @param NodesSources $source
+     * @return array|null
+     */
+    private function getFieldsForSource(Node $node, NodesSources $source)
+    {
+        $criteria = [
+            'nodeType' => $node->getNodeType(),
+            'visible' => true,
+        ];
+        $position = [
+            'position' => 'ASC',
+        ];
+        if (!$source->getTranslation()->isDefaultTranslation()) {
+            $criteria = array_merge($criteria, ['universal' => false]);
+        }
+
+        return $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+            ->findBy($criteria, $position);
+    }
+
+    /**
+     * @param Node $node
+     * @param NodesSources $source
      * @return \Symfony\Component\Form\Form
      * @throws \Exception
      */
     private function buildEditSourceForm(Node $node, NodesSources $source)
     {
-        if ($source->getTranslation()->isDefaultTranslation()) {
-            $fields = $node->getNodeType()->getFields();
-        } else {
-            $fields = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-                ->findAllNotUniversal($node->getNodeType());
-        }
+        $fields = $this->getFieldsForSource($node, $source);
 
         /*
          * Create source default values
