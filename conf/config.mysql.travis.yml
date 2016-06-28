@@ -34,3 +34,6 @@ assetsProcessing:
     # pixel size limit () after roadiz
     # should create a smaller copy.
     maxPixelSize: 1920
+    jpegoptimPath: ~
+    pngquantPath: ~
+
