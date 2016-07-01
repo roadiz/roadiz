@@ -590,7 +590,9 @@ class NodesSourcesHandler
             ->findByNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
-                $this->nodeSource->getTranslation()
+                $this->nodeSource->getTranslation(),
+                Kernel::getService('securityAuthorizationChecker'),
+                Kernel::getInstance()->isPreview()
             );
     }
 
@@ -608,7 +610,9 @@ class NodesSourcesHandler
             ->findByReverseNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
-                $this->nodeSource->getTranslation()
+                $this->nodeSource->getTranslation(),
+                Kernel::getService('securityAuthorizationChecker'),
+                Kernel::getInstance()->isPreview()
             );
     }
 }

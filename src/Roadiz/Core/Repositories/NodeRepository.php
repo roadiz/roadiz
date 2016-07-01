@@ -1103,214 +1103,266 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * @param Node          $node
-     * @param NodeTypeField $field
-     *
-     * @return array
+     * @param QueryBuilder $qb
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return QueryBuilder
      */
-    public function findByNodeAndField($node, NodeTypeField $field)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            WHERE ntn.field = :field AND ntn.nodeA = :nodeA
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
+    protected function alterQueryBuilderWithAuthorizationChecker(
+        QueryBuilder $qb,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $backendUser = $preview === true &&
+            null !== $authorizationChecker &&
+            $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+
+        if ($backendUser) {
+            $qb->andWhere($qb->expr()->lte('n.status', Node::PUBLISHED));
+        } else {
+            $qb->andWhere($qb->expr()->eq('n.status', Node::PUBLISHED));
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param Node $node
+     * @param NodeTypeField $field
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByNodeAndField(
+        Node $node,
+        NodeTypeField $field,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByNodeAndFieldName(
+            $node,
+            $field->getName(),
+            $authorizationChecker,
+            $preview
+        );
+    }
+
+    /**
+     * @param Node $node
+     * @param $fieldName
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByNodeAndFieldName(
+        Node $node,
+        $fieldName,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        if (null !== $authorizationChecker) {
+            $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+        }
+
+        $qb->setParameter('name', $fieldName)
             ->setParameter('nodeA', $node);
+
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
-     * @param Node   $node
-     * @param string $fieldName
-     *
-     * @return array
-     */
-    public function findByNodeAndFieldName($node, $fieldName)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            INNER JOIN ntn.field f
-            WHERE f.name = :name AND ntn.nodeA = :nodeA
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
-            ->setParameter('nodeA', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node          $node
+     * @param Node $node
      * @param NodeTypeField $field
-     * @param Translation   $translation
-     *
-     * @return array
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
      */
     public function findByNodeAndFieldAndTranslation(
         Node $node,
         NodeTypeField $field,
-        Translation $translation
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            INNER JOIN n.nodeSources ns
-            WHERE ntn.field = :field
-            AND ntn.nodeA = :nodeA
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeA', $node)
-            ->setParameter('translation', $translation);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->findByNodeAndFieldNameAndTranslation(
+            $node,
+            $field->getName(),
+            $translation,
+            $authorizationChecker,
+            $preview
+        );
     }
 
     /**
-     * @param Node        $node
-     * @param string      $fieldName
+     * @param Node $node
+     * @param $fieldName
      * @param Translation $translation
-     *
-     * @return array
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
      */
     public function findByNodeAndFieldNameAndTranslation(
         Node $node,
         $fieldName,
-        Translation $translation
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ntn.field f
-            WHERE f.name = :name
-            AND ntn.nodeA = :nodeA
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        if (null !== $authorizationChecker) {
+            $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+        }
+
+        $qb->setParameter('name', $fieldName)
             ->setParameter('nodeA', $node)
             ->setParameter('translation', $translation);
+
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
-     * @param Node          $node
+     * @param Node $node
      * @param NodeTypeField $field
-     *
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
      * @return array
      */
-    public function findByReverseNodeAndField($node, NodeTypeField $field)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            WHERE ntn.field = :field AND ntn.nodeB = :nodeB
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeB', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+    public function findByReverseNodeAndField(
+        Node $node,
+        NodeTypeField $field,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByReverseNodeAndFieldName(
+            $node,
+            $field->getName(),
+            $authorizationChecker,
+            $preview
+        );
     }
 
     /**
-     * @param Node   $node
+     * @param Node $node
      * @param string $fieldName
-     *
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
      * @return array
      */
-    public function findByReverseNodeAndFieldName($node, $fieldName)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            INNER JOIN ntn.field f
-            WHERE f.name = :name AND ntn.nodeB = :nodeB
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
+    public function findByReverseNodeAndFieldName(
+        Node $node,
+        $fieldName,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n')
+            ->innerJoin('n.bNodes', 'ntn')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        if (null !== $authorizationChecker) {
+            $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+        }
+
+        $qb->setParameter('name', $fieldName)
             ->setParameter('nodeB', $node);
+
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
-     * @param Node          $node
+     * @param Node $node
      * @param NodeTypeField $field
-     * @param Translation   $translation
-     *
-     * @return array
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
      */
     public function findByReverseNodeAndFieldAndTranslation(
         Node $node,
         NodeTypeField $field,
-        Translation $translation
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            INNER JOIN n.nodeSources ns
-            WHERE ntn.field = :field
-            AND ntn.nodeB = :nodeB
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeB', $node)
-            ->setParameter('translation', $translation);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->findByReverseNodeAndFieldNameAndTranslation(
+            $node,
+            $field->getName(),
+            $translation,
+            $authorizationChecker,
+            $preview
+        );
     }
 
     /**
-     * @param Node        $node
-     * @param string      $fieldName
+     * @param Node $node
+     * @param $fieldName
      * @param Translation $translation
-     *
-     * @return array
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
      */
     public function findByReverseNodeAndFieldNameAndTranslation(
         Node $node,
         $fieldName,
-        Translation $translation
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ntn.field f
-            WHERE f.name = :name
-            AND ntn.nodeB = :nodeB
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
-            ->setParameter('nodeB', $node)
-            ->setParameter('translation', $translation);
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.bNodes', 'ntn')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        if (null !== $authorizationChecker) {
+            $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+        }
+
+        $qb->setParameter('name', $fieldName)
+            ->setParameter('translation', $translation)
+            ->setParameter('nodeB', $node);
+
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -1362,14 +1414,14 @@ class NodeRepository extends EntityRepository
     /**
      * Find all node’ parents with criteria and ordering.
      *
-     * @param  Node                      $node
-     * @param  array                     $criteria
-     * @param  array|null                $orderBy
-     * @param  integer                   $limit
-     * @param  integer                   $offset
-     * @param  Translation|null          $translation
-     * @param  AuthorizationChecker|null $authorizationChecker
-     *
+     * @param Node $node
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer $limit
+     * @param integer $offset
+     * @param Translation|null $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
      * @return array|null
      */
     public function findAllNodeParentsBy(
@@ -1379,7 +1431,8 @@ class NodeRepository extends EntityRepository
         $limit = null,
         $offset = null,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
     ) {
 
         $parentsId = $this->findAllParentsIdByNode($node);
@@ -1395,7 +1448,8 @@ class NodeRepository extends EntityRepository
             $limit,
             $offset,
             $translation,
-            $authorizationChecker
+            $authorizationChecker,
+            $preview
         );
     }
 
