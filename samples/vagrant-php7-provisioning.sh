@@ -44,6 +44,9 @@ sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-cur
 echo -e "\n--- Setting up our MySQL user and db ---\n"
 sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME"
 mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
+echo -e "\n--- Setting up a db for tests ---\n"
+sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE ${DBNAME}_test"
+mysql -uroot -p$DBPASSWD -e "grant all privileges on ${DBNAME}_test.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
 
 echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
@@ -108,4 +111,5 @@ echo -e "\n* Type https://localhost:4430/install.php to proceed using SSL (cert 
 echo -e "\n* MySQL User: $DBUSER"
 echo -e "\n* MySQL Password: $DBPASSWD"
 echo -e "\n* MySQL Database: $DBNAME"
+echo -e "\n* MySQL Database for tests: ${DBNAME}_test"
 echo -e "\n-----------------------------------------------------------------"

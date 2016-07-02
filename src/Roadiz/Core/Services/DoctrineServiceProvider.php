@@ -174,11 +174,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
                     $evm = $em->getEventManager();
 
-                    /*
-                     * Create dynamic dicriminator map for our Node system
-                     */
                     $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
 
+                    /*
+                     * Create dynamic discriminator map for our Node system
+                     */
                     $evm->addEventListener(
                         Events::loadClassMetadata,
                         new DataInheritanceEvent($prefix)
@@ -208,6 +208,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
                     return $em;
                 } catch (\PDOException $e) {
+                    $c['logger']->error('Cannot create EntityManager: ' . $e->getMessage());
                     $c['session']->getFlashBag()->add('error', $e->getMessage());
                     return null;
                 }

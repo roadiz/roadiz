@@ -604,21 +604,19 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findParent(NodesSources $nodeSource)
     {
-        if (null !== $nodeSource->getNode()->getParent()) {
-            try {
-                $query = $this->_em->createQuery('
-                    SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
-                    WHERE ns.node = :node
-                    AND ns.translation = :translation')
-                    ->setParameter('node', $nodeSource->getNode()->getParent())
-                    ->setParameter('translation', $nodeSource->getTranslation())
-                    ->setMaxResults(1);
+        $qb = $this->createQueryBuilder('ns');
+        $qb->select('ns, n')
+            ->innerJoin('ns.node', 'n')
+            ->innerJoin('n.children', 'cn')
+            ->andWhere($qb->expr()->eq('cn.id', ':childNodeId'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setParameter('childNodeId', $nodeSource->getNode()->getId())
+            ->setParameter('translation', $nodeSource->getTranslation())
+            ->setMaxResults(1);
 
-                return $query->getSingleResult();
-            } catch (NoResultException $e) {
-                return null;
-            }
-        } else {
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
             return null;
         }
     }

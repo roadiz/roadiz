@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use RZ\Roadiz\Console\Tools\YamlConfiguration;
 use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register configuration services for dependency injection container.
@@ -45,14 +46,26 @@ class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvi
     public function register(Container $container)
     {
         parent::register($container);
+
         /*
          * Inject app config
          */
         $container['config'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $configDir = $kernel->getRootDir() . '/conf';
+            $configName = 'config_' . $kernel->getEnvironment() . '.yml';
+
+            if (file_exists($configDir . '/' . $configName)) {
+                $configPath = $configDir . '/' . $configName;
+            } else {
+                $configPath = $configDir . '/config.yml';
+            }
+
             $configuration = new YamlConfiguration(
-                $c['kernel']->getCacheDir(),
-                $c['kernel']->isDebug(),
-                $c['kernel']->getRootDir() . '/conf/config.yml'
+                $kernel->getCacheDir(),
+                $kernel->isDebug(),
+                $configPath
             );
 
             if (false !== $configuration->load()) {
