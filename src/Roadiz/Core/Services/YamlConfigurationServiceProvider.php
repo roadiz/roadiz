@@ -47,25 +47,31 @@ class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvi
     {
         parent::register($container);
 
+        $container['config_path'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $configDir = $kernel->getRootDir() . '/conf';
+            if ($kernel->getEnvironment() != 'prod') {
+                $configName = 'config_' . $kernel->getEnvironment() . '.yml';
+
+                if (file_exists($configDir . '/' . $configName)) {
+                    return $configDir . '/' . $configName;
+                }
+            }
+
+            return $configDir . '/config.yml';
+        };
         /*
          * Inject app config
          */
         $container['config'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            $configDir = $kernel->getRootDir() . '/conf';
-            $configName = 'config_' . $kernel->getEnvironment() . '.yml';
-
-            if (file_exists($configDir . '/' . $configName)) {
-                $configPath = $configDir . '/' . $configName;
-            } else {
-                $configPath = $configDir . '/config.yml';
-            }
 
             $configuration = new YamlConfiguration(
                 $kernel->getCacheDir(),
                 $kernel->isDebug(),
-                $configPath
+                $c['config_path']
             );
 
             if (false !== $configuration->load()) {
