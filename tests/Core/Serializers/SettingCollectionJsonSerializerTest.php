@@ -27,20 +27,19 @@
  * @file SettingCollectionJsonSerializerTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
  * Description.
  */
-class SettingCollectionJsonSerializerTest extends KernelDependentCase
+class SettingCollectionJsonSerializerTest extends SchemaDependentCase
 {
-    private static $entityCollection;
-
     /**
      * @dataProvider deserializeProvider
+     * @param $json
+     * @param $expected
+     * @throws Exception
      */
     public function testDeserialize($json, $expected)
     {
@@ -71,6 +70,9 @@ class SettingCollectionJsonSerializerTest extends KernelDependentCase
 
     /**
      * @dataProvider deserializeReturnTypeProvider
+     * @param $json
+     * @param $expected
+     * @throws Exception
      */
     public function testDeserializeReturnType($json, $expected)
     {
@@ -96,29 +98,5 @@ class SettingCollectionJsonSerializerTest extends KernelDependentCase
                 "Doctrine\Common\Collections\ArrayCollection",
             ),
         );
-    }
-
-    /**
-     * Nothing special to do except init collection
-     * array.
-     */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        static::$entityCollection = array();
-    }
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$entityCollection as $setting) {
-            Kernel::getService('em')->remove($setting);
-        }
-
-        Kernel::getService('em')->flush();
-
-        parent::tearDownAfterClass();
     }
 }

@@ -27,17 +27,17 @@
  * @file SolariumNodeSourceTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use Solarium\Exception\HttpException;
 
 /**
  * SolariumNodeSourceTest.
  */
-class SolariumNodeSourceTest extends KernelDependentCase
+class SolariumNodeSourceTest extends DefaultThemeDependentCase
 {
     private static $entityCollection;
     private static $documentCollection;
@@ -46,7 +46,7 @@ class SolariumNodeSourceTest extends KernelDependentCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getService('em')
+        $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
@@ -76,9 +76,13 @@ class SolariumNodeSourceTest extends KernelDependentCase
                     // Assert
                     $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
                 }
+            } catch (SolrServerNotConfiguredException $e) {
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                return;
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             }
+        } else {
+            throw new \PHPUnit_Framework_SkippedTestError('Node source "Ipsum Lorem Vehicula" does not exist.');
         }
 
     }
@@ -87,7 +91,7 @@ class SolariumNodeSourceTest extends KernelDependentCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getService('em')
+        $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
@@ -100,9 +104,13 @@ class SolariumNodeSourceTest extends KernelDependentCase
 
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotConfiguredException $e) {
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                return;
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             }
+        } else {
+            throw new \PHPUnit_Framework_SkippedTestError('Node source "Ipsum Lorem Vehicula" does not exist.');
         }
     }
 
@@ -110,7 +118,7 @@ class SolariumNodeSourceTest extends KernelDependentCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getService('em')
+        $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
@@ -125,10 +133,15 @@ class SolariumNodeSourceTest extends KernelDependentCase
 
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotConfiguredException $e) {
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             } catch (HttpException $e) {
-                return;
+                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
             }
+        } else {
+            throw new \PHPUnit_Framework_SkippedTestError('Node source "Ipsum Lorem Vehicula" does not exist.');
         }
     }
 
@@ -142,6 +155,22 @@ class SolariumNodeSourceTest extends KernelDependentCase
 
         static::$entityCollection = array();
         static::$documentCollection = array();
+
+        $testTitle = "Ipsum Lorem Vehicula";
+        $translation = static::getManager()
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findDefault();
+
+        $node = new \RZ\Roadiz\Core\Entities\Node();
+        $node->setNodeName($testTitle);
+        static::getManager()->persist($node);
+
+        $ns = new \GeneratedNodeSources\NSPage($node, $translation);
+        $ns->setTitle($testTitle);
+        static::getManager()->persist($ns);
+
+
+        static::getManager()->flush();
     }
 
     /**
@@ -166,8 +195,10 @@ class SolariumNodeSourceTest extends KernelDependentCase
                 // this executes the query and returns the result
                 $result = $solr->update($update);
             }
+        } catch (SolrServerNotConfiguredException $e) {
+            
         } catch (HttpException $e) {
-            return;
+
         }
 
         parent::tearDownAfterClass();

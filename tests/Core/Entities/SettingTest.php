@@ -29,14 +29,14 @@
  */
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
-class SettingTest extends KernelDependentCase
+class SettingTest extends SchemaDependentCase
 {
-    private static $entityCollection;
-
     /**
      * @dataProvider settingsProvider
+     * @param $name
+     * @param $expected
      */
     public function testGetValue($name, $expected)
     {
@@ -48,6 +48,9 @@ class SettingTest extends KernelDependentCase
         $this->assertEquals($expected, $value);
     }
 
+    /**
+     * @return array
+     */
     public static function settingsProvider()
     {
         return array(
@@ -63,7 +66,6 @@ class SettingTest extends KernelDependentCase
     {
         parent::setUpBeforeClass();
 
-        static::$entityCollection = array();
         $settings = static::settingsProvider();
 
         foreach ($settings as $setting) {
@@ -71,23 +73,8 @@ class SettingTest extends KernelDependentCase
             $s->setName($setting[0]);
             $s->setValue($setting[1]);
             Kernel::getService('em')->persist($s);
-
-            static::$entityCollection[] = $s;
         }
 
         Kernel::getService('em')->flush();
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$entityCollection as $setting) {
-            Kernel::getService('em')->remove($setting);
-        }
-
-        Kernel::getService('em')->flush();
-        parent::tearDownAfterClass();
     }
 }

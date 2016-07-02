@@ -27,16 +27,13 @@
  * @file RoleRepositoryTest.php
  * @author Ambroise Maupate
  */
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Entities\RoleRepository;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\RoleRepository;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
-class RoleRepositoryTest extends KernelDependentCase
+class RoleRepositoryTest extends SchemaDependentCase
 {
-    private static $entityCollection;
-
     /**
      * @dataProvider rolesProvider
      */
@@ -63,8 +60,6 @@ class RoleRepositoryTest extends KernelDependentCase
     {
         parent::setUpBeforeClass();
 
-        static::$entityCollection = new ArrayCollection();
-
         $roles = array(
             array("role___test", "ROLE_TEST"),
             array("role___test", "ROLE_TEST"),
@@ -80,24 +75,9 @@ class RoleRepositoryTest extends KernelDependentCase
                 $a = new Role();
                 $a->setName($value[0]);
                 Kernel::getService('em')->persist($a);
-
-                static::$entityCollection->add($role);
             }
         }
 
         Kernel::getService('em')->flush();
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$entityCollection as $role) {
-            Kernel::getService('em')->remove($role);
-        }
-
-        Kernel::getService('em')->flush();
-        parent::tearDownAfterClass();
     }
 }

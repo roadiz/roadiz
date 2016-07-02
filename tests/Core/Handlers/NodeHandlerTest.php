@@ -32,23 +32,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
-class NodeHandlerTest extends KernelDependentCase
+class NodeHandlerTest extends DefaultThemeDependentCase
 {
-    private static $entityCollection;
     private static $runtimeCollection;
 
     public function testDuplicate()
     {
         $node = null;
 
-        $nodeType = Kernel::getService("em")
+        $nodeType = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findOneByName('Page');
-        $tran = Kernel::getService("em")
+        $tran = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
@@ -58,17 +56,17 @@ class NodeHandlerTest extends KernelDependentCase
             $node = new Node($nodeType);
             $node->setNodeName("unittest-NodeHandlerTest-" . $uniqId);
             $node->setPublished(true);
-            Kernel::getService("em")->persist($node);
+            static::getManager()->persist($node);
 
             $src = new NSPage($node, $tran);
             $src->setTitle("NodeHandlerTest-" . $uniqId);
 
-            Kernel::getService("em")->persist($src);
-            Kernel::getService("em")->flush();
+            static::getManager()->persist($src);
+            static::getManager()->flush();
 
             $nbNode = count(static::$runtimeCollection);
 
-            $duplicator = new \RZ\Roadiz\Utils\Node\NodeDuplicator($node, Kernel::getService("em"));
+            $duplicator = new \RZ\Roadiz\Utils\Node\NodeDuplicator($node, static::getManager());
             $duplicatedNode = $duplicator->duplicate();
 
             $this->assertEquals($node->getNodeSources()->count(), $duplicatedNode->getNodeSources()->count());
@@ -77,7 +75,6 @@ class NodeHandlerTest extends KernelDependentCase
             $this->assertEquals($node->getTags()->count(), $duplicatedNode->getTags()->count());
             $this->assertEquals($node->getParent(), $duplicatedNode->getParent());
 
-            static::$entityCollection->add($node);
             static::$runtimeCollection->add($duplicatedNode);
 
             $duplicatedNode->getNodeSources()->first()->setTitle("testNodeDuplicated");
@@ -92,7 +89,6 @@ class NodeHandlerTest extends KernelDependentCase
     {
         parent::setUpBeforeClass();
 
-        static::$entityCollection = new ArrayCollection();
         static::$runtimeCollection = new ArrayCollection();
 
         $file = file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.rzt');
@@ -100,23 +96,5 @@ class NodeHandlerTest extends KernelDependentCase
             $file,
             Kernel::getService('em')
         );
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$entityCollection as $node) {
-            Kernel::getService('em')->remove($node);
-        }
-
-        foreach (static::$runtimeCollection as $node) {
-            Kernel::getService('em')->remove($node);
-        }
-
-        Kernel::getService('em')->flush();
-
-        parent::tearDownAfterClass();
     }
 }

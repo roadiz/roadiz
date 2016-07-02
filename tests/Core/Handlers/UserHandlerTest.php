@@ -30,13 +30,15 @@
 
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
-class UserHandlerTest extends KernelDependentCase
+class UserHandlerTest extends SchemaDependentCase
 {
-
     /**
      * @dataProvider encodeUserProvider
+     * @param $userName
+     * @param $email
+     * @param $plainPassword
      */
     public function testEncodeUser($userName, $email, $plainPassword)
     {

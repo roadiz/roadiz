@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,22 +28,20 @@
  * @file NodesSourcesRepositoryTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 /**
  * NodesSourcesRepositoryTest.
  */
-class NodesSourcesRepositoryTest extends KernelDependentCase
+class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
 {
     /**
      * @dataProvider findBySearchQueryProvider
      */
     public function testFindBySearchQuery($query, $expectedClass)
     {
-        $nSources = Kernel::getService('em')
+        $nSources = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBySearchQuery($query);
 
@@ -66,10 +64,13 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
 
     /**
      * @dataProvider findBySearchQueryAndTranslationProvider
+     * @param $query
+     * @param $expectedClass
+     * @param Translation $translation
      */
     public function testFindBySearchQueryAndTranslation($query, $expectedClass, Translation $translation)
     {
-        $nSources = Kernel::getService('em')
+        $nSources = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBySearchQueryAndTranslation($query, $translation);
 

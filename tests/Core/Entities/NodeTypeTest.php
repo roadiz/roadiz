@@ -33,6 +33,8 @@ class NodeTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider sourceEntityClassNameProvider
+     * @param $sourceName
+     * @param $expected
      */
     public function testSourceEntityClassName($sourceName, $expected)
     {
@@ -45,6 +47,8 @@ class NodeTypeTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider sourceEntityTableNameProvider
+     * @param $sourceName
+     * @param $expected
      */
     public function testSourceEntityTableName($sourceName, $expected)
     {
@@ -57,6 +61,8 @@ class NodeTypeTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider setNameProvider
+     * @param $sourceName
+     * @param $expected
      */
     public function testSetName($sourceName, $expected)
     {

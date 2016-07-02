@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,38 +24,53 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file PasswordGeneratorTest.php
+ * @file KernelDependentCase.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Utils\Security\PasswordGenerator;
+namespace RZ\Roadiz\Tests;
+
+use Doctrine\ORM\Tools\SchemaTool;
+use RZ\Roadiz\Core\Kernel;
 
 /**
- * Class PasswordGeneratorTest
+ * Class SchemaDependentCase for UnitTest which need EntityManager.
+ *
+ * Be careful, these tests must be executed on a clear database! Or all data will be lost.
+ *
+ * @package RZ\Roadiz\Tests
  */
-class PasswordGeneratorTest extends PHPUnit_Framework_TestCase
+abstract class SchemaDependentCase extends KernelDependentCase
 {
     /**
-     * @dataProvider generatePasswordProvider
-     * @param $passwordLength
+     * @throws \Doctrine\ORM\Tools\ToolsException
      */
-    public function testGeneratePassword($passwordLength)
+    public static function setUpBeforeClass()
     {
-        $passGen = new PasswordGenerator();
-        $pass = $passGen->generatePassword($passwordLength);
+        parent::setUpBeforeClass();
 
-        $this->assertEquals($passwordLength, strlen($pass));
+        $em = Kernel::getService('em');
+        $schemaTool = new SchemaTool($em);
+        $metadata = $em->getMetadataFactory()->getAllMetadata();
+
+        // Drop and recreate tables for all entities
+        $dropSQL = $schemaTool->getDropDatabaseSQL();
+        if (count($dropSQL) > 0) {
+            throw new \PHPUnit_Framework_RiskyTestError('Test database is not empty! Do not execute tests on a running Roadiz db.');
+        }
+        $schemaTool->dropDatabase();
+        $schemaTool->createSchema($metadata);
     }
-
-    /**
-     * @return array
-     */
-    public function generatePasswordProvider()
+    
+    public static function tearDownAfterClass()
     {
-        return [
-            [5],
-            [6],
-            [9],
-            [12],
-        ];
+        $em = Kernel::getService('em');
+        $schemaTool = new SchemaTool($em);
+
+        // Drop and recreate tables for all entities
+        $schemaTool->dropDatabase();
+
+        $em->close();
+
+        parent::tearDownAfterClass();
     }
 }

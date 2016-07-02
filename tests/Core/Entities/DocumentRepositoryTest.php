@@ -32,9 +32,9 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
-class DocumentRepositoryTest extends KernelDependentCase
+class DocumentRepositoryTest extends SchemaDependentCase
 {
     private static $documentCollection;
     private static $folderCollection;
@@ -207,22 +207,5 @@ class DocumentRepositoryTest extends KernelDependentCase
             }
         }
         Kernel::getService('em')->flush();
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$documentCollection as $document) {
-            Kernel::getService('em')->remove($document);
-        }
-        foreach (static::$folderCollection as $folder) {
-            Kernel::getService('em')->remove($folder);
-        }
-
-        Kernel::getService('em')->flush();
-
-        parent::tearDownAfterClass();
     }
 }

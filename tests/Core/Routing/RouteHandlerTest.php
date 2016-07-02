@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,13 +28,14 @@
  * @file RouteHandlerTest.php
  * @author Maxime Constantinian
  */
-
 use RZ\Roadiz\Core\Routing\RouteHandler;
 
 class RouteHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getBaseRouteProvider
+     * @param $input
+     * @param $expected
      */
     public function testGetBaseRoute($input, $expected)
     {
