@@ -37,6 +37,8 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getGetterNameProvider
+     * @param $sourceName
+     * @param $expected
      */
     public function testGetGetterName($sourceName, $expected)
     {
@@ -49,6 +51,8 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getSetterNameProvider
+     * @param $sourceName
+     * @param $expected
      */
     public function testGetSetterName($sourceName, $expected)
     {
@@ -61,6 +65,8 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider setNameProvider
+     * @param $sourceName
+     * @param $expected
      */
     public function testSetName($sourceName, $expected)
     {

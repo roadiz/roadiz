@@ -38,6 +38,8 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
 {
     /**
      * @dataProvider findBySearchQueryProvider
+     * @param $query
+     * @param $expectedClass
      */
     public function testFindBySearchQuery($query, $expectedClass)
     {

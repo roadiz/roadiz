@@ -27,8 +27,6 @@
  * @file NodesSourcesHandlerTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Kernel;
@@ -73,9 +71,9 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $en->setDefaultTranslation(false);
         $en->setAvailable(true);
 
-        Kernel::getService('em')->persist($fr);
-        Kernel::getService('em')->persist($en);
-        Kernel::getService('em')->flush();
+        static::getManager()->persist($fr);
+        static::getManager()->persist($en);
+        static::getManager()->flush();
     }
 
 
@@ -86,78 +84,57 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
     {
         $sources = array();
 
-        $fr = Kernel::getService("em")
+        $fr = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findOneByLocale('fr');
 
-        $en = Kernel::getService("em")
+        $en = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findOneByLocale('en');
 
         /*
          * Test 1 - regular node
          */
-        $n1 = new Node();
-        $n1->setNodeName('page');
-        Kernel::getService('em')->persist($n1);
-
-        $ns1 = new NodesSources($n1, $fr);
-        Kernel::getService('em')->persist($ns1);
+        $n1 = static::createNode("Page", $fr);
+        $ns1 = $n1->getNodeSources()->first();
 
         $sources[] = array($ns1, '/page');
 
         /*
          * Test 2  - regular node
          */
-        $n2 = new Node();
-        $n2->setNodeName('Page 2');
-        Kernel::getService('em')->persist($n2);
-
-        $ns2 = new NodesSources($n2, $en);
-        Kernel::getService('em')->persist($ns2);
+        $n2 = static::createNode("Page 2", $en);
+        $ns2 = $n2->getNodeSources()->first();
 
         $sources[] = array($ns2, '/en/page-2');
 
         /*
          * Test 3 - home node
          */
-        $n3 = new Node();
-        $n3->setNodeName('Page 3');
+        $n3 = static::createNode("Page 3", $fr);
+        $ns3 = $n3->getNodeSources()->first();
         $n3->setHome(true);
-        Kernel::getService('em')->persist($n3);
-
-        $ns3 = new NodesSources($n3, $fr);
-        Kernel::getService('em')->persist($ns3);
 
         $sources[] = array($ns3, '/');
 
         /*
          * Test 4 - home node non-default
          */
-        $n4 = new Node();
-        $n4->setNodeName('Page 4');
+        $n4 = static::createNode("Page 4", $en);
+        $ns4 = $n4->getNodeSources()->first();
         $n4->setHome(true);
-        Kernel::getService('em')->persist($n4);
-
-        $ns4 = new NodesSources($n4, $en);
-        Kernel::getService('em')->persist($ns4);
 
         $sources[] = array($ns4, '/en');
 
         /*
          * Test 5  - regular node with alias
          */
-        $n5 = new Node();
-        $n5->setNodeName('Page 5');
-        Kernel::getService('em')->persist($n5);
-
-        $ns5 = new NodesSources($n5, $en);
-        Kernel::getService('em')->persist($ns5);
+        $n5 = static::createNode("Page 5", $en);
+        $ns5 = $n5->getNodeSources()->first();
 
         $a5 = new Urlalias($ns5);
         $a5->setAlias('tralala-en');
-        Kernel::getService('em')->persist($a5);
-
+        static::getManager()->persist($a5);
         $ns5->getUrlAliases()->add($a5);
 
         $sources[] = array($ns5, '/tralala-en');
@@ -165,13 +142,8 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         /*
          * Test 6  - regular node with 1 parent
          */
-        $n6 = new Node();
-        $n6->setNodeName('Page 6');
-        Kernel::getService('em')->persist($n6);
-
-        $ns6 = new NodesSources($n6, $fr);
-        Kernel::getService('em')->persist($ns6);
-
+        $n6 = static::createNode("Page 6", $fr);
+        $ns6 = $n6->getNodeSources()->first();
         $ns6->getHandler()->setParentNodeSource($ns1);
 
         $sources[] = array($ns6, '/page/page-6');
@@ -179,62 +151,45 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         /*
          * Test 7  - regular node with 2 parents
          */
-        $n7 = new Node();
-        $n7->setNodeName('Page 7');
-        Kernel::getService('em')->persist($n7);
-
-        $ns7 = new NodesSources($n7, $fr);
-        Kernel::getService('em')->persist($ns7);
-
-        $ns7->getHandler()->setParentNodeSource($ns6);
+        $n7 = static::createNode("Page 7", $fr);
+        $ns7 = $n7->getNodeSources()->first();
+        $n7->setParent($n6);
 
         $sources[] = array($ns7, '/page/page-6/page-7');
 
         /*
          * Test 8  - regular node with 1 parent and 2 alias
          */
-        $n8 = new Node();
-        $n8->setNodeName('Page 8');
-        Kernel::getService('em')->persist($n8);
-        $ns8 = new NodesSources($n8, $fr);
-        Kernel::getService('em')->persist($ns8);
+        $n8 = static::createNode("Page 8", $en);
+        $ns8 = $n8->getNodeSources()->first();
+        $n8->setParent($n5);
 
         $a8 = new Urlalias($ns8);
         $a8->setAlias('other-tralala-en');
         $ns8->getUrlAliases()->add($a8);
-        Kernel::getService('em')->persist($a8);
-
-        $ns8->getHandler()->setParentNodeSource($ns5);
+        static::getManager()->persist($a8);
 
         $sources[] = array($ns8, '/tralala-en/other-tralala-en');
 
         /*
          * Test 9 - hidden node
          */
-        $n9 = new Node();
-        $n9->setNodeName('Hidden page');
+        $n9 = static::createNode("hidden-page", $fr);
+        $ns9 = $n9->getNodeSources()->first();
         $n9->setVisible(false);
-        Kernel::getService('em')->persist($n9);
-
-        $ns9 = new NodesSources($n9, $fr);
-        Kernel::getService('em')->persist($ns9);
 
         $sources[] = array($ns9, '/hidden-page');
 
         /*
          * Test 10 - regular node with hidden parent
          */
-        $n10 = new Node();
-        $n10->setNodeName('page-with-hidden-parent');
-        Kernel::getService('em')->persist($n10);
-
-        $ns10 = new NodesSources($n10, $fr);
-        $ns10->getHandler()->setParentNodeSource($ns9);
-        Kernel::getService('em')->persist($ns10);
-
+        $n10 = static::createNode("page-with-hidden-parent", $fr);
+        $ns10 = $n10->getNodeSources()->first();
+        $n10->setParent($n9);
+        
         $sources[] = array($ns10, '/page-with-hidden-parent');
 
-        Kernel::getService('em')->flush();
+        static::getManager()->flush();
 
         return $sources;
     }

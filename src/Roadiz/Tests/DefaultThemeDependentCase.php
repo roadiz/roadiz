@@ -30,7 +30,12 @@
 namespace RZ\Roadiz\Tests;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
+use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Console\RoadizApplication;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\StringInput;
@@ -81,6 +86,50 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         $command = sprintf('%s --quiet --env=test', $command);
 
         return static::$application->run(new StringInput($command));
+    }
+
+    /**
+     * @param $title
+     * @param Translation $translation
+     * @return Node
+     */
+    protected static function createPageNode($title, Translation $translation)
+    {
+        $nodeType = static::getManager()
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->findOneByName('Page');
+
+        $node = new Node($nodeType);
+        $node->setNodeName($title);
+        static::getManager()->persist($node);
+
+        $ns = new NSPage($node, $translation);
+        $ns->setTitle($title);
+        static::getManager()->persist($ns);
+
+        $node->addNodeSources($ns);
+
+        return $node;
+    }
+
+    /**
+     * @param $title
+     * @param Translation $translation
+     * @return Tag
+     */
+    protected static function createTag($title, Translation $translation)
+    {
+        $tag = new Tag();
+        $tag->setTagName($title);
+        static::getManager()->persist($tag);
+
+        $tt = new TagTranslation($tag, $translation);
+        $tt->setName($title);
+        static::getManager()->persist($tt);
+
+        $tag->getTranslatedTags()->add($tt);
+
+        return $tag;
     }
 
     /**

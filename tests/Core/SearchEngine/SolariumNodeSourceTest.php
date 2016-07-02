@@ -77,20 +77,17 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                     $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
                 }
             } catch (SolrServerNotConfiguredException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             }
-        } else {
-            throw new \PHPUnit_Framework_SkippedTestError('Node source "Ipsum Lorem Vehicula" does not exist.');
         }
-
     }
 
     public function testGetDocumentFromIndex()
     {
         $testTitle = "Ipsum Lorem Vehicula";
-
+        /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
         $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
@@ -105,19 +102,17 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
 
             } catch (SolrServerNotConfiguredException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             }
-        } else {
-            throw new \PHPUnit_Framework_SkippedTestError('Node source "Ipsum Lorem Vehicula" does not exist.');
         }
     }
 
     public function testCleanAndCommit()
     {
         $testTitle = "Ipsum Lorem Vehicula";
-
+        /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
         $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
@@ -134,15 +129,13 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
 
             } catch (SolrServerNotConfiguredException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             } catch (HttpException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             }
-        } else {
-            throw new \PHPUnit_Framework_SkippedTestError('Node source "Ipsum Lorem Vehicula" does not exist.');
-        }
+        } 
     }
 
     /**
@@ -161,14 +154,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
-        $node = new \RZ\Roadiz\Core\Entities\Node();
-        $node->setNodeName($testTitle);
-        static::getManager()->persist($node);
-
-        $ns = new \GeneratedNodeSources\NSPage($node, $translation);
-        $ns->setTitle($testTitle);
-        static::getManager()->persist($ns);
-
+        static::createPageNode($testTitle, $translation);
 
         static::getManager()->flush();
     }
@@ -196,7 +182,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $result = $solr->update($update);
             }
         } catch (SolrServerNotConfiguredException $e) {
-            
+
         } catch (HttpException $e) {
 
         }

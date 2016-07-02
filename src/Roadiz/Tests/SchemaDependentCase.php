@@ -29,7 +29,11 @@
  */
 namespace RZ\Roadiz\Tests;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 
 /**
@@ -60,7 +64,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
         $schemaTool->dropDatabase();
         $schemaTool->createSchema($metadata);
     }
-    
+
     public static function tearDownAfterClass()
     {
         $em = Kernel::getService('em');
@@ -72,5 +76,33 @@ abstract class SchemaDependentCase extends KernelDependentCase
         $em->close();
 
         parent::tearDownAfterClass();
+    }
+
+    /**
+     * @param $title
+     * @param Translation $translation
+     * @return Node
+     */
+    protected static function createNode($title, Translation $translation)
+    {
+        $node = new Node();
+        $node->setNodeName($title);
+        static::getManager()->persist($node);
+
+        $ns = new NodesSources($node, $translation);
+        $ns->setTitle($title);
+        static::getManager()->persist($ns);
+
+        $node->addNodeSources($ns);
+
+        return $node;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public static function getManager()
+    {
+        return Kernel::getService('em');
     }
 }

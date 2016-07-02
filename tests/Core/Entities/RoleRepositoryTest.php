@@ -36,6 +36,8 @@ class RoleRepositoryTest extends SchemaDependentCase
 {
     /**
      * @dataProvider rolesProvider
+     * @param $name
+     * @param $expected
      */
     public function testRoleValue($name, $expected)
     {

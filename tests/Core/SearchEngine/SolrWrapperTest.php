@@ -52,9 +52,9 @@ class SolrWrapperTest extends KernelDependentCase
             try {
                 $result = $solr->ping($ping);
             } catch (\Solarium\Exception $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             } catch (HttpException $e) {
-                throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+                $this->markTestSkipped('Solr is not available.');
             }
 
             // get an update query instance
@@ -88,7 +88,7 @@ class SolrWrapperTest extends KernelDependentCase
             // Assert
             $this->assertEquals($resultset->getNumFound(), 1);
         } else {
-            throw new \PHPUnit_Framework_SkippedTestError('Solr is not available.');
+            $this->markTestSkipped('Solr is not available.');
         }
     }
 
@@ -124,7 +124,7 @@ class SolrWrapperTest extends KernelDependentCase
                 $result = $solr->update($update);
 
             } catch (SolrServerNotConfiguredException $e) {
-                
+
             } catch (HttpException $e) {
 
             }

@@ -29,9 +29,6 @@
  */
 
 use Doctrine\Common\Collections\ArrayCollection;
-use GeneratedNodeSources\NSPage;
-use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
@@ -42,27 +39,13 @@ class NodeHandlerTest extends DefaultThemeDependentCase
     public function testDuplicate()
     {
         $node = null;
-
-        $nodeType = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findOneByName('Page');
         $tran = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
-        if (null !== $nodeType &&
-            null !== $tran) {
-            $uniqId = uniqid();
-            $node = new Node($nodeType);
-            $node->setNodeName("unittest-NodeHandlerTest-" . $uniqId);
+        if (null !== $tran) {
+            $node = static::createPageNode("Original node", $tran);
             $node->setPublished(true);
-            static::getManager()->persist($node);
-
-            $src = new NSPage($node, $tran);
-            $src->setTitle("NodeHandlerTest-" . $uniqId);
-            $node->addNodeSources($src);
-
-            static::getManager()->persist($src);
             static::getManager()->flush();
 
             $nbNode = count(static::$runtimeCollection);
@@ -91,11 +74,5 @@ class NodeHandlerTest extends DefaultThemeDependentCase
         parent::setUpBeforeClass();
 
         static::$runtimeCollection = new ArrayCollection();
-
-        $file = file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Handlers/Page.rzt');
-        NodeTypesImporter::importJsonFile(
-            $file,
-            Kernel::getService('em')
-        );
     }
 }

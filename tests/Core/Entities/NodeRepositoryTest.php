@@ -27,10 +27,6 @@
  * @file NodeRepositoryTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 class NodeRepositoryTest extends DefaultThemeDependentCase
@@ -122,8 +118,6 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
          * Make this test available only if Page node-type exists.
          */
         if (null !== $type) {
-            $sourceClass = NodeType::getGeneratedEntitiesNamespace() . '\\' . $type->getSourceEntityClassName();
-
             $tags = [
                 'unittest-tag-1',
                 'unittest-tag-2',
@@ -140,19 +134,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
              * Adding Tags
              */
             foreach ($tags as $value) {
-                $tag = static::getManager()
-                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findOneByTagName($value);
-
-                if (null === $tag) {
-                    $tag = new Tag();
-                    $tag->setTagName($value);
-                    static::getManager()->persist($tag);
-
-                    $tt = new TagTranslation($tag, $translation);
-                    $tt->setName($value);
-                    static::getManager()->persist($tt);
-                }
+                static::createTag($value, $translation);
             }
             static::getManager()->flush();
 
@@ -160,19 +142,8 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
              * Adding nodes
              */
             foreach ($nodes as $value) {
-                $node = static::getManager()
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findOneByNodeName($value[0]);
+                $node = static::createPageNode($value[0], $translation);
 
-                if (null === $node) {
-                    $node = new Node($type);
-                    $node->setNodeName($value[0]);
-                    static::getManager()->persist($node);
-
-                    $ns = new $sourceClass($node, $translation);
-                    $ns->setTitle($value[0]);
-                    static::getManager()->persist($ns);
-                }
                 /*
                  * Adding tags
                  */

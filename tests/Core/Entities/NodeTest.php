@@ -37,6 +37,8 @@ class NodeTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider nodeNameProvider
+     * @param $nodeName
+     * @param $expected
      */
     public function testNodeName($nodeName, $expected)
     {
