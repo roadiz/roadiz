@@ -134,7 +134,7 @@ class AssetsController extends AppController
         $repository = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
-
+        /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
@@ -169,7 +169,7 @@ class AssetsController extends AppController
                     break;
             }
 
-            if ("" != $fontpath) {
+            if ("" != $fontpath && file_exists($fontpath)) {
                 $response = new Response(
                     '',
                     Response::HTTP_NOT_MODIFIED,
@@ -191,8 +191,9 @@ class AssetsController extends AppController
                 return $response;
             }
         }
+        $msg = "Font doesn't exist " . $filename;
         return new Response(
-            "Font doesn't exist " . $filename,
+            $msg,
             Response::HTTP_NOT_FOUND,
             ['content-type' => 'text/html']
         );
