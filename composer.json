@@ -81,7 +81,7 @@
         "erusev/parsedown-extra": "^0.7.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "~5.4",
         "satooshi/php-coveralls": "~1.0",
         "squizlabs/php_codesniffer": "@stable"
     },

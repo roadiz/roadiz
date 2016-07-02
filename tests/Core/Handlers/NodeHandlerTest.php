@@ -60,6 +60,7 @@ class NodeHandlerTest extends DefaultThemeDependentCase
 
             $src = new NSPage($node, $tran);
             $src->setTitle("NodeHandlerTest-" . $uniqId);
+            $node->addNodeSources($src);
 
             static::getManager()->persist($src);
             static::getManager()->flush();

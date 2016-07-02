@@ -736,6 +736,9 @@ class Node extends AbstractDateTimedPositioned
         $this->nodeSources = new ArrayCollection();
         $this->stackTypes = new ArrayCollection();
         $this->customForms = new ArrayCollection();
+        $this->aNodes = new ArrayCollection();
+        $this->bNodes = new ArrayCollection();
+        
         $this->setNodeType($nodeType);
     }
 
