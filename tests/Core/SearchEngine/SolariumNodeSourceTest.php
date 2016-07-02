@@ -57,7 +57,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                     Kernel::getService('solr')
                 );
 
-                $result = $solrDoc->indexAndCommit();
+                $solrDoc->indexAndCommit();
                 static::$documentCollection[] = $solrDoc;
 
                 /*
@@ -80,6 +80,8 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
                 $this->markTestSkipped('Solr is not available.');
+            } catch (HttpException $e) {
+                $this->markTestSkipped($e->getMessage());
             }
         }
     }
@@ -105,6 +107,8 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
                 $this->markTestSkipped('Solr is not available.');
+            } catch (HttpException $e) {
+                $this->markTestSkipped($e->getMessage());
             }
         }
     }
@@ -133,9 +137,9 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             } catch (SolrServerNotAvailableException $e) {
                 $this->markTestSkipped('Solr is not available.');
             } catch (HttpException $e) {
-                $this->markTestSkipped('Solr is not available.');
+                $this->markTestSkipped($e->getMessage());
             }
-        } 
+        }
     }
 
     /**

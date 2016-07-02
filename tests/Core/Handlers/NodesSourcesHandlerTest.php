@@ -33,6 +33,9 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 
+/**
+ * Class NodesSourcesHandlerTest
+ */
 class NodesSourcesHandlerTest extends SchemaDependentCase
 {
     /**
@@ -186,8 +189,59 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $n10 = static::createNode("page-with-hidden-parent", $fr);
         $ns10 = $n10->getNodeSources()->first();
         $n10->setParent($n9);
-        
+
         $sources[] = array($ns10, '/page-with-hidden-parent');
+
+        static::getManager()->flush();
+
+        return $sources;
+    }
+
+
+    public function testGetParent()
+    {
+        $sources = $this->getSourcesParentsProvider();
+
+        foreach ($sources as $source) {
+            /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
+            $nodeSource = $source[0];
+            /** @var \RZ\Roadiz\Core\Entities\NodesSources $expectedParent */
+            $expectedParent = $source[1];
+
+            $this->assertEquals($nodeSource->getHandler()->getParent(), $expectedParent);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getSourcesParentsProvider()
+    {
+        $sources = [];
+
+        $fr = static::getManager()
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findOneByLocale('fr');
+
+        $n1 = static::createNode("Page 0", $fr);
+        $ns1 = $n1->getNodeSources()->first();
+
+        $n2 = static::createNode("Page 0-1", $fr);
+        $n2->setParent($n1);
+        $ns2 = $n2->getNodeSources()->first();
+
+        $n3 = static::createNode("Page 0-2", $fr);
+        $n3->setParent($n1);
+        $ns3 = $n3->getNodeSources()->first();
+
+        $n4 = static::createNode("Page 0-2-1", $fr);
+        $n4->setParent($n3);
+        $ns4 = $n4->getNodeSources()->first();
+
+        $sources[] = array($ns1, null);
+        $sources[] = array($ns2, $ns1);
+        $sources[] = array($ns3, $ns1);
+        $sources[] = array($ns4, $ns3);
 
         static::getManager()->flush();
 
