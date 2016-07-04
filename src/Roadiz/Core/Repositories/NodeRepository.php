@@ -926,7 +926,7 @@ class NodeRepository extends EntityRepository
     public function exists($nodeName)
     {
         $qb = $this->createQueryBuilder('n');
-        $qb->addSelect($qb->expr()->countDistinct('n.nodeName'))
+        $qb->select($qb->expr()->countDistinct('n.nodeName'))
             ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
             ->setParameter('nodeName', $nodeName);
 
