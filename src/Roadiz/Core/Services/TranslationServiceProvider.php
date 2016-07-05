@@ -31,6 +31,10 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -48,15 +52,20 @@ class TranslationServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        /**
+         * @param $c
+         * @return Translation
+         */
         $container['defaultTranslation'] = function ($c) {
             return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findDefault();
         };
+
         /**
          * This service have to be called once a controller has
          * been matched! Never before.
          * @param $c
-         * @return
+         * @return string
          */
         $container['translator.locale'] = function ($c) {
             if (null !== $c['request']->getLocale()) {
@@ -69,50 +78,58 @@ class TranslationServiceProvider implements ServiceProviderInterface
             return null;
         };
 
+        /**
+         * @param $c
+         * @return Translator
+         */
         $container['translator'] = function ($c) {
             $c['stopwatch']->start('initTranslator');
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
 
             $translator = new Translator(
                 $c['translator.locale'],
                 null,
-                $c['kernel']->isDevMode() ? null : $c['kernel']->getCacheDir() . '/translations',
-                $c['kernel']->isDebug()
+                $kernel->isDevMode() ? null : $kernel->getCacheDir() . '/translations',
+                $kernel->isDebug()
             );
 
             $translator->addLoader('xlf', new XliffFileLoader());
+            $availableTranslations = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                             ->findAllAvailable();
 
-            /*
-             * Chosen language translations
-             */
-            $this->addTranslatorResource(
-                $translator,
-                ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
-                'xlf',
-                $c['translator.locale']
-            );
-            $this->addTranslatorResource(
-                $translator,
-                ROADIZ_ROOT . '/themes/Install/Resources/translations',
-                'xlf',
-                $c['translator.locale']
-            );
+            /** @var Translation $availableTranslation */
+            foreach ($availableTranslations as $availableTranslation) {
+                $this->addTranslatorResource(
+                    $translator,
+                    ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
+                    'xlf',
+                    $availableTranslation->getLocale()
+                );
+                $this->addTranslatorResource(
+                    $translator,
+                    ROADIZ_ROOT . '/themes/Install/Resources/translations',
+                    'xlf',
+                    $availableTranslation->getLocale()
+                );
 
-            $classes = [$c['backendTheme']];
-            $classes = array_merge($classes, $c['frontendThemes']);
+                $classes = [$c['backendTheme']];
+                $classes = array_merge($classes, $c['frontendThemes']);
 
-            foreach ($classes as $theme) {
-                if (null !== $theme) {
-                    $themeClass = $theme->getClassName();
-
-                    $this->addTranslatorResource(
-                        $translator,
-                        $themeClass::getResourcesFolder() . '/translations',
-                        'xlf',
-                        $c['translator.locale']
-                    );
+                /** @var Theme $theme */
+                foreach ($classes as $theme) {
+                    if (null !== $theme) {
+                        /** @var FrontendController $themeClass */
+                        $themeClass = $theme->getClassName();
+                        $this->addTranslatorResource(
+                            $translator,
+                            $themeClass::getResourcesFolder() . '/translations',
+                            'xlf',
+                            $availableTranslation->getLocale()
+                        );
+                    }
                 }
             }
-
             $c['stopwatch']->stop('initTranslator');
 
             return $translator;
