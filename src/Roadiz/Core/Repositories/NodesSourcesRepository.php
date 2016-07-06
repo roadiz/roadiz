@@ -33,7 +33,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -370,7 +369,7 @@ class NodesSourcesRepository extends EntityRepository
         try {
             return $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 
@@ -432,10 +431,8 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         try {
             return $finalQuery->getResult();
-        } catch (QueryException $e) {
-            return null;
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -473,8 +470,6 @@ class NodesSourcesRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (QueryException $e) {
-            return null;
         } catch (NoResultException $e) {
             return null;
         }
@@ -486,10 +481,12 @@ class NodesSourcesRepository extends EntityRepository
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param integer $limit Result number to fetch (default: all)
      *
-     * @return ArrayCollection | null
+     * @return ArrayCollection
      */
     public function findBySearchQuery($query, $limit = 0)
     {
+        $sources = new ArrayCollection();
+
         // Update Solr Serach engine if setup
         if (true === Kernel::getService('solr.ready')) {
             $service = Kernel::getService('solr');
@@ -507,22 +504,19 @@ class NodesSourcesRepository extends EntityRepository
             $resultset = $service->select($queryObj);
 
             if (0 === $resultset->getNumFound()) {
-                return null;
+                return $sources;
             } else {
-                $sources = new ArrayCollection();
-
                 foreach ($resultset as $document) {
                     $sources->add($this->_em->find(
                         'RZ\Roadiz\Core\Entities\NodesSources',
                         $document['node_source_id_i']
                     ));
                 }
-
                 return $sources;
             }
         }
 
-        return null;
+        return $sources;
     }
 
     /**
@@ -532,10 +526,12 @@ class NodesSourcesRepository extends EntityRepository
      * @param string      $query       Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
      *
-     * @return ArrayCollection | null
+     * @return ArrayCollection
      */
     public function findBySearchQueryAndTranslation($query, Translation $translation)
     {
+        $sources = new ArrayCollection();
+
         // Update Solr Serach engine if setup
         if (true === Kernel::getService('solr.ready')) {
             $service = Kernel::getService('solr');
@@ -551,10 +547,8 @@ class NodesSourcesRepository extends EntityRepository
             $resultset = $service->select($queryObj);
 
             if (0 === $resultset->getNumFound()) {
-                return null;
+                return $sources;
             } else {
-                $sources = new ArrayCollection();
-
                 foreach ($resultset as $document) {
                     $sources->add($this->_em->find(
                         'RZ\Roadiz\Core\Entities\NodesSources',
@@ -566,7 +560,7 @@ class NodesSourcesRepository extends EntityRepository
             }
         }
 
-        return null;
+        return $sources;
     }
 
     /**
@@ -592,7 +586,7 @@ class NodesSourcesRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 

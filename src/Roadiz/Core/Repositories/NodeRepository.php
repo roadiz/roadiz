@@ -79,7 +79,7 @@ class NodeRepository extends EntityRepository
         try {
             return $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 
@@ -1171,7 +1171,6 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param Node $node
-     *
      * @return array
      */
     public function findAllOffspringIdByNode(Node $node)

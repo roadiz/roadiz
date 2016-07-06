@@ -46,6 +46,10 @@ class EntityListManager
     protected $request = null;
     protected $_em = null;
     protected $entityName;
+
+    /**
+     * @var Paginator
+     */
     protected $paginator = null;
     protected $pagination = true;
     protected $orderingArray = null;
@@ -201,8 +205,8 @@ class EntityListManager
 
     protected function createPaginator()
     {
-        if ($this->entityName == "RZ\Roadiz\Core\Entities\Node" ||
-            $this->entityName == "\RZ\Roadiz\Core\Entities\Node" ||
+        if ($this->entityName == 'RZ\Roadiz\Core\Entities\Node' ||
+            $this->entityName == '\RZ\Roadiz\Core\Entities\Node' ||
             $this->entityName == "Node") {
             $this->paginator = new NodePaginator(
                 $this->_em,
@@ -213,8 +217,8 @@ class EntityListManager
             $this->paginator->setTranslation($this->translation);
             $this->paginator->setAuthorizationChecker($this->authorizationChecker);
             $this->paginator->setPreview($this->preview);
-        } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
-            $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
+        } elseif ($this->entityName == 'RZ\Roadiz\Core\Entities\NodesSources' ||
+            $this->entityName == '\RZ\Roadiz\Core\Entities\NodesSources' ||
             $this->entityName == "NodesSources" ||
             strpos($this->entityName, NodeType::getGeneratedEntitiesNamespace()) !== false) {
             $this->paginator = new NodesSourcesPaginator(
@@ -240,7 +244,6 @@ class EntityListManager
      * Handle request to find filter to apply to entity listing.
      *
      * @param boolean $disabled Disable pagination and filtering over GET params
-     *
      * @return void
      */
     public function handle($disabled = false)

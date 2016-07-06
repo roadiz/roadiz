@@ -528,9 +528,8 @@ class NodeHandler
     }
 
     /**
-     * return all node offspring id
-     *
-     * @return ArrayCollection
+     * Return all node offspring id.
+     * @return array
      */
     public function getAllOffspringId()
     {
