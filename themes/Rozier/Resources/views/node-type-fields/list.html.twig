@@ -1,60 +1,64 @@
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section class="content-global content-nav-and-filters">
+    <section class="content-global content-nav-and-filters">
 
-    <header class="content-header header-node-type-fields header-node-type-fields-list">
-        <h1 class="content-title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
+        <header class="content-header header-node-type-fields header-node-type-fields-list">
+            <h1 class="content-title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
 
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
-        <div class="content-header-action-menu">
-	        <nav>
-				<a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.nodeTypeField{% endtrans %}</a>
-			</nav>
-		</div>
-    </header>
+            <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+            <div class="content-header-action-menu">
+                <nav>
+                    <a class="uk-button" href="{{ path('nodeTypeFieldsAddPage', { nodeTypeId: nodeType.getId }) }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.nodeTypeField{% endtrans %}</a>
+                </nav>
+            </div>
 
-    <article class="content content-no-action-menu">
-        <div class="content-table-cont">
-        	<table class="node-type-fields content-table uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}name{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
+            {% include '@Rozier/node-types/navBar.html.twig' with {
+            nodeType: nodeType,
+            current: 'nodeTypeFields'
+            } only %}
+        </header>
+
+        <article class="content content-no-action-menu">
+            <div class="content-table-cont">
+                <table class="node-type-fields content-table uk-table">
+                    <thead>
+                    <tr>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}group{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged', handleClass:'node-type-field-col'}">
-					{% for field in fields %}
-					<tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="node-type-field-row">
-						<td class="node-type-field-col node-type-field-col-1">
-                            <a class="node-type-field-edit-button edit-button-chevron rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
-                                <i class="uk-icon-chevron-right"></i>{{ field.getName }}
-                            </a>
-                        </td>
-						<td class="mobile-hidden">{{ field.label }}</td>
-						<td class="mobile-hidden">{{ field.typeName|trans }}</td>
-                        <td class="mobile-hidden">{{ field.groupName|trans }}</td>
-                        <td class="mobile-hidden">
-                            {% if not field.Visible %}<i title="{{ 'invisible'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-eye-slash"></i>{% endif %}
-                            {% if field.Universal %}<i title="{{ 'universal'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-flag"></i>{% endif %}
-                            {% if field.Indexed %}<i title="{{ 'indexed'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-filter"></i>{% endif %}
-                        </td>
-						<td>
-                            {% spaceless %}
-                                <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
-                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                            {% endspaceless %}
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-        </div>
-    </article>
-
-</section>
+                    </tr>
+                    </thead>
+                    <tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged', handleClass:'node-type-field-col'}">
+                    {% for field in fields %}
+                        <tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="node-type-field-row">
+                            <td class="node-type-field-col node-type-field-col-1">
+                                <a class="node-type-field-edit-button edit-button-chevron rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
+                                    <i class="uk-icon-chevron-right"></i>{{ field.getName }}
+                                </a>
+                            </td>
+                            <td class="mobile-hidden">{{ field.label }}</td>
+                            <td class="mobile-hidden">{{ field.typeName|trans }}</td>
+                            <td class="mobile-hidden">{{ field.groupName|trans }}</td>
+                            <td class="mobile-hidden">
+                                {% if not field.Visible %}<i title="{{ 'invisible'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-eye-slash"></i>{% endif %}
+                                {% if field.Universal %}<i title="{{ 'universal'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-flag"></i>{% endif %}
+                                {% if field.Indexed %}<i title="{{ 'indexed'|trans }}" data-uk-tooltip="{animation:true}" class="uk-icon-filter"></i>{% endif %}
+                            </td>
+                            <td>
+                                {% spaceless %}
+                                    <a class="uk-button uk-button-content uk-button-small node-type-field-edit-button rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
+                                    <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('nodeTypeFieldsDeletePage', { nodeTypeFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                {% endspaceless %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
 {% endblock %}

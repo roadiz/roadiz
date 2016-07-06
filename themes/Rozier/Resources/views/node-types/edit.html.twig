@@ -6,9 +6,14 @@
     <header class="content-header header-node-types header-node-types-edit">
         <h1 class="content-title node-types-edit-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName})|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+
+        {% include '@Rozier/node-types/navBar.html.twig' with {
+            nodeType: nodeType,
+            current: 'nodeType'
+        } only %}
     </header>
 
-    <article class="content content-node-types-edit">
+    <article class="content content-first content-node-types-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
@@ -22,7 +27,21 @@
             </fieldset>
         </form>
     </article>
+    <article class="content content-node-types-edit">
+        <div class="content-table-cont">
+            <table class="node-types content-table uk-table">
 
+                <tr>
+                    <td>{% trans %}name{% endtrans %}</td>
+                    <td>{{ nodeType.name }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}classname{% endtrans %}</td>
+                    <td>{{ nodeType.sourceEntityClassName() }}</td>
+                </tr>
+            </table>
+        </div>
+    </article>
     {% include '@Rozier/node-types/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

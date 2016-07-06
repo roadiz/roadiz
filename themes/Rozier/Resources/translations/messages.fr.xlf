@@ -6254,6 +6254,11 @@
             <target xml:lang="fr" state="translated">Le nom de fichier est déjà utilisé.</target>
             <note>In document edit page when you rename your file but filename already exists in folder.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="classname">
+            <source>classname</source>
+            <target xml:lang="fr" state="translated">Nom de la classe Entité</target>
+            <note>In node-type edit page, label for the current node-type class name..</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
