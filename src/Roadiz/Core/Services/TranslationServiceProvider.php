@@ -95,40 +95,21 @@ class TranslationServiceProvider implements ServiceProviderInterface
             );
 
             $translator->addLoader('xlf', new XliffFileLoader());
-            $availableTranslations = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                             ->findAllAvailable();
+            $classes = [$c['backendTheme']];
+            $classes = array_merge($classes, $c['frontendThemes']);
 
-            /** @var Translation $availableTranslation */
-            foreach ($availableTranslations as $availableTranslation) {
-                $this->addTranslatorResource(
-                    $translator,
-                    ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
-                    'xlf',
-                    $availableTranslation->getLocale()
-                );
-                $this->addTranslatorResource(
-                    $translator,
-                    ROADIZ_ROOT . '/themes/Install/Resources/translations',
-                    'xlf',
-                    $availableTranslation->getLocale()
-                );
-
-                $classes = [$c['backendTheme']];
-                $classes = array_merge($classes, $c['frontendThemes']);
-
-                /** @var Theme $theme */
-                foreach ($classes as $theme) {
-                    if (null !== $theme) {
-                        /** @var FrontendController $themeClass */
-                        $themeClass = $theme->getClassName();
-                        $this->addTranslatorResource(
-                            $translator,
-                            $themeClass::getResourcesFolder() . '/translations',
-                            'xlf',
-                            $availableTranslation->getLocale()
-                        );
-                    }
+            /*
+             * DO NOT wake up entity manager in Install
+             */
+            if (!$kernel->isInstallMode()) {
+                $availableTranslations = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                                 ->findAllAvailable();
+                /** @var Translation $availableTranslation */
+                foreach ($availableTranslations as $availableTranslation) {
+                    $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes);
                 }
+            } else {
+                $this->addResourcesForLocale($c['translator.locale'], $translator, $classes);
             }
             $c['stopwatch']->stop('initTranslator');
 
@@ -136,6 +117,36 @@ class TranslationServiceProvider implements ServiceProviderInterface
         };
 
         return $container;
+    }
+
+    protected function addResourcesForLocale($locale, Translator $translator, array &$classes)
+    {
+        $this->addTranslatorResource(
+            $translator,
+            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
+            'xlf',
+            $locale
+        );
+        $this->addTranslatorResource(
+            $translator,
+            ROADIZ_ROOT . '/themes/Install/Resources/translations',
+            'xlf',
+            $locale
+        );
+
+        /** @var Theme $theme */
+        foreach ($classes as $theme) {
+            if (null !== $theme) {
+                /** @var FrontendController $themeClass */
+                $themeClass = $theme->getClassName();
+                $this->addTranslatorResource(
+                    $translator,
+                    $themeClass::getResourcesFolder() . '/translations',
+                    'xlf',
+                    $locale
+                );
+            }
+        }
     }
 
     /**
