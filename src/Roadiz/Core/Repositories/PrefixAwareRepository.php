@@ -344,4 +344,40 @@ class PrefixAwareRepository extends EntityRepository
             return 0;
         }
     }
+
+    /**
+     * Create a LIKE comparison with entity texts colunms.
+     *
+     * @param string $pattern
+     * @param QueryBuilder $qb
+     * @param string $alias
+     */
+    protected function classicLikeComparison(
+        $pattern,
+        QueryBuilder $qb,
+        $alias = "obj"
+    ) {
+        /*
+         * Get fields needed for a search query
+         */
+        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
+        $criteriaFields = [];
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $this->searchableTypes) &&
+                $field != 'folder' &&
+                $field != 'childrenOrder' &&
+                $field != 'childrenOrderDirection') {
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+            }
+        }
+
+        foreach ($criteriaFields as $key => $value) {
+            $realKey = $this->getRealKey($qb, $key);
+            $fullKey = sprintf('LOWER(%s)', $realKey['prefix'] . $realKey['key']);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
+        }
+    }
 }

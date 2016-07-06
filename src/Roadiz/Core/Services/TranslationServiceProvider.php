@@ -119,14 +119,26 @@ class TranslationServiceProvider implements ServiceProviderInterface
         return $container;
     }
 
+    /**
+     * @param string $locale
+     * @param Translator $translator
+     * @param array $classes
+     */
     protected function addResourcesForLocale($locale, Translator $translator, array &$classes)
     {
+        /*
+         * Add general CMS translations
+         */
         $this->addTranslatorResource(
             $translator,
             ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
             'xlf',
             $locale
         );
+
+        /*
+         * Add install theme translations
+         */
         $this->addTranslatorResource(
             $translator,
             ROADIZ_ROOT . '/themes/Install/Resources/translations',
