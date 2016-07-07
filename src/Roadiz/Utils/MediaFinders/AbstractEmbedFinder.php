@@ -151,9 +151,15 @@ abstract class AbstractEmbedFinder
         }
 
         $attributes['frameborder'] = "0";
-        $attributes['webkitAllowFullScreen'] = "1";
-        $attributes['mozallowfullscreen'] = "1";
-        $attributes['allowFullScreen'] = "1";
+
+        if (!isset($args['fullscreen']) ||
+            $args['fullscreen'] == true){
+
+            $attributes['webkitAllowFullScreen'] = "1";
+            $attributes['mozallowfullscreen'] = "1";
+            $attributes['allowFullScreen'] = "1";
+        }
+
 
         $htmlTag = '<iframe';
         foreach ($attributes as $key => $value) {

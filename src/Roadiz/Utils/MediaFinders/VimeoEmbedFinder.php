@@ -148,6 +148,9 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
+        if (isset($args['fullscreen'])) {
+            $queryString['fullscreen'] = (int) $args['fullscreen'];
+        }
         if (isset($args['api'])) {
             $queryString['api'] = (int) $args['api'];
         }
