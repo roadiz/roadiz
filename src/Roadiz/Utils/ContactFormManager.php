@@ -35,6 +35,8 @@ use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,7 +48,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- *
+ * Class ContactFormManager
+ * @package RZ\Roadiz\Utils
  */
 class ContactFormManager
 {
@@ -60,14 +63,35 @@ class ContactFormManager
     protected $translator;
     protected $templating;
     protected $mailer;
+    /**
+     * @var Request
+     */
     protected $request;
+    /**
+     * @var string
+     */
     protected $redirectUrl = null;
+    /**
+     * @var FormBuilder
+     */
     protected $formBuilder = null;
+    /**
+     * @var Form
+     */
     protected $form = null;
     protected $emailTemplate = 'forms/contactForm.html.twig';
     protected $emailStylesheet = '/src/Roadiz/CMS/Resources/css/transactionalStyles.css';
+    /**
+     * @var array
+     */
     protected $assignation;
+    /**
+     * @var \Swift_Message
+     */
     protected $message;
+    /**
+     * @var array
+     */
     protected $allowedMimeTypes = [
         'application/pdf',
         'application/x-pdf',
@@ -75,8 +99,19 @@ class ContactFormManager
         'image/png',
         'image/gif',
     ];
+    /**
+     * @var int
+     */
     protected $maxFileSize = 5242880; // 5MB
 
+    /**
+     * ContactFormManager constructor.
+     * @param Request $request
+     * @param FormFactoryInterface $formFactory
+     * @param TranslatorInterface $translator
+     * @param \Twig_Environment $templating
+     * @param \Swift_Mailer $mailer
+     */
     public function __construct(
         Request $request,
         FormFactoryInterface $formFactory,
@@ -98,10 +133,17 @@ class ContactFormManager
              ->setMethod('POST');
     }
 
+    /**
+     * @return FormBuilder
+     */
     public function getFormBuilder()
     {
         return $this->formBuilder;
     }
+
+    /**
+     * @return Form
+     */
     public function getForm()
     {
         return $this->form;
@@ -188,6 +230,8 @@ class ContactFormManager
     {
         $this->form = $this->formBuilder->getForm();
         $this->form->handleRequest($this->request);
+        $returnJson = $this->request->isXmlHttpRequest() ||
+            ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') == 'json');
 
         if ($this->form->isSubmitted()) {
             if ($this->form->isValid()) {
@@ -195,7 +239,7 @@ class ContactFormManager
                 $this->handleFormData($this->form);
 
                 if ($this->send() > 0) {
-                    if ($this->request->isXmlHttpRequest()) {
+                    if ($returnJson) {
                         $responseArray = [
                             'statusCode' => Response::HTTP_OK,
                             'status' => 'success',
@@ -210,29 +254,37 @@ class ContactFormManager
                         $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
                         return new RedirectResponse($this->redirectUrl);
                     }
-                } else {
-                    return null;
                 }
-            } elseif ($this->request->isXmlHttpRequest()) {
+            } elseif ($returnJson) {
                 /*
                  * If form has errors during AJAX
                  * request we sent them.
                  */
+                $errorPerForm = [];
+                foreach ($this->form as $child) {
+                    if (!$child->isValid()) {
+                        foreach ($child->getErrors() as $error) {
+                            $errorPerForm[$child->getName()][] = $this->translator->trans($error->getMessage());
+                        }
+                    }
+                }
                 $responseArray = [
                     'statusCode' => Response::HTTP_BAD_REQUEST,
                     'status' => 'danger',
                     'message' => $this->translator->trans($this->failMessage),
                     'errors' => (string) $this->form->getErrors(),
+                    'errorsPerForm' => $errorPerForm,
                 ];
                 return new JsonResponse($responseArray);
-            } else {
-                return null;
             }
-        } else {
-            return null;
         }
+
+        return null;
     }
 
+    /**
+     * @throws BadFormRequestException
+     */
     protected function handleFiles()
     {
         $this->uploadedFiles = [];
@@ -241,6 +293,10 @@ class ContactFormManager
          * Files values
          */
         foreach ($this->request->files as $files) {
+            /**
+             * @var string $name
+             * @var UploadedFile $uploadedFile
+             */
             foreach ($files as $name => $uploadedFile) {
                 if (null !== $uploadedFile) {
                     if (!$uploadedFile->isValid() ||
@@ -287,8 +343,9 @@ class ContactFormManager
             $this->sender = $formData['email'];
         }
 
-        /*
-         * Files values
+        /**
+         * @var string $key
+         * @var UploadedFile $uploadedFile
          */
         foreach ($this->uploadedFiles as $key => $uploadedFile) {
             $fields[] = [
@@ -386,7 +443,6 @@ class ContactFormManager
             );
         }
 
-        // Create the message
         $this->message = \Swift_Message::newInstance()
              // Give the message a subject
              ->setSubject($this->subject)
@@ -402,9 +458,7 @@ class ContactFormManager
             $this->message->setReplyTo([$this->sender]);
         }
 
-        /*
-         * Attach files
-         */
+        /** @var UploadedFile $uploadedFile */
         foreach ($this->uploadedFiles as $uploadedFile) {
             $attachment = \Swift_Attachment::fromPath($uploadedFile->getRealPath())
                 ->setFilename($uploadedFile->getClientOriginalName());
@@ -484,7 +538,7 @@ class ContactFormManager
     public function setReceiver($receiver)
     {
         if (false === filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception("Receiver must be a valid email address.", 1);
+            throw new \InvalidArgumentException("Receiver must be a valid email address.", 1);
         }
 
         $this->receiver = $receiver;
@@ -512,7 +566,7 @@ class ContactFormManager
     protected function setSender($sender)
     {
         if (false === filter_var($sender, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception("Sender must be a valid email address.", 1);
+            throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
         }
 
         $this->sender = $sender;

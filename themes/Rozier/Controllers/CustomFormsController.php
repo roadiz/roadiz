@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,9 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- *
- *
- * @file CustomFormsController.php
- * @author Ambroise Maupate
+ * CustomFormsController.php
+ * @author ambroisemaupate
  */
-
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
