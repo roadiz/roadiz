@@ -214,7 +214,7 @@ class FullTextSearchHandler
         } else {
             $args["fq"][] = "node_status_i:" . (string) (Node::PUBLISHED);
         }
-        
+
         /*
          * Filter by translation
          */
@@ -259,7 +259,7 @@ class FullTextSearchHandler
     }
 
     /**
-     * Search on Solr.
+     * ## Search on Solr.
      *
      * * $q is the search criteria.
      * * $args is a array with solr query argument.
@@ -270,8 +270,9 @@ class FullTextSearchHandler
      *
      * * status (int)
      * * visible (boolean)
-     * * nodeType (RZ\Roadiz\Core\Entities\NodeType or string)
+     * * nodeType (RZ\Roadiz\Core\Entities\NodeType or string or array)
      * * tags (RZ\Roadiz\Core\Entities\Tag or array of Tag)
+     * * translation (RZ\Roadiz\Core\Entities\Translation)
      *
      * For other filters, use $args['fq'][] array, eg.
      *
@@ -282,10 +283,10 @@ class FullTextSearchHandler
      *
      * @param string $q
      * @param array  $args
-     * @param int  $rows
+     * @param int  $rows Results per page
      * @param boolean $searchTags Search in tags too, even if a node don’t match
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
-     * @param int $page
+     * @param int $page Retrieve a specific page
      *
      * @return array
      */
