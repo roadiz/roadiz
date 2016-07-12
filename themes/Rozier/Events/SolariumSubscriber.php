@@ -81,7 +81,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         if (null !== $this->solr) {
             $solrSource = new SolariumNodeSource(
                 $event->getNodeSource(),
-                $this->solr
+                $this->solr,
+                $this->logger
             );
             $solrSource->getDocumentFromIndex();
             $solrSource->updateAndCommit();
@@ -99,7 +100,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         if (null !== $this->solr) {
             $solrSource = new SolariumNodeSource(
                 $event->getNodeSource(),
-                $this->solr
+                $this->solr,
+                $this->logger
             );
             $solrSource->getDocumentFromIndex();
             $solrSource->removeAndCommit();
@@ -117,7 +119,8 @@ class SolariumSubscriber implements EventSubscriberInterface
             foreach ($event->getNode()->getNodeSources() as $nodeSource) {
                 $solrSource = new SolariumNodeSource(
                     $nodeSource,
-                    $this->solr
+                    $this->solr,
+                    $this->logger
                 );
                 $solrSource->getDocumentFromIndex();
                 $solrSource->removeAndCommit();
@@ -136,7 +139,8 @@ class SolariumSubscriber implements EventSubscriberInterface
             foreach ($event->getNode()->getNodeSources() as $nodeSource) {
                 $solrSource = new SolariumNodeSource(
                     $nodeSource,
-                    $this->solr
+                    $this->solr,
+                    $this->logger
                 );
                 $solrSource->getDocumentFromIndex();
                 $solrSource->updateAndCommit();
@@ -159,7 +163,8 @@ class SolariumSubscriber implements EventSubscriberInterface
                 foreach ($node->getNodeSources() as $nodeSource) {
                     $solrSource = new SolariumNodeSource(
                         $nodeSource,
-                        $this->solr
+                        $this->solr,
+                        $this->logger
                     );
                     $solrSource->getDocumentFromIndex();
                     $solrSource->update($update);
