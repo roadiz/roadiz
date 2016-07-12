@@ -80,6 +80,7 @@ class CustomFormFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
+        /** @var CustomFormField $field */
         $field = $this->getService('em')
                       ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 

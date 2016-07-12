@@ -6259,6 +6259,27 @@
             <target xml:lang="en" state="translated">Entity class name</target>
             <note>In node-type edit page, label for the current node-type class name..</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="node-type.parameters">
+            <source>node-type.parameters</source>
+            <target xml:lang="en" state="translated">Parameters</target>
+            <note>In node-type section, label for the parameters section.</note>
+        </trans-unit>
+      <!-- Custom form nav bar -->
+      <trans-unit xml:space="preserve" id="custom-form.parameters">
+            <source>custom-form.parameters</source>
+            <target xml:lang="en" state="translated">Parameters</target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.fields">
+            <source>custom-form.fields</source>
+            <target xml:lang="en" state="translated">Questions</target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.answers">
+            <source>custom-form.answers</source>
+            <target xml:lang="en" state="translated">Answers</target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

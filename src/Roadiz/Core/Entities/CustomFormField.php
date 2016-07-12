@@ -68,6 +68,19 @@ class CustomFormField extends AbstractField
     ];
 
     /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setLabel($label)
+    {
+        parent::setLabel($label);
+        $this->setName($label);
+
+        return $this;
+    }
+
+    /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      */

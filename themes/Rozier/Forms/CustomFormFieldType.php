@@ -45,22 +45,15 @@ class CustomFormFieldType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
-                'label' => 'name',
+        $builder->add('label', 'text', [
+                'label' => 'label',
                 'constraints' => [
                     new NotBlank(),
-                    new SimpleLatinString(),
                     new UniqueCustomFormFieldName([
                         'entityManager' => $options['em'],
                         'currentValue' => $options['fieldName'],
                         'customForm' => $options['customForm'],
                     ]),
-                ],
-            ])
-            ->add('label', 'text', [
-                'label' => 'label',
-                'constraints' => [
-                    new NotBlank(),
                 ],
             ])
             ->add('description', new MarkdownType(), [

@@ -69,6 +69,7 @@ class CustomFormAnswersController extends RozierApp
             ["submittedAt" => "DESC"]
         );
         $listManager->handle();
+        $this->assignation['customForm'] = $customForm;
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['custom_form_answers'] = $listManager->getEntities();
 

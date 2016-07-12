@@ -7,6 +7,10 @@
                     <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>
                     <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
                 </a>
+                <a class="uk-button rz-no-ajax-link" href="{{ path('nodesTypesExportPage', { nodeTypeId: nodeType.getId }) }}">
+                    <span class="icon-container"><i class="uk-icon-rz-download"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}export{% endtrans %}</span></span>
+                </a>
             {% endif %}
         {% endif %}
     </nav>

@@ -1,67 +1,87 @@
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
-<section class="content-global content-nav-and-filters">
+    <section class="content-global content-nav-and-filters">
+        <header class="content-header header-custom-forms header-custom-forms-list">
+            <h1 class="content-title custom-forms-title">{% trans %}customForm{% endtrans %}</h1>
+            {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
+            <div class="content-header-action-menu">
+                <nav>
+                    <a class="uk-button" href="{{ path('customFormsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.a.customForm{% endtrans %}</a>
+                </nav>
+            </div>
+        </header>
 
-    <header class="content-header header-custom-forms header-custom-forms-list">
-        <h1 class="content-title custom-forms-title">{% trans %}customForm{% endtrans %}</h1>
-        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
-        <div class="content-header-action-menu">
-            <nav>
-            	<a class="uk-button" href="{{ path('customFormsAddPage') }}"><i class="uk-icon-plus"></i> {% trans %}add.a.customForm{% endtrans %}</a>
-			</nav>
-        </div>
-    </header>
+        {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
-    {% include '@Rozier/widgets/filtersBar.html.twig' %}
+        <article class="content content-no-action-menu content-custom-forms-list">
+            <div class="content-table-cont">
+                {% spaceless %}
+                    <table class="custom-forms content-table uk-table">
+                        <thead>
+                        <tr>
+                            <th>{% trans %}customForm.displayName{% endtrans %}</th>
+                            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
+                            <th class="mobile-hidden"></th>
+                            <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for type in custom_forms %}
+                            <tr>
+                                <td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
+                                        <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
+                                {# <td>{{ type.getSourceEntityClassName }}</td> #}
+                                <td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
+                                <td class="table-actions-row table-actions-row-6">
+                                    {% spaceless %}
+                                        <a class="uk-button uk-button-content uk-button-small"
+                                           href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}"
+                                           title="{% trans %}edit{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
 
-    <article class="content content-no-action-menu content-custom-forms-list">
-        <div class="content-table-cont">
-            {% spaceless %}
-			<table class="custom-forms content-table uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}customForm.displayName{% endtrans %}</th>
-			            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
-			            <th class="mobile-hidden"></th>
-			            <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for type in custom_forms %}
-						<tr>
-							<td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
-                                <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
-							{# <td>{{ type.getSourceEntityClassName }}</td> #}
-							<td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
-							<td>
-                            {% spaceless %}
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small"
+                                           href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}"
+                                           title="{% trans %}manage.customFormFields{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-custom-form-fields"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldsListPage', { customFormId: type.getId }) }}" title="{% trans %}manage.customFormFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-custom-form-fields"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small"
+                                           href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}"
+                                           title="{% trans %}customForm.answers{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-custom-form-answers"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormAnswersHomePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-custom-form-answers"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small"
+                                           href="{{ path('customFormSendAction', { customFormId: type.getId }) }}"
+                                           title="{% trans %}customForm.show{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormSendAction', { customFormId: type.getId }) }}" title="{% trans %}customForm.show{% endtrans %}" data-uk-tooltip="{animation:true}" target="_blank"><i class="uk-icon-rz-visibility"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link"
+                                           href="{{ path('customFormsDuplicatePage', { customFormId: type.getId }) }}"
+                                           title="{% trans %}customForm.duplicate{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-duplicate"></i></a>
 
-                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('customFormsDuplicatePage', { customFormId: type.getId }) }}" title="{% trans %}customForm.duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-duplicate"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link"
+                                           href="{{ path('customFormsExportPage', { customFormId: type.getId }) }}"
+                                           title="{% trans %}export{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}">
+                                            <i class="uk-icon-rz-download"></i>
+                                        </a>
 
-                                <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('customFormsExportPage', { customFormId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-download"></i>
-                                </a>
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete"
+                                           href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}"
+                                           title="{% trans %}delete{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}">
+                                            <i class="uk-icon-rz-trash-o"></i>
+                                        </a>
+                                    {% endspaceless %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endspaceless %}
+            </div>
+        </article>
 
-                                <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormsDeletePage', { customFormId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-trash-o"></i>
-                                </a>
-                            {% endspaceless %}
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			{% endspaceless %}
-        </div>
-    </article>
-
-</section>
+    </section>
 {% endblock %}
