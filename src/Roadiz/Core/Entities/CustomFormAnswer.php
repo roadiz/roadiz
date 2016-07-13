@@ -173,4 +173,18 @@ class CustomFormAnswer extends AbstractEntity
         return $this->getId() . " — " . $this->getIp() .
         " — Submitted : " . ($this->getSubmittedAt()->format('Y-m-d H:i:s'));
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $answers = [];
+        /** @var CustomFormFieldAttribute $answer */
+        foreach ($this->answerFields as $answer) {
+            $answers[$answer->getCustomFormField()->getName()] = $answer->getValue();
+        }
+
+        return $answers;
+    }
 }

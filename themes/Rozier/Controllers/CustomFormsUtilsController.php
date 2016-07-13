@@ -2,6 +2,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,10 @@ class CustomFormsUtilsController extends RozierApp
 
         $answers = $customForm->getCustomFormAnswers();
 
+        /**
+         * @var int $key
+         * @var CustomFormAnswer $answer
+         */
         foreach ($answers as $key => $answer) {
             $array = [$answer->getIp(), $answer->getSubmittedAt()];
             foreach ($answer->getAnswers() as $obj) {
