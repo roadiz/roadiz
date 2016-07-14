@@ -34,7 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
- * CustomFormAnswer entities
+ * CustomFormAnswer entities.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="custom_form_answers",  indexes={
@@ -44,7 +44,6 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  */
 class CustomFormAnswer extends AbstractEntity
 {
-
     /**
      * @ORM\Column(type="string", name="ip")
      */
@@ -143,15 +142,23 @@ class CustomFormAnswer extends AbstractEntity
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
      *           inversedBy="customFormAnswers")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var CustomForm
      **/
     private $customForm;
 
+    /**
+     * @param $customForm
+     * @return $this
+     */
     public function setCustomForm($customForm)
     {
         $this->customForm = $customForm;
         return $this;
     }
 
+    /**
+     * @return CustomForm
+     */
     public function getCustomForm()
     {
         return $this->customForm;
@@ -184,7 +191,6 @@ class CustomFormAnswer extends AbstractEntity
         foreach ($this->answerFields as $answer) {
             $answers[$answer->getCustomFormField()->getName()] = $answer->getValue();
         }
-
         return $answers;
     }
 }

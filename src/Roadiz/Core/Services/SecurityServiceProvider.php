@@ -148,7 +148,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 true === $kernel->isDebug()) {
                 $log->pushHandler(new StreamHandler($logPath, Logger::DEBUG));
             }
-            
+
             /*
              * Only activate doctrine logger for production.
              */
@@ -267,7 +267,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['daoAuthenticationProvider'],
             ]);
         };
-
+        
         /*
          * Main decision manager, set your voters here.
          */

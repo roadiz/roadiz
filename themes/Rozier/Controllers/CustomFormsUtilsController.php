@@ -2,7 +2,9 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +26,8 @@ class CustomFormsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $customFormId)
     {
-        $customForm = $this->getService("em")->find("RZ\Roadiz\Core\Entities\CustomForm", $customFormId);
-
+        /** @var CustomForm $customForm */
+        $customForm = $this->getService("em")->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
         $answers = $customForm->getCustomFormAnswers();
 
         /**
@@ -33,19 +35,17 @@ class CustomFormsUtilsController extends RozierApp
          * @var CustomFormAnswer $answer
          */
         foreach ($answers as $key => $answer) {
-            $array = [$answer->getIp(), $answer->getSubmittedAt()];
-            foreach ($answer->getAnswers() as $obj) {
-                $array[] = $obj->getValue();
-            }
+            $array = array_merge(
+                [$answer->getIp(), $answer->getSubmittedAt()],
+                $answer->toArray()
+            );
             $answers[$key] = $array;
         }
 
         $keys = ["ip", "submittedDate"];
 
         $fields = $customForm->getFieldsLabels();
-
         $keys = array_merge($keys, $fields);
-
         $xlsx = XlsxExporter::exportXlsx($answers, $keys);
 
         $response = new Response(
@@ -71,7 +71,7 @@ class CustomFormsUtilsController extends RozierApp
      * Duplicate custom form by ID
      *
      * @param Request $request
-     * @param int     $customFormId
+     * @param int $customFormId
      *
      * @return Response
      */
