@@ -71,7 +71,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getSource(&$args = [])
     {
-
     }
 
     /**
@@ -79,7 +78,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getMediaFeed($search = null)
     {
-
     }
 
     /**
@@ -87,7 +85,6 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
      */
     public function getSearchFeed($searchTerm, $author, $maxResults = 15)
     {
-
     }
 
     /**

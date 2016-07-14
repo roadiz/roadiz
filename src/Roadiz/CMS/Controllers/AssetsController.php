@@ -50,7 +50,6 @@ class AssetsController extends AppController
      */
     public function __init()
     {
-
     }
 
     /**
@@ -58,7 +57,6 @@ class AssetsController extends AppController
      */
     public function prepareBaseAssignation()
     {
-
     }
 
     /**

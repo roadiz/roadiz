@@ -256,7 +256,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         $qb->andWhere($res);
 
         return $qb;
-
     }
 
     /**

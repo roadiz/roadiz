@@ -46,6 +46,5 @@ class DeferredRouteCollection extends RouteCollection
      */
     public function parseResources()
     {
-
     }
 }

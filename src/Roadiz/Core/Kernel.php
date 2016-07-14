@@ -105,7 +105,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $this->container->register($this);
 
         $this->booted = true;
-
     }
 
     /**

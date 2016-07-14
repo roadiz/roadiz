@@ -370,7 +370,6 @@ class FrontendController extends AppController
      */
     protected function extendAssignation()
     {
-
     }
 
     /**

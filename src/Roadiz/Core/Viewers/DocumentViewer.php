@@ -56,7 +56,6 @@ class DocumentViewer implements ViewableInterface
     public function __construct(Document $document)
     {
         $this->document = $document;
-
     }
 
     /**

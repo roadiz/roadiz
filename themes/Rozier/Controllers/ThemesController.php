@@ -156,7 +156,6 @@ class ThemesController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('themes/add.html.twig', $this->assignation);
-
     }
 
     /**
@@ -525,7 +524,6 @@ class ThemesController extends RozierApp
                 ["id" => $theme->getId()]
             ));
         }
-
     }
 
     /**

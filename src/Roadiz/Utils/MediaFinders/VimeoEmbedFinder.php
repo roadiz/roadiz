@@ -162,6 +162,5 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         }
 
         return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);
-
     }
 }
