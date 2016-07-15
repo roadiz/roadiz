@@ -182,14 +182,23 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
+     * @param bool $namesAsKeys Use fields name as key. Default: true
      * @return array
      */
-    public function toArray()
+    public function toArray($namesAsKeys = true)
     {
         $answers = [];
         /** @var CustomFormFieldAttribute $answer */
         foreach ($this->answerFields as $answer) {
-            $answers[$answer->getCustomFormField()->getName()] = $answer->getValue();
+            if ($namesAsKeys) {
+                $answers[$answer->getCustomFormField()->getName()] = $answer->getValue();
+            } else {
+                $answers[] = [
+                    'name' => $answer->getCustomFormField()->getName(),
+                    'label' => $answer->getCustomFormField()->getLabel(),
+                    'value' => $answer->getValue(),
+                ];
+            }
         }
         return $answers;
     }

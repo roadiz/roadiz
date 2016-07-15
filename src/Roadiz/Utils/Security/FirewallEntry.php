@@ -180,7 +180,12 @@ class FirewallEntry
      */
     public function withAnonymousAuthenticationListener()
     {
-        $this->additionnalListeners[] = new AnonymousAuthenticationListener($this->container['securityTokenStorage'], '');
+        $this->additionnalListeners[] = new AnonymousAuthenticationListener(
+            $this->container['securityTokenStorage'],
+            $this->container['config']['security']['secret'],
+            $this->container['logger'],
+            $this->container['authentificationManager']
+        );
         return $this;
     }
 

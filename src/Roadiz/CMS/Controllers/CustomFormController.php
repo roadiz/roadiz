@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Utils\CustomForm\CustomFormHelper;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -197,6 +198,8 @@ class CustomFormController extends AppController
      * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      * @param \Doctrine\ORM\EntityManager $em
      *
+     * @deprecated Use \RZ\Roadiz\Utils\CustomForm\CustomFormHelper to transform Form to CustomFormAnswer.
+     *
      * @return array $fieldsData
      */
     public static function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManager $em)
@@ -219,23 +222,25 @@ class CustomFormController extends AppController
             $fieldAttr->setCustomFormAnswer($answer);
             $fieldAttr->setCustomFormField($field);
 
-            if ($data[$field->getName()] instanceof \DateTime) {
-                $strDate = $data[$field->getName()]->format('Y-m-d H:i:s');
+            if (isset($data[$field->getName()])) {
+                $fieldValue = $data[$field->getName()];
+                if ($fieldValue instanceof \DateTime) {
+                    $strDate = $fieldValue->format('Y-m-d H:i:s');
 
-                $fieldAttr->setValue($strDate);
-                $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
-            } else if (is_array($data[$field->getName()])) {
-                $values = $data[$field->getName()];
+                    $fieldAttr->setValue($strDate);
+                    $fieldsData[] = ["name" => $field->getLabel(), "value" => $strDate];
+                } elseif (is_array($fieldValue)) {
+                    $values = $fieldValue;
+                    $values = array_map('trim', $values);
+                    $values = array_map('strip_tags', $values);
 
-                $values = array_map('trim', $values);
-                $values = array_map('strip_tags', $values);
-
-                $displayValues = implode(', ', $values);
-                $fieldAttr->setValue($displayValues);
-                $fieldsData[] = ["name" => $field->getLabel(), "value" => $displayValues];
-            } else {
-                $fieldAttr->setValue(strip_tags($data[$field->getName()]));
-                $fieldsData[] = ["name" => $field->getLabel(), "value" => $data[$field->getName()]];
+                    $displayValues = implode(CustomFormHelper::ARRAY_SEPARATOR, $values);
+                    $fieldAttr->setValue($displayValues);
+                    $fieldsData[] = ["name" => $field->getLabel(), "value" => $displayValues];
+                } else {
+                    $fieldAttr->setValue(strip_tags($fieldValue));
+                    $fieldsData[] = ["name" => $field->getLabel(), "value" => $fieldValue];
+                }
             }
             $em->persist($fieldAttr);
         }
@@ -312,19 +317,22 @@ class CustomFormController extends AppController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $data = $form->getData();
-                $data["ip"] = $request->getClientIp();
+                $helper = new CustomFormHelper($em, $customFormsEntity);
+                /*
+                 * Parse form data and create answer.
+                 */
+                $answer = $helper->parseAnswerFormData($form, null, $request->getClientIp());
 
                 /*
-                 * add custom form answer
+                 * Prepare field assignation for email content.
                  */
-                $assignation["emailFields"] = static::addCustomFormAnswer(
-                    $data,
-                    $customFormsEntity,
-                    $em
-                );
+                $assignation["emailFields"] = [
+                    ["name" => "ip.address", "value" => $answer->getIp()],
+                    ["name" => "submittedAt", "value" => $answer->getSubmittedAt()->format('Y-m-d H:i:s')],
+                ];
+                $assignation["emailFields"] = array_merge($assignation["emailFields"], $answer->toArray(false));
 
                 $msg = $translator->trans(
                     'customForm.%name%.send',
