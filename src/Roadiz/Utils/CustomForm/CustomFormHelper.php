@@ -119,35 +119,38 @@ class CustomFormHelper
     }
 
     /**
-     * @param CustomFormAnswer $answer
      * @param FormFactory $formFactory
+     * @param CustomFormAnswer $answer
      * @param bool $forceExpanded
      * @param array $options
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getFormFromAnswer(CustomFormAnswer $answer, FormFactory $formFactory, $forceExpanded = false, array $options = [])
+    public function getFormFromAnswer(FormFactory $formFactory, CustomFormAnswer $answer = null, $forceExpanded = false, array $options = [])
     {
-        $data = [];
+        $data = null;
+        
+        if (null !== $answer) {
+            $data = [];
+            /** @var CustomFormFieldAttribute $attribute */
+            foreach ($answer->getAnswers() as $attribute) {
+                $type = $attribute->getCustomFormField()->getType();
+                $name = $attribute->getCustomFormField()->getName();
 
-        /** @var CustomFormFieldAttribute $attribute */
-        foreach ($answer->getAnswers() as $attribute) {
-            $type = $attribute->getCustomFormField()->getType();
-            $name = $attribute->getCustomFormField()->getName();
-
-            switch ($type) {
-                case AbstractField::DATE_T:
-                case AbstractField::DATETIME_T:
-                    $data[$name] = new \DateTime($attribute->getValue());
-                    break;
-                case AbstractField::BOOLEAN_T:
-                    $data[$name] = (boolean) $attribute->getValue();
-                    break;
-                case AbstractField::MULTIPLE_T:
-                case AbstractField::CHECK_GROUP_T:
-                    $data[$name] = explode(static::ARRAY_SEPARATOR, $attribute->getValue());
-                    break;
-                default:
-                    $data[$name] = $attribute->getValue();
+                switch ($type) {
+                    case AbstractField::DATE_T:
+                    case AbstractField::DATETIME_T:
+                        $data[$name] = new \DateTime($attribute->getValue());
+                        break;
+                    case AbstractField::BOOLEAN_T:
+                        $data[$name] = (boolean) $attribute->getValue();
+                        break;
+                    case AbstractField::MULTIPLE_T:
+                    case AbstractField::CHECK_GROUP_T:
+                        $data[$name] = explode(static::ARRAY_SEPARATOR, $attribute->getValue());
+                        break;
+                    default:
+                        $data[$name] = $attribute->getValue();
+                }
             }
         }
 
