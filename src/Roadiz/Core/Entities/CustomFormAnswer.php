@@ -190,12 +190,14 @@ class CustomFormAnswer extends AbstractEntity
         $answers = [];
         /** @var CustomFormFieldAttribute $answer */
         foreach ($this->answerFields as $answer) {
+            $field = $answer->getCustomFormField();
             if ($namesAsKeys) {
-                $answers[$answer->getCustomFormField()->getName()] = $answer->getValue();
+                $answers[$field->getName()] = $answer->getValue();
             } else {
                 $answers[] = [
-                    'name' => $answer->getCustomFormField()->getName(),
-                    'label' => $answer->getCustomFormField()->getLabel(),
+                    'name' => $field->getName(),
+                    'label' => $field->getLabel(),
+                    'description' => $field->getDescription(),
                     'value' => $answer->getValue(),
                 ];
             }

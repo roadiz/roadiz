@@ -63,8 +63,14 @@ class CustomFormsType extends AbstractType
     {
         $fields = $this->customForm->getFields();
 
+        /** @var CustomFormField $field */
         foreach ($fields as $field) {
-            $option = ["label" => $field->getLabel()];
+            $option = [
+                "label" => $field->getLabel(),
+                'attr' => [
+                    'data-description' => $field->getDescription(),
+                ],
+            ];
 
             if ($field->isRequired()) {
                 $option['required'] = true;

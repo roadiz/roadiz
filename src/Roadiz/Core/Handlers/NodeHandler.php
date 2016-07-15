@@ -127,8 +127,7 @@ class NodeHandler
      * Get custom forms linked to current node for a given fieldname.
      *
      * @param string $fieldName Name of the node-type field
-     *
-     * @return ArrayCollection Collection of nodes
+     * @return array
      */
     public function getCustomFormsFromFieldName($fieldName)
     {
