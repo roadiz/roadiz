@@ -10,7 +10,7 @@
 	{% if autoplay %}autoplay {% endif %}
 >
 	{% for source in sources %}
-	<source type="{{ source.mime }}" src="{{ source.url }}"></source>
+	<source type="{{ source.mime }}" src="{{ source.url }}">
 	{% endfor %}
 	Your browser does not support the video tag.
 </video>

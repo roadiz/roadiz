@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Utils;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
 /**
  * Class NodeSourceApi
@@ -64,15 +65,21 @@ class NodeSourceApi extends AbstractApi
 
         return $rep;
     }
+
     /**
-     * {@inheritdoc}
+     * @return NodesSourcesRepository
      */
     public function getRepository()
     {
         return $this->container['em']->getRepository($this->repository);
     }
+
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $order
+     * @param null $limit
+     * @param null $offset
+     * @return array
      */
     public function getBy(
         array $criteria,
@@ -96,8 +103,10 @@ class NodeSourceApi extends AbstractApi
                         $this->container['kernel']->isPreview()
                     );
     }
+
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @return int
      */
     public function countBy(
         array $criteria
@@ -115,8 +124,11 @@ class NodeSourceApi extends AbstractApi
                         $this->container['kernel']->isPreview()
                     );
     }
+
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $order
+     * @return null|\RZ\Roadiz\Core\Entities\NodesSources
      */
     public function getOneBy(array $criteria, array $order = null)
     {

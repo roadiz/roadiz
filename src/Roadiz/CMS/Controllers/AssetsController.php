@@ -183,7 +183,7 @@ class AssetsController extends AppController
                 if (!$response->isNotModified($request)) {
                     $response->setContent(file_get_contents($fontpath));
                     $response->setStatusCode(Response::HTTP_OK);
-                    $response->setETag(md5($response->getContent()));
+                    $response->setEtag(md5($response->getContent()));
                 }
 
                 return $response;
@@ -246,7 +246,7 @@ class AssetsController extends AppController
                 $assignation
             )
         );
-        $response->setETag(md5($response->getContent()));
+        $response->setEtag(md5($response->getContent()));
         $response->setStatusCode(Response::HTTP_OK);
 
         return $response;

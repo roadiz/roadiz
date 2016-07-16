@@ -54,7 +54,6 @@ class DynamicUrlMatcher extends UrlMatcher
      * @param EntityManager $em
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
-     * @param AuthorizationChecker $authorizationChecker
      * @param bool $preview
      */
     public function __construct(
