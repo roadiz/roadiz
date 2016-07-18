@@ -324,7 +324,7 @@ class DocumentViewer implements ViewableInterface
         }
 
         $sourcesDocs = Kernel::getService('em')
-            ->getRepository("RZ\Roadiz\Core\Entities\Document")
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findBy(["filename" => $sourcesDocsName]);
 
         foreach ($sourcesDocs as $source) {

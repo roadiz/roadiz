@@ -29,7 +29,6 @@
  */
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormFieldName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\CustomFormField;

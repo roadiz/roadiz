@@ -38,7 +38,8 @@ use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- *
+ * Class Packages
+ * @package RZ\Roadiz\Utils\Asset
  */
 class Packages extends BasePackages
 {
@@ -62,12 +63,20 @@ class Packages extends BasePackages
         $request = $requestStack->getCurrentRequest();
 
         if ($staticDomain != "") {
+            /*
+             * Add non-default port to static domain.
+             */
+            $staticDomainAndPort = $staticDomain;
+            if (($request->isSecure() && $request->getPort() != 443) || $request->getPort() != 80) {
+                $staticDomainAndPort .= ':' . $request->getPort();
+            }
+
             $defaultPackage = new UrlPackage(
-                '//' . $staticDomain,
+                '//' . $staticDomainAndPort,
                 $versionStrategy
             );
             $documentPackage = new UrlPackage(
-                '//' . $staticDomain . '/' . Document::getFilesFolderName(),
+                '//' . $staticDomainAndPort . '/' . Document::getFilesFolderName(),
                 $versionStrategy
             );
 

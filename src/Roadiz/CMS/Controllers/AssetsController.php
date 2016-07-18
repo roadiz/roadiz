@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 /**
- * Special controller app file for assets managment with InterventionRequest lib.
+ * Special controller app file for assets management with InterventionRequest lib.
  */
 class AssetsController extends AppController
 {

@@ -13,5 +13,8 @@ FontFaceCSS:
 #
 interventionRequestProcess:
     path:     /assets/{queryString}/{filename}
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::interventionRequestAction }
-    requirements: { queryString : "[a-zA-Z:0-9\-]+", filename : "[a-zA-Z0-9\-_\.\/]+" }
+    defaults:
+        _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::interventionRequestAction
+    requirements:
+        queryString : "[a-zA-Z:0-9\-]+"
+        filename : "[a-zA-Z0-9\-_\.\/]+"

@@ -26,7 +26,6 @@
  * @file DocumentsController.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
@@ -39,9 +38,7 @@ use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
