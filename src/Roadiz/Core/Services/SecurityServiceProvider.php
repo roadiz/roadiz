@@ -267,7 +267,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['daoAuthenticationProvider'],
             ]);
         };
-        
+
         /*
          * Main decision manager, set your voters here.
          */
@@ -299,6 +299,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['roleHierarchy'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            if ($kernel->isInstallMode()) {
+                return new DoctrineRoleHierarchy(null);
+            }
             return new DoctrineRoleHierarchy($c['em']);
         };
 
