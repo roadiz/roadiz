@@ -470,15 +470,15 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Document $document */
         $document = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null &&
             null !== $response = $document->getHandler()->getDownloadResponse()) {
             return $response->send();
-        } else {
-            return $this->throw404();
         }
+        return $this->throw404();
     }
 
     /**
