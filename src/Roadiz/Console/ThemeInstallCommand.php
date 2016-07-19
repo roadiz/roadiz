@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityNotFoundException;
+use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
@@ -118,6 +119,15 @@ class ThemeInstallCommand extends Command
         $data = $this->getThemeConfig();
 
         if (false !== $data && isset($data["importFiles"])) {
+            if (isset($data["importFiles"]['groups'])) {
+                foreach ($data["importFiles"]['groups'] as $filename) {
+                    GroupsImporter::importJsonFile(
+                        file_get_contents($this->themeRoot . "/" . $filename),
+                        $this->entityManager
+                    );
+                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                }
+            }
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     RolesImporter::importJsonFile(
