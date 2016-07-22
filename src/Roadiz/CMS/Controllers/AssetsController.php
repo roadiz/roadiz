@@ -178,7 +178,7 @@ class AssetsController extends AppController
                 $response->setCache([
                     'last_modified' => new \DateTime($lastMod),
                     'max_age' => 60 * 60 * 2,
-                    'public' => false,
+                    'public' => true,
                 ]);
                 if (!$response->isNotModified($request)) {
                     $response->setContent(file_get_contents($fontpath));
@@ -218,7 +218,7 @@ class AssetsController extends AppController
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
             'max_age' => 60 * 60 * 2,
-            'public' => false,
+            'public' => true,
         ]);
 
         if ($response->isNotModified($request)) {
