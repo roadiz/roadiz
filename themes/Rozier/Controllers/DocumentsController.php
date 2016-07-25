@@ -39,6 +39,7 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -483,12 +484,11 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int     $folderId
-     *
+     * @param int $folderId
+     * @param string $_format
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
-    public function uploadAction(Request $request, $folderId = null)
+    public function uploadAction(Request $request, $folderId = null, $_format = 'html')
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
@@ -506,48 +506,70 @@ class DocumentsController extends RozierApp
         $form = $this->buildUploadForm($folderId);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $document = $this->uploadDocument($form, $folderId);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $document = $this->uploadDocument($form, $folderId);
 
-            if (false !== $document) {
-                $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                    '%name%' => $document->getFilename(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                $this->getService("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_CREATED,
-                    new FilterDocumentEvent($document)
-                );
-
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse([
-                        'success' => true,
-                        'documentId' => $document->getId(),
-                        'thumbnail' => [
-                            'id' => $document->getId(),
-                            'filename' => $document->getFilename(),
-                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                        ],
+                if (false !== $document) {
+                    $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
+                        '%name%' => $document->getFilename(),
                     ]);
-                } else {
-                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
-                }
-            } else {
-                $msg = $this->getTranslator()->trans('document.cannot_persist');
-                $this->publishErrorMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg);
 
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse(
-                        [
-                            "error" => $msg,
-                        ],
-                        Response::HTTP_NOT_FOUND
+                    $this->getService("dispatcher")->dispatch(
+                        DocumentEvents::DOCUMENT_CREATED,
+                        new FilterDocumentEvent($document)
                     );
+
+                    if ($_format === 'json' || $request->isXmlHttpRequest()) {
+                        return new JsonResponse([
+                            'success' => true,
+                            'documentId' => $document->getId(),
+                            'thumbnail' => [
+                                'id' => $document->getId(),
+                                'filename' => $document->getFilename(),
+                                'large' => $document->getViewer()->getDocumentUrlByArray(['noProcess' => true]),
+                                'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
+                            ],
+                        ]);
+                    } else {
+                        return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                    }
                 } else {
-                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                    $msg = $this->getTranslator()->trans('document.cannot_persist');
+                    $this->publishErrorMessage($request, $msg);
+
+                    if ($_format === 'json' || $request->isXmlHttpRequest()) {
+                        return new JsonResponse(
+                            [
+                                "error" => $msg,
+                            ],
+                            Response::HTTP_NOT_FOUND
+                        );
+                    } else {
+                        return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                    }
                 }
+            } elseif ($_format === 'json' || $request->isXmlHttpRequest()) {
+                /*
+                 * Bad form submitted
+                 */
+                $errorPerForm = [];
+                /** @var Form $child */
+                foreach ($form as $child) {
+                    if (!$child->isValid()) {
+                        foreach ($child->getErrors() as $error) {
+                            $errorPerForm[$child->getName()][] = $this->getService('translator')->trans($error->getMessage());
+                        }
+                    }
+                }
+                return new JsonResponse(
+                    [
+                        "errors" => $errorPerForm,
+                    ],
+                    Response::HTTP_BAD_REQUEST
+                );
             }
         }
         $this->assignation['form'] = $form->createView();
@@ -699,6 +721,9 @@ class DocumentsController extends RozierApp
             ])
             ->add('attachment', 'file', [
                 'label' => 'choose.documents.to_upload',
+                'constraints' => [
+                    new File(),
+                ],
             ]);
 
         if (null !== $folderId &&

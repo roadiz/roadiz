@@ -19,9 +19,14 @@ documentsUsagePage:
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
     requirements: { documentId : "[0-9]+" }
 documentsUploadPage:
-    path:     /upload/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction, folderId:null }
-    requirements: { folderId : "[0-9]+" }
+    path:     /upload/{_format}/{folderId}
+    defaults:
+        _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction
+        folderId: null
+        _format : html
+    requirements:
+        folderId : "[0-9]+"
+        _format : "html|json"
 documentsRandomPage:
     path:     /random/{folderId}
     defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction, folderId:null }

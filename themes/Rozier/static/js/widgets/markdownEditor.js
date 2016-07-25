@@ -5,8 +5,19 @@
 MarkdownEditor = function($textarea, index){
     var _this = this;
 
+    marked.setOptions({
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: false
+    });
+
     _this.$textarea = $textarea;
     _this.textarea = _this.$textarea[0];
+    _this.usePreview = false;
 
     _this.editor = CodeMirror.fromTextArea(_this.textarea, {
         mode: 'gfm',
@@ -15,9 +26,25 @@ MarkdownEditor = function($textarea, index){
         styleActiveLine: true,
         indentWithTabs: false,
         lineWrapping: true,
-        dragDrop: false,
-        viewportMargin: Infinity
+        viewportMargin: Infinity,
+        enterMode: "keep"
     });
+
+    _this.editor.addKeyMap({
+        "Ctrl-B": function(cm) {
+            cm.replaceSelections(_this.boldSelections());
+        },
+        "Ctrl-I": function(cm) {
+            cm.replaceSelections(_this.italicSelections());
+        },
+        "Cmd-B": function(cm) {
+            cm.replaceSelections(_this.boldSelections());
+        },
+        "Cmd-I": function(cm) {
+            cm.replaceSelections( _this.italicSelections());
+        },
+    });
+
     // Selectors
     _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0);
     _this.index = index;
@@ -52,6 +79,8 @@ MarkdownEditor.prototype.init = function(){
     if(_this.$cont.length &&
        _this.$textarea.length) {
 
+        _this.$editor = _this.$cont.find('.CodeMirror').eq(0);
+
         _this.$cont.addClass('markdown-editor');
         _this.$buttons = _this.$cont.find('[data-markdowneditor-button]');
         // Selectors
@@ -68,7 +97,22 @@ MarkdownEditor.prototype.init = function(){
         _this.$cont.find('.markdown-editor-button-preview').attr('data-index', _this.index);
         _this.$cont.find('.markdown-editor-button-fullscreen').attr('data-index', _this.index);
         _this.$cont.find('.markdown_textarea').attr('data-index', _this.index);
-        _this.$cont.find('.CodeMirror').attr('data-index', _this.index);
+        _this.$editor.attr('data-index', _this.index);
+
+        /*
+         * Create preview tab.
+         */
+        if (_this.usePreview) {
+            _this.$editor.before('<div class="markdown-editor-tabs">');
+            _this.$tabs = _this.$cont.find('.markdown-editor-tabs').eq(0);
+
+            _this.$editor.after('<div class="markdown-editor-preview">');
+            _this.$preview = _this.$cont.find('.markdown-editor-preview').eq(0);
+
+            _this.$tabs.append(_this.$editor);
+            _this.$tabs.append(_this.$preview);
+            _this.editor.refresh();
+        }
 
         // Check if a max length is defined
         if(_this.textarea.hasAttribute('data-max-length') &&
@@ -84,7 +128,6 @@ MarkdownEditor.prototype.init = function(){
                 _this.$countMaxLimitText[0].innerHTML = _this.textarea.getAttribute('data-max-length');
                 _this.$count[0].style.display = 'block';
             }
-
         }
 
         if(_this.textarea.hasAttribute('data-min-length') &&
@@ -122,6 +165,7 @@ MarkdownEditor.prototype.init = function(){
         _this.editor.on('focus', $.proxy(_this.textareaFocus, _this));
         _this.editor.on('blur', $.proxy(_this.textareaBlur, _this));
 
+        _this.editor.on('drop', $.proxy(_this.onDropFile, _this));
         _this.$buttonPreview.on('click', $.proxy(_this.buttonPreviewClick, _this));
         _this.$buttonCode.on('click', $.proxy(_this.buttonCodeClick, _this));
         _this.$buttonFullscreen.on('click', $.proxy(_this.buttonFullscreenClick, _this));
@@ -137,10 +181,52 @@ MarkdownEditor.prototype.init = function(){
     }
 };
 
+MarkdownEditor.prototype.onDropFile = function(editor, event) {
+    var _this = this;
+
+    event.preventDefault(event);
+
+    for (var i = 0; i < event.dataTransfer.files.length; i++) {
+        Rozier.lazyload.canvasLoader.show();
+        var file = event.dataTransfer.files[i];
+        var formData = new FormData();
+        formData.append('_token', Rozier.ajaxToken);
+        formData.append('form[attachment]', file);
+
+        $.ajax({
+            url: Rozier.routes.documentsUploadPage,
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+        })
+        .always($.proxy(_this.onDropFileUploaded, _this, editor));
+    }
+};
+
+MarkdownEditor.prototype.onDropFileUploaded = function(editor, data) {
+    var _this = this;
+
+    Rozier.lazyload.canvasLoader.hide();
+    console.log(data);
+
+    if (data.success === true) {
+        var mark = "![" + data.thumbnail.filename + "](" + data.thumbnail.large + ")";
+
+        editor.replaceSelection(mark);
+    }
+};
+
 MarkdownEditor.prototype.forceEditorUpdate = function(event) {
     var _this = this;
     //console.log('Refresh Markdown editor');
     _this.editor.refresh();
+
+    if (_this.$preview) {
+        _this.$preview.html(marked(_this.editor.getValue()));
+    }
 };
 
 MarkdownEditor.prototype.buttonClick = function(event) {
@@ -238,6 +324,9 @@ MarkdownEditor.prototype.linkSelections = function(selections) {
 };
 MarkdownEditor.prototype.imageSelections = function(selections) {
     var _this = this;
+    if (!selections) {
+        selections = _this.editor.getSelections();
+    }
     for(var i in selections) {
         selections[i] = '!['+selections[i]+'](/files/)';
     }
@@ -245,6 +334,10 @@ MarkdownEditor.prototype.imageSelections = function(selections) {
 };
 MarkdownEditor.prototype.boldSelections = function(selections) {
     var _this = this;
+    if (!selections) {
+        selections = _this.editor.getSelections();
+    }
+    console.log(selections);
     for(var i in selections) {
         selections[i] = '**'+selections[i]+'**';
     }
@@ -252,6 +345,9 @@ MarkdownEditor.prototype.boldSelections = function(selections) {
 };
 MarkdownEditor.prototype.italicSelections = function(selections) {
     var _this = this;
+    if (!selections) {
+        selections = _this.editor.getSelections();
+    }
     for(var i in selections) {
         selections[i] = '*'+selections[i]+'*';
     }
@@ -309,6 +405,13 @@ MarkdownEditor.prototype.textareaChange = function(e){
 
     _this.editor.save();
 
+    if (_this.$preview) {
+        clearTimeout(_this.refreshPreviewTimeout);
+        _this.refreshPreviewTimeout = setTimeout(function () {
+            _this.$preview.html(marked(_this.editor.getValue()));
+        }, 100);
+    }
+
     if(_this.limit){
         setTimeout(function(){
             var textareaVal = _this.editor.getValue();
@@ -337,7 +440,6 @@ MarkdownEditor.prototype.textareaChange = function(e){
             }
         }, 100);
     }
-
 };
 
 

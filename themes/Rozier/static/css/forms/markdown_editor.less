@@ -20,6 +20,53 @@
 .uk-form-row {
     .CodeMirror {
         height: auto;
+        //height: 600px;
+    }
+
+
+    .markdown-editor-tabs {
+        display: table;
+        width: 100%;
+
+        .CodeMirror {
+            display: table-cell;
+            width:50%;
+            box-sizing: border-box;
+        }
+
+        .markdown-editor-preview {
+            display: table-cell;
+            width:50%;
+            box-sizing: border-box;
+            padding: 10px 20px;
+            background-color: #ececec;
+            border: 1px solid #d3d3d3;
+            border-left: none;
+
+
+            font-family: -apple-system, Helvetica, Arial, sans-serif;
+
+            * {
+                font-family: -apple-system, Helvetica, Arial, sans-serif;
+            }
+
+            p, ul, ol {
+                margin: 1em 0;
+            }
+            ul, ol {
+                padding-left: 2em;
+
+                ul, ol {
+                    margin: 0 0 0.5em;
+                }
+            }
+
+            p, li {
+                color: #666;
+                font-size: 14px;
+                line-height: 18px;
+            }
+        }
     }
 }
 
@@ -255,10 +302,6 @@
     .CodeMirror {
         font-size: 14px; line-height:22px;
         padding:25px 60px 30px 30px;
-    }
-    .markdown-editor-preview {
-        font-size: 14px; line-height:22px;
-        padding:25px 60px 30px 40px;
     }
 
     .markdown-editor-navbar{
