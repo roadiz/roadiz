@@ -6280,6 +6280,11 @@
             <target xml:lang="fr">Réponses</target>
             <note>In custom form nav bar.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="markdown.preview">
+            <source>markdown.preview</source>
+            <target xml:lang="fr" state="translated">Aperçu du Markdown</target>
+            <note>For markdown.preview button label</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

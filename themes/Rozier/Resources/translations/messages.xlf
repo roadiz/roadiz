@@ -6404,6 +6404,11 @@
             <target></target>
             <note>In custom form nav bar.</note>
         </trans-unit>
+        <trans-unit xml:space="preserve" id="markdown.preview">
+            <source>markdown.preview</source>
+            <target></target>
+            <note>For markdown.preview button label</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

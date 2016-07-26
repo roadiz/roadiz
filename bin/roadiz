@@ -49,12 +49,13 @@ require ROADIZ_ROOT . "/vendor/autoload.php";
 $input = new ArgvInput();
 $env = $input->getParameterOption(array('--env', '-e'), getenv('ROADIZ_ENV') ?: 'dev');
 $debug = getenv('ROADIZ_DEBUG') !== '0' && !$input->hasParameterOption(array('--no-debug', '')) && $env !== 'prod';
+$preview = $input->hasParameterOption(array('--preview', ''));
 
 if ($debug) {
     Debug::enable();
 }
 
-$kernel = Kernel::getInstance($env, $debug);
+$kernel = Kernel::getInstance($env, $debug, $preview);
 
 $application = new RoadizApplication($kernel);
 $application->run($input);
