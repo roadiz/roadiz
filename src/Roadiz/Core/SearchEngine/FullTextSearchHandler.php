@@ -82,24 +82,26 @@ class FullTextSearchHandler
             $singleWord = strpos($q, ' ') === false ? true : false;
 
             /*
-             * @see http://www.solrtutorial.com/solr-query-syntax.html
-             */
-            if ($singleWord) {
-                $queryTxt = sprintf('(title:"*%s*")^1.5 (collection_txt:"*%s*")', $q, $q);
-            } else {
-                $queryTxt = sprintf('(title:"%s"~%d)^1.5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-            }
-
-            /*
              * Search in node-sources tags name…
              */
             if ($searchTags) {
+                /*
+                 * @see http://www.solrtutorial.com/solr-query-syntax.html
+                 */
                 if ($singleWord) {
-                    $queryTxt .= sprintf(' (tags_txt:"*%s*")', $q);
+                    $queryTxt = sprintf('(title:%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
                 } else {
-                    $queryTxt .= sprintf(' (tags_txt:"%s"~%d)', $q, $proximity);
+                    $queryTxt = sprintf('(title:"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+                }
+            } else {
+                if ($singleWord) {
+                    $queryTxt = sprintf('(title:%s*)^5 (collection_txt:%s*)', $q, $q);
+                } else {
+                    $queryTxt = sprintf('(title:"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
                 }
             }
+
+
             $filterQueries = [];
             $query->setQuery($queryTxt);
             foreach ($args as $key => $value) {
