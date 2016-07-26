@@ -161,7 +161,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
     {
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
-
             $container['em.config'] = function ($c) {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
