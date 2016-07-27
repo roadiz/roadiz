@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -54,6 +55,7 @@ class NodesTreesController extends RozierApp
     {
         if ($nodeId > 0) {
             $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
+            /** @var Node $node */
             $node = $this->getService('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -67,16 +69,19 @@ class NodesTreesController extends RozierApp
         }
 
         if (null !== $translationId) {
+            /** @var Translation $translation */
             $translation = $this->getService('em')
                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                 ->findOneBy(['id' => (int) $translationId]);
         } else {
+            /** @var Translation $translation */
             $translation = $this->getService('defaultTranslation');
         }
 
         $widget = new NodeTreeWidget($request, $this, $node, $translation);
 
-        if ($request->get('tagId') && $request->get('tagId') > 0) {
+        if ($request->get('tagId') &&
+            $request->get('tagId') > 0) {
             $filterTag = $this->getService('em')
                               ->find(
                                   '\RZ\Roadiz\Core\Entities\Tag',
@@ -222,7 +227,7 @@ class NodesTreesController extends RozierApp
 
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $msg = $this->bulkStatusNodes($form->getData());
 
                     $this->publishConfirmMessage($request, $msg);
