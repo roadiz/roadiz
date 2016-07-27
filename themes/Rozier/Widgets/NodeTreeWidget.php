@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -125,7 +126,12 @@ class NodeTreeWidget extends AbstractWidget
         return $this->getListManager($this->parentNode);
     }
 
-    protected function getListManager(Node $parent = null)
+    /**
+     * @param Node|null $parent
+     * @param bool $subRequest Default: false
+     * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
+     */
+    protected function getListManager(Node $parent = null, $subRequest = false)
     {
         $criteria = [
             'parent' => $parent,
@@ -168,16 +174,21 @@ class NodeTreeWidget extends AbstractWidget
             $listManager->handle(true);
         }
 
+        if ($subRequest) {
+            $listManager->disablePagination();
+        }
+
         return $listManager;
     }
+
     /**
      * @param Node $parent
-     *
+     * @param bool $subRequest Default: false
      * @return ArrayCollection
      */
-    public function getChildrenNodes(Node $parent = null)
+    public function getChildrenNodes(Node $parent = null, $subRequest = false)
     {
-        return $this->getListManager($parent)->getEntities();
+        return $this->getListManager($parent, $subRequest)->getEntities();
     }
     /**
      * @return Node

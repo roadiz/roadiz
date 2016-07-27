@@ -155,14 +155,24 @@ class EntityListManager
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function enablePagination()
     {
         $this->pagination = true;
+        return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function disablePagination()
     {
+        $this->setPage(1);
         $this->pagination = false;
+
+        return $this;
     }
 
     /**
@@ -272,7 +282,10 @@ class EntityListManager
                 $this->currentPage = 1;
             }
         } else {
-            $this->currentPage = 1;
+            /*
+             * Disable pagination and paginator
+             */
+            $this->disablePagination();
         }
 
         $this->createPaginator();
