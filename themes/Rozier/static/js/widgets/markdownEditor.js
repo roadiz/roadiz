@@ -5,15 +5,9 @@
 MarkdownEditor = function($textarea, index){
     var _this = this;
 
-    marked.setOptions({
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: true,
-        smartLists: true,
-        smartypants: false
-    });
+    _this.markdownit = window.markdownit();
+    _this.markdownit.use(window.markdownitFootnote);
+
 
     _this.$textarea = $textarea;
     _this.textarea = _this.$textarea[0];
@@ -221,7 +215,7 @@ MarkdownEditor.prototype.forceEditorUpdate = function(event) {
     _this.editor.refresh();
 
     if (_this.usePreview) {
-        _this.$preview.html(marked(_this.editor.getValue()));
+        _this.$preview.html(_this.markdownit.render(_this.editor.getValue()));
     }
 };
 
@@ -402,7 +396,7 @@ MarkdownEditor.prototype.textareaChange = function(e){
     if (_this.usePreview) {
         clearTimeout(_this.refreshPreviewTimeout);
         _this.refreshPreviewTimeout = setTimeout(function () {
-            _this.$preview.html(marked(_this.editor.getValue()));
+            _this.$preview.html(_this.markdownit.render(_this.editor.getValue()));
         }, 100);
     }
 

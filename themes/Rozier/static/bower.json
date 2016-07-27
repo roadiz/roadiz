@@ -34,6 +34,7 @@
     "jquery.actual": "~1.0.17",
     "CanvasLoader": "~0.9.1",
     "jquery-tag-editor": "~1.0.18",
-    "marked": "~0.3.5"
+    "markdown-it-footnote": "~3.0.0",
+    "markdown-it": "~7.0.0"
   }
 }
