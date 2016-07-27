@@ -67,16 +67,16 @@ class NodesSourcesController extends RozierApp
         /** @var Translation $translation */
         $translation = $this->getService('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+        /*
+         * Here we need to directly select nodeSource
+         * if not doctrine will grab a cache tag because of NodeTreeWidget
+         * that is initialized before calling route method.
+         */
+        /** @var Node $gnode */
+        $gnode = $this->getService('em')
+            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
-        if ($translation !== null) {
-            /*
-             * Here we need to directly select nodeSource
-             * if not doctrine will grab a cache tag because of NodeTreeWidget
-             * that is initialized before calling route method.
-             */
-            /** @var Node $gnode */
-            $gnode = $this->getService('em')
-                          ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        if ($translation !== null && $gnode !== null) {
             /** @var NodesSources $source */
             $source = $this->getService('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')

@@ -490,7 +490,11 @@ MarkdownEditor.prototype.closePreview = function(e) {
     var _this = this;
 
     if (e) {
-        e.preventDefault();
+        if (e.keyCode == 27) {
+            e.preventDefault();
+        } else {
+            return;
+        }
     }
     var width = _this.$preview.outerWidth();
     Rozier.$window.off('keyup', _this.closePreviewProxy);
