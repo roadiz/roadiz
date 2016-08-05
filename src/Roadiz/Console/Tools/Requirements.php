@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@
  * @file Requirements.php
  * @author Ambroise Maupate
  */
-
 namespace RZ\Roadiz\Console\Tools;
 
 /**
@@ -114,6 +113,17 @@ class Requirements
         ];
 
         if ($checks['gd']['status']) {
+            $this->successChecks++;
+        }
+        $this->totalChecks++;
+
+        $checks['fileinfo'] = [
+            'status' => $this->testExtension('fileinfo'),
+            'extension' => true,
+            'message' => 'Fileinfo extension must be installed.',
+        ];
+
+        if ($checks['fileinfo']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;
