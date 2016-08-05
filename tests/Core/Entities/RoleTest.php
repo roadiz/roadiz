@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,6 +38,8 @@ class RoleTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider roleNameProvider
+     * @param $roleName
+     * @param $expected
      */
     public function testRoleName($roleName, $expected)
     {

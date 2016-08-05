@@ -33,7 +33,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -41,6 +40,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -370,7 +370,7 @@ class NodesSourcesRepository extends EntityRepository
         try {
             return $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 
@@ -432,10 +432,8 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
         try {
             return $finalQuery->getResult();
-        } catch (QueryException $e) {
-            return null;
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -473,8 +471,6 @@ class NodesSourcesRepository extends EntityRepository
 
         try {
             return $finalQuery->getSingleResult();
-        } catch (QueryException $e) {
-            return null;
         } catch (NoResultException $e) {
             return null;
         }
@@ -486,87 +482,49 @@ class NodesSourcesRepository extends EntityRepository
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param integer $limit Result number to fetch (default: all)
      *
-     * @return ArrayCollection | null
+     * @return array
      */
-    public function findBySearchQuery($query, $limit = 0)
+    public function findBySearchQuery($query, $limit = 25)
     {
-        // Update Solr Serach engine if setup
         if (true === Kernel::getService('solr.ready')) {
-            $service = Kernel::getService('solr');
-
-            $queryObj = $service->createSelect();
-
-            $queryObj->setQuery('collection_txt:' . $query);
-            $queryObj->addSort('score', $queryObj::SORT_DESC);
+            /** @var FullTextSearchHandler $service */
+            $service = Kernel::getService('solr.search.nodeSource');
 
             if ($limit > 0) {
-                $queryObj->setRows((int) $limit);
-            }
-
-            // this executes the query and returns the result
-            $resultset = $service->select($queryObj);
-
-            if (0 === $resultset->getNumFound()) {
-                return null;
+                return $service->search($query, [], $limit);
             } else {
-                $sources = new ArrayCollection();
-
-                foreach ($resultset as $document) {
-                    $sources->add($this->_em->find(
-                        'RZ\Roadiz\Core\Entities\NodesSources',
-                        $document['node_source_id_i']
-                    ));
-                }
-
-                return $sources;
+                return $service->search($query, [], 999999);
             }
         }
-
-        return null;
+        return [];
     }
 
     /**
      * Search nodes sources by using Solr search engine
      * and a specific translation.
      *
-     * @param string      $query       Solr query string (for example: `text:Lorem Ipsum`)
+     * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
      *
-     * @return ArrayCollection | null
+     * @param int $limit
+     * @return array
      */
-    public function findBySearchQueryAndTranslation($query, Translation $translation)
+    public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
-        // Update Solr Serach engine if setup
         if (true === Kernel::getService('solr.ready')) {
-            $service = Kernel::getService('solr');
+            /** @var FullTextSearchHandler $service */
+            $service = Kernel::getService('solr.search.nodeSource');
+            $params = [
+                'translation' => $translation,
+            ];
 
-            $queryObj = $service->createSelect();
-
-            $queryObj->setQuery('collection_txt:' . $query);
-            // create a filterquery
-            $queryObj->createFilterQuery('translation')->setQuery('locale_s:' . $translation->getLocale());
-            $queryObj->addSort('score', $queryObj::SORT_DESC);
-
-            // this executes the query and returns the result
-            $resultset = $service->select($queryObj);
-
-            if (0 === $resultset->getNumFound()) {
-                return null;
+            if ($limit > 0) {
+                return $service->search($query, $params, $limit);
             } else {
-                $sources = new ArrayCollection();
-
-                foreach ($resultset as $document) {
-                    $sources->add($this->_em->find(
-                        'RZ\Roadiz\Core\Entities\NodesSources',
-                        $document['node_source_id_i']
-                    ));
-                }
-
-                return $sources;
+                return $service->search($query, $params, 999999);
             }
         }
-
-        return null;
+        return [];
     }
 
     /**
@@ -592,7 +550,7 @@ class NodesSourcesRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -604,21 +562,19 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findParent(NodesSources $nodeSource)
     {
-        if (null !== $nodeSource->getNode()->getParent()) {
-            try {
-                $query = $this->_em->createQuery('
-                    SELECT ns FROM RZ\Roadiz\Core\Entities\NodesSources ns
-                    WHERE ns.node = :node
-                    AND ns.translation = :translation')
-                    ->setParameter('node', $nodeSource->getNode()->getParent())
-                    ->setParameter('translation', $nodeSource->getTranslation())
-                    ->setMaxResults(1);
+        $qb = $this->createQueryBuilder('ns');
+        $qb->select('ns, n')
+            ->innerJoin('ns.node', 'n')
+            ->innerJoin('n.children', 'cn')
+            ->andWhere($qb->expr()->eq('cn.id', ':childNodeId'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setParameter('childNodeId', $nodeSource->getNode()->getId())
+            ->setParameter('translation', $nodeSource->getTranslation())
+            ->setMaxResults(1);
 
-                return $query->getSingleResult();
-            } catch (NoResultException $e) {
-                return null;
-            }
-        } else {
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
             return null;
         }
     }

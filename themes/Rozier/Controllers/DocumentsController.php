@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,23 +23,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
  * @file DocumentsController.php
- * @author Ambroise Maupate
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +51,8 @@ use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 use Themes\Rozier\RozierApp;
 
 /**
- * {@inheritdoc}
+ * Class DocumentsController
+ * @package Themes\Rozier\Controllers
  */
 class DocumentsController extends RozierApp
 {
@@ -470,25 +471,24 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Document $document */
         $document = $this->getService('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null &&
             null !== $response = $document->getHandler()->getDownloadResponse()) {
             return $response->send();
-        } else {
-            return $this->throw404();
         }
+        return $this->throw404();
     }
 
     /**
      * @param Request $request
-     * @param int     $folderId
-     *
+     * @param int $folderId
+     * @param string $_format
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
-    public function uploadAction(Request $request, $folderId = null)
+    public function uploadAction(Request $request, $folderId = null, $_format = 'html')
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
@@ -506,48 +506,70 @@ class DocumentsController extends RozierApp
         $form = $this->buildUploadForm($folderId);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $document = $this->uploadDocument($form, $folderId);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $document = $this->uploadDocument($form, $folderId);
 
-            if (false !== $document) {
-                $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                    '%name%' => $document->getFilename(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                $this->getService("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_CREATED,
-                    new FilterDocumentEvent($document)
-                );
-
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse([
-                        'success' => true,
-                        'documentId' => $document->getId(),
-                        'thumbnail' => [
-                            'id' => $document->getId(),
-                            'filename' => $document->getFilename(),
-                            'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                            'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                        ],
+                if (false !== $document) {
+                    $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
+                        '%name%' => $document->getFilename(),
                     ]);
-                } else {
-                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
-                }
-            } else {
-                $msg = $this->getTranslator()->trans('document.cannot_persist');
-                $this->publishErrorMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg);
 
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse(
-                        [
-                            "error" => $msg,
-                        ],
-                        Response::HTTP_NOT_FOUND
+                    $this->getService("dispatcher")->dispatch(
+                        DocumentEvents::DOCUMENT_CREATED,
+                        new FilterDocumentEvent($document)
                     );
+
+                    if ($_format === 'json' || $request->isXmlHttpRequest()) {
+                        return new JsonResponse([
+                            'success' => true,
+                            'documentId' => $document->getId(),
+                            'thumbnail' => [
+                                'id' => $document->getId(),
+                                'filename' => $document->getFilename(),
+                                'large' => $document->getViewer()->getDocumentUrlByArray(['noProcess' => true]),
+                                'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
+                            ],
+                        ]);
+                    } else {
+                        return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                    }
                 } else {
-                    return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                    $msg = $this->getTranslator()->trans('document.cannot_persist');
+                    $this->publishErrorMessage($request, $msg);
+
+                    if ($_format === 'json' || $request->isXmlHttpRequest()) {
+                        return new JsonResponse(
+                            [
+                                "error" => $msg,
+                            ],
+                            Response::HTTP_NOT_FOUND
+                        );
+                    } else {
+                        return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+                    }
                 }
+            } elseif ($_format === 'json' || $request->isXmlHttpRequest()) {
+                /*
+                 * Bad form submitted
+                 */
+                $errorPerForm = [];
+                /** @var Form $child */
+                foreach ($form as $child) {
+                    if (!$child->isValid()) {
+                        foreach ($child->getErrors() as $error) {
+                            $errorPerForm[$child->getName()][] = $this->getService('translator')->trans($error->getMessage());
+                        }
+                    }
+                }
+                return new JsonResponse(
+                    [
+                        "errors" => $errorPerForm,
+                    ],
+                    Response::HTTP_BAD_REQUEST
+                );
             }
         }
         $this->assignation['form'] = $form->createView();
@@ -699,6 +721,9 @@ class DocumentsController extends RozierApp
             ])
             ->add('attachment', 'file', [
                 'label' => 'choose.documents.to_upload',
+                'constraints' => [
+                    new File(),
+                ],
             ]);
 
         if (null !== $folderId &&
@@ -1020,56 +1045,28 @@ class DocumentsController extends RozierApp
         $this->getService('em')->flush();
     }
 
-    private function updateDocument($data, $document)
+    /**
+     * @param $data
+     * @param Document $document
+     * @return Document
+     */
+    private function updateDocument($data, Document $document)
     {
-        $fs = new Filesystem();
-
         if (!empty($data['newDocument'])) {
+            /** @var UploadedFile $uploadedFile */
             $uploadedFile = $data['newDocument'];
 
-            if ($uploadedFile !== null &&
-                $uploadedFile->getError() == UPLOAD_ERR_OK &&
-                $uploadedFile->isValid()) {
-                /*
-                 * In case file already exists
-                 */
-                if ($fs->exists($document->getAbsolutePath())) {
-                    $fs->remove($document->getAbsolutePath());
-                }
+            $documentFactory = new DocumentFactory(
+                $uploadedFile,
+                $this->getService('em'),
+                $this->getService('dispatcher'),
+                null,
+                $this->getService('logger')
+            );
 
-                if (StringHandler::cleanForFilename($uploadedFile->getClientOriginalName()) == $document->getFilename()) {
-                    $finder = new Finder();
-
-                    $previousFolder = $document->getFilesFolder() . '/' . $document->getFolder();
-
-                    if ($fs->exists($previousFolder)) {
-                        $finder->files()->in($previousFolder);
-                        // Remove Precious folder if it's empty
-                        if ($finder->count() == 0) {
-                            $fs->remove($previousFolder);
-                        }
-                    }
-
-                    $document->setFolder(substr(hash("crc32b", date('YmdHi')), 0, 12));
-                }
-
-                $document->setFilename($uploadedFile->getClientOriginalName());
-                $document->setMimeType($uploadedFile->getMimeType());
-                $this->getService('em')->flush();
-
-                $uploadedFile->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
-
-                if ($document->isImage()) {
-                    $this->getService("dispatcher")->dispatch(
-                        DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
-                        new FilterDocumentEvent($document)
-                    );
-                }
-
-                return $document;
-            }
+            $documentFactory->updateDocument($document);
+            $this->getService('em')->flush();
         }
-
         return $document;
     }
 
@@ -1083,55 +1080,27 @@ class DocumentsController extends RozierApp
      */
     private function uploadDocument($data, $folderId = null)
     {
+        $folder = null;
+        if (null !== $folderId && $folderId > 0) {
+            /** @var Folder $folder */
+            $folder = $this->getService('em')
+                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+        }
+
         if (!empty($data['attachment'])) {
             $uploadedFile = $data['attachment']->getData();
 
-            if ($uploadedFile !== null &&
-                $uploadedFile->getError() == UPLOAD_ERR_OK &&
-                $uploadedFile->isValid()) {
-                try {
-                    $document = new Document();
-                    $document->setFilename($uploadedFile->getClientOriginalName());
-                    $document->setMimeType($uploadedFile->getMimeType());
+            $documentFactory = new DocumentFactory(
+                $uploadedFile,
+                $this->getService('em'),
+                $this->getService('dispatcher'),
+                $folder,
+                $this->getService('logger')
+            );
 
-                    /*
-                     * Special case for SVG without XML statement
-                     */
-                    if (($document->getMimeType() == "text/plain" ||
-                        $document->getMimeType() == 'text/html') &&
-                        preg_match("#\.svg$#", $uploadedFile->getClientOriginalName())) {
-                        $this->getService('logger')->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
-                        $document->setMimeType('image/svg+xml');
-                    }
-
-                    $this->getService('em')->persist($document);
-                    $this->getService('em')->flush();
-
-                    if (null !== $folderId && $folderId > 0) {
-                        $folder = $this->getService('em')
-                            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
-
-                        $document->addFolder($folder);
-                        $folder->addDocument($document);
-                        $this->getService('em')->flush();
-                    }
-
-                    $uploadedFile->move(
-                        Document::getFilesFolder() . '/' . $document->getFolder(),
-                        $document->getFilename()
-                    );
-
-                    if ($document->isImage()) {
-                        $this->getService("dispatcher")->dispatch(
-                            DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
-                            new FilterDocumentEvent($document)
-                        );
-                    }
-
-                    return $document;
-                } catch (\Exception $e) {
-                    return false;
-                }
+            if (null !== $document = $documentFactory->getDocument()) {
+                $this->getService('em')->flush();
+                return $document;
             }
         }
 

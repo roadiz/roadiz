@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -42,6 +43,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class NodeTreeWidget extends AbstractWidget
 {
+    const SESSION_ITEM_PER_PAGE = 'nodetree_item_per_page';
+
     protected $parentNode = null;
     protected $nodes = null;
     protected $tag = null;
@@ -125,7 +128,12 @@ class NodeTreeWidget extends AbstractWidget
         return $this->getListManager($this->parentNode);
     }
 
-    protected function getListManager(Node $parent = null)
+    /**
+     * @param Node|null $parent
+     * @param bool $subRequest Default: false
+     * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
+     */
+    protected function getListManager(Node $parent = null, $subRequest = false)
     {
         $criteria = [
             'parent' => $parent,
@@ -163,21 +171,49 @@ class NodeTreeWidget extends AbstractWidget
         if (true === $this->stackTree) {
             $listManager->setItemPerPage(20);
             $listManager->handle();
+
+            /*
+             * Stored in session
+             */
+            if (null !== $this->request->getSession() &&
+                $this->request->getSession()->has(static::SESSION_ITEM_PER_PAGE) &&
+                $this->request->getSession()->get(static::SESSION_ITEM_PER_PAGE) > 0 &&
+                (!$this->request->query->has('item_per_page') ||
+                $this->request->query->get('item_per_page') < 1)) {
+                /*
+                 * Item count is in session
+                 */
+                $this->request->query->set('item_per_page', $this->request->getSession()->get(static::SESSION_ITEM_PER_PAGE));
+                $listManager->setItemPerPage($this->request->getSession()->get(static::SESSION_ITEM_PER_PAGE));
+            } elseif ($this->request->query->has('item_per_page') &&
+                $this->request->query->get('item_per_page') > 0) {
+                /*
+                 * Item count is in query
+                 */
+                $this->request->getSession()->set(static::SESSION_ITEM_PER_PAGE, $this->request->query->get('item_per_page'));
+                $listManager->setItemPerPage($this->request->query->get('item_per_page'));
+            }
         } else {
-            $listManager->setItemPerPage(100);
+            $listManager->setItemPerPage(99999);
             $listManager->handle(true);
+        }
+
+
+        if ($subRequest) {
+            $listManager->disablePagination();
         }
 
         return $listManager;
     }
+
     /**
      * @param Node $parent
-     *
+     * @param bool $subRequest Default: false
      * @return ArrayCollection
      */
-    public function getChildrenNodes(Node $parent = null)
+    public function getChildrenNodes(Node $parent = null, $subRequest = false)
     {
-        return $this->getListManager($parent)->getEntities();
+        return $this->getListManager($parent, $subRequest)->getEntities();
     }
     /**
      * @return Node

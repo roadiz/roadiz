@@ -36,6 +36,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * Class CustomFormsType
+ * @package RZ\Roadiz\CMS\Forms
+ */
 class CustomFormsType extends AbstractType
 {
     protected $customForm;
@@ -59,8 +63,14 @@ class CustomFormsType extends AbstractType
     {
         $fields = $this->customForm->getFields();
 
+        /** @var CustomFormField $field */
         foreach ($fields as $field) {
-            $option = ["label" => $field->getLabel()];
+            $option = [
+                "label" => $field->getLabel(),
+                'attr' => [
+                    'data-description' => $field->getDescription(),
+                ],
+            ];
 
             if ($field->isRequired()) {
                 $option['required'] = true;
@@ -117,6 +127,9 @@ class CustomFormsType extends AbstractType
         }
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'custom_form_'.$this->customForm->getId();

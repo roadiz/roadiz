@@ -35,6 +35,7 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 use Solarium\Client;
 use Solarium\Core\Query\Helper;
 
@@ -81,24 +82,26 @@ class FullTextSearchHandler
             $singleWord = strpos($q, ' ') === false ? true : false;
 
             /*
-             * @see http://www.solrtutorial.com/solr-query-syntax.html
-             */
-            if ($singleWord) {
-                $queryTxt = sprintf('(title:"*%s*")^1.5 (collection_txt:"*%s*")', $q, $q);
-            } else {
-                $queryTxt = sprintf('(title:"%s"~%d)^1.5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-            }
-
-            /*
              * Search in node-sources tags name…
              */
             if ($searchTags) {
+                /*
+                 * @see http://www.solrtutorial.com/solr-query-syntax.html
+                 */
                 if ($singleWord) {
-                    $queryTxt .= sprintf(' (tags_txt:"*%s*")', $q);
+                    $queryTxt = sprintf('(title:%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
                 } else {
-                    $queryTxt .= sprintf(' (tags_txt:"%s"~%d)', $q, $proximity);
+                    $queryTxt = sprintf('(title:"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+                }
+            } else {
+                if ($singleWord) {
+                    $queryTxt = sprintf('(title:%s*)^5 (collection_txt:%s*)', $q, $q);
+                } else {
+                    $queryTxt = sprintf('(title:"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
                 }
             }
+
+
             $filterQueries = [];
             $query->setQuery($queryTxt);
             foreach ($args as $key => $value) {
@@ -213,6 +216,15 @@ class FullTextSearchHandler
         } else {
             $args["fq"][] = "node_status_i:" . (string) (Node::PUBLISHED);
         }
+
+        /*
+         * Filter by translation
+         */
+        if (isset($args['translation']) &&
+            $args['translation'] instanceof Translation) {
+            $args["fq"][] = "locale_s:" . $args['translation']->getLocale();
+        }
+
         return $args;
     }
 
@@ -249,7 +261,7 @@ class FullTextSearchHandler
     }
 
     /**
-     * Search on Solr.
+     * ## Search on Solr.
      *
      * * $q is the search criteria.
      * * $args is a array with solr query argument.
@@ -260,8 +272,9 @@ class FullTextSearchHandler
      *
      * * status (int)
      * * visible (boolean)
-     * * nodeType (RZ\Roadiz\Core\Entities\NodeType or string)
+     * * nodeType (RZ\Roadiz\Core\Entities\NodeType or string or array)
      * * tags (RZ\Roadiz\Core\Entities\Tag or array of Tag)
+     * * translation (RZ\Roadiz\Core\Entities\Translation)
      *
      * For other filters, use $args['fq'][] array, eg.
      *
@@ -272,10 +285,10 @@ class FullTextSearchHandler
      *
      * @param string $q
      * @param array  $args
-     * @param int  $rows
+     * @param int  $rows Results per page
      * @param boolean $searchTags Search in tags too, even if a node don’t match
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
-     * @param int $page
+     * @param int $page Retrieve a specific page
      *
      * @return array
      */
@@ -293,7 +306,7 @@ class FullTextSearchHandler
     /**
      * @param $q
      * @param array $args
-     * @param int $rows
+     * @param int $rows Useless var but keep it for retrocompatibility
      * @param bool $searchTags
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @return int

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\NoResultException;
@@ -179,7 +178,7 @@ class PrefixAwareRepository extends EntityRepository
      * @param array $order
      * @param null $limit
      * @param null $offset
-     * @return array|ArrayCollection
+     * @return array
      */
     public function findBy(
         array $criteria,
@@ -225,7 +224,7 @@ class PrefixAwareRepository extends EntityRepository
             try {
                 return $finalQuery->getResult();
             } catch (NoResultException $e) {
-                return new ArrayCollection();
+                return [];
             }
         }
     }
@@ -268,6 +267,117 @@ class PrefixAwareRepository extends EntityRepository
             return $finalQuery->getSingleResult();
         } catch (NoResultException $e) {
             return null;
+        }
+    }
+
+    /**
+     * @param string  $pattern  Search pattern
+     * @param array   $criteria Additionnal criteria
+     * @param array   $orders
+     * @param integer $limit
+     * @param integer $offset
+     *
+     * @return array
+     */
+    public function searchBy(
+        $pattern,
+        array $criteria = [],
+        array $orders = [],
+        $limit = null,
+        $offset = null
+    ) {
+        $qb = $this->createQueryBuilder($this->getDefaultPrefix());
+        $qb->select($this->getDefaultPrefix());
+        $qb = $this->createSearchBy($pattern, $qb, $criteria, $this->getDefaultPrefix());
+
+        // Add ordering
+        if (null !== $orders) {
+            foreach ($orders as $key => $value) {
+                $realKey = $this->getRealKey($qb, $key);
+                $qb->addOrderBy($realKey['prefix'] . $realKey['key'], $value);
+            }
+        }
+
+        if (null !== $offset) {
+            $qb->setFirstResult($offset);
+        }
+        if (null !== $limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        $finalQuery = $qb->getQuery();
+        $this->applyComparisons($criteria, $finalQuery);
+
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (NoResultException $e) {
+                return [];
+            }
+        }
+    }
+
+    /**
+     * @param string $pattern  Search pattern
+     * @param array  $criteria Additionnal criteria
+     * @return int
+     */
+    public function countSearchBy($pattern, array $criteria = [])
+    {
+        $qb = $this->createQueryBuilder($this->getDefaultPrefix());
+        $qb->select($qb->expr()->countDistinct($this->getDefaultPrefix().'.id'));
+        $qb = $this->createSearchBy($pattern, $qb, $criteria);
+
+        $finalQuery = $qb->getQuery();
+        $this->applyComparisons($criteria, $finalQuery);
+
+        try {
+            return $finalQuery->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Create a LIKE comparison with entity texts colunms.
+     *
+     * @param string $pattern
+     * @param QueryBuilder $qb
+     * @param string $alias
+     */
+    protected function classicLikeComparison(
+        $pattern,
+        QueryBuilder $qb,
+        $alias = "obj"
+    ) {
+        /*
+         * Get fields needed for a search query
+         */
+        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
+        $criteriaFields = [];
+        $cols = $metadatas->getColumnNames();
+        foreach ($cols as $col) {
+            $field = $metadatas->getFieldName($col);
+            $type = $metadatas->getTypeOfField($field);
+            if (in_array($type, $this->searchableTypes) &&
+                $field != 'folder' &&
+                $field != 'childrenOrder' &&
+                $field != 'childrenOrderDirection') {
+                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+            }
+        }
+
+        foreach ($criteriaFields as $key => $value) {
+            $realKey = $this->getRealKey($qb, $key);
+            $fullKey = sprintf('LOWER(%s)', $realKey['prefix'] . $realKey['key']);
+            $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
         }
     }
 }

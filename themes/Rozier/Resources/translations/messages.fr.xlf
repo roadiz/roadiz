@@ -790,9 +790,9 @@
         <source>visible</source>
         <target xml:lang="fr">Visible</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="invisible">
+      <trans-unit xml:space="preserve" id="invisible" approved="yes">
         <source>invisible</source>
-        <target xml:lang="fr" state="translated">Invisible</target>
+        <target xml:lang="fr">Invisible</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="79" approved="yes">
         <source>parent_tagId</source>
@@ -1378,9 +1378,9 @@
           <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font.hash">
+      <trans-unit xml:space="preserve" id="font.hash" approved="yes">
         <source>font.hash</source>
-        <target xml:lang="fr" state="translated">Identifiant CSS de la fonte</target>
+        <target xml:lang="fr">Identifiant CSS de la fonte</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="143" approved="yes">
         <source>font.eotFile</source>
@@ -3758,9 +3758,9 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="tag.color">
+      <trans-unit xml:space="preserve" id="tag.color" approved="yes">
         <source>tag.color</source>
-        <target xml:lang="fr" state="translated">Couleur</target>
+        <target xml:lang="fr">Couleur</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="374" approved="yes">
         <source>tag.tree</source>
@@ -4144,13 +4144,13 @@
         <source>markdown.type</source>
         <target xml:lang="fr">Markdown</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="json.type">
+      <trans-unit xml:space="preserve" id="json.type" approved="yes">
         <source>json.type</source>
-        <target xml:lang="fr" state="translated">Code JSON</target>
+        <target xml:lang="fr">Code JSON</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="css.type">
+      <trans-unit xml:space="preserve" id="css.type" approved="yes">
         <source>css.type</source>
-        <target xml:lang="fr" state="translated">Code CSS</target>
+        <target xml:lang="fr">Code CSS</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="437" approved="yes">
         <source>boolean.type</source>
@@ -4184,9 +4184,9 @@
         <source>children-nodes.type</source>
         <target xml:lang="fr">Nœuds enfants</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="country.type">
+      <trans-unit xml:space="preserve" id="country.type" approved="yes">
         <source>country.type</source>
-        <target xml:lang="fr" state="translated">Pays (ISO 3166-1 alpha-2)</target>
+        <target xml:lang="fr">Pays (ISO 3166-1 alpha-2)</target>
       </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445" approved="yes">
@@ -4645,9 +4645,9 @@
         <source>export.all.nodes</source>
         <target xml:lang="fr">Exporter tout</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="export.all">
+      <trans-unit xml:space="preserve" id="export.all" approved="yes">
         <source>export.all</source>
-        <target xml:lang="fr" state="translated">Tout exporter</target>
+        <target xml:lang="fr">Tout exporter</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="drop.files.here.to.upload.or.click.to.open.your.explorer" approved="yes">
           <source>drop.files.here.to.upload.or.click.to.open.your.explorer</source>
@@ -4669,9 +4669,9 @@
           <source>you.cant.upload.files.of.this.type</source>
           <target xml:lang="fr">Vous ne pouvez pas téléverser de fichiers de ce type.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code" approved="yes">
-          <source>server.responded.with.{{statuscode}}.code</source>
-          <target xml:lang="fr">Le serveur a répondu avec le code {{statuscode}}.</target>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statusCode}}.code" approved="yes">
+          <source>server.responded.with.{{statusCode}}.code</source>
+          <target xml:lang="fr">Le serveur a répondu avec le code {{statusCode}}</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="cancel.upload" approved="yes">
           <source>cancel.upload</source>
@@ -4931,8 +4931,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="add.a.nodeType" approved="yes">
           <source>add.a.nodeType</source>
-          <target xml:lang="fr">Ajouter un type de noeud</target>
-      </trans-unit>
+          <target xml:lang="fr">Ajouter un type de nœud</target>
+      <alt-trans><target xml:lang="fr">Ajouter un type de noeud</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="add.a.nodeTypeField" approved="yes">
           <source>add.a.nodeTypeField</source>
           <target xml:lang="fr">Ajouter un champ de type de nœud</target>
@@ -5471,8 +5471,8 @@
       <alt-trans><target xml:lang="fr">La supression de «%node_source%» en «%translation%» n'est pas possible</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="delete.nodesource" approved="yes">
           <source>delete.nodesource</source>
-          <target xml:lang="fr">Supprimer la source du noeud</target>
-      </trans-unit>
+          <target xml:lang="fr">Supprimer la source du nœud</target>
+      <alt-trans><target xml:lang="fr">Supprimer la source du noeud</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="latest.node-sources.updates" approved="yes">
           <source>latest.node-sources.updates</source>
           <target xml:lang="fr">Dernières sources modifiées</target>
@@ -5533,9 +5533,9 @@
           <source>maps_style</source>
           <target xml:lang="fr">Style par défaut Google Maps</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="maps_default_location">
+      <trans-unit xml:space="preserve" id="maps_default_location" approved="yes">
         <source>maps_default_location</source>
-        <target xml:lang="fr" state="translated">Position par défaut des cartographies</target>
+        <target xml:lang="fr">Position par défaut des cartographies</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="user.status" approved="yes">
           <source>user.status</source>
@@ -6178,81 +6178,112 @@
           <source>document.raw_document</source>
           <target xml:lang="fr">Document non traité</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="export_format.rzn">
+      <trans-unit xml:space="preserve" id="export_format.rzn" approved="yes">
           <source>export_format.rzn</source>
-          <target xml:lang="fr" state="translated">Format de fichier RZN</target>
+          <target xml:lang="fr">Format de fichier RZN</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="export_format.excel.%language%">
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%" approved="yes">
           <source>export_format.excel.%language%</source>
-          <target xml:lang="fr" state="translated">Format de fichier Excel (%language%)</target>
+          <target xml:lang="fr">Format de fichier Excel (%language%)</target>
       </trans-unit>
       <!-- Bulk tags -->
-      <trans-unit xml:space="preserve" id="delete.tags">
+      <trans-unit xml:space="preserve" id="delete.tags" approved="yes">
           <source>delete.tags</source>
-          <target xml:lang="fr" state="translated">Supprimer les étiquettes</target>
+          <target xml:lang="fr">Supprimer les étiquettes</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags">
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags" approved="yes">
           <source>are_you_sure.delete.these.tags</source>
-          <target xml:lang="fr" state="translated">Êtes-vous sûr(e) de vouloir supprimer ces étiquettes ?</target>
+          <target xml:lang="fr">Êtes-vous sûr(e) de vouloir supprimer ces étiquettes ?</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="bulk.delete.tags">
+      <trans-unit xml:space="preserve" id="bulk.delete.tags" approved="yes">
           <source>bulk.delete.tags</source>
-          <target xml:lang="fr" state="translated">Supprimer les étiquettes sélectionnées</target>
+          <target xml:lang="fr">Supprimer les étiquettes sélectionnées</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="tags.bulk.deleted">
+      <trans-unit xml:space="preserve" id="tags.bulk.deleted" approved="yes">
           <source>tags.bulk.deleted</source>
-          <target xml:lang="fr" state="translated">Les étiquettes sélectionnées ont été supprimées</target>
+          <target xml:lang="fr">Les étiquettes sélectionnées ont été supprimées</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="tag.childrenOrder">
+      <trans-unit xml:space="preserve" id="tag.childrenOrder" approved="yes">
             <source>tag.childrenOrder</source>
-            <target xml:lang="fr" state="translated">Les étiquettes enfantes sont ordonnées par</target>
+            <target xml:lang="fr">Les étiquettes enfantes sont ordonnées par</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
+      <trans-unit xml:space="preserve" id="tag.childrenOrderDirection" approved="yes">
             <source>tag.childrenOrderDirection</source>
-            <target xml:lang="fr" state="translated">Direction de l’ordre des étiquettes enfantes</target>
+            <target xml:lang="fr">Direction de l’ordre des étiquettes enfantes</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%">
+      <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%" approved="yes">
             <source>node.%name%.status_changed_to.%status%</source>
-            <target xml:lang="fr" state="translated">Le statut du nœud « %name% »a été changé à : %status%.</target>
+            <target xml:lang="fr">Le statut du nœud « %name% »a été changé à : %status%.</target>
         <alt-trans><target xml:lang="fr">Le statut du nœud « %name% »a été changé en : %status%.</target></alt-trans></trans-unit>
-      <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
+      <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%" approved="yes">
             <source>node.%name%.visibility_changed_to.%visible%</source>
-            <target xml:lang="fr" state="translated">La visibilité du nœud « %name% » a été changée à : %visible%.</target>
+            <target xml:lang="fr">La visibilité du nœud « %name% » a été changée à : %visible%.</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
+      <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%" approved="yes">
             <source>stack_type.%type%.has_been_removed.%name%</source>
-            <target xml:lang="fr" state="translated">Le type de pile «%type%» a été retiré du nœud «%name%»</target>
+            <target xml:lang="fr">Le type de pile «%type%» a été retiré du nœud «%name%»</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields" approved="yes">
             <source>form_has_errors.check_you_fields</source>
-            <target xml:lang="fr" state="translated">Votre formulaire contient des erreurs, vérifiez les champs correspondants.</target>
+            <target xml:lang="fr">Votre formulaire contient des erreurs, vérifiez les champs correspondants.</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="no_more_translation_available">
+      <trans-unit xml:space="preserve" id="no_more_translation_available" approved="yes">
             <source>no_more_translation_available</source>
-            <target xml:lang="fr" state="translated">Aucune autre traduction n’est disponible.</target>
+            <target xml:lang="fr">Aucune autre traduction n’est disponible.</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="translate_offspring">
+      <trans-unit xml:space="preserve" id="translate_offspring" approved="yes">
             <source>translate_offspring</source>
-            <target xml:lang="fr" state="translated">Traduire toute l’arborescence</target>
+            <target xml:lang="fr">Traduire toute l’arborescence</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+      <trans-unit xml:space="preserve" id="node.%name%.undeleted" approved="yes">
             <source>node.%name%.undeleted</source>
-            <target xml:lang="fr" state="translated">Le nœud «%name%» a été sorti de la corbeille</target>
+            <target xml:lang="fr">Le nœud «%name%» a été sorti de la corbeille</target>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="universal">
+      <trans-unit xml:space="preserve" id="universal" approved="yes">
             <source>universal</source>
-            <target xml:lang="fr" state="translated">Universel</target>
+            <target xml:lang="fr">Universel</target>
             <note>Universal node-type fields are common over translations.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename">
+      <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename" approved="yes">
             <source>value_is_not_a_valid_filename</source>
-            <target xml:lang="fr" state="translated">Veuillez entrer un nom de fichier valide avec extension.</target>
+            <target xml:lang="fr">Veuillez entrer un nom de fichier valide avec extension.</target>
             <note>In document edit page when you rename your file without file extension.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="filename.alreadyExists">
+      <trans-unit xml:space="preserve" id="filename.alreadyExists" approved="yes">
             <source>filename.alreadyExists</source>
-            <target xml:lang="fr" state="translated">Le nom de fichier est déjà utilisé.</target>
+            <target xml:lang="fr">Le nom de fichier est déjà utilisé.</target>
             <note>In document edit page when you rename your file but filename already exists in folder.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname" approved="yes">
+            <source>classname</source>
+            <target xml:lang="fr">Nom de la classe Entité</target>
+            <note>In node-type edit page, label for the current node-type class name..</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="node-type.parameters" approved="yes">
+            <source>node-type.parameters</source>
+            <target xml:lang="fr">Paramètres</target>
+            <note>In node-type section, label for the parameters section.</note>
+        </trans-unit>
+      <!-- Custom form nav bar -->
+      <trans-unit xml:space="preserve" id="custom-form.parameters" approved="yes">
+            <source>custom-form.parameters</source>
+            <target xml:lang="fr">Paramètres</target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.fields" approved="yes">
+            <source>custom-form.fields</source>
+            <target xml:lang="fr">Questions</target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.answers" approved="yes">
+            <source>custom-form.answers</source>
+            <target xml:lang="fr">Réponses</target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="markdown.preview">
+            <source>markdown.preview</source>
+            <target xml:lang="fr" state="translated">Aperçu du Markdown</target>
+            <note>For markdown.preview button label</note>
         </trans-unit>
     </body>
   </file>

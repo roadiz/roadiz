@@ -736,6 +736,9 @@ class Node extends AbstractDateTimedPositioned
         $this->nodeSources = new ArrayCollection();
         $this->stackTypes = new ArrayCollection();
         $this->customForms = new ArrayCollection();
+        $this->aNodes = new ArrayCollection();
+        $this->bNodes = new ArrayCollection();
+        
         $this->setNodeType($nodeType);
     }
 
@@ -745,7 +748,7 @@ class Node extends AbstractDateTimedPositioned
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getNodeName() . " — " . $this->getNodeType()->getName() .
-            " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
+        " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**
@@ -798,7 +801,6 @@ class Node extends AbstractDateTimedPositioned
     {
         if ($this->id) {
             $this->id = null;
-            $this->nodeName .= "-" . uniqid();
             $this->home = false;
             $children = $this->getChildren();
             if ($children !== null) {
@@ -818,6 +820,11 @@ class Node extends AbstractDateTimedPositioned
                     $cloneNodeSource->setNode($this);
                 }
             }
+            // Get a random string after node-name.
+            $namePrefix = $this->getNodeSources()->first()->getTitle() != "" ?
+                $this->getNodeSources()->first()->getTitle() :
+                $this->nodeName;
+            $this->setNodeName($namePrefix . "-" . uniqid());
         }
     }
 

@@ -30,6 +30,7 @@
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\KernelDependentCase;
 use Solarium\Exception\HttpException;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 
 /**
  * SolrWrapperTest.
@@ -51,11 +52,9 @@ class SolrWrapperTest extends KernelDependentCase
             try {
                 $result = $solr->ping($ping);
             } catch (\Solarium\Exception $e) {
-                echo PHP_EOL . 'No Solr server available.' . PHP_EOL;
-                return;
+                $this->markTestSkipped('Solr is not available.');
             } catch (HttpException $e) {
-                echo PHP_EOL . 'No Solr server available.' . PHP_EOL;
-                return;
+                $this->markTestSkipped('Solr is not available.');
             }
 
             // get an update query instance
@@ -88,8 +87,9 @@ class SolrWrapperTest extends KernelDependentCase
 
             // Assert
             $this->assertEquals($resultset->getNumFound(), 1);
+        } else {
+            $this->markTestSkipped('Solr is not available.');
         }
-
     }
 
     /**
@@ -123,9 +123,10 @@ class SolrWrapperTest extends KernelDependentCase
                 // this executes the query and returns the result
                 $result = $solr->update($update);
 
+            } catch (SolrServerNotConfiguredException $e) {
+
             } catch (HttpException $e) {
-                echo PHP_EOL . 'No Solr server available.' . PHP_EOL;
-                return;
+
             }
         }
 

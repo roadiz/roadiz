@@ -27,27 +27,26 @@
  * @file SettingJsonSerializerTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
  * Description.
  */
-class SettingJsonSerializerTest extends KernelDependentCase
+class SettingJsonSerializerTest extends SchemaDependentCase
 {
-    private static $entityCollection;
 
     /**
      * @dataProvider deserializeProvider
+     * @param $json
+     * @throws Exception
      */
     public function testDeserialize($json)
     {
         $serializer = new SettingJsonSerializer();
         $setting = $serializer->deserialize($json);
 
-        static::$entityCollection[] = $setting;
         Kernel::getService('em')->persist($setting);
         Kernel::getService('em')->flush();
 
@@ -74,6 +73,9 @@ class SettingJsonSerializerTest extends KernelDependentCase
 
     /**
      * @dataProvider deserializeReturnTypeProvider
+     * @param $json
+     * @param $expected
+     * @throws Exception
      */
     public function testDeserializeReturnType($json, $expected)
     {
@@ -96,31 +98,8 @@ class SettingJsonSerializerTest extends KernelDependentCase
         return array(
             array(
                 file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
-                "RZ\Roadiz\Core\Entities\Setting",
+                'RZ\Roadiz\Core\Entities\Setting',
             ),
         );
-    }
-
-    /**
-     * Nothing special to do except init collection
-     * array.
-     */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        static::$entityCollection = array();
-    }
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$entityCollection as $setting) {
-            Kernel::getService('em')->remove($setting);
-        }
-
-        Kernel::getService('em')->flush();
-        parent::tearDownAfterClass();
     }
 }

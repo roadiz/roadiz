@@ -148,6 +148,9 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         if (isset($args['autoplay'])) {
             $queryString['autoplay'] = (int) $args['autoplay'];
         }
+        if (isset($args['fullscreen'])) {
+            $queryString['fullscreen'] = (int) $args['fullscreen'];
+        }
         if (isset($args['api'])) {
             $queryString['api'] = (int) $args['api'];
         }
@@ -159,6 +162,5 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
         }
 
         return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);
-
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "rozier",
-  "version": "0.13.0",
+  "version": "0.15.0",
   "homepage": "https://github.com/roadiz/roadiz",
   "authors": [
     "Ambroise Maupate <ambroise@rezo-zero.com>",
@@ -30,10 +30,11 @@
     "uikit": "~2.18.0",
     "mousetrap": "~1.4.6",
     "codemirror": "~5.8.0",
-    "marked": "~0.3.3",
     "dropzone": "~4.2.0",
-    "jquery.actual":"~1.0.17",
-    "CanvasLoader":"~0.9.1",
-    "jquery-tag-editor": "~1.0.18"
+    "jquery.actual": "~1.0.17",
+    "CanvasLoader": "~0.9.1",
+    "jquery-tag-editor": "~1.0.18",
+    "markdown-it-footnote": "~3.0.0",
+    "markdown-it": "~7.0.0"
   }
 }

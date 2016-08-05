@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,6 +37,8 @@ class NodeTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider nodeNameProvider
+     * @param $nodeName
+     * @param $expected
      */
     public function testNodeName($nodeName, $expected)
     {

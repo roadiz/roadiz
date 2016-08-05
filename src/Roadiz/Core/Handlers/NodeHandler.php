@@ -127,8 +127,7 @@ class NodeHandler
      * Get custom forms linked to current node for a given fieldname.
      *
      * @param string $fieldName Name of the node-type field
-     *
-     * @return ArrayCollection Collection of nodes
+     * @return array
      */
     public function getCustomFormsFromFieldName($fieldName)
     {
@@ -194,7 +193,12 @@ class NodeHandler
     {
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findByNodeAndFieldName($this->node, $fieldName);
+            ->findByNodeAndFieldName(
+                $this->node,
+                $fieldName,
+                Kernel::getService('securityAuthorizationChecker'),
+                Kernel::getInstance()->isPreview()
+            );
     }
 
     /**
@@ -208,7 +212,12 @@ class NodeHandler
     {
         return Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findByReverseNodeAndFieldName($this->node, $fieldName);
+            ->findByReverseNodeAndFieldName(
+                $this->node,
+                $fieldName,
+                Kernel::getService('securityAuthorizationChecker'),
+                Kernel::getInstance()->isPreview()
+            );
     }
 
     /**
@@ -518,9 +527,8 @@ class NodeHandler
     }
 
     /**
-     * return all node offspring id
-     *
-     * @return ArrayCollection
+     * Return all node offspring id.
+     * @return array
      */
     public function getAllOffspringId()
     {

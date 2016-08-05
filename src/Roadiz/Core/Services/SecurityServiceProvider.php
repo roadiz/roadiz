@@ -135,15 +135,26 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['logger'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $logPath = $kernel->getLogDir() . '/' .
+                $kernel->getName(). '_' .
+                $kernel->getEnvironment().'.log';
+
             $log = new Logger('roadiz');
-            $log->pushHandler(new StreamHandler($c['kernel']->getLogDir() . '/roadiz.log', Logger::NOTICE));
+            $log->pushHandler(new StreamHandler($logPath, Logger::NOTICE));
 
             if (null !== $c['em'] &&
-                true === $c['kernel']->isDebug()) {
-                $log->pushHandler(new StreamHandler(ROADIZ_ROOT . '/logs/roadiz-debug.log', Logger::DEBUG));
+                true === $kernel->isDebug()) {
+                $log->pushHandler(new StreamHandler($logPath, Logger::DEBUG));
             }
+
+            /*
+             * Only activate doctrine logger for production.
+             */
             if (null !== $c['em'] &&
-                false === $c['kernel']->isInstallMode()) {
+                false === $kernel->isInstallMode() &&
+                $kernel->getEnvironment() == 'prod') {
                 $log->pushHandler(new DoctrineHandler(
                     $c['em'],
                     $c['securityTokenStorage'],
@@ -288,6 +299,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['roleHierarchy'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            if ($kernel->isInstallMode()) {
+                return new DoctrineRoleHierarchy(null);
+            }
             return new DoctrineRoleHierarchy($c['em']);
         };
 

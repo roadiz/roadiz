@@ -29,10 +29,14 @@
  */
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
 
+/**
+ * Class PasswordGeneratorTest
+ */
 class PasswordGeneratorTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider generatePasswordProvider
+     * @param $passwordLength
      */
     public function testGeneratePassword($passwordLength)
     {
@@ -42,6 +46,9 @@ class PasswordGeneratorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($passwordLength, strlen($pass));
     }
 
+    /**
+     * @return array
+     */
     public function generatePasswordProvider()
     {
         return [

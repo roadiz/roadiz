@@ -38,25 +38,73 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Perform basic filtering and search over entity listings.
+ *
+ * @package RZ\Roadiz\Core\ListManagers
  */
 class EntityListManager
 {
     const ITEM_PER_PAGE = 20;
 
+    /**
+     * @var null|Request
+     */
     protected $request = null;
+    /**
+     * @var EntityManager|null
+     */
     protected $_em = null;
+    /**
+     * @var string
+     */
     protected $entityName;
+
+    /**
+     * @var Paginator
+     */
     protected $paginator = null;
+    /**
+     * @var bool
+     */
     protected $pagination = true;
+    /**
+     * @var array|null
+     */
     protected $orderingArray = null;
+    /**
+     * @var array|null
+     */
     protected $filteringArray = null;
+    /**
+     * @var array|null
+     */
     protected $queryArray = null;
+    /**
+     * @var string|null
+     */
     protected $searchPattern = null;
+    /**
+     * @var int|null
+     */
     protected $currentPage = null;
+    /**
+     * @var array|null
+     */
     protected $assignation = null;
+    /**
+     * @var int|null
+     */
     protected $itemPerPage = null;
+    /**
+     * @var Translation|null
+     */
     protected $translation = null;
+    /**
+     * @var AuthorizationChecker|null
+     */
     protected $authorizationChecker = null;
+    /**
+     * @var bool
+     */
     protected $preview = false;
 
     /**
@@ -117,48 +165,12 @@ class EntityListManager
     }
 
     /**
-     * Configure a custom item count per page.
-     *
-     * @param integer $itemPerPage
-     *
      * @return $this
      */
-    public function setItemPerPage($itemPerPage)
-    {
-        if ($itemPerPage < 1) {
-            throw new \RuntimeException("Item count per page cannot be lesser than 1.", 1);
-        }
-
-        $this->itemPerPage = (int) $itemPerPage;
-
-        return $this;
-    }
-
-    /**
-     * Configure a custom current page.
-     *
-     * @param integer $page
-     *
-     * @return $this
-     */
-    public function setPage($page)
-    {
-        if ($page < 1) {
-            throw new \RuntimeException("Page cannot be lesser than 1.", 1);
-        }
-        $this->currentPage = (int) $page;
-
-        return $this;
-    }
-
     public function enablePagination()
     {
         $this->pagination = true;
-    }
-
-    public function disablePagination()
-    {
-        $this->pagination = false;
+        return $this;
     }
 
     /**
@@ -199,10 +211,86 @@ class EntityListManager
         return $this;
     }
 
+    /**
+     * Handle request to find filter to apply to entity listing.
+     *
+     * @param boolean $disabled Disable pagination and filtering over GET params
+     * @return void
+     */
+    public function handle($disabled = false)
+    {
+        if (false === $disabled) {
+            if ($this->request->query->get('field') &&
+                $this->request->query->get('ordering')) {
+                $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
+                $this->queryArray['field'] = $this->request->query->get('field');
+                $this->queryArray['ordering'] = $this->request->query->get('ordering');
+            }
+
+            if ($this->request->query->get('search') != "") {
+                $this->searchPattern = $this->request->query->get('search');
+                $this->queryArray['search'] = $this->request->query->get('search');
+            }
+
+            if ($this->request->query->has('item_per_page') &&
+                $this->request->query->get('item_per_page') > 0) {
+                $this->setItemPerPage($this->request->query->get('item_per_page'));
+            }
+
+            if ($this->request->query->has('page') &&
+                $this->request->query->get('page') > 1) {
+                $this->setPage($this->request->query->get('page'));
+            } else {
+                $this->setPage(1);
+            }
+        } else {
+            /*
+             * Disable pagination and paginator
+             */
+            $this->disablePagination();
+        }
+
+        $this->createPaginator();
+
+        if (false === $disabled) {
+            if ($this->request->query->get('search') != "") {
+                $this->paginator->setSearchPattern($this->request->query->get('search'));
+            }
+        }
+    }
+
+    /**
+     * Configure a custom current page.
+     *
+     * @param integer $page
+     *
+     * @return $this
+     */
+    public function setPage($page)
+    {
+        if ($page < 1) {
+            throw new \RuntimeException("Page cannot be lesser than 1.", 1);
+        }
+        $this->currentPage = (int) $page;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function disablePagination()
+    {
+        $this->setPage(1);
+        $this->pagination = false;
+
+        return $this;
+    }
+
     protected function createPaginator()
     {
-        if ($this->entityName == "RZ\Roadiz\Core\Entities\Node" ||
-            $this->entityName == "\RZ\Roadiz\Core\Entities\Node" ||
+        if ($this->entityName == 'RZ\Roadiz\Core\Entities\Node' ||
+            $this->entityName == '\RZ\Roadiz\Core\Entities\Node' ||
             $this->entityName == "Node") {
             $this->paginator = new NodePaginator(
                 $this->_em,
@@ -213,8 +301,8 @@ class EntityListManager
             $this->paginator->setTranslation($this->translation);
             $this->paginator->setAuthorizationChecker($this->authorizationChecker);
             $this->paginator->setPreview($this->preview);
-        } elseif ($this->entityName == "RZ\Roadiz\Core\Entities\NodesSources" ||
-            $this->entityName == "\RZ\Roadiz\Core\Entities\NodesSources" ||
+        } elseif ($this->entityName == 'RZ\Roadiz\Core\Entities\NodesSources' ||
+            $this->entityName == '\RZ\Roadiz\Core\Entities\NodesSources' ||
             $this->entityName == "NodesSources" ||
             strpos($this->entityName, NodeType::getGeneratedEntitiesNamespace()) !== false) {
             $this->paginator = new NodesSourcesPaginator(
@@ -233,51 +321,6 @@ class EntityListManager
                 $this->itemPerPage,
                 $this->filteringArray
             );
-        }
-    }
-
-    /**
-     * Handle request to find filter to apply to entity listing.
-     *
-     * @param boolean $disabled Disable pagination and filtering over GET params
-     *
-     * @return void
-     */
-    public function handle($disabled = false)
-    {
-        if (false === $disabled) {
-            if ($this->request->query->get('field') &&
-                $this->request->query->get('ordering')) {
-                $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
-                $this->queryArray['field'] = $this->request->query->get('field');
-                $this->queryArray['ordering'] = $this->request->query->get('ordering');
-            }
-
-            if ($this->request->query->get('search') != "") {
-                $this->searchPattern = $this->request->query->get('search');
-                $this->queryArray['search'] = $this->request->query->get('search');
-            }
-
-            if ($this->request->query->get('item_per_page') != "") {
-                $this->itemPerPage = (int) $this->request->query->get('item_per_page');
-            }
-
-            if ($this->request->query->has('page') &&
-                $this->request->query->get('page') > 1) {
-                $this->currentPage = $this->request->query->get('page');
-            } else {
-                $this->currentPage = 1;
-            }
-        } else {
-            $this->currentPage = 1;
-        }
-
-        $this->createPaginator();
-
-        if (false === $disabled) {
-            if ($this->request->query->get('search') != "") {
-                $this->paginator->setSearchPattern($this->request->query->get('search'));
-            }
         }
     }
 
@@ -339,7 +382,9 @@ class EntityListManager
      */
     public function getEntities()
     {
-        if ($this->pagination === true) {
+        if ($this->pagination === true &&
+            null !== $this->paginator) {
+            $this->paginator->setItemsPerPage($this->getItemPerPage());
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
             return $this->_em->getRepository($this->entityName)
@@ -373,5 +418,39 @@ class EntityListManager
         $this->preview = (boolean) $preview;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getItemPerPage()
+    {
+        return $this->itemPerPage;
+    }
+
+    /**
+     * Configure a custom item count per page.
+     *
+     * @param integer $itemPerPage
+     *
+     * @return $this
+     */
+    public function setItemPerPage($itemPerPage)
+    {
+        if ($itemPerPage < 1) {
+            throw new \RuntimeException("Item count per page cannot be lesser than 1.", 1);
+        }
+
+        $this->itemPerPage = (int) $itemPerPage;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->currentPage;
     }
 }

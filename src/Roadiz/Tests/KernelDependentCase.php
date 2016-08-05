@@ -33,10 +33,15 @@ use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 
 /**
-*
-*/
+ * Class KernelDependentCase for test which need a valid Kernel.
+ *
+ * @package RZ\Roadiz\Tests
+ */
 abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
     public static function setUpBeforeClass()
     {
         $kernel = Kernel::getInstance('test', true, false);
@@ -46,7 +51,6 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        Kernel::getService('em')->close();
         Kernel::getInstance()->shutdown();
     }
 }

@@ -85,42 +85,41 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
 DocumentWidget.prototype.onUploaderToggle = function(event) {
     var _this = this;
 
-    //documents-widget
     var $btn = $(event.currentTarget);
-    var $widget = $btn.parents('.documents-widget');
+    var $widget = $btn.parents('.documents-widget').eq(0);
+    var $uploader = $widget.find('.documents-widget-uploader').eq(0);
 
-    if (null !== _this.uploader) {
+
+    if (null !== _this.uploader &&
+        $uploader.length) {
+        $uploader.remove();
         _this.uploader = null;
-        var $uploader = $widget.find('.documents-widget-uploader');
-        $uploader.slideUp(500, function () {
-            $uploader.remove();
-            $btn.removeClass('active');
-        });
+        $btn.removeClass('active uk-active');
     } else {
-
         $widget.append('<div class="documents-widget-uploader dropzone"></div>');
-        var $uploaderNew = $widget.find('.documents-widget-uploader');
+        var $uploaderNew = $widget.find('.documents-widget-uploader').eq(0);
+        if ($uploaderNew.length) {
+            var options = {
+                selector: '.documents-widget .documents-widget-uploader',
+                headers: { "_token": Rozier.ajaxToken },
+                onSuccess : function (data) {
+                    if(typeof data.thumbnail !== "undefined") {
+                        var $sortable = $widget.find('.documents-widget-sortable');
+                        $sortable.append(data.thumbnail.html);
+                        var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
 
-        var options = {
-            selector: '.documents-widget .documents-widget-uploader',
-            headers: { "_token": Rozier.ajaxToken },
-            onSuccess : function (data) {
-                if(typeof data.thumbnail !== "undefined") {
-                    var $sortable = $widget.find('.documents-widget-sortable');
-                    $sortable.append(data.thumbnail.html);
-                    var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
-
-                    _this.onSortableDocumentWidgetChange(null, $sortable, $element);
+                        _this.onSortableDocumentWidgetChange(null, $sortable, $element);
+                    }
                 }
-            }
-        };
+            };
 
-        $.extend(options, Rozier.messages.dropzone);
-        //console.log(options);
-        _this.uploader = new DocumentUploader(options);
+            $.extend(options, Rozier.messages.dropzone);
+            //console.log(options);
+            _this.uploader = new DocumentUploader(options);
 
-        $uploaderNew.slideDown(500);
-        $btn.addClass('active');
+            $uploaderNew.slideDown(500);
+            $btn.addClass('active uk-active');
+        }
     }
 
     return false;
@@ -136,10 +135,11 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
 DocumentWidget.prototype.onExplorerToggle = function(event) {
     var _this = this;
 
-    if (_this.$explorer === null) {
+    var $btn = $(event.currentTarget);
+    var $widget = $btn.parents('.documents-widget').eq(0);
 
-        _this.$toggleExplorerButtons.addClass('uk-active');
-
+    if (_this.$explorer === null && $widget.length) {
+        $btn.addClass('uk-active');
         var ajaxData = {
             '_action':'toggleExplorer',
             '_token': Rozier.ajaxToken
@@ -156,10 +156,9 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
         })
         .success(function(data) {
             Rozier.lazyload.canvasLoader.hide();
-
             if (typeof data.documents != "undefined") {
 
-                var $currentsortable = $($(event.currentTarget).parents('.documents-widget')[0]).find('.documents-widget-sortable');
+                var $currentsortable = $(event.currentTarget).parents('.documents-widget').eq(0).find('.documents-widget-sortable');
                 _this.createExplorer(data, $currentsortable);
             }
         })

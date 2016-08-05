@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,29 +28,31 @@
  * @file NodesSourcesRepositoryTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 /**
  * NodesSourcesRepositoryTest.
  */
-class NodesSourcesRepositoryTest extends KernelDependentCase
+class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
 {
     /**
      * @dataProvider findBySearchQueryProvider
+     * @param $query
+     * @param $expectedClass
      */
     public function testFindBySearchQuery($query, $expectedClass)
     {
-        $nSources = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-            ->findBySearchQuery($query);
+        /** @var \RZ\Roadiz\Core\Repositories\NodesSourcesRepository $repository */
+        $repository = static::getManager()->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+        $nSources = $repository->findBySearchQuery($query);
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
-                $this->assertEquals(get_class($source), $expectedClass);
+                $this->assertEquals($expectedClass, get_class($source));
             }
+        } else {
+            $this->markTestSkipped('No nodes are available for this search.');
         }
     }
     /**
@@ -66,17 +68,22 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
 
     /**
      * @dataProvider findBySearchQueryAndTranslationProvider
+     * @param $query
+     * @param $expectedClass
+     * @param Translation $translation
      */
     public function testFindBySearchQueryAndTranslation($query, $expectedClass, Translation $translation)
     {
-        $nSources = Kernel::getService('em')
+        $nSources = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBySearchQueryAndTranslation($query, $translation);
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
-                $this->assertEquals(get_class($source), $expectedClass);
+                $this->assertEquals($expectedClass, get_class($source));
             }
+        } else {
+            $this->markTestSkipped('No nodes are available for this search.');
         }
     }
     /**
@@ -91,5 +98,15 @@ class NodesSourcesRepositoryTest extends KernelDependentCase
             array('Propos', 'GeneratedNodeSources\NSPage', $english),
             array('About', 'GeneratedNodeSources\NSPage', $english),
         );
+    }
+
+    /**
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        static::runCommand('solr:reindex -n');
     }
 }

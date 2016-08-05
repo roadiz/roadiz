@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,16 +28,18 @@
  * @file StringHandlerTest.php
  * @author Ambroise Maupate
  */
-
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- *
+ * Class StringHandlerTest
  */
 class StringHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider endsWithProvider
+     * @param $input
+     * @param $wanted
+     * @param $expected
      */
     public function testEndsWith($input, $wanted, $expected)
     {
@@ -60,12 +62,18 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider replaceLastProvider
+     * @param $input
+     * @param $wanted
+     * @param $expected
      */
     public function testReplaceLast($input, $wanted, $expected)
     {
         $this->assertEquals($expected, StringHandler::replaceLast($wanted, "", $input));
     }
 
+    /**
+     * @return array
+     */
     public function replaceLastProvider()
     {
         return array(
@@ -82,6 +90,8 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider removeDiacriticsProvider
+     * @param $input
+     * @param $expected
      */
     public function testRemoveDiacritics($input, $expected)
     {
@@ -89,6 +99,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, StringHandler::removeDiacritics($input));
     }
 
+    /**
+     * @return array
+     */
     public function removeDiacriticsProvider()
     {
         return array(
@@ -105,6 +118,8 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider variablizeProvider
+     * @param $input
+     * @param $expected
      */
     public function testVariablize($input, $expected)
     {
@@ -112,6 +127,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, StringHandler::variablize($input));
     }
 
+    /**
+     * @return array
+     */
     public function variablizeProvider()
     {
         return array(
@@ -128,6 +146,8 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider camelCaseProvider
+     * @param $input
+     * @param $expected
      */
     public function testCamelCase($input, $expected)
     {
@@ -135,6 +155,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, StringHandler::camelcase($input));
     }
 
+    /**
+     * @return array
+     */
     public function camelCaseProvider()
     {
         return array(
@@ -148,6 +171,8 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider slugifyProvider
+     * @param $input
+     * @param $expected
      */
     public function testSlugify($input, $expected)
     {
@@ -155,6 +180,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, StringHandler::slugify($input));
     }
 
+    /**
+     * @return array
+     */
     public function slugifyProvider()
     {
         return array(
@@ -169,6 +197,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider encodeWithSecretProvider
+     * @param $input
+     * @param $secret
+     * @throws \RZ\Roadiz\Core\Exceptions\EmptySaltException
      */
     public function testEncodeWithSecret($input, $secret)
     {
@@ -178,6 +209,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($input, StringHandler::decodeWithSecret($code, $secret));
     }
 
+    /**
+     * @return array
+     */
     public function encodeWithSecretProvider()
     {
         return array(
@@ -191,6 +225,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider encodeWithSecretNoSaltProvider
+     * @param $input
+     * @param $secret
+     * @throws \RZ\Roadiz\Core\Exceptions\EmptySaltException
      */
     public function testEncodeWithSecretNoSalt($input, $secret)
     {
@@ -202,6 +239,9 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($input, StringHandler::decodeWithSecret($code, $secret));
     }
 
+    /**
+     * @return array
+     */
     public function encodeWithSecretNoSaltProvider()
     {
         return array(

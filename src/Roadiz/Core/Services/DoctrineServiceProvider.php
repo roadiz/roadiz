@@ -43,6 +43,7 @@ use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register Doctrine services for dependency injection container.
@@ -55,21 +56,19 @@ class DoctrineServiceProvider implements ServiceProviderInterface
      * Logic from Doctrine setup method
      * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
      *
-     * @param  array      $cacheConfig
-     * @param  boolean    $isDevMode
-     * @param  string|null $proxyDir
-     * @param  string $environment
+     * @param array $cacheConfig
+     * @param string $namespace
+     * @param bool $isPreview
+     * @param string $environment
      * @return Cache
      */
     protected function getManuallyDefinedCache(
         array $cacheConfig,
-        $isDevMode = false,
-        $proxyDir = null,
+        $namespace = 'dc2',
+        $isPreview = false,
         $environment = 'prod'
     ) {
-        $proxyDir = $proxyDir ?: sys_get_temp_dir();
-
-        if ($isDevMode === false) {
+        if ($environment === 'prod') {
             if (extension_loaded('apc') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'apc'
@@ -123,11 +122,30 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         } else {
             $cache = new ArrayCache();
         }
+        /*
+         * Set namespace
+         */
         if ($cache instanceof CacheProvider) {
-            $cache->setNamespace("dc2_" . md5($proxyDir) . $environment . "_"); // to avoid collisions
+            $cache->setNamespace($this->getNamespace($namespace, $isPreview, $environment));
         }
 
         return $cache;
+    }
+
+    /**
+     * @param string $namespace
+     * @param bool $isPreview
+     * @param string $environment
+     * @return string
+     */
+    public function getNamespace($namespace = 'dc2', $isPreview = false, $environment = 'prod')
+    {
+        $namespace = $namespace . "_" . $environment . "_";
+        if ($isPreview) {
+            $namespace .= 'preview_';
+        }
+
+        return $namespace;
     }
 
     /**
@@ -144,25 +162,27 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
             $container['em.config'] = function ($c) {
+                /** @var Kernel $kernel */
+                $kernel = $c['kernel'];
                 $cache = null;
                 if (isset($c['config']['cacheDriver']) &&
                     !empty($c['config']['cacheDriver']['type'])) {
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
-                        $c['kernel']->isDevMode(),
-                        $c['kernel']->getRootDir() . '/gen-src/Proxies',
-                        $c['kernel']->getEnvironment()
+                        $c['config']["appNamespace"],
+                        $kernel->isPreview(),
+                        $kernel->getEnvironment()
                     );
                 }
 
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
-                    $c['kernel']->isDevMode(),
-                    $c['kernel']->getRootDir() . '/gen-src/Proxies',
+                    $kernel->isDevMode(),
+                    $kernel->getRootDir() . '/gen-src/Proxies',
                     $cache,
                     false
                 );
-                $config->setProxyDir($c['kernel']->getRootDir() . '/gen-src/Proxies');
+                $config->setProxyDir($kernel->getRootDir() . '/gen-src/Proxies');
                 $config->setProxyNamespace('Proxies');
 
                 return $config;
@@ -171,43 +191,64 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             $container['em'] = function ($c) {
                 try {
                     $c['stopwatch']->start('initDoctrine');
+                    /** @var Kernel $kernel */
+                    $kernel = $c['kernel'];
+                    /** @var EntityManager $em */
                     $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
                     $evm = $em->getEventManager();
 
-                    /*
-                     * Create dynamic dicriminator map for our Node system
-                     */
                     $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
 
+                    /** @var CacheProvider $resultCacheDriver */
+                    $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
+                    if ($resultCacheDriver !== null) {
+                        $resultCacheDriver->setNamespace($this->getNamespace(
+                            $c['config']["appNamespace"],
+                            $kernel->isPreview(),
+                            $kernel->getEnvironment()
+                        ));
+                    }
+                    /** @var CacheProvider $hydratationCacheDriver */
+                    $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
+                    if ($hydratationCacheDriver !== null) {
+                        $hydratationCacheDriver->setNamespace($this->getNamespace(
+                            $c['config']["appNamespace"],
+                            $kernel->isPreview(),
+                            $kernel->getEnvironment()
+                        ));
+                    }
+                    /** @var CacheProvider $queryCacheDriver */
+                    $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
+                    if ($queryCacheDriver !== null) {
+                        $queryCacheDriver->setNamespace($this->getNamespace(
+                            $c['config']["appNamespace"],
+                            $kernel->isPreview(),
+                            $kernel->getEnvironment()
+                        ));
+                    }
+                    /** @var CacheProvider $metadataCacheDriver */
+                    $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
+                    if (null !== $metadataCacheDriver) {
+                        $metadataCacheDriver->setNamespace($this->getNamespace(
+                            $c['config']["appNamespace"],
+                            $kernel->isPreview(),
+                            $kernel->getEnvironment()
+                        ));
+                    }
+
+                    /*
+                     * Create dynamic discriminator map for our Node system
+                     */
                     $evm->addEventListener(
                         Events::loadClassMetadata,
                         new DataInheritanceEvent($prefix)
                     );
 
-                    $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
-                    if ($resultCacheDriver !== null) {
-                        $resultCacheDriver->setNamespace($c['config']["appNamespace"]);
-                    }
-
-                    $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
-                    if ($hydratationCacheDriver !== null) {
-                        $hydratationCacheDriver->setNamespace($c['config']["appNamespace"]);
-                    }
-
-                    $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
-                    if ($queryCacheDriver !== null) {
-                        $queryCacheDriver->setNamespace($c['config']["appNamespace"]);
-                    }
-
-                    $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
-                    if (null !== $metadataCacheDriver) {
-                        $metadataCacheDriver->setNamespace($c['config']["appNamespace"]);
-                    }
-
                     $c['stopwatch']->stop('initDoctrine');
 
                     return $em;
                 } catch (\PDOException $e) {
+                    $c['logger']->error('Cannot create EntityManager: ' . $e->getMessage());
                     $c['session']->getFlashBag()->add('error', $e->getMessage());
                     return null;
                 }
@@ -220,7 +261,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             // clone existing cache to be able to vary namespace
             $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
             if ($cache instanceof CacheProvider) {
-                $cache->setNamespace($c['config']["appNamespace"] . "_nsurls"); // to avoid collisions
+                $cache->setNamespace($cache->getNamespace() . "nsurls_"); // to avoid collisions
             }
 
             return $cache;

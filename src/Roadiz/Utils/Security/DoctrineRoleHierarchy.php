@@ -33,54 +33,31 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
+/**
+ * Class DoctrineRoleHierarchy
+ * @package RZ\Roadiz\Utils\Security
+ */
 class DoctrineRoleHierarchy extends RoleHierarchy
 {
-    protected $em;
-
     /**
-     * Constructor.
-     *
-     * @param EntityManager $em
+     * DoctrineRoleHierarchy constructor.
+     * @param EntityManager|null $em
      */
     public function __construct(EntityManager $em = null)
     {
-        $this->em = $em;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReachableRoles(array $roles)
-    {
-        if (null === $this->map) {
-            $this->buildRoleMap();
-        }
-
-        return parent::getReachableRoles($roles);
-    }
-
-    protected function buildRoleMap()
-    {
-        $this->map = [];
-
-        if (null !== $this->em) {
+        if (null !== $em) {
             $hierarchy = [
-                Role::ROLE_SUPERADMIN => $this->em->getRepository('RZ\Roadiz\Core\Entities\Role')->getAllBasicRoleName(),
+                Role::ROLE_SUPERADMIN => $em->getRepository('RZ\Roadiz\Core\Entities\Role')->getAllBasicRoleName(),
+                Role::ROLE_BACKEND_USER => ['IS_AUTHENTICATED_ANONYMOUSLY'],
+                Role::ROLE_DEFAULT => ['IS_AUTHENTICATED_ANONYMOUSLY'],
             ];
-
-            foreach ($hierarchy as $main => $roles) {
-                $this->map[$main] = $roles;
-                $visited = array();
-                $additionalRoles = $roles;
-                while ($role = array_shift($additionalRoles)) {
-                    if (!isset($hierarchy[$role])) {
-                        continue;
-                    }
-                    $visited[] = $role;
-                    $this->map[$main] = array_unique(array_merge($this->map[$main], $hierarchy[$role]));
-                    $additionalRoles = array_merge($additionalRoles, array_diff($hierarchy[$role], $visited));
-                }
-            }
+            parent::__construct($hierarchy);
+        } else {
+            parent::__construct([
+                Role::ROLE_SUPERADMIN => [Role::ROLE_BACKEND_USER, Role::ROLE_DEFAULT],
+                Role::ROLE_BACKEND_USER => ['IS_AUTHENTICATED_ANONYMOUSLY'],
+                Role::ROLE_DEFAULT => ['IS_AUTHENTICATED_ANONYMOUSLY'],
+            ]);
         }
     }
 }

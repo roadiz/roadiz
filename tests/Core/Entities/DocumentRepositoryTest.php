@@ -32,15 +32,23 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
-class DocumentRepositoryTest extends KernelDependentCase
+class DocumentRepositoryTest extends SchemaDependentCase
 {
+    /**
+     * @var ArrayCollection
+     */
     private static $documentCollection;
+    /**
+     * @var ArrayCollection
+     */
     private static $folderCollection;
 
     /**
      * @dataProvider testDocumentFoldersProvider
+     * @param $documentFilename
+     * @param $expectedFolderCount
      */
     public function testDocumentFolders($documentFilename, $expectedFolderCount)
     {
@@ -63,6 +71,8 @@ class DocumentRepositoryTest extends KernelDependentCase
 
     /**
      * @dataProvider getByFolderInclusiveProvider
+     * @param $foldersNames
+     * @param $expectedDocumentCount
      */
     public function testGetByFolderInclusive($foldersNames, $expectedDocumentCount)
     {
@@ -94,6 +104,8 @@ class DocumentRepositoryTest extends KernelDependentCase
 
     /**
      * @dataProvider getByFolderExclusiveProvider
+     * @param $foldersNames
+     * @param $expectedDocumentCount
      */
     public function testGetByFolderExclusive($foldersNames, $expectedDocumentCount)
     {
@@ -135,6 +147,7 @@ class DocumentRepositoryTest extends KernelDependentCase
 
         static::$documentCollection = new ArrayCollection();
         static::$folderCollection = new ArrayCollection();
+        $em = Kernel::getService('em');
 
         $folders = [
             'unittest-folder-1',
@@ -148,22 +161,25 @@ class DocumentRepositoryTest extends KernelDependentCase
             ["unittest_document3", ['unittest-folder-1', 'unittest-folder-3', 'unittest-folder-4']],
         ];
 
-        $translation = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findDefault();
+        $translation = new \RZ\Roadiz\Core\Entities\Translation();
+        $translation->setLocale('en');
+        $translation->setName('en');
+        $translation->setAvailable(true);
+        $translation->setDefaultTranslation(true);
+
+        $em->persist($translation);
 
         /*
          * Adding Folders
          */
         foreach ($folders as $value) {
-            $folder = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            $folder = $em->getRepository('RZ\Roadiz\Core\Entities\Folder')
                 ->findOneByFolderName($value);
 
             if (null === $folder) {
                 $folder = new Folder();
                 $folder->setFolderName($value);
-                Kernel::getService('em')->persist($folder);
+                $em->persist($folder);
 
                 static::$folderCollection->add($folder);
             }
@@ -174,19 +190,18 @@ class DocumentRepositoryTest extends KernelDependentCase
          * Adding documents
          */
         foreach ($documents as $value) {
-            $document = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            $document = $em->getRepository('RZ\Roadiz\Core\Entities\Document')
                 ->findOneByFilename($value[0]);
 
             if (null === $document) {
                 $document = new Document();
                 $document->setFilename($value[0]);
-                Kernel::getService('em')->persist($document);
+                $em->persist($document);
 
                 $dt = new DocumentTranslation();
                 $dt->setDocument($document);
                 $dt->setTranslation($translation);
-                Kernel::getService('em')->persist($dt);
+                $em->persist($dt);
 
                 static::$documentCollection->add($document);
             }
@@ -195,34 +210,16 @@ class DocumentRepositoryTest extends KernelDependentCase
              */
             foreach ($value[1] as $folderName) {
                 /** @var Folder $folder */
-                $folder = Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                $folder = $em->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findOneByFolderName($folderName);
                 if (null !== $folder) {
                     $document->addFolder($folder);
                     $folder->addDocument($document);
                 } else {
-                    throw new \RuntimeException("Folder does not exist: " . $folderName, 1);
+                    throw new \PHPUnit_Framework_Exception("Folder does not exist: " . $folderName, 1);
                 }
             }
         }
-        Kernel::getService('em')->flush();
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$documentCollection as $document) {
-            Kernel::getService('em')->remove($document);
-        }
-        foreach (static::$folderCollection as $folder) {
-            Kernel::getService('em')->remove($folder);
-        }
-
-        Kernel::getService('em')->flush();
-
-        parent::tearDownAfterClass();
+        $em->flush();
     }
 }

@@ -4719,8 +4719,8 @@
           <source>you.cant.upload.files.of.this.type</source>
           <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code">
-          <source>server.responded.with.{{statuscode}}.code</source>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statusCode}}.code">
+          <source>server.responded.with.{{statusCode}}.code</source>
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="cancel.upload">
@@ -6375,6 +6375,39 @@
             <source>filename.alreadyExists</source>
             <target></target>
             <note>In document edit page when you rename your file but filename already exists in folder.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="classname">
+            <source>classname</source>
+            <target></target>
+            <note>In node-type edit page, label for the current node-type class name..</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="node-type.parameters">
+            <source>node-type.parameters</source>
+            <target></target>
+            <note>In node-type section, label for the parameters section.</note>
+        </trans-unit>
+        <!-- Custom form nav bar -->
+        <trans-unit xml:space="preserve" id="custom-form.parameters">
+            <source>custom-form.parameters</source>
+            <target></target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="custom-form.fields">
+            <source>custom-form.fields</source>
+            <target></target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="custom-form.answers">
+            <source>custom-form.answers</source>
+            <target></target>
+            <note>In custom form nav bar.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="markdown.preview">
+            <source>markdown.preview</source>
+            <target></target>
+            <note>For markdown.preview button label</note>
         </trans-unit>
     </body>
   </file>

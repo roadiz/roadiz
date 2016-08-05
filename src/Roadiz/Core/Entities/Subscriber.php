@@ -97,7 +97,6 @@ class Subscriber extends AbstractHuman
      */
     public function __construct()
     {
-
     }
 
     /**

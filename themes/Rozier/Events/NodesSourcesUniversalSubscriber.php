@@ -30,12 +30,9 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
+use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -74,88 +71,13 @@ class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
     public function duplicateUniversalContents(FilterNodesSourcesEvent $event)
     {
         $source = $event->getNodeSource();
+
+        $duplicator = new UniversalDataDuplicator($this->em);
         /*
-         * Only if source is default translation.
-         * Non-default translation source should not contain universal fields.
+         * Flush only if duplication happened.
          */
-        if ($source->getTranslation()->isDefaultTranslation()) {
-            $universalFields = $this->em
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-                ->findAllUniversal($source->getNode()->getNodeType());
-
-            if (count($universalFields) > 0) {
-                /** @var NodesSourcesRepository $repository */
-                $repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
-                $otherSources = $repository->findBy([
-                    'node' => $source->getNode(),
-                    'id' => ['!=', $source->getId()],
-                ]);
-
-
-                /** @var NodeTypeField $universalField */
-                foreach ($universalFields as $universalField) {
-                    /** @var NodesSources $otherSource */
-                    foreach ($otherSources as $otherSource) {
-                        if (!$universalField->isVirtual()) {
-                            $this->duplicateNonVirtualField($source, $otherSource, $universalField);
-                        } else {
-                            if ($universalField->getType() == NodeTypeField::DOCUMENTS_T) {
-                                $this->duplicateDocumentsField($source, $otherSource, $universalField);
-                            }
-                        }
-                    }
-                }
-
-                $this->em->flush();
-            }
-        }
-    }
-
-    /**
-     * @param NodesSources $universalSource
-     * @param NodesSources $destSource
-     * @param NodeTypeField $field
-     */
-    protected function duplicateNonVirtualField(NodesSources $universalSource, NodesSources $destSource, NodeTypeField $field)
-    {
-        $getter = $field->getGetterName();
-        $setter = $field->getSetterName();
-
-        $destSource->$setter($universalSource->$getter());
-    }
-
-    /**
-     * @param NodesSources $universalSource
-     * @param NodesSources $destSource
-     * @param NodeTypeField $field
-     */
-    protected function duplicateDocumentsField(NodesSources $universalSource, NodesSources $destSource, NodeTypeField $field)
-    {
-        $newDocuments = $this->em
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
-            ->findBy(['nodeSource' => $universalSource, 'field' => $field]);
-
-        $formerDocuments = $this->em
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
-            ->findBy(['nodeSource' => $destSource, 'field' => $field]);
-
-        /* Delete former documents */
-        if (count($formerDocuments) > 0) {
-            foreach ($formerDocuments as $formerDocument) {
-                $this->em->remove($formerDocument);
-            }
-        }
-        /* Add new documents */
-        if (count($newDocuments) > 0) {
-            /** @var NodesSourcesDocuments $newDocument */
-            $position = 1;
-            foreach ($newDocuments as $newDocument) {
-                $nsDoc = new NodesSourcesDocuments($destSource, $newDocument->getDocument(), $field);
-                $nsDoc->setPosition($position);
-                $position++;
-
-                $this->em->persist($nsDoc);
-            }
+        if (true === $duplicator->duplicateUniversalContents($source)) {
+            $this->em->flush();
         }
     }
 }

@@ -74,12 +74,21 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
             $imageDriver = !empty($c['config']['assetsProcessing']['driver']) ? $c['config']['assetsProcessing']['driver'] : 'gd';
             $defaultQuality = !empty($c['config']['assetsProcessing']['defaultQuality']) ? (int) $c['config']['assetsProcessing']['defaultQuality'] : 90;
+            $pngquantPath = !empty($c['config']['assetsProcessing']['pngquantPath']) ? $c['config']['assetsProcessing']['pngquantPath'] : null;
+            $jpegoptimPath = !empty($c['config']['assetsProcessing']['jpegoptimPath']) ? $c['config']['assetsProcessing']['jpegoptimPath'] : null;
 
             $conf = new Configuration();
             $conf->setCachePath($cacheDir);
             $conf->setImagesPath(ROADIZ_ROOT . '/files');
             $conf->setDriver($imageDriver);
             $conf->setDefaultQuality($defaultQuality);
+
+            if (null !== $pngquantPath) {
+                $conf->setPngquantPath($pngquantPath);
+            }
+            if (null !== $jpegoptimPath) {
+                $conf->setJpegoptimPath($jpegoptimPath);
+            }
 
             return $conf;
         };

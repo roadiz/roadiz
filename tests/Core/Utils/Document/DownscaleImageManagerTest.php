@@ -25,19 +25,18 @@
  */
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- *
+ * Class DownscaleImageManagerTest
  */
-class DownscaleImageManagerTest extends KernelDependentCase
+class DownscaleImageManagerTest extends SchemaDependentCase
 {
     protected static $files;
     protected static $documentCollection;
@@ -142,20 +141,5 @@ class DownscaleImageManagerTest extends KernelDependentCase
         }
 
         Kernel::getService('em')->flush();
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$documentCollection as $document) {
-            $document = Kernel::getService("em")->find("RZ\Roadiz\Core\Entities\Document", $document->getId());
-            Kernel::getService('em')->remove($document);
-        }
-
-        Kernel::getService('em')->flush();
-
-        parent::tearDownAfterClass();
     }
 }

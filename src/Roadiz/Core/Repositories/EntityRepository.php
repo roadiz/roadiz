@@ -256,7 +256,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         $qb->andWhere($res);
 
         return $qb;
-
     }
 
     /**
@@ -363,8 +362,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
             try {
                 return $finalQuery->getSingleScalarResult();
-            } catch (Query\QueryException $e) {
-                return 0;
             } catch (NoResultException $e) {
                 return 0;
             }
@@ -464,10 +461,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         try {
             return $finalQuery->getResult();
-        } catch (Query\QueryException $e) {
-            return null;
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -475,13 +470,12 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param string $pattern  Search pattern
      * @param array  $criteria Additionnal criteria
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return int
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
         $qb = $this->createQueryBuilder('obj');
-        $qb->add('select', 'count(distinct obj.id)');
-
+        $qb->select($qb->expr()->countDistinct('obj.id'));
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         $finalQuery = $qb->getQuery();
@@ -489,10 +483,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 
         try {
             return $finalQuery->getSingleScalarResult();
-        } catch (Query\QueryException $e) {
-            return null;
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 

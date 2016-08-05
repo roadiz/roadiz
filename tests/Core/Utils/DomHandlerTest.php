@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,7 +28,6 @@
  * @file DomHandlerTest.php
  * @author Ambroise Maupate
  */
-
 use RZ\Roadiz\Utils\DomHandler;
 
 /**
@@ -38,6 +37,8 @@ class DomHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getExternalStylesProvider
+     * @param $input
+     * @param $expected
      */
     public function testGetExternalStyles($input, $expected)
     {
@@ -83,6 +84,9 @@ class DomHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider replaceExternalStylesheetsWithStyleProvider
+     * @param $input
+     * @param $style
+     * @param $expected
      */
     public function testReplaceExternalStylesheetsWithStyle($input, $style, $expected)
     {

@@ -27,29 +27,22 @@
  * @file NodeRepositoryTest.php
  * @author Ambroise Maupate
  */
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagTranslation;
-use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
-class NodeRepositoryTest extends KernelDependentCase
+class NodeRepositoryTest extends DefaultThemeDependentCase
 {
-    private static $nodeCollection;
-    private static $tagCollection;
-
     /**
      * @dataProvider getByTagInclusiveProvider
+     * @param $tagsNames
+     * @param $expectedNodeCount
      */
     public function testGetByTagInclusive($tagsNames, $expectedNodeCount)
     {
-        $tags = Kernel::getService('em')
+        $tags = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findByTagName($tagsNames);
 
-        $nodeCount = Kernel::getService('em')
+        $nodeCount = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->countBy([
                 'tags' => $tags,
@@ -73,14 +66,16 @@ class NodeRepositoryTest extends KernelDependentCase
 
     /**
      * @dataProvider getByTagExclusiveProvider
+     * @param $tagsNames
+     * @param $expectedNodeCount
      */
     public function testGetByTagExclusive($tagsNames, $expectedNodeCount)
     {
-        $tags = Kernel::getService('em')
+        $tags = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findByTagName($tagsNames);
 
-        $nodeCount = Kernel::getService('em')
+        $nodeCount = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->countBy([
                 'tags' => $tags,
@@ -112,13 +107,10 @@ class NodeRepositoryTest extends KernelDependentCase
     {
         parent::setUpBeforeClass();
 
-        static::$nodeCollection = new ArrayCollection();
-        static::$tagCollection = new ArrayCollection();
-
-        $type = Kernel::getService('em')
+        $type = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findOneByName('Page');
-        $translation = Kernel::getService('em')
+        $translation = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
@@ -126,8 +118,6 @@ class NodeRepositoryTest extends KernelDependentCase
          * Make this test available only if Page node-type exists.
          */
         if (null !== $type) {
-            $sourceClass = NodeType::getGeneratedEntitiesNamespace() . '\\' . $type->getSourceEntityClassName();
-
             $tags = [
                 'unittest-tag-1',
                 'unittest-tag-2',
@@ -144,48 +134,21 @@ class NodeRepositoryTest extends KernelDependentCase
              * Adding Tags
              */
             foreach ($tags as $value) {
-                $tag = Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                    ->findOneByTagName($value);
-
-                if (null === $tag) {
-                    $tag = new Tag();
-                    $tag->setTagName($value);
-                    Kernel::getService('em')->persist($tag);
-
-                    $tt = new TagTranslation($tag, $translation);
-                    $tt->setName($value);
-                    Kernel::getService('em')->persist($tt);
-
-                    static::$tagCollection->add($tag);
-                }
+                static::createTag($value, $translation);
             }
-            Kernel::getService('em')->flush();
+            static::getManager()->flush();
 
             /*
              * Adding nodes
              */
             foreach ($nodes as $value) {
-                $node = Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findOneByNodeName($value[0]);
+                $node = static::createPageNode($value[0], $translation);
 
-                if (null === $node) {
-                    $node = new Node($type);
-                    $node->setNodeName($value[0]);
-                    Kernel::getService('em')->persist($node);
-
-                    $ns = new $sourceClass($node, $translation);
-                    $ns->setTitle($value[0]);
-                    Kernel::getService('em')->persist($ns);
-
-                    static::$nodeCollection->add($node);
-                }
                 /*
                  * Adding tags
                  */
                 foreach ($value[1] as $tagName) {
-                    $tag = Kernel::getService('em')
+                    $tag = static::getManager()
                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                         ->findOneByTagName($tagName);
                     if (null !== $tag) {
@@ -193,27 +156,7 @@ class NodeRepositoryTest extends KernelDependentCase
                     }
                 }
             }
-            Kernel::getService('em')->flush();
+            static::getManager()->flush();
         }
-    }
-
-    /**
-     * Remove test entities.
-     */
-    public static function tearDownAfterClass()
-    {
-        foreach (static::$nodeCollection as $node) {
-            foreach ($node->getNodeSources() as $ns) {
-                Kernel::getService('em')->remove($ns);
-            }
-            Kernel::getService('em')->remove($node);
-        }
-        foreach (static::$tagCollection as $tag) {
-            Kernel::getService('em')->remove($tag);
-        }
-
-        Kernel::getService('em')->flush();
-
-        parent::tearDownAfterClass();
     }
 }

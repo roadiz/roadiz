@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\UrlAlias;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -48,6 +49,109 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
  */
 class NodeRepository extends EntityRepository
 {
+    /**
+     * Just like the countBy method but with relational criteria.
+     *
+     * @param array                     $criteria
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
+     *
+     * @return int
+     */
+    public function countBy(
+        $criteria,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $query = $this->getCountContextualQueryWithTranslation(
+            $criteria,
+            $translation,
+            $authorizationChecker,
+            $preview
+        );
+        $finalQuery = $query->getQuery();
+        $this->applyFilterByTag($criteria, $finalQuery);
+        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyTranslationByTag($finalQuery, $translation);
+
+        try {
+            return $finalQuery->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Create a securized count query with node.published = true if user is
+     * not a Backend user and if authorizationChecker is defined.
+     *
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                     $criteria
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
+     *
+     * @return QueryBuilder
+     */
+    protected function getCountContextualQueryWithTranslation(
+        array &$criteria,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select($qb->expr()->countDistinct('n.id'));
+
+        $this->filterByTranslation($criteria, $qb, $translation);
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        return $qb;
+    }
+
+    /**
+     * Create filters according to any translation criteria OR argument.
+     *
+     * @param array            $criteria
+     * @param QueryBuilder     $qb
+     * @param Translation|null $translation
+     */
+    protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
+    {
+        if (isset($criteria['translation']) ||
+            isset($criteria['translation.locale']) ||
+            isset($criteria['translation.id']) ||
+            isset($criteria['translation.available'])) {
+            $qb->innerJoin('n.nodeSources', 'ns');
+            $qb->innerJoin('ns.translation', 't');
+        } else {
+            if (null !== $translation) {
+                /*
+                 * With a given translation
+                 */
+                $qb->innerJoin(
+                    'n.nodeSources',
+                    'ns',
+                    'WITH',
+                    'ns.translation = :translation'
+                );
+            } else {
+                /*
+                 * With a null translation, not filter by translation to enable
+                 * nodes with only one translation which is not the default one.
+                 */
+                $qb->innerJoin('n.nodeSources', 'ns');
+            }
+        }
+    }
+
     /**
      * Add a tag filtering to queryBuilder.
      *
@@ -62,7 +166,7 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Reimplementing findBy features… with extra things
+     * Reimplementing findBy features… with extra things.
      *
      * * key => array('<=', $value)
      * * key => array('<', $value)
@@ -116,25 +220,6 @@ class NodeRepository extends EntityRepository
             $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
     }
-    /**
-     * Bind parameters to generated query.
-     *
-     * @param array $criteria
-     * @param Query $finalQuery
-     */
-    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
-    {
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-            if ($key == "tags" || $key == "tagExclusive") {
-                continue;
-            }
-
-            $this->applyComparison($key, $value, $finalQuery);
-        }
-    }
 
     /**
      * Bind tag parameter to final query
@@ -158,16 +243,34 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Bind translation parameter to final query
+     * Bind parameters to generated query.
      *
-     * @param array            $criteria
-     * @param Query            $finalQuery
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    {
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+            if ($key == "tags" || $key == "tagExclusive") {
+                continue;
+            }
+
+            $this->applyComparison($key, $value, $finalQuery);
+        }
+    }
+
+    /**
+     * Bind translation parameter to final query.
+     *
+     * @param Query $finalQuery
      * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
-        array &$criteria,
-        &$finalQuery,
-        &$translation = null
+        Query $finalQuery,
+        Translation $translation = null
     ) {
         if (null !== $translation) {
             $finalQuery->setParameter('translation', $translation);
@@ -175,75 +278,11 @@ class NodeRepository extends EntityRepository
     }
 
     /**
-     * Create filters according to any translation criteria OR argument.
+     * Just like the findBy method but with a given Translation and optional
+     * AuthorizationChecker.
      *
-     * @param array            $criteria
-     * @param QueryBuilder     $qb
-     * @param Translation|null $translation
-     */
-    protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
-    {
-        if (isset($criteria['translation']) ||
-            isset($criteria['translation.locale']) ||
-            isset($criteria['translation.id']) ||
-            isset($criteria['translation.available'])) {
-            $qb->innerJoin('n.nodeSources', 'ns');
-            $qb->innerJoin('ns.translation', 't');
-        } else {
-            if (null !== $translation) {
-                /*
-                 * With a given translation
-                 */
-                $qb->innerJoin(
-                    'n.nodeSources',
-                    'ns',
-                    'WITH',
-                    'ns.translation = :translation'
-                );
-            } else {
-                /*
-                 * With a null translation, not filter by translation to enable
-                 * nodes with only one translation which is not the default one.
-                 */
-                $qb->innerJoin('n.nodeSources', 'ns');
-            }
-        }
-    }
-
-    /**
-     * @param array                     $criteria
-     * @param QueryBuilder              $qb
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param boolean                   $preview
-     */
-    protected function filterByAuthorizationChecker(
-        &$criteria,
-        &$qb,
-        AuthorizationChecker &$authorizationChecker = null,
-        $preview = false
-    ) {
-        $backendUser = null !== $authorizationChecker &&
-        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER) &&
-            $preview === true;
-
-        if ($backendUser) {
-            /*
-             * Forbid deleted node for anonymous and backend users.
-             */
-            $qb->andWhere($qb->expr()->lte('n.status', Node::PUBLISHED));
-        } elseif (null !== $authorizationChecker) {
-            /*
-             * Forbid unpublished node for anonymous and not backend users.
-             */
-            $qb->andWhere($qb->expr()->eq('n.status', Node::PUBLISHED));
-        }
-    }
-
-    /**
-     * Create a securized query with node.published = true if user is
-     * not a Backend user and if authorizationChecker is defined.
-     *
-     * This method allows to pre-filter Nodes with a given translation.
+     * If no translation nor authorizationChecker is given, the vanilla `findBy`
+     * method will be called instead.
      *
      * @param array                     $criteria
      * @param array|null                $orderBy
@@ -251,81 +290,27 @@ class NodeRepository extends EntityRepository
      * @param integer|null              $offset
      * @param Translation|null          $translation
      * @param AuthorizationChecker|null $authorizationChecker
-     * @param boolean                   $preview
      *
-     * @return QueryBuilder
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    protected function getContextualQueryWithTranslation(
-        array &$criteria,
-        array &$orderBy = null,
+    public function findByWithTranslation(
+        array $criteria,
+        array $orderBy = null,
         $limit = null,
         $offset = null,
         Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        AuthorizationChecker $authorizationChecker = null
     ) {
-
-        $qb = $this->createQueryBuilder('n');
-        $qb->add('select', 'n, ns');
-
-        $this->filterByTranslation($criteria, $qb, $translation);
-
-        /*
-         * Filtering by tag
-         */
-        $this->filterByTag($criteria, $qb);
-        $this->filterByCriteria($criteria, $qb);
-        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
-
-        // Add ordering
-        if (null !== $orderBy) {
-            foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('n.' . $key, $value);
-            }
-        }
-        if (null !== $offset) {
-            $qb->setFirstResult($offset);
-        }
-        if (null !== $limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        return $qb;
+        return $this->findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            $translation,
+            $authorizationChecker
+        );
     }
 
-    /**
-     * Create a securized count query with node.published = true if user is
-     * not a Backend user and if authorizationChecker is defined.
-     *
-     * This method allows to pre-filter Nodes with a given translation.
-     *
-     * @param array                     $criteria
-     * @param Translation|null          $translation
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param boolean                   $preview
-     *
-     * @return QueryBuilder
-     */
-    protected function getCountContextualQueryWithTranslation(
-        array &$criteria,
-        Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-
-        $qb = $this->createQueryBuilder('n');
-        $qb->select($qb->expr()->countDistinct('n.id'));
-
-        $this->filterByTranslation($criteria, $qb, $translation);
-        /*
-         * Filtering by tag
-         */
-        $this->filterByTag($criteria, $qb);
-        $this->filterByCriteria($criteria, $qb);
-        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
-
-        return $qb;
-    }
     /**
      * Just like the findBy method but with relational criteria.
      *
@@ -384,7 +369,7 @@ class NodeRepository extends EntityRepository
 
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyTranslationByTag($finalQuery, $translation);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -401,6 +386,87 @@ class NodeRepository extends EntityRepository
             }
         }
     }
+
+    /**
+     * Create a securized query with node.published = true if user is
+     * not a Backend user and if authorizationChecker is defined.
+     *
+     * This method allows to pre-filter Nodes with a given translation.
+     *
+     * @param array                     $criteria
+     * @param array|null                $orderBy
+     * @param integer|null              $limit
+     * @param integer|null              $offset
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param boolean                   $preview
+     *
+     * @return QueryBuilder
+     */
+    protected function getContextualQueryWithTranslation(
+        array &$criteria,
+        array &$orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns');
+
+        $this->filterByTranslation($criteria, $qb, $translation);
+
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        // Add ordering
+        if (null !== $orderBy) {
+            foreach ($orderBy as $key => $value) {
+                $qb->addOrderBy('n.' . $key, $value);
+            }
+        }
+        if (null !== $offset) {
+            $qb->setFirstResult($offset);
+        }
+        if (null !== $limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb;
+    }
+
+    /**
+     * Just like the findOneBy method but with a given Translation and optional
+     * AuthorizationChecker.
+     *
+     * If no translation nor authorizationChecker is given, the vanilla `findOneBy`
+     * method will be called instead.
+     *
+     * @param array                     $criteria
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     *
+     * @return Node|null
+     */
+    public function findOneByWithTranslation(
+        array $criteria,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null
+    ) {
+        return $this->findOneBy(
+            $criteria,
+            null,
+            $translation,
+            $authorizationChecker
+        );
+    }
+
     /**
      * Just like the findOneBy method but with relational criteria.
      *
@@ -434,105 +500,13 @@ class NodeRepository extends EntityRepository
 
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyTranslationByTag($finalQuery, $translation);
 
         try {
             return $finalQuery->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
-    }
-    /**
-     * Just like the countBy method but with relational criteria.
-     *
-     * @param array                     $criteria
-     * @param Translation|null          $translation
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param boolean                   $preview
-     *
-     * @return int
-     */
-    public function countBy(
-        $criteria,
-        Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-        $query = $this->getCountContextualQueryWithTranslation(
-            $criteria,
-            $translation,
-            $authorizationChecker,
-            $preview
-        );
-        $finalQuery = $query->getQuery();
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
-
-        try {
-            return $finalQuery->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-    /**
-     * Just like the findBy method but with a given Translation and optional
-     * AuthorizationChecker.
-     *
-     * If no translation nor authorizationChecker is given, the vanilla `findBy`
-     * method will be called instead.
-     *
-     * @param array                     $criteria
-     * @param array|null                $orderBy
-     * @param integer|null              $limit
-     * @param integer|null              $offset
-     * @param Translation|null          $translation
-     * @param AuthorizationChecker|null $authorizationChecker
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function findByWithTranslation(
-        array $criteria,
-        array $orderBy = null,
-        $limit = null,
-        $offset = null,
-        Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
-    ) {
-        return $this->findBy(
-            $criteria,
-            $orderBy,
-            $limit,
-            $offset,
-            $translation,
-            $authorizationChecker
-        );
-    }
-
-    /**
-     * Just like the findOneBy method but with a given Translation and optional
-     * AuthorizationChecker.
-     *
-     * If no translation nor authorizationChecker is given, the vanilla `findOneBy`
-     * method will be called instead.
-     *
-     * @param array                     $criteria
-     * @param Translation|null          $translation
-     * @param AuthorizationChecker|null $authorizationChecker
-     *
-     * @return Node|null
-     */
-    public function findOneByWithTranslation(
-        array $criteria,
-        Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
-    ) {
-        return $this->findOneBy(
-            $criteria,
-            null,
-            $translation,
-            $authorizationChecker
-        );
     }
 
     /**
@@ -552,420 +526,19 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            WHERE n.id = :nodeId AND ns.translation = :translation';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId)
             ->setParameter('translation', $translation);
 
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
         try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Find one Node with its Id and the default translation.
-     *
-     * @param integer                   $nodeId
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return Node|null
-     */
-    public function findWithDefaultTranslation(
-        $nodeId,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.translation t
-            WHERE n.id = :nodeId AND t.defaultTranslation = true';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setMaxResults(1)
-            ->setParameter('nodeId', (int) $nodeId);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Find one Node with its nodeName and a given translation.
-     *
-     * @param string                    $nodeName
-     * @param Translation               $translation
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return Node|null
-     */
-    public function findByNodeNameWithTranslation(
-        $nodeName,
-        Translation $translation,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            WHERE n.nodeName = :nodeName AND ns.translation = :translation';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setMaxResults(1)
-            ->setParameter('nodeName', $nodeName)
-            ->setParameter('translation', $translation);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Find one Node with its nodeName and the default translation.
-     *
-     * @param string                    $nodeName
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return Node|null
-     */
-    public function findByNodeNameWithDefaultTranslation(
-        $nodeName,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.translation t
-            WHERE n.nodeName = :nodeName AND t.defaultTranslation = true';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setMaxResults(1)
-            ->setParameter('nodeName', $nodeName);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Find the Home node with a given translation.
-     *
-     * @param Translation|null          $translation
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return Node|null
-     */
-    public function findHomeWithTranslation(
-        Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-
-        if (null === $translation) {
-            return $this->findHomeWithDefaultTranslation($authorizationChecker);
-        }
-
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            WHERE n.home = true AND ns.translation = :translation';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setMaxResults(1)
-            ->setParameter('translation', $translation);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Find the Home node with the default translation.
-     *
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean $preview
-     *
-     * @return Node|null
-     */
-    public function findHomeWithDefaultTranslation(
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.translation t
-            WHERE n.home = true AND t.defaultTranslation = true';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)->setMaxResults(1);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node                      $node
-     * @param Translation               $translation
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getChildrenWithTranslation(
-        Node $node,
-        Translation $translation,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            WHERE n.parent = :node AND ns.translation = :translation';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setParameter('node', $node)
-            ->setParameter('translation', $translation);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Translation               $translation
-     * @param Node                      $parent
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function findByParentWithTranslation(
-        Translation $translation,
-        Node $parent = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-                     INNER JOIN n.nodeSources ns
-                     INNER JOIN ns.translation t';
-
-        if ($parent === null) {
-            $txtQuery .= PHP_EOL . 'WHERE n.parent IS NULL';
-        } else {
-            $txtQuery .= PHP_EOL . 'WHERE n.parent = :parent';
-        }
-
-        $txtQuery .= ' AND t.id = :translation_id';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $txtQuery .= ' ORDER BY n.position ASC';
-
-        if ($parent === null) {
-            $query = $this->_em->createQuery($txtQuery)
-                ->setParameter('translation_id', (int) $translation->getId());
-        } else {
-            $query = $this->_em->createQuery($txtQuery)
-                ->setParameter('parent', $parent)
-                ->setParameter('translation_id', (int) $translation->getId());
-        }
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node                      $parent
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean                   $preview
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function findByParentWithDefaultTranslation(
-        Node $parent = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-        $txtQuery = 'SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-                     INNER JOIN n.nodeSources ns
-                     INNER JOIN ns.translation t';
-
-        if ($parent === null) {
-            $txtQuery .= PHP_EOL . 'WHERE n.parent IS NULL';
-        } else {
-            $txtQuery .= PHP_EOL . 'WHERE n.parent = :parent';
-        }
-
-        $txtQuery .= ' AND t.defaultTranslation = true';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $txtQuery .= ' ORDER BY n.position ASC';
-
-        if ($parent === null) {
-            $query = $this->_em->createQuery($txtQuery);
-        } else {
-            $query = $this->_em->createQuery($txtQuery)
-                ->setParameter('parent', $parent);
-        }
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param \RZ\Roadiz\Core\Entities\UrlAlias $urlAlias
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean $preview
-     *
-     * @return Node|null
-     */
-    public function findOneWithUrlAlias(
-        $urlAlias,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-        $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.urlAliases uas
-            INNER JOIN ns.translation t
-            WHERE uas.id = :urlalias_id';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setParameter('urlalias_id', (int) $urlAlias->getId());
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param string $urlAliasAlias
-     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
-     * will be request or with a lower status
-     * @param boolean $preview
-     *
-     * @return Node|null
-     */
-    public function findOneWithAliasAndAvailableTranslation(
-        $urlAliasAlias,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
-    ) {
-        $txtQuery = 'SELECT n, ns, t FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ns.urlAliases uas
-            INNER JOIN ns.translation t
-            WHERE uas.alias = :alias
-            AND t.available = true';
-
-        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
-
-        $query = $this->_em->createQuery($txtQuery)
-            ->setParameter('alias', $urlAliasAlias);
-
-        if (null !== $authorizationChecker) {
-            $query->setParameter('status', Node::PUBLISHED);
-        }
-
-        try {
-            return $query->getSingleResult();
+            return $qb->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -1000,6 +573,768 @@ class NodeRepository extends EntityRepository
         }
 
         return $txtQuery;
+    }
+
+    /**
+     * Find one Node with its Id and the default translation.
+     *
+     * @param integer                   $nodeId
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     * @param boolean                   $preview
+     *
+     * @return Node|null
+     */
+    public function findWithDefaultTranslation(
+        $nodeId,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ns.translation', 't')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
+            ->setMaxResults(1)
+            ->setParameter('nodeId', (int) $nodeId)
+            ->setParameter('defaultTranslation', true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Find one Node with its nodeName and a given translation.
+     *
+     * @param string                    $nodeName
+     * @param Translation               $translation
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     * @param boolean                   $preview
+     *
+     * @return Node|null
+     */
+    public function findByNodeNameWithTranslation(
+        $nodeName,
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setMaxResults(1)
+            ->setParameter('nodeName', $nodeName)
+            ->setParameter('translation', $translation);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Find one Node with its nodeName and the default translation.
+     *
+     * @param string                    $nodeName
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     * @param boolean                   $preview
+     * @return Node|null
+     */
+    public function findByNodeNameWithDefaultTranslation(
+        $nodeName,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ns.translation', 't')
+            ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
+            ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
+            ->setMaxResults(1)
+            ->setParameter('nodeName', $nodeName)
+            ->setParameter('defaultTranslation', true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Find the Home node with a given translation.
+     *
+     * @param Translation|null          $translation
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     * @param boolean                   $preview
+     * @return Node|null
+     */
+    public function findHomeWithTranslation(
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        if (null === $translation) {
+            return $this->findHomeWithDefaultTranslation($authorizationChecker);
+        }
+
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->andWhere($qb->expr()->eq('n.home', ':home'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setMaxResults(1)
+            ->setParameter('home', true)
+            ->setParameter('translation', $translation);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Find the Home node with the default translation.
+     *
+     * @param AuthorizationChecker|null $authorizationChecker When not null, only PUBLISHED node
+     * will be request or with a lower status
+     * @param boolean $preview
+     * @return Node|null
+     */
+    public function findHomeWithDefaultTranslation(
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ns.translation', 't')
+            ->andWhere($qb->expr()->eq('n.home', ':home'))
+            ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
+            ->setMaxResults(1)
+            ->setParameter('home', true)
+            ->setParameter('defaultTranslation', true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array
+     * @deprecated Use findByParentWithTranslation instead
+     */
+    public function getChildrenWithTranslation(
+        Node $node,
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByParentWithTranslation($translation, $node, $authorizationChecker, $preview);
+    }
+
+    /**
+     * @param Translation $translation
+     * @param Node|null $parent
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array
+     */
+    public function findByParentWithTranslation(
+        Translation $translation,
+        Node $parent = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->setParameter('translation', $translation)
+            ->addOrderBy('n.position', 'ASC');
+
+        if ($parent === null) {
+            $qb->andWhere($qb->expr()->isNull('n.parent'));
+        } else {
+            $qb->andWhere($qb->expr()->eq('n.parent', ':parent'))
+                ->setParameter('parent', $parent);
+        }
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node|null $parent
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array
+     */
+    public function findByParentWithDefaultTranslation(
+        Node $parent = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ns.translation', 't')
+            ->andWhere($qb->expr()->eq('t.defaultTranslation', true))
+            ->addOrderBy('n.position', 'ASC');
+
+        if ($parent === null) {
+            $qb->andWhere($qb->expr()->isNull('n.parent'));
+        } else {
+            $qb->andWhere($qb->expr()->eq('n.parent', ':parent'))
+                ->setParameter('parent', $parent);
+        }
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param UrlAlias $urlAlias
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return Node|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneWithUrlAlias(
+        UrlAlias $urlAlias,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->andWhere($qb->expr()->eq('ns.urlAliases', ':urlAlias'))
+            ->setParameter('urlAlias', $urlAlias)
+            ->setMaxResults(1);
+
+        $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param $urlAliasAlias
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return Node|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneWithAliasAndAvailableTranslation(
+        $urlAliasAlias,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns, t')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ns.urlAliases', 'uas')
+            ->innerJoin('ns.translation', 't')
+            ->andWhere($qb->expr()->eq('uas.alias', ':alias'))
+            ->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->setParameter('alias', $urlAliasAlias)
+            ->setParameter('available', true)
+            ->setMaxResults(1);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @param string $prefix
+     * @return QueryBuilder
+     */
+    protected function alterQueryBuilderWithAuthorizationChecker(
+        QueryBuilder $qb,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false,
+        $prefix = 'n'
+    ) {
+        if (null !== $authorizationChecker) {
+            $backendUser = $preview === true &&
+                null !== $authorizationChecker &&
+                $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+
+            if ($backendUser) {
+                $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
+            } else {
+                $qb->andWhere($qb->expr()->eq($prefix . '.status', Node::PUBLISHED));
+            }
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param $nodeName
+     * @return bool
+     */
+    public function exists($nodeName)
+    {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select($qb->expr()->countDistinct('n.nodeName'))
+            ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
+            ->setParameter('nodeName', $nodeName);
+
+        try {
+            return (boolean) $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param NodeTypeField $field
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByNodeAndField(
+        Node $node,
+        NodeTypeField $field,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByNodeAndFieldName(
+            $node,
+            $field->getName(),
+            $authorizationChecker,
+            $preview
+        );
+    }
+
+    /**
+     * @param Node $node
+     * @param $fieldName
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByNodeAndFieldName(
+        Node $node,
+        $fieldName,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        $qb->setParameter('name', $fieldName)
+            ->setParameter('nodeA', $node);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param NodeTypeField $field
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByNodeAndFieldAndTranslation(
+        Node $node,
+        NodeTypeField $field,
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByNodeAndFieldNameAndTranslation(
+            $node,
+            $field->getName(),
+            $translation,
+            $authorizationChecker,
+            $preview
+        );
+    }
+
+    /**
+     * @param Node $node
+     * @param $fieldName
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByNodeAndFieldNameAndTranslation(
+        Node $node,
+        $fieldName,
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        $qb->setParameter('name', $fieldName)
+            ->setParameter('nodeA', $node)
+            ->setParameter('translation', $translation);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param NodeTypeField $field
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
+     * @return array
+     */
+    public function findByReverseNodeAndField(
+        Node $node,
+        NodeTypeField $field,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByReverseNodeAndFieldName(
+            $node,
+            $field->getName(),
+            $authorizationChecker,
+            $preview
+        );
+    }
+
+    /**
+     * @param Node $node
+     * @param string $fieldName
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
+     * @return array
+     */
+    public function findByReverseNodeAndFieldName(
+        Node $node,
+        $fieldName,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n')
+            ->innerJoin('n.bNodes', 'ntn')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        $qb->setParameter('name', $fieldName)
+            ->setParameter('nodeB', $node);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @param NodeTypeField $field
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByReverseNodeAndFieldAndTranslation(
+        Node $node,
+        NodeTypeField $field,
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        return $this->findByReverseNodeAndFieldNameAndTranslation(
+            $node,
+            $field->getName(),
+            $translation,
+            $authorizationChecker,
+            $preview
+        );
+    }
+
+    /**
+     * @param Node $node
+     * @param $fieldName
+     * @param Translation $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findByReverseNodeAndFieldNameAndTranslation(
+        Node $node,
+        $fieldName,
+        Translation $translation,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select('n, ns')
+            ->innerJoin('n.bNodes', 'ntn')
+            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
+            ->addOrderBy('ntn.position', 'ASC');
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
+
+        $qb->setParameter('name', $fieldName)
+            ->setParameter('translation', $translation)
+            ->setParameter('nodeB', $node);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAllOffspringIdByNode(Node $node)
+    {
+        $theOffprings = [];
+        $in = [$node->getId()];
+
+        do {
+            $theOffprings = array_merge($theOffprings, $in);
+            $query = $this->_em->createQuery('
+                SELECT n.id FROM RZ\Roadiz\Core\Entities\Node n
+                WHERE n.parent IN (:tab)')
+                ->setParameter('tab', $in);
+            $result = $query->getScalarResult();
+            $in = [];
+
+            //For memory optimizations
+            foreach ($result as $item) {
+                $in[] = (int) $item['id'];
+            }
+        } while (!empty($in));
+        return $theOffprings;
+    }
+
+    /**
+     * Find all node’ parents with criteria and ordering.
+     *
+     * @param Node $node
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param integer $limit
+     * @param integer $offset
+     * @param Translation|null $translation
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return array|null
+     */
+    public function findAllNodeParentsBy(
+        Node $node,
+        array $criteria,
+        array $orderBy = null,
+        $limit = null,
+        $offset = null,
+        Translation $translation = null,
+        AuthorizationChecker $authorizationChecker = null,
+        $preview = false
+    ) {
+
+        $parentsId = $this->findAllParentsIdByNode($node);
+        if (count($parentsId) > 0) {
+            $criteria['id'] = $parentsId;
+        } else {
+            return null;
+        }
+
+        return $this->findBy(
+            $criteria,
+            $orderBy,
+            $limit,
+            $offset,
+            $translation,
+            $authorizationChecker,
+            $preview
+        );
+    }
+
+    /**
+     * @param Node $node
+     *
+     * @return array
+     */
+    public function findAllParentsIdByNode(Node $node)
+    {
+        $theParents = [];
+        $parent = $node->getParent();
+
+        while (null !== $parent) {
+            $theParents[] = $parent->getId();
+            $parent = $parent->getParent();
+        }
+
+        return $theParents;
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAvailableTranslationForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->innerJoin('t.nodeSources', 'ns')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->setParameter('nodeId', $node->getId());
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findUnavailableTranslationForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findAvailableTranslationIdForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t.id')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->innerJoin('t.nodeSources', 'ns')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
+            ->setParameter('nodeId', $node->getId());
+
+        try {
+            $complexArray = $qb->getQuery()->getScalarResult();
+            return array_map('current', $complexArray);
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function findUnavailableTranslationIdForNode(Node $node)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('t.id')
+            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+
+        try {
+            $complexArray = $qb->getQuery()->getScalarResult();
+            return array_map('current', $complexArray);
+        } catch (NoResultException $e) {
+            return [];
+        }
     }
 
     /**
@@ -1081,404 +1416,5 @@ class NodeRepository extends EntityRepository
         }
 
         return $qb;
-    }
-
-    /**
-     * @param string $nodeName
-     *
-     * @return boolean
-     */
-    public function exists($nodeName)
-    {
-        $query = $this->_em->createQuery('
-            SELECT COUNT(n.nodeName) FROM RZ\Roadiz\Core\Entities\Node n
-            WHERE n.nodeName = :node_name')
-            ->setParameter('node_name', $nodeName);
-
-        try {
-            return (boolean) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param Node          $node
-     * @param NodeTypeField $field
-     *
-     * @return array
-     */
-    public function findByNodeAndField($node, NodeTypeField $field)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            WHERE ntn.field = :field AND ntn.nodeA = :nodeA
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeA', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node   $node
-     * @param string $fieldName
-     *
-     * @return array
-     */
-    public function findByNodeAndFieldName($node, $fieldName)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            INNER JOIN ntn.field f
-            WHERE f.name = :name AND ntn.nodeA = :nodeA
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
-            ->setParameter('nodeA', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node          $node
-     * @param NodeTypeField $field
-     * @param Translation   $translation
-     *
-     * @return array
-     */
-    public function findByNodeAndFieldAndTranslation(
-        Node $node,
-        NodeTypeField $field,
-        Translation $translation
-    ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            INNER JOIN n.nodeSources ns
-            WHERE ntn.field = :field
-            AND ntn.nodeA = :nodeA
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeA', $node)
-            ->setParameter('translation', $translation);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node        $node
-     * @param string      $fieldName
-     * @param Translation $translation
-     *
-     * @return array
-     */
-    public function findByNodeAndFieldNameAndTranslation(
-        Node $node,
-        $fieldName,
-        Translation $translation
-    ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.aNodes ntn
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ntn.field f
-            WHERE f.name = :name
-            AND ntn.nodeA = :nodeA
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
-            ->setParameter('nodeA', $node)
-            ->setParameter('translation', $translation);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node          $node
-     * @param NodeTypeField $field
-     *
-     * @return array
-     */
-    public function findByReverseNodeAndField($node, NodeTypeField $field)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            WHERE ntn.field = :field AND ntn.nodeB = :nodeB
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeB', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node   $node
-     * @param string $fieldName
-     *
-     * @return array
-     */
-    public function findByReverseNodeAndFieldName($node, $fieldName)
-    {
-        $query = $this->_em->createQuery('
-            SELECT n FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            INNER JOIN ntn.field f
-            WHERE f.name = :name AND ntn.nodeB = :nodeB
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
-            ->setParameter('nodeB', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node          $node
-     * @param NodeTypeField $field
-     * @param Translation   $translation
-     *
-     * @return array
-     */
-    public function findByReverseNodeAndFieldAndTranslation(
-        Node $node,
-        NodeTypeField $field,
-        Translation $translation
-    ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            INNER JOIN n.nodeSources ns
-            WHERE ntn.field = :field
-            AND ntn.nodeB = :nodeB
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('field', $field)
-            ->setParameter('nodeB', $node)
-            ->setParameter('translation', $translation);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node        $node
-     * @param string      $fieldName
-     * @param Translation $translation
-     *
-     * @return array
-     */
-    public function findByReverseNodeAndFieldNameAndTranslation(
-        Node $node,
-        $fieldName,
-        Translation $translation
-    ) {
-        $query = $this->_em->createQuery('
-            SELECT n, ns FROM RZ\Roadiz\Core\Entities\Node n
-            INNER JOIN n.bNodes ntn
-            INNER JOIN n.nodeSources ns
-            INNER JOIN ntn.field f
-            WHERE f.name = :name
-            AND ntn.nodeB = :nodeB
-            AND ns.translation = :translation
-            ORDER BY ntn.position ASC')
-            ->setParameter('name', (string) $fieldName)
-            ->setParameter('nodeB', $node)
-            ->setParameter('translation', $translation);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param Node $node
-     *
-     * @return array
-     */
-    public function findAllOffspringIdByNode(Node $node)
-    {
-        $theOffprings = [];
-        $in = [$node->getId()];
-
-        do {
-            $theOffprings = array_merge($theOffprings, $in);
-            $query = $this->_em->createQuery('
-                SELECT n.id FROM RZ\Roadiz\Core\Entities\Node n
-                WHERE n.parent IN (:tab)')
-                ->setParameter('tab', $in);
-            $result = $query->getScalarResult();
-            $in = [];
-
-            //For memory optimizations
-            foreach ($result as $item) {
-                $in[] = (int) $item['id'];
-            }
-        } while (!empty($in));
-        return $theOffprings;
-    }
-
-    /**
-     * @param Node $node
-     *
-     * @return array
-     */
-    public function findAllParentsIdByNode(Node $node)
-    {
-        $theParents = [];
-        $parent = $node->getParent();
-
-        while (null !== $parent) {
-            $theParents[] = $parent->getId();
-            $parent = $parent->getParent();
-        }
-
-        return $theParents;
-    }
-
-    /**
-     * Find all node’ parents with criteria and ordering.
-     *
-     * @param  Node                      $node
-     * @param  array                     $criteria
-     * @param  array|null                $orderBy
-     * @param  integer                   $limit
-     * @param  integer                   $offset
-     * @param  Translation|null          $translation
-     * @param  AuthorizationChecker|null $authorizationChecker
-     *
-     * @return array|null
-     */
-    public function findAllNodeParentsBy(
-        Node $node,
-        array $criteria,
-        array $orderBy = null,
-        $limit = null,
-        $offset = null,
-        Translation $translation = null,
-        AuthorizationChecker $authorizationChecker = null
-    ) {
-
-        $parentsId = $this->findAllParentsIdByNode($node);
-        if (count($parentsId) > 0) {
-            $criteria['id'] = $parentsId;
-        } else {
-            return null;
-        }
-
-        return $this->findBy(
-            $criteria,
-            $orderBy,
-            $limit,
-            $offset,
-            $translation,
-            $authorizationChecker
-        );
-    }
-
-
-    /**
-     * @param Node $node
-     * @return array
-     */
-    public function findAvailableTranslationForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('t')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
-            ->innerJoin('t.nodeSources', 'ns')
-            ->innerJoin('ns.node', 'n')
-            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
-            ->setParameter('nodeId', $node->getId());
-
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
-    }
-
-    /**
-     * @param Node $node
-     * @return array
-     */
-    public function findAvailableTranslationIdForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
-            ->innerJoin('t.nodeSources', 'ns')
-            ->innerJoin('ns.node', 'n')
-            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
-            ->setParameter('nodeId', $node->getId());
-
-        try {
-            $complexArray = $qb->getQuery()->getScalarResult();
-            return array_map('current', $complexArray);
-        } catch (NoResultException $e) {
-            return [];
-        }
-    }
-
-    /**
-     * @param Node $node
-     * @return array
-     */
-    public function findUnavailableTranslationForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('t')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
-            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
-            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
-
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
-    }
-
-    /**
-     * @param Node $node
-     * @return array
-     */
-    public function findUnavailableTranslationIdForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
-            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
-            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
-
-        try {
-            $complexArray = $qb->getQuery()->getScalarResult();
-            return array_map('current', $complexArray);
-        } catch (NoResultException $e) {
-            return [];
-        }
     }
 }

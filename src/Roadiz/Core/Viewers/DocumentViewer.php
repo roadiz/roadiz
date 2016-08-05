@@ -56,7 +56,6 @@ class DocumentViewer implements ViewableInterface
     public function __construct(Document $document)
     {
         $this->document = $document;
-
     }
 
     /**
@@ -209,7 +208,7 @@ class DocumentViewer implements ViewableInterface
         ) {
             $assignation['alt'] = $this->document->getDocumentTranslations()->first()->getName();
         } else {
-            $assignation['alt'] = $this->document->getFileName();
+            $assignation['alt'] = $this->document->getFilename();
         }
 
         if (isset($args['embed']) &&
@@ -301,7 +300,7 @@ class DocumentViewer implements ViewableInterface
      */
     public function getSourcesFiles()
     {
-        $basename = pathinfo($this->document->getFileName());
+        $basename = pathinfo($this->document->getFilename());
         $basename = $basename['filename'];
 
         $sources = [];
@@ -325,7 +324,7 @@ class DocumentViewer implements ViewableInterface
         }
 
         $sourcesDocs = Kernel::getService('em')
-            ->getRepository("RZ\Roadiz\Core\Entities\Document")
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findBy(["filename" => $sourcesDocsName]);
 
         foreach ($sourcesDocs as $source) {

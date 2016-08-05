@@ -28,6 +28,9 @@ install:
   - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.yml conf/config.yml; fi"
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
+
+
+script:
   - php bin/roadiz orm:schema-tool:create -n --env=install
   - php bin/roadiz install -n --env=install
   - php bin/roadiz themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
@@ -37,9 +40,8 @@ install:
   - php bin/roadiz themes:install -n --nodes "Themes\\DefaultTheme\\DefaultThemeApp"
   - php bin/roadiz cache:clear --env=install
   - php bin/roadiz cache:clear --env=test
-
-script:
-  - ENABLE_SECOND_LEVEL_CACHE=0 bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
+  - php bin/roadiz orm:schema-tool:drop --force
+  - ENABLE_SECOND_LEVEL_CACHE=0 php bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
   - bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore=*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/* -p ./
 
 after_success:

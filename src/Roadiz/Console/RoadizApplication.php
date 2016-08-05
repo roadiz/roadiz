@@ -63,6 +63,7 @@ class RoadizApplication extends Application
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
         $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
+        $this->getDefinition()->addOption(new InputOption('--preview', null, InputOption::VALUE_NONE, 'Preview mode.'));
         $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
         // Use default Doctrine commands
         ConsoleRunner::addCommands($this);
@@ -98,6 +99,8 @@ class RoadizApplication extends Application
             new NodesCommand(),
             new NodesCreationCommand(),
             new NodesDetailsCommand(),
+            new NodesCleanNamesCommand(),
+            new NodeApplyUniversalFieldsCommand(),
             new ThemesCommand(),
             new InstallCommand(),
             new UsersCommand(),

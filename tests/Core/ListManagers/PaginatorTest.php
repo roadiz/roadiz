@@ -30,33 +30,34 @@
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use RZ\Roadiz\Core\ListManagers\Paginator;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
-class PaginatorTest extends KernelDependentCase
+class PaginatorTest extends DefaultThemeDependentCase
 {
     public function testNodePaginatorTotalCount()
     {
         $paginator = new NodePaginator(
-            Kernel::getService('em'),
+            static::getManager(),
             'RZ\Roadiz\Core\Entities\Node'
         );
         /** @var \Doctrine\ORM\Query $query */
-        $query = Kernel::getService('em')->createQuery('SELECT COUNT(n.id) FROM RZ\Roadiz\Core\Entities\Node n');
+        $query = static::getManager()->createQuery('SELECT COUNT(n.id) FROM RZ\Roadiz\Core\Entities\Node n');
         $this->assertEquals($query->getSingleScalarResult(), $paginator->getTotalCount());
     }
 
     /**
      * @dataProvider getTestingItemPerPage
+     * @param $itemPerPage
      */
     public function testNodePaginatorFindByAtPage($itemPerPage)
     {
         $paginator = new NodePaginator(
-            Kernel::getService('em'),
+            static::getManager(),
             'RZ\Roadiz\Core\Entities\Node',
             $itemPerPage
         );
 
-        $query = Kernel::getService('em')->createQuery('SELECT COUNT(n.id) FROM RZ\Roadiz\Core\Entities\Node n');
+        $query = static::getManager()->createQuery('SELECT COUNT(n.id) FROM RZ\Roadiz\Core\Entities\Node n');
 
         $nodes = $paginator->findByAtPage();
         $nodesArray = $nodes->getIterator()->getArrayCopy();
@@ -84,27 +85,28 @@ class PaginatorTest extends KernelDependentCase
     public function testPaginatorTotalCount()
     {
         $paginator = new Paginator(
-            Kernel::getService('em'),
+            static::getManager(),
             'RZ\Roadiz\Core\Entities\Role'
         );
 
-        $query = Kernel::getService('em')->createQuery('SELECT COUNT(d.id) FROM RZ\Roadiz\Core\Entities\Role d');
+        $query = static::getManager()->createQuery('SELECT COUNT(d.id) FROM RZ\Roadiz\Core\Entities\Role d');
 
         $this->assertEquals($query->getSingleScalarResult(), $paginator->getTotalCount());
     }
 
     /**
      * @dataProvider getTestingItemPerPage
+     * @param $itemPerPage
      */
     public function testPaginatorFindByAtPage($itemPerPage)
     {
         $paginator = new Paginator(
-            Kernel::getService('em'),
+            static::getManager(),
             'RZ\Roadiz\Core\Entities\Role',
             $itemPerPage
         );
 
-        $query = Kernel::getService('em')->createQuery('SELECT COUNT(d.id) FROM RZ\Roadiz\Core\Entities\Role d');
+        $query = static::getManager()->createQuery('SELECT COUNT(d.id) FROM RZ\Roadiz\Core\Entities\Role d');
 
         /*
          * If there are more than $itemPerPage nodes

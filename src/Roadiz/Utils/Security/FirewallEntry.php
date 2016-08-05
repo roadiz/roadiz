@@ -121,7 +121,7 @@ class FirewallEntry
      * @param string $firewallLogin
      * @param string $firewallLogout
      * @param string $firewallLoginCheck
-     * @param string $firewallBaseRole
+     * @param string|array $firewallBaseRole
      * @param string $authenticationSuccessHandlerClass
      * @param string $authenticationFailureHandlerClass
      */
@@ -141,14 +141,28 @@ class FirewallEntry
         $this->firewallLogin = $firewallLogin;
         $this->firewallLogout = $firewallLogout;
         $this->firewallLoginCheck = $firewallLoginCheck;
-        $this->firewallBaseRole = $firewallBaseRole;
+
+        if (is_array($firewallBaseRole)) {
+            $this->firewallBaseRole = $firewallBaseRole;
+        } else {
+            $this->firewallBaseRole = [$firewallBaseRole];
+        }
+
         $this->container = $container;
 
         $this->authenticationSuccessHandlerClass = $authenticationSuccessHandlerClass;
         $this->authenticationFailureHandlerClass = $authenticationFailureHandlerClass;
 
-        $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
-        $this->container['accessMap']->add($this->requestMatcher, [$this->firewallBaseRole]);
+        /*
+         * Add an access map entry only if basePath pattern is valid and
+         * not root level.
+         */
+        if (null !== $this->firewallBasePattern &&
+           "" !== $this->firewallBasePattern &&
+            "^/" !== $this->firewallBasePattern) {
+            $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
+            $this->container['accessMap']->add($this->requestMatcher, $this->firewallBaseRole);
+        }
 
         $this->listeners = [
             // manages the SecurityContext persistence through a session
@@ -166,7 +180,12 @@ class FirewallEntry
      */
     public function withAnonymousAuthenticationListener()
     {
-        $this->additionnalListeners[] = new AnonymousAuthenticationListener($this->container['securityTokenStorage'], '');
+        $this->additionnalListeners[] = new AnonymousAuthenticationListener(
+            $this->container['securityTokenStorage'],
+            $this->container['config']['security']['secret'],
+            $this->container['logger'],
+            $this->container['authentificationManager']
+        );
         return $this;
     }
 

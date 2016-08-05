@@ -66,7 +66,7 @@
                             </div>
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="table-actions-row table-actions-row-3">
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('usersEditPage', { userId: user.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             {% if not (user.username == session.user.username or is_granted('ROLE_PREVIOUS_ADMIN')) %}

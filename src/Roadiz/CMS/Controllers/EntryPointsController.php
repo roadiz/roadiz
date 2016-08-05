@@ -476,7 +476,7 @@ class EntryPointsController extends AppController
                 ]);
             } else {
                 $builder->add('_redirect', 'hidden', [
-                    'data' => strip_tags($request->getURI()),
+                    'data' => strip_tags($request->getUri()),
                 ]);
             }
         }

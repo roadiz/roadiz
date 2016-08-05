@@ -27,17 +27,17 @@
  * @file SolariumNodeSourceTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
-use RZ\Roadiz\Tests\KernelDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use Solarium\Exception\HttpException;
 
 /**
  * SolariumNodeSourceTest.
  */
-class SolariumNodeSourceTest extends KernelDependentCase
+class SolariumNodeSourceTest extends DefaultThemeDependentCase
 {
     private static $entityCollection;
     private static $documentCollection;
@@ -46,7 +46,7 @@ class SolariumNodeSourceTest extends KernelDependentCase
     {
         $testTitle = "Ipsum Lorem Vehicula";
 
-        $nodeSource = Kernel::getService('em')
+        $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
@@ -57,7 +57,7 @@ class SolariumNodeSourceTest extends KernelDependentCase
                     Kernel::getService('solr')
                 );
 
-                $result = $solrDoc->indexAndCommit();
+                $solrDoc->indexAndCommit();
                 static::$documentCollection[] = $solrDoc;
 
                 /*
@@ -76,18 +76,21 @@ class SolariumNodeSourceTest extends KernelDependentCase
                     // Assert
                     $this->assertEquals($document->node_source_id_i, $nodeSource->getId());
                 }
+            } catch (SolrServerNotConfiguredException $e) {
+                $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                return;
+                $this->markTestSkipped('Solr is not available.');
+            } catch (HttpException $e) {
+                $this->markTestSkipped($e->getMessage());
             }
         }
-
     }
 
     public function testGetDocumentFromIndex()
     {
         $testTitle = "Ipsum Lorem Vehicula";
-
-        $nodeSource = Kernel::getService('em')
+        /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
+        $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
@@ -100,8 +103,12 @@ class SolariumNodeSourceTest extends KernelDependentCase
 
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotConfiguredException $e) {
+                $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
-                return;
+                $this->markTestSkipped('Solr is not available.');
+            } catch (HttpException $e) {
+                $this->markTestSkipped($e->getMessage());
             }
         }
     }
@@ -109,8 +116,8 @@ class SolariumNodeSourceTest extends KernelDependentCase
     public function testCleanAndCommit()
     {
         $testTitle = "Ipsum Lorem Vehicula";
-
-        $nodeSource = Kernel::getService('em')
+        /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
+        $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
@@ -125,9 +132,12 @@ class SolariumNodeSourceTest extends KernelDependentCase
 
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
 
+            } catch (SolrServerNotConfiguredException $e) {
+                $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
+                $this->markTestSkipped('Solr is not available.');
             } catch (HttpException $e) {
-                return;
+                $this->markTestSkipped($e->getMessage());
             }
         }
     }
@@ -142,6 +152,15 @@ class SolariumNodeSourceTest extends KernelDependentCase
 
         static::$entityCollection = array();
         static::$documentCollection = array();
+
+        $testTitle = "Ipsum Lorem Vehicula";
+        $translation = static::getManager()
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findDefault();
+
+        static::createPageNode($testTitle, $translation);
+
+        static::getManager()->flush();
     }
 
     /**
@@ -166,8 +185,10 @@ class SolariumNodeSourceTest extends KernelDependentCase
                 // this executes the query and returns the result
                 $result = $solr->update($update);
             }
+        } catch (SolrServerNotConfiguredException $e) {
+
         } catch (HttpException $e) {
-            return;
+
         }
 
         parent::tearDownAfterClass();

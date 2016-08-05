@@ -20,14 +20,17 @@
         </div>
 
         <div class="content-text-cont">
-
             <div class="content-text">
-
-                <p class="user-summary-items">
-                    <span class="summary-item-name">{% trans %}user.name{% endtrans %}</span> :<span class="summary-item-value">{{ name }}</span><br>
-                    <span class="summary-item-name">{% trans %}user.email{% endtrans %}</span> :<span class="summary-item-value">{{ email }}</span>
-                </p>
-
+                <table class="user-summary-items">
+                    <tr>
+                        <td class="summary-item-name">{% trans %}user.name{% endtrans %}</td>
+                        <td class="summary-item-value">{{ name }}</td><br>
+                    </tr>
+                    <tr>
+                        <td class="summary-item-name">{% trans %}user.email{% endtrans %}</td>
+                        <td class="summary-item-value">{{ email }}</td>
+                    </tr>
+                </table>
             </div>
 
             {% spaceless %}

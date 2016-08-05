@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Monolog\Logger;
 use Parsedown;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -82,14 +83,16 @@ class SolariumNodeSource
     protected $indexed = false;
     protected $nodeSource = null;
     protected $document = null;
+    protected $logger = null;
 
     /**
      * Create a new SolariumNodeSource.
      *
      * @param NodesSources $nodeSource
      * @param Client $client
+     * @param Logger $logger
      */
-    public function __construct(NodesSources $nodeSource, Client $client = null)
+    public function __construct(NodesSources $nodeSource, Client $client = null, Logger $logger = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
@@ -97,6 +100,7 @@ class SolariumNodeSource
 
         $this->client = $client;
         $this->nodeSource = $nodeSource;
+        $this->logger = $logger;
     }
 
     /**
@@ -213,7 +217,7 @@ class SolariumNodeSource
             } else {
                 $name .= '_t';
             }
-            
+
             $assoc[$name] = $content;
 
             $collection[] = $content;
@@ -264,6 +268,10 @@ class SolariumNodeSource
         $update = $this->client->createUpdate();
         $this->update($update);
         $update->addCommit();
+
+        if (null !== $this->logger) {
+            $this->logger->debug('[Solr] Node-source document updated.');
+        }
         return $this->client->update($update);
     }
 

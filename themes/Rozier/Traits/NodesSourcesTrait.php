@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,13 +23,11 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
  * @file NodesSourcesTrait.php
- * @author Maxime Constantinian
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 namespace Themes\Rozier\Traits;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\CustomFormsNodesType;
@@ -47,6 +44,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Validator\Constraints\Email;
@@ -72,12 +70,21 @@ trait NodesSourcesTrait
             $nodeSource->setTitle("");
         }
 
-        $fields = $nodeSource->getNode()->getNodeType()->getFields();
-        foreach ($fields as $field) {
-            if (isset($data[$field->getName()])) {
-                $this->setValueFromFieldType($data[$field->getName()], $nodeSource, $field);
-            } else {
-                $this->setValueFromFieldType(null, $nodeSource, $field);
+        /*
+         * List form data to get actual node type fields.
+         * Important to do this instead of listing node fields first because of
+         * universal fields that could be absent from Form.
+         */
+        foreach ($data as $name => $singleData) {
+            $field = $this->getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                ->findOneBy([
+                    'nodeType' => $nodeSource->getNode()->getNodeType(),
+                    'name' => $name,
+                ]);
+
+            if ($field !== null) {
+                $this->setValueFromFieldType($singleData, $nodeSource, $field);
             }
         }
 
@@ -91,8 +98,6 @@ trait NodesSourcesTrait
      */
     protected function updateNodeName(NodesSources $nodeSource)
     {
-        /** @var EntityManager $em */
-        $em = $this->getService('em');
         $title = $nodeSource->getTitle();
 
         /*
@@ -105,22 +110,51 @@ trait NodesSourcesTrait
             $testingNodeName = StringHandler::slugify($title);
 
             /*
-             * node name wont be updated if name already taken
+             * Node name wont be updated if name already taken OR
+             * if it is ALREADY suffixed with a unique ID.
              */
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($testingNodeName) &&
-                false === (boolean) $em->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($testingNodeName)) {
-                $nodeSource->getNode()->setNodeName($title);
-
-                $em->flush();
+                !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
+                $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->getService('em'));
+                if (!$alreadyUsed) {
+                    $nodeSource->getNode()->setNodeName($title);
+                } else {
+                    $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
+                }
+                $this->getService('em')->flush();
 
                 /*
                  * Dispatch event
                  */
                 $event = new FilterNodeEvent($nodeSource->getNode());
                 $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            } else {
+                $this->getService('logger')->debug('Node name has not be changed.');
             }
         }
+    }
+
+    /**
+     * @param Node $node
+     * @param NodesSources $source
+     * @return array|null
+     */
+    private function getFieldsForSource(Node $node, NodesSources $source)
+    {
+        $criteria = [
+            'nodeType' => $node->getNodeType(),
+            'visible' => true,
+        ];
+        $position = [
+            'position' => 'ASC',
+        ];
+        if (!$source->getTranslation()->isDefaultTranslation()) {
+            $criteria = array_merge($criteria, ['universal' => false]);
+        }
+
+        return $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+            ->findBy($criteria, $position);
     }
 
     /**
@@ -131,13 +165,7 @@ trait NodesSourcesTrait
      */
     private function buildEditSourceForm(Node $node, NodesSources $source)
     {
-        if ($source->getTranslation()->isDefaultTranslation()) {
-            $fields = $node->getNodeType()->getFields();
-        } else {
-            $fields = $this->getService('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-                           ->findAllNotUniversal($node->getNodeType());
-        }
+        $fields = $this->getFieldsForSource($node, $source);
 
         /*
          * Create source default values
@@ -163,7 +191,7 @@ trait NodesSourcesTrait
          */
         /** @var FormBuilder $sourceBuilder */
         $sourceBuilder = $this->getService('formFactory')
-                              ->createNamedBuilder('source', 'form', $sourceDefaults);
+            ->createNamedBuilder('source', 'form', $sourceDefaults);
         /*
          * Add title and default fields
          */
@@ -207,19 +235,19 @@ trait NodesSourcesTrait
             case NodeTypeField::DOCUMENTS_T:
                 /** @var Document[] $documents */
                 $documents = $nodeSource->getHandler()
-                                        ->getDocumentsFromFieldName($field->getName());
+                    ->getDocumentsFromFieldName($field->getName());
 
                 return new DocumentsType($documents, $this->getService('em'));
             case NodeTypeField::NODES_T:
                 /** @var Node[] $nodes */
                 $nodes = $nodeSource->getNode()->getHandler()
-                                    ->getNodesFromFieldName($field->getName());
+                    ->getNodesFromFieldName($field->getName());
 
                 return new NodesType($nodes, $this->getService('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
                 /** @var CustomForm[] $customForms */
                 $customForms = $nodeSource->getNode()->getHandler()
-                                          ->getCustomFormsFromFieldName($field->getName());
+                    ->getCustomFormsFromFieldName($field->getName());
 
                 return new CustomFormsNodesType($customForms, $this->getService('em'));
             case NodeTypeField::CHILDREN_T:

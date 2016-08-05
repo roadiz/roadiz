@@ -87,7 +87,7 @@ class NodePaginator extends Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function findByAtPage(array $order = [], $page = 1)
     {
@@ -108,7 +108,7 @@ class NodePaginator extends Paginator
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
     public function getTotalCount()
     {

@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 /**
- * Special controller app file for assets managment with InterventionRequest lib.
+ * Special controller app file for assets management with InterventionRequest lib.
  */
 class AssetsController extends AppController
 {
@@ -50,7 +50,6 @@ class AssetsController extends AppController
      */
     public function __init()
     {
-
     }
 
     /**
@@ -58,7 +57,6 @@ class AssetsController extends AppController
      */
     public function prepareBaseAssignation()
     {
-
     }
 
     /**
@@ -134,7 +132,7 @@ class AssetsController extends AppController
         $repository = $this->getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
-
+        /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
         if (null !== $font) {
@@ -169,7 +167,7 @@ class AssetsController extends AppController
                     break;
             }
 
-            if ("" != $fontpath) {
+            if ("" != $fontpath && file_exists($fontpath)) {
                 $response = new Response(
                     '',
                     Response::HTTP_NOT_MODIFIED,
@@ -180,19 +178,20 @@ class AssetsController extends AppController
                 $response->setCache([
                     'last_modified' => new \DateTime($lastMod),
                     'max_age' => 60 * 60 * 2,
-                    'public' => false,
+                    'public' => true,
                 ]);
                 if (!$response->isNotModified($request)) {
                     $response->setContent(file_get_contents($fontpath));
                     $response->setStatusCode(Response::HTTP_OK);
-                    $response->setETag(md5($response->getContent()));
+                    $response->setEtag(md5($response->getContent()));
                 }
 
                 return $response;
             }
         }
+        $msg = "Font doesn't exist " . $filename;
         return new Response(
-            "Font doesn't exist " . $filename,
+            $msg,
             Response::HTTP_NOT_FOUND,
             ['content-type' => 'text/html']
         );
@@ -219,7 +218,7 @@ class AssetsController extends AppController
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
             'max_age' => 60 * 60 * 2,
-            'public' => false,
+            'public' => true,
         ]);
 
         if ($response->isNotModified($request)) {
@@ -247,7 +246,7 @@ class AssetsController extends AppController
                 $assignation
             )
         );
-        $response->setETag(md5($response->getContent()));
+        $response->setEtag(md5($response->getContent()));
         $response->setStatusCode(Response::HTTP_OK);
 
         return $response;

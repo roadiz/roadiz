@@ -29,13 +29,14 @@
  */
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 
 class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider serializeToJsonProvider
+     * @param $sourceNodeType
+     * @param $expectedFile
      */
     public function testSerializeToJson($sourceNodeType, $expectedFile)
     {
@@ -48,6 +49,7 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider deserializeProvider
+     * @param $expectedFile
      */
     public function testDeserialize($expectedFile)
     {
@@ -61,6 +63,8 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider defaultValueTestProvider
+     * @param $json
+     * @param $expectedValue
      */
     public function testDefaultValue($json, $expectedValue)
     {
