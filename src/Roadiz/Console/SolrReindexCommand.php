@@ -67,10 +67,10 @@ class SolrReindexCommand extends SolrCommand
                 );
                 if (!$input->isInteractive() ||
                     $this->questionHelper->ask(
-                    $input,
-                    $output,
-                    $confirmation
-                )) {
+                        $input,
+                        $output,
+                        $confirmation
+                    )) {
                     $stopwatch = new Stopwatch();
                     $stopwatch->start('global');
                     $this->reindexNodeSources($output);
