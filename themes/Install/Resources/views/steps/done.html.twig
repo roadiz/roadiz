@@ -25,10 +25,10 @@
             </div>
 
             {% if error %}
-            <div class="uk-alert uk-alert-danger">
-                <a href="#" class="uk-alert-close uk-close"></a>
-                <p>{{ errorMessage }}</p>
-            </div>
+                <div class="uk-alert uk-alert-danger">
+                    <a href="#" class="uk-alert-close uk-close"></a>
+                    <p>{{ errorMessage }}</p>
+                </div>
             {% endif %}
 
             <form class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(doneForm) }}>
@@ -38,26 +38,20 @@
                     {{ form_errors(doneForm) }}
 
                     {% for item in doneForm %}
-                            {{ form_errors(item) }}
-                            {{ form_widget(item) }}
+                        {{ form_errors(item) }}
+                        {{ form_widget(item) }}
                     {% endfor %}
                     {{ form_rest(doneForm) }}
 
                 </div>
 
                 {% spaceless %}
-                <div class="content-buttons">
-
-                    <a class="content-button uk-button uk-button-success" href="{{ path('installUserPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.user{% endtrans %}</a>
-                    <button class="content-button uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}success.quit_install{% endtrans %}</button>
-
-                </div>
+                    <div class="content-buttons">
+                        <a class="content-button uk-button uk-button-success" href="{{ path('installUserPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.user{% endtrans %}</a>
+                        <button class="content-button uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}success.quit_install{% endtrans %}</button>
+                    </div>
                 {% endspaceless %}
-
             </form>
-
         </div>
-
     </article>
-
 {% endblock %}

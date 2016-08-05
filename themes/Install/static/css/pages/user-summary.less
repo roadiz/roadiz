@@ -1,14 +1,19 @@
 .user-summary-items{
     line-height:20px;
+
+    td {
+        border-top: 1px dashed #dcdcdc;
+        padding: 3px 10px 3px 0px;
+    }
+
+    tr:first-child {
+        td {
+            border-top: none;
+        }
+    }
 }
 
 .summary-item-name{
-    display: inline-block;
-    width:70px;
     font-weight: bold;
-}
-
-.summary-item-value{
-    display: inline-block;
-    margin-left:10px;
+    color: black;
 }
