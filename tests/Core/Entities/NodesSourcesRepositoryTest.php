@@ -43,14 +43,16 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
      */
     public function testFindBySearchQuery($query, $expectedClass)
     {
-        $nSources = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-            ->findBySearchQuery($query);
+        /** @var \RZ\Roadiz\Core\Repositories\NodesSourcesRepository $repository */
+        $repository = static::getManager()->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+        $nSources = $repository->findBySearchQuery($query);
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
-                $this->assertEquals(get_class($source), $expectedClass);
+                $this->assertEquals($expectedClass, get_class($source));
             }
+        } else {
+            $this->markTestSkipped('No nodes are available for this search.');
         }
     }
     /**
@@ -78,8 +80,10 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
 
         if (null !== $nSources) {
             foreach ($nSources as $key => $source) {
-                $this->assertEquals(get_class($source), $expectedClass);
+                $this->assertEquals($expectedClass, get_class($source));
             }
+        } else {
+            $this->markTestSkipped('No nodes are available for this search.');
         }
     }
     /**
@@ -94,5 +98,15 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
             array('Propos', 'GeneratedNodeSources\NSPage', $english),
             array('About', 'GeneratedNodeSources\NSPage', $english),
         );
+    }
+
+    /**
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        static::runCommand('solr:reindex -n');
     }
 }

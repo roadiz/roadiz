@@ -65,7 +65,8 @@ class SolrReindexCommand extends SolrCommand
                     '<question>Are you sure to reindex your Node database? (y/N)</question>',
                     false
                 );
-                if ($this->questionHelper->ask(
+                if (!$input->isInteractive() ||
+                    $this->questionHelper->ask(
                     $input,
                     $output,
                     $confirmation

@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -481,86 +482,49 @@ class NodesSourcesRepository extends EntityRepository
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param integer $limit Result number to fetch (default: all)
      *
-     * @return ArrayCollection
+     * @return array
      */
-    public function findBySearchQuery($query, $limit = 0)
+    public function findBySearchQuery($query, $limit = 25)
     {
-        $sources = new ArrayCollection();
-
-        // Update Solr Serach engine if setup
         if (true === Kernel::getService('solr.ready')) {
-            $service = Kernel::getService('solr');
-
-            $queryObj = $service->createSelect();
-
-            $queryObj->setQuery('collection_txt:' . $query);
-            $queryObj->addSort('score', $queryObj::SORT_DESC);
+            /** @var FullTextSearchHandler $service */
+            $service = Kernel::getService('solr.search.nodeSource');
 
             if ($limit > 0) {
-                $queryObj->setRows((int) $limit);
-            }
-
-            // this executes the query and returns the result
-            $resultset = $service->select($queryObj);
-
-            if (0 === $resultset->getNumFound()) {
-                return $sources;
+                return $service->search($query, [], $limit);
             } else {
-                foreach ($resultset as $document) {
-                    $sources->add($this->_em->find(
-                        'RZ\Roadiz\Core\Entities\NodesSources',
-                        $document['node_source_id_i']
-                    ));
-                }
-                return $sources;
+                return $service->search($query, [], 999999);
             }
         }
-
-        return $sources;
+        return [];
     }
 
     /**
      * Search nodes sources by using Solr search engine
      * and a specific translation.
      *
-     * @param string      $query       Solr query string (for example: `text:Lorem Ipsum`)
+     * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
      *
-     * @return ArrayCollection
+     * @param int $limit
+     * @return array
      */
-    public function findBySearchQueryAndTranslation($query, Translation $translation)
+    public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
-        $sources = new ArrayCollection();
-
-        // Update Solr Serach engine if setup
         if (true === Kernel::getService('solr.ready')) {
-            $service = Kernel::getService('solr');
+            /** @var FullTextSearchHandler $service */
+            $service = Kernel::getService('solr.search.nodeSource');
+            $params = [
+                'translation' => $translation,
+            ];
 
-            $queryObj = $service->createSelect();
-
-            $queryObj->setQuery('collection_txt:' . $query);
-            // create a filterquery
-            $queryObj->createFilterQuery('translation')->setQuery('locale_s:' . $translation->getLocale());
-            $queryObj->addSort('score', $queryObj::SORT_DESC);
-
-            // this executes the query and returns the result
-            $resultset = $service->select($queryObj);
-
-            if (0 === $resultset->getNumFound()) {
-                return $sources;
+            if ($limit > 0) {
+                return $service->search($query, $params, $limit);
             } else {
-                foreach ($resultset as $document) {
-                    $sources->add($this->_em->find(
-                        'RZ\Roadiz\Core\Entities\NodesSources',
-                        $document['node_source_id_i']
-                    ));
-                }
-
-                return $sources;
+                return $service->search($query, $params, 999999);
             }
         }
-
-        return $sources;
+        return [];
     }
 
     /**
