@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Viewers;
 
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+
 class SvgDocumentViewer
 {
     protected $imagePath;
@@ -62,7 +64,7 @@ class SvgDocumentViewer
         $this->asObject = $asObject;
 
         if (!file_exists($this->imagePath)) {
-            throw new \RuntimeException('SVG file does not exist: ' . $this->imagePath);
+            throw new FileNotFoundException('SVG file does not exist: ' . $this->imagePath);
         }
 
         if (false === $this->asObject) {

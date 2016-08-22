@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Viewers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
@@ -222,13 +223,17 @@ class DocumentViewer implements ViewableInterface
                 $asObject = true;
             }
 
-            $viewer = new SvgDocumentViewer(
-                $this->document->getAbsolutePath(),
-                $assignation,
-                $asObject,
-                Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
-            );
-            return $viewer->getContent();
+            try {
+                $viewer = new SvgDocumentViewer(
+                    $this->document->getAbsolutePath(),
+                    $assignation,
+                    $asObject,
+                    Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
+                );
+                return $viewer->getContent();
+            } catch (FileNotFoundException $e) {
+                return false;
+            }
         } elseif ($this->document->isImage()) {
             return $this->getTwig()->render('documents/image.html.twig', $assignation);
         } elseif ($this->document->isVideo()) {
@@ -242,6 +247,9 @@ class DocumentViewer implements ViewableInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isEmbedPlatformSupported()
     {
         $handlers = Kernel::getService('document.platforms');
@@ -258,6 +266,9 @@ class DocumentViewer implements ViewableInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function getEmbedFinder()
     {
         if (null === $this->embedFinder) {
@@ -296,7 +307,7 @@ class DocumentViewer implements ViewableInterface
      * This method will search for document which filename is the same
      * except the extension. If you choose an MP4 file, it will look for a OGV and WEBM file.
      *
-     * @return array
+     * @return array|bool
      */
     public function getSourcesFiles()
     {
@@ -327,6 +338,7 @@ class DocumentViewer implements ViewableInterface
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findBy(["filename" => $sourcesDocsName]);
 
+        /** @var Document $source */
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
