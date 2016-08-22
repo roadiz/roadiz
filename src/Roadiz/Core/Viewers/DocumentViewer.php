@@ -152,6 +152,7 @@ class DocumentViewer implements ViewableInterface
      * ## Audio / Video options
      *
      * - autoplay
+     * - loop
      * - controls
      *
      * @param array $args
@@ -198,6 +199,9 @@ class DocumentViewer implements ViewableInterface
         }
         if (!empty($args['autoplay'])) {
             $assignation['autoplay'] = (boolean) $args['autoplay'];
+        }
+        if (!empty($args['loop'])) {
+            $assignation['loop'] = (boolean) $args['loop'];
         }
         if (!empty($args['controls'])) {
             $assignation['controls'] = (boolean) $args['controls'];

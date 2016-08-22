@@ -7,7 +7,8 @@
 	{% if class %}class="{{ class }}" {% endif %}
 	{% if identifier %}id="{{ identifier }}" {% endif %}
 	{% if controls %}controls {% endif %}
-	{% if autoplay %}autoplay {% endif %}
+    {% if autoplay %}autoplay {% endif %}
+    {% if loop %}loop {% endif %}
 >
 	{% for source in sources %}
 	<source type="{{ source.mime }}" src="{{ source.url }}">
