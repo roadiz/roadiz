@@ -39,7 +39,9 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -55,18 +57,26 @@ class SearchController extends RozierApp
     protected $pagination = true;
     protected $itemPerPage = null;
 
+    /**
+     * @param $var
+     * @return bool
+     */
     public function isBlank($var)
     {
         return empty($var) && !is_numeric($var);
     }
 
+    /**
+     * @param $var
+     * @return bool
+     */
     public function notBlank($var)
     {
         return !$this->isBlank($var);
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @param string $prefix
      * @return mixed
      */
@@ -120,7 +130,7 @@ class SearchController extends RozierApp
         if (isset($data["tags"])) {
             $data["tags"] = array_map('trim', explode(',', $data["tags"]));
             foreach ($data["tags"] as $key => $value) {
-                $data["tags"][$key] = $this->getService("em")->getRepository("RZ\Roadiz\Core\Entities\Tag")->findByPath($value);
+                $data["tags"][$key] = $this->getService("em")->getRepository('RZ\Roadiz\Core\Entities\Tag')->findByPath($value);
             }
             array_filter($data["tags"]);
         }
@@ -181,10 +191,8 @@ class SearchController extends RozierApp
     public function searchNodeAction(Request $request)
     {
         /** @var Form $form */
-        $form = $this->buildSimpleForm("")->add("searchANode", "submit", [
-            "label" => $this->getTranslator()->trans("search.a.node"),
-            "attr" => ["class" => "uk-button uk-button-primary"],
-        ])->getForm();
+        $builder = $this->buildSimpleForm("");
+        $form = $this->addButtons($builder)->getForm();
         $form->handleRequest($request);
 
         $builderNodeType = $this->buildNodeTypeForm();
@@ -240,15 +248,10 @@ class SearchController extends RozierApp
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
-        $builder = $this->extendForm($builder, $nodetype);
-        $builder->add("searchANode", "submit", [
-            "label" => "search.a.node",
-            "attr" => ["class" => "uk-button uk-button-primary"],
-        ]);
-        $builder->add("exportNodesSources", "submit", [
-            "label" => "export.all.nodesSource",
-            "attr" => ["class" => "uk-button rz-no-ajax"],
-        ]);
+        $this->extendForm($builder, $nodetype);
+        $this->addButtons($builder);
+
+        /** @var Form $form */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -266,7 +269,6 @@ class SearchController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
         $this->assignation['nodeTypeForm'] = $nodeTypeForm->createView();
-
         $this->assignation['filters']['searchDisable'] = true;
 
         return $this->render('search/list.html.twig', $this->assignation);
@@ -276,9 +278,11 @@ class SearchController extends RozierApp
      * Build node-type selection form.
      *
      * @param int|null $nodetypeId
+     * @return FormBuilder
      */
     protected function buildNodeTypeForm($nodetypeId = null)
     {
+        /** @var FormBuilder $builderNodeType */
         $builderNodeType = $this->getService('formFactory')
                                 ->createNamedBuilder(
                                     'nodeTypeForm',
@@ -290,17 +294,34 @@ class SearchController extends RozierApp
             "nodetype",
             new NodeTypesType,
             [
-                'placeholder' => "",
+                'placeholder' => "ignore",
                 'required' => false,
                 'data' => $nodetypeId,
             ]
-        )
-        ->add("nodetypeSubmit", "submit", [
-            "label" => "select.nodetype",
-            "attr" => ["class" => "uk-button uk-button-primary"],
-        ]);
+        );
 
         return $builderNodeType;
+    }
+
+    /**
+     * @param FormBuilder $builder
+     * @return FormBuilder
+     */
+    protected function addButtons(FormBuilder $builder)
+    {
+        $builder->add('search', 'submit', [
+            'label' => 'search.a.node',
+            'attr' => [
+                'class' => 'uk-button uk-button-primary',
+            ]
+        ])->add('export', 'submit', [
+            'disabled' => true,
+            'label' => 'export.all.nodesSource',
+            'attr' => [
+                'class' => 'uk-button rz-no-ajax',
+            ]
+        ]);
+        return $builder;
     }
 
     /**
@@ -365,8 +386,10 @@ class SearchController extends RozierApp
                     $nodes[] = $nodesSource->getNode();
                 }
             }
-
-            if ($form->get('exportNodesSources')->isClicked()) {
+            /*
+             * Export all entries into XLSX format
+             */
+            if ($form->get('export')->isClicked()) {
                 $response = new Response(
                     $this->getXlsxResults($nodetype, $entities),
                     Response::HTTP_OK,
@@ -403,6 +426,7 @@ class SearchController extends RozierApp
         $keys = [];
         $answers = [];
         $keys[] = "title";
+        /** @var NodeTypeField $field */
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $keys[] = $field->getName();
@@ -425,11 +449,12 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param $prefix
-     * @return mixed
+     * @param string $prefix
+     * @return FormBuilder
      */
     protected function buildSimpleForm($prefix)
     {
+        /** @var FormBuilder $builder */
         $builder = $this->getService('formFactory')
                         ->createBuilder(
                             'form',
@@ -493,11 +518,11 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param $builder
-     * @param $nodetype
-     * @return mixed
+     * @param FormBuilder $builder
+     * @param NodeType $nodetype
+     * @return FormBuilder
      */
-    private function extendForm($builder, $nodetype)
+    private function extendForm(FormBuilder $builder, NodeType $nodetype)
     {
         $fields = $nodetype->getFields();
 
@@ -510,6 +535,7 @@ class SearchController extends RozierApp
             ]
         );
 
+        /** @var NodeTypeField $field */
         foreach ($fields as $field) {
             $option = ["label" => $field->getLabel()];
             $option['required'] = false;
