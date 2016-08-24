@@ -46,6 +46,12 @@ class UrlExtension extends \Twig_Extension
     protected $forceLocale;
     protected $cacheProvider;
 
+    /**
+     * UrlExtension constructor.
+     * @param Request $request
+     * @param CacheProvider|null $cacheProvider
+     * @param bool $forceLocale
+     */
     public function __construct(Request $request, CacheProvider $cacheProvider = null, $forceLocale = false)
     {
         $this->request = $request;
@@ -53,11 +59,17 @@ class UrlExtension extends \Twig_Extension
         $this->cacheProvider = $cacheProvider;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'urlExtension';
     }
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         return [
@@ -65,6 +77,11 @@ class UrlExtension extends \Twig_Extension
         ];
     }
 
+    /**
+     * @param NodesSources $ns
+     * @param bool $absolute
+     * @return string
+     */
     public function getCacheKey(NodesSources $ns, $absolute = false)
     {
         return ($ns->getId() . "_" . (int) $absolute);
@@ -80,14 +97,13 @@ class UrlExtension extends \Twig_Extension
      * - Node
      *
      * @param  AbstractEntity|null $mixed
-     * @param  array               $criteria
+     * @param  array $criteria
      * @return string
+     * @throws \Twig_Error_Runtime
      */
     public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
     {
-        if (null === $mixed) {
-            return '';
-        } else {
+        if (null !== $mixed) {
             if ($mixed instanceof Document) {
                 $absolute = false;
                 if (isset($criteria['absolute'])) {
@@ -98,10 +114,12 @@ class UrlExtension extends \Twig_Extension
                 return $this->getNodesSourceUrl($mixed, $criteria);
             } elseif ($mixed instanceof Node) {
                 return $this->getNodeUrl($mixed, $criteria);
-            } else {
-                throw new \RuntimeException("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
             }
+
+            throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
         }
+
+        throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object", 1);
     }
 
     /**

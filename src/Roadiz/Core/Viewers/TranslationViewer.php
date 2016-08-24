@@ -84,7 +84,7 @@ class TranslationViewer implements ViewableInterface
      * @param Request $request
      * @param boolean $absolute Generate absolute url or relative paths
      *
-     * @return $this
+     * @return array
      */
     public function getTranslationMenuAssignation(Request $request, $absolute = false)
     {

@@ -64,9 +64,9 @@ class BlockRenderExtension extends \Twig_Extension
      * @param array $assignation
      *
      * @return string
-     * @throws \Exception
+     * @throws \Twig_Error_Runtime
      */
-    public function blockRender(NodesSources $nodeSource, $themeName = "DefaultTheme", $assignation = [])
+    public function blockRender(NodesSources $nodeSource = null, $themeName = "DefaultTheme", $assignation = [])
     {
         if (null !== $nodeSource) {
             if (!empty($themeName)) {
@@ -88,13 +88,12 @@ class BlockRenderExtension extends \Twig_Extension
 
                     return $response->getContent();
                 } else {
-                    throw new \Exception($class . "::blockAction() action does not exist.", 1);
+                    throw new \Twig_Error_Runtime($class . "::blockAction() action does not exist.");
                 }
             } else {
-                throw new \Exception("Invalid name formatting for your theme.", 1);
+                throw new \Twig_Error_Runtime("Invalid name formatting for your theme.");
             }
-        } else {
-            throw new \Exception("Invalid NodesSources.", 1);
         }
+        throw new \Twig_Error_Runtime("Invalid NodesSources.");
     }
 }
