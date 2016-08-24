@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Extension that allow render inner page part calling directly their
@@ -76,10 +78,12 @@ class BlockRenderExtension extends \Twig_Extension
                 'Controller';
                 if (class_exists($class) &&
                     method_exists($class, 'blockAction')) {
+                    /** @var FrontendController $ctrl */
                     $ctrl = new $class();
                     $ctrl->setContainer($this->container);
                     $ctrl->__init();
 
+                    /** @var Response $response */
                     $response = $ctrl->blockAction(
                         $this->container['request'],
                         $nodeSource,
