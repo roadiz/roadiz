@@ -30,12 +30,18 @@
 namespace Themes\Rozier\Events;
 
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
+use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Client;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -67,6 +73,13 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
             TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onSolariumDocumentUpdate',
+            DocumentEvents::DOCUMENT_TRANSLATION_UPDATED => 'onSolariumDocumentUpdate',
+            DocumentEvents::DOCUMENT_IN_FOLDER => 'onSolariumDocumentUpdate',
+            DocumentEvents::DOCUMENT_OUT_FOLDER => 'onSolariumDocumentUpdate',
+            DocumentEvents::DOCUMENT_UPDATED => 'onSolariumDocumentUpdate',
+            DocumentEvents::DOCUMENT_DELETED => 'onSolariumDocumentDelete',
+            FolderEvents::FOLDER_UPDATED => 'onSolariumFolderUpdate',
         ];
     }
 
@@ -148,6 +161,47 @@ class SolariumSubscriber implements EventSubscriberInterface
         }
     }
 
+
+    /**
+     * Delete solr documents for each Document translation.
+     *
+     * @param FilterDocumentEvent $event
+     */
+    public function onSolariumDocumentDelete(FilterDocumentEvent $event)
+    {
+        if (null !== $this->solr) {
+            foreach ($event->getDocument()->getDocumentTranslations() as $documentTranslation) {
+                $solrSource = new SolariumNodeSource(
+                    $documentTranslation,
+                    $this->solr,
+                    $this->logger
+                );
+                $solrSource->getDocumentFromIndex();
+                $solrSource->removeAndCommit();
+            }
+        }
+    }
+
+    /**
+     * Update or create solr documents for each Document translation.
+     *
+     * @param FilterDocumentEvent $event
+     */
+    public function onSolariumDocumentUpdate(FilterDocumentEvent $event)
+    {
+        if (null !== $this->solr) {
+            foreach ($event->getDocument()->getDocumentTranslations() as $documentTranslation) {
+                $solarium = new SolariumDocumentTranslation(
+                    $documentTranslation,
+                    $this->solr,
+                    $this->logger
+                );
+                $solarium->getDocumentFromIndex();
+                $solarium->updateAndCommit();
+            }
+        }
+    }
+
     /**
      * Update solr documents linked to current event Tag.
      *
@@ -168,6 +222,42 @@ class SolariumSubscriber implements EventSubscriberInterface
                     );
                     $solrSource->getDocumentFromIndex();
                     $solrSource->update($update);
+                }
+            }
+            $this->solr->update($update);
+
+            // then optimize
+            $optimizeUpdate = $this->solr->createUpdate();
+            $optimizeUpdate->addOptimize(true, true, 5);
+            $this->solr->update($optimizeUpdate);
+            // and commit
+            $finalCommitUpdate = $this->solr->createUpdate();
+            $finalCommitUpdate->addCommit(true, true, false);
+            $this->solr->update($finalCommitUpdate);
+        }
+    }
+
+    /**
+     * Update solr documents linked to current event Folder.
+     *
+     * @param FilterFolderEvent $event
+     */
+    public function onSolariumFolderUpdate(FilterFolderEvent $event)
+    {
+        if (null !== $this->solr) {
+            $update = $this->solr->createUpdate();
+            $documents = $event->getFolder()->getDocuments();
+
+            /** @var Document $document */
+            foreach ($documents as $document) {
+                foreach ($document->getDocumentTranslations() as $documentTranslation) {
+                    $solarium = new SolariumDocumentTranslation(
+                        $documentTranslation,
+                        $this->solr,
+                        $this->logger
+                    );
+                    $solarium->getDocumentFromIndex();
+                    $solarium->update($update);
                 }
             }
             $this->solr->update($update);

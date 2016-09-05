@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -96,6 +98,12 @@ class DocumentTranslationsController extends RozierApp
                     '%name%' => $document->getFilename(),
                 ]);
                 $this->publishConfirmMessage($request, $msg);
+
+                $this->getService("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
+                    new FilterDocumentEvent($document)
+                );
+
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */

@@ -29,11 +29,14 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\SearchEngine\SolariumDocument;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -48,7 +51,9 @@ class SolrReindexCommand extends SolrCommand
     protected function configure()
     {
         $this->setName('solr:reindex')
-            ->setDescription('Reindex Solr search engine index');
+            ->setDescription('Reindex Solr search engine index')
+            ->addOption('nodes', null, InputOption::VALUE_NONE, 'Reindex with only nodes.')
+            ->addOption('documents', null, InputOption::VALUE_NONE, 'Reindex with only documents.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -62,7 +67,7 @@ class SolrReindexCommand extends SolrCommand
         if (null !== $this->solr) {
             if (true === $this->getHelperSet()->get('solr')->ready()) {
                 $confirmation = new ConfirmationQuestion(
-                    '<question>Are you sure to reindex your Node database? (y/N)</question>',
+                    '<question>Are you sure to reindex your Node and Document database? (y/N)</question>',
                     false
                 );
                 if (!$input->isInteractive() ||
@@ -73,12 +78,23 @@ class SolrReindexCommand extends SolrCommand
                     )) {
                     $stopwatch = new Stopwatch();
                     $stopwatch->start('global');
-                    $this->reindexNodeSources($output);
+                    // Empty first
+                    $this->emptySolr($output);
+
+                    if ($input->getOption('documents')) {
+                        $this->reindexDocuments($output);
+                    } elseif ($input->getOption('nodes')) {
+                        $this->reindexNodeSources($output);
+                    } else {
+                        $this->reindexDocuments($output);
+                        $this->reindexNodeSources($output);
+                    }
+
                     $stopwatch->stop('global');
 
                     $duration = $stopwatch->getEvent('global')->getDuration();
 
-                    $text = PHP_EOL . sprintf('<info>Node database has been re-indexed in %.2d ms.</info>', $duration) . PHP_EOL;
+                    $text = PHP_EOL . sprintf('<info>Node and document database has been re-indexed in %.2d ms.</info>', $duration) . PHP_EOL;
                 }
             } else {
                 $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
@@ -98,9 +114,6 @@ class SolrReindexCommand extends SolrCommand
      */
     protected function reindexNodeSources(OutputInterface $output)
     {
-        // Empty first
-        $this->emptySolr($output);
-
         $update = $this->solr->createUpdate();
         /*
          * Use buffered insertion
@@ -120,10 +133,52 @@ class SolrReindexCommand extends SolrCommand
 
         /** @var NodesSources $ns */
         foreach ($nSources as $ns) {
-            $solariumNS = new SolariumNodeSource($ns, $this->solr);
-            $solariumNS->setDocument($update->createDocument());
-            $solariumNS->index();
-            $buffer->addDocument($solariumNS->getDocument());
+            $solarium = new SolariumNodeSource($ns, $this->solr);
+            $solarium->createEmptyDocument($update);
+            $solarium->index();
+            $buffer->addDocument($solarium->getDocument());
+            $progress->advance();
+        }
+
+        $buffer->flush();
+
+        // optimize the index
+        $this->optimizeSolr($output);
+        $progress->finish();
+    }
+
+    /**
+     * Delete Solr index and loop over every Documents to index them again.
+     *
+     * @param OutputInterface $output
+     */
+    protected function reindexDocuments(OutputInterface $output)
+    {
+        $update = $this->solr->createUpdate();
+        /*
+         * Use buffered insertion
+         */
+        /** @var BufferedAdd $buffer */
+        $buffer = $this->solr->getPlugin('bufferedadd');
+        $buffer->setBufferSize(100);
+
+        // Then index
+        $docs = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findAll();
+
+        $progress = new ProgressBar($output, count($docs));
+        $progress->setFormat('verbose');
+        $progress->start();
+
+        /** @var Document $doc */
+        foreach ($docs as $doc) {
+            $solarium = new SolariumDocument($doc, $this->solr);
+            $solarium->createEmptyDocument($update);
+            $solarium->index();
+            foreach ($solarium->getDocuments() as $document) {
+                $buffer->addDocument($document);
+            }
             $progress->advance();
         }
 

@@ -36,6 +36,8 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterFolderEvent;
+use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -113,6 +115,15 @@ class FoldersController extends RozierApp
                     ['%name%' => $folder->getFolderName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
+
+                /*
+                 * Dispatch event
+                 */
+                $this->getService('dispatcher')->dispatch(
+                    FolderEvents::FOLDER_CREATED,
+                    new FilterFolderEvent($folder)
+                );
+
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -154,6 +165,14 @@ class FoldersController extends RozierApp
                         ['%name%' => $folder->getFolderName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
+
+                    /*
+                     * Dispatch event
+                     */
+                    $this->getService('dispatcher')->dispatch(
+                        FolderEvents::FOLDER_DELETED,
+                        new FilterFolderEvent($folder)
+                    );
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -203,6 +222,13 @@ class FoldersController extends RozierApp
                         ['%name%' => $folder->getFolderName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
+                    /*
+                     * Dispatch event
+                     */
+                    $this->getService('dispatcher')->dispatch(
+                        FolderEvents::FOLDER_UPDATED,
+                        new FilterFolderEvent($folder)
+                    );
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -266,6 +292,13 @@ class FoldersController extends RozierApp
                         ['%name%' => $folder->getFolderName()]
                     );
                     $this->publishConfirmMessage($request, $msg);
+                    /*
+                     * Dispatch event
+                     */
+                    $this->getService('dispatcher')->dispatch(
+                        FolderEvents::FOLDER_UPDATED,
+                        new FilterFolderEvent($folder)
+                    );
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }

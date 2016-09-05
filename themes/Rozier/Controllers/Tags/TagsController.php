@@ -136,8 +136,10 @@ class TagsController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterTagEvent($tag);
-                    $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
+                    $this->getService('dispatcher')->dispatch(
+                        TagEvents::TAG_UPDATED,
+                        new FilterTagEvent($tag)
+                    );
 
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', [
                         '%name%' => $tag->getTranslatedTags()->first()->getName(),

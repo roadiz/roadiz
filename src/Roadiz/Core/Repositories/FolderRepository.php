@@ -30,8 +30,10 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -269,6 +271,36 @@ class FolderRepository extends EntityRepository
             return null;
         } catch (NoResultException $e) {
             return null;
+        }
+    }
+
+    /**
+     * @param Document $document
+     * @param Translation|null $translation
+     * @return array
+     */
+    public function findByDocumentAndTranslation(Document $document, Translation $translation = null)
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->innerJoin('f.documents', 'd')
+            ->andWhere($qb->expr()->in('d', ':document'))
+            ->setParameter(':document', $document);
+
+        if (null !== $translation) {
+            $qb->addSelect('tf')
+                ->innerJoin(
+                    'f.translatedFolders',
+                    'tf',
+                    Join::WITH,
+                    'tf.translation = :translation'
+                )
+                ->setParameter(':translation', $translation);
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
         }
     }
 }

@@ -23,20 +23,45 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FullTextSearchHandler.php
+ * @file FolderEvents.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace src\Roadiz\Core\SearchEngine;
+namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 
-/**
- * Class FullTextSearchHandler
- * @package src\Roadiz\Core\SearchEngine
- * @deprecated Use NodeSourceSearchHandler instead
- */
-class FullTextSearchHandler extends NodeSourceSearchHandler
+final class FolderEvents
 {
+    /**
+     * Event folder.created is triggered each time a node-source
+     * is created.
+     *
+     * Evetn listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterFolderEvent instance
+     *
+     * @var string
+     */
+    const FOLDER_CREATED = 'folder.created';
 
+    /**
+     * Event folder.updated is triggered each time a node-source
+     * is updated.
+     *
+     * Evetn listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterFolderEvent instance
+     *
+     * @var string
+     */
+    const FOLDER_UPDATED = 'folder.updated';
+
+    /**
+     * Event folder.deleted is triggered each time a node-source
+     * is deleted.
+     *
+     * Evetn listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterFolderEvent instance
+     *
+     * @var string
+     */
+    const FOLDER_DELETED = 'folder.deleted';
 }

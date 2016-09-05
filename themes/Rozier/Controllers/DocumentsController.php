@@ -824,6 +824,7 @@ class DocumentsController extends RozierApp
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
+                /** @var Folder $folder */
                 $folder = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findOrCreateByPath($path);
@@ -838,6 +839,16 @@ class DocumentsController extends RozierApp
 
             $this->getService('em')->flush();
             $msg = $this->getTranslator()->trans('documents.linked_to.folders');
+
+            /*
+             * Dispatch events
+             */
+            foreach ($documents as $document) {
+                $this->getService("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_IN_FOLDER,
+                    new FilterDocumentEvent($document)
+                );
+            }
         }
 
         return $msg;
@@ -866,6 +877,7 @@ class DocumentsController extends RozierApp
             $folderPaths = array_filter($folderPaths);
 
             foreach ($folderPaths as $path) {
+                /** @var Folder $folder */
                 $folder = $this->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findByPath($path);
@@ -880,8 +892,17 @@ class DocumentsController extends RozierApp
                 }
             }
             $this->getService('em')->flush();
-
             $msg = $this->getTranslator()->trans('documents.removed_from.folders');
+
+            /*
+             * Dispatch events
+             */
+            foreach ($documents as $document) {
+                $this->getService("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_OUT_FOLDER,
+                    new FilterDocumentEvent($document)
+                );
+            }
         }
 
         return $msg;

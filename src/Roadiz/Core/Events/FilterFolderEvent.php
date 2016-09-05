@@ -23,20 +23,40 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FullTextSearchHandler.php
+ * @file FilterFolderEvent.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace src\Roadiz\Core\SearchEngine;
+namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\Entities\Folder;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class FullTextSearchHandler
- * @package src\Roadiz\Core\SearchEngine
- * @deprecated Use NodeSourceSearchHandler instead
+ * Class FilterFolderEvent
+ * @package RZ\Roadiz\Core\Events
  */
-class FullTextSearchHandler extends NodeSourceSearchHandler
+class FilterFolderEvent extends Event
 {
+    /**
+     * @var Folder
+     */
+    protected $folder;
 
+    /**
+     * FilterFolderEvent constructor.
+     * @param Folder $folder
+     */
+    public function __construct(Folder $folder)
+    {
+        $this->folder = $folder;
+    }
+
+    /**
+     * @return Folder
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
 }

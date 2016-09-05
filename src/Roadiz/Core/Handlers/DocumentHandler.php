@@ -30,6 +30,8 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
@@ -140,5 +142,32 @@ class DocumentHandler
         } else {
             return null;
         }
+    }
+
+    /**
+     * Return documents folders with the same translation as
+     * current document.
+     *
+     * @param Translation $translation
+     * @return array
+     */
+    public function getFolders(Translation $translation = null)
+    {
+        if (null !== $translation) {
+            return Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                ->findByDocumentAndTranslation($this->document, $translation);
+        }
+
+        $docTranslation = $this->document->getDocumentTranslations()->first();
+        if (null !== $docTranslation && $docTranslation instanceof DocumentTranslation) {
+            return Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                ->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());
+        }
+
+        return Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            ->findByDocumentAndTranslation($this->document);
     }
 }

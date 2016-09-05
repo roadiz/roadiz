@@ -40,7 +40,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -487,7 +487,7 @@ class NodesSourcesRepository extends EntityRepository
     public function findBySearchQuery($query, $limit = 25)
     {
         if (true === Kernel::getService('solr.ready')) {
-            /** @var FullTextSearchHandler $service */
+            /** @var NodeSourceSearchHandler $service */
             $service = Kernel::getService('solr.search.nodeSource');
 
             if ($limit > 0) {
@@ -512,7 +512,7 @@ class NodesSourcesRepository extends EntityRepository
     public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
         if (true === Kernel::getService('solr.ready')) {
-            /** @var FullTextSearchHandler $service */
+            /** @var NodeSourceSearchHandler $service */
             $service = Kernel::getService('solr.search.nodeSource');
             $params = [
                 'translation' => $translation,
