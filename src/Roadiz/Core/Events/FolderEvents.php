@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Core\Events;
 
-
 final class FolderEvents
 {
     /**

@@ -57,6 +57,8 @@ class RozierApp extends BackendController
     protected $formFactory = null;
     protected $themeContainer = null;
 
+    const DEFAULT_ITEM_PER_PAGE = 50;
+
     /**
      * @return $this
      */

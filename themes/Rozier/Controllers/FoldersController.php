@@ -123,7 +123,6 @@ class FoldersController extends RozierApp
                     FolderEvents::FOLDER_CREATED,
                     new FilterFolderEvent($folder)
                 );
-
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }

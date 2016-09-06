@@ -56,19 +56,19 @@ abstract class AbstractSearchHandler
     /**
      * @return string
      */
-    protected abstract function getDocumentType();
+    abstract protected function getDocumentType();
 
     /**
      * @param $response
      * @return array|null
      */
-    protected abstract function parseSolrResponse($response);
+    abstract protected function parseSolrResponse($response);
 
     /**
      * @param $args
      * @return mixed
      */
-    protected abstract function argFqProcess(&$args);
+    abstract protected function argFqProcess(&$args);
 
     /**
      * @param string  $q
@@ -80,7 +80,7 @@ abstract class AbstractSearchHandler
      *
      * @return array
      */
-    protected abstract function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
+    abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
 
     /**
      * @param array $response

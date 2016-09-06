@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,9 +37,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * {@inheritdoc}
+ * Class UsersController
+ * @package Themes\Rozier\Controllers\Users
  */
 class UsersController extends RozierApp
 {
@@ -62,6 +64,11 @@ class UsersController extends RozierApp
             [],
             ['username' => 'ASC']
         );
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('user_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

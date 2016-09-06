@@ -331,9 +331,21 @@ Rozier.centerVerticalObjects = function(context) {
     var $objects = $(".rz-vertical-align");
 
     for(var i = 0; i < $objects.length; i++) {
+        var marginTop = $($objects[i]).actual('outerHeight')/-2;
         $objects[i].style.top = '50%';
-        $objects[i].style.marginTop = $($objects[i]).actual('outerHeight')/-2 +'px';
-        if($objects[i].className.indexOf('actions-menu') >= 0 && context == 'ajax'){
+        $objects[i].style.marginTop = marginTop +'px';
+        if($objects[i].className.indexOf('actions-menu') >= 0 && context == 'ajax') {
+            /*
+             * Add additional space at actionMenu top to let see translation menu bar.
+             */
+            var actionMenuHeight = $($objects[i]).actual('height');
+            var windowHeight = $(window).height();
+            var spaceTop = (windowHeight - actionMenuHeight) / 2;
+            if (spaceTop < 220) { // 220 is the header min height
+                var additionnalSpace = 220 - spaceTop;
+                $objects[i].style.marginTop = (marginTop + additionnalSpace) +'px';
+            }
+
             $objects[i].style.right = - $($objects[i]).actual('outerWidth')+'px';
         }
     }

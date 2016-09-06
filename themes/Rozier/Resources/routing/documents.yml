@@ -1,27 +1,27 @@
 documentsEditPage:
     path:     /edit/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::editAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::editAction }
     requirements: { documentId : "[0-9]+" }
 documentsMetaPage:
     path:     /meta/{documentId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentTranslationsController::editAction, translationId : null }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentTranslationsController::editAction, translationId : null }
     requirements: { documentId : "[0-9]+", translationId : "[0-9]+" }
 documentsPreviewPage:
     path:     /preview/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::previewAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::previewAction }
     requirements: { documentId : "[0-9]+" }
 documentsDownloadPage:
     path:     /download/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::downloadAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::downloadAction }
     requirements: { documentId : "[0-9]+" }
 documentsUsagePage:
     path:     /usage/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::usageAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::usageAction }
     requirements: { documentId : "[0-9]+" }
 documentsUploadPage:
     path:     /upload/{_format}/{folderId}
     defaults:
-        _controller: Themes\Rozier\Controllers\DocumentsController::uploadAction
+        _controller: Themes\Rozier\Controllers\Documents\DocumentsController::uploadAction
         folderId: null
         _format : html
     requirements:
@@ -29,22 +29,22 @@ documentsUploadPage:
         _format : "html|json"
 documentsRandomPage:
     path:     /random/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::randomAction, folderId:null }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::randomAction, folderId:null }
     requirements: { folderId : "[0-9]+" }
 documentsEmbedPage:
     path:     /embed/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::embedAction, folderId:null }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::embedAction, folderId:null }
     requirements: { folderId : "[0-9]+" }
 documentsDeletePage:
     path:     /delete/{documentId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::deleteAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::deleteAction }
     requirements: { documentId : "[0-9]+" }
 documentsBulkDeletePage:
     path:     /bulk-delete
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDeleteAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::bulkDeleteAction }
 documentsBulkDownloadPage:
     path:     /bulk-download
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::bulkDownloadAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::bulkDownloadAction }
 documentsUnusedPage:
     path:     /orphans
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::unusedAction }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::unusedAction }

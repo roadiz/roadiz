@@ -26,7 +26,7 @@
  * @file DocumentsController.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Documents;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -49,10 +49,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * Class DocumentsController
- * @package Themes\Rozier\Controllers
+ * @package Themes\Rozier\Controllers\Documents
  */
 class DocumentsController extends RozierApp
 {
@@ -115,7 +116,14 @@ class DocumentsController extends RozierApp
             $prefilters,
             ['createdAt' => 'DESC']
         );
-        $listManager->setItemPerPage(28);
+        $listManager->setItemPerPage(static::DEFAULT_ITEM_PER_PAGE);
+
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('documents_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
+
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

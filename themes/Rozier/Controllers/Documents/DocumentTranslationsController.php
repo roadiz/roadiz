@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,11 +23,10 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- * @file DocumentsController.php
- * @author Ambroise Maupate
+ * @file DocumentTranslationsController.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\Documents;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
@@ -40,7 +38,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
 /**
- * {@inheritdoc}
+ * Class DocumentTranslationsController
+ * @package Themes\Rozier\Controllers\Documents
  */
 class DocumentTranslationsController extends RozierApp
 {

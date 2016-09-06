@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
@@ -175,24 +176,8 @@ class NodeTreeWidget extends AbstractWidget
             /*
              * Stored in session
              */
-            if (null !== $this->request->getSession() &&
-                $this->request->getSession()->has(static::SESSION_ITEM_PER_PAGE) &&
-                $this->request->getSession()->get(static::SESSION_ITEM_PER_PAGE) > 0 &&
-                (!$this->request->query->has('item_per_page') ||
-                $this->request->query->get('item_per_page') < 1)) {
-                /*
-                 * Item count is in session
-                 */
-                $this->request->query->set('item_per_page', $this->request->getSession()->get(static::SESSION_ITEM_PER_PAGE));
-                $listManager->setItemPerPage($this->request->getSession()->get(static::SESSION_ITEM_PER_PAGE));
-            } elseif ($this->request->query->has('item_per_page') &&
-                $this->request->query->get('item_per_page') > 0) {
-                /*
-                 * Item count is in query
-                 */
-                $this->request->getSession()->set(static::SESSION_ITEM_PER_PAGE, $this->request->query->get('item_per_page'));
-                $listManager->setItemPerPage($this->request->query->get('item_per_page'));
-            }
+            $sessionListFilter = new SessionListFilters(static::SESSION_ITEM_PER_PAGE);
+            $sessionListFilter->handleItemPerPage($this->request, $listManager);
         } else {
             $listManager->setItemPerPage(99999);
             $listManager->handle(true);

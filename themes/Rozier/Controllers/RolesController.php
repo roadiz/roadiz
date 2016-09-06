@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,9 +37,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * {@inheritdoc}
+ * Class RolesController
+ * @package Themes\Rozier\Controllers
  */
 class RolesController extends RozierApp
 {
@@ -58,6 +60,11 @@ class RolesController extends RozierApp
             [],
             ['name' => 'ASC']
         );
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('role_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

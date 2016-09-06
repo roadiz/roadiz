@@ -42,6 +42,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * Nodes controller
@@ -112,6 +113,11 @@ class NodesController extends RozierApp
             'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('node_list_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

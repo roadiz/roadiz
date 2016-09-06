@@ -244,13 +244,13 @@ abstract class AbstractSolarium
         return $this;
     }
 
-    public abstract function clean(Query $update);
+    abstract public function clean(Query $update);
 
 
     /**
      * @return boolean
      */
-    public abstract function getDocumentFromIndex();
+    abstract public function getDocumentFromIndex();
 
     /**
      * Get a key/value array representation of current indexed object.
@@ -258,5 +258,5 @@ abstract class AbstractSolarium
      * @return array
      * @throws \Exception
      */
-    protected abstract function getFieldsAssoc();
+    abstract protected function getFieldsAssoc();
 }

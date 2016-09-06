@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeType;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * NodeType controller
@@ -60,6 +61,13 @@ class NodeTypesController extends RozierApp
             [],
             ['name' => 'ASC']
         );
+
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('node_types_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
+
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

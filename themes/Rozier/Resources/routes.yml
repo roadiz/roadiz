@@ -120,7 +120,7 @@ translationsRoutes:
 # DOCUMENTS
 documentsHomePage:
     path:     /rz-admin/documents/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\DocumentsController::indexAction, folderId:null }
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::indexAction, folderId:null }
     requirements: { folderId : "[0-9]+" }
 documentsRoutes:
     resource: "routing/documents.yml"
