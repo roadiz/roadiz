@@ -4655,6 +4655,18 @@
         <source>back_to.folders</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.settings">
+        <source>folder.settings</source>
+          <note>Nav bar label for editing folder id and visibility state</note>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.labels">
+        <source>folder.labels</source>
+          <note>Nav bar label for editing folder label in each translation.</note>
+        <target></target>
+      </trans-unit>
+
+
 
       <trans-unit xml:space="preserve" id="delete.folder.%name%">
           <source>delete.folder.%name%</source>

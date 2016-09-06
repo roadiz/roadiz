@@ -7,12 +7,17 @@
     <header class="content-header header-folder header-folder-add">
         <h1 class="content-title folder-add-title">
             {{ "edit.folder.%name%"|trans({'%name%': folderName})|truncate(25, true, '[…]') }}
-            {% if translation %}
+            {% if translation and available_translations %}
                 ({{ translation.locale }})
             {% endif %}
         </h1>
-        {% include '@Rozier/folders/navBar.html.twig' with {'folder':folder, current:'edit'} %}
-        {% include '@Rozier/folders/translationBar.html.twig' with {'folder':folder, "current":translation.id} %}
+
+        {% if available_translations %}
+            {% include '@Rozier/folders/navBar.html.twig' with {'folder':folder, current:'edit-label'} %}
+            {% include '@Rozier/folders/translationBar.html.twig' with {'folder':folder, "current":translation.id} %}
+        {% else %}
+            {% include '@Rozier/folders/navBar.html.twig' with {'folder':folder, current:'edit'} %}
+        {% endif %}
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('foldersHomePage') }}" title="{% trans %}back_to.folders{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 

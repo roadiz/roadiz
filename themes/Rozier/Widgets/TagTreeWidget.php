@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -57,6 +57,9 @@ class TagTreeWidget extends AbstractWidget
         parent::__construct($request, $refereeController);
 
         $this->parentTag = $parent;
+        $this->translation = $this->getController()->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findOneBy(['defaultTranslation' => true]);
         $this->getTagTreeAssignationForParent();
     }
 
@@ -65,12 +68,6 @@ class TagTreeWidget extends AbstractWidget
      */
     protected function getTagTreeAssignationForParent()
     {
-        if ($this->translation === null) {
-            $this->translation = $this->getController()->getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                 ->findOneBy(['defaultTranslation' => true]);
-        }
-
         $ordering = [
             'position' => 'ASC',
         ];
@@ -87,7 +84,10 @@ class TagTreeWidget extends AbstractWidget
         $this->tags = $this->getController()->getService('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
              ->findBy(
-                 ['parent' => $this->parentTag, 'translation' => $this->translation],
+                 [
+                     'parent' => $this->parentTag,
+                     'translation' => $this->translation,
+                 ],
                  $ordering
              );
     }
@@ -99,11 +99,6 @@ class TagTreeWidget extends AbstractWidget
      */
     public function getChildrenTags(Tag $parent)
     {
-        if ($this->translation === null) {
-            $this->translation = $this->getController()->getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                 ->findOneBy(['defaultTranslation' => true]);
-        }
         if ($parent !== null) {
             $ordering = [
                 'position' => 'ASC',
@@ -117,7 +112,10 @@ class TagTreeWidget extends AbstractWidget
 
             return $this->tags = $this->getController()->getService('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                        ->findBy(['parent' => $parent], $ordering);
+                        ->findBy([
+                            'parent' => $parent,
+                            'translation' => $this->translation,
+                        ], $ordering);
         }
 
         return null;

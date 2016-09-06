@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\TagHandler;
@@ -232,7 +233,7 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
      */
     private $translatedTags = null;
@@ -243,6 +244,19 @@ class Tag extends AbstractDateTimedPositioned
     {
         return $this->translatedTags;
     }
+
+    /**
+     * @param Translation $translation
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTranslatedTagsByTranslation(Translation $translation)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('translation', $translation));
+
+        return $this->translatedTags->matching($criteria);
+    }
+
     /**
      * Create a new Tag.
      */

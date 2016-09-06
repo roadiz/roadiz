@@ -67,9 +67,9 @@ class DocumentSearchHandler extends AbstractSearchHandler
                  * @see http://www.solrtutorial.com/solr-query-syntax.html
                  */
                 if ($singleWord) {
-                    $queryTxt = sprintf('(title:%s*)^10 (collection_txt:%s*) (folders_txt:*%s*)', $q, $q, $q);
+                    $queryTxt = sprintf('(title:%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
                 } else {
-                    $queryTxt = sprintf('(title:"%s"~%d)^10 (collection_txt:"%s"~%d) (folders_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+                    $queryTxt = sprintf('(title:"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
                 }
             } else {
                 if ($singleWord) {
@@ -188,7 +188,7 @@ class DocumentSearchHandler extends AbstractSearchHandler
      */
     protected function getDocumentType()
     {
-        return 'Document';
+        return 'DocumentTranslation';
     }
 
     /**
@@ -202,17 +202,15 @@ class DocumentSearchHandler extends AbstractSearchHandler
                 function ($n) use ($response) {
                     if (isset($response["highlighting"])) {
                         return [
-                            "document" => $this->em->find(
-                                'RZ\Roadiz\Core\Entities\DocumentTranslation',
-                                (int) $n[SolariumDocumentTranslation::IDENTIFIER_KEY]
-                            ),
+                            "document" => $this->em
+                                        ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                                        ->findOneByDocumentTranslationId($n[SolariumDocumentTranslation::IDENTIFIER_KEY]),
                             "highlighting" => $response["highlighting"][$n['id']],
                         ];
                     }
-                    return $this->em->find(
-                        'RZ\Roadiz\Core\Entities\DocumentTranslation',
-                        $n[SolariumDocumentTranslation::IDENTIFIER_KEY]
-                    );
+                    return $this->em
+                        ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                        ->findOneByDocumentTranslationId($n[SolariumDocumentTranslation::IDENTIFIER_KEY]);
                 },
                 $response['response']['docs']
             );

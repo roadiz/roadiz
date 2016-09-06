@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 /**
  * DocumentTranslation.
  *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentTranslationRepository")
  * @ORM\Table(name="documents_translations", uniqueConstraints={@ORM\UniqueConstraint(columns={"document_id", "translation_id"})})
  */
 class DocumentTranslation extends AbstractEntity

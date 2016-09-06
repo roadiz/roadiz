@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
+use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use Symfony\Component\Console\Application;
@@ -152,6 +153,7 @@ class RoadizApplication extends Application
             new DebugFormatterHelper(),
             new ProcessHelper(),
             new KernelHelper($this->kernel),
+            new LoggerHelper($this->kernel),
             'question' => new QuestionHelper(),
             'configuration' => new ConfigurationHelper($this->kernel->container['config']),
             'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),

@@ -131,7 +131,7 @@ class FolderRepository extends EntityRepository
                 ->andWhere($qb->expr()->in('f.id', ':ids'))
                 ->setParameter(':ids', $ids);
 
-            if (null !== $translation && $translation instanceof Translation) {
+            if (null !== $translation) {
                 $qb->addSelect('tf')
                     ->innerJoin('f.translatedFolders', 'tf')
                     ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
@@ -161,7 +161,7 @@ class FolderRepository extends EntityRepository
             ->setMaxResults(1)
             ->setParameter(':name', $folderName);
 
-        if (null !== $translation && $translation instanceof Translation) {
+        if (null !== $translation) {
             $qb->addSelect('tf')
                 ->innerJoin('f.translatedFolders', 'tf')
                 ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
@@ -283,8 +283,43 @@ class FolderRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('f');
         $qb->innerJoin('f.documents', 'd')
-            ->andWhere($qb->expr()->in('d', ':document'))
-            ->setParameter(':document', $document);
+            ->andWhere($qb->expr()->eq('d.id', ':documentId'))
+            ->setParameter(':documentId', $document->getId());
+
+        if (null !== $translation) {
+            $qb->addSelect('tf')
+                ->innerJoin(
+                    'f.translatedFolders',
+                    'tf',
+                    Join::WITH,
+                    'tf.translation = :translation'
+                )
+                ->setParameter(':translation', $translation);
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Folder|null $parent
+     * @param Translation|null $translation
+     * @return array
+     */
+    public function findByParentAndTranslation(Folder $parent = null, Translation $translation = null)
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->addOrderBy('f.position', 'ASC');
+
+        if (null === $parent) {
+            $qb->andWhere($qb->expr()->isNull('f.parent'));
+        } else {
+            $qb->andWhere($qb->expr()->eq('f.parent', ':parent'))
+                ->setParameter(':parent', $parent);
+        }
 
         if (null !== $translation) {
             $qb->addSelect('tf')

@@ -28,6 +28,7 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
@@ -72,11 +73,16 @@ class SolariumDocument extends AbstractSolarium
      * Create a new SolariumDocument.
      *
      * @param Document $rzDocument
+     * @param EntityManager $entityManager
      * @param Client $client
      * @param Logger $logger
      */
-    public function __construct(Document $rzDocument, Client $client = null, Logger $logger = null)
-    {
+    public function __construct(
+        Document $rzDocument,
+        EntityManager $entityManager,
+        Client $client = null,
+        Logger $logger = null
+    ) {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
         }
@@ -84,7 +90,12 @@ class SolariumDocument extends AbstractSolarium
         $this->documentTranslationItems = [];
 
         foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
-            $this->documentTranslationItems[] = new SolariumDocumentTranslation($documentTranslation, $client, $logger);
+            $this->documentTranslationItems[] = new SolariumDocumentTranslation(
+                $documentTranslation,
+                $entityManager,
+                $client,
+                $logger
+            );
         }
     }
 

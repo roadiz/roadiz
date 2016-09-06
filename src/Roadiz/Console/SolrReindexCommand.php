@@ -133,7 +133,11 @@ class SolrReindexCommand extends SolrCommand
 
         /** @var NodesSources $ns */
         foreach ($nSources as $ns) {
-            $solarium = new SolariumNodeSource($ns, $this->solr);
+            $solarium = new SolariumNodeSource(
+                $ns,
+                $this->solr,
+                $this->getHelperSet()->get('logger')->getLogger()
+            );
             $solarium->createEmptyDocument($update);
             $solarium->index();
             $buffer->addDocument($solarium->getDocument());
@@ -173,7 +177,12 @@ class SolrReindexCommand extends SolrCommand
 
         /** @var Document $doc */
         foreach ($docs as $doc) {
-            $solarium = new SolariumDocument($doc, $this->solr);
+            $solarium = new SolariumDocument(
+                $doc,
+                $this->entityManager,
+                $this->solr,
+                $this->getHelperSet()->get('logger')->getLogger()
+            );
             $solarium->createEmptyDocument($update);
             $solarium->index();
             foreach ($solarium->getDocuments() as $document) {

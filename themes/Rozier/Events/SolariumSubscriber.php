@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Events;
 
+use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentEvents;
@@ -54,11 +55,22 @@ class SolariumSubscriber implements EventSubscriberInterface
 {
     protected $solr;
     protected $logger;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
-    public function __construct(Client $solr, LoggerInterface $logger)
+    /**
+     * SolariumSubscriber constructor.
+     * @param Client $solr
+     * @param LoggerInterface $logger
+     * @param EntityManager $entityManager
+     */
+    public function __construct(Client $solr, LoggerInterface $logger, EntityManager $entityManager)
     {
         $this->solr = $solr;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents()
@@ -193,6 +205,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             foreach ($event->getDocument()->getDocumentTranslations() as $documentTranslation) {
                 $solarium = new SolariumDocumentTranslation(
                     $documentTranslation,
+                    $this->entityManager,
                     $this->solr,
                     $this->logger
                 );
@@ -253,6 +266,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 foreach ($document->getDocumentTranslations() as $documentTranslation) {
                     $solarium = new SolariumDocumentTranslation(
                         $documentTranslation,
+                        $this->entityManager,
                         $this->solr,
                         $this->logger
                     );

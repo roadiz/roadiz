@@ -28,6 +28,7 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
 use Parsedown;
 use RZ\Roadiz\Core\Entities\Document;
@@ -53,16 +54,25 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
     /** @var DocumentTranslation */
     protected $documentTranslation = null;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
      * Create a new SolariumDocument.
      *
      * @param DocumentTranslation $documentTranslation
+     * @param EntityManager $entityManager
      * @param Client $client
      * @param Logger $logger
      */
-    public function __construct(DocumentTranslation $documentTranslation, Client $client = null, Logger $logger = null)
-    {
+    public function __construct(
+        DocumentTranslation $documentTranslation,
+        EntityManager $entityManager,
+        Client $client = null,
+        Logger $logger = null
+    ) {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
         }
@@ -71,6 +81,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $this->documentTranslation = $documentTranslation;
         $this->rzDocument = $documentTranslation->getDocument();
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -117,7 +128,8 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $assoc['filename_s'] = $this->rzDocument->getFilename();
         $assoc['mime_type_s'] = $this->rzDocument->getMimeType();
 
-        $locale = $this->documentTranslation->getTranslation()->getLocale();
+        $translation = $this->documentTranslation->getTranslation();
+        $locale = $translation->getLocale();
         $assoc['locale_s'] = $locale;
         $lang = \Locale::getPrimaryLanguage($locale);
 
@@ -138,21 +150,26 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $collection[] = $assoc['description' . $suffix];
         $collection[] = $assoc['copyright' . $suffix];
 
-        // Need a locale field
-        /*
-         * @TODO: Folders are not retreived according to their locale.
-         */
-        $out = array_map(
-            function (Folder $folder) {
-                /** @var FolderTranslation $folderTranslation */
-                $folderTranslation = $folder->getTranslatedFolders()->first();
-                return $folderTranslation->getName();
-            },
-            $this->rzDocument->getHandler()->getFolders($this->documentTranslation->getTranslation())
-        );
+
+        $folders = $this->rzDocument->getFolders();
+        $folderNames = [];
+        /** @var Folder $folder */
+        foreach ($folders as $folder) {
+            if ($fTrans = $folder->getTranslatedFoldersByTranslation($translation)->first()) {
+                $folderNames[] = $fTrans->getName();
+            }
+        }
+
+        if ($this->logger !== null && count($folderNames) > 0) {
+            $this->logger->debug('Indexed document.', [
+                'document' => $this->rzDocument->getId(),
+                'locale' => $this->documentTranslation->getTranslation()->getLocale(),
+                'folders' => $folderNames,
+            ]);
+        }
 
         // Use tags_txt to be compatible with other data types
-        $assoc['tags_txt'] = $out;
+        $assoc['tags_txt'] = $folderNames;
 
         /*
          * Collect data in a single field

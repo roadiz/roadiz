@@ -72,6 +72,11 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Translation $translation */
+        $translation = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findDefault();
+
         $prefilters = [];
 
         if (null !== $folderId &&
@@ -128,6 +133,7 @@ class DocumentsController extends RozierApp
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['documents'] = $listManager->getEntities();
+        $this->assignation['translation'] = $translation;
         $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
         return $this->render('documents/list.html.twig', $this->assignation);

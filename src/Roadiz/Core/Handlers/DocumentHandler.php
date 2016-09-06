@@ -160,7 +160,8 @@ class DocumentHandler
         }
 
         $docTranslation = $this->document->getDocumentTranslations()->first();
-        if (null !== $docTranslation && $docTranslation instanceof DocumentTranslation) {
+        if (null !== $docTranslation &&
+            $docTranslation instanceof DocumentTranslation) {
             return Kernel::getService('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                 ->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());

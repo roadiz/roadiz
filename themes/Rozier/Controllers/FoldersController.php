@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,12 +24,10 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * Description
  *
  * @file FoldersController.php
  * @author Ambroise Maupate
  */
-
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Document;
@@ -51,7 +49,6 @@ use Themes\Rozier\RozierApp;
  */
 class FoldersController extends RozierApp
 {
-
     /**
      * @param Request $request
      *
@@ -204,6 +201,11 @@ class FoldersController extends RozierApp
         $folder = $this->getService('em')
                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
+        /** @var Translation $translation */
+        $translation = $this->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findDefault();
+
         if ($folder !== null) {
             /** @var Form $form */
             $form = $this->createForm(new FolderType(), $folder, [
@@ -215,7 +217,6 @@ class FoldersController extends RozierApp
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->getService('em')->flush();
-
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.updated',
                         ['%name%' => $folder->getFolderName()]
@@ -237,9 +238,7 @@ class FoldersController extends RozierApp
 
             $this->assignation['folder'] = $folder;
             $this->assignation['form'] = $form->createView();
-            $this->assignation['available_translations'] = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findAllAvailable();
+            $this->assignation['translation'] = $translation;
 
             return $this->render('folders/edit.html.twig', $this->assignation);
         }

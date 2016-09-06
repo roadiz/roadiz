@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
@@ -652,6 +653,18 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * @param Translation $translation
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNodeSourcesByTranslation(Translation $translation)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('translation', $translation));
+
+        return $this->nodeSources->matching($criteria);
+    }
+
+    /**
      * @param NodesSources $ns
      *
      * @return $this
@@ -738,7 +751,7 @@ class Node extends AbstractDateTimedPositioned
         $this->customForms = new ArrayCollection();
         $this->aNodes = new ArrayCollection();
         $this->bNodes = new ArrayCollection();
-        
+
         $this->setNodeType($nodeType);
     }
 
