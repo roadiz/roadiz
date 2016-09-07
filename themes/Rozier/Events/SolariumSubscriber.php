@@ -183,13 +183,14 @@ class SolariumSubscriber implements EventSubscriberInterface
     {
         if (null !== $this->solr) {
             foreach ($event->getDocument()->getDocumentTranslations() as $documentTranslation) {
-                $solrSource = new SolariumNodeSource(
+                $solarium = new SolariumDocumentTranslation(
                     $documentTranslation,
+                    $this->entityManager,
                     $this->solr,
                     $this->logger
                 );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->removeAndCommit();
+                $solarium->getDocumentFromIndex();
+                $solarium->removeAndCommit();
             }
         }
     }
