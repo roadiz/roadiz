@@ -41,7 +41,7 @@ use Themes\Rozier\RozierApp;
  */
 abstract class AbstractAjaxController extends RozierApp
 {
-    static $validMethods = ['post', 'get'];
+    protected static $validMethods = ['post', 'get'];
     /**
      * @param Request $request
      * @param string  $method
