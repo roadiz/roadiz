@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -407,7 +406,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function findBy(
         array $criteria,

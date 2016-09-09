@@ -380,13 +380,16 @@ Rozier.toggleUserPanel = function (event) {
 
 /**
  * Handle ajax search node source.
- *
  * @param event
  */
 Rozier.onSearchNodesSources = function (event) {
     var $input = $(event.currentTarget);
 
-    if ($input.val().length > 2) {
+    if (event.keyCode == 27) {
+        $input.blur();
+    }
+
+    if ($input.val().length > 1) {
         clearTimeout(Rozier.searchNodesSourcesDelay);
         Rozier.searchNodesSourcesDelay = setTimeout(function () {
             var postData = {
@@ -401,29 +404,26 @@ Rozier.onSearchNodesSources = function (event) {
                 dataType: 'json',
                 data: postData
             })
-            .done(function( data ) {
-                console.log(data);
-
-                var $results;
+            .done(function(data) {
+                var $results = $('#nodes-sources-search-results');
                 if (typeof data.data != "undefined" &&
                     data.data.length > 0) {
-
-                    $results = $('#nodes-sources-search-results');
                     $results.empty();
-
                     for (var i in data.data) {
                         $results.append('<li><a href="' + data.data[i].url +
                             '" style="border-left-color:' + data.data[i].typeColor + '"><span class="title">' + data.data[i].title +
                             '</span> <span class="type">' + data.data[i].typeName +
                             '</span></a></li>');
                     }
-                    $results.append('<a id="see-all" href="#">' + Rozier.messages.see_all + '</a>'); //Trans message (base.html.twig)
+                } else {
+                    $results.empty();
                 }
             })
-            .fail(function( data ) {
-                console.log(data);
+            .fail(function(data) {
+                var $results = $('#nodes-sources-search-results');
+                $results.empty();
             });
-        }, 300);
+        }, 200);
     }
 };
 

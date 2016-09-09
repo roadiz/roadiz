@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,7 +35,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * {@inheritdoc}
+ * Class AjaxSearchNodesSourcesController
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxSearchNodesSourcesController extends AbstractAjaxController
 {
@@ -52,9 +53,9 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
     public function searchAction(Request $request)
     {
         /*
-         * Validate
+         * Validate without csrf and for all methods
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
+        if (true !== $notValid = $this->validateRequest($request, 'POST', false)) {
             return new JsonResponse(
                 $notValid,
                 Response::HTTP_FORBIDDEN
@@ -64,6 +65,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if ("" != $request->get('searchTerms')) {
+            /** @var array $nodesSources */
             $nodesSources = $this->getService('em')
                                  ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                  ->findBySearchQuery(
@@ -71,7 +73,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                                      static::RESULT_COUNT
                                  );
 
-            if (null === $nodesSources) {
+            if (count($nodesSources) === 0) {
                 $nodesSources = $this->getService('em')
                                      ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                      ->searchBy(
@@ -123,7 +125,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
 
         return new JsonResponse(
             $responseArray,
-            Response::HTTP_OK
+            Response::HTTP_NOT_FOUND
         );
     }
 }
