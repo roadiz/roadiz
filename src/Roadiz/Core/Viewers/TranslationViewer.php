@@ -145,7 +145,6 @@ class TranslationViewer implements ViewableInterface
                  */
                 if (true === $forceLocale ||
                     !$translation->isDefaultTranslation()) {
-
                     /*
                      * Search for a Locale suffixed route
                      */
