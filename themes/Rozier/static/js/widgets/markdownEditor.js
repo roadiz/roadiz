@@ -470,10 +470,13 @@ MarkdownEditor.prototype.buttonPreviewClick = function(e){
         _this.$buttonPreview.addClass('uk-active active');
         _this.$preview.addClass('active');
         _this.forceEditorUpdate();
-
         TweenLite.fromTo(_this.$preview, 1, {x: width*-1, opacity: 0}, {x: 0, ease: Expo.easeOut, opacity: 1});
-
         Rozier.$window.on('keyup', _this.closePreviewProxy);
+
+        var openPreview = new CustomEvent('markdownPreviewOpen', {
+            'detail': this,
+        });
+        document.body.dispatchEvent(openPreview);
     }
 };
 

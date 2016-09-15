@@ -18,8 +18,8 @@
             <table class="content-table users uk-table">
                 <thead>
                     <tr>
-                        <th class="table-actions-userpicture-row mobile-hidden"></th>
-                        <th>{% trans %}user.username{% endtrans %}
+                        <th class="table-actions-userpicture-row mobile-hidden uk-visible-xlarge"></th>
+                        <th class="mobile-hidden">{% trans %}user.username{% endtrans %}
                             {% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
                                 <a href="?field=username&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
                             {% else %}
@@ -41,9 +41,9 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td class="mobile-hidden"><img width="45" height="45" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
-                        <td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername }}</a></td>
-                        <td>{{ user.getEmail }}</td>
+                        <td class="mobile-hidden uk-visible-xlarge"><img width="45" height="45" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
+                        <td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername|truncate(30) }}</a></td>
+                        <td class="mobile-hidden">{{ user.getEmail|truncate(30) }}</td>
                         <td class="mobile-hidden uk-visible-xlarge">{% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}</td>
                         <td class="mobile-hidden uk-visible-large user-status">
                             {% if user.enabled %}

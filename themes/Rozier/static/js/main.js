@@ -95,6 +95,9 @@ Rozier.onDocumentReady = function(event) {
     // Minify trees panel toggle button
     Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
 
+    //Rozier.$body.on('markdownPreviewOpen', '.markdown-editor-preview', Rozier.toggleTreesPanel);
+    document.body.addEventListener('markdownPreviewOpen', Rozier.openTreesPanel, false);
+
     // Back top btn
     Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
@@ -359,8 +362,17 @@ Rozier.centerVerticalObjects = function(context) {
  */
 Rozier.toggleTreesPanel = function (event) {
     $('#main-trees').toggleClass('minified');
+    $('#main-content').toggleClass('maximized');
     $('#minify-tree-panel-button i').toggleClass('uk-icon-rz-panel-tree-open');
     $('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
+
+    return false;
+};
+
+Rozier.openTreesPanel = function (event) {
+    if ($('#main-trees').hasClass('minified')) {
+        Rozier.toggleTreesPanel(null);
+    }
 
     return false;
 };
