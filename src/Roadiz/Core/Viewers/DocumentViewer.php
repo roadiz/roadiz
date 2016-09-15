@@ -157,7 +157,7 @@ class DocumentViewer implements ViewableInterface
      *
      * @return string HTML output
      */
-    public function getDocumentByArray($args = null)
+    public function getDocumentByArray($args = [])
     {
         $absolute = false;
 
@@ -281,7 +281,7 @@ class DocumentViewer implements ViewableInterface
      * @return string
      * @see RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
-    public function getEmbedByArray($args = null)
+    public function getEmbedByArray($args = [])
     {
         if ($this->isEmbedPlatformSupported()) {
             return $this->getEmbedFinder()->getIFrame($args);
@@ -362,11 +362,11 @@ class DocumentViewer implements ViewableInterface
      *
      * @return string Url
      */
-    public function getDocumentUrlByArray($args = null, $absolute = false)
+    public function getDocumentUrlByArray($args = [], $absolute = false)
     {
         $packageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
 
-        if ($args === null ||
+        if (count($args) === 0 ||
             (isset($args['noProcess']) && $args['noProcess'] === true) ||
             !$this->document->isImage()) {
             return Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), $packageName);
