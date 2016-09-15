@@ -102,7 +102,7 @@ class TranslationViewer implements ViewableInterface
 
         if ($node === null && !empty($attr["_route"])) {
             $translations = Kernel::getService('em')
-                ->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } elseif (null !== $node) {
@@ -123,6 +123,7 @@ class TranslationViewer implements ViewableInterface
 
         $return = [];
 
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
             $url = null;
 
@@ -137,13 +138,14 @@ class TranslationViewer implements ViewableInterface
                     $url .= "?" . http_build_query($query);
                 }
             } elseif (!empty($attr["_route"])) {
+                $name = $attr["_route"];
                 /*
                  * Use suffixed route if locales are forced or
                  * if it’s not default translation.
                  */
                 if (true === $forceLocale ||
                     !$translation->isDefaultTranslation()) {
-                    $name = $attr["_route"];
+
                     /*
                      * Search for a Locale suffixed route
                      */
@@ -153,10 +155,15 @@ class TranslationViewer implements ViewableInterface
 
                     $attr["_route_params"]["_locale"] = $translation->getLocale();
                 } else {
-                    $name = $attr["_route"];
                     if (in_array("_locale", array_keys($attr["_route_params"]), true)) {
                         unset($attr["_route_params"]["_locale"]);
                     }
+                }
+                /*
+                 * Remove existing _locale in query string
+                 */
+                if (isset($query["_locale"])) {
+                    unset($query["_locale"]);
                 }
 
                 $url = Kernel::getService("urlGenerator")->generate(
