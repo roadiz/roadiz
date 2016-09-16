@@ -108,6 +108,9 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
                         $sortable.append(data.thumbnail.html);
                         var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
 
+                        _this.initUnlinkEvent();
+                        Rozier.lazyload.bindAjaxLink();
+
                         _this.onSortableDocumentWidgetChange(null, $sortable, $element);
                     }
                 }
