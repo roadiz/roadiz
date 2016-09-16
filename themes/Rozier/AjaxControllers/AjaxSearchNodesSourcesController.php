@@ -30,6 +30,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
+use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,24 +68,13 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if ("" != $request->get('searchTerms')) {
+            $searchHandler = new GlobalNodeSourceSearchHandler($this->getService('em'));
             /** @var array $nodesSources */
-            $nodesSources = $this->getService('em')
-                                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                 ->findBySearchQuery(
-                                     strip_tags($request->get('searchTerms')),
-                                     static::RESULT_COUNT
-                                 );
-
-            if (count($nodesSources) === 0) {
-                $nodesSources = $this->getService('em')
-                                     ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                     ->searchBy(
-                                         strip_tags($request->get('searchTerms')),
-                                         [],
-                                         [],
-                                         static::RESULT_COUNT
-                                     );
-            }
+            $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
+                $request->get('searchTerms'),
+                static::RESULT_COUNT,
+                $this->getService('defaultTranslation')
+            );
 
             if (null !== $nodesSources &&
                 count($nodesSources) > 0) {
