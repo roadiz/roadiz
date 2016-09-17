@@ -1,112 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta name="viewport" content="width=device-width" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>{{ nodeSource.subject }}</title>
-{# Link balise will be replace during export process #}
-<link href="{{ head.resourcesUrl }}css/styleNewsletter.css" rel="stylesheet"/>
-</head>
+{% extends "newsletters/base.html.twig" %}
 
-<body>
+{% set children = nodeSource|children %}
 
-
-{% macro simpleBlock(nodeSource, nbLevel) %}
-    {% set imgConf = {'width': 600, 'crop': '3:1'} %}
-    {% set headerImage = nodeSource.headerImage[0] %}
-
-    <td class="multi_{{ nbLevel }}">
-        {{ headerImage|display(imgConf) }}
-        <h2> {{ nodeSource.title }} </h2>
-        {{ nodeSource.content|markdown }}
-    </td>
-{% endmacro %}
-
-
-{% macro checkNode(nodeSource, nbLevel)%}
-    {% import _self as show %}
-
-    {% if nodeSource.node.nodetype.name == "BlockContent" %}
-        {{ show.simpleBlock(nodeSource, nbLevel|default('1')) }}
-    {% elseif nodeSource.node.nodetype.name == "BlockCategories" %}
-        {{ show.multiBlock(nodeSource) }}
-    {% endif %}
-{% endmacro %}
-
-{% macro childBlock(nodeSource, nbLevel) %}
-    {% set imgConf = {'width': 600, 'crop': '2:3'} %}
-    {% set headerImage = nodeSource.headerImage[0] %}
-
-    <td class="multi_{{ nbLevel }}">
-        {{ headerImage|display(imgConf) }}
-        <h2> {{ nodeSource.title }} </h2>
-        {{ nodeSource.content|markdown }}
-    </td>
-{% endmacro %}
-
-{% macro checkChild(nodeSource, nbLevel)%}
-    {% import _self as show %}
-
-    {% if nodeSource.node.nodetype.name == "BlockContent" %}
-        {{ show.childBlock(nodeSource, nbLevel|default('1')) }}
-    {% elseif nodeSource.node.nodetype.name == "BlockCategories" %}
-        {{ show.multiBlock(nodeSource) }}
-    {% endif %}
-{% endmacro %}
-
-{% macro multiBlock(nodeSource) %}
-    {% import _self as show %}
-
+{% block content %}
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-        {% for tmp in nodeSource.handler.children %}
-            {{ show.checkChild(tmp, nodeSource.handler.children|length) }}
-        {% endfor %}
+            <td class="content-block">
+                <a href="{{ nodeSource.titleLink }}" target="_blank"><h1>{{ nodeSource.newsletterTitle }}</h1></a>
+            </td>
         </tr>
-    </table>
-{% endmacro %}
-
-
-<table class="body-wrap">
-    <tr>
-        <td></td>
-        <td class="container" width="600">
-            <div class="content">
-                <table class="main" width="100%" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td class="content-wrap">
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td class="content-block">
-                                        <a href="{{ nodeSource.titleLink }}" target="_blank"><h1>{{ nodeSource.newsletterTitle }}</h1></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="content-block">
-                                        Newsletter: {{ nodeSource.datetime|localizeddate('none', 'none', null, null, "Y MMMM") }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    {% for ns in nodeSource.handler.children %}
-                                        {{ _self.checkNode(ns) }}
-                                    {% endfor %}
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                <div class="footer">
-                    <table width="100%">
+        <tr>
+            <td class="content-block">
+                Newsletter: {{ nodeSource.datetime|localizeddate('none', 'none', null, null, "Y MMMM") }}
+            </td>
+        </tr>
+        {% if children|length %}
+            <tr>
+                {% for child in children %}
+                    <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td> </td>
+                            <td>{% include 'blocks/' ~ child.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
+                                nodeSource: child,
+                                loop: loop
+                                } only %}</td>
                         </tr>
                     </table>
-                </div>
-            </div>
-        </td>
-        <td></td>
-    </tr>
-</table>
-
-</body>
-</html>
+                {% endfor %}
+            </tr>
+        {% endif %}
+    </table>
+{% endblock %}

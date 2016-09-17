@@ -49,11 +49,6 @@ class DefaultThemeApp extends FrontendController
     protected static $themeDir = 'DefaultTheme';
     protected static $backendTheme = false;
 
-    protected static $specificNodesControllers = [
-        // Put here your nodes which need a specific controller
-        // instead of a node-type controller
-    ];
-
     /**
      * @param Request $request
      * @param null $_locale

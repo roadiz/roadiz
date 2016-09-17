@@ -1,11 +1,7 @@
-{% if source.title %}
-    {% set title = source.title %}
-{% else %}
-    {% set title = source.node.nodeName %}
-{% endif %}
+{% set title = source.title|default(source.node.nodeName) %}
 
 {% set children = source|children({
-    'node.nodeType' : themeServices.pageType
+'node.nodeType' : themeServices.pageType
 }) %}
 
 <li data-node-id="{{ source.node.id }}"
@@ -15,19 +11,18 @@
     <a href="{{ source|url }}">{{ title }}</a>
 
     {% if children|length and level < 1 %}
-    <div class="uk-dropdown">
-        <ul class="uk-nav uk-nav-dropdown">
-            {% for subsource in children %}
-            {% include '@DefaultTheme/modules/navigationElement.html.twig' with {
-                'source' : subsource,
-                'activeId' : activeId,
-                'level':(1 + level),
-                'themeServices': themeServices,
-                'authorizationChecker':authorizationChecker
-            } only %}
-            {% endfor %}
-        </ul>
-    </div>
+        <div class="uk-dropdown">
+            <ul class="uk-nav uk-nav-dropdown">
+                {% for subsource in children %}
+                    {% include '@DefaultTheme/modules/navigationElement.html.twig' with {
+                    'source' : subsource,
+                    'activeId' : activeId,
+                    'level':(1 + level),
+                    'themeServices': themeServices
+                    } only %}
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
 </li>

@@ -3,81 +3,81 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="{{ request.locale|replace('_', '-')|lower }}"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ request.locale|replace('_', '-')|lower }}"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ request.locale|replace('_', '-')|lower }}"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{{ pageMeta.title }}</title>
-        <meta name="description" content="{{ pageMeta.description }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ pageMeta.title }}</title>
+    <meta name="description" content="{{ pageMeta.description }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {% if translation %}
+    {% if translation %}
         {% for id, key in translation|menu(true) %}
-        <link rel="alternate" href="{{ key.url }}" hreflang="{{ key.locale|replace('_', '-')|lower }}" />
+            <link rel="alternate" href="{{ key.url }}" hreflang="{{ key.locale|replace('_', '-')|lower }}" />
         {% endfor %}
-        {% endif %}
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.almost-flat.min.css" />
-        <link rel="stylesheet" href="{{ path('FontFaceCSS', {"token": head.fontToken}) }}" />
+    {% endif %}
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" href="{{ head.resourcesUrl }}css/uikit.almost-flat.min.css" />
+    <link rel="stylesheet" href="{{ path('FontFaceCSS', {"token": head.fontToken}) }}" />
 
-        {% if themeServices.useGrunt %}
-            <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.css[0] }}" />
-        {% else %}
-            <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.css" />
-        {% endif %}
+    {% if themeServices.useGrunt %}
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.css[0] }}" />
+    {% else %}
+        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.css" />
+    {% endif %}
 
-        <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body class="{{ node.nodeType.name|lower }} {{ node.nodeName|lower }}">
-        <!--[if lt IE 8]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        {% block header %}
-        <header class="no-image">{# <i class="uk-icon-image"></i> #}</header>
-        {% endblock %}
+    <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+<body class="{{ node.nodeType.name|lower }} {{ node.nodeName|lower }}">
+<!--[if lt IE 8]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+{% block header %}
+    <header class="no-image">{# <i class="uk-icon-image"></i> #}</header>
+{% endblock %}
 
-        {% block mainnavigation %}
-        {% include '@DefaultTheme/modules/navigation.html.twig' %}
-        {% endblock %}
+{% block mainnavigation %}
+    {% include '@DefaultTheme/modules/navigation.html.twig' %}
+{% endblock %}
 
-        <!-- Add your site or application content here -->
-        <div id="main-content">{% block content %}{% endblock %}</div>
-        <div id="my-id" class="uk-offcanvas">
-             <div class="uk-offcanvas-bar">
-                <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>...</ul>
-            </div>
-        </div>
+<!-- Add your site or application content here -->
+<div id="main-content">{% block content %}{% endblock %}</div>
+<div id="my-id" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>...</ul>
+    </div>
+</div>
 
-        {% block footer %}
-        <footer id="footer">
-            <p>© {{"now"|date('Y')}} Rezo Zero</p>
-        </footer>
-        {% endblock %}
+{% block footer %}
+    <footer id="footer">
+        <p>© {{"now"|date('Y')}} Rezo Zero</p>
+    </footer>
+{% endblock %}
 
-        {% if is_granted('ROLE_PREVIOUS_ADMIN')%}
-            <a href="?_su=_exit">{% trans %}stop.test.user.right{% endtrans %}</a>
-        {% endif %}
+{% if is_granted('ROLE_PREVIOUS_ADMIN')%}
+    <a href="?_su=_exit">{% trans %}stop.test.user.right{% endtrans %}</a>
+{% endif %}
 
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-        {% if head.devMode %}
-            <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
-            <script src="{{ head.resourcesUrl }}js/main.js"></script>
-        {% else %}
-            <script src="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.js[0] }}"></script>
-        {% endif %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+{% if head.devMode %}
+    <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
+    <script src="{{ head.resourcesUrl }}js/main.js"></script>
+{% else %}
+    <script src="{{ head.resourcesUrl }}public{{ themeServices.grunt.staticAssets.global.js[0] }}"></script>
+{% endif %}
 
-        {% if head.universalAnalyticsId %}
-        <!-- Google Analytics: change {{ head.universalAnalyticsId }} to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+{% if head.universalAnalyticsId %}
+    <!-- Google Analytics: change {{ head.universalAnalyticsId }} to be your site's ID. -->
+    <script>
+        (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
             e=o.createElement(i);r=o.getElementsByTagName(i)[0];
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','{{ head.universalAnalyticsId }}');ga('send','pageview');
-        </script>
-        {% endif %}
-    </body>
+        ga('create','{{ head.universalAnalyticsId }}');ga('send','pageview');
+    </script>
+{% endif %}
+</body>
 </html>
