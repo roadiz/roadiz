@@ -20,4 +20,3 @@ importFiles:
     tags: []
     nodes:
         - "Resources/import/node/node-main-menu.rzn"
-        - "Resources/import/node/node-newsletter.rzn"
