@@ -20,38 +20,10 @@
 
 {% block content %}
     <section class="{{ classes|join(' ') }}" id="page-{{ nodeName }}">
-
         <div class="container">
             {% block inner_content %}
-                <div class="container">
-                    <div class="row">
-                        <h1 class="page-title">{{ title }}</h1>
-                        {% if content %}<div class="page-text">{{ content|markdown }}</div>{% endif %}
-                    </div>
-                </div>
-
-                {% if nodeSource %}
-                    <div class="page-blocks">
-                        {#
-                         # Page blocks pattern implementation
-                         #}
-                        {% set blocks = nodeSource|children({
-                        'node.nodeType' : ['!=', themeServices.typePage]
-                        }) %}
-                        {% for singleBlock in blocks %}
-                            {% include '@DefaultTheme/blocks/' ~ singleBlock.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
-                            'nodeSource': singleBlock,
-                            'parentNodeSource': nodeSource,
-                            'themeServices': themeServices,
-                            'head': head,
-                            'node': singleBlock.node,
-                            'nodeType': singleBlock.node.nodeType,
-                            'loop': loop,
-                            'blocksLength':blocks|length
-                            } only %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                <h1 class="page-title">{{ title }}</h1>
+                {% if content %}<div class="page-text">{{ content|markdown }}</div>{% endif %}
             {% endblock %}
         </div>
     </section>

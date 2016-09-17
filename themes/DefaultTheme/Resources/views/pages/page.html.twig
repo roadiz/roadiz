@@ -6,7 +6,9 @@
 
     <div class="page-blocks row">
         {#
-         # Page blocks pattern implementation
+         # Use a loop over children to display blocks
+         # according to their node-types.
+         # Here is the real power of Roadiz!
          #}
         {% set blocks = nodeSource|children({
         'node.nodeType' : ['!=', themeServices.typePage]
