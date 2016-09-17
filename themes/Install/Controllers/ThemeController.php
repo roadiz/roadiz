@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,7 +35,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\Install\InstallApp;
 
 /**
- * ThemeController
+ * Class ThemeController
+ * @package Themes\Install\Controllers
  */
 class ThemeController extends InstallApp
 {

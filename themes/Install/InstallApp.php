@@ -421,6 +421,7 @@ class InstallApp extends AppController
                 ->add('install_theme', 'checkbox', [
                     'required' => false,
                     'label' => $this->getTranslator()->trans('install_theme'),
+                    'data' => true,
                 ])
                 ->add(
                     'className',
