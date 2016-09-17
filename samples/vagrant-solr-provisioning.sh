@@ -3,9 +3,8 @@
 export DEBIAN_FRONTEND=noninteractive
 
 # Apache Solr
-SOLR_VERSION="6.1.0"
+SOLR_VERSION="6.2.0"
 SOLR_MIRROR="http://www-eu.apache.org/dist"
-
 
 echo -e "\n--- Installing Oracle JDK 8 ---\n"
 sudo locale-gen fr_FR.UTF-8;
