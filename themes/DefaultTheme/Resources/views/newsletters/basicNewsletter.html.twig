@@ -19,6 +19,11 @@
                 {% for child in children %}
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tr>
+                            {#
+                             # Use a loop over children to display blocks
+                             # according to their node-types.
+                             # Here is the real power of Roadiz!
+                             #}
                             <td>{% include 'blocks/' ~ child.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
                                 nodeSource: child,
                                 loop: loop

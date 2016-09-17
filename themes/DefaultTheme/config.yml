@@ -7,7 +7,7 @@ supportedLocale:
     - en
     - fr
     - ru
-versionRequire: "0.15.0"
+versionRequire: "0.15.1"
 importFiles:
     roles: []
     groups: []
@@ -19,5 +19,5 @@ importFiles:
         - "Resources/import/nodetype/BasicNewsletter.rzt"
     tags: []
     nodes:
-        - "Resources/import/node/node-home.rzn"
+        - "Resources/import/node/node-main-menu.rzn"
         - "Resources/import/node/node-newsletter.rzn"

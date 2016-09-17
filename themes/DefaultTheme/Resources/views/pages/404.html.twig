@@ -1,0 +1,17 @@
+{% extends '@DefaultTheme/pages/base.html.twig' %}
+
+{% block body_attributes %}class="error error-404" id="error-404" data-node-type="error404"{% endblock %}
+
+{% block inner_content %}
+    <div class="container">
+        <div class="row">
+            <h1 class="page-title">{{ title }}</h1>
+            {% if content %}<div class="page-text">{{ content|markdown }}</div>{% endif %}
+            {% if head.devMode %}{{ errorMessage|trans }}{% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+

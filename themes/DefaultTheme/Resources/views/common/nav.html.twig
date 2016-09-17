@@ -1,0 +1,39 @@
+{# Main nav #}
+<nav id="nav" data-active-node="{{ node.id }}">
+    <div class="container" id="nav-container">
+        {# Nav list #}
+        <ul class="nav-list nav navbar-nav" id="nav-list">
+            {% if themeServices.navigation and themeServices.navigation|length %}
+                {# Pages #}
+                {% for source in themeServices.navigation %}
+                    {% include '@DefaultTheme/common/nav-item.html.twig' with {
+                    'source' : source,
+                    'active' : node,
+                    'home' : home,
+                    'themeServices':themeServices
+                    } only %}
+                {% endfor %}
+
+                {#
+                 # Page contact
+                 #}
+                {% if request.locale != _default_locale %}
+                    <li class="nav-item{% if route == 'contactPageLocale' %} active{% endif %}"><a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a></li>
+                {% else %}
+                    <li class="nav-link{% if route == 'contactPage' %} active{% endif %}"><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
+                {% endif %}
+
+            {% endif %}
+        </ul>
+        {# Lang #}
+        {% if translation %}
+            <ul class="nav-list nav navbar-nav navbar-right" id="nav-lang">
+                {% for id, trans in translation|menu %}
+                    <li class="nav-item nav-item-lang{% if trans.active %} active{% endif %}">
+                        <a class="nav-link nav-link-lang{% if trans.active %} active{% endif %}" href="{{ trans.url }}">{{ trans.translation }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</nav>
