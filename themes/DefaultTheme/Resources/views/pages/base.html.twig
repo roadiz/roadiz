@@ -1,0 +1,30 @@
+{% extends '@DefaultTheme/base.html.twig' %}
+
+{% set classes = classes|default([
+'page-container',
+]) %}
+
+{% if node.home %}
+    {% set classes = classes|merge(['home-container']) %}
+{% endif %}
+
+{% if head.ajax %}
+    {% set classes = classes|merge(['page-container-ajax']) %}
+{% endif %}
+
+{% block header %}
+    <header class="page-header">
+        <figure class="page-header-image">{% if headerImage %}{{ headerImage|display(themeServices.imageFormats.headerImage) }}{% endif %}</figure>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <section class="{{ classes|join(' ') }}" id="page-{{ nodeName }}">
+        <div class="container">
+            {% block inner_content %}
+                <h1 class="page-title">{{ title }}</h1>
+                {% if content %}<div class="page-text">{{ content|markdown }}</div>{% endif %}
+            {% endblock %}
+        </div>
+    </section>
+{% endblock %}

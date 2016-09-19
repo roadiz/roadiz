@@ -64,21 +64,28 @@ class NodeDuplicator
      */
     public function duplicate()
     {
-        $this->em->refresh($this->originalNode);
+        if (null !== $this->originalNode) {
+            $this->em->refresh($this->originalNode);
 
-        $parent = $this->originalNode->getParent();
-        $node = clone $this->originalNode;
-        $this->em->clear($node);
+            $parent = $this->originalNode->getParent();
+            $node = clone $this->originalNode;
 
-        if ($parent !== null) {
-            $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
-            $node->setParent($parent);
+            if ($this->em->contains($node)) {
+                $this->em->clear($node);
+            }
+
+            if ($parent !== null) {
+                $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
+                $node->setParent($parent);
+            }
+            $node = $this->doDuplicate($node);
+            $this->em->flush();
+            $this->em->refresh($node);
+
+            return $node;
         }
-        $node = $this->doDuplicate($node);
-        $this->em->flush();
-        $this->em->refresh($node);
 
-        return $node;
+        throw new \RuntimeException('Node to be duplicated can’t be null.');
     }
 
     /**

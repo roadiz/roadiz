@@ -4,7 +4,9 @@ homePage:
     defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction }
 homePageLocale:
     path:     /{_locale}
-    defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction }
+    defaults:
+        _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction
+        _locale: en
     requirements:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
