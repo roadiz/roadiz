@@ -67,7 +67,8 @@ class Packages extends BasePackages
              * Add non-default port to static domain.
              */
             $staticDomainAndPort = $staticDomain;
-            if (($request->isSecure() && $request->getPort() != 443) || $request->getPort() != 80) {
+            if (($request->isSecure() && $request->getPort() != 443) ||
+                (!$request->isSecure() && $request->getPort() != 80)) {
                 $staticDomainAndPort .= ':' . $request->getPort();
             }
 
