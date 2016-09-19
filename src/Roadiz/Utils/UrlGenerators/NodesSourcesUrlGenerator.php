@@ -54,20 +54,26 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
         $this->nodeSource = $nodeSource;
         $this->forceLocale = $forceLocale;
     }
+
+
     /**
      * Get a resource Url.
      *
      * @param boolean $absolute Use Url with domain name [default: false]
-     *
+     * @param string $canonicalSchemeAuthority Override protocol, host and port to generate Url. Need absolute tot true
      * @return string
      */
-    public function getUrl($absolute = false)
+    public function getUrl($absolute = false, $canonicalSchemeAuthority = '')
     {
         if (null !== $this->request) {
             $schemeAuthority = '';
 
             if ($absolute === true) {
-                $schemeAuthority = $this->request->getSchemeAndHttpHost();
+                if (!empty($canonicalSchemeAuthority)) {
+                    $schemeAuthority = trim($canonicalSchemeAuthority);
+                } else {
+                    $schemeAuthority = $this->request->getSchemeAndHttpHost();
+                }
             }
 
             return $schemeAuthority .

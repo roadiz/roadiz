@@ -80,11 +80,12 @@ class UrlExtension extends \Twig_Extension
     /**
      * @param NodesSources $ns
      * @param bool $absolute
+     * @param string $canonicalScheme
      * @return string
      */
-    public function getCacheKey(NodesSources $ns, $absolute = false)
+    public function getCacheKey(NodesSources $ns, $absolute = false, $canonicalScheme = '')
     {
-        return ($ns->getId() . "_" . (int) $absolute);
+        return ($ns->getId() . "_" . (int) $absolute . "_" . $canonicalScheme);
     }
 
     /**
@@ -132,11 +133,16 @@ class UrlExtension extends \Twig_Extension
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
     {
         $absolute = false;
+        $canonicalScheme = '';
+
         if (isset($criteria['absolute'])) {
             $absolute = (boolean) $criteria['absolute'];
         }
+        if (isset($criteria['canonicalScheme'])) {
+            $canonicalScheme = trim($criteria['canonicalScheme']);
+        }
 
-        $cacheKey = $this->getCacheKey($ns, $absolute);
+        $cacheKey = $this->getCacheKey($ns, $absolute, $canonicalScheme);
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
@@ -147,7 +153,7 @@ class UrlExtension extends \Twig_Extension
                 $this->forceLocale
             );
 
-            $url = $urlGenerator->getUrl($absolute);
+            $url = $urlGenerator->getUrl($absolute, $canonicalScheme);
 
             $this->cacheProvider->save($cacheKey, $url);
             return $url;
