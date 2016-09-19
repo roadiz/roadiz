@@ -90,12 +90,20 @@
             padding:0px;
 
             .uk-button {
+                position: relative;
                 display: block;
                 text-align: left;
                 margin: 0px;
                 border: none;
+                height:auto;
+                padding:9px 10px 9px 33px;
+                line-height:17px;
                 border-bottom: 1px solid @children-nodes-btn-border;
 
+                .uk-icon-rz-plus-simple{
+                    position: absolute;
+                    top:10px; left:10px;
+                }
 
                 &:last-child{
                     margin-right:0;
