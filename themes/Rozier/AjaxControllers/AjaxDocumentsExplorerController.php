@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -59,7 +59,12 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $arrayFilter = [];
+        /*
+         * Prevent raw document to show in explorer.
+         */
+        $arrayFilter = [
+            'raw' => false,
+        ];
 
         if ($request->get('folderId') > 0) {
             $folder = $this->getService('em')
