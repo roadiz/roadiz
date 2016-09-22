@@ -1,16 +1,14 @@
-{% if source.getTitle %}
-{% set currentTitle = source.getTitle %}
-{% else %}
-{% set currentTitle = node.getNodeName %}
-{% endif %}
+{% set currentTitle = source.title|default(node.nodeName) %}
 
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block content %}
 <section class="content-global">
-
     <header class="content-header header-node header-node-edit-source">
-        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {
+            "node": node,
+            "source": source,
+        } only %}
         <h1 class="content-title node-edit-source-title">
             {{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
