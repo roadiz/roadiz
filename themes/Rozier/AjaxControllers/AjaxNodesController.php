@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,7 +40,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * {@inheritdoc}
+ * Class AjaxNodesController
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodesController extends AbstractAjaxController
 {
@@ -383,6 +384,10 @@ class AjaxNodesController extends AbstractAjaxController
         );
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function quickAddAction(Request $request)
     {
         /*

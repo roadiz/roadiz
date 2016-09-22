@@ -38,12 +38,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
-*
-*/
+ * Class UniqueNodeGenerator
+ * @package RZ\Roadiz\Utils\Node
+ */
 class UniqueNodeGenerator
 {
     protected $entityManager;
 
+    /**
+     * UniqueNodeGenerator constructor.
+     * @param EntityManager $entityManager
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -80,6 +85,8 @@ class UniqueNodeGenerator
 
         if ($pushToTop) {
             $node->setPosition(0.5);
+        } else {
+            $node->setPosition(999999);
         }
 
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
@@ -88,6 +95,12 @@ class UniqueNodeGenerator
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         $this->entityManager->persist($source);
+        $this->entityManager->flush();
+
+        /*
+         * Enforce cleaning node positions after each creation
+         */
+        $node->getHandler()->cleanPositions();
         $this->entityManager->flush();
 
         return $source;
