@@ -26,10 +26,7 @@
  * @file FullTextSearchHandler.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
-namespace src\Roadiz\Core\SearchEngine;
-
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+namespace RZ\Roadiz\Core\SearchEngine;
 
 /**
  * Class FullTextSearchHandler
