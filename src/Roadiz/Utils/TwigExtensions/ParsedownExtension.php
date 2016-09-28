@@ -84,6 +84,13 @@ class ParsedownExtension extends \Twig_Extension
      */
     public function markdownExtra($text)
     {
+        /*
+         * Need to recreate the object to reset
+         * footnotes count.
+         *
+         * https://github.com/erusev/parsedown-extra/issues/97
+         */
+        $this->parsedownExtra = new \ParsedownExtra();
         return $this->parsedownExtra->text($text);
     }
 }
