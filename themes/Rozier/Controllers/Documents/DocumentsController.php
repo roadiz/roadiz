@@ -424,7 +424,7 @@ class DocumentsController extends RozierApp
                     new FilterDocumentEvent($document)
                 );
             } catch (\Exception $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
+                $this->publishErrorMessage($request, $this->getTranslator()->trans($e->getMessage()));
             }
             /*
              * Force redirect to avoid resending form when refreshing page

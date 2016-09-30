@@ -51,18 +51,40 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
+     * Tell if embed media exists after its API feed.
+     *
+     * @return boolean
+     */
+    public function exists()
+    {
+        if ($this->getFeed() !== false && $this->getFeed()['items'][0]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()['items'][0]['snippet']['title'];
+        if (isset($this->getFeed()['items'][0])) {
+            return $this->getFeed()['items'][0]['snippet']['title'];
+        }
+
+        return "";
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()['items'][0]['snippet']['description'];
+        if (isset($this->getFeed()['items'][0])) {
+            return $this->getFeed()['items'][0]['snippet']['description'];
+        }
+
+        return "";
     }
     /**
      * {@inheritdoc}
@@ -76,13 +98,17 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        $thumbnails = $this->getFeed()['items'][0]['snippet']['thumbnails'];
+        if (isset($this->getFeed()['items'][0])) {
+            $thumbnails = $this->getFeed()['items'][0]['snippet']['thumbnails'];
 
-        if (isset($thumbnails['maxres'])) {
-            return $thumbnails['maxres']['url'];
-        } else {
-            return $thumbnails['high']['url'];
+            if (isset($thumbnails['maxres'])) {
+                return $thumbnails['maxres']['url'];
+            } else {
+                return $thumbnails['high']['url'];
+            }
         }
+
+        return "";
     }
 
     /**

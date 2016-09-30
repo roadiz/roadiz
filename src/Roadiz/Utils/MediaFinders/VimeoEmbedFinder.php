@@ -49,18 +49,40 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     }
 
     /**
+     * Tell if embed media exists after its API feed.
+     *
+     * @return boolean
+     */
+    public function exists()
+    {
+        if ($this->getFeed() !== false && isset($this->getFeed()[0])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getMediaTitle()
     {
-        return $this->getFeed()[0]['title'];
+        if (isset($this->getFeed()[0])) {
+            return $this->getFeed()[0]['title'];
+        }
+
+        return "";
     }
     /**
      * {@inheritdoc}
      */
     public function getMediaDescription()
     {
-        return $this->getFeed()[0]['description'];
+        if (isset($this->getFeed()[0])) {
+            return $this->getFeed()[0]['description'];
+        }
+
+        return "";
     }
     /**
      * {@inheritdoc}
@@ -74,7 +96,11 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
      */
     public function getThumbnailURL()
     {
-        return $this->getFeed()[0]['thumbnail_large'];
+        if (isset($this->getFeed()[0])) {
+            return $this->getFeed()[0]['thumbnail_large'];
+        }
+
+        return "";
     }
 
     /**

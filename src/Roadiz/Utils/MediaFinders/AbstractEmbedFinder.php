@@ -39,7 +39,9 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * abstract class to handle external media via their Json API.
+ * Abstract class to handle external media via their Json API.
+ *
+ * @package RZ\Roadiz\Utils\MediaFinders
  */
 abstract class AbstractEmbedFinder
 {
@@ -180,14 +182,14 @@ abstract class AbstractEmbedFinder
      *
      * @return Document
      * @throws EntityAlreadyExistsException
-     * @throws \Exception
+     * @throws \RuntimeException
      */
     public function createDocumentFromFeed(Container $container)
     {
         $url = $this->downloadThumbnail();
 
         if (!$this->exists()) {
-            throw new \Exception('no.embed.document.found');
+            throw new \RuntimeException('no.embed.document.found');
         }
 
         if (false !== $url) {
@@ -204,7 +206,6 @@ abstract class AbstractEmbedFinder
         if (null !== $existingDocument) {
             throw new EntityAlreadyExistsException('embed.document.already_exists');
         }
-
 
         $document = new Document();
         $document->setEmbedId($this->embedId);
@@ -279,24 +280,20 @@ abstract class AbstractEmbedFinder
     /**
      * Send a CURL request and get its string output.
      *
-     * @param string $url
-     *
-     * @return string|false
+     * @param $url
+     * @return \GuzzleHttp\Stream\StreamInterface|null
+     * @throws \RuntimeException
      */
     public function downloadFeedFromAPI($url)
     {
-        try {
-            $client = new Client();
-            $response = $client->get($url);
+        $client = new Client();
+        $response = $client->get($url);
 
-            if (Response::HTTP_OK == $response->getStatusCode()) {
-                return $response->getBody();
-            } else {
-                return false;
-            }
-        } catch (RequestException $e) {
-            return false;
+        if (Response::HTTP_OK == $response->getStatusCode()) {
+            return $response->getBody();
         }
+
+        throw new \RuntimeException($response->getReasonPhrase());
     }
 
     /**
@@ -309,8 +306,7 @@ abstract class AbstractEmbedFinder
     {
         $url = $this->getThumbnailURL();
 
-        if (false !== $url &&
-            '' !== $url) {
+        if (false !== $url && '' !== $url) {
             $pathinfo = basename($url);
 
             if ($pathinfo != "") {
