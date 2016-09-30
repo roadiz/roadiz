@@ -310,7 +310,7 @@ class DocumentViewer implements ViewableInterface
      * @param array|null $args
      *
      * @return string
-     * @see RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
+     * @see \RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
     public function getEmbedByArray($args = [])
     {
@@ -376,10 +376,10 @@ class DocumentViewer implements ViewableInterface
      */
     protected function getPosterFile($args = [], $absolute = false)
     {
-        $basename = pathinfo($this->document->getFilename());
-        $basename = $basename['filename'];
-
         if ($this->document->isVideo()) {
+            $basename = pathinfo($this->document->getFilename());
+            $basename = $basename['filename'];
+
             $sourcesDocsName = [
                 $basename . '.jpg',
                 $basename . '.gif',
