@@ -4,6 +4,8 @@
     {% if width %}width="{{ width }}" {% endif %}
     {% if height %}height="{{ height }}" {% endif %}
     {% if class %}class="{{ class }}" {% endif %}
+    {% if poster and poster.url and not custom_poster %}poster="{{ poster.url }}" {% endif %}
+    {% if custom_poster %}poster="{{ custom_poster }}" {% endif %}
     {% if identifier %}id="{{ identifier }}" {% endif %}
     {% if controls %}controls {% endif %}
     {% if autoplay %}autoplay {% endif %}

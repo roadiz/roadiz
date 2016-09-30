@@ -36,7 +36,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
- * DocumentViewer
+ * Class DocumentViewer
+ * @package RZ\Roadiz\Core\Viewers
  */
 class DocumentViewer implements ViewableInterface
 {
@@ -154,6 +155,9 @@ class DocumentViewer implements ViewableInterface
      * - autoplay
      * - loop
      * - controls
+     * - custom_poster
+     *
+     * For videos, a poster can be set if you name a document after your video filename (without extension).
      *
      * @param array $args
      *
@@ -242,6 +246,18 @@ class DocumentViewer implements ViewableInterface
             return $this->getTwig()->render('documents/image.html.twig', $assignation);
         } elseif ($this->document->isVideo()) {
             $assignation['sources'] = $this->getSourcesFiles();
+
+            /*
+             * Use a user defined poster url
+             */
+            if (!empty($args['custom_poster'])) {
+                $assignation['custom_poster'] = trim(strip_tags($args['custom_poster']));
+            } else {
+                /*
+                 * Look for poster with the same args as the video.
+                 */
+                $assignation['poster'] = $this->getPosterFile($args, $absolute);
+            }
             return $this->getTwig()->render('documents/video.html.twig', $assignation);
         } elseif ($this->document->isAudio()) {
             $assignation['sources'] = $this->getSourcesFiles();
@@ -351,6 +367,43 @@ class DocumentViewer implements ViewableInterface
         }
 
         return $sources;
+    }
+
+    /**
+     * @param array $args
+     * @param bool $absolute
+     * @return array|bool
+     */
+    protected function getPosterFile($args = [], $absolute = false)
+    {
+        $basename = pathinfo($this->document->getFilename());
+        $basename = $basename['filename'];
+
+        if ($this->document->isVideo()) {
+            $sourcesDocsName = [
+                $basename . '.jpg',
+                $basename . '.gif',
+                $basename . '.png',
+                $basename . '.jpeg',
+                $basename . '.webp',
+            ];
+
+            $sourcesDoc = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->findOneBy([
+                    "filename" => $sourcesDocsName,
+                    "raw" => false,
+                ]);
+
+            if (null !== $sourcesDoc && $sourcesDoc instanceof Document) {
+                return [
+                    'mime' => $sourcesDoc->getMimeType(),
+                    'url' => $sourcesDoc->getViewer()->getDocumentUrlByArray($args, $absolute),
+                ];
+            }
+        }
+
+        return false;
     }
 
     /**
