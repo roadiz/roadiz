@@ -31,11 +31,15 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 
 /**
- * {@inheritdoc}
+ * Class TagsImporter.
+ *
+ * @package RZ\Roadiz\CMS\Importers
  */
 class TagsImporter implements ImporterInterface
 {
@@ -57,11 +61,18 @@ class TagsImporter implements ImporterInterface
         return true;
     }
 
-    protected static function browseTree($tag, EntityManager $em)
+    /**
+     * @param Tag $tag
+     * @param EntityManager $em
+     * @return null|Tag
+     */
+    protected static function browseTree(Tag $tag, EntityManager $em)
     {
         try {
-            /*
+            /**
              * Test if tag already exists against its tagName
+             *
+             * @var Tag|null $existing
              */
             $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
                            ->findOneByTagName($tag->getTagName());
@@ -71,12 +82,14 @@ class TagsImporter implements ImporterInterface
 
             $childObj = [];
             $sourceObj = [];
+            /** @var Tag $child */
             foreach ($tag->getChildren() as $child) {
                 $childObj[] = static::browseTree($child, $em);
             }
             $tag->getChildren()->clear();
+            /** @var TagTranslation $tagTranslation */
             foreach ($tag->getTranslatedTags() as $tagTranslation) {
-                $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
 
                 if (empty($trans)) {

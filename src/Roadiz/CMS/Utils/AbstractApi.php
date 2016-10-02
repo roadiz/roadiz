@@ -32,14 +32,16 @@ namespace RZ\Roadiz\CMS\Utils;
 use Pimple\Container;
 
 /**
- * Class AbstractApi
+ * Class AbstractApi.
+ *
  * @package RZ\Roadiz\CMS\Utils
  */
 abstract class AbstractApi
 {
-
-    /*
+    /**
      * DI container
+     *
+     * @var Container $container
      */
     protected $container;
 

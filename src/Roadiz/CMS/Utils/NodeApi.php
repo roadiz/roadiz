@@ -33,7 +33,8 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
- * Class NodeApi
+ * Class NodeApi.
+ *
  * @package RZ\Roadiz\CMS\Utils
  */
 class NodeApi extends AbstractApi
@@ -54,9 +55,8 @@ class NodeApi extends AbstractApi
         $limit = null,
         $offset = null
     ) {
-        if (empty($criteria['status'])) {
-            $criteria['status'] = ['<=', Node::PUBLISHED];
-        }
+        $this->secureQuery($criteria);
+
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
         }
@@ -77,9 +77,8 @@ class NodeApi extends AbstractApi
      */
     public function countBy(array $criteria)
     {
-        if (empty($criteria['status'])) {
-            $criteria['status'] = ['<=', Node::PUBLISHED];
-        }
+        $this->secureQuery($criteria);
+
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
         }
@@ -97,9 +96,8 @@ class NodeApi extends AbstractApi
      */
     public function getOneBy(array $criteria, array $order = null)
     {
-        if (empty($criteria['status'])) {
-            $criteria['status'] = ['<=', Node::PUBLISHED];
-        }
+        $this->secureQuery($criteria);
+
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
         }
@@ -112,5 +110,17 @@ class NodeApi extends AbstractApi
                         $this->container['securityAuthorizationChecker'],
                         $this->container['kernel']->isPreview()
                     );
+    }
+
+    /**
+     * Add status constraint if not present.
+     *
+     * @param array $criteria
+     */
+    protected function secureQuery(array &$criteria)
+    {
+        if (empty($criteria['status'])) {
+            $criteria['status'] = ['<=', Node::PUBLISHED];
+        }
     }
 }
