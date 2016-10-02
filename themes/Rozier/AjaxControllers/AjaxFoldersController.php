@@ -64,7 +64,7 @@ class AjaxFoldersController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $folder = $this->getService('em')
+        $folder = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
         if ($folder !== null) {
@@ -136,7 +136,7 @@ class AjaxFoldersController extends AbstractAjaxController
             $responseArray = [];
 
             $pattern = strip_tags($request->get('search'));
-            $folders = $this->getService('em')
+            $folders = $this->get('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                         ->searchBy(
                             $pattern,
@@ -170,7 +170,7 @@ class AjaxFoldersController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
             /** @var Folder $parent */
-            $parent = $this->getService('em')
+            $parent = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -186,7 +186,7 @@ class AjaxFoldersController extends AbstractAjaxController
         if (!empty($parameters['nextFolderId']) &&
             $parameters['nextFolderId'] > 0) {
             /** @var Folder $nextFolder */
-            $nextFolder = $this->getService('em')
+            $nextFolder = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['nextFolderId']);
             if ($nextFolder !== null) {
                 $folder->setPosition($nextFolder->getPosition() - 0.5);
@@ -194,14 +194,14 @@ class AjaxFoldersController extends AbstractAjaxController
         } elseif (!empty($parameters['prevFolderId']) &&
             $parameters['prevFolderId'] > 0) {
             /** @var Folder $prevFolder */
-            $prevFolder = $this->getService('em')
+            $prevFolder = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['prevFolderId']);
             if ($prevFolder !== null) {
                 $folder->setPosition($prevFolder->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();

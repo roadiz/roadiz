@@ -57,18 +57,18 @@ class TranslateController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->getService('em')
+        $node = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
-            $availableTranslations = $this->getService('em')
+            $availableTranslations = $this->get('em')
                                  ->getRepository('RZ\Roadiz\Core\Entities\Node')
                                  ->findUnavailableTranslationForNode($node);
 
             if (count($availableTranslations) > 0) {
                 /** @var Form $form */
                 $form = $this->createForm(TranslateNodeType::class, null, [
-                    'em' => $this->getService('em'),
+                    'em' => $this->get('em'),
                     'node' => $node,
                 ]);
                 $form->handleRequest($request);
@@ -97,7 +97,7 @@ class TranslateController extends RozierApp
             }
 
             $this->assignation['node'] = $node;
-            $this->assignation['translation'] = $this->getService('defaultTranslation');
+            $this->assignation['translation'] = $this->get('defaultTranslation');
 
             $this->assignation['available_translations'] = [];
 
@@ -119,7 +119,7 @@ class TranslateController extends RozierApp
      */
     protected function translateNode(Translation $translation, Node $node)
     {
-        $existing = $this->getService('em')
+        $existing = $this->get('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                          ->findOneByNodeAndTranslation($node, $translation);
         if (null === $existing) {
@@ -128,18 +128,18 @@ class TranslateController extends RozierApp
                 $source = clone $baseSource;
 
                 foreach ($source->getDocumentsByFields() as $document) {
-                    $this->getService('em')->persist($document);
+                    $this->get('em')->persist($document);
                 }
                 $source->setTranslation($translation);
                 $source->setNode($node);
 
-                $this->getService('em')->persist($source);
+                $this->get('em')->persist($source);
 
                 /*
                  * Dispatch event
                  */
                 $event = new FilterNodesSourcesEvent($source);
-                $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
+                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
             }
         }
     }
@@ -159,6 +159,6 @@ class TranslateController extends RozierApp
             }
         }
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
     }
 }

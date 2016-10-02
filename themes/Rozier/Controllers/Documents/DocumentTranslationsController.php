@@ -55,21 +55,21 @@ class DocumentTranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         if (null === $translationId) {
-            $translation = $this->getService('defaultTranslation');
+            $translation = $this->get('defaultTranslation');
 
             $translationId = $translation->getId();
         } else {
-            $translation = $this->getService('em')
+            $translation = $this->get('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
-        $this->assignation['available_translations'] = $this->getService('em')
+        $this->assignation['available_translations'] = $this->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Translation')
              ->findAll();
 
-        $document = $this->getService('em')
+        $document = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
-        $documentTr = $this->getService('em')
+        $documentTr = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
                            ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
 
@@ -98,7 +98,7 @@ class DocumentTranslationsController extends RozierApp
                 ]);
                 $this->publishConfirmMessage($request, $msg);
 
-                $this->getService("dispatcher")->dispatch(
+                $this->get("dispatcher")->dispatch(
                     DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
                     new FilterDocumentEvent($document)
                 );
@@ -135,8 +135,8 @@ class DocumentTranslationsController extends RozierApp
         $dt->setDocument($document);
         $dt->setTranslation($translation);
 
-        $this->getService('em')->persist($dt);
-        $this->getService('em')->flush();
+        $this->get('em')->persist($dt);
+        $this->get('em')->flush();
 
         return $dt;
     }
@@ -154,10 +154,10 @@ class DocumentTranslationsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
-        $documentTr = $this->getService('em')
+        $documentTr = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
                            ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
-        $document = $this->getService('em')
+        $document = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($documentTr !== null &&
@@ -170,15 +170,15 @@ class DocumentTranslationsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['documentId'] == $documentTr->getId()) {
                 try {
-                    $this->getService('em')->remove($documentTr);
-                    $this->getService('em')->flush();
+                    $this->get('em')->remove($documentTr);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', ['%name%' => $document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', ['%name%' => $document->getFilename()]);
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->warning($msg);
+                    $this->get('logger')->warning($msg);
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -258,6 +258,6 @@ class DocumentTranslationsController extends RozierApp
             $document->$setter($value);
         }
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
     }
 }

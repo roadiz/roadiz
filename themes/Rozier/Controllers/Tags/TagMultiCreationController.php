@@ -46,8 +46,8 @@ class TagMultiCreationController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $translation = $this->getService('defaultTranslation');
-        $parentTag = $this->getService('em')
+        $translation = $this->get('defaultTranslation');
+        $parentTag = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parentTagId);
 
         if (null !== $parentTag) {
@@ -61,7 +61,7 @@ class TagMultiCreationController extends RozierApp
                 /*
                  * Get latest position to add tags after.
                  */
-                $latestPosition = $this->getService('em')
+                $latestPosition = $this->get('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                     ->findLatestPositionInParent($parentTag);
 
@@ -74,10 +74,10 @@ class TagMultiCreationController extends RozierApp
                     $tag->setTagName($name);
                     $tag->setParent($parentTag);
                     $tag->setPosition(++$latestPosition);
-                    $this->getService('em')->persist($tag);
+                    $this->get('em')->persist($tag);
 
                     $translatedTag = new TagTranslation($tag, $translation);
-                    $this->getService('em')->persist($translatedTag);
+                    $this->get('em')->persist($translatedTag);
 
                     $tagsArray[] = $tag;
                 }
@@ -85,7 +85,7 @@ class TagMultiCreationController extends RozierApp
                 /*
                  * Flush only one time.
                  */
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 /*
                  * Dispatch event and msg
@@ -95,7 +95,7 @@ class TagMultiCreationController extends RozierApp
                      * Dispatch event
                      */
                     $event = new FilterTagEvent($tag);
-                    $this->getService('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
 
                     $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%' => $tag->getTagName()]);
                     $this->publishConfirmMessage($request, $msg);

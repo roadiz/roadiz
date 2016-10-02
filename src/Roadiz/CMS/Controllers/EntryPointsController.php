@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,7 +97,7 @@ class EntryPointsController extends AppController
             ];
         }
         $token = new CsrfToken(static::CONTACT_FORM_TOKEN_INTENTION, $request->get('form')['_token']);
-        if (!$this->getService('csrfTokenManager')->isTokenValid($token)) {
+        if (!$this->get('csrfTokenManager')->isTokenValid($token)) {
             return [
                 'statusCode' => Response::HTTP_FORBIDDEN,
                 'status' => 'danger',
@@ -163,14 +164,14 @@ class EntryPointsController extends AppController
                 ),
             ];
             $request->getSession()->getFlashBag()->add('confirm', $responseArray['message']);
-            $this->getService('logger')->info($responseArray['message']);
+            $this->get('logger')->info($responseArray['message']);
 
             if (empty($request->get('form')['_redirect'])) {
                 return new JsonResponse($responseArray);
             }
         } catch (BadFormRequestException $e) {
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-            $this->getService('logger')->warning($e->getMessage());
+            $this->get('logger')->warning($e->getMessage());
 
             if (empty($request->get('form')['_redirect'])) {
                 return new JsonResponse([
@@ -182,7 +183,7 @@ class EntryPointsController extends AppController
             }
         } catch (\Exception $e) {
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-            $this->getService('logger')->warning($e->getMessage());
+            $this->get('logger')->warning($e->getMessage());
 
             if (empty($request->get('form')['_redirect'])) {
                 return new JsonResponse([
@@ -298,7 +299,7 @@ class EntryPointsController extends AppController
         if (!empty($request->get('form')['_emailSubject'])) {
             return StringHandler::decodeWithSecret(
                 $request->get('form')['_emailSubject'],
-                $this->getService('config')['security']['secret']
+                $this->get('config')['security']['secret']
             );
         } else {
             return null;
@@ -316,7 +317,7 @@ class EntryPointsController extends AppController
         if (!empty($request->get('form')['_emailReceiver'])) {
             $email = StringHandler::decodeWithSecret(
                 $request->get('form')['_emailReceiver'],
-                $this->getService('config')['security']['secret']
+                $this->get('config')['security']['secret']
             );
             if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return $email;
@@ -346,6 +347,10 @@ class EntryPointsController extends AppController
          * Files values
          */
         foreach ($request->files as $files) {
+            /**
+             * @var string $name
+             * @var UploadedFile $uploadedFile
+             */
             foreach ($files as $name => $uploadedFile) {
                 if (null !== $uploadedFile) {
                     if (!$uploadedFile->isValid() ||
@@ -408,7 +413,7 @@ class EntryPointsController extends AppController
      *
      * <pre>
      * // Get session messages
-     * $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
+     * $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
      * </pre>
      *
      * Then in your contact page Twig template
@@ -508,7 +513,7 @@ class EntryPointsController extends AppController
      */
     protected function sendContactForm($assignation, $receiver, $subject = null, $files = null)
     {
-        $emailBody = $this->getService('twig.environment')->render('forms/contactForm.html.twig', $assignation);
+        $emailBody = $this->get('twig.environment')->render('forms/contactForm.html.twig', $assignation);
         /*
          * inline CSS
          */
@@ -548,6 +553,6 @@ class EntryPointsController extends AppController
         }
 
         // Send the message
-        return $this->getService('mailer')->send($message);
+        return $this->get('mailer')->send($message);
     }
 }

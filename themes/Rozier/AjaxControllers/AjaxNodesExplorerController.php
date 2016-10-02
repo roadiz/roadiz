@@ -66,7 +66,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         if (count($request->get('nodeTypes')) > 0) {
             $nodeTypeNames = array_map('trim', $request->get('nodeTypes'));
 
-            $nodeTypes = $this->getService('nodeTypeApi')->getBy([
+            $nodeTypes = $this->get('nodeTypeApi')->getBy([
                 'name' => $nodeTypeNames,
             ]);
 

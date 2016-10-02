@@ -76,7 +76,7 @@ trait NodesSourcesTrait
          * universal fields that could be absent from Form.
          */
         foreach ($data as $name => $singleData) {
-            $field = $this->getService('em')
+            $field = $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                 ->findOneBy([
                     'nodeType' => $nodeSource->getNode()->getNodeType(),
@@ -88,7 +88,7 @@ trait NodesSourcesTrait
             }
         }
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
     }
 
     /**
@@ -115,21 +115,21 @@ trait NodesSourcesTrait
              */
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
                 !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
-                $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->getService('em'));
+                $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->get('em'));
                 if (!$alreadyUsed) {
                     $nodeSource->getNode()->setNodeName($title);
                 } else {
                     $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
                 }
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 /*
                  * Dispatch event
                  */
                 $event = new FilterNodeEvent($nodeSource->getNode());
-                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
             } else {
-                $this->getService('logger')->debug('Node name has not be changed.');
+                $this->get('logger')->debug('Node name has not be changed.');
             }
         }
     }
@@ -152,7 +152,7 @@ trait NodesSourcesTrait
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
-        return $this->getService('em')
+        return $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
             ->findBy($criteria, $position);
     }
@@ -190,7 +190,7 @@ trait NodesSourcesTrait
          * Create subform for source
          */
         /** @var FormBuilder $sourceBuilder */
-        $sourceBuilder = $this->getService('formFactory')
+        $sourceBuilder = $this->get('formFactory')
             ->createNamedBuilder('source', 'form', $sourceDefaults);
         /*
          * Add title and default fields
@@ -237,19 +237,19 @@ trait NodesSourcesTrait
                 $documents = $nodeSource->getHandler()
                     ->getDocumentsFromFieldName($field->getName());
 
-                return new DocumentsType($documents, $this->getService('em'));
+                return new DocumentsType($documents, $this->get('em'));
             case NodeTypeField::NODES_T:
                 /** @var Node[] $nodes */
                 $nodes = $nodeSource->getNode()->getHandler()
                     ->getNodesFromFieldName($field->getName());
 
-                return new NodesType($nodes, $this->getService('em'));
+                return new NodesType($nodes, $this->get('em'));
             case NodeTypeField::CUSTOM_FORMS_T:
                 /** @var CustomForm[] $customForms */
                 $customForms = $nodeSource->getNode()->getHandler()
                     ->getCustomFormsFromFieldName($field->getName());
 
-                return new CustomFormsNodesType($customForms, $this->getService('em'));
+                return new CustomFormsNodesType($customForms, $this->get('em'));
             case NodeTypeField::CHILDREN_T:
                 /*
              * NodeTreeType is a virtual type which is only available
@@ -429,7 +429,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanDocumentsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $documentId) {
-                        $tempDoc = $this->getService('em')
+                        $tempDoc = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                         if ($tempDoc !== null) {
                             $hdlr->addDocumentForField($tempDoc, $field);
@@ -442,7 +442,7 @@ trait NodesSourcesTrait
                 $hdlr->cleanCustomFormsFromField($field);
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $customFormId) {
-                        $tempCForm = $this->getService('em')
+                        $tempCForm = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
                         if ($tempCForm !== null) {
                             $hdlr->addCustomFormForField($tempCForm, $field);
@@ -456,7 +456,7 @@ trait NodesSourcesTrait
 
                 if (is_array($dataValue)) {
                     foreach ($dataValue as $nodeId) {
-                        $tempNode = $this->getService('em')
+                        $tempNode = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                         if ($tempNode !== null) {
                             $hdlr->addNodeForField($tempNode, $field);

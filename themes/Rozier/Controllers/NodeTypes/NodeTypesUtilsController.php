@@ -56,7 +56,7 @@ class NodeTypesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        $nodeType = $this->getService('em')
+        $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $serializer = new NodeTypeJsonSerializer();
@@ -87,7 +87,7 @@ class NodeTypesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        $nodeTypes = $this->getService('em')
+        $nodeTypes = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findAll();
 
@@ -137,7 +137,7 @@ class NodeTypesUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
                     $serializer = new NodeTypeJsonSerializer();
                     $nodeType = $serializer->deserialize($serializedData);
-                    $existingNT = $this->getService('em')
+                    $existingNT = $this->get('em')
                                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                                        ->findOneBy(['name' => $nodeType->getName()]);
 
@@ -147,17 +147,17 @@ class NodeTypesUtilsController extends RozierApp
                          *
                          * First persist node-type
                          */
-                        $this->getService('em')->persist($nodeType);
+                        $this->get('em')->persist($nodeType);
 
                         // Flush before creating node-type fields.
-                        $this->getService('em')->flush();
+                        $this->get('em')->flush();
 
                         foreach ($nodeType->getFields() as $field) {
                             /*
                              * then persist each field
                              */
                             $field->setNodeType($nodeType);
-                            $this->getService('em')->persist($field);
+                            $this->get('em')->persist($field);
                         }
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.created');
@@ -173,7 +173,7 @@ class NodeTypesUtilsController extends RozierApp
                         $this->publishConfirmMessage($request, $msg);
                     }
 
-                    $this->getService('em')->flush();
+                    $this->get('em')->flush();
                     $nodeType->getHandler()->updateSchema();
 
                     /*
@@ -182,13 +182,13 @@ class NodeTypesUtilsController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'nodeTypesSchemaUpdate',
                         [
-                            '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
+                            '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                         ]
                     ));
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->error($msg);
+                    $this->get('logger')->error($msg);
 
                     // redirect even if its null
                     return $this->redirect($this->generateUrl(
@@ -198,7 +198,7 @@ class NodeTypesUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getService('logger')->error($msg);
+                $this->get('logger')->error($msg);
 
                 // redirect even if its null
                 return $this->redirect($this->generateUrl(

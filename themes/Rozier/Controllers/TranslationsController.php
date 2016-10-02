@@ -59,7 +59,7 @@ class TranslationsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        $translations = $this->getService('em')
+        $translations = $this->get('em')
                              ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                              ->findAll();
 
@@ -87,7 +87,7 @@ class TranslationsController extends RozierApp
                  * Dispatch event
                  */
                 $event = new FilterTranslationEvent($translation);
-                $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -117,21 +117,21 @@ class TranslationsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        $translation = $this->getService('em')
+        $translation = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
 
             $form = $this->createForm(new TranslationType(), $translation, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'locale' => $translation->getLocale(),
                 'overrideLocale' => $translation->getOverrideLocale(),
             ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('translation.%name%.updated', ['%name%' => $translation->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -140,7 +140,7 @@ class TranslationsController extends RozierApp
                  * Dispatch event
                  */
                 $event = new FilterTranslationEvent($translation);
-                $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -173,13 +173,13 @@ class TranslationsController extends RozierApp
         $this->assignation['translation'] = $translation;
 
         $form = $this->createForm(new TranslationType(), $translation, [
-            'em' => $this->getService('em'),
+            'em' => $this->get('em'),
         ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getService('em')->persist($translation);
-            $this->getService('em')->flush();
+            $this->get('em')->persist($translation);
+            $this->get('em')->flush();
 
             $msg = $this->getTranslator()->trans('translation.%name%.created', ['%name%' => $translation->getName()]);
             $this->publishConfirmMessage($request, $msg);
@@ -187,7 +187,7 @@ class TranslationsController extends RozierApp
              * Dispatch event
              */
             $event = new FilterTranslationEvent($translation);
-            $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_CREATED, $event);
+            $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_CREATED, $event);
             /*
              * Force redirect to avoid resending form when refreshing page
              */
@@ -211,7 +211,7 @@ class TranslationsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        $translation = $this->getService('em')
+        $translation = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if (null !== $translation) {
@@ -232,7 +232,7 @@ class TranslationsController extends RozierApp
                      * Dispatch event
                      */
                     $event = new FilterTranslationEvent($translation);
-                    $this->getService('dispatcher')->dispatch(TranslationEvents::TRANSLATION_DELETED, $event);
+                    $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_DELETED, $event);
                 } catch (\Exception $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
@@ -260,8 +260,8 @@ class TranslationsController extends RozierApp
     {
         if ($data['translationId'] == $translation->getId()) {
             if (false === $translation->isDefaultTranslation()) {
-                $this->getService('em')->remove($translation);
-                $this->getService('em')->flush();
+                $this->get('em')->remove($translation);
+                $this->get('em')->flush();
             } else {
                 throw new \Exception(
                     $this->getTranslator()->trans(

@@ -65,7 +65,7 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         /** @var Translation $translation */
-        $translation = $this->getService('em')
+        $translation = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         /*
          * Here we need to directly select nodeSource
@@ -73,17 +73,17 @@ class NodesSourcesController extends RozierApp
          * that is initialized before calling route method.
          */
         /** @var Node $gnode */
-        $gnode = $this->getService('em')
+        $gnode = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($translation !== null && $gnode !== null) {
             /** @var NodesSources $source */
-            $source = $this->getService('em')
+            $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
             if (null !== $source) {
-                $this->getService('em')->refresh($source);
+                $this->get('em')->refresh($source);
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;
@@ -104,7 +104,7 @@ class NodesSourcesController extends RozierApp
                          * Dispatch event
                          */
                         $event = new FilterNodesSourcesEvent($source);
-                        $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+                        $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
 
                         /*
                          * Update nodeName against source title.
@@ -179,7 +179,7 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
-        $ns = $this->getService("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
+        $ns = $this->get("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
 
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
@@ -209,10 +209,10 @@ class NodesSourcesController extends RozierApp
                  * Dispatch event
                  */
                 $event = new FilterNodesSourcesEvent($ns);
-                $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
+                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
 
-                $this->getService("em")->remove($ns);
-                $this->getService("em")->flush();
+                $this->get("em")->remove($ns);
+                $this->get("em")->flush();
 
                 $ns = $node->getNodeSources()->first();
 

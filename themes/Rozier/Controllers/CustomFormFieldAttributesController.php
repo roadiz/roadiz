@@ -55,7 +55,7 @@ class CustomFormFieldAttributesController extends RozierApp
          * Manage get request to filter list
          */
 
-        $customFormAnswer = $this->getService("em")->find("RZ\Roadiz\Core\Entities\CustomFormAnswer", $customFormAnswerId);
+        $customFormAnswer = $this->get("em")->find("RZ\Roadiz\Core\Entities\CustomFormAnswer", $customFormAnswerId);
 
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\CustomFormFieldAttribute',
@@ -63,7 +63,7 @@ class CustomFormFieldAttributesController extends RozierApp
         );
         $listManager->handle();
 
-        $customFormAnswer = $this->getService('em')->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', $customFormAnswerId);
+        $customFormAnswer = $this->get('em')->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', $customFormAnswerId);
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['fields'] = $listManager->getEntities();

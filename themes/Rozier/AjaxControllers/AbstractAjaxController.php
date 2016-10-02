@@ -60,7 +60,7 @@ abstract class AbstractAjaxController extends RozierApp
 
         if ($requestCsrfToken === true) {
             $token = new CsrfToken(static::AJAX_TOKEN_INTENTION, $request->get('_token'));
-            if (!$this->getService('csrfTokenManager')->isTokenValid($token)) {
+            if (!$this->get('csrfTokenManager')->isTokenValid($token)) {
                 return [
                     'statusCode'   => Response::HTTP_FORBIDDEN,
                     'status'       => 'danger',

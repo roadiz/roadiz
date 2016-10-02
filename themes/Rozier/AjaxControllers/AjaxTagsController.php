@@ -67,7 +67,7 @@ class AjaxTagsController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $tag = $this->getService('em')
+        $tag = $this->get('em')
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
@@ -133,7 +133,7 @@ class AjaxTagsController extends AbstractAjaxController
 
             $pattern = strip_tags($request->get('search'));
 
-            $tags = $this->getService('em')
+            $tags = $this->get('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                          ->searchBy($pattern, [], [], 10);
 
@@ -142,7 +142,7 @@ class AjaxTagsController extends AbstractAjaxController
                  * Try again using tag slug
                  */
                 $pattern = StringHandler::slugify($pattern);
-                $tags = $this->getService('em')
+                $tags = $this->get('em')
                              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                              ->searchBy($pattern, [], [], 10);
             }
@@ -171,7 +171,7 @@ class AjaxTagsController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-            $parent = $this->getService('em')
+            $parent = $this->get('em')
                            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -186,21 +186,21 @@ class AjaxTagsController extends AbstractAjaxController
          */
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
-            $nextTag = $this->getService('em')
+            $nextTag = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
-            $prevTag = $this->getService('em')
+            $prevTag = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }
         }
         // Apply position update before cleaning
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();
@@ -212,6 +212,6 @@ class AjaxTagsController extends AbstractAjaxController
          * Dispatch event
          */
         $event = new FilterTagEvent($tag);
-        $this->getService('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
+        $this->get('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
     }
 }

@@ -53,7 +53,7 @@ class CustomFormFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
-        $customForm = $this->getService('em')
+        $customForm = $this->get('em')
                            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if ($customForm !== null) {
@@ -81,21 +81,21 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         /** @var CustomFormField $field */
-        $field = $this->getService('em')
+        $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if ($field !== null) {
             $this->assignation['customForm'] = $field->getCustomForm();
             $this->assignation['field'] = $field;
             $form = $this->createForm(new CustomFormFieldType(), $field, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'customForm' => $field->getCustomForm(),
                 'fieldName' => $field->getName(),
             ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('customFormField.%name%.updated', ['%name%' => $field->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -132,7 +132,7 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $field = new CustomFormField();
-        $customForm = $this->getService('em')
+        $customForm = $this->get('em')
                            ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
         $field->setCustomForm($customForm);
 
@@ -141,15 +141,15 @@ class CustomFormFieldsController extends RozierApp
             $this->assignation['customForm'] = $customForm;
             $this->assignation['field'] = $field;
             $form = $this->createForm(new CustomFormFieldType(), $field, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'customForm' => $customForm,
             ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
-                    $this->getService('em')->persist($field);
-                    $this->getService('em')->flush();
+                    $this->get('em')->persist($field);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans(
                         'customFormField.%name%.created',
@@ -169,7 +169,7 @@ class CustomFormFieldsController extends RozierApp
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->error($msg);
+                    $this->get('logger')->error($msg);
                     /*
                      * Redirect to add page
                      */
@@ -200,7 +200,7 @@ class CustomFormFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
-        $field = $this->getService('em')
+        $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if ($field !== null) {
@@ -212,8 +212,8 @@ class CustomFormFieldsController extends RozierApp
                 $form->getData()['customFormFieldId'] == $field->getId()) {
                 $customFormId = $field->getCustomForm()->getId();
 
-                $this->getService('em')->remove($field);
-                $this->getService('em')->flush();
+                $this->get('em')->remove($field);
+                $this->get('em')->flush();
 
                 /*
                  * Update Database

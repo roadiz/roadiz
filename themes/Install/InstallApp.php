@@ -88,8 +88,8 @@ class InstallApp extends AppController
                 'filesUrl' => $this->getRequest()
                     ->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->getService('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->getService('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
+                'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
@@ -117,7 +117,7 @@ class InstallApp extends AppController
         if ($form->isValid()) {
             $locale = $form->getData()['language'];
             $request->setLocale($locale);
-            $this->getService('session')->set('_locale', $locale);
+            $this->get('session')->set('_locale', $locale);
             /*
              * Force redirect to avoid resending form when refreshing page
              */
@@ -180,17 +180,17 @@ class InstallApp extends AppController
                  */
                 try {
                     $fixtures = new Fixtures(
-                        $this->getService('em'),
-                        $this->getService('kernel')->getCacheDir(),
-                        $this->getService('kernel')->getRootDir() . '/conf/config.yml',
-                        $this->getService('kernel')->isDebug(),
+                        $this->get('em'),
+                        $this->get('kernel')->getCacheDir(),
+                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
+                        $this->get('kernel')->isDebug(),
                         $request
                     );
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
-                    $user = $this->getService('em')
+                    $user = $this->get('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\User')
                         ->findOneBy(['username' => $userForm->getData()['username']]);
 
@@ -219,7 +219,7 @@ class InstallApp extends AppController
      */
     public function userSummaryAction(Request $request, $userId)
     {
-        $user = $this->getService('em')->find('RZ\Roadiz\Core\Entities\User', $userId);
+        $user = $this->get('em')->find('RZ\Roadiz\Core\Entities\User', $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
         return $this->render('steps/userSummary.html.twig', $this->assignation);
@@ -248,13 +248,13 @@ class InstallApp extends AppController
                     /*
                      * Close Session for security and temp translation
                      */
-                    $this->getService('session')->invalidate();
+                    $this->get('session')->invalidate();
 
                     $clearers = [
-                        new DoctrineCacheClearer($this->getService('em')),
-                        new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
-                        new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
-                        new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
+                        new DoctrineCacheClearer($this->get('em')),
+                        new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
+                        new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
+                        new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),
                         // Force clear prod configuration too
                         new ConfigurationCacheClearer(ROADIZ_ROOT . '/cache/prod'),
                         new OPCacheClearer(),
@@ -368,7 +368,7 @@ class InstallApp extends AppController
         $metaDescription = SettingsBag::get('seo_description');
         $emailSender = SettingsBag::get('email_sender');
         $emailSenderName = SettingsBag::get('email_sender_name');
-        $timeZone = $this->getService('config')['timezone'];
+        $timeZone = $this->get('config')['timezone'];
 
         $timeZoneList = include dirname(__FILE__) . '/Resources/import/timezones.php';
 

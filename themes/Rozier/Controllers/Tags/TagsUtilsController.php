@@ -55,9 +55,9 @@ class TagsUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $existingTag = $this->getService('em')
+        $existingTag = $this->get('em')
                               ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
-        $this->getService('em')->refresh($existingTag);
+        $this->get('em')->refresh($existingTag);
 
         $serializer = new TagJsonSerializer();
         $tag = $serializer->serialize([$existingTag]);
@@ -93,11 +93,11 @@ class TagsUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $existingTags = $this->getService('em')
+        $existingTags = $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                               ->findBy(["parent" => null]);
         foreach ($existingTags as $existingTag) {
-            $this->getService('em')->refresh($existingTag);
+            $this->get('em')->refresh($existingTag);
         }
         $serializer = new TagJsonSerializer();
         $tag = $serializer->serialize($existingTags);

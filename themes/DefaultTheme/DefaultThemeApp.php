@@ -86,7 +86,7 @@ class DefaultThemeApp extends FrontendController
          * Register services
          */
         $this->themeContainer->register(new NodeServiceProvider($this->getContainer(), $this->translation));
-        $this->themeContainer->register(new NodeTypeServiceProvider($this->getService('nodeTypeApi')));
+        $this->themeContainer->register(new NodeTypeServiceProvider($this->get('nodeTypeApi')));
         $this->themeContainer->register(new AssetsServiceProvider());
 
         $this->assignation['themeServices'] = $this->themeContainer;
@@ -106,7 +106,7 @@ class DefaultThemeApp extends FrontendController
         // Get session messages
         // Remove FlashBag assignation from here if you handle your forms
         // in sub-requests block renders.
-        $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
+        $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
     }
 
     /**
@@ -118,19 +118,19 @@ class DefaultThemeApp extends FrontendController
      */
     public function throw404($message = '')
     {
-        $this->translation = $this->getService('defaultTranslation');
+        $this->translation = $this->get('defaultTranslation');
 
         $this->prepareThemeAssignation(null, $this->translation);
-        $this->getService('logger')->error($message);
+        $this->get('logger')->error($message);
 
         $this->assignation['nodeName'] = 'error-404';
         $this->assignation['nodeTypeName'] = 'error404';
         $this->assignation['errorMessage'] = $message;
-        $this->assignation['title'] = $this->getService('translator')->trans('error404.title');
-        $this->assignation['content'] = $this->getService('translator')->trans('error404.message');
+        $this->assignation['title'] = $this->get('translator')->trans('error404.title');
+        $this->assignation['content'] = $this->get('translator')->trans('error404.message');
 
 
-        $this->getService('stopwatch')->start('twigRender');
+        $this->get('stopwatch')->start('twigRender');
         return new Response(
             $this->renderView('@DefaultTheme/pages/404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
@@ -149,10 +149,10 @@ class DefaultThemeApp extends FrontendController
 
         $this->assignation['nodeName'] = 'maintenance' ;
         $this->assignation['nodeTypeName'] = 'maintenance';
-        $this->assignation['title'] = $this->getService('translator')->trans('website.is.under.maintenance');
-        $this->assignation['content'] = $this->getService('translator')->trans('website.is.under.maintenance.we.will.be.back.soon');
+        $this->assignation['title'] = $this->get('translator')->trans('website.is.under.maintenance');
+        $this->assignation['content'] = $this->get('translator')->trans('website.is.under.maintenance.we.will.be.back.soon');
 
-        $this->getService('stopwatch')->start('twigRender');
+        $this->get('stopwatch')->start('twigRender');
         return new Response(
             $this->renderView('@DefaultTheme/pages/maintenance.html.twig', $this->assignation),
             Response::HTTP_SERVICE_UNAVAILABLE,

@@ -50,7 +50,7 @@ class HistoryController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         /** @var Node $node */
-        $node = $this->getService('em')
+        $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null === $node) {
@@ -73,7 +73,7 @@ class HistoryController extends RozierApp
         $listManager->setPage($page);
 
         $this->assignation['node'] = $node;
-        $this->assignation['translation'] = $this->getService('defaultTranslation');
+        $this->assignation['translation'] = $this->get('defaultTranslation');
         $this->assignation['entries'] = $listManager->getEntities();
         $this->assignation['filters'] = $listManager->getAssignation();
 

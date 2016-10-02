@@ -54,18 +54,18 @@ class LoginRequestController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $user = $this->getService('em')
+            $user = $this->get('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\User')
                          ->findOneByEmail($form->getData()['email']);
 
             if (null !== $user) {
                 if (!$user->isPasswordRequestNonExpired(LoginRequestController::CONFIRMATION_TTL)) {
                     try {
-                        $tokenGenerator = new TokenGenerator($this->getService('logger'));
+                        $tokenGenerator = new TokenGenerator($this->get('logger'));
                         $user->setPasswordRequestedAt(new \DateTime());
                         $user->setConfirmationToken($tokenGenerator->generateToken());
-                        $this->getService('em')->flush();
-                        $user->getViewer()->sendPasswordResetLink($this->getService('urlGenerator'));
+                        $this->get('em')->flush();
+                        $user->getViewer()->sendPasswordResetLink($this->get('urlGenerator'));
 
                         return $this->redirect($this->generateUrl(
                             'loginRequestConfirmPage'
@@ -73,7 +73,7 @@ class LoginRequestController extends RozierApp
                     } catch (\Exception $e) {
                         $user->setPasswordRequestedAt(null);
                         $user->setConfirmationToken(null);
-                        $this->getService('em')->flush();
+                        $this->get('em')->flush();
                         $this->assignation['error'] = $e->getMessage();
                     }
                 } else {
@@ -112,7 +112,7 @@ class LoginRequestController extends RozierApp
                                     'checkMX' => true,
                                 ]),
                                 new ValidAccountEmail([
-                                    'entityManager' => $this->getService('em'),
+                                    'entityManager' => $this->get('em'),
                                     'message' => $this->getTranslator()->trans('%email%.email.does.not.exist.in.user.account.database'),
                                 ]),
                             ],

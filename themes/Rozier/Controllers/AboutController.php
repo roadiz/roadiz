@@ -102,7 +102,7 @@ class AboutController extends RozierApp
 
             // needs a composer require guzzlehttp/cache-subscriber
             CacheSubscriber::attach($client, array(
-                'storage' => new CacheStorage($this->getService('em')->getConfiguration()->getResultCacheImpl(), "rozier_github", 3600),
+                'storage' => new CacheStorage($this->get('em')->getConfiguration()->getResultCacheImpl(), "rozier_github", 3600),
                 'validate' => false,
             ));
 
@@ -373,11 +373,11 @@ class AboutController extends RozierApp
         $this->canAutomaticUpdate();
 
         $clearers = [
-            new DoctrineCacheClearer($this->getService('em')),
-            new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
-            new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
-            new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
-            new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
+            new DoctrineCacheClearer($this->get('em')),
+            new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
+            new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
+            new TemplatesCacheClearer($this->get('kernel')->getCacheDir()),
+            new TemplatesCacheClearer($this->get('kernel')->getCacheDir()),
             new OPCacheClearer(),
         ];
         foreach ($clearers as $clearer) {
@@ -403,8 +403,8 @@ class AboutController extends RozierApp
         $this->validateAccessForRole('ROLE_SUPERADMIN');
         $this->canAutomaticUpdate();
 
-        $schemaTool = new SchemaTool($this->getService('em'));
-        $metadatas = $this->getService('em')->getMetadataFactory()->getAllMetadata();
+        $schemaTool = new SchemaTool($this->get('em'));
+        $metadatas = $this->get('em')->getMetadataFactory()->getAllMetadata();
         $schemaTool->updateSchema($metadatas, true);
 
         return new JsonResponse([
@@ -444,12 +444,12 @@ class AboutController extends RozierApp
          */
         if ($fs->exists($newFile)) {
             $fs->rename($newFile, $trashFile);
-            $this->getService('logger')->notice('Trash file', [
+            $this->get('logger')->notice('Trash file', [
                 'src' => $newFile,
                 'dest' => $trashFile,
             ]);
         } else {
-            $this->getService('logger')->notice('File does not exist', [
+            $this->get('logger')->notice('File does not exist', [
                 'src' => $newFile,
             ]);
         }
@@ -459,7 +459,7 @@ class AboutController extends RozierApp
          */
         if ($fs->exists($tempFile)) {
             $fs->rename($tempFile, $newFile);
-            $this->getService('logger')->notice('Moved file', [
+            $this->get('logger')->notice('Moved file', [
                 'src' => $tempFile,
                 'dest' => $newFile,
             ]);

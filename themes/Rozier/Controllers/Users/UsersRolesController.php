@@ -53,7 +53,7 @@ class UsersRolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -101,9 +101,9 @@ class UsersRolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
-        $role = $this->getService('em')
+        $role = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
         if ($user !== null && $role !== null) {
@@ -147,11 +147,11 @@ class UsersRolesController extends RozierApp
     private function addUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->getService('em')
+            $role = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
 
             $user->addRole($role);
-            $this->getService('em')->flush();
+            $this->get('em')->flush();
 
             return $role;
         }
@@ -168,12 +168,12 @@ class UsersRolesController extends RozierApp
     private function removeUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->getService('em')
+            $role = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
 
             if ($role !== null) {
                 $user->removeRole($role);
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
             }
 
             return $role;

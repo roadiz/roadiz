@@ -104,7 +104,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
             null !== $field) {
             $field->setPosition($parameters['newPosition']);
             // Apply position update before cleaning
-            $this->getService('em')->flush();
+            $this->get('em')->flush();
 
             $field->getHandler()->cleanPositions();
         }

@@ -68,12 +68,12 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if ("" != $request->get('searchTerms')) {
-            $searchHandler = new GlobalNodeSourceSearchHandler($this->getService('em'));
+            $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
             /** @var array $nodesSources */
             $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
                 $request->get('searchTerms'),
                 static::RESULT_COUNT,
-                $this->getService('defaultTranslation')
+                $this->get('defaultTranslation')
             );
 
             if (null !== $nodesSources &&

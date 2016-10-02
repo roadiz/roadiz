@@ -130,7 +130,7 @@ class SearchController extends RozierApp
         if (isset($data["tags"])) {
             $data["tags"] = array_map('trim', explode(',', $data["tags"]));
             foreach ($data["tags"] as $key => $value) {
-                $data["tags"][$key] = $this->getService("em")->getRepository('RZ\Roadiz\Core\Entities\Tag')->findByPath($value);
+                $data["tags"][$key] = $this->get("em")->getRepository('RZ\Roadiz\Core\Entities\Tag')->findByPath($value);
             }
             array_filter($data["tags"]);
         }
@@ -244,7 +244,7 @@ class SearchController extends RozierApp
      */
     public function searchNodeSourceAction(Request $request, $nodetypeId)
     {
-        $nodetype = $this->getService('em')
+        $nodetype = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
@@ -283,7 +283,7 @@ class SearchController extends RozierApp
     protected function buildNodeTypeForm($nodetypeId = null)
     {
         /** @var FormBuilder $builderNodeType */
-        $builderNodeType = $this->getService('formFactory')
+        $builderNodeType = $this->get('formFactory')
                                 ->createNamedBuilder(
                                     'nodeTypeForm',
                                     "form",
@@ -455,7 +455,7 @@ class SearchController extends RozierApp
     protected function buildSimpleForm($prefix)
     {
         /** @var FormBuilder $builder */
-        $builder = $this->getService('formFactory')
+        $builder = $this->get('formFactory')
                         ->createBuilder(
                             'form',
                             [],

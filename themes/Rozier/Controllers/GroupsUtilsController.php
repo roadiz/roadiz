@@ -54,11 +54,11 @@ class GroupsUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
-        $existingGroup = $this->getService('em')
+        $existingGroup = $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Group')
                               ->findAll();
 
-        $serializer = new GroupCollectionJsonSerializer($this->getService('em'));
+        $serializer = new GroupCollectionJsonSerializer($this->get('em'));
         $group = $serializer->serialize($existingGroup);
 
         $response = new Response(
@@ -90,10 +90,10 @@ class GroupsUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
-        $existingGroup = $this->getService('em')
+        $existingGroup = $this->get('em')
                               ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
-        $serializer = new GroupCollectionJsonSerializer($this->getService('em'));
+        $serializer = new GroupCollectionJsonSerializer($this->get('em'));
         $group = $serializer->serialize([$existingGroup]);
 
         $response = new Response(
@@ -139,7 +139,7 @@ class GroupsUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
                     GroupsImporter::importJsonFile(
                         $serializedData,
-                        $this->getService('em')
+                        $this->get('em')
                     );
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
@@ -152,7 +152,7 @@ class GroupsUtilsController extends RozierApp
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->error($msg);
+                    $this->get('logger')->error($msg);
 
                     // redirect even if its null
                     return $this->redirect($this->generateUrl(
@@ -162,7 +162,7 @@ class GroupsUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getService('logger')->error($msg);
+                $this->get('logger')->error($msg);
             }
         }
 

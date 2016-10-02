@@ -59,7 +59,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $folders = $this->getService('em')
+        $folders = $this->get('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                         ->findBy(
                             [

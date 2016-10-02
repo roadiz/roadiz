@@ -67,7 +67,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         ];
 
         if ($request->get('folderId') > 0) {
-            $folder = $this->getService('em')
+            $folder = $this->get('em')
                            ->find(
                                'RZ\Roadiz\Core\Entities\Folder',
                                $request->get('folderId')

@@ -62,7 +62,7 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
-        $field = $this->getService('em')
+        $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if (null !== $response = $this->handleFieldActions($request, $field)) {

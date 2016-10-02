@@ -65,13 +65,13 @@ class UrlAliasesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if (null === $translationId && $translationId < 1) {
-            $translation = $this->getService('defaultTranslation');
+            $translation = $this->get('defaultTranslation');
         } else {
-            $translation = $this->getService('em')
+            $translation = $this->get('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
         /** @var NodesSources $source */
-        $source = $this->getService('em')
+        $source = $this->get('em')
                        ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
 
@@ -79,7 +79,7 @@ class UrlAliasesController extends RozierApp
 
         if ($source !== null &&
             $node !== null) {
-            $uas = $this->getService('em')
+            $uas = $this->get('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
                         ->findAllFromNode($node->getId());
 
@@ -105,7 +105,7 @@ class UrlAliasesController extends RozierApp
                      * Dispatch event
                      */
                     $event = new FilterNodesSourcesEvent($source);
-                    $this->getService('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+                    $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
                 } else {
                     $msg = $this->getTranslator()->trans('node.seo.not.updated');
                     $this->publishErrorMessage($request, $msg, $source);
@@ -139,7 +139,7 @@ class UrlAliasesController extends RozierApp
                          * Dispatch event
                          */
                         $event = new FilterUrlAliasEvent($alias);
-                        $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_UPDATED, $event);
+                        $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_UPDATED, $event);
                     } else {
                         $msg = $this->getTranslator()->trans('url_alias.%alias%.no_update.already_exists', ['%alias%' => $alias->getAlias()]);
                         $this->publishErrorMessage($request, $msg, $source);
@@ -167,7 +167,7 @@ class UrlAliasesController extends RozierApp
                      * Dispatch event
                      */
                     $event = new FilterUrlAliasEvent($alias);
-                    $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_DELETED, $event);
+                    $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_DELETED, $event);
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -203,7 +203,7 @@ class UrlAliasesController extends RozierApp
                      * Dispatch event
                      */
                     $event = new FilterUrlAliasEvent($ua);
-                    $this->getService('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage(), $source);
                 } catch (NoTranslationAvailableException $e) {
@@ -237,10 +237,10 @@ class UrlAliasesController extends RozierApp
     private function addNodeUrlAlias($data, Node $node)
     {
         if ($data['nodeId'] == $node->getId()) {
-            $translation = $this->getService('em')
+            $translation = $this->get('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $data['translationId']);
 
-            $nodeSource = $this->getService('em')
+            $nodeSource = $this->get('em')
                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                                ->findOneBy(['node' => $node, 'translation' => $translation]);
 
@@ -256,8 +256,8 @@ class UrlAliasesController extends RozierApp
                 try {
                     $ua = new UrlAlias($nodeSource);
                     $ua->setAlias($data['alias']);
-                    $this->getService('em')->persist($ua);
-                    $this->getService('em')->flush();
+                    $this->get('em')->persist($ua);
+                    $this->get('em')->flush();
 
                     return $ua;
                 } catch (\Exception $e) {
@@ -290,7 +290,7 @@ class UrlAliasesController extends RozierApp
             $nodeSource->setMetaKeywords($data['metaKeywords']);
             $nodeSource->setMetaDescription($data['metaDescription']);
 
-            $this->getService('em')->flush();
+            $this->get('em')->flush();
             return true;
         }
 
@@ -304,7 +304,7 @@ class UrlAliasesController extends RozierApp
      */
     private function urlAliasExists($name)
     {
-        return (boolean) $this->getService('em')
+        return (boolean) $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
                               ->exists($name);
     }
@@ -315,7 +315,7 @@ class UrlAliasesController extends RozierApp
      */
     private function nodeNameExists($name)
     {
-        return (boolean) $this->getService('em')
+        return (boolean) $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Node')
                               ->exists($name);
     }
@@ -344,7 +344,7 @@ class UrlAliasesController extends RozierApp
         if ($data['urlaliasId'] == $ua->getId()) {
             try {
                 $ua->setAlias($data['alias']);
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 return true;
             } catch (\Exception $e) {
@@ -362,8 +362,8 @@ class UrlAliasesController extends RozierApp
     private function deleteUrlAlias($data, UrlAlias $ua)
     {
         if ($data['urlaliasId'] == $ua->getId()) {
-            $this->getService('em')->remove($ua);
-            $this->getService('em')->flush();
+            $this->get('em')->remove($ua);
+            $this->get('em')->flush();
         }
     }
 

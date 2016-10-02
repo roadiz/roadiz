@@ -55,9 +55,9 @@ class AjaxNodeTreeController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if (null === $translationId) {
-            $translation = $this->getService('defaultTranslation');
+            $translation = $this->get('defaultTranslation');
         } else {
-            $translation = $this->getService('em')
+            $translation = $this->get('em')
                                 ->find(
                                     '\RZ\Roadiz\Core\Entities\Translation',
                                     (int) $translationId
@@ -70,7 +70,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
              */
             case 'requestNodeTree':
                 if ($request->get('parentNodeId') > 0) {
-                    $node = $this->getService('em')
+                    $node = $this->get('em')
                                  ->find(
                                      '\RZ\Roadiz\Core\Entities\Node',
                                      (int) $request->get('parentNodeId')
@@ -86,7 +86,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                 );
 
                 if ($request->get('tagId') && $request->get('tagId') > 0) {
-                    $filterTag = $this->getService('em')
+                    $filterTag = $this->get('em')
                                         ->find(
                                             '\RZ\Roadiz\Core\Entities\Tag',
                                             (int) $request->get('tagId')

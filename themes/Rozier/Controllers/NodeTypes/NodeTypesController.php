@@ -88,14 +88,14 @@ class NodeTypesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        $nodeType = $this->getService('em')
+        $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
 
             $form = $this->createForm(new NodeTypeType(), $nodeType, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'name' => $nodeType->getName(),
             ]);
 
@@ -103,7 +103,7 @@ class NodeTypesController extends RozierApp
 
             if ($form->isValid()) {
                 try {
-                    $this->getService('em')->flush();
+                    $this->get('em')->flush();
                     $nodeType->getHandler()->updateSchema();
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.updated', ['%name%' => $nodeType->getName()]);
@@ -117,7 +117,7 @@ class NodeTypesController extends RozierApp
                 return $this->redirect($this->generateUrl(
                     'nodeTypesSchemaUpdate',
                     [
-                        '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
+                        '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                     ]
                 ));
             }
@@ -150,14 +150,14 @@ class NodeTypesController extends RozierApp
              * form
              */
             $form = $this->createForm(new NodeTypeType(), $nodeType, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
             ]);
 
             $form->handleRequest($request);
             if ($form->isValid()) {
                 try {
-                    $this->getService('em')->persist($nodeType);
-                    $this->getService('em')->flush();
+                    $this->get('em')->persist($nodeType);
+                    $this->get('em')->flush();
                     $nodeType->getHandler()->updateSchema();
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.created', ['%name%' => $nodeType->getName()]);
@@ -169,7 +169,7 @@ class NodeTypesController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'nodeTypesSchemaUpdate',
                         [
-                            '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
+                            '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                         ]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
@@ -200,7 +200,7 @@ class NodeTypesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
 
-        $nodeType = $this->getService('em')
+        $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         if (null !== $nodeType) {
@@ -225,7 +225,7 @@ class NodeTypesController extends RozierApp
                 return $this->redirect($this->generateUrl(
                     'nodeTypesSchemaUpdate',
                     [
-                        '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
+                        '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                     ]
                 ));
             }

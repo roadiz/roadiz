@@ -53,7 +53,7 @@ class LoginController extends RozierApp
 
         $this->assignation['form'] = $form->createView();
 
-        $helper = $this->getService('securityAuthenticationUtils');
+        $helper = $this->get('securityAuthenticationUtils');
 
         $this->assignation['last_username'] = $helper->getLastUsername();
         $this->assignation['error'] = $helper->getLastAuthenticationError();
@@ -106,7 +106,7 @@ class LoginController extends RozierApp
     {
         $defaults = [];
 
-        $builder = $this->getService('formFactory')
+        $builder = $this->get('formFactory')
                         ->createNamedBuilder(null, 'form', $defaults, [])
                         ->add('_username', 'text', [
                             'label' => 'username',
