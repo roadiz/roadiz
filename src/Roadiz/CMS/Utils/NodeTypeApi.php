@@ -28,6 +28,7 @@
  * @author Maxime Constantinian
  */
 namespace RZ\Roadiz\CMS\Utils;
+
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
 
 /**
