@@ -27,7 +27,7 @@
  * @file TokenStorageProcessor.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Utils\LogProcessors;
+namespace RZ\Roadiz\Utils\Log\Processor;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

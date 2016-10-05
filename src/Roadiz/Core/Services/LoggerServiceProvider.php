@@ -29,19 +29,21 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Gelf\Publisher;
+use Gelf\Transport\HttpTransport;
 use Monolog\Handler\GelfHandler;
-use Monolog\Handler\NewRelicHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
-use Monolog\Processor\WebProcessor;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Log\DoctrineHandler;
-use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
-use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
+use RZ\Roadiz\Utils\Log\Handler\TolerantGelfHandler;
+use RZ\Roadiz\Utils\Log\Processor\RequestProcessor;
+use RZ\Roadiz\Utils\Log\Processor\TokenStorageProcessor;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class LoggerServiceProvider.
@@ -70,10 +72,10 @@ class LoggerServiceProvider implements ServiceProviderInterface
                     if (!empty($config['type'])) {
                         switch ($config['type']) {
                             case 'default':
-                                $handlers[] = new StreamHandler($c['logger.path'], Logger::NOTICE);
+                                $handlers[] = new StreamHandler($c['logger.path'], constant('\Monolog\Logger::'.$config['level']));
                                 if (null !== $c['em'] &&
                                     true === $kernel->isDebug()) {
-                                    $handlers[] = new StreamHandler($c['logger.path'], Logger::DEBUG);
+                                    $handlers[] = new StreamHandler($c['logger.path'], constant('\Monolog\Logger::'.$config['level']));
                                 }
                                 break;
                             case 'stream':
@@ -95,26 +97,14 @@ class LoggerServiceProvider implements ServiceProviderInterface
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
                                 break;
-                            case 'newrelic':
-                                if (empty($config['app_name'])) {
-                                    throw new InvalidConfigurationException('A monolog NewRelicHandler must define a log "app_name".');
-                                }
-                                $handlers[] = new NewRelicHandler(
-                                    constant('\Monolog\Logger::'.$config['level']),
-                                    true,
-                                    $config['app_name']
-                                );
-                                break;
                             case 'gelf':
-                                if (empty($config['publisher'])) {
-                                    throw new InvalidConfigurationException('A monolog NewRelicHandler must define a log "publisher".');
+                                if (empty($config['url'])) {
+                                    throw new InvalidConfigurationException('A monolog NewRelicHandler must define a log "url".');
                                 }
-                                if (empty($config['publisher']['hostname']) &&
-                                    empty($config['publisher']['id'])) {
-                                    throw new InvalidConfigurationException('A monolog NewRelicHandler must define a for the publisher either the hostname or the id.');
-                                }
-                                $handlers[] = new GelfHandler(
-                                    $config['publisher'],
+                                $publisher = new Publisher(HttpTransport::fromUrl($config['url']));
+
+                                $handlers[] = new TolerantGelfHandler(
+                                    $publisher,
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
                                 break;
@@ -169,7 +159,9 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /*
              * Add processors
              */
-            $log->pushProcessor(new WebProcessor());
+            /** @var Request $request */
+            $request = $c['request'];
+            $log->pushProcessor(new RequestProcessor($request));
             $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
 
             return $log;

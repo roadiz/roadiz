@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,27 +24,31 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RequestProcessor.php
+ * @file TokenStorageProcessor.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Utils\LogProcessors;
+namespace RZ\Roadiz\Utils\Log\Handler;
 
-use Symfony\Component\HttpFoundation\Request;
+use Monolog\Handler\GelfHandler;
 
-class RequestProcessor
+/**
+ * Fault tolerant GelfHandler.
+ *
+ * @package RZ\Roadiz\Utils\Log\Handler
+ */
+class TolerantGelfHandler extends GelfHandler
 {
-    private $request;
-
-    public function __construct(Request $request)
+    /**
+     * Do not throw exception if external host is not reachable.
+     *
+     * @param array $record
+     */
+    protected function write(array $record)
     {
-        $this->request = $request;
-    }
-
-    public function __invoke(array $record)
-    {
-        $record['extra']['locale'] = $this->request->getLocale();
-        $record['extra']['uri'] = $this->request->getUri();
-
-        return $record;
+        try {
+            $this->publisher->publish($record['formatted']);
+        } catch (\Exception $e) {
+            // Do nothing
+        }
     }
 }
