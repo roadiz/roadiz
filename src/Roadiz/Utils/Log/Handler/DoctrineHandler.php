@@ -27,7 +27,7 @@
  * @file DoctrineHandler.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Log;
+namespace RZ\Roadiz\Utils\Log\Handler;
 
 use Doctrine\ORM\EntityManager;
 use Monolog\Handler\AbstractProcessingHandler;

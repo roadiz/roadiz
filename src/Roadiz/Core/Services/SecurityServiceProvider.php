@@ -29,17 +29,12 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Log\DoctrineHandler;
-use RZ\Roadiz\Utils\LogProcessors\RequestProcessor;
-use RZ\Roadiz\Utils\LogProcessors\TokenStorageProcessor;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
 use RZ\Roadiz\Utils\Security\TimedFirewall;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -76,6 +71,10 @@ use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
  */
 class SecurityServiceProvider implements ServiceProviderInterface
 {
+    /**
+     * @param Container $container
+     * @return Container
+     */
     public function register(Container $container)
     {
         /*
@@ -134,43 +133,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AuthenticationUtils($c['requestStack']);
         };
 
-        $container['logger'] = function ($c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            $logPath = $kernel->getLogDir() . '/' .
-                $kernel->getName(). '_' .
-                $kernel->getEnvironment().'.log';
 
-            $log = new Logger('roadiz');
-            $log->pushHandler(new StreamHandler($logPath, Logger::NOTICE));
-
-            if (null !== $c['em'] &&
-                true === $kernel->isDebug()) {
-                $log->pushHandler(new StreamHandler($logPath, Logger::DEBUG));
-            }
-
-            /*
-             * Only activate doctrine logger for production.
-             */
-            if (null !== $c['em'] &&
-                false === $kernel->isInstallMode() &&
-                $kernel->getEnvironment() == 'prod') {
-                $log->pushHandler(new DoctrineHandler(
-                    $c['em'],
-                    $c['securityTokenStorage'],
-                    $c['request'],
-                    Logger::INFO
-                ));
-            }
-
-            /*
-             * Add processors
-             */
-            $log->pushProcessor(new RequestProcessor($c['request']));
-            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
-
-            return $log;
-        };
 
         $container['contextListener'] = function ($c) {
             $c['session']; //Force session handler
