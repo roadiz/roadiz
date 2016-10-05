@@ -31,14 +31,13 @@ namespace RZ\Roadiz\Core\Services;
 
 use Gelf\Publisher;
 use Gelf\Transport\HttpTransport;
-use Monolog\Handler\GelfHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\Log\DoctrineHandler;
+use RZ\Roadiz\Utils\Log\Handler\DoctrineHandler;
 use RZ\Roadiz\Utils\Log\Handler\TolerantGelfHandler;
 use RZ\Roadiz\Utils\Log\Processor\RequestProcessor;
 use RZ\Roadiz\Utils\Log\Processor\TokenStorageProcessor;
