@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -41,11 +43,17 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class DynamicUrlMatcher extends UrlMatcher
 {
+    /** @var EntityManager */
     protected $em;
-    protected $theme = null;
-    protected $repository = null;
-    protected $stopwatch = null;
-    protected $logger = null;
+    /** @var Theme  */
+    protected $theme;
+    /** @var NodeRepository */
+    protected $repository;
+    /** @var Stopwatch  */
+    protected $stopwatch;
+    /** @var LoggerInterface */
+    protected $logger;
+    /** @var bool */
     protected $preview;
 
     /**

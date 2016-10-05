@@ -144,6 +144,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new \RZ\Roadiz\Core\Services\ThemeServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\TranslationServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\TwigServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\LoggerServiceProvider());
 
         /*
          * Load additional service providers

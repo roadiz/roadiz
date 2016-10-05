@@ -86,7 +86,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     /**
      * @param string $decodedUrl
      *
-     * @return array
+     * @return array|bool
      */
     protected function matchNode($decodedUrl)
     {
@@ -106,6 +106,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             }
 
             if ($node !== null) {
+                /** @var Translation $translation */
                 $translation = $node->getNodeSources()->first()->getTranslation();
                 $nodeRouteHelper = new NodeRouteHelper(
                     $node,
