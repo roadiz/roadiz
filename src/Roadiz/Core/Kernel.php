@@ -401,7 +401,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getCacheDir()
     {
-        return ROADIZ_ROOT . '/cache/' . $this->environment;
+        if ($this->isPreview()) {
+            return $this->getRootDir() . '/cache/' . $this->environment . '_preview';
+        }
+        return $this->getRootDir() . '/cache/' . $this->environment;
     }
 
     /**
@@ -411,7 +414,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getLogDir()
     {
-        return ROADIZ_ROOT . '/logs';
+        return $this->getRootDir() . '/logs';
     }
 
     /**
@@ -459,11 +462,17 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return serialize(array($this->environment, $this->debug, $this->preview));
     }
 
+    /**
+     * @param string $data
+     */
     public function unserialize($data)
     {
         list($environment, $debug, $preview) = unserialize($data);

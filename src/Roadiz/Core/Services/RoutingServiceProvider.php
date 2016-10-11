@@ -49,6 +49,10 @@ use Symfony\Component\Security\Http\HttpUtils;
  */
 class RoutingServiceProvider implements ServiceProviderInterface
 {
+    /**
+     * @param Container $container
+     * @return Container
+     */
     public function register(Container $container)
     {
         $container['httpKernel'] = function ($c) {
@@ -137,7 +141,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
                  */
                 $collection = new RoadizRouteCollection(
                     $c['themeResolver'],
-                    $c['stopwatch']
+                    $c['stopwatch'],
+                    $c['kernel']->isPreview()
                 );
 
                 return $collection;

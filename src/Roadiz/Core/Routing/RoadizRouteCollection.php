@@ -34,26 +34,36 @@ use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
+ * Class RoadizRouteCollection.
  *
+ * @package RZ\Roadiz\Core\Routing
  */
 class RoadizRouteCollection extends DeferredRouteCollection
 {
     protected $stopwatch;
     protected $themeResolver;
+    /**
+     * @var bool
+     */
+    private $isPreview;
 
     /**
      * @param ThemeResolver $themeResolver
      * @param Stopwatch $stopwatch
+     * @param bool $isPreview
      */
     public function __construct(
         ThemeResolver $themeResolver,
-        Stopwatch $stopwatch = null
+        Stopwatch $stopwatch = null,
+        $isPreview = false
     ) {
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
+        $this->isPreview = $isPreview;
     }
 
     /**
@@ -76,7 +86,12 @@ class RoadizRouteCollection extends DeferredRouteCollection
              * Add Assets controller routes
              */
             $assets = AssetsController::getRoutes();
-            if ('' != SettingsBag::get('static_domain_name')) {
+            if (false === $this->isPreview &&
+                '' != SettingsBag::get('static_domain_name')) {
+                /*
+                 * Only use CDN if no preview mode and CDN domain
+                 * is well set
+                 */
                 $assets->setHost(SettingsBag::get('static_domain_name'));
             }
             $this->addCollection($assets);
@@ -98,6 +113,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
         }
     }
 
+
     protected function addBackendCollection()
     {
         $class = $this->themeResolver->getBackendClassName();
@@ -117,7 +133,9 @@ class RoadizRouteCollection extends DeferredRouteCollection
         foreach ($frontendThemes as $theme) {
             if ($theme instanceof Theme) {
                 $feClass = $theme->getClassName();
+                /** @var RouteCollection $feCollection */
                 $feCollection = $feClass::getRoutes();
+                /** @var RouteCollection $feBackendCollection */
                 $feBackendCollection = $feClass::getBackendRoutes();
 
                 if ($feCollection !== null) {
