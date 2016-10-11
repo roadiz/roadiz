@@ -51,18 +51,20 @@ class Packages extends BasePackages
      * Build a new asset packages for Roadiz root and documents.
      *
      * @param VersionStrategyInterface $versionStrategy
-     * @param RequestStack             $requestStack
-     * @param string                   $staticDomain
+     * @param RequestStack $requestStack
+     * @param string $staticDomain
+     * @param bool $isPreview
      */
     public function __construct(
         VersionStrategyInterface $versionStrategy,
         RequestStack $requestStack,
-        $staticDomain = ""
+        $staticDomain = "",
+        $isPreview = false
     ) {
         $requestStackContext = new RequestStackContext($requestStack);
         $request = $requestStack->getCurrentRequest();
 
-        if ($staticDomain != "") {
+        if (false === $isPreview && $staticDomain != "") {
             /*
              * Add non-default port to static domain.
              */
