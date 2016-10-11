@@ -286,6 +286,8 @@ class AppController extends Controller
      *     - baseUrl
      *     - filesUrl
      *     - resourcesUrl
+     *     - absoluteResourcesUrl
+     *     - staticDomainName
      *     - ajaxToken
      *     - fontToken
      *     - universalAnalyticsId
@@ -313,6 +315,7 @@ class AppController extends Controller
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
+                'absoluteResourcesUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
@@ -321,6 +324,11 @@ class AppController extends Controller
                 'user' => $this->getUser(),
             ],
         ];
+
+        if ('' != SettingsBag::getDocument('static_domain_name')) {
+            $this->assignation['head']['absoluteResourcesUrl'] = $this->getStaticResourcesUrl();
+            $this->assignation['head']['staticDomainName'] = SettingsBag::getDocument('static_domain_name');
+        }
 
         if ($this->get('securityAuthorizationChecker') !== null) {
             $this->assignation['authorizationChecker'] = $this->get('securityAuthorizationChecker');
