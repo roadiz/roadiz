@@ -45,6 +45,9 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
         $this->client = new Client();
     }
 
+    /**
+     * @see http://www.splashbase.co/api#images_random
+     */
     public function getRandom()
     {
         try {
@@ -123,7 +126,9 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
                 return false;
             }
         }
-
-        return $this->feed['url'];
+        /*
+         * http://www.splashbase.co/api#images_random
+         */
+        return !empty($this->feed['large_url']) ? $this->feed['large_url'] : $this->feed['url'];
     }
 }

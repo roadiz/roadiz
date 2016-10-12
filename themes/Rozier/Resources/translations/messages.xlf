@@ -6421,6 +6421,36 @@
             <target></target>
             <note>For markdown.preview button label</note>
         </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="document.relative_url">
+          <source>document.relative_url</source>
+          <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.absolute_url">
+          <source>document.absolute_url</source>
+          <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.unprocessed_url">
+          <source>document.unprocessed_url</source>
+          <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.source_url">
+          <source>document.source_url</source>
+          <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.width">
+          <source>document.width</source>
+          <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.height">
+          <source>document.height</source>
+          <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.filesize">
+          <source>document.filesize</source>
+          <target></target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

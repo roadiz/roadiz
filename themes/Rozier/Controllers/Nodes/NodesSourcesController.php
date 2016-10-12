@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -119,7 +120,15 @@ class NodesSourcesController extends RozierApp
                         $this->publishConfirmMessage($request, $msg, $source);
 
                         if ($request->isXmlHttpRequest()) {
-                            return new JsonResponse(['status' => 'success', 'errors' => []]);
+                            $urlGenerator = new NodesSourcesUrlGenerator($request, $source);
+                            $url = $urlGenerator->getUrl();
+                            $previewUrl = '/preview.php' . str_replace('/dev.php', '', $url);
+
+                            return new JsonResponse([
+                                'status' => 'success',
+                                'public_url' => $source->getNode()->isPublished() ? $url : $previewUrl,
+                                'errors' => []
+                            ]);
                         }
 
                         return $this->redirect($this->generateUrl(

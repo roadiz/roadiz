@@ -155,6 +155,16 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
         })
         .done(function(data) {
             _this.cleanErrors();
+
+            /*
+             * Update preview or view url
+             */
+            if (data.public_url) {
+                $publicUrlLinks = $('a.public-url-link');
+                if ($publicUrlLinks.length) {
+                    $publicUrlLinks.attr('href', data.public_url);
+                }
+            }
         })
         .fail(function(data) {
             _this.displayErrors(data.responseJSON.errors);

@@ -220,15 +220,24 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Document $document */
         $document = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
-                'width' => 500,
+                'width' => 750,
                 'controls' => true,
             ];
+            $this->assignation['infos'] = [
+                'filesize' => sprintf('%.3f MB', (filesize($document->getAbsolutePath()))/pow(1024, 2)),
+            ];
+            if ($document->isImage()) {
+                list($width, $height) = getimagesize($document->getAbsolutePath());
+                $this->assignation['infos']['width'] = $width . 'px';
+                $this->assignation['infos']['height'] = $height . 'px';
+            }
 
             return $this->render('documents/preview.html.twig', $this->assignation);
         } else {

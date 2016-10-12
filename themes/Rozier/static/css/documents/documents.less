@@ -251,13 +251,18 @@ table.documents {
 
 // Edit preview
 .content-document-preview{
-
+    padding-bottom: 0;
     text-align: center;
 
     .uk-thumbnail{
         height:auto;
         background: none;
         box-shadow: none;
+
+        iframe {
+            max-width: 100%;
+            border: 0;
+        }
     }
 
     .document-source{
