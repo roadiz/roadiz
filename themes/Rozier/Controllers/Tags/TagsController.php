@@ -32,9 +32,11 @@ namespace Themes\Rozier\Controllers\Tags;
 
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\TagTranslationType;
@@ -94,8 +96,10 @@ class TagsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         if (null === $translationId) {
+            /** @var Translation $translation */
             $translation = $this->get('defaultTranslation');
         } else {
+            /** @var Translation $translation */
             $translation = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
@@ -109,6 +113,7 @@ class TagsController extends RozierApp
             $gtag = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
+            /** @var TagTranslation $tt */
             $tt = $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
                 ->findOneBy(['translation' => $translation, 'tag' => $gtag]);
@@ -117,6 +122,7 @@ class TagsController extends RozierApp
                 /*
                  * Tag is already translated
                  */
+                /** @var Tag $tag */
                 $tag = $tt->getTag();
                 $this->assignation['tag'] = $tag;
                 $this->assignation['translatedTag'] = $tt;
@@ -127,10 +133,19 @@ class TagsController extends RozierApp
 
                 $form = $this->createForm(new TagTranslationType(), $tt, [
                     'em' => $this->get('em'),
+                    'tagName' => $tag->getTagName(),
                 ]);
                 $form->handleRequest($request);
 
                 if ($form->isValid()) {
+                    /*
+                     * Update tag slug if not locked
+                     * only from default translation.
+                     */
+                    if (!$tag->isLocked() && $translation->isDefaultTranslation()) {
+                        $tag->setTagName($tt->getName());
+                    }
+
                     $this->get('em')->flush();
 
                     /*
@@ -142,7 +157,7 @@ class TagsController extends RozierApp
                     );
 
                     $msg = $this->getTranslator()->trans('tag.%name%.updated', [
-                        '%name%' => $tag->getTranslatedTags()->first()->getName(),
+                        '%name%' => $tt->getName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
                     /*
@@ -508,12 +523,7 @@ class TagsController extends RozierApp
                         ['tagId' => $tag->getId()]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-
-                    return $this->redirect($this->generateUrl(
-                        'tagsAddChildPage',
-                        ['tagId' => $tagId, 'translationId' => $translationId]
-                    ));
+                    $form->addError(new FormError($e->getMessage()));
                 }
             }
 

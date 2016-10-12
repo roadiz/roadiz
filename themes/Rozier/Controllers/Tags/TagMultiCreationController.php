@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Controllers\Tags;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
@@ -127,6 +128,9 @@ class TagMultiCreationController extends RozierApp
                 ],
                 'constraints' => [
                     new NotBlank(),
+                    new UniqueTagName([
+                        'entityManager' => $this->get('em'),
+                    ]),
                 ],
             ]);
 

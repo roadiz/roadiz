@@ -35,7 +35,28 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueTagNameValidator extends ConstraintValidator
 {
+    /**
+     * @param string $value
+     * @param Constraint $constraint
+     */
     public function validate($value, Constraint $constraint)
+    {
+        if ($this->isMulti($value)) {
+            $names = explode(',', $value);
+            foreach ($names as $name) {
+                $name = strip_tags(trim($name));
+                $this->testSingleValue($name, $constraint);
+            }
+        } else {
+            $this->testSingleValue($value, $constraint);
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param Constraint $constraint
+     */
+    protected function testSingleValue($value, Constraint $constraint)
     {
         $value = StringHandler::slugify($value);
 
@@ -68,5 +89,14 @@ class UniqueTagNameValidator extends ConstraintValidator
                              ->findOneByTagName($name);
 
         return (null !== $entity);
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function isMulti($value)
+    {
+        return (boolean) strpos($value, ',');
     }
 }
