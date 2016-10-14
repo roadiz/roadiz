@@ -148,6 +148,7 @@ class SolariumNodeSource extends AbstractSolarium
              * Remove ctrl characters
              */
             $content = preg_replace("[:cntrl:]", "", $content);
+            $content = preg_replace('/[\x00-\x1F]/', '', $content);
 
             /*
              * Use locale to create field name
