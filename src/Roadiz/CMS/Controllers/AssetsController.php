@@ -179,7 +179,7 @@ class AssetsController extends AppController
                 );
                 $response->setCache([
                     'last_modified' => new \DateTime($lastMod),
-                    'max_age' => 60 * 60 * 2,
+                    'max_age' => 60 * 60 * 48, // expires for 2 days
                     'public' => true,
                 ]);
                 if (!$response->isNotModified($request)) {
@@ -220,7 +220,7 @@ class AssetsController extends AppController
         );
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
-            'max_age' => 60 * 60 * 2,
+            'max_age' => 60 * 60 * 48, // expires for 2 days
             'public' => true,
         ]);
 
