@@ -60,10 +60,6 @@ class DocumentFactory
     private $folder;
 
     /**
-     * @var Document
-     */
-    private $document;
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -104,14 +100,16 @@ class DocumentFactory
 
     /**
      * Special case for SVG without XML statement.
+     *
+     * @param Document $document
      */
-    protected function parseSvgMimeType()
+    protected function parseSvgMimeType(Document $document)
     {
-        if (($this->document->getMimeType() == "text/plain" ||
-                $this->document->getMimeType() == 'text/html') &&
+        if (($document->getMimeType() == "text/plain" ||
+                $document->getMimeType() == 'text/html') &&
             preg_match('#\.svg$#', $this->uploadedFile->getClientOriginalName())) {
             $this->logger->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
-            $this->document->setMimeType('image/svg+xml');
+            $document->setMimeType('image/svg+xml');
         }
     }
 
@@ -127,31 +125,31 @@ class DocumentFactory
             $this->uploadedFile->getError() == UPLOAD_ERR_OK &&
             $this->uploadedFile->isValid()) {
             try {
-                $this->document = new Document();
-                $this->document->setFilename($this->uploadedFile->getClientOriginalName());
-                $this->document->setMimeType($this->uploadedFile->getMimeType());
-                $this->em->persist($this->document);
+                $document = new Document();
+                $document->setFilename($this->uploadedFile->getClientOriginalName());
+                $document->setMimeType($this->uploadedFile->getMimeType());
+                $this->em->persist($document);
 
-                $this->parseSvgMimeType();
+                $this->parseSvgMimeType($document);
 
                 if (null !== $this->folder) {
-                    $this->document->addFolder($this->folder);
-                    $this->folder->addDocument($this->document);
+                    $document->addFolder($this->folder);
+                    $this->folder->addDocument($document);
                 }
 
                 $this->uploadedFile->move(
-                    Document::getFilesFolder() . '/' . $this->document->getFolder(),
-                    $this->document->getFilename()
+                    Document::getFilesFolder() . '/' . $document->getFolder(),
+                    $document->getFilename()
                 );
 
-                if ($this->document->isImage()) {
+                if ($document->isImage()) {
                     $this->dispatcher->dispatch(
                         DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
-                        new FilterDocumentEvent($this->document)
+                        new FilterDocumentEvent($document)
                     );
                 }
 
-                return $this->document;
+                return $document;
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
                 return null;
@@ -198,7 +196,7 @@ class DocumentFactory
 
             $document->setFilename($this->uploadedFile->getClientOriginalName());
             $document->setMimeType($this->uploadedFile->getMimeType());
-            $this->parseSvgMimeType();
+            $this->parseSvgMimeType($document);
 
             $this->uploadedFile->move(
                 Document::getFilesFolder() . '/' . $document->getFolder(),
