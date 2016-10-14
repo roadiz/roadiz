@@ -143,7 +143,14 @@ class SolariumDocumentTranslation extends AbstractSolarium
         }
 
         $assoc['title'] = $this->documentTranslation->getName();
-        $assoc['description' . $suffix] = strip_tags(Parsedown::instance()->text($this->documentTranslation->getDescription()));
+
+        /*
+         * Remove ctrl characters
+         */
+        $description = strip_tags(Parsedown::instance()->text($this->documentTranslation->getDescription()));
+        $description = preg_replace("[:cntrl:]", "", $description);
+        $assoc['description' . $suffix] = $description;
+
         $assoc['copyright' . $suffix] = $this->documentTranslation->getCopyright();
 
         $collection[] = $assoc['title'];

@@ -144,6 +144,10 @@ class SolariumNodeSource extends AbstractSolarium
              * Strip markdown syntax
              */
             $content = strip_tags(Parsedown::instance()->text($content));
+            /*
+             * Remove ctrl characters
+             */
+            $content = preg_replace("[:cntrl:]", "", $content);
 
             /*
              * Use locale to create field name
