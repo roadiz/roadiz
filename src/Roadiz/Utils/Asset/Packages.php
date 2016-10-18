@@ -74,12 +74,19 @@ class Packages extends BasePackages
                 $staticDomainAndPort .= ':' . $request->getPort();
             }
 
+            /*
+             * If no protocol, use https as default
+             */
+            if (!preg_match("~^(?:f|ht)tps?://~i", $staticDomainAndPort)) {
+                $staticDomainAndPort = "https://" . $staticDomainAndPort;
+            }
+
             $defaultPackage = new UrlPackage(
-                '//' . $staticDomainAndPort,
+                $staticDomainAndPort,
                 $versionStrategy
             );
             $documentPackage = new UrlPackage(
-                '//' . $staticDomainAndPort . '/' . Document::getFilesFolderName(),
+                $staticDomainAndPort . '/' . Document::getFilesFolderName(),
                 $versionStrategy
             );
 
