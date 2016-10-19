@@ -100,14 +100,16 @@ export DB_NAME=$DBNAME
 export DB_USER=$DBUSER
 export DB_PASS=$DBPASSWD
 
+export PRIVATE_IP=`/sbin/ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\n----------- Your Roadiz Vagrant is ready in /var/www ------------"
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\nDo not forget to \"composer install\" and to add "
-echo -e "\nyour host IP into install.php and dev.php (generally 10.0.2.2)"
+echo -e "\nyour host IP into install.php and dev.php"
 echo -e "\nto get allowed in install and dev entrypoints."
-echo -e "\n* Type http://localhost:8080/install.php to proceed to install."
-echo -e "\n* Type https://localhost:4430/install.php to proceed using SSL (cert is not authentified)."
+echo -e "\n* Type http://$PRIVATE_IP/install.php to proceed to install."
+echo -e "\n* Type https://$PRIVATE_IP/install.php to proceed using SSL (cert is not authentified)."
 echo -e "\n* MySQL User: $DBUSER"
 echo -e "\n* MySQL Password: $DBPASSWD"
 echo -e "\n* MySQL Database: $DBNAME"

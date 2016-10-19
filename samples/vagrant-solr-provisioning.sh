@@ -41,7 +41,9 @@ sudo /opt/solr/bin/solr create_core -c roadiz_test > /dev/null 2>&1;
 echo -e "\n--- Restarting Solr server ---\n"
 sudo service solr restart > /dev/null 2>&1;
 
+export PRIVATE_IP=`/sbin/ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+
 echo -e "\n-----------------------------------------------------------"
 echo -e "\n---------------- Your Solr server is ready ----------------"
-echo -e "\n* Type http://localhost:8983/solr to use Apache Solr admin."
+echo -e "\n* Type http://$PRIVATE_IP:8983/solr to use Apache Solr admin."
 echo -e "\n-----------------------------------------------------------"

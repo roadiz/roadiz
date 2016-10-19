@@ -55,8 +55,10 @@ $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
 EOF
 
+export PRIVATE_IP=`/sbin/ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\n------------------- Your phpmyadmin is ready --------------------"
 echo -e "\n-----------------------------------------------------------------"
-echo -e "\n* Type http://localhost:8080/phpmyadmin for your MySQL db admin."
+echo -e "\n* Type http://$PRIVATE_IP/phpmyadmin for your MySQL db admin."
 echo -e "\n-----------------------------------------------------------------"
