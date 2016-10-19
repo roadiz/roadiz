@@ -83,6 +83,7 @@ build/Release
 node_modules
 
 ### Vagrant ###
+/Vagrantfile
 .vagrant/
 
 ### grunt ###
