@@ -460,3 +460,20 @@
         {{- form_widget(form) -}}
     </div>
 {%- endblock button_row -%}
+
+{%- block button_widget -%}
+    {% if not attr.class %}
+        {% set attr = attr|merge({'class': 'uk-button'}) %}
+    {% endif %}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+            '%name%': name,
+            '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</button>
+{%- endblock button_widget -%}

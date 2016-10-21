@@ -378,7 +378,7 @@ class EntityListManager
     /**
      * Return filtered entities.
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function getEntities()
     {
