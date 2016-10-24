@@ -81,10 +81,10 @@ class NodesSourcesHandler
      * Remove every node-source documents associations for a given field.
      *
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
-     *
+     * @param bool $flush
      * @return $this
      */
-    public function cleanDocumentsFromField(NodeTypeField $field)
+    public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
     {
         $nsDocuments = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
@@ -94,7 +94,10 @@ class NodesSourcesHandler
             foreach ($nsDocuments as $nsDoc) {
                 Kernel::getService('em')->remove($nsDoc);
             }
-            Kernel::getService('em')->flush();
+
+            if (true === $flush) {
+                Kernel::getService('em')->flush();
+            }
         }
 
         return $this;
@@ -103,23 +106,30 @@ class NodesSourcesHandler
     /**
      * Add a document to current node-source for a given node-type field.
      *
-     * @param Document      $document
+     * @param Document $document
      * @param NodeTypeField $field
-     *
+     * @param bool $flush
+     * @param null|integer $position
      * @return $this
      */
-    public function addDocumentForField(Document $document, NodeTypeField $field)
+    public function addDocumentForField(Document $document, NodeTypeField $field, $flush = true, $position = null)
     {
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
-        $latestPosition = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
-            ->getLatestPosition($this->nodeSource, $field);
+        if (null === $position) {
+            $latestPosition = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+                ->getLatestPosition($this->nodeSource, $field);
 
-        $nsDoc->setPosition($latestPosition + 1);
+            $nsDoc->setPosition($latestPosition + 1);
+        } else {
+            $nsDoc->setPosition($position);
+        }
 
         Kernel::getService('em')->persist($nsDoc);
-        Kernel::getService('em')->flush();
+        if (true === $flush) {
+            Kernel::getService('em')->flush();
+        }
 
         return $this;
     }
