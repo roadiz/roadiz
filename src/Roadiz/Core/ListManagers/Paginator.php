@@ -114,11 +114,11 @@ class Paginator
      *
      * **Warning** : EntityRepository must implements *countBy* method
      *
-     * @return float
+     * @return int
      */
     public function getPageCount()
     {
-        return ceil($this->getTotalCount() / $this->getItemsPerPage());
+        return (int) ceil($this->getTotalCount() / $this->getItemsPerPage());
     }
 
     /**

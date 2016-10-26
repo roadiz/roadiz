@@ -81,7 +81,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
-        $listManager->setItemPerPage(40);
+        $listManager->setItemPerPage(30);
         $listManager->handle();
 
         $nodes = $listManager->getEntities();
@@ -104,7 +104,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
-            'nodesCount' => count($nodes),
+            'nodesCount' => $listManager->getItemCount(),
             'filters' => $listManager->getAssignation(),
         ];
 

@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 
 /**
@@ -432,7 +433,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @param integer $limit
      * @param integer $offset
      *
-     * @return array
+     * @return array|Paginator
      */
     public function searchBy(
         $pattern,
@@ -459,10 +460,19 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         $finalQuery = $qb->getQuery();
         $this->applyComparisons($criteria, $finalQuery);
 
-        try {
-            return $finalQuery->getResult();
-        } catch (NoResultException $e) {
-            return [];
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (NoResultException $e) {
+                return [];
+            }
         }
     }
 

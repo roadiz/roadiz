@@ -291,7 +291,7 @@ class NodeRepository extends EntityRepository
      * @param Translation|null          $translation
      * @param AuthorizationChecker|null $authorizationChecker
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function findByWithTranslation(
         array $criteria,
@@ -344,7 +344,7 @@ class NodeRepository extends EntityRepository
      * @param AuthorizationChecker|null $authorizationChecker
      * @param boolean                   $preview
      *
-     * @return ArrayCollection|Paginator
+     * @return array|Paginator
      */
     public function findBy(
         array $criteria,
@@ -382,7 +382,7 @@ class NodeRepository extends EntityRepository
             try {
                 return $finalQuery->getResult();
             } catch (NoResultException $e) {
-                return new ArrayCollection();
+                return [];
             }
         }
     }
@@ -476,7 +476,7 @@ class NodeRepository extends EntityRepository
      * @param AuthorizationChecker|null $authorizationChecker
      * @param boolean                   $preview
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return null|Node
      */
     public function findOneBy(
         array $criteria,
