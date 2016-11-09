@@ -5,19 +5,21 @@
  # Markdown, document and childrenNodeTree fields
  #
  #}
- {%- block date_widget -%}
-    {%- if widget == 'single_text' -%}
-        {%- set type = type|default('text') -%}
-        <input data-uk-datepicker="{format:'YYYY-MM-DD'}" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-    {%- else -%}
-        <div {{ block('widget_container_attributes') }}>
-            {{- date_pattern|replace({
-                '{{ year }}':  form_widget(form.year),
-                '{{ month }}': form_widget(form.month),
-                '{{ day }}':   form_widget(form.day),
-            })|raw -}}
-        </div>
-    {%- endif -%}
+{% extends "form_div_layout.html.twig" %}
+
+{%- block date_widget -%}
+     {%- if widget == 'single_text' -%}
+         {%- set type = type|default('text') -%}
+         <input data-uk-datepicker="{format:'YYYY-MM-DD'}" type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+     {%- else -%}
+         <div {{ block('widget_container_attributes') }}>
+             {{- date_pattern|replace({
+                 '{{ year }}':  form_widget(form.year),
+                 '{{ month }}': form_widget(form.month),
+                 '{{ day }}':   form_widget(form.day),
+             })|raw -}}
+         </div>
+     {%- endif -%}
 {%- endblock date_widget -%}
 
 {% block markdown_widget %}
@@ -28,79 +30,79 @@
         <nav class="markdown-editor-navbar">
             <ul class="markdown-editor-navbar-nav">
                 <li class="markdown-editor-button-cont-h2"><a class="markdown-editor-button-h2"
-                        data-markdowneditor-button="h2"
-                        title="{% trans %}headline.2{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h2"></i></a></li>
+                                                              data-markdowneditor-button="h2"
+                                                              title="{% trans %}headline.2{% endtrans %}"
+                                                              data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h2"></i></a></li>
 
                 <li class="markdown-editor-button-cont-h3"><a class="markdown-editor-button-h3"
-                        data-markdowneditor-button="h3"
-                        title="{% trans %}headline.3{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h3"></i></a></li>
+                                                              data-markdowneditor-button="h3"
+                                                              title="{% trans %}headline.3{% endtrans %}"
+                                                              data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h3"></i></a></li>
 
                 <li class="markdown-editor-button-cont-h4"><a class="markdown-editor-button-h4"
-                        data-markdowneditor-button="h4"
-                        title="{% trans %}headline.4{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h4"></i></a></li>
+                                                              data-markdowneditor-button="h4"
+                                                              title="{% trans %}headline.4{% endtrans %}"
+                                                              data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h4"></i></a></li>
 
                 <li class="markdown-editor-button-cont-h5"><a class="markdown-editor-button-h5"
-                        data-markdowneditor-button="h5"
-                        title="{% trans %}headline.5{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h5"></i></a></li>
+                                                              data-markdowneditor-button="h5"
+                                                              title="{% trans %}headline.5{% endtrans %}"
+                                                              data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h5"></i></a></li>
 
                 <li class="markdown-editor-button-cont-h6"><a class="markdown-editor-button-h6"
-                        data-markdowneditor-button="h6"
-                        title="{% trans %}headline.6{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h6"></i></a></li>
+                                                              data-markdowneditor-button="h6"
+                                                              title="{% trans %}headline.6{% endtrans %}"
+                                                              data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h6"></i></a></li>
 
                 <li class="markdown-editor-button-cont-bold"><a class="markdown-editor-button-bold"
-                        data-markdowneditor-button="bold"
-                        title="{% trans %}bold{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-bold"></i></a></li>
+                                                                data-markdowneditor-button="bold"
+                                                                title="{% trans %}bold{% endtrans %}"
+                                                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-bold"></i></a></li>
 
                 <li class="markdown-editor-button-cont-italic"><a class="markdown-editor-button-italic"
-                        data-markdowneditor-button="italic"
-                        title="{% trans %}italic{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-italic"></i></a></li>
+                                                                  data-markdowneditor-button="italic"
+                                                                  title="{% trans %}italic{% endtrans %}"
+                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-italic"></i></a></li>
 
                 <li class="markdown-editor-button-cont-blockquote"><a class="markdown-editor-button-blockquote"
-                        data-markdowneditor-button="blockquote"
-                        title="{% trans %}blockquote{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-quote"></i></a></li>
+                                                                      data-markdowneditor-button="blockquote"
+                                                                      title="{% trans %}blockquote{% endtrans %}"
+                                                                      data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-quote"></i></a></li>
 
                 <li class="markdown-editor-button-cont-link"><a class="markdown-editor-button-link"
-                        data-markdowneditor-button="link"
-                        title="{% trans %}link{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-link"></i></a></li>
+                                                                data-markdowneditor-button="link"
+                                                                title="{% trans %}link{% endtrans %}"
+                                                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-link"></i></a></li>
 
                 <li class="markdown-editor-button-cont-image"><a class="markdown-editor-button-image"
-                        data-markdowneditor-button="image"
-                        title="{% trans %}image{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-image"></i></a></li>
+                                                                 data-markdowneditor-button="image"
+                                                                 title="{% trans %}image{% endtrans %}"
+                                                                 data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-image"></i></a></li>
 
                 <li class="markdown-editor-button-cont-listUl"><a class="markdown-editor-button-listUl"
-                        data-markdowneditor-button="listUl"
-                        title="{% trans %}unordered.list{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-unordered-list"></i></a></li>
+                                                                  data-markdowneditor-button="listUl"
+                                                                  title="{% trans %}unordered.list{% endtrans %}"
+                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-unordered-list"></i></a></li>
 
                 <li class="markdown-editor-button-cont-back"><a class="markdown-editor-button-back"
-                        data-markdowneditor-button="back"
-                        title="{% trans %}back{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back"></i></a></li>
+                                                                data-markdowneditor-button="back"
+                                                                title="{% trans %}back{% endtrans %}"
+                                                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back"></i></a></li>
 
                 <li class="markdown-editor-button-cont-hr"><a class="markdown-editor-button-hr"
-                        data-markdowneditor-button="hr"
-                        title="{% trans %}separator{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-hr"></i></a></li>
+                                                              data-markdowneditor-button="hr"
+                                                              title="{% trans %}separator{% endtrans %}"
+                                                              data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-hr"></i></a></li>
 
                 <li class="markdown-editor-button-cont-nbsp"><a class="markdown-editor-button-nbsp"
-                        data-markdowneditor-button="nbsp"
-                        title="{% trans %}non_breaking.space{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-space-forced"></i></a></li>
+                                                                data-markdowneditor-button="nbsp"
+                                                                title="{% trans %}non_breaking.space{% endtrans %}"
+                                                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-space-forced"></i></a></li>
 
                 <li class="markdown-editor-button-cont-preview"><a class="markdown-editor-button-preview"
-                        data-markdowneditor-button="preview"
-                        title="{% trans %}markdown.preview{% endtrans %}"
-                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a></li>
+                                                                   data-markdowneditor-button="preview"
+                                                                   title="{% trans %}markdown.preview{% endtrans %}"
+                                                                   data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a></li>
 
             </ul>
         </nav>
@@ -135,140 +137,140 @@
 
 {% block tags_widget %}
     {% spaceless %}
-    <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>
-        {% if label is empty -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
+        <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>
+            {% if label is empty -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
 
-        <nav class="tags-widget-nav uk-navbar">
-            <ul class="uk-navbar-nav">
-                <li class="uk-navbar-brand"><i class="uk-icon-rz-tags"></i></li>
-                <li class="uk-navbar-brand label">{{ label|trans }}</li>
-            </ul>
-            <div class="uk-navbar-content uk-navbar-flip">
-                <div class="tags-widget-quick-creation uk-button-group">
-                    <a class="uk-button uk-button-small" href="#" data-tag-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}tags.toggle-explorer{% endtrans %}</a>
+            <nav class="tags-widget-nav uk-navbar">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-navbar-brand"><i class="uk-icon-rz-tags"></i></li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                </ul>
+                <div class="uk-navbar-content uk-navbar-flip">
+                    <div class="tags-widget-quick-creation uk-button-group">
+                        <a class="uk-button uk-button-small" href="#" data-tag-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}tags.toggle-explorer{% endtrans %}</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <ul class="uk-sortable tags-widget-sortable" data-uk-sortable="{group:'tags-widget', dragCustomClass:'tags-widget-dragging'}" data-input-name="{{ name }}">
-            {% for doc in data %}
-            {% include '@Rozier/widgets/tagSmallThumbnail.html.twig' with {
-                'tag':doc,
-                'name': name,
-                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
-                'read_only': read_only,
-                'disabled':disabled,
-                'required':required,
-                'attr': attr
-            } only %}
-            {% endfor %}
-        </ul>
-    </div>
+            </nav>
+            <ul class="uk-sortable tags-widget-sortable" data-uk-sortable="{group:'tags-widget', dragCustomClass:'tags-widget-dragging'}" data-input-name="{{ name }}">
+                {% for doc in data %}
+                    {% include '@Rozier/widgets/tagSmallThumbnail.html.twig' with {
+                    'tag':doc,
+                    'name': name,
+                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                    'read_only': read_only,
+                    'disabled':disabled,
+                    'required':required,
+                    'attr': attr
+                    } only %}
+                {% endfor %}
+            </ul>
+        </div>
     {% endspaceless %}
 {% endblock tags_widget %}
 
 {% block documents_widget %}
     {% spaceless %}
-    <div class="uk-form-row documents-widget" data-document-widget {{ block('widget_attributes') }}>
-        {% if label is empty -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
+        <div class="uk-form-row documents-widget" data-document-widget {{ block('widget_attributes') }}>
+            {% if label is empty -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
 
-        <nav class="documents-widget-nav uk-navbar">
-            <ul class="uk-navbar-nav">
-                <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
-                <li class="uk-navbar-brand label">{{ label|trans }}</li>
-            </ul>
-            <div class="uk-navbar-content uk-navbar-flip">
-                <div class="documents-widget-quick-creation uk-button-group">
-                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
-                    <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+            <nav class="documents-widget-nav uk-navbar">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                </ul>
+                <div class="uk-navbar-content uk-navbar-flip">
+                    <div class="documents-widget-quick-creation uk-button-group">
+                        <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
+                        <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
-            {% for doc in data %}
-            {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
-                'document':doc,
-                'name': name,
-                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
-                'read_only': read_only,
-                'disabled':disabled,
-                'required':required,
-                'attr': attr
-            } only %}
-            {% endfor %}
-        </ul>
-    </div>
+            </nav>
+            <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
+                {% for doc in data %}
+                    {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
+                    'document':doc,
+                    'name': name,
+                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                    'read_only': read_only,
+                    'disabled':disabled,
+                    'required':required,
+                    'attr': attr
+                    } only %}
+                {% endfor %}
+            </ul>
+        </div>
     {% endspaceless %}
 {% endblock documents_widget %}
 
 {% block nodes_widget %}
     {% spaceless %}
-    <div class="uk-form-row nodes-widget" data-node-widget {{ block('widget_attributes') }}>
-        {% if label is empty -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
-        <nav class="nodes-widget-nav uk-navbar">
-            <ul class="uk-navbar-nav">
-                <li class="uk-navbar-brand"><i class="uk-icon-rz-global-nodes"></i></li>
-                <li class="uk-navbar-brand label">{{ label|trans }}</li>
-            </ul>
-            <div class="uk-navbar-content uk-navbar-flip">
-                <div class="nodes-widget-quick-creation uk-button-group">
-                    <a class="uk-button uk-button-small" href="#" data-node-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}nodes.toggle-explorer{% endtrans %}</a>
+        <div class="uk-form-row nodes-widget" data-node-widget {{ block('widget_attributes') }}>
+            {% if label is empty -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+            <nav class="nodes-widget-nav uk-navbar">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-navbar-brand"><i class="uk-icon-rz-global-nodes"></i></li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                </ul>
+                <div class="uk-navbar-content uk-navbar-flip">
+                    <div class="nodes-widget-quick-creation uk-button-group">
+                        <a class="uk-button uk-button-small" href="#" data-node-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}nodes.toggle-explorer{% endtrans %}</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <ul class="uk-sortable nodes-widget-sortable" data-uk-sortable="{group:'nodes-widget', dragCustomClass:'nodes-widget-dragging'}" data-input-name="{{ name }}">
-            {% for node in data %}
-            {% include '@Rozier/widgets/nodeSmallThumbnail.html.twig' with {
-                'node':node,
-                'name': name,
-                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
-                'read_only': read_only,
-                'disabled':disabled,
-                'required':required,
-                'attr': attr
-            } only %}
-            {% endfor %}
-        </ul>
-    </div>
+            </nav>
+            <ul class="uk-sortable nodes-widget-sortable" data-uk-sortable="{group:'nodes-widget', dragCustomClass:'nodes-widget-dragging'}" data-input-name="{{ name }}">
+                {% for node in data %}
+                    {% include '@Rozier/widgets/nodeSmallThumbnail.html.twig' with {
+                    'node':node,
+                    'name': name,
+                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                    'read_only': read_only,
+                    'disabled':disabled,
+                    'required':required,
+                    'attr': attr
+                    } only %}
+                {% endfor %}
+            </ul>
+        </div>
     {% endspaceless %}
 {% endblock nodes_widget %}
 
 {% block custom_forms_widget %}
     {% spaceless %}
-    <div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
-        {% if label is empty -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
-        <nav class="custom-forms-widget-nav uk-navbar">
-            <ul class="uk-navbar-nav">
-                <li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>
-                <li class="uk-navbar-brand label">{{ label|trans }}</li>
-            </ul>
-            <div class="uk-navbar-content uk-navbar-flip">
-                <div class="custom-forms-widget-quick-creation uk-button-group">
-                    <a class="uk-button uk-button-small" href="#" data-custom-form-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}custom-forms.toggle-explorer{% endtrans %}</a>
+        <div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
+            {% if label is empty -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+            <nav class="custom-forms-widget-nav uk-navbar">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                </ul>
+                <div class="uk-navbar-content uk-navbar-flip">
+                    <div class="custom-forms-widget-quick-creation uk-button-group">
+                        <a class="uk-button uk-button-small" href="#" data-custom-form-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}custom-forms.toggle-explorer{% endtrans %}</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <ul class="uk-sortable custom-forms-widget-sortable" data-uk-sortable="{group:'custom-forms-widget', dragCustomClass:'custom-forms-widget-dragging'}" data-input-name="{{ name }}">
-            {% for customForm in data %}
-            {% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {
-                'customForm':customForm,
-                'name': name,
-                'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
-                'read_only': read_only,
-                'disabled':disabled,
-                'required':required,
-                'attr': attr
-            } only %}
-            {% endfor %}
-        </ul>
-    </div>
+            </nav>
+            <ul class="uk-sortable custom-forms-widget-sortable" data-uk-sortable="{group:'custom-forms-widget', dragCustomClass:'custom-forms-widget-dragging'}" data-input-name="{{ name }}">
+                {% for customForm in data %}
+                    {% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {
+                    'customForm':customForm,
+                    'name': name,
+                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                    'read_only': read_only,
+                    'disabled':disabled,
+                    'required':required,
+                    'attr': attr
+                    } only %}
+                {% endfor %}
+            </ul>
+        </div>
     {% endspaceless %}
 {% endblock custom_forms_widget %}
 
@@ -302,51 +304,51 @@
 {# Override default error block #}
 {% block form_errors -%}
     {% if errors|length > 0 -%}
-    <ul class="errors">
-        {%- for error in errors -%}
-        <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans }}</li>
-        {%- endfor -%}
-    </ul>
+        <ul class="errors">
+            {%- for error in errors -%}
+                <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans }}</li>
+            {%- endfor -%}
+        </ul>
     {%- endif %}
 {%- endblock form_errors %}
 
 {# Children node tree field #}
 {% block childrennodes_widget %}
     {% spaceless %}
-    <div class="uk-form-row children-nodes-widget" data-children-nodes-widget {{ block('widget_attributes') }}>
-        {% if label is empty -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
-        <nav class="children-nodes-nav uk-navbar">
-            <ul class="uk-navbar-nav">
-                <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
-                <li class="uk-navbar-brand label">{{ label|trans }}</li>
-            </ul>
-            <div class="uk-navbar-content uk-navbar-flip">
-                <div class="children-nodes-quick-creation uk-button-group">
-                    {% for linkedType in linkedTypes %}
-                    <a class="uk-button uk-button-small"
-                        href="#"
-                        data-children-node-type="{{ linkedType.getId }}"
-                        data-children-parent-node="{{ nodeTree.rootNode.getId }}"
-                        data-translation-id="{{ nodeTree.translation.getId }}">
-                        <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
-                    </a>
-                    {% endfor %}
+        <div class="uk-form-row children-nodes-widget" data-children-nodes-widget {{ block('widget_attributes') }}>
+            {% if label is empty -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+            <nav class="children-nodes-nav uk-navbar">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                </ul>
+                <div class="uk-navbar-content uk-navbar-flip">
+                    <div class="children-nodes-quick-creation uk-button-group">
+                        {% for linkedType in linkedTypes %}
+                            <a class="uk-button uk-button-small"
+                               href="#"
+                               data-children-node-type="{{ linkedType.getId }}"
+                               data-children-parent-node="{{ nodeTree.rootNode.getId }}"
+                               data-translation-id="{{ nodeTree.translation.getId }}">
+                                <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
+                            </a>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <div class="children-nodes-tree">
-            {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
+            </nav>
+            <div class="children-nodes-tree">
+                {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
                 "nodeTree":nodeTree,
                 "node":nodeTree.getRootNode,
                 'mainNodeTree':false,
                 "authorizationChecker":authorizationChecker,
                 "nodeStatuses":nodeStatuses,
                 "request":request,
-            } only %}
+                } only %}
+            </div>
         </div>
-    </div>
     {% endspaceless %}
 {% endblock childrennodes_widget %}
 {#
@@ -435,16 +437,43 @@
 
 {% block form_row -%}
     {% set rowClasses = [
-        'uk-form-row',
-        'form-col-' ~ form.vars.block_prefixes[1],
-        'form-col-' ~ form.vars.name|replace('_','-')
+    'uk-form-row',
+    'form-col-' ~ form.vars.block_prefixes[1],
+    'form-col-' ~ form.vars.name|replace('_','-')
     ] %}
     <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group']|trans }}"{% endif %} class="{{ rowClasses|join(' ') }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
-           {{- form_label(form) -}}
+            {{- form_label(form) -}}
         {% endif %}
         {{- form_errors(form) -}}
         {{- form_widget(form) -}}
     </div>
 {%- endblock form_row %}
 
+{%- block button_row -%}
+    {% set rowClasses = [
+    'uk-form-row',
+    'form-col-' ~ form.vars.block_prefixes[1],
+    'form-col-' ~ form.vars.name|replace('_','-')
+    ] %}
+    <div class="{{ rowClasses|join(' ') }}">
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock button_row -%}
+
+{%- block button_widget -%}
+    {% if not attr.class %}
+        {% set attr = attr|merge({'class': 'uk-button'}) %}
+    {% endif %}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+            '%name%': name,
+            '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</button>
+{%- endblock button_widget -%}

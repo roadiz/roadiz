@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,9 +42,10 @@ use Themes\DefaultTheme\DefaultThemeApp;
 class BasicNewsletterController extends DefaultThemeApp
 {
     /**
-     * Generate HTML. The function name makeHtml is important because it will be automaticaly use bye NewsletterUtilsController
+     * Generate HTML. The function name makeHtml is important because it will be used
+     * by NewsletterUtilsController to get your newsletter HTML body.
      *
-     * @param Request                             $request
+     * @param Request $request
      * @param \RZ\Roadiz\Core\Entities\Newsletter $newsletter
      *
      * @return string
@@ -54,6 +55,6 @@ class BasicNewsletterController extends DefaultThemeApp
         $this->prepareThemeAssignation($newsletter->getNode(), null);
         $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();
 
-        return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation, null, static::getThemeDir());
+        return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation);
     }
 }

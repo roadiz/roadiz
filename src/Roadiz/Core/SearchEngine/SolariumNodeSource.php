@@ -35,55 +35,17 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
-use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
  */
-class SolariumNodeSource
+class SolariumNodeSource extends AbstractSolarium
 {
-    public static $availableLocalizedTextFields = [
-        'en',
-        'ar',
-        'bg',
-        'ca',
-        'cz',
-        'da',
-        'de',
-        'el',
-        'es',
-        'eu',
-        'fa',
-        'fi',
-        'fr',
-        'ga',
-        'gl',
-        'hi',
-        'hu',
-        'hy',
-        'id',
-        'it',
-        'ja',
-        'lv',
-        'nl',
-        'no',
-        'pt',
-        'ro',
-        'ru',
-        'sv',
-        'th',
-        'tr',
-    ];
-
     const DOCUMENT_TYPE = 'NodesSources';
     const IDENTIFIER_KEY = 'node_source_id_i';
 
-    protected $client = null;
-    protected $indexed = false;
     protected $nodeSource = null;
-    protected $document = null;
-    protected $logger = null;
 
     /**
      * Create a new SolariumNodeSource.
@@ -112,7 +74,7 @@ class SolariumNodeSource
     {
         $query = $this->client->createSelect();
         $query->setQuery(static::IDENTIFIER_KEY . ':' . $this->nodeSource->getId());
-        $query->createFilterQuery('type')->setQuery('document_type_s:' . static::DOCUMENT_TYPE);
+        $query->createFilterQuery('type')->setQuery(static::TYPE_DISCRIMINATOR . ':' . static::DOCUMENT_TYPE);
 
         // this executes the query and returns the result
         $resultset = $this->client->select($query);
@@ -122,36 +84,10 @@ class SolariumNodeSource
         } else {
             foreach ($resultset as $document) {
                 $this->document = $document;
-
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * Index current document with nodeSource data.
-     *
-     * @return boolean
-     *
-     * @throws \RuntimeException If no document is available.
-     */
-    public function index()
-    {
-        if (null !== $this->document) {
-            $this->document->id = uniqid(); //or something else suitably unique
-
-            try {
-                foreach ($this->getFieldsAssoc() as $key => $value) {
-                    $this->document->$key = $value;
-                }
-                return true;
-            } catch (\RuntimeException $e) {
-                return false;
-            }
-        } else {
-            throw new \RuntimeException("No Solr document available for current NodeSource", 1);
-        }
     }
 
     /**
@@ -170,7 +106,7 @@ class SolariumNodeSource
         }
 
         // Need a documentType field
-        $assoc['document_type_s'] = static::DOCUMENT_TYPE;
+        $assoc[static::TYPE_DISCRIMINATOR] = static::DOCUMENT_TYPE;
         // Need a nodeSourceId field
         $assoc[static::IDENTIFIER_KEY] = $this->nodeSource->getId();
         $assoc['node_type_s'] = $node->getNodeType()->getName();
@@ -179,13 +115,16 @@ class SolariumNodeSource
         $assoc['node_visible_b'] = $node->isVisible();
 
         // Need a locale field
-        $assoc['locale_s'] = $this->nodeSource->getTranslation()->getLocale();
+        $locale = $this->nodeSource->getTranslation()->getLocale();
+        $lang = \Locale::getPrimaryLanguage($locale);
+        $assoc['locale_s'] = $locale;
         $out = array_map(
             function (Tag $x) {
                 return $x->getTranslatedTags()->first()->getName();
             },
             $this->nodeSource->getHandler()->getTags()
         );
+        // Use tags_txt to be compatible with other data types
         $assoc['tags_txt'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();
@@ -193,8 +132,6 @@ class SolariumNodeSource
 
         $searchableFields = $node->getNodeType()->getSearchableFields();
 
-        $locale = $this->nodeSource->getTranslation()->getLocale();
-        $lang = \Locale::getPrimaryLanguage($locale);
         /*
          * Only one content fields to search in.
          */
@@ -207,6 +144,11 @@ class SolariumNodeSource
              * Strip markdown syntax
              */
             $content = strip_tags(Parsedown::instance()->text($content));
+            /*
+             * Remove ctrl characters
+             */
+            $content = preg_replace("[:cntrl:]", "", $content);
+            $content = preg_replace('/[\x00-\x1F]/', '', $content);
 
             /*
              * Use locale to create field name
@@ -233,143 +175,19 @@ class SolariumNodeSource
     }
 
     /**
-     * Index current nodeSource and commit after.
-     *
-     * Use this method only when you need to index single NodeSources.
-     *
-     * @return boolean
-     */
-    public function indexAndCommit()
-    {
-        $update = $this->client->createUpdate();
-
-        $this->setDocument($update->createDocument());
-
-        if (true === $this->index()) {
-            // add the documents and a commit command to the update query
-            $update->addDocument($this->getDocument());
-            $update->addCommit();
-
-            return $this->client->update($update);
-        }
-
-        return false;
-    }
-
-    /**
-     * Update current nodeSource document and commit after.
-     *
-     * Use this method **only** when you need to re-index a single NodeSources.
-     *
-     * @return \Solarium\QueryType\Update\Result
-     */
-    public function updateAndCommit()
-    {
-        $update = $this->client->createUpdate();
-        $this->update($update);
-        $update->addCommit();
-
-        if (null !== $this->logger) {
-            $this->logger->debug('[Solr] Node-source document updated.');
-        }
-        return $this->client->update($update);
-    }
-
-    /**
-     * Update current nodeSource document with existing update.
-     *
-     * Use this method only when you need to re-index bulk NodeSources.
-     *
-     * @param  Query  $update
-     */
-    public function update(Query $update)
-    {
-        $this->clean($update);
-        $this->setDocument($update->createDocument());
-        $this->index();
-        // add the document to the update query
-        $update->addDocument($this->document);
-    }
-
-    /**
      * Remove any document linked to current node-source.
      *
      * @param \Solarium\QueryType\Update\Query\Query $update
-     *
      * @return boolean
      */
     public function clean(Query $update)
     {
         $update->addDeleteQuery(
             static::IDENTIFIER_KEY . ':"' . $this->nodeSource->getId() . '"' .
-            '&document_type_s:"' . static::DOCUMENT_TYPE . '"' .
+            '&'.static::TYPE_DISCRIMINATOR.':"' . static::DOCUMENT_TYPE . '"' .
             '&locale_s:"' . $this->nodeSource->getTranslation()->getLocale() . '"'
         );
 
         return true;
-    }
-
-    /**
-     * Remove current document from SearchEngine index.
-     *
-     * @param \Solarium\QueryType\Update\Query\Query $update
-     *
-     * @return boolean
-     *
-     * @throws \RuntimeException If no document is available.
-     */
-    public function remove(Query $update)
-    {
-        if (null !== $this->document) {
-            $update->addDeleteById($this->document->id);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Remove current Solr document and commit after.
-     *
-     * Use this method only when you need to remove a single NodeSources.
-     */
-    public function removeAndCommit()
-    {
-        $update = $this->client->createUpdate();
-
-        if (true === $this->remove($update)) {
-            $update->addCommit();
-            $this->client->update($update);
-        }
-    }
-    /**
-     * Remove any document linked to current node-source and commit after.
-     *
-     * Use this method only when you need to remove a single NodeSources.
-     */
-    public function cleanAndCommit()
-    {
-        $update = $this->client->createUpdate();
-
-        if (true === $this->clean($update)) {
-            $update->addCommit();
-            $this->client->update($update);
-        }
-    }
-
-    /**
-     * @param \Solarium\QueryType\Update\Query\Document\DocumentInterface $document
-     */
-    public function setDocument(DocumentInterface $document)
-    {
-        $this->document = $document;
-    }
-    /**
-     * @return \Solarium\QueryType\Update\Query\Document\DocumentInterface
-     */
-    public function getDocument()
-    {
-        return $this->document;
     }
 }

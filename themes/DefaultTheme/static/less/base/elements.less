@@ -1,0 +1,187 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+
+    REZO ZERO fork
+  ---------------------------------------------------*/
+
+/*
+ * Emulate display none but keep in render to enable transitions
+ */
+
+.fake-display-none(){
+    display: block;
+    pointer-events: none;
+    opacity:0;
+}
+
+.fake-display-block(){
+    display: block;
+    pointer-events: auto;
+    opacity:1;
+}
+
+.text-ellipsis(){
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.gradient(@black: #F5F5F5, @start: #EEE, @stop: #FFF) {
+    background: @black;
+    background: -webkit-gradient(linear,
+                               left bottom,
+                               left top,
+                               color-stop(0, @start),
+                               color-stop(1, @stop));
+    background: -ms-linear-gradient(bottom,
+                                  @start,
+                                  @stop);
+    background: -moz-linear-gradient(center bottom,
+                                   @start 0%,
+                                   @stop 100%);
+    background: -o-linear-gradient(@stop,
+                                 @start);
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
+}
+
+.gradient-or (@origin: top, @start: #fff, @stop: #000) {
+    background-color: @start;
+    background-image: -webkit-linear-gradient(@origin, @start, @stop);
+    background-image: -moz-linear-gradient(@origin, @start, @stop);
+    background-image: -o-linear-gradient(@origin, @start, @stop);
+    background-image: -ms-linear-gradient(@origin, @start, @stop);
+    background-image: linear-gradient(@origin, @start, @stop);
+}
+
+.bw-gradient(@black: #F5F5F5, @start: 0, @stop: 255) {
+    background: @black;
+    background: -webkit-gradient(linear,
+                               left bottom,
+                               left top,
+                               color-stop(0, rgb(@start,@start,@start)),
+                               color-stop(1, rgb(@stop,@stop,@stop)));
+    background: -ms-linear-gradient(bottom,
+                                  rgb(@start,@start,@start) 0%,
+                                  rgb(@stop,@stop,@stop) 100%);
+    background: -moz-linear-gradient(center bottom,
+                                   rgb(@start,@start,@start) 0%,
+                                   rgb(@stop,@stop,@stop) 100%);
+    background: -o-linear-gradient(rgb(@stop,@stop,@stop),
+                                 rgb(@start,@start,@start));
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",rgb(@stop,@stop,@stop),rgb(@start,@start,@start)));
+}
+
+.bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE) {
+    border-top:    solid 1px @top-color;
+    border-left:   solid 1px @left-color;
+    border-right:  solid 1px @right-color;
+    border-bottom: solid 1px @bottom-color;
+}
+
+.drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
+    -webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+    -moz-box-shadow:    @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+    box-shadow:         @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
+}
+
+.rotation(@deg:5deg){
+    transform: rotate(@deg);
+}
+
+.scale(@ratio:1.5){
+    transform: scale(@ratio);
+}
+
+.transform-style(@style:preserve-3d){
+  transform-style: @style;
+}
+
+.backface-visibility(@value:hidden){
+    backface-visibility:@value;
+}
+
+.transition-duration(@duration: 0.2s) {
+    transition-duration: @duration;
+}
+
+.transition-delay(@delay: 0s) {
+    transition-delay: @delay;
+}
+
+.transition-property(@property: all) {
+    transition-property: @property;
+}
+
+.transition-timing-function(@ease: ease-in){
+    transition-timing-function: @ease;
+}
+
+.transform-origin( @x, @y ) {
+    transform-origin : @x @y;
+}
+
+.inner-shadow(@horizontal:0, @vertical:1px, @blur:2px, @alpha: 0.4) {
+    box-shadow: inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+}
+
+.box-sizing(@sizing: border-box) {
+    box-sizing: @sizing;
+}
+
+.user-select(@argument: none) {
+    user-select: @argument;
+}
+
+.columns(@colwidth: 250px, @colcount: 0, @colgap: 50px, @columnRuleColor: #EEE, @columnRuleStyle: solid, @columnRuleWidth: 1px) {
+    column-width: @colwidth;
+    column-count: @colcount;
+    column-gap:   @colgap;
+    column-rule-color: @columnRuleColor;
+    column-rule-style: @columnRuleStyle;
+    column-rule-width: @columnRuleWidth;
+}
+
+.translate(@x:0, @y:0) {
+    transform: translate(@x, @y);
+}
+
+.background-clip(@argument: padding-box) {
+    background-clip:         @argument;
+}
+
+.background-size(@type:cover){
+    background-size: @type;
+}
+
+.keep-image-aspect(){
+    image-rendering: optimizeSpeed;
+    image-rendering: pixellated;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode:nearest-neighbor;
+}
+
+.color-placeholder(@black) {
+    &::placeholder {
+        color:@black;
+    }
+}
+
+.touch-scroll(){
+    -webkit-overflow-scrolling: touch;
+}
+
+.clearfloat() {
+    &:after {
+        display:    block;
+        content:    '.';
+        height:     0;
+        visibility: hidden;
+        float:      none;
+        clear:      both;
+    }
+}

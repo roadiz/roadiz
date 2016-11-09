@@ -114,11 +114,11 @@ class Paginator
      *
      * **Warning** : EntityRepository must implements *countBy* method
      *
-     * @return float
+     * @return int
      */
     public function getPageCount()
     {
-        return ceil($this->getTotalCount() / $this->getItemsPerPage());
+        return (int) ceil($this->getTotalCount() / $this->getItemsPerPage());
     }
 
     /**
@@ -127,7 +127,7 @@ class Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function findByAtPage(array $order = [], $page = 1)
     {
@@ -150,7 +150,7 @@ class Paginator
      * @param array   $order
      * @param integer $page
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function searchByAtPage(array $order = [], $page = 1)
     {

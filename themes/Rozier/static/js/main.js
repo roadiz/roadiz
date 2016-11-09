@@ -95,6 +95,9 @@ Rozier.onDocumentReady = function(event) {
     // Minify trees panel toggle button
     Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
 
+    //Rozier.$body.on('markdownPreviewOpen', '.markdown-editor-preview', Rozier.toggleTreesPanel);
+    document.body.addEventListener('markdownPreviewOpen', Rozier.openTreesPanel, false);
+
     // Back top btn
     Rozier.$backTopBtn.on('click', $.proxy(Rozier.backTopBtnClick, Rozier));
 
@@ -331,9 +334,21 @@ Rozier.centerVerticalObjects = function(context) {
     var $objects = $(".rz-vertical-align");
 
     for(var i = 0; i < $objects.length; i++) {
+        var marginTop = $($objects[i]).actual('outerHeight')/-2;
         $objects[i].style.top = '50%';
-        $objects[i].style.marginTop = $($objects[i]).actual('outerHeight')/-2 +'px';
-        if($objects[i].className.indexOf('actions-menu') >= 0 && context == 'ajax'){
+        $objects[i].style.marginTop = marginTop +'px';
+        if($objects[i].className.indexOf('actions-menu') >= 0 && context == 'ajax') {
+            /*
+             * Add additional space at actionMenu top to let see translation menu bar.
+             */
+            var actionMenuHeight = $($objects[i]).actual('height');
+            var windowHeight = $(window).height();
+            var spaceTop = (windowHeight - actionMenuHeight) / 2;
+            if (spaceTop < 220) { // 220 is the header min height
+                var additionnalSpace = 220 - spaceTop;
+                $objects[i].style.marginTop = (marginTop + additionnalSpace) +'px';
+            }
+
             $objects[i].style.right = - $($objects[i]).actual('outerWidth')+'px';
         }
     }
@@ -347,8 +362,17 @@ Rozier.centerVerticalObjects = function(context) {
  */
 Rozier.toggleTreesPanel = function (event) {
     $('#main-trees').toggleClass('minified');
+    $('#main-content').toggleClass('maximized');
     $('#minify-tree-panel-button i').toggleClass('uk-icon-rz-panel-tree-open');
     $('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
+
+    return false;
+};
+
+Rozier.openTreesPanel = function (event) {
+    if ($('#main-trees').hasClass('minified')) {
+        Rozier.toggleTreesPanel(null);
+    }
 
     return false;
 };
@@ -368,13 +392,16 @@ Rozier.toggleUserPanel = function (event) {
 
 /**
  * Handle ajax search node source.
- *
  * @param event
  */
 Rozier.onSearchNodesSources = function (event) {
     var $input = $(event.currentTarget);
 
-    if ($input.val().length > 2) {
+    if (event.keyCode == 27) {
+        $input.blur();
+    }
+
+    if ($input.val().length > 1) {
         clearTimeout(Rozier.searchNodesSourcesDelay);
         Rozier.searchNodesSourcesDelay = setTimeout(function () {
             var postData = {
@@ -389,29 +416,26 @@ Rozier.onSearchNodesSources = function (event) {
                 dataType: 'json',
                 data: postData
             })
-            .done(function( data ) {
-                console.log(data);
-
-                var $results;
+            .done(function(data) {
+                var $results = $('#nodes-sources-search-results');
                 if (typeof data.data != "undefined" &&
                     data.data.length > 0) {
-
-                    $results = $('#nodes-sources-search-results');
                     $results.empty();
-
                     for (var i in data.data) {
                         $results.append('<li><a href="' + data.data[i].url +
                             '" style="border-left-color:' + data.data[i].typeColor + '"><span class="title">' + data.data[i].title +
                             '</span> <span class="type">' + data.data[i].typeName +
                             '</span></a></li>');
                     }
-                    $results.append('<a id="see-all" href="#">' + Rozier.messages.see_all + '</a>'); //Trans message (base.html.twig)
+                } else {
+                    $results.empty();
                 }
             })
-            .fail(function( data ) {
-                console.log(data);
+            .fail(function(data) {
+                var $results = $('#nodes-sources-search-results');
+                $results.empty();
             });
-        }, 300);
+        }, 200);
     }
 };
 

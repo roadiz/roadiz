@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * Class HistoryController
@@ -49,28 +50,32 @@ class HistoryController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         /** @var Node $node */
-        $node = $this->getService('em')
+        $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null === $node) {
             return $this->throw404();
         }
 
-        $elm = $this->createEntityListManager(
+        $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Log',
             [
                 'nodeSource' => $node->getNodeSources()->toArray(),
             ],
             ['datetime' => 'DESC']
         );
-        $elm->setItemPerPage(20);
-        $elm->handle();
-        $elm->setPage($page);
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('user_history_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
+        $listManager->handle();
+        $listManager->setPage($page);
 
         $this->assignation['node'] = $node;
-        $this->assignation['translation'] = $this->getService('defaultTranslation');
-        $this->assignation['entries'] = $elm->getEntities();
-        $this->assignation['filters'] = $elm->getAssignation();
+        $this->assignation['translation'] = $this->get('defaultTranslation');
+        $this->assignation['entries'] = $listManager->getEntities();
+        $this->assignation['filters'] = $listManager->getAssignation();
 
         return $this->render('nodes/history.html.twig', $this->assignation);
     }

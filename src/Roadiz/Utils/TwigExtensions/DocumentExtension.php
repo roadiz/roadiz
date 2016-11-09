@@ -49,8 +49,18 @@ class DocumentExtension extends \Twig_Extension
         ];
     }
 
-    public function display(Document $document, array $criteria = [])
+    /**
+     * @param Document|null $document
+     * @param array $criteria
+     * @return string
+     * @throws \Twig_Error_Runtime
+     */
+    public function display(Document $document = null, array $criteria = [])
     {
-        return $document->getViewer()->getDocumentByArray($criteria);
+        if (null !== $document) {
+            return $document->getViewer()->getDocumentByArray($criteria);
+        }
+
+        throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
     }
 }

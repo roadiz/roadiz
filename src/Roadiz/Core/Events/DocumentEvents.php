@@ -57,6 +57,17 @@ final class DocumentEvents
     const DOCUMENT_UPDATED = 'document.updated';
 
     /**
+     * Event document_translation.updated is triggered each time a document
+     * translation is updated.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterDocumentEvent instance
+     *
+     * @var string
+     */
+    const DOCUMENT_TRANSLATION_UPDATED = 'document_translation.updated';
+
+    /**
      * Event document.deleted is triggered each time a document
      * is deleted.
      *
@@ -77,4 +88,24 @@ final class DocumentEvents
      * @var string
      */
     const DOCUMENT_IMAGE_UPLOADED = 'document.image.uploaded';
+
+    /**
+     * Event document.in.folder is triggered each time a document is linked to a folder.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterDocumentEvent instance
+     *
+     * @var string
+     */
+    const DOCUMENT_IN_FOLDER = 'document.in.folder';
+
+    /**
+     * Event document.out.folder is triggered each time a document is linked to a folder.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterDocumentEvent instance
+     *
+     * @var string
+     */
+    const DOCUMENT_OUT_FOLDER = 'document.out.folder';
 }

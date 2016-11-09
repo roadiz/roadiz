@@ -35,6 +35,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
+use RZ\Roadiz\Core\Repositories\FontRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,7 +87,7 @@ class AssetsController extends AppController
     public function interventionRequestAction(Request $request, $queryString, $filename)
     {
         $log = new Logger('InterventionRequest');
-        $log->pushHandler(new StreamHandler($this->getService('kernel')->getLogDir() . '/interventionRequest.log', Logger::INFO));
+        $log->pushHandler(new StreamHandler($this->get('kernel')->getLogDir() . '/interventionRequest.log', Logger::INFO));
 
         try {
             /*
@@ -99,7 +100,7 @@ class AssetsController extends AppController
              * Handle main image request
              */
             $iRequest = new InterventionRequest(
-                $this->getService('interventionRequestConfiguration'),
+                $this->get('interventionRequestConfiguration'),
                 $request,
                 $log
             );
@@ -129,7 +130,8 @@ class AssetsController extends AppController
      */
     public function fontFileAction(Request $request, $filename, $variant, $extension)
     {
-        $repository = $this->getService('em')
+        /** @var FontRepository $repository */
+        $repository = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
@@ -177,7 +179,7 @@ class AssetsController extends AppController
                 );
                 $response->setCache([
                     'last_modified' => new \DateTime($lastMod),
-                    'max_age' => 60 * 60 * 2,
+                    'max_age' => 60 * 60 * 48, // expires for 2 days
                     'public' => true,
                 ]);
                 if (!$response->isNotModified($request)) {
@@ -206,7 +208,8 @@ class AssetsController extends AppController
      */
     public function fontFacesAction(Request $request)
     {
-        $repository = $this->getService('em')
+        /** @var FontRepository $repository */
+        $repository = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
 
@@ -217,7 +220,7 @@ class AssetsController extends AppController
         );
         $response->setCache([
             'last_modified' => new \DateTime($lastMod),
-            'max_age' => 60 * 60 * 2,
+            'max_age' => 60 * 60 * 48, // expires for 2 days
             'public' => true,
         ]);
 
@@ -230,7 +233,7 @@ class AssetsController extends AppController
         $assignation = [
             'fonts' => [],
         ];
-
+        /** @var Font $font */
         foreach ($fonts as $font) {
             $variantHash = $font->getHash() . $font->getVariant();
             $assignation['fonts'][] = [
@@ -241,7 +244,7 @@ class AssetsController extends AppController
             ];
         }
         $response->setContent(
-            $this->getService('twig.environment')->render(
+            $this->get('twig.environment')->render(
                 'fonts/fontfamily.css.twig',
                 $assignation
             )

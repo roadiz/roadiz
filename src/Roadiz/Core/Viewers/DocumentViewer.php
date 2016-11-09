@@ -32,10 +32,12 @@ namespace RZ\Roadiz\Core\Viewers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
- * DocumentViewer
+ * Class DocumentViewer
+ * @package RZ\Roadiz\Core\Viewers
  */
 class DocumentViewer implements ViewableInterface
 {
@@ -151,7 +153,11 @@ class DocumentViewer implements ViewableInterface
      * ## Audio / Video options
      *
      * - autoplay
+     * - loop
      * - controls
+     * - custom_poster
+     *
+     * For videos, a poster can be set if you name a document after your video filename (without extension).
      *
      * @param array $args
      *
@@ -198,6 +204,9 @@ class DocumentViewer implements ViewableInterface
         if (!empty($args['autoplay'])) {
             $assignation['autoplay'] = (boolean) $args['autoplay'];
         }
+        if (!empty($args['loop'])) {
+            $assignation['loop'] = (boolean) $args['loop'];
+        }
         if (!empty($args['controls'])) {
             $assignation['controls'] = (boolean) $args['controls'];
         }
@@ -222,17 +231,33 @@ class DocumentViewer implements ViewableInterface
                 $asObject = true;
             }
 
-            $viewer = new SvgDocumentViewer(
-                $this->document->getAbsolutePath(),
-                $assignation,
-                $asObject,
-                Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
-            );
-            return $viewer->getContent();
+            try {
+                $viewer = new SvgDocumentViewer(
+                    $this->document->getAbsolutePath(),
+                    $assignation,
+                    $asObject,
+                    Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
+                );
+                return $viewer->getContent();
+            } catch (FileNotFoundException $e) {
+                return false;
+            }
         } elseif ($this->document->isImage()) {
             return $this->getTwig()->render('documents/image.html.twig', $assignation);
         } elseif ($this->document->isVideo()) {
             $assignation['sources'] = $this->getSourcesFiles();
+
+            /*
+             * Use a user defined poster url
+             */
+            if (!empty($args['custom_poster'])) {
+                $assignation['custom_poster'] = trim(strip_tags($args['custom_poster']));
+            } else {
+                /*
+                 * Look for poster with the same args as the video.
+                 */
+                $assignation['poster'] = $this->getPosterFile($args, $absolute);
+            }
             return $this->getTwig()->render('documents/video.html.twig', $assignation);
         } elseif ($this->document->isAudio()) {
             $assignation['sources'] = $this->getSourcesFiles();
@@ -242,6 +267,9 @@ class DocumentViewer implements ViewableInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isEmbedPlatformSupported()
     {
         $handlers = Kernel::getService('document.platforms');
@@ -258,6 +286,9 @@ class DocumentViewer implements ViewableInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function getEmbedFinder()
     {
         if (null === $this->embedFinder) {
@@ -279,7 +310,7 @@ class DocumentViewer implements ViewableInterface
      * @param array|null $args
      *
      * @return string
-     * @see RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
+     * @see \RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
     public function getEmbedByArray($args = [])
     {
@@ -296,7 +327,7 @@ class DocumentViewer implements ViewableInterface
      * This method will search for document which filename is the same
      * except the extension. If you choose an MP4 file, it will look for a OGV and WEBM file.
      *
-     * @return array
+     * @return array|bool
      */
     public function getSourcesFiles()
     {
@@ -327,6 +358,7 @@ class DocumentViewer implements ViewableInterface
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findBy(["filename" => $sourcesDocsName]);
 
+        /** @var Document $source */
         foreach ($sourcesDocs as $source) {
             $sources[] = [
                 'mime' => $source->getMimeType(),
@@ -335,6 +367,43 @@ class DocumentViewer implements ViewableInterface
         }
 
         return $sources;
+    }
+
+    /**
+     * @param array $args
+     * @param bool $absolute
+     * @return array|bool
+     */
+    protected function getPosterFile($args = [], $absolute = false)
+    {
+        if ($this->document->isVideo()) {
+            $basename = pathinfo($this->document->getFilename());
+            $basename = $basename['filename'];
+
+            $sourcesDocsName = [
+                $basename . '.jpg',
+                $basename . '.gif',
+                $basename . '.png',
+                $basename . '.jpeg',
+                $basename . '.webp',
+            ];
+
+            $sourcesDoc = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->findOneBy([
+                    "filename" => $sourcesDocsName,
+                    "raw" => false,
+                ]);
+
+            if (null !== $sourcesDoc && $sourcesDoc instanceof Document) {
+                return [
+                    'mime' => $sourcesDoc->getMimeType(),
+                    'url' => $sourcesDoc->getViewer()->getDocumentUrlByArray($args, $absolute),
+                ];
+            }
+        }
+
+        return false;
     }
 
     /**

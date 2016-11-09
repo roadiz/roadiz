@@ -57,19 +57,19 @@ class ExportController extends RozierApp
         /*
          * Get translation
          */
-        $translation = $this->getService('em')
+        $translation = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Translation', $translationId);
         if (null === $translation) {
-            $translation = $this->getService('em')
+            $translation = $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findDefault();
         }
 
-        $sources = $this->getService('em')
+        $sources = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBy(["translation" => $translation], ['node.nodeType' => 'ASC']);
 
-        $serializer = new NodeSourceXlsxSerializer($this->getService('em'));
+        $serializer = new NodeSourceXlsxSerializer($this->get('em'));
         $serializer->setOnlyTexts(true);
         $serializer->addUrls($request, SettingsBag::get('force_locale'));
 

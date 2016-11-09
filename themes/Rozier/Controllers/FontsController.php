@@ -81,10 +81,10 @@ class FontsController extends RozierApp
         $font = new Font();
 
         $form = $this->createForm(new FontType(), $font, [
-            'em' => $this->getService('em'),
+            'em' => $this->get('em'),
             'constraints' => [
                 new UniqueFontVariant([
-                    'entityManager' => $this->getService('em'),
+                    'entityManager' => $this->get('em'),
                 ]),
             ],
         ]);
@@ -92,8 +92,8 @@ class FontsController extends RozierApp
 
         if ($form->isValid()) {
             try {
-                $this->getService('em')->persist($font);
-                $this->getService('em')->flush();
+                $this->get('em')->persist($font);
+                $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('font.%name%.created', ['%name%' => $font->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -126,7 +126,7 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
-        $font = $this->getService('em')
+        $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if (null !== $font) {
@@ -136,8 +136,8 @@ class FontsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['fontId'] == $font->getId()) {
                 try {
-                    $this->getService('em')->remove($font);
-                    $this->getService('em')->flush();
+                    $this->get('em')->remove($font);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans(
                         'font.%name%.deleted',
@@ -174,17 +174,17 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
-        $font = $this->getService('em')
+        $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
             $form = $this->createForm(new FontType(), $font, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'name' => $font->getName(),
                 'variant' => $font->getVariant(),
                 'constraints' => [
                     new UniqueFontVariant([
-                        'entityManager' => $this->getService('em'),
+                        'entityManager' => $this->get('em'),
                         'currentName' => $font->getName(),
                         'currentVariant' => $font->getVariant(),
                     ]),
@@ -199,7 +199,7 @@ class FontsController extends RozierApp
                      * has been made in entity fields
                      */
                     $font->preUpload();
-                    $this->getService('em')->flush();
+                    $this->get('em')->flush();
                     $font->upload();
 
                     $msg = $this->getTranslator()->trans(
@@ -236,7 +236,7 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
-        $font = $this->getService('em')
+        $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {

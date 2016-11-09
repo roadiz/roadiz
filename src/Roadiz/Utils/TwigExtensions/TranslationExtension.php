@@ -56,6 +56,11 @@ class TranslationExtension extends \Twig_Extension
         ];
     }
 
+    /**
+     * @param Translation|null $translation
+     * @param bool $absolute
+     * @return array
+     */
     public function getMenuAssignation(Translation $translation = null, $absolute = false)
     {
         if (null !== $translation) {

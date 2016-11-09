@@ -43,8 +43,40 @@
         <target xml:lang="en">Send form</target>
       </trans-unit>
       <trans-unit id="document" approved="yes">
-        <source>document</source>
+        <source><![CDATA[document]]></source>
         <target xml:lang="en"><![CDATA[Attach an image or a PDF (< 5 MB)]]></target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.consent_message">
+        <source>cookie_choice.consent_message</source>
+        <target xml:lang="en" state="translated">We use cookies to make your experience of our website better. Continuing on our website, you give us your consent to set these cookies.</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.close_message">
+        <source>cookie_choice.close_message</source>
+        <target xml:lang="en" state="translated">That’s OK</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.find_out_more_message">
+        <source>cookie_choice.find_out_more_message</source>
+        <target xml:lang="en" state="translated">Find out more</target>
+      </trans-unit>
+      <trans-unit id="no_javascript_message">
+        <source>no_javascript_message</source>
+        <target xml:lang="en" state="translated">JavaScript is disabled on your browser or it does not support this technology. Please enable or update your browser to get a better browsing experience.</target>
+      </trans-unit>
+      <trans-unit id="browser_update.message">
+        <source>browser_update.message</source>
+        <target xml:lang="en" state="translated">Your browser is out of date. It has some security failures et could not show properly some features of this website.</target>
+      </trans-unit>
+      <trans-unit id="browser_update.link">
+        <source>browser_update.link</source>
+        <target xml:lang="en" state="translated">See how to update your browser</target>
+      </trans-unit>
+      <trans-unit id="error404.title">
+        <source>error404.title</source>
+        <target xml:lang="en" state="translated">404 Error</target>
+      </trans-unit>
+      <trans-unit id="error404.message">
+        <source>error404.message</source>
+        <target xml:lang="en" state="translated">Requested page cannot be found.</target>
       </trans-unit>
     </body>
   </file>

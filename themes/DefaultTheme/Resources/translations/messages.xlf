@@ -43,7 +43,40 @@
                 <target></target>
             </trans-unit>
             <trans-unit id="document">
-                <source>document</source>
+                <source><![CDATA[document]]></source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit id="cookie_choice.consent_message">
+                <source>cookie_choice.consent_message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="cookie_choice.close_message">
+                <source>cookie_choice.close_message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="cookie_choice.find_out_more_message">
+                <source>cookie_choice.find_out_more_message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="no_javascript_message">
+                <source>no_javascript_message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="browser_update.message">
+                <source>browser_update.message</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="browser_update.link">
+                <source>browser_update.link</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="error404.title">
+                <source>error404.title</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit id="error404.message">
+                <source>error404.message</source>
                 <target></target>
             </trans-unit>
         </body>

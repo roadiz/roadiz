@@ -109,7 +109,7 @@ class FrontendController extends AppController
         Node $node = null,
         Translation $translation = null
     ) {
-        $this->getService('stopwatch')->start('handleNodeController');
+        $this->get('stopwatch')->start('handleNodeController');
         $this->node = $node;
         $this->translation = $translation;
 
@@ -247,13 +247,13 @@ class FrontendController extends AppController
         Node $node = null,
         Translation $translation = null
     ) {
-        $this->getService('stopwatch')->start('handleNodeController');
+        $this->get('stopwatch')->start('handleNodeController');
 
         if ($node !== null) {
             $nodeRouteHelper = new NodeRouteHelper(
                 $node,
                 $this->getTheme(),
-                $this->getService('kernel')->isPreview()
+                $this->get('kernel')->isPreview()
             );
             $controllerPath = $nodeRouteHelper->getController();
             $method = $nodeRouteHelper->getMethod();
@@ -284,7 +284,7 @@ class FrontendController extends AppController
                     $this->themeContainer
                 );
             }
-            $this->getService('stopwatch')->stop('handleNodeController');
+            $this->get('stopwatch')->stop('handleNodeController');
             return $ctrl->$method(
                 $request,
                 $node,
@@ -310,7 +310,7 @@ class FrontendController extends AppController
     {
         parent::prepareBaseAssignation();
 
-        $translation = $this->getService('defaultTranslation');
+        $translation = $this->get('defaultTranslation');
 
         $this->assignation['_default_locale'] = $translation->getLocale();
         $this->assignation['meta'] = [
@@ -460,8 +460,8 @@ class FrontendController extends AppController
          * When using EntityListManager you need to manually set the
          * security context
          */
-        $elm->setAuthorizationChecker($this->getService('securityAuthorizationChecker'));
-        $elm->setPreview($this->getService('kernel')->isPreview());
+        $elm->setAuthorizationChecker($this->get('securityAuthorizationChecker'));
+        $elm->setPreview($this->get('kernel')->isPreview());
 
         return $elm;
     }

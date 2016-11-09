@@ -40,6 +40,13 @@ class StaticRouter extends Router
 {
     protected $routeCollection;
 
+    /**
+     * StaticRouter constructor.
+     * @param DeferredRouteCollection $routeCollection
+     * @param array $options
+     * @param RequestContext|null $context
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(
         DeferredRouteCollection $routeCollection,
         array $options = [],
@@ -52,6 +59,9 @@ class StaticRouter extends Router
         $this->setOptions($options);
     }
 
+    /**
+     * @return null|DeferredRouteCollection|\Symfony\Component\Routing\RouteCollection
+     */
     public function getRouteCollection()
     {
         if (null === $this->collection) {

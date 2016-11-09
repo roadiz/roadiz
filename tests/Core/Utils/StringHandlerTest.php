@@ -49,6 +49,10 @@ class StringHandlerTest extends PHPUnit_Framework_TestCase
     public function endsWithProvider()
     {
         return array(
+            array("  ", "Locale", false),
+            array("", "Locale", false),
+            array("home", "Locale", false),
+            array("ocale", "Locale", false),
             array("testPage", "Locale", false),
             array("localePage", "Locale", false),
             array("testLocalePage", "Locale", false),

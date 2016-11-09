@@ -69,44 +69,128 @@ class NodesSourcesExtension extends \Twig_Extension
         ];
     }
 
-    public function getChildren(NodesSources $ns, array $criteria = null, array $order = null)
+    /**
+     * @param NodesSources|null $ns
+     * @param array|null $criteria
+     * @param array|null $order
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @throws \Twig_Error_Runtime
+     */
+    public function getChildren(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
-    public function getNext(NodesSources $ns, array $criteria = null, array $order = null)
+    /**
+     * @param NodesSources|null $ns
+     * @param array|null $criteria
+     * @param array|null $order
+     * @return NodesSources
+     * @throws \Twig_Error_Runtime
+     */
+    public function getNext(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
-    public function getPrevious(NodesSources $ns, array $criteria = null, array $order = null)
+    /**
+     * @param NodesSources|null $ns
+     * @param array|null $criteria
+     * @param array|null $order
+     * @return NodesSources
+     * @throws \Twig_Error_Runtime
+     */
+    public function getPrevious(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
-    public function getLastSibling(NodesSources $ns, array $criteria = null, array $order = null)
+    /**
+     * @param NodesSources|null $ns
+     * @param array|null $criteria
+     * @param array|null $order
+     * @return NodesSources
+     * @throws \Twig_Error_Runtime
+     */
+    public function getLastSibling(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
-    public function getFirstSibling(NodesSources $ns, array $criteria = null, array $order = null)
+    /**
+     * @param NodesSources|null $ns
+     * @param array|null $criteria
+     * @param array|null $order
+     * @return NodesSources
+     * @throws \Twig_Error_Runtime
+     */
+    public function getFirstSibling(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
-    public function getParent(NodesSources $ns)
+    /**
+     * @param NodesSources|null $ns
+     * @return NodesSources
+     * @throws \Twig_Error_Runtime
+     */
+    public function getParent(NodesSources $ns = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getParent();
     }
 
-    public function getParents(NodesSources $ns, array $criteria = null, $preview = null)
+    /**
+     * @param NodesSources|null $ns
+     * @param array|null $criteria
+     * @param null $preview
+     * @return array
+     * @throws \Twig_Error_Runtime
+     */
+    public function getParents(NodesSources $ns = null, array $criteria = null, $preview = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         $preview = $preview !== null ? $preview : $this->preview;
         return $ns->getHandler()->getParents($criteria, $this->securityAuthorizationChecker, $preview);
     }
 
-    public function getTags(NodesSources $ns)
+    /**
+     * @param NodesSources|null $ns
+     * @return array
+     * @throws \Twig_Error_Runtime
+     */
+    public function getTags(NodesSources $ns = null)
     {
+        if (null === $ns) {
+            throw new \Twig_Error_Runtime("NodesSources is null.");
+        }
+
         return $ns->getHandler()->getTags();
     }
 }

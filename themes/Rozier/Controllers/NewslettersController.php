@@ -56,7 +56,7 @@ class NewslettersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
-        $translation = $this->getService('defaultTranslation');
+        $translation = $this->get('defaultTranslation');
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Newsletter',
             [],
@@ -66,7 +66,7 @@ class NewslettersController extends RozierApp
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['newsletters'] = $listManager->getEntities();
-        $this->assignation['nodeTypes'] = $this->getService('em')
+        $this->assignation['nodeTypes'] = $this->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
              ->findBy(['newsletterType' => true]);
         $this->assignation['translation'] = $translation;
@@ -87,13 +87,13 @@ class NewslettersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
-        $type = $this->getService('em')
+        $type = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
-        $trans = $this->getService('defaultTranslation');
+        $trans = $this->get('defaultTranslation');
 
         if ($translationId !== null) {
-            $trans = $this->getService('em')
+            $trans = $this->get('em')
                           ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
@@ -101,7 +101,7 @@ class NewslettersController extends RozierApp
             $trans !== null) {
 
             /** @var Form $form */
-            $form = $this->getService('formFactory')
+            $form = $this->get('formFactory')
                          ->createBuilder()
                          ->add('title', 'text', [
                              'label' => 'title',
@@ -119,8 +119,8 @@ class NewslettersController extends RozierApp
                     $newsletter = new Newsletter($node);
                     $newsletter->setStatus(Newsletter::DRAFT);
 
-                    $this->getService('em')->persist($newsletter);
-                    $this->getService('em')->flush();
+                    $this->get('em')->persist($newsletter);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans(
                         'newsletter.%name%.created',
@@ -160,7 +160,7 @@ class NewslettersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
-        $translation = $this->getService('em')
+        $translation = $this->get('em')
                             ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
 
         if ($translation !== null) {
@@ -169,10 +169,10 @@ class NewslettersController extends RozierApp
              * if not doctrine will grab a cache tag because of NodeTreeWidget
              * that is initialized before calling route method.
              */
-            $newsletter = $this->getService('em')
+            $newsletter = $this->get('em')
                                ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
 
-            $source = $this->getService('em')
+            $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $newsletter->getNode()]);
 

@@ -1,8 +1,5 @@
-{% if node.getNodeSources.first.getTitle %}
-{% set currentTitle = node.getNodeSources.first.getTitle %}
-{% else %}
-{% set currentTitle = node.getNodeName %}
-{% endif %}
+
+{% set currentTitle = node.nodeSources.first.title|default(node.nodeName) %}
 
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
@@ -15,7 +12,7 @@
             {{ "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
         {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
     </header>
 

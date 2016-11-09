@@ -59,7 +59,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.15.1";
+    public static $cmsVersion = "0.16.0";
     protected static $instance = null;
 
     public $container = null;
@@ -144,6 +144,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new \RZ\Roadiz\Core\Services\ThemeServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\TranslationServiceProvider());
         $container->register(new \RZ\Roadiz\Core\Services\TwigServiceProvider());
+        $container->register(new \RZ\Roadiz\Core\Services\LoggerServiceProvider());
 
         /*
          * Load additional service providers
@@ -158,7 +159,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
@@ -301,7 +301,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function terminate(Request $request, Response $response)
     {
@@ -315,8 +314,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function shutdown()
     {
@@ -340,7 +337,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function getBundles()
     {
@@ -349,7 +345,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function getBundle($name, $first = true)
     {
@@ -357,7 +352,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
     /**
      * {@inheritdoc}
-     *
      */
     public function locateResource($name, $dir = null, $first = true)
     {
@@ -400,7 +394,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getCacheDir()
     {
-        return ROADIZ_ROOT . '/cache/' . $this->environment;
+        if ($this->isPreview()) {
+            return $this->getRootDir() . '/cache/' . $this->environment . '_preview';
+        }
+        return $this->getRootDir() . '/cache/' . $this->environment;
     }
 
     /**
@@ -410,7 +407,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getLogDir()
     {
-        return ROADIZ_ROOT . '/logs';
+        return $this->getRootDir() . '/logs';
     }
 
     /**
@@ -427,7 +424,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * Returns an array of bundles to register.
      *
      * @return BundleInterface[] An array of bundle instances.
-     *
      */
     public function registerBundles()
     {
@@ -438,7 +434,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * Loads the container configuration.
      *
      * @param LoaderInterface $loader A LoaderInterface instance
-     *
      * @return bool
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -447,7 +442,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     *
      * @deprecated since version 2.6, to be removed in 3.0.
      * @param string $class
      *
@@ -458,11 +452,17 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return serialize(array($this->environment, $this->debug, $this->preview));
     }
 
+    /**
+     * @param string $data
+     */
     public function unserialize($data)
     {
         list($environment, $debug, $preview) = unserialize($data);

@@ -8,6 +8,7 @@
 @children-nodes-btn-bg :         #ededed;
 @children-nodes-btn-border :     #bfbfbf;
 @children-nodes-btn-color :      #2d2d2d;
+@children-node-height :             55px;
 
 
 /* -------- STYLES -------- */
@@ -23,7 +24,7 @@
     .uk-form-label{
         position: absolute;
         left:70px;
-        height:55px;
+        height: @children-node-height;
         line-height:59px;
 
         &:before{
@@ -47,8 +48,9 @@
 }
 
 .children-nodes-nav{
-    height:55px;
+    height:@children-node-height;
     border-bottom:1px dashed @children-nodes-border;
+    overflow: hidden;
 
     .uk-navbar-brand{
         .widgetNavBarBrand();
@@ -90,12 +92,20 @@
             padding:0px;
 
             .uk-button {
+                position: relative;
                 display: block;
                 text-align: left;
                 margin: 0px;
                 border: none;
+                height:auto;
+                padding:9px 10px 9px 33px;
+                line-height:17px;
                 border-bottom: 1px solid @children-nodes-btn-border;
 
+                .uk-icon-rz-plus-simple{
+                    position: absolute;
+                    top:10px; left:10px;
+                }
 
                 &:last-child{
                     margin-right:0;
@@ -136,12 +146,11 @@
         .non-nestable-handle,
         .uk-nestable-handle {
             width:42px;
-            height:55px;
+            height:@children-node-height;
             border-color:@children-nodes-border;
         }
     }
     .nodetree-contextualmenu {
-
         top: 0px;
 
         .tree-contextualmenu-button {
@@ -154,6 +163,11 @@
 
         .vertical-nodetype .text{
             left:41px;
+        }
+
+        .uk-dropdown {
+            margin-top: -5px;
+            margin-bottom: -5px;
         }
     }
 }
@@ -170,17 +184,12 @@
             right: 10px;
         }
         .nodetree-contextualmenu {
-            right: 27px;
+            right: @children-node-height / 2;
             top: 0px;
         }
 
         &:nth-child(2n){
             background:@grey-verylight;
-        }
-
-        &.has-children{
-            padding-top:7px;
-            padding-bottom:20px;
         }
 
         &:last-child{
@@ -193,43 +202,21 @@
             }
         }
 
-        &> .uk-nestable-list{
-            // 2nd level
-            &> .uk-nestable-list-item{
-
-                &:first-child{
-                    margin-top:-8px;
-
-                    &:after{
-                        position: absolute;
-                        content:'';
-                        width:1px; height:18px;
-                        background:@item-border-color;
-                        top:-15px; left:-1px;
-                    }
-                }
-
-                &:last-child{
-                    &:before{
-                        left:-1px;
-                    }
-                }
-            }
-        }
-
         &:last-child{
             border-bottom:none;
         }
 
         .nodetree-list-item-color{
             position:absolute;
-            top:0; bottom:0; left:0;
+            top:0;
+            bottom:0;
+            left:0;
             width:4px;
         }
 
         .uk-nestable-item{
-            height:55px;
-            line-height:55px;
+            height:@children-node-height;
+            line-height:@children-node-height;
             padding: 0 5px 0 21px;
             .box-sizing();
 
@@ -296,7 +283,8 @@
                 & > .non-nestable-handle:after,
                 & > .uk-nestable-handle:after {
                     top:11px; left:7px;
-                    width:28px; height:28px;
+                    width:@children-node-height / 2;
+                    height: @children-node-height / 2;
                     .rounded(3px);
                 }
             }
@@ -377,7 +365,29 @@
         // 2nd level
         & > .uk-nestable-list {
             padding-left:24px;
-            margin:15px 0 0 17px; // 15px 0 0 17px
+            margin:0 0 0 17px;
+
+            & > .uk-nestable-list-item {
+                &:first-child{
+                    margin-top:0;
+                    padding-top: 0;
+
+                    &:after{
+                        position: absolute;
+                        content:'';
+                        width:1px; height:18px;
+                        background:@item-border-color;
+                        top:-7px; left:-1px;
+                    }
+                }
+
+                &:last-child{
+                    &:before{
+                        left:-1px;
+                    }
+                }
+            }
+
 
             &.empty{
                 margin:0;
@@ -386,11 +396,10 @@
             .uk-nestable-list-item{
                 position: relative;
                 border-bottom:none;
-                margin-right:40px;
 
                 &.has-children{
                     .nodetree-list-item-color{
-                        height:54px;
+                        height:@children-node-height;
                     }
                 }
 
@@ -405,18 +414,14 @@
                 }
 
                 &:first-child{
-
-                    .nodetree-list-item-color{
-                        top:8px;
-                    }
-
                     &:before{
-                        top:14px;
+                        top:7px;
                     }
                 }
 
                 &:last-child:before{
-                    top:0; height:27px;
+                    top:0;
+                    height:@children-node-height/2;
                 }
 
                 .nodetree-list-item-color{
@@ -439,13 +444,13 @@
 
                 // 3rd level
                 .uk-nestable-list{
-                    padding-left:68px;
+                    padding-left:@children-node-height;
 
                     .uk-nestable-list-item{
                         margin-right:0;
 
                         &:first-child{
-                            margin-top:10px; padding-top:0;
+                            padding-top:0;
 
                             .nodetree-list-item-color{
                                 top:0;

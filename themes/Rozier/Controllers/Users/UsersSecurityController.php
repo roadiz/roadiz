@@ -49,7 +49,7 @@ class UsersSecurityController extends RozierApp
         // Only user managers can review security
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -102,7 +102,7 @@ class UsersSecurityController extends RozierApp
             'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null,
         ];
 
-        $builder = $this->getService('formFactory')
+        $builder = $this->get('formFactory')
                         ->createNamedBuilder('source', 'form', $defaults);
 
         $builder->add('enabled', 'checkbox', [
@@ -149,7 +149,7 @@ class UsersSecurityController extends RozierApp
         if ($this->isGranted("ROLE_SUPERADMIN")) {
             $n = $user->getChroot();
             $n = ($n !== null) ? [$n] : [];
-            $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n, $this->getService('em')), [
+            $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n, $this->get('em')), [
                 'label' => 'chroot',
                 'required' => false,
             ]);
@@ -168,7 +168,7 @@ class UsersSecurityController extends RozierApp
                     $this->publishErrorMessage($request, $msg);
                 }
                 if ($value !== null) {
-                    $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $n = $this->get('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
                     $user->$setter($n);
                 } else {
                     $user->$setter(null);
@@ -178,6 +178,6 @@ class UsersSecurityController extends RozierApp
             }
         }
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
     }
 }

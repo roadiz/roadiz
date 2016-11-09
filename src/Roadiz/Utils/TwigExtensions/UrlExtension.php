@@ -46,6 +46,12 @@ class UrlExtension extends \Twig_Extension
     protected $forceLocale;
     protected $cacheProvider;
 
+    /**
+     * UrlExtension constructor.
+     * @param Request $request
+     * @param CacheProvider|null $cacheProvider
+     * @param bool $forceLocale
+     */
     public function __construct(Request $request, CacheProvider $cacheProvider = null, $forceLocale = false)
     {
         $this->request = $request;
@@ -53,11 +59,17 @@ class UrlExtension extends \Twig_Extension
         $this->cacheProvider = $cacheProvider;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'urlExtension';
     }
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         return [
@@ -65,9 +77,15 @@ class UrlExtension extends \Twig_Extension
         ];
     }
 
-    public function getCacheKey(NodesSources $ns, $absolute = false)
+    /**
+     * @param NodesSources $ns
+     * @param bool $absolute
+     * @param string $canonicalScheme
+     * @return string
+     */
+    public function getCacheKey(NodesSources $ns, $absolute = false, $canonicalScheme = '')
     {
-        return ($ns->getId() . "_" . (int) $absolute);
+        return ($ns->getId() . "_" . (int) $absolute . "_" . $canonicalScheme);
     }
 
     /**
@@ -80,14 +98,13 @@ class UrlExtension extends \Twig_Extension
      * - Node
      *
      * @param  AbstractEntity|null $mixed
-     * @param  array               $criteria
+     * @param  array $criteria
      * @return string
+     * @throws \Twig_Error_Runtime
      */
     public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
     {
-        if (null === $mixed) {
-            return '';
-        } else {
+        if (null !== $mixed) {
             if ($mixed instanceof Document) {
                 $absolute = false;
                 if (isset($criteria['absolute'])) {
@@ -98,10 +115,12 @@ class UrlExtension extends \Twig_Extension
                 return $this->getNodesSourceUrl($mixed, $criteria);
             } elseif ($mixed instanceof Node) {
                 return $this->getNodeUrl($mixed, $criteria);
-            } else {
-                throw new \RuntimeException("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
             }
+
+            throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
         }
+
+        throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object", 1);
     }
 
     /**
@@ -114,11 +133,16 @@ class UrlExtension extends \Twig_Extension
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
     {
         $absolute = false;
+        $canonicalScheme = '';
+
         if (isset($criteria['absolute'])) {
             $absolute = (boolean) $criteria['absolute'];
         }
+        if (isset($criteria['canonicalScheme'])) {
+            $canonicalScheme = trim($criteria['canonicalScheme']);
+        }
 
-        $cacheKey = $this->getCacheKey($ns, $absolute);
+        $cacheKey = $this->getCacheKey($ns, $absolute, $canonicalScheme);
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
@@ -129,7 +153,7 @@ class UrlExtension extends \Twig_Extension
                 $this->forceLocale
             );
 
-            $url = $urlGenerator->getUrl($absolute);
+            $url = $urlGenerator->getUrl($absolute, $canonicalScheme);
 
             $this->cacheProvider->save($cacheKey, $url);
             return $url;

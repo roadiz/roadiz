@@ -1,0 +1,24 @@
+{% extends '@DefaultTheme/pages/base.html.twig' %}
+{% block inner_content %}
+    <h1 class="page-title">{% trans %}contact.us{% endtrans %}</h1>
+    <div class="page-text">
+        {#
+         # Display contact errors
+         #}
+        {% if session.messages|length %}
+            {% for type, msgs in session.messages %}
+                {% for msg in msgs %}
+                    <div class="alert alert-{% if type == "confirm" %}success{% elseif type == "warning" %}warning{% else %}danger{% endif %}">
+                        <p>{{ msg }}</p>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        {#
+         # Display contact form
+         #}
+        {% form_theme contactForm 'bootstrap_3_layout.html.twig' %}
+        {{ form(contactForm) }}
+    </div>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}

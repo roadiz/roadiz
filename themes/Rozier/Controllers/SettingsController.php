@@ -74,7 +74,7 @@ class SettingsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $settingGroup = $this->getService('em')
+        $settingGroup = $this->get('em')
                              ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
 
         if ($settingGroup !== null) {
@@ -165,7 +165,7 @@ class SettingsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $setting = $this->getService('em')
+        $setting = $this->get('em')
                         ->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
 
         if ($setting !== null) {
@@ -254,7 +254,7 @@ class SettingsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $setting = $this->getService('em')
+        $setting = $this->get('em')
                         ->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
 
         if (null !== $setting) {
@@ -299,7 +299,7 @@ class SettingsController extends RozierApp
 
             if (isset($data['name']) &&
                 $data['name'] != $setting->getName() &&
-                $this->getService('em')
+                $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', ['%name%' => $setting->getName()]), 1);
@@ -312,16 +312,16 @@ class SettingsController extends RozierApp
                         $setter = 'set' . ucwords($key);
                         $setting->$setter($value);
                     } else {
-                        $group = $this->getService('em')
+                        $group = $this->get('em')
                                       ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
                         $setting->setSettingGroup($group);
                     }
                 }
 
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 // Clear result cache
-                $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+                $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
                 if ($cacheDriver !== null) {
                     $cacheDriver->deleteAll();
                 }
@@ -349,8 +349,8 @@ class SettingsController extends RozierApp
                     $document = new Document();
                     $document->setFilename($value->getClientOriginalName());
                     $document->setMimeType($value->getMimeType());
-                    $this->getService('em')->persist($document);
-                    $this->getService('em')->flush();
+                    $this->get('em')->persist($document);
+                    $this->get('em')->flush();
 
                     $value->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
 
@@ -372,7 +372,7 @@ class SettingsController extends RozierApp
      */
     private function addSetting($data, Setting $setting)
     {
-        if ($this->getService('em')
+        if ($this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', ['%name%' => $setting->getName()]), 1);
@@ -386,14 +386,14 @@ class SettingsController extends RozierApp
                     $setter = 'set' . ucwords($key);
                     $setting->$setter($value);
                 } else {
-                    $group = $this->getService('em')
+                    $group = $this->get('em')
                                   ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
                     $setting->setSettingGroup($group);
                 }
             }
 
-            $this->getService('em')->persist($setting);
-            $this->getService('em')->flush();
+            $this->get('em')->persist($setting);
+            $this->get('em')->flush();
 
             return true;
         } catch (\Exception $e) {
@@ -409,8 +409,8 @@ class SettingsController extends RozierApp
      */
     private function deleteSetting($data, Setting $setting)
     {
-        $this->getService('em')->remove($setting);
-        $this->getService('em')->flush();
+        $this->get('em')->remove($setting);
+        $this->get('em')->flush();
 
         return true;
     }

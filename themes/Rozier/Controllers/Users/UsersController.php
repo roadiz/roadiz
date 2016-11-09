@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,9 +37,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * {@inheritdoc}
+ * Class UsersController
+ * @package Themes\Rozier\Controllers\Users
  */
 class UsersController extends RozierApp
 {
@@ -62,6 +64,11 @@ class UsersController extends RozierApp
             [],
             ['username' => 'ASC']
         );
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('user_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -87,14 +94,14 @@ class UsersController extends RozierApp
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
             $form = $this->createForm(new UserType(), $user, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
             ]);
@@ -102,7 +109,7 @@ class UsersController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.updated',
@@ -144,7 +151,7 @@ class UsersController extends RozierApp
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -156,7 +163,7 @@ class UsersController extends RozierApp
 
             if ($form->isValid()) {
                 $this->updateProfileImage($user);
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.updated',
@@ -198,15 +205,15 @@ class UsersController extends RozierApp
             $this->assignation['user'] = $user;
 
             $form = $this->createForm(new UserType(), $user, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
             ]);
 
             $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->updateProfileImage($user);
-                $this->getService('em')->persist($user);
-                $this->getService('em')->flush();
+                $this->get('em')->persist($user);
+                $this->get('em')->flush();
 
                 $user->getViewer()->sendSignInConfirmation();
 
@@ -236,7 +243,7 @@ class UsersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -289,8 +296,8 @@ class UsersController extends RozierApp
      */
     private function deleteUser($data, User $user)
     {
-        $this->getService('em')->remove($user);
-        $this->getService('em')->flush();
+        $this->get('em')->remove($user);
+        $this->get('em')->flush();
     }
 
     /**

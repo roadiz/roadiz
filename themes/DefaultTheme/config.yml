@@ -1,13 +1,13 @@
 ---
 name: "Default theme"
 author: "Ambroise Maupate"
-copyright: "Ambroise Maupate and Julien Blanchet"
+copyright: "Ambroise Maupate - Julien Blanchet"
 themeDir: "DefaultTheme"
 supportedLocale:
     - en
     - fr
     - ru
-versionRequire: "0.15.0"
+versionRequire: "0.15.1"
 importFiles:
     roles: []
     groups: []
@@ -16,6 +16,7 @@ importFiles:
         - "Resources/import/nodetype/Page.rzt"
         - "Resources/import/nodetype/Neutral.rzt"
         - "Resources/import/nodetype/BasicBlock.rzt"
+        - "Resources/import/nodetype/BasicNewsletter.rzt"
     tags: []
     nodes:
-        - "Resources/import/node/node-home.rzn"
+        - "Resources/import/node/node-main-menu.rzn"

@@ -225,7 +225,7 @@ class AppController extends Controller
      */
     public function getStaticResourcesUrl()
     {
-        return $this->getService('assetPackages')->getUrl('/themes/' . static::$themeDir . '/static/');
+        return $this->get('assetPackages')->getUrl('/themes/' . static::$themeDir . '/static/');
     }
 
     /**
@@ -239,8 +239,8 @@ class AppController extends Controller
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
         try {
-            if (!$this->getService('stopwatch')->isStarted('twigRender')) {
-                $this->getService('stopwatch')->start('twigRender');
+            if (!$this->get('stopwatch')->isStarted('twigRender')) {
+                $this->get('stopwatch')->start('twigRender');
             }
 
             if (null === $response) {
@@ -259,7 +259,7 @@ class AppController extends Controller
                 $view = '@' . static::getThemeDir() . '/' . $view;
             }
 
-            $response->setContent($this->container['twig.environment']->render($view, $parameters));
+            $response->setContent($this->get('twig.environment')->render($view, $parameters));
 
             return $response;
         } catch (\Twig_Error_Runtime $e) {
@@ -286,6 +286,8 @@ class AppController extends Controller
      *     - baseUrl
      *     - filesUrl
      *     - resourcesUrl
+     *     - absoluteResourcesUrl
+     *     - staticDomainName
      *     - ajaxToken
      *     - fontToken
      *     - universalAnalyticsId
@@ -307,14 +309,15 @@ class AppController extends Controller
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => $this->container['kernel']->isDevMode(),
+                'devMode' => $this->get('kernel')->isDevMode(),
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'ajaxToken' => $this->container['csrfTokenManager']->getToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->container['csrfTokenManager']->getToken(static::FONT_TOKEN_INTENTION),
+                'absoluteResourcesUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->getStaticResourcesUrl(),
+                'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
+                'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
@@ -322,8 +325,13 @@ class AppController extends Controller
             ],
         ];
 
-        if ($this->container['securityAuthorizationChecker'] !== null) {
-            $this->assignation['authorizationChecker'] = $this->container['securityAuthorizationChecker'];
+        if ('' != SettingsBag::getDocument('static_domain_name')) {
+            $this->assignation['head']['absoluteResourcesUrl'] = $this->getStaticResourcesUrl();
+            $this->assignation['head']['staticDomainName'] = SettingsBag::getDocument('static_domain_name');
+        }
+
+        if ($this->get('securityAuthorizationChecker') !== null) {
+            $this->assignation['authorizationChecker'] = $this->get('securityAuthorizationChecker');
         }
 
         return $this;
@@ -338,7 +346,7 @@ class AppController extends Controller
      */
     public function throw404($message = "")
     {
-        $this->container['logger']->error($message);
+        $this->get('logger')->error($message);
         $this->assignation['errorMessage'] = $message;
 
         return new Response(
@@ -367,7 +375,7 @@ class AppController extends Controller
                     $className = "\\" . $className;
                 }
             }
-            $this->theme = $this->getService('em')
+            $this->theme = $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                 ->findOneByClassName($className);
         }
@@ -403,30 +411,30 @@ class AppController extends Controller
                 $home = $theme->getHomeNode();
                 if ($home !== null) {
                     if ($translation !== null) {
-                        $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                        $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findWithTranslation(
                                 $home->getId(),
                                 $translation,
-                                $this->container['securityAuthorizationChecker']
+                                $this->get('securityAuthorizationChecker')
                             );
                     } else {
-                        $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                        $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
                             ->findWithDefaultTranslation(
                                 $home->getId(),
-                                $this->container['securityAuthorizationChecker']
+                                $this->get('securityAuthorizationChecker')
                             );
                     }
                 }
             }
             if ($translation !== null) {
-                $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
+                $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
                     ->findHomeWithTranslation(
                         $translation,
-                        $this->container['securityAuthorizationChecker']
+                        $this->get('securityAuthorizationChecker')
                     );
             } else {
-                $this->homeNode = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findHomeWithDefaultTranslation($this->container['securityAuthorizationChecker']);
+                $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findHomeWithDefaultTranslation($this->get('securityAuthorizationChecker'));
             }
         }
 
@@ -457,10 +465,10 @@ class AppController extends Controller
 
         switch ($level) {
             case 'error':
-                $this->container['logger']->error($msg, ['source' => $source]);
+                $this->get('logger')->error($msg, ['source' => $source]);
                 break;
             default:
-                $this->container['logger']->info($msg, ['source' => $source]);
+                $this->get('logger')->info($msg, ['source' => $source]);
                 break;
         }
     }
@@ -504,11 +512,11 @@ class AppController extends Controller
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
         $user = $this->getUser();
-        $node = $this->container['em']
+        $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null !== $node) {
-            $this->container['em']->refresh($node);
+            $this->get('em')->refresh($node);
             $parents = $node->getHandler()->getParents();
 
             if ($includeChroot) {

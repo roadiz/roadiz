@@ -55,10 +55,10 @@ class NewslettersUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
-        $translation = $this->getService('defaultTranslation');
+        $translation = $this->get('defaultTranslation');
 
         try {
-            $existingNewsletter = $this->getService('em')
+            $existingNewsletter = $this->get('em')
                                        ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
 
             $newNewsletter = $existingNewsletter->getHandler()->duplicate();
@@ -69,7 +69,7 @@ class NewslettersUtilsController extends RozierApp
 
             $this->publishConfirmMessage($request, $msg);
 
-            return $this->redirect($this->getService('urlGenerator')
+            return $this->redirect($this->get('urlGenerator')
                                             ->generate(
                                                 'newslettersEditPage',
                                                 [
@@ -86,7 +86,7 @@ class NewslettersUtilsController extends RozierApp
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
-            return $this->redirect($this->getService('urlGenerator')
+            return $this->redirect($this->get('urlGenerator')
                                             ->generate(
                                                 'newslettersEditPage',
                                                 [
@@ -100,7 +100,7 @@ class NewslettersUtilsController extends RozierApp
     private function getBaseNamespace()
     {
         // get first not static frontend
-        $theme = $this->getService("em")
+        $theme = $this->get("em")
                       ->getRepository("RZ\Roadiz\Core\Entities\Theme")
                       ->findFirstAvailableNonStaticFrontend();
 
@@ -123,7 +123,7 @@ class NewslettersUtilsController extends RozierApp
         . $newsletter->getNode()->getNodeType()->getName()
         . "Controller";
         // force the twig path
-        $this->getService('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
+        $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
 
         // get html from the controller
         $front = new $classname();
@@ -142,7 +142,7 @@ class NewslettersUtilsController extends RozierApp
      */
     public function previewAction(Request $request, $newsletterId)
     {
-        $newsletter = $this->getService("em")->find(
+        $newsletter = $this->get("em")->find(
             "RZ\Roadiz\Core\Entities\Newsletter",
             $newsletterId
         );
@@ -165,7 +165,7 @@ class NewslettersUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $newsletterId, $inline)
     {
-        $newsletter = $this->getService("em")->find(
+        $newsletter = $this->get("em")->find(
             "RZ\Roadiz\Core\Entities\Newsletter",
             $newsletterId
         );

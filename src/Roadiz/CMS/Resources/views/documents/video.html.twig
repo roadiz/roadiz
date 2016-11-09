@@ -1,17 +1,19 @@
 {% spaceless %}
 <video
-	data-document
-	alt="{{ alt }}"
-	{% if width %}width="{{ width }}" {% endif %}
-	{% if height %}height="{{ height }}" {% endif %}
-	{% if class %}class="{{ class }}" {% endif %}
-	{% if identifier %}id="{{ identifier }}" {% endif %}
-	{% if controls %}controls {% endif %}
-	{% if autoplay %}autoplay {% endif %}
+    data-document
+    {% if width %}width="{{ width }}" {% endif %}
+    {% if height %}height="{{ height }}" {% endif %}
+    {% if class %}class="{{ class }}" {% endif %}
+    {% if poster and poster.url and not custom_poster %}poster="{{ poster.url }}" {% endif %}
+    {% if custom_poster %}poster="{{ custom_poster }}" {% endif %}
+    {% if identifier %}id="{{ identifier }}" {% endif %}
+    {% if controls %}controls {% endif %}
+    {% if autoplay %}autoplay {% endif %}
+    {% if loop %}loop {% endif %}
 >
-	{% for source in sources %}
-	<source type="{{ source.mime }}" src="{{ source.url }}">
-	{% endfor %}
-	Your browser does not support the video tag.
+    {% for source in sources %}
+    <source type="{{ source.mime }}" src="{{ source.url }}">
+    {% endfor %}
+    Your browser does not support the video tag.
 </video>
 {% endspaceless %}

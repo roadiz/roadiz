@@ -183,13 +183,26 @@ class StringHandler
         }
     }
 
-
+    /**
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
     public static function endsWith($haystack, $needle)
     {
+        if (strlen($needle) > strlen($haystack)) {
+            return false;
+        }
         // search forward starting from end minus needle length characters
         return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== false;
     }
 
+    /**
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     * @return string
+     */
     public static function replaceLast($search, $replace, $subject)
     {
         $pos = strrpos($subject, $search);

@@ -51,32 +51,42 @@ class Packages extends BasePackages
      * Build a new asset packages for Roadiz root and documents.
      *
      * @param VersionStrategyInterface $versionStrategy
-     * @param RequestStack             $requestStack
-     * @param string                   $staticDomain
+     * @param RequestStack $requestStack
+     * @param string $staticDomain
+     * @param bool $isPreview
      */
     public function __construct(
         VersionStrategyInterface $versionStrategy,
         RequestStack $requestStack,
-        $staticDomain = ""
+        $staticDomain = "",
+        $isPreview = false
     ) {
         $requestStackContext = new RequestStackContext($requestStack);
         $request = $requestStack->getCurrentRequest();
 
-        if ($staticDomain != "") {
+        if (false === $isPreview && $staticDomain != "") {
             /*
              * Add non-default port to static domain.
              */
             $staticDomainAndPort = $staticDomain;
-            if (($request->isSecure() && $request->getPort() != 443) || $request->getPort() != 80) {
+            if (($request->isSecure() && $request->getPort() != 443) ||
+                (!$request->isSecure() && $request->getPort() != 80)) {
                 $staticDomainAndPort .= ':' . $request->getPort();
             }
 
+            /*
+             * If no protocol, use https as default
+             */
+            if (!preg_match("~^(?:f|ht)tps?://~i", $staticDomainAndPort)) {
+                $staticDomainAndPort = "https://" . $staticDomainAndPort;
+            }
+
             $defaultPackage = new UrlPackage(
-                '//' . $staticDomainAndPort,
+                $staticDomainAndPort,
                 $versionStrategy
             );
             $documentPackage = new UrlPackage(
-                '//' . $staticDomainAndPort . '/' . Document::getFilesFolderName(),
+                $staticDomainAndPort . '/' . Document::getFilesFolderName(),
                 $versionStrategy
             );
 

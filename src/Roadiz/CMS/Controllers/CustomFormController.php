@@ -60,7 +60,7 @@ class CustomFormController extends AppController
      */
     public function getStaticResourcesUrl()
     {
-        return $this->getService('assetPackages')->getUrl('/themes/Rozier/static/');
+        return $this->get('assetPackages')->getUrl('/themes/Rozier/static/');
     }
 
     /**
@@ -90,7 +90,7 @@ class CustomFormController extends AppController
     public function addAction(Request $request, $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->getService('em')
+        $customForm = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
 
         if (null !== $customForm &&
@@ -98,18 +98,18 @@ class CustomFormController extends AppController
             $mixed = static::prepareAndHandleCustomFormAssignation(
                 $request,
                 $customForm,
-                $this->getService('formFactory'),
-                $this->getService('em'),
-                $this->getService('twig.environment'),
-                $this->getService('mailer'),
-                $this->getService('translator'),
+                $this->get('formFactory'),
+                $this->get('em'),
+                $this->get('twig.environment'),
+                $this->get('mailer'),
+                $this->get('translator'),
                 new RedirectResponse(
                     $this->generateUrl(
                         'customFormSentAction',
                         ["customFormId" => $customFormId]
                     )
                 ),
-                $this->getService('logger')
+                $this->get('logger')
             );
 
             if ($mixed instanceof RedirectResponse) {
@@ -134,7 +134,7 @@ class CustomFormController extends AppController
      */
     public function sentAction(Request $request, $customFormId)
     {
-        $customForm = $this->getService('em')
+        $customForm = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
 
         if (null !== $customForm) {

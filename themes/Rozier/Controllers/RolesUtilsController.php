@@ -54,11 +54,11 @@ class RolesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
-        $existingRole = $this->getService('em')
+        $existingRole = $this->get('em')
                              ->getRepository('RZ\Roadiz\Core\Entities\Role')
                              ->findAll();
 
-        $serializer = new RoleCollectionJsonSerializer($this->getService('em'));
+        $serializer = new RoleCollectionJsonSerializer($this->get('em'));
         $role = $serializer->serialize($existingRole);
 
         $response = new Response(
@@ -92,10 +92,10 @@ class RolesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
-        $existingRole = $this->getService('em')
+        $existingRole = $this->get('em')
                              ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
-        $serializer = new RoleCollectionJsonSerializer($this->getService('em'));
+        $serializer = new RoleCollectionJsonSerializer($this->get('em'));
         $role = $serializer->serialize([$existingRole]);
 
         $response = new Response(
@@ -140,14 +140,14 @@ class RolesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (RolesImporter::importJsonFile($serializedData, $this->getService('em'))) {
+                    if (RolesImporter::importJsonFile($serializedData, $this->get('em'))) {
                         $msg = $this->getTranslator()->trans('role.imported');
                         $this->publishConfirmMessage($request, $msg);
 
-                        $this->getService('em')->flush();
+                        $this->get('em')->flush();
 
                         // Clear result cache
-                        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+                        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
                         if ($cacheDriver !== null) {
                             $cacheDriver->deleteAll();
                         }
@@ -159,7 +159,7 @@ class RolesUtilsController extends RozierApp
                     } else {
                         $msg = $this->getTranslator()->trans('file.format.not_valid');
                         $request->getSession()->getFlashBag()->add('error', $msg);
-                        $this->getService('logger')->error($msg);
+                        $this->get('logger')->error($msg);
 
                         // redirect even if its null
                         return $this->redirect($this->generateUrl(
@@ -169,7 +169,7 @@ class RolesUtilsController extends RozierApp
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->error($msg);
+                    $this->get('logger')->error($msg);
 
                     // redirect even if its null
                     return $this->redirect($this->generateUrl(
@@ -179,7 +179,7 @@ class RolesUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getService('logger')->error($msg);
+                $this->get('logger')->error($msg);
             }
         }
 

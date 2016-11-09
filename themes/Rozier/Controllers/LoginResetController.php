@@ -44,7 +44,7 @@ class LoginResetController extends RozierApp
      */
     public function resetAction(Request $request, $token)
     {
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->getRepository('RZ\Roadiz\Core\Entities\User')
                      ->findOneByConfirmationToken($token);
 
@@ -56,7 +56,7 @@ class LoginResetController extends RozierApp
                 $user->setConfirmationToken(null);
                 $user->setPlainPassword($form->getData()['plainPassword']);
 
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 return $this->redirect($this->generateUrl(
                     'loginResetConfirmPage'
@@ -95,7 +95,7 @@ class LoginResetController extends RozierApp
                             'label' => false,
                             'constraints' => [
                                 new ValidAccountConfirmationToken([
-                                    'entityManager' => $this->getService('em'),
+                                    'entityManager' => $this->get('em'),
                                     'ttl' => LoginRequestController::CONFIRMATION_TTL,
                                     'message' => 'confirmation.token.is.invalid',
                                     'expiredMessage' => 'confirmation.token.has.expired',

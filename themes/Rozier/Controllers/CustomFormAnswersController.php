@@ -55,7 +55,7 @@ class CustomFormAnswersController extends RozierApp
          * Manage get request to filter list
          */
 
-        $customForm = $this->getService('em')->find(
+        $customForm = $this->get('em')->find(
             'RZ\Roadiz\Core\Entities\CustomForm',
             $customFormId
         );
@@ -86,7 +86,7 @@ class CustomFormAnswersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
-        $customFormAnswer = $this->getService('em')
+        $customFormAnswer = $this->get('em')
                                  ->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', (int) $customFormAnswerId);
 
         if (null !== $customFormAnswer) {
@@ -98,7 +98,7 @@ class CustomFormAnswersController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId()) {
-                $this->getService("em")->remove($customFormAnswer);
+                $this->get("em")->remove($customFormAnswer);
 
                 $msg = $this->getTranslator()->trans('customFormAnswer.%id%.deleted', ['%id%' => $customFormAnswer->getId()]);
                 $this->publishConfirmMessage($request, $msg);

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
@@ -93,7 +94,6 @@ class Folder extends AbstractDateTimedPositioned
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
-     *
      */
     private $children;
 
@@ -119,7 +119,7 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true)
      * @var ArrayCollection
      */
     private $translatedFolders;
@@ -201,6 +201,18 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
+     * @param Translation $translation
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTranslatedFoldersByTranslation(Translation $translation)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('translation', $translation));
+
+        return $this->translatedFolders->matching($criteria);
+    }
+
+    /**
      * @param mixed $translatedFolders
      * @return Folder
      */
@@ -247,7 +259,7 @@ class Folder extends AbstractDateTimedPositioned
     {
         return $this->setFolderName($folderName);
     }
-    
+
     /**
      * @return string
      */

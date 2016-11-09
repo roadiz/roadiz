@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,12 +30,16 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
+use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * {@inheritdoc}
+ * Class AjaxSearchNodesSourcesController
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxSearchNodesSourcesController extends AbstractAjaxController
 {
@@ -52,9 +56,9 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
     public function searchAction(Request $request)
     {
         /*
-         * Validate
+         * Validate without csrf and for all methods
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
+        if (true !== $notValid = $this->validateRequest($request, 'POST', false)) {
             return new JsonResponse(
                 $notValid,
                 Response::HTTP_FORBIDDEN
@@ -64,23 +68,13 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if ("" != $request->get('searchTerms')) {
-            $nodesSources = $this->getService('em')
-                                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                 ->findBySearchQuery(
-                                     strip_tags($request->get('searchTerms')),
-                                     static::RESULT_COUNT
-                                 );
-
-            if (null === $nodesSources) {
-                $nodesSources = $this->getService('em')
-                                     ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                                     ->searchBy(
-                                         strip_tags($request->get('searchTerms')),
-                                         [],
-                                         [],
-                                         static::RESULT_COUNT
-                                     );
-            }
+            $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
+            /** @var array $nodesSources */
+            $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
+                $request->get('searchTerms'),
+                static::RESULT_COUNT,
+                $this->get('defaultTranslation')
+            );
 
             if (null !== $nodesSources &&
                 count($nodesSources) > 0) {
@@ -123,7 +117,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
 
         return new JsonResponse(
             $responseArray,
-            Response::HTTP_OK
+            Response::HTTP_NOT_FOUND
         );
     }
 }

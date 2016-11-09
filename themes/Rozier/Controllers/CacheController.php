@@ -60,12 +60,12 @@ class CacheController extends RozierApp
 
         if ($form->isValid()) {
             $clearers = [
-                new DoctrineCacheClearer($this->getService('em')),
-                new NodesSourcesUrlsCacheClearer($this->getService('nodesSourcesUrlCacheProvider')),
-                new TranslationsCacheClearer($this->getService('kernel')->getCacheDir()),
-                new RoutingCacheClearer($this->getService('kernel')->getCacheDir()),
-                new TemplatesCacheClearer($this->getService('kernel')->getCacheDir()),
-                new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir()),
+                new DoctrineCacheClearer($this->get('em')),
+                new NodesSourcesUrlsCacheClearer($this->get('nodesSourcesUrlCacheProvider')),
+                new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
+                new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
+                new TemplatesCacheClearer($this->get('kernel')->getCacheDir()),
+                new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),
                 new OPCacheClearer(),
             ];
             foreach ($clearers as $clearer) {
@@ -84,11 +84,11 @@ class CacheController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         $this->assignation['cachesInfo'] = [
-            'resultCache' => $this->getService('em')->getConfiguration()->getResultCacheImpl(),
-            'hydratationCache' => $this->getService('em')->getConfiguration()->getHydrationCacheImpl(),
-            'queryCache' => $this->getService('em')->getConfiguration()->getQueryCacheImpl(),
-            'metadataCache' => $this->getService('em')->getConfiguration()->getMetadataCacheImpl(),
-            'nodeSourcesUrlsCache' => $this->getService('nodesSourcesUrlCacheProvider'),
+            'resultCache' => $this->get('em')->getConfiguration()->getResultCacheImpl(),
+            'hydratationCache' => $this->get('em')->getConfiguration()->getHydrationCacheImpl(),
+            'queryCache' => $this->get('em')->getConfiguration()->getQueryCacheImpl(),
+            'metadataCache' => $this->get('em')->getConfiguration()->getMetadataCacheImpl(),
+            'nodeSourcesUrlsCache' => $this->get('nodesSourcesUrlCacheProvider'),
         ];
 
         foreach ($this->assignation['cachesInfo'] as $key => $value) {
@@ -125,7 +125,7 @@ class CacheController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $clearer = new AssetsClearer($this->getService('kernel')->getCacheDir());
+            $clearer = new AssetsClearer($this->get('kernel')->getCacheDir());
             $clearer->clear();
 
             $msg = $this->getTranslator()->trans('cache.deleted');

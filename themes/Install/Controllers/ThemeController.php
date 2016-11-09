@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,7 +35,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\Install\InstallApp;
 
 /**
- * ThemeController
+ * Class ThemeController
+ * @package Themes\Install\Controllers
  */
 class ThemeController extends InstallApp
 {
@@ -50,7 +51,7 @@ class ThemeController extends InstallApp
     public function importThemeAction(Request $request, $id)
     {
 
-        $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+        $result = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
@@ -69,8 +70,8 @@ class ThemeController extends InstallApp
      */
     public function themeInstallAction(Request $request)
     {
-        $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->getService("em"));
-        $theme = $this->getService("em")
+        $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->get("em"));
+        $theme = $this->get("em")
                       ->getRepository("RZ\Roadiz\Core\Entities\Theme")
                       ->findOneByClassName($request->get("classname"));
         if ($importFile === false) {
@@ -120,10 +121,10 @@ class ThemeController extends InstallApp
                  */
                 try {
                     $fixtures = new Fixtures(
-                        $this->getService('em'),
-                        $this->getService('kernel')->getCacheDir(),
-                        $this->getService('kernel')->getRootDir() . '/conf/config.yml',
-                        $this->getService('kernel')->isDebug(),
+                        $this->get('em'),
+                        $this->get('kernel')->getCacheDir(),
+                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
+                        $this->get('kernel')->isDebug(),
                         $request
                     );
                     $fixtures->saveInformations($infosForm->getData());

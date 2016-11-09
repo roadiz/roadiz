@@ -77,21 +77,21 @@ class CustomFormsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
-        $customForm = $this->getService('em')
+        $customForm = $this->get('em')
                            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
             $form = $this->createForm(new CustomFormType(), $customForm, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'name' => $customForm->getName(),
             ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
-                    $this->getService('em')->flush();
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -104,7 +104,7 @@ class CustomFormsController extends RozierApp
                 return $this->redirect($this->generateUrl(
                     'customFormsHomePage',
                     [
-                        '_token' => $this->getService('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
+                        '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
                     ]
                 ));
             }
@@ -137,13 +137,13 @@ class CustomFormsController extends RozierApp
              * form
              */
             $form = $this->createForm(new CustomFormType(), $customForm, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);
             if ($form->isValid()) {
                 try {
-                    $this->getService('em')->persist($customForm);
-                    $this->getService('em')->flush();
+                    $this->get('em')->persist($customForm);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -182,7 +182,7 @@ class CustomFormsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
-        $customForm = $this->getService('em')
+        $customForm = $this->get('em')
                            ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
         if (null !== $customForm) {
@@ -194,7 +194,7 @@ class CustomFormsController extends RozierApp
 
             if ($form->isValid() &&
                 $form->getData()['customFormId'] == $customForm->getId()) {
-                $this->getService("em")->remove($customForm);
+                $this->get("em")->remove($customForm);
 
                 $msg = $this->getTranslator()->trans('customForm.%name%.deleted', ['%name%' => $customForm->getName()]);
                 $this->publishConfirmMessage($request, $msg);

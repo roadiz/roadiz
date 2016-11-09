@@ -41,10 +41,32 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
- * {@inheritdoc}
+ * Class DocumentRepository
+ * @package RZ\Roadiz\Core\Repositories
  */
 class DocumentRepository extends EntityRepository
 {
+    /**
+     * Get a document with its translation id.
+     *
+     * @param $id
+     * @return mixed|null
+     */
+    public function findOneByDocumentTranslationId($id)
+    {
+        $qb = $this->createQueryBuilder('d');
+        $qb->select('d, dt')
+            ->innerJoin('d.documentTranslations', 'dt')
+            ->andWhere($qb->expr()->eq('dt.id', ':id'))
+            ->setParameter(':id', $id)
+            ->setMaxResults(1);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
     /**
      * Add a folder filtering to queryBuilder.
      *

@@ -144,6 +144,17 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
 
     setTimeout(function () {
         var formData = new FormData(_this.$form.get(0));
+        // Display the key/value pairs
+        /*var outputLog = {}, iterator = formData.entries(), end = false;
+        while(end === false) {
+            var item = iterator.next();
+            if(item.value) {
+                outputLog[item.value[0]] = item.value[1];
+            } else if(item.done === true) {
+                end = true;
+            }
+        }
+        console.log(outputLog);*/
 
         $.ajax({
             url: window.location.href,
@@ -155,9 +166,20 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
         })
         .done(function(data) {
             _this.cleanErrors();
+
+            /*
+             * Update preview or view url
+             */
+            if (data.public_url) {
+                $publicUrlLinks = $('a.public-url-link');
+                if ($publicUrlLinks.length) {
+                    $publicUrlLinks.attr('href', data.public_url);
+                }
+            }
         })
         .fail(function(data) {
             _this.displayErrors(data.responseJSON.errors);
+            //console.log(data.responseJSON);
             UIkit.notify({
                 message : data.responseJSON.message,
                 status  : 'danger',

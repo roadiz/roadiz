@@ -56,9 +56,9 @@ class DatabaseController extends InstallApp
     public function databaseAction(Request $request)
     {
         $config = new YamlConfiguration(
-            $this->getService('kernel')->getCacheDir(),
-            $this->getService('kernel')->isDebug(),
-            $this->getService('kernel')->getRootDir() . '/conf/config.yml'
+            $this->get('kernel')->getCacheDir(),
+            $this->get('kernel')->isDebug(),
+            $this->get('kernel')->getRootDir() . '/conf/config.yml'
         );
         if (false === $config->load()) {
             $config->setConfiguration($config->getDefaultConfiguration());
@@ -84,10 +84,10 @@ class DatabaseController extends InstallApp
                      */
                     try {
                         $fixtures = new Fixtures(
-                            $this->getService('em'),
-                            $this->getService('kernel')->getCacheDir(),
-                            $this->getService('kernel')->getRootDir() . '/conf/config.yml',
-                            $this->getService('kernel')->isDebug(),
+                            $this->get('em'),
+                            $this->get('kernel')->getCacheDir(),
+                            $this->get('kernel')->getRootDir() . '/conf/config.yml',
+                            $this->get('kernel')->isDebug(),
                             $request
                         );
                         $fixtures->createFolders();
@@ -96,7 +96,7 @@ class DatabaseController extends InstallApp
                         /*
                          * Need to clear configuration cache.
                          */
-                        $configurationClearer = new ConfigurationCacheClearer($this->getService('kernel')->getCacheDir());
+                        $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
                         $configurationClearer->clear();
 
                         /*
@@ -142,9 +142,9 @@ class DatabaseController extends InstallApp
         /*
          * Test connexion
          */
-        if (null === $this->getService('em')) {
+        if (null === $this->get('em')) {
             $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $this->getService('session')->getFlashBag()->all();
+            $this->assignation['errorMessage'] = $this->get('session')->getFlashBag()->all();
         } else {
             try {
                 /*
@@ -152,7 +152,7 @@ class DatabaseController extends InstallApp
                  * Use updateSchema instead of create to enable upgrading
                  * Roadiz database using Install theme.
                  */
-                $updater = new SchemaUpdater($this->getService('em'));
+                $updater = new SchemaUpdater($this->get('em'));
                 $updater->updateSchema();
 
                 /*
@@ -189,10 +189,10 @@ class DatabaseController extends InstallApp
     public function databaseFixturesAction(Request $request)
     {
         $fixtures = new Fixtures(
-            $this->getService('em'),
-            $this->getService('kernel')->getCacheDir(),
-            $this->getService('kernel')->getRootDir() . '/conf/config.yml',
-            $this->getService('kernel')->isDebug(),
+            $this->get('em'),
+            $this->get('kernel')->getCacheDir(),
+            $this->get('kernel')->getRootDir() . '/conf/config.yml',
+            $this->get('kernel')->isDebug(),
             $request
         );
         $fixtures->installFixtures();
@@ -214,7 +214,7 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        $updater = new SchemaUpdater($this->getService('em'));
+        $updater = new SchemaUpdater($this->get('em'));
         $updater->updateSchema();
 
         return new JsonResponse(['status' => true]);
@@ -227,7 +227,7 @@ class DatabaseController extends InstallApp
      */
     public function clearDoctrineCacheAction(Request $request)
     {
-        $doctrineClearer = new DoctrineCacheClearer($this->getService('em'));
+        $doctrineClearer = new DoctrineCacheClearer($this->get('em'));
         $doctrineClearer->clear();
 
         return new JsonResponse(['status' => true]);

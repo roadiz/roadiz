@@ -57,6 +57,8 @@ class RozierApp extends BackendController
     protected $formFactory = null;
     protected $themeContainer = null;
 
+    const DEFAULT_ITEM_PER_PAGE = 50;
+
     /**
      * @return $this
      */
@@ -105,7 +107,7 @@ class RozierApp extends BackendController
         };
 
         $this->themeContainer['settingGroups'] = function () {
-            return $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+            return $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                 ->findBy(
                     ['inMenu' => true],
                     ['name' => 'ASC']
@@ -148,8 +150,8 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = SettingsBag::get('main_color');
-        $this->assignation['nodeTypes'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
-        $this->assignation['tags'] = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+        $this->assignation['nodeTypes'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
+        $this->assignation['tags'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
                 'color' => ['!=', '#000000'],
             ]);
 
@@ -174,7 +176,7 @@ class RozierApp extends BackendController
          */
         if ($container['solr.ready']) {
             $container['dispatcher']->addSubscriber(
-                new SolariumSubscriber($container['solr'], $container['logger'])
+                new SolariumSubscriber($container['solr'], $container['logger'], $container['em'])
             );
         }
 

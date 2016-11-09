@@ -87,9 +87,7 @@ class NodeSourceApi extends AbstractApi
         $limit = null,
         $offset = null
     ) {
-        if (empty($criteria['node.status'])) {
-            $criteria['node.status'] = ['<=', Node::PUBLISHED];
-        }
+        $this->secureQuery($criteria);
 
         $this->getRepositoryName($criteria);
 
@@ -111,9 +109,7 @@ class NodeSourceApi extends AbstractApi
     public function countBy(
         array $criteria
     ) {
-        if (empty($criteria['node.status'])) {
-            $criteria['node.status'] = ['<=', Node::PUBLISHED];
-        }
+        $this->secureQuery($criteria);
 
         $this->getRepositoryName($criteria);
 
@@ -132,9 +128,7 @@ class NodeSourceApi extends AbstractApi
      */
     public function getOneBy(array $criteria, array $order = null)
     {
-        if (empty($criteria['node.status'])) {
-            $criteria['node.status'] = ['<=', Node::PUBLISHED];
-        }
+        $this->secureQuery($criteria);
 
         $this->getRepositoryName($criteria);
 
@@ -145,5 +139,17 @@ class NodeSourceApi extends AbstractApi
                         $this->container['securityAuthorizationChecker'],
                         $this->container['kernel']->isPreview()
                     );
+    }
+
+    /**
+     * Add status constraint if not present.
+     *
+     * @param array $criteria
+     */
+    protected function secureQuery(array &$criteria)
+    {
+        if (empty($criteria['node.status'])) {
+            $criteria['node.status'] = ['<=', Node::PUBLISHED];
+        }
     }
 }

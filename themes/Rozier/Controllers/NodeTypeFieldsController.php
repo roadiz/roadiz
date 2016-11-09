@@ -53,7 +53,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        $nodeType = $this->getService('em')
+        $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
         if ($nodeType !== null) {
@@ -80,7 +80,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        $field = $this->getService('em')
+        $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -88,14 +88,14 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['field'] = $field;
 
             $form = $this->createForm(new NodeTypeFieldType(), $field, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'fieldName' => $field->getName(),
                 'nodeType' => $field->getNodeType(),
             ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
                 $field->getNodeType()->getHandler()->updateSchema();
 
                 $msg = $this->getTranslator()->trans('nodeTypeField.%name%.updated', ['%name%' => $field->getName()]);
@@ -108,7 +108,7 @@ class NodeTypeFieldsController extends RozierApp
                     'nodeTypesFieldSchemaUpdate',
                     [
                         'nodeTypeId' => $field->getNodeType()->getId(),
-                        '_token' => $this->getService('csrfTokenManager')->getToken(
+                        '_token' => $this->get('csrfTokenManager')->getToken(
                             static::SCHEMA_TOKEN_INTENTION
                         ),
                     ]
@@ -136,13 +136,13 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $field = new NodeTypeField();
-        $nodeType = $this->getService('em')
+        $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
 
         if ($nodeType !== null &&
             $field !== null) {
-            $latestPosition = $this->getService('em')
+            $latestPosition = $this->get('em')
                                    ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                                    ->findLatestPositionInNodeType($nodeType);
             $field->setNodeType($nodeType);
@@ -152,16 +152,16 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['field'] = $field;
 
             $form = $this->createForm(new NodeTypeFieldType(), $field, [
-                'em' => $this->getService('em'),
+                'em' => $this->get('em'),
                 'nodeType' => $field->getNodeType(),
             ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
                 try {
-                    $this->getService('em')->persist($field);
-                    $this->getService('em')->flush();
-                    $this->getService('em')->refresh($nodeType);
+                    $this->get('em')->persist($field);
+                    $this->get('em')->flush();
+                    $this->get('em')->refresh($nodeType);
 
                     $nodeType->getHandler()->updateSchema();
 
@@ -178,7 +178,7 @@ class NodeTypeFieldsController extends RozierApp
                         'nodeTypesFieldSchemaUpdate',
                         [
                             'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->getService('csrfTokenManager')->getToken(
+                            '_token' => $this->get('csrfTokenManager')->getToken(
                                 static::SCHEMA_TOKEN_INTENTION
                             ),
                         ]
@@ -186,7 +186,7 @@ class NodeTypeFieldsController extends RozierApp
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->error($msg);
+                    $this->get('logger')->error($msg);
                     /*
                      * Redirect to add page
                      */
@@ -217,7 +217,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
-        $field = $this->getService('em')
+        $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -228,13 +228,13 @@ class NodeTypeFieldsController extends RozierApp
             if ($form->isValid() &&
                 $form->getData()['nodeTypeFieldId'] == $field->getId()) {
                 $nodeTypeId = $field->getNodeType()->getId();
-                $this->getService('em')->remove($field);
-                $this->getService('em')->flush();
+                $this->get('em')->remove($field);
+                $this->get('em')->flush();
 
                 /*
                  * Update Database
                  */
-                $nodeType = $this->getService('em')
+                $nodeType = $this->get('em')
                                  ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
                 $nodeType->getHandler()->updateSchema();
@@ -252,7 +252,7 @@ class NodeTypeFieldsController extends RozierApp
                     'nodeTypesFieldSchemaUpdate',
                     [
                         'nodeTypeId' => $nodeTypeId,
-                        '_token' => $this->getService('csrfTokenManager')->getToken(
+                        '_token' => $this->get('csrfTokenManager')->getToken(
                             static::SCHEMA_TOKEN_INTENTION
                         ),
                     ]

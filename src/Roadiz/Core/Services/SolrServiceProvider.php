@@ -31,7 +31,8 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Solarium\Client;
 
 /**
@@ -71,9 +72,25 @@ class SolrServiceProvider implements ServiceProviderInterface
             }
         };
 
+        /**
+         * @param $c
+         * @return null|NodeSourceSearchHandler
+         */
         $container['solr.search.nodeSource'] = function ($c) {
             if ($c['solr.ready']) {
-                return new FullTextSearchHandler($c['solr'], $c['em'], $c['logger']);
+                return new NodeSourceSearchHandler($c['solr'], $c['em'], $c['logger']);
+            } else {
+                return null;
+            }
+        };
+
+        /**
+         * @param $c
+         * @return null|DocumentSearchHandler()
+         */
+        $container['solr.search.document'] = function ($c) {
+            if ($c['solr.ready']) {
+                return new DocumentSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
                 return null;
             }

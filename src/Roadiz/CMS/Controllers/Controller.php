@@ -51,6 +51,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 abstract class Controller
 {
+    /**
+     * @var Container|null
+     */
     protected $container = null;
 
     /**
@@ -60,7 +63,7 @@ abstract class Controller
      */
     public function getRequest()
     {
-        return $this->container['request'];
+        return $this->get('request');
     }
 
     /**
@@ -89,12 +92,36 @@ abstract class Controller
      * *Alias for `$this->container[$key]`*
      *
      * @param string|null $key
-     *
      * @return mixed
+     * @deprecated Use Controller::get to better match Symfony style.
      */
     public function getService($key = null)
     {
         return $this->container[$key];
+    }
+
+    /**
+     * Gets a container service by its id.
+     *
+     * *Alias for `$this->container[$key]`*
+     *
+     * @param string $id
+     * @return mixed The service
+     */
+    public function get($id)
+    {
+        return $this->container[$id];
+    }
+
+    /**
+     * Returns true if the service id is defined.
+     *
+     * @param string $id
+     * @return bool true if the service id is defined, false otherwise
+     */
+    public function has($id)
+    {
+        return $this->container->offsetExists($id);
     }
 
     /**
@@ -104,7 +131,7 @@ abstract class Controller
      */
     public function getAuthorizationChecker()
     {
-        return $this->container['securityAuthorizationChecker'];
+        return $this->get('securityAuthorizationChecker');
     }
 
     /**
@@ -114,7 +141,7 @@ abstract class Controller
      */
     public function getTokenStorage()
     {
-        return $this->container['securityTokenStorage'];
+        return $this->get('securityTokenStorage');
     }
 
     /**
@@ -124,7 +151,7 @@ abstract class Controller
      */
     public function em()
     {
-        return $this->container['em'];
+        return $this->get('em');
     }
 
     /**
@@ -132,7 +159,7 @@ abstract class Controller
      */
     public function getTranslator()
     {
-        return $this->container['translator'];
+        return $this->get('translator');
     }
 
     /**
@@ -140,7 +167,7 @@ abstract class Controller
      */
     public function getTwig()
     {
-        return $this->container['twig.environment'];
+        return $this->get('twig.environment');
     }
 
     /**
@@ -154,7 +181,7 @@ abstract class Controller
      */
     public function generateUrl($route, $parameters = [], $absolute = false)
     {
-        return $this->container['urlGenerator']->generate($route, $parameters, $absolute);
+        return $this->get('urlGenerator')->generate($route, $parameters, $absolute);
     }
 
     /**
@@ -226,7 +253,7 @@ abstract class Controller
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
         /** @var TranslationRepository $repository */
-        $repository = $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Translation');
+        $repository = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Translation');
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
@@ -249,7 +276,7 @@ abstract class Controller
                 throw new NoTranslationAvailableException();
             }
         } else {
-            $translation = $this->container['defaultTranslation'];
+            $translation = $this->get('defaultTranslation');
         }
 
         $request->setLocale($translation->getLocale());
@@ -266,7 +293,7 @@ abstract class Controller
      */
     public function renderView($view, array $parameters = [])
     {
-        return $this->container['twig.environment']->render($view, $parameters);
+        return $this->get('twig.environment')->render($view, $parameters);
     }
 
     /**
@@ -283,8 +310,8 @@ abstract class Controller
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
-        if (!$this->getService('stopwatch')->isStarted('twigRender')) {
-            $this->getService('stopwatch')->start('twigRender');
+        if (!$this->get('stopwatch')->isStarted('twigRender')) {
+            $this->get('stopwatch')->start('twigRender');
         }
 
         try {
@@ -323,8 +350,8 @@ abstract class Controller
     protected function forward($controller, array $path = [], array $query = [])
     {
         $path['_controller'] = $controller;
-        $subRequest = $this->container['request']->duplicate($query, null, $path);
-        return $this->container['httpKernel']->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $subRequest = $this->get('request')->duplicate($query, null, $path);
+        return $this->get('httpKernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 
     /**
@@ -370,7 +397,7 @@ abstract class Controller
      */
     protected function createForm($type, $data = null, array $options = [])
     {
-        return $this->container['formFactory']->create($type, $data, $options);
+        return $this->get('formFactory')->create($type, $data, $options);
     }
 
     /**
@@ -383,7 +410,7 @@ abstract class Controller
      */
     protected function createFormBuilder($data = null, array $options = [])
     {
-        return $this->container['formFactory']->createBuilder('form', $data, $options);
+        return $this->get('formFactory')->createBuilder('form', $data, $options);
     }
 
     /**
@@ -398,8 +425,8 @@ abstract class Controller
     public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
     {
         return new EntityListManager(
-            $this->container['request'],
-            $this->container['em'],
+            $this->get('request'),
+            $this->get('em'),
             $entity,
             $criteria,
             $ordering
@@ -415,11 +442,11 @@ abstract class Controller
     public function createContactFormManager()
     {
         return new ContactFormManager(
-            $this->container['request'],
-            $this->container['formFactory'],
-            $this->container['translator'],
-            $this->container['twig.environment'],
-            $this->container['mailer']
+            $this->get('request'),
+            $this->get('formFactory'),
+            $this->get('translator'),
+            $this->get('twig.environment'),
+            $this->get('mailer')
         );
     }
 
@@ -434,10 +461,10 @@ abstract class Controller
      */
     protected function getUser()
     {
-        if (!isset($this->container['securityTokenStorage'])) {
+        if (!$this->has('securityTokenStorage')) {
             throw new \LogicException('No TokenStorage has been registered in your application.');
         }
-        if (null === $token = $this->container['securityTokenStorage']->getToken()) {
+        if (null === $token = $this->get('securityTokenStorage')->getToken()) {
             return null;
         }
         if (!is_object($user = $token->getUser())) {
@@ -458,9 +485,9 @@ abstract class Controller
      */
     protected function isGranted($attributes, $object = null)
     {
-        if (!isset($this->container['securityAuthorizationChecker'])) {
+        if (!$this->has('securityAuthorizationChecker')) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
-        return $this->container['securityAuthorizationChecker']->isGranted($attributes, $object);
+        return $this->get('securityAuthorizationChecker')->isGranted($attributes, $object);
     }
 }

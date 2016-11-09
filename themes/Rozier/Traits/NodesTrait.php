@@ -50,7 +50,7 @@ trait NodesTrait
     protected function createNode($title, Translation $translation, Node $node = null, NodeType $type = null)
     {
         $nodeName = StringHandler::slugify($title);
-        if (null !== $this->getService('em')
+        if (null !== $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
                           ->findOneByNodeName($nodeName)) {
             $nodeName .= '-' . uniqid();
@@ -61,14 +61,14 @@ trait NodesTrait
         }
 
         $node->setNodeName($nodeName);
-        $this->getService('em')->persist($node);
+        $this->get('em')->persist($node);
 
         $sourceClass = "GeneratedNodeSources\\" . $node->getNodeType()->getSourceEntityClassName();
         $source = new $sourceClass($node, $translation);
         $source->setTitle($title);
 
-        $this->getService('em')->persist($source);
-        $this->getService('em')->flush();
+        $this->get('em')->persist($source);
+        $this->get('em')->flush();
 
         return $node;
     }
@@ -83,12 +83,12 @@ trait NodesTrait
     {
         if ($data['nodeId'] == $node->getId() &&
             !empty($data['nodeTypeId'])) {
-            $nodeType = $this->getService('em')
+            $nodeType = $this->get('em')
                              ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
 
             if (null !== $nodeType) {
                 $node->addStackType($nodeType);
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 return $nodeType;
             }
@@ -107,7 +107,7 @@ trait NodesTrait
         if ($node->isHidingChildren()) {
             $defaults = [];
 
-            $builder = $this->getService('formFactory')
+            $builder = $this->get('formFactory')
                             ->createBuilder('form', $defaults)
                             ->add('nodeId', 'hidden', [
                                 'data' => (int) $node->getId(),
@@ -140,7 +140,7 @@ trait NodesTrait
                             'constraints' => [
                                 new NotBlank(),
                                 new UniqueNodeName([
-                                    'entityManager' => $this->getService('em'),
+                                    'entityManager' => $this->get('em'),
                                 ]),
                             ],
                         ])

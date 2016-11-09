@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,7 +40,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * {@inheritdoc}
+ * Class AjaxNodesController
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodesController extends AbstractAjaxController
 {
@@ -63,7 +64,7 @@ class AjaxNodesController extends AbstractAjaxController
         }
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         $tags = [];
-        $node = $this->getService('em')
+        $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         foreach ($node->getTags() as $tag) {
@@ -99,7 +100,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $node = $this->getService('em')
+        $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if ($node !== null) {
@@ -118,7 +119,7 @@ class AjaxNodesController extends AbstractAjaxController
                      * Dispatch event
                      */
                     $event = new FilterNodeEvent($newNode);
-                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
                     $responseArray = [
                         'statusCode' => '200',
@@ -173,7 +174,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
-            $parent = $this->getService('em')
+            $parent = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
@@ -189,14 +190,14 @@ class AjaxNodesController extends AbstractAjaxController
          */
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
-            $nextNode = $this->getService('em')
+            $nextNode = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
-            $prevNode = $this->getService('em')
+            $prevNode = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
@@ -209,7 +210,7 @@ class AjaxNodesController extends AbstractAjaxController
             $node->setPosition(9999999);
         }
         // Apply position update before cleaning
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
 
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();
@@ -217,13 +218,13 @@ class AjaxNodesController extends AbstractAjaxController
             NodeHandler::cleanRootNodesPositions();
         }
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
 
         /*
          * Dispatch event
          */
         $event = new FilterNodeEvent($node);
-        $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+        $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
     }
 
     /**
@@ -268,7 +269,7 @@ class AjaxNodesController extends AbstractAjaxController
                 ];
             } else {
                 if ($request->get('nodeId') > 0) {
-                    $node = $this->getService('em')
+                    $node = $this->get('em')
                         ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
@@ -298,7 +299,7 @@ class AjaxNodesController extends AbstractAjaxController
                                  * Dispatch event
                                  */
                                 $event = new FilterNodeEvent($node);
-                                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+                                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
                                 if ($request->get('statusName') == 'status') {
                                     $nodeStatuses = [
@@ -313,7 +314,7 @@ class AjaxNodesController extends AbstractAjaxController
                                         '%status%' => $this->getTranslator()->trans($nodeStatuses[$node->getStatus()]),
                                     ]);
                                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-                                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
+                                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
                                 }
                                 if ($request->get('statusName') == 'visible') {
                                     $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
@@ -321,7 +322,7 @@ class AjaxNodesController extends AbstractAjaxController
                                         '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
                                     ]);
                                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-                                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
+                                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
                                 }
 
                                 $responseArray = [
@@ -383,6 +384,10 @@ class AjaxNodesController extends AbstractAjaxController
         );
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function quickAddAction(Request $request)
     {
         /*
@@ -398,14 +403,14 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
-            $generator = new UniqueNodeGenerator($this->getService('em'));
+            $generator = new UniqueNodeGenerator($this->get('em'));
             $source = $generator->generateFromRequest($request);
 
             /*
              * Dispatch event
              */
             $event = new FilterNodeEvent($source->getNode());
-            $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+            $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
             $responseArray = [
                 'statusCode' => Response::HTTP_OK,

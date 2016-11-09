@@ -193,7 +193,7 @@ class ImportController extends AppController
             if (null === $themeId) {
                 $path = $pathFile;
             } else {
-                $theme = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
+                $theme = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
 
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');
@@ -204,7 +204,7 @@ class ImportController extends AppController
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                $classImporter::importJsonFile($file, $this->getService('em'));
+                $classImporter::importJsonFile($file, $this->get('em'));
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

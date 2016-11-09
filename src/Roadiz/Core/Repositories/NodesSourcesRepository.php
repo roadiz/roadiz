@@ -29,18 +29,18 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Core\SearchEngine\FullTextSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -407,7 +407,7 @@ class NodesSourcesRepository extends EntityRepository
      * @param AuthorizationChecker $authorizationChecker
      * @param boolean $preview
      *
-     * @return ArrayCollection
+     * @return array|Paginator
      */
     public function findBy(
         array $criteria,
@@ -417,7 +417,6 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-
         $qb = $this->getContextualQuery(
             $criteria,
             $orderBy,
@@ -430,10 +429,20 @@ class NodesSourcesRepository extends EntityRepository
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
-        try {
-            return $finalQuery->getResult();
-        } catch (NoResultException $e) {
-            return [];
+
+        if (null !== $limit &&
+            null !== $offset) {
+            /*
+             * We need to use Doctrine paginator
+             * if a limit is set because of the default inner join
+             */
+            return new Paginator($finalQuery);
+        } else {
+            try {
+                return $finalQuery->getResult();
+            } catch (NoResultException $e) {
+                return [];
+            }
         }
     }
 
@@ -487,7 +496,7 @@ class NodesSourcesRepository extends EntityRepository
     public function findBySearchQuery($query, $limit = 25)
     {
         if (true === Kernel::getService('solr.ready')) {
-            /** @var FullTextSearchHandler $service */
+            /** @var NodeSourceSearchHandler $service */
             $service = Kernel::getService('solr.search.nodeSource');
 
             if ($limit > 0) {
@@ -512,7 +521,7 @@ class NodesSourcesRepository extends EntityRepository
     public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
         if (true === Kernel::getService('solr.ready')) {
-            /** @var FullTextSearchHandler $service */
+            /** @var NodeSourceSearchHandler $service */
             $service = Kernel::getService('solr.search.nodeSource');
             $params = [
                 'translation' => $translation,
@@ -532,7 +541,7 @@ class NodesSourcesRepository extends EntityRepository
      *
      * @param integer $maxResult
      *
-     * @return array|null
+     * @return Paginator
      */
     public function findByLatestUpdated($maxResult = 5)
     {
@@ -541,17 +550,8 @@ class NodesSourcesRepository extends EntityRepository
         $query->innerJoin('ns.logs', 'log');
         $query->setMaxResults($maxResult);
         $query->orderBy('log.datetime', 'DESC');
-        /*
-         * Cannot groupBy for the moment due to an incompatibility with Doctrine
-         * http://www.doctrine-project.org/jira/browse/DDC-2917
-         */
-        $query = $query->getQuery();
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return new Paginator($query->getQuery());
     }
 
     /**

@@ -60,9 +60,9 @@ class TranstypeController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->getService('em')
+        $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-        $this->getService('em')->refresh($node);
+        $this->get('em')->refresh($node);
 
         if (null === $node) {
             return $this->throw404();
@@ -70,7 +70,7 @@ class TranstypeController extends RozierApp
 
         /** @var Form $form */
         $form = $this->createForm(new TranstypeType(), null, [
-            'em' => $this->getService('em'),
+            'em' => $this->get('em'),
             'currentType' => $node->getNodeType(),
         ]);
         $form->handleRequest($request);
@@ -79,17 +79,17 @@ class TranstypeController extends RozierApp
             $data = $form->getData();
 
             /** @var NodeType $newNodeType */
-            $newNodeType = $this->getService('em')
+            $newNodeType = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
 
             $this->doTranstype($node, $newNodeType);
-            $this->getService('em')->refresh($node);
+            $this->get('em')->refresh($node);
 
             /*
              * Dispatch event
              */
             $event = new FilterNodeEvent($node);
-            $this->getService('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
             $msg = $this->getTranslator()->trans('%node%.transtyped_to.%type%', [
                 '%node%' => $node->getNodeName(),
@@ -126,7 +126,7 @@ class TranstypeController extends RozierApp
          */
         $fieldAssociations = [];
         $oldFields = $node->getNodeType()->getFields();
-        $er = $this->getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField');
+        $er = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField');
 
         foreach ($oldFields as $oldField) {
             $matchingField = $er->findOneBy([
@@ -176,7 +176,7 @@ class TranstypeController extends RozierApp
                     /*
                      * Copy documents.
                      */
-                    $documents = $this->getService('em')
+                    $documents = $this->get('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Document')
                         ->findByNodeSourceAndField($existingSource, $oldField);
 
@@ -186,22 +186,22 @@ class TranstypeController extends RozierApp
                 }
             }
             // First plan old source deletion.
-            $this->getService('em')->remove($existingSource);
+            $this->get('em')->remove($existingSource);
             $node->removeNodeSources($existingSource);
-            $this->getService('em')->flush($existingSource);
+            $this->get('em')->flush($existingSource);
 
             foreach ($nsDocuments as $nsDoc) {
                 $source->getDocumentsByFields()->add($nsDoc);
-                $this->getService('em')->persist($nsDoc);
+                $this->get('em')->persist($nsDoc);
             }
 
             $node->addNodeSources($source);
-            $this->getService('em')->persist($source);
-            $this->getService('em')->flush($source);
+            $this->get('em')->persist($source);
+            $this->get('em')->flush($source);
         }
 
         $node->setNodeType($nodeType);
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
     }
 
     /**
@@ -218,24 +218,24 @@ class TranstypeController extends RozierApp
          */
         $node = new Node();
         $node->setNodeName('testing_before_transtype' . $uniqueId);
-        $this->getService('em')->persist($node);
+        $this->get('em')->persist($node);
 
         $translation = new Translation();
         $translation->setAvailable(true);
         $translation->setLocale('test' . $uniqueId);
         $translation->setName('test' . $uniqueId);
-        $this->getService('em')->persist($translation);
+        $this->get('em')->persist($translation);
 
         /** @var NodesSources $testSource */
         $testSource = new $sourceClass($node, $translation);
         $testSource->setTitle('testing_before_transtype' . $uniqueId);
-        $this->getService('em')->persist($testSource);
-        $this->getService('em')->flush();
+        $this->get('em')->persist($testSource);
+        $this->get('em')->flush();
 
         // then remove it if OK
-        $this->getService('em')->remove($testSource);
-        $this->getService('em')->remove($node);
-        $this->getService('em')->remove($translation);
-        $this->getService('em')->flush();
+        $this->get('em')->remove($testSource);
+        $this->get('em')->remove($node);
+        $this->get('em')->remove($translation);
+        $this->get('em')->flush();
     }
 }

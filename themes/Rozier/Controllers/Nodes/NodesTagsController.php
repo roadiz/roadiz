@@ -60,11 +60,11 @@ class NodesTagsController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
-        $translation = $this->getService('defaultTranslation');
+        $translation = $this->get('defaultTranslation');
 
         if (null !== $translation) {
             /** @var NodesSources $source */
-            $source = $this->getService('em')
+            $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy([
                                'translation' => $translation,
@@ -89,7 +89,7 @@ class NodesTagsController extends RozierApp
                      * Dispatch event
                      */
                     $event = new FilterNodeEvent($node);
-                    $this->getService('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
 
                     $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
                         '%node%' => $node->getNodeName(),
@@ -126,10 +126,10 @@ class NodesTagsController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->getService('em')
+        $node = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         /** @var Tag $tag */
-        $tag = $this->getService('em')
+        $tag = $this->get('em')
                     ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($node !== null && $tag !== null) {
@@ -145,7 +145,7 @@ class NodesTagsController extends RozierApp
                  * Dispatch event
                  */
                 $event = new FilterNodeEvent($node);
-                $this->getService('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+                $this->get('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
 
                 $msg = $this->getTranslator()->trans(
                     'tag.%name%.removed',
@@ -182,7 +182,7 @@ class NodesTagsController extends RozierApp
             $paths = array_filter($paths);
 
             foreach ($paths as $path) {
-                $tag = $this->getService('em')
+                $tag = $this->get('em')
                             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                             ->findOrCreateByPath($path);
 
@@ -190,7 +190,7 @@ class NodesTagsController extends RozierApp
             }
         }
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
     }
 
     /**
@@ -205,7 +205,7 @@ class NodesTagsController extends RozierApp
         if ($data['nodeId'] == $node->getId() &&
             $data['tagId'] == $tag->getId()) {
             $node->removeTag($tag);
-            $this->getService('em')->flush();
+            $this->get('em')->flush();
         }
 
         return $tag;

@@ -30,8 +30,10 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -129,7 +131,7 @@ class FolderRepository extends EntityRepository
                 ->andWhere($qb->expr()->in('f.id', ':ids'))
                 ->setParameter(':ids', $ids);
 
-            if (null !== $translation && $translation instanceof Translation) {
+            if (null !== $translation) {
                 $qb->addSelect('tf')
                     ->innerJoin('f.translatedFolders', 'tf')
                     ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
@@ -159,7 +161,7 @@ class FolderRepository extends EntityRepository
             ->setMaxResults(1)
             ->setParameter(':name', $folderName);
 
-        if (null !== $translation && $translation instanceof Translation) {
+        if (null !== $translation) {
             $qb->addSelect('tf')
                 ->innerJoin('f.translatedFolders', 'tf')
                 ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
@@ -269,6 +271,71 @@ class FolderRepository extends EntityRepository
             return null;
         } catch (NoResultException $e) {
             return null;
+        }
+    }
+
+    /**
+     * @param Document $document
+     * @param Translation|null $translation
+     * @return array
+     */
+    public function findByDocumentAndTranslation(Document $document, Translation $translation = null)
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->innerJoin('f.documents', 'd')
+            ->andWhere($qb->expr()->eq('d.id', ':documentId'))
+            ->setParameter(':documentId', $document->getId());
+
+        if (null !== $translation) {
+            $qb->addSelect('tf')
+                ->innerJoin(
+                    'f.translatedFolders',
+                    'tf',
+                    Join::WITH,
+                    'tf.translation = :translation'
+                )
+                ->setParameter(':translation', $translation);
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Folder|null $parent
+     * @param Translation|null $translation
+     * @return array
+     */
+    public function findByParentAndTranslation(Folder $parent = null, Translation $translation = null)
+    {
+        $qb = $this->createQueryBuilder('f');
+        $qb->addOrderBy('f.position', 'ASC');
+
+        if (null === $parent) {
+            $qb->andWhere($qb->expr()->isNull('f.parent'));
+        } else {
+            $qb->andWhere($qb->expr()->eq('f.parent', ':parent'))
+                ->setParameter(':parent', $parent);
+        }
+
+        if (null !== $translation) {
+            $qb->addSelect('tf')
+                ->innerJoin(
+                    'f.translatedFolders',
+                    'tf',
+                    Join::WITH,
+                    'tf.translation = :translation'
+                )
+                ->setParameter(':translation', $translation);
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
         }
     }
 }

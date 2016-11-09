@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
@@ -489,6 +490,18 @@ class Document extends AbstractDateTimed
     public function getDocumentTranslations()
     {
         return $this->documentTranslations;
+    }
+
+    /**
+     * @param Translation $translation
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocumentTranslationsByTranslation(Translation $translation)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('translation', $translation));
+
+        return $this->documentTranslations->matching($criteria);
     }
 
     /**

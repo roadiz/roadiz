@@ -55,10 +55,10 @@ class SettingsUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $groups = $this->getService('em')
+        $groups = $this->get('em')
                        ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                        ->findAll();
-        $lonelySettings = $this->getService('em')
+        $lonelySettings = $this->get('em')
                                ->getRepository('RZ\Roadiz\Core\Entities\Setting')
                                ->findBy(['settingGroup' => null]);
 
@@ -111,11 +111,11 @@ class SettingsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (SettingsImporter::importJsonFile($serializedData, $this->getService('em'))) {
+                    if (SettingsImporter::importJsonFile($serializedData, $this->get('em'))) {
                         $msg = $this->getTranslator()->trans('setting.imported');
                         $this->publishConfirmMessage($request, $msg);
 
-                        $this->getService('em')->flush();
+                        $this->get('em')->flush();
 
                         // redirect even if its null
                         return $this->redirect($this->generateUrl(
@@ -124,7 +124,7 @@ class SettingsUtilsController extends RozierApp
                     } else {
                         $msg = $this->getTranslator()->trans('file.format.not_valid');
                         $request->getSession()->getFlashBag()->add('error', $msg);
-                        $this->getService('logger')->error($msg);
+                        $this->get('logger')->error($msg);
 
                         // redirect even if its null
                         return $this->redirect($this->generateUrl(
@@ -134,7 +134,7 @@ class SettingsUtilsController extends RozierApp
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->getService('logger')->error($msg);
+                    $this->get('logger')->error($msg);
 
                     // redirect even if its null
                     return $this->redirect($this->generateUrl(
@@ -144,7 +144,7 @@ class SettingsUtilsController extends RozierApp
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
                 $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->getService('logger')->error($msg);
+                $this->get('logger')->error($msg);
             }
         }
 

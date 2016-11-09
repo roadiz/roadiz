@@ -79,7 +79,7 @@ class SettingGroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $settingGroup = $this->getService('em')
+        $settingGroup = $this->get('em')
                              ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
 
         if ($settingGroup !== null) {
@@ -174,7 +174,7 @@ class SettingGroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $settingGroup = $this->getService('em')
+        $settingGroup = $this->get('em')
                              ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
 
         if (null !== $settingGroup) {
@@ -222,7 +222,7 @@ class SettingGroupsController extends RozierApp
 
             if (isset($data['name']) &&
                 $data['name'] != $settingGroup->getName() &&
-                $this->getService('em')
+                $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans(
@@ -236,7 +236,7 @@ class SettingGroupsController extends RozierApp
                     $settingGroup->$setter($value);
                 }
 
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
 
                 return true;
             } catch (\Exception $e) {
@@ -257,7 +257,7 @@ class SettingGroupsController extends RozierApp
      */
     private function addSettingGroup($data, SettingGroup $settingGroup)
     {
-        if ($this->getService('em')
+        if ($this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
@@ -272,8 +272,8 @@ class SettingGroupsController extends RozierApp
                 $settingGroup->$setter($value);
             }
 
-            $this->getService('em')->persist($settingGroup);
-            $this->getService('em')->flush();
+            $this->get('em')->persist($settingGroup);
+            $this->get('em')->flush();
 
             return true;
         } catch (\Exception $e) {
@@ -292,8 +292,8 @@ class SettingGroupsController extends RozierApp
      */
     private function deleteSettingGroup($data, SettingGroup $settingGroup)
     {
-        $this->getService('em')->remove($settingGroup);
-        $this->getService('em')->flush();
+        $this->get('em')->remove($settingGroup);
+        $this->get('em')->flush();
 
         return true;
     }

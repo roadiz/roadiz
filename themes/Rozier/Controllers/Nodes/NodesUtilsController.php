@@ -59,11 +59,11 @@ class NodesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $existingNode = $this->getService('em')
+        $existingNode = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
-        $this->getService('em')->refresh($existingNode);
+        $this->get('em')->refresh($existingNode);
 
-        $serializer = new NodeJsonSerializer($this->getService('em'));
+        $serializer = new NodeJsonSerializer($this->get('em'));
         $node = $serializer->serialize([$existingNode]);
 
         $response = new Response(
@@ -96,15 +96,15 @@ class NodesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        $existingNodes = $this->getService('em')
+        $existingNodes = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findBy(["parent" => null]);
 
         foreach ($existingNodes as $existingNode) {
-            $this->getService('em')->refresh($existingNode);
+            $this->get('em')->refresh($existingNode);
         }
 
-        $serializer = new NodeJsonSerializer($this->getService('em'));
+        $serializer = new NodeJsonSerializer($this->get('em'));
         $node = $serializer->serialize($existingNodes);
 
         $response = new Response(
@@ -139,18 +139,18 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
-        $existingNode = $this->getService('em')
+        $existingNode = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         try {
-            $duplicator = new NodeDuplicator($existingNode, $this->getService('em'));
+            $duplicator = new NodeDuplicator($existingNode, $this->get('em'));
             $newNode = $duplicator->duplicate();
 
             /*
              * Dispatch event
              */
             $event = new FilterNodeEvent($newNode);
-            $this->getService('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+            $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", [
                 '%name%' => $existingNode->getNodeName(),
@@ -158,7 +158,7 @@ class NodesUtilsController extends RozierApp
 
             $this->publishConfirmMessage($request, $msg, $newNode->getNodeSources()->first());
 
-            return $this->redirect($this->getService('urlGenerator')
+            return $this->redirect($this->get('urlGenerator')
                     ->generate(
                         'nodesEditPage',
                         ["nodeId" => $newNode->getId()]
@@ -172,7 +172,7 @@ class NodesUtilsController extends RozierApp
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
-            return $this->redirect($this->getService('urlGenerator')
+            return $this->redirect($this->get('urlGenerator')
                     ->generate(
                         'nodesEditPage',
                         ["nodeId" => $existingNode->getId()]

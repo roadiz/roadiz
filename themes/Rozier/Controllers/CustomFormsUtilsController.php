@@ -53,7 +53,7 @@ class CustomFormsUtilsController extends RozierApp
     public function exportAction(Request $request, $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->getService("em")->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
+        $customForm = $this->get("em")->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
         $answers = $customForm->getCustomFormAnswers();
 
         /**
@@ -106,12 +106,12 @@ class CustomFormsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         try {
-            $existingCustomForm = $this->getService('em')
+            $existingCustomForm = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
 
             $newCustomForm = clone $existingCustomForm;
 
-            $em = $this->getService("em");
+            $em = $this->get("em");
 
             foreach ($newCustomForm->getFields() as $field) {
                 $em->persist($field);
@@ -131,7 +131,7 @@ class CustomFormsUtilsController extends RozierApp
 
             $this->publishConfirmMessage($request, $msg);
 
-            return $this->redirect($this->getService('urlGenerator')
+            return $this->redirect($this->get('urlGenerator')
                     ->generate(
                         'customFormsEditPage',
                         ["customFormId" => $newCustomForm->getId()]
@@ -145,7 +145,7 @@ class CustomFormsUtilsController extends RozierApp
             );
             $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
-            return $this->redirect($this->getService('urlGenerator')
+            return $this->redirect($this->get('urlGenerator')
                     ->generate(
                         'customFormsEditPage',
                         ["customFormId" => $existingCustomForm->getId()]

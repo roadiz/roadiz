@@ -31,16 +31,48 @@ table.documents {
     }
 }
 
+/*
+ * Bulk linking for NODES and DOCUMENTS
+ */
+.node-bulk-tag-form,
 .document-bulk-folder-form {
     display: inline-block;
 
     .data-uk-margin {
         display: inline-block;
+
+        .uk-form-row {
+            margin-top: 0;
+        }
+
+        .form-col-text {
+
+        }
+    }
+}
+@media screen and (min-width: 1281px) {
+    .node-bulk-tag-form,
+    .document-bulk-folder-form {
+        .data-uk-margin {
+            .form-col-text {
+                width: 400px;
+            }
+        }
+    }
+}
+@media screen and (min-width: 1380px) {
+    .node-bulk-tag-form,
+    .document-bulk-folder-form {
+        .data-uk-margin {
+            .form-col-text {
+                width: 500px;
+            }
+        }
     }
 }
 
 .documents-list{
-    margin:0;
+    margin:0 -10px;
     list-style-type:none;
 
     .document-checkbox {
@@ -81,7 +113,7 @@ table.documents {
         display: inline-block;
         vertical-align: top;
         width:128px; height:128px;
-        margin:0 16px 39px 0;
+        margin:0 10px 39px;
         background: #E2E2E2; // not white to see white PNG logotypes
         //overflow: hidden;
 
@@ -219,13 +251,18 @@ table.documents {
 
 // Edit preview
 .content-document-preview{
-
+    padding-bottom: 0;
     text-align: center;
 
     .uk-thumbnail{
         height:auto;
         background: none;
         box-shadow: none;
+
+        iframe {
+            max-width: 100%;
+            border: 0;
+        }
     }
 
     .document-source{

@@ -91,8 +91,8 @@ class SchemaController extends RozierApp
     protected function updateSchema(Request $request, $_token)
     {
         $token = new CsrfToken(static::SCHEMA_TOKEN_INTENTION, $_token);
-        if ($this->getService('csrfTokenManager')->isTokenValid($token)) {
-            $updater = new SchemaUpdater($this->getService('em'));
+        if ($this->get('csrfTokenManager')->isTokenValid($token)) {
+            $updater = new SchemaUpdater($this->get('em'));
             $updater->updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');

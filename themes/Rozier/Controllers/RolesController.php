@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,9 +37,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * {@inheritdoc}
+ * Class RolesController
+ * @package Themes\Rozier\Controllers
  */
 class RolesController extends RozierApp
 {
@@ -58,6 +60,11 @@ class RolesController extends RozierApp
             [],
             ['name' => 'ASC']
         );
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('role_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -114,7 +121,7 @@ class RolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
-        $role = $this->getService('em')
+        $role = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
         if ($role !== null) {
             $form = $this->buildDeleteForm($role);
@@ -158,7 +165,7 @@ class RolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
-        $role = $this->getService('em')
+        $role = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
 
         if ($role !== null &&
@@ -276,7 +283,7 @@ class RolesController extends RozierApp
     protected function addRole(array $data)
     {
         if (isset($data['name'])) {
-            $existing = $this->getService('em')
+            $existing = $this->get('em')
                              ->getRepository('RZ\Roadiz\Core\Entities\Role')
                              ->findOneBy(['name' => $data['name']]);
             if ($existing !== null) {
@@ -284,11 +291,11 @@ class RolesController extends RozierApp
             }
 
             $role = new Role($data['name']);
-            $this->getService('em')->persist($role);
-            $this->getService('em')->flush();
+            $this->get('em')->persist($role);
+            $this->get('em')->flush();
 
             // Clear result cache
-            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
@@ -314,7 +321,7 @@ class RolesController extends RozierApp
         }
 
         if (isset($data['name'])) {
-            $existing = $this->getService('em')
+            $existing = $this->get('em')
                              ->getRepository('RZ\Roadiz\Core\Entities\Role')
                              ->findOneBy(['name' => $data['name']]);
             if ($existing !== null &&
@@ -323,10 +330,10 @@ class RolesController extends RozierApp
             }
 
             $role->setName($data['name']);
-            $this->getService('em')->flush();
+            $this->get('em')->flush();
 
             // Clear result cache
-            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
@@ -346,11 +353,11 @@ class RolesController extends RozierApp
     protected function deleteRole(array $data, Role $role)
     {
         if (!$role->required()) {
-            $this->getService('em')->remove($role);
-            $this->getService('em')->flush();
+            $this->get('em')->remove($role);
+            $this->get('em')->flush();
 
             // Clear result cache
-            $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }

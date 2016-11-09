@@ -81,10 +81,10 @@ class NodeHandler
      * Remove every node to custom-forms associations for a given field.
      *
      * @param NodeTypeField $field
-     *
+     * @param bool $flush
      * @return $this
      */
-    public function cleanCustomFormsFromField(NodeTypeField $field)
+    public function cleanCustomFormsFromField(NodeTypeField $field, $flush = true)
     {
         $nodesCustomForms = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
@@ -94,7 +94,9 @@ class NodeHandler
             Kernel::getService('em')->remove($ncf);
         }
 
-        Kernel::getService('em')->flush();
+        if (true === $flush) {
+            Kernel::getService('em')->flush();
+        }
 
         return $this;
     }
@@ -104,21 +106,28 @@ class NodeHandler
      *
      * @param CustomForm $customForm
      * @param NodeTypeField $field
-     *
+     * @param bool $flush
+     * @param null|integer $position
      * @return $this
      */
-    public function addCustomFormForField(CustomForm $customForm, NodeTypeField $field)
+    public function addCustomFormForField(CustomForm $customForm, NodeTypeField $field, $flush = true, $position = null)
     {
         $ncf = new NodesCustomForms($this->node, $customForm, $field);
 
-        $latestPosition = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
-            ->getLatestPosition($this->node, $field);
-
-        $ncf->setPosition($latestPosition + 1);
+        if (null === $position) {
+            $latestPosition = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+                ->getLatestPosition($this->node, $field);
+            $ncf->setPosition($latestPosition + 1);
+        } else {
+            $ncf->setPosition($position);
+        }
 
         Kernel::getService('em')->persist($ncf);
-        Kernel::getService('em')->flush();
+
+        if (true === $flush) {
+            Kernel::getService('em')->flush();
+        }
 
         return $this;
     }
@@ -141,9 +150,10 @@ class NodeHandler
      *
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
+     * @param bool $flush
      * @return $this
      */
-    public function cleanNodesFromField(NodeTypeField $field)
+    public function cleanNodesFromField(NodeTypeField $field, $flush = true)
     {
         $nodesToNodes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
@@ -153,7 +163,9 @@ class NodeHandler
             Kernel::getService('em')->remove($ntn);
         }
 
-        Kernel::getService('em')->flush();
+        if (true === $flush) {
+            Kernel::getService('em')->flush();
+        }
 
         return $this;
     }
@@ -161,23 +173,29 @@ class NodeHandler
     /**
      * Add a node to current node for a given node-type field.
      *
-     * @param Node          $node
+     * @param Node $node
      * @param NodeTypeField $field
-     *
+     * @param bool $flush
+     * @param null|integer $position
      * @return $this
      */
-    public function addNodeForField(Node $node, NodeTypeField $field)
+    public function addNodeForField(Node $node, NodeTypeField $field, $flush = true, $position = null)
     {
         $ntn = new NodesToNodes($this->node, $node, $field);
 
-        $latestPosition = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
-            ->getLatestPosition($this->node, $field);
-
-        $ntn->setPosition($latestPosition + 1);
+        if (null === $position) {
+            $latestPosition = Kernel::getService('em')
+                ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
+                ->getLatestPosition($this->node, $field);
+            $ntn->setPosition($latestPosition + 1);
+        } else {
+            $ntn->setPosition($position);
+        }
 
         Kernel::getService('em')->persist($ntn);
-        Kernel::getService('em')->flush();
+        if (true === $flush) {
+            Kernel::getService('em')->flush();
+        }
 
         return $this;
     }
@@ -205,7 +223,6 @@ class NodeHandler
      * Get nodes reversed-linked to current node for a given fieldname.
      *
      * @param string $fieldName Name of the node-type field
-     *
      * @return ArrayCollection Collection of nodes
      */
     public function getReverseNodesFromFieldName($fieldName)

@@ -51,7 +51,7 @@ class UsersGroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
@@ -99,9 +99,9 @@ class UsersGroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        $user = $this->getService('em')
+        $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
-        $group = $this->getService('em')
+        $group = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
 
         if ($user !== null) {
@@ -146,12 +146,12 @@ class UsersGroupsController extends RozierApp
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->getService('em')
+            $group = $this->get('em')
                           ->find('RZ\Roadiz\Core\Entities\Group', $data['group']);
 
             if ($group !== null) {
                 $user->addGroup($group);
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
             }
 
             return $group;
@@ -169,12 +169,12 @@ class UsersGroupsController extends RozierApp
     private function removeUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->getService('em')
+            $group = $this->get('em')
                           ->find('RZ\Roadiz\Core\Entities\Group', $data['groupId']);
 
             if ($group !== null) {
                 $user->removeGroup($group);
-                $this->getService('em')->flush();
+                $this->get('em')->flush();
             }
 
             return $group;
@@ -206,7 +206,7 @@ class UsersGroupsController extends RozierApp
                         )
                         ->add(
                             'group',
-                            new \RZ\Roadiz\CMS\Forms\GroupsType($this->getService('em'), $user->getGroups()),
+                            new \RZ\Roadiz\CMS\Forms\GroupsType($this->get('em'), $user->getGroups()),
                             ['label' => 'Group']
                         );
 

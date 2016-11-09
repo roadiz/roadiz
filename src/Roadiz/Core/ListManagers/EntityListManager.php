@@ -350,9 +350,9 @@ class EntityListManager
             'description' => '',
             'search' => $this->searchPattern,
             'currentPage' => $this->currentPage,
-            'pageCount' => $this->paginator->getPageCount(),
+            'pageCount' => $this->getPageCount(),
             'itemPerPage' => $this->itemPerPage,
-            'itemCount' => $this->paginator->getTotalCount(),
+            'itemCount' => $this->getItemCount(),
             'nextPageQuery' => null,
             'previousPageQuery' => null,
         ];
@@ -365,7 +365,7 @@ class EntityListManager
             $assign['previousPage'] = $this->currentPage - 1;
         }
         // compute next and prev page URL
-        if ($this->currentPage < $this->paginator->getPageCount()) {
+        if ($this->currentPage < $this->getPageCount()) {
             $this->queryArray['page'] = $this->currentPage + 1;
             $assign['nextPageQuery'] = http_build_query($this->queryArray);
             $assign['nextQueryArray'] = $this->queryArray;
@@ -376,9 +376,35 @@ class EntityListManager
     }
 
     /**
+     * @return int
+     */
+    public function getItemCount()
+    {
+        if ($this->pagination === true &&
+            null !== $this->paginator) {
+            return $this->paginator->getTotalCount();
+        }
+
+        return 0;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getPageCount()
+    {
+        if ($this->pagination === true &&
+            null !== $this->paginator) {
+            return $this->paginator->getPageCount();
+        }
+
+        return 1;
+    }
+
+    /**
      * Return filtered entities.
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      */
     public function getEntities()
     {

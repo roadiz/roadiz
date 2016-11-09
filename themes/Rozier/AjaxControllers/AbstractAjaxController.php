@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -41,13 +41,14 @@ use Themes\Rozier\RozierApp;
  */
 abstract class AbstractAjaxController extends RozierApp
 {
+    protected static $validMethods = ['post', 'get'];
     /**
      * @param Request $request
      * @param string  $method
      *
      * @return boolean | array  Return true if request is valid, else return error array
      */
-    protected function validateRequest(Request $request, $method = 'POST')
+    protected function validateRequest(Request $request, $method = 'POST', $requestCsrfToken = true)
     {
         if ($request->get('_action') == "") {
             return [
@@ -57,15 +58,18 @@ abstract class AbstractAjaxController extends RozierApp
             ];
         }
 
-        $token = new CsrfToken(static::AJAX_TOKEN_INTENTION, $request->get('_token'));
-        if (!$this->getService('csrfTokenManager')->isTokenValid($token)) {
-            return [
-                'statusCode'   => Response::HTTP_FORBIDDEN,
-                'status'       => 'danger',
-                'responseText' => 'Bad token'
-            ];
+        if ($requestCsrfToken === true) {
+            $token = new CsrfToken(static::AJAX_TOKEN_INTENTION, $request->get('_token'));
+            if (!$this->get('csrfTokenManager')->isTokenValid($token)) {
+                return [
+                    'statusCode'   => Response::HTTP_FORBIDDEN,
+                    'status'       => 'danger',
+                    'responseText' => 'Bad token'
+                ];
+            }
         }
-        if ($request->getMethod() != $method) {
+        if (in_array(strtolower($method), static::$validMethods) &&
+            strtolower($request->getMethod()) != strtolower($method)) {
             return [
                 'statusCode'   => Response::HTTP_FORBIDDEN,
                 'status'       => 'danger',

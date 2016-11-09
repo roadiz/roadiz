@@ -56,7 +56,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $updater = new SchemaUpdater($this->getService('em'));
+        $updater = new SchemaUpdater($this->get('em'));
         $updater->updateSchema();
 
         return new JsonResponse(['status' => true]);
@@ -71,7 +71,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $doctrineClearer = new DoctrineCacheClearer($this->getService('em'));
+        $doctrineClearer = new DoctrineCacheClearer($this->get('em'));
         $doctrineClearer->clear();
 
         $opcacheClearer = new OPCacheClearer();
@@ -92,7 +92,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $result = $this->getService('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+        $result = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
@@ -219,7 +219,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $theme = $this->getService('em')
+        $theme = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
@@ -264,7 +264,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $theme = $this->getService('em')
+        $theme = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
 
         if ($theme !== null) {
@@ -307,7 +307,7 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $builder = $this->getService('formFactory')
+        $builder = $this->get('formFactory')
             ->createNamedBuilder('source', 'form', []);
 
         /*
@@ -379,7 +379,7 @@ class ThemesController extends RozierApp
             'root' => ($r !== null) ? $r->getId() : null,
         ];
 
-        $builder = $this->getService('formFactory')
+        $builder = $this->get('formFactory')
             ->createNamedBuilder('source', 'form', $defaults)
             ->add('available', 'checkbox', [
                 'label' => 'available',
@@ -410,7 +410,7 @@ class ThemesController extends RozierApp
 
         $d = ($n !== null) ? [$n] : [];
 
-        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->getService('em')), [
+        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->get('em')), [
             'label' => 'homeNode',
             'required' => false,
             'attr' => [
@@ -420,7 +420,7 @@ class ThemesController extends RozierApp
 
         $d = ($r !== null) ? [$r] : [];
 
-        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->getService('em')), [
+        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->get('em')), [
             'label' => 'themeRoot',
             'required' => false,
             'attr' => [
@@ -467,7 +467,7 @@ class ThemesController extends RozierApp
                     }
                 }
                 if ($value !== null && !empty($value[0])) {
-                    $n = $this->getService('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $n = $this->get('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
                     $theme->$setter($n);
                 } else {
                     $theme->$setter(null);
@@ -487,7 +487,7 @@ class ThemesController extends RozierApp
      */
     private function addTheme(Request $request, array &$data)
     {
-        $existing = $this->getService('em')
+        $existing = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneBy(['className' => $data["classname"]]);
 
@@ -501,16 +501,16 @@ class ThemesController extends RozierApp
             );
         }
 
-        $importFile = ThemeInstaller::install($request, $data["classname"], $this->getService("em"));
-        $theme = $this->getService("em")
+        $importFile = ThemeInstaller::install($request, $data["classname"], $this->get("em"));
+        $theme = $this->get("em")
             ->getRepository("RZ\Roadiz\Core\Entities\Theme")
             ->findOneByClassName($data["classname"]);
         $this->setThemeValue($request, $data, $theme);
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
 
         // Clear result cache
-        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }
@@ -537,10 +537,10 @@ class ThemesController extends RozierApp
     {
         $this->setThemeValue($request, $data, $theme);
 
-        $this->getService('em')->flush();
+        $this->get('em')->flush();
 
         // Clear result cache
-        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }
@@ -554,11 +554,11 @@ class ThemesController extends RozierApp
      */
     protected function deleteTheme(array $data, Theme $theme)
     {
-        $this->getService('em')->remove($theme);
-        $this->getService('em')->flush();
+        $this->get('em')->remove($theme);
+        $this->get('em')->flush();
 
         // Clear result cache
-        $cacheDriver = $this->getService('em')->getConfiguration()->getResultCacheImpl();
+        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
         if ($cacheDriver !== null) {
             $cacheDriver->deleteAll();
         }

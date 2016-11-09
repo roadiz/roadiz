@@ -31,9 +31,13 @@ namespace Themes\DefaultTheme;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
-use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\DefaultTheme\Services\AssetsServiceProvider;
+use Themes\DefaultTheme\Services\NodeServiceProvider;
+use Themes\DefaultTheme\Services\NodeTypeServiceProvider;
 
 /**
  * Class DefaultThemeApp
@@ -41,18 +45,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultThemeApp extends FrontendController
 {
-    const USE_GRUNT = false;
-
     protected static $themeName = 'Default theme';
     protected static $themeAuthor = 'Ambroise Maupate';
     protected static $themeCopyright = 'REZO ZERO';
     protected static $themeDir = 'DefaultTheme';
     protected static $backendTheme = false;
-
-    protected static $specificNodesControllers = [
-        // Put here your nodes which need a specific controller
-        // instead of a node-type controller
-    ];
 
     /**
      * @param Request $request
@@ -64,122 +61,101 @@ class DefaultThemeApp extends FrontendController
         $_locale = null
     ) {
         /*
-         * You must catch NoTranslationAvailableException if
-         * user visit a non-available translation.
+         * If you use a static route for Home page
+         * we need to grab manually language.
+         *
+         * Get language from static route
          */
-        try {
-            $translation = $this->bindLocaleFromRoute($request, $_locale);
-            $home = $this->getHome($translation);
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
+        $home = $this->getHome($translation);
 
-            return $this->handle($request, $home, $translation);
-        } catch (NoTranslationAvailableException $e) {
-            return $this->throw404();
-        }
+        /*
+         * Use home page node-type to render it.
+         */
+        return $this->handle($request, $home, $translation);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function extendAssignation()
     {
         parent::extendAssignation();
 
-        $this->themeContainer['imageFormats'] = function ($c) {
-            $array = [];
-
-            /*
-             * Common image format for pages headers
-             */
-            $array['headerImage'] = [
-                'width' => 1600,
-                'noProcess' => true,
-            ];
-            $array['thumbnail'] = [
-                "fit" => "200x200",
-                "controls" => true,
-                "embed" => true,
-            ];
-
-            return $array;
-        };
-
-        $this->themeContainer['navigation'] = function ($c) {
-            return $this->assignMainNavigation();
-        };
-        $this->themeContainer['basicBlockType'] = function ($c) {
-            return $this->getService('nodeTypeApi')
-                        ->getOneBy([
-                            'name' => 'BasicBlock'
-                        ]);
-        };
-        $this->themeContainer['pageType'] = function ($c) {
-            return $this->getService('nodeTypeApi')
-                        ->getOneBy([
-                            'name' => 'Page'
-                        ]);
-        };
-
-        $this->themeContainer['useGrunt'] = function ($c) {
-            return static::USE_GRUNT;
-        };
-
         /*
-         * Use Grunt to generate unique asset files for CSS and JS
+         * Register services
          */
-        $this->themeContainer['grunt'] = function ($c) {
-            return include dirname(__FILE__) . '/static/public/config/assets.config.php';
-        };
+        $this->themeContainer->register(new NodeServiceProvider($this->getContainer(), $this->translation));
+        $this->themeContainer->register(new NodeTypeServiceProvider($this->get('nodeTypeApi')));
+        $this->themeContainer->register(new AssetsServiceProvider());
 
-        $this->assignation['home'] = $this->getHome($this->translation);
         $this->assignation['themeServices'] = $this->themeContainer;
+
+        $this->assignation['head']['facebookUrl'] = SettingsBag::get('facebook_url');
+        $this->assignation['head']['pinterest_url'] = SettingsBag::get('pinterest_url');
+        $this->assignation['head']['facebookClientId'] = SettingsBag::get('facebook_client_id');
+        $this->assignation['head']['instagramUrl'] = SettingsBag::get('instagram_url');
+        $this->assignation['head']['twitterUrl'] = SettingsBag::get('twitter_url');
+        $this->assignation['head']['googleplusUrl'] = SettingsBag::get('googleplus_url');
+        $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id');
+        $this->assignation['head']['twitterAccount'] = SettingsBag::get('twitter_account');
+        $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
+        $this->assignation['head']['themeName'] = static::$themeName;
+        $this->assignation['head']['themeVersion'] = Kernel::$cmsVersion;
+
         // Get session messages
-        $this->assignation['session']['messages'] = $this->getService('session')->getFlashBag()->all();
+        // Remove FlashBag assignation from here if you handle your forms
+        // in sub-requests block renders.
+        $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Node
-     */
-    protected function assignMainNavigation()
-    {
-        if ($this->translation === null) {
-            $this->translation = $this->getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                 ->findOneBy(
-                     ['defaultTranslation' => true]
-                 );
-        }
-        $parent = $this->getHome($this->translation);
-
-        if ($parent !== null) {
-            $pageNodeType = $this->getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->findOneByName('Page');
-            return $this->getService('nodeApi')
-                        ->getBy(
-                            [
-                                'parent' => $parent,
-                                'translation' => $this->translation,
-                                'nodeType' => $pageNodeType,
-                            ],
-                            [
-                                'position' => 'ASC',
-                            ]
-                        );
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $message
+     * Return a Response with default backend 404 error page.
+     *
+     * @param string $message Additionnal message to describe 404 error.
+     *
      * @return Response
      */
-    public function throw404($message = "")
+    public function throw404($message = '')
     {
-        $this->prepareThemeAssignation(null, null);
-        $this->getService('logger')->error($message);
-        $this->assignation['errorMessage'] = $message;
+        $this->translation = $this->get('defaultTranslation');
 
+        $this->prepareThemeAssignation(null, $this->translation);
+        $this->get('logger')->error($message);
+
+        $this->assignation['nodeName'] = 'error-404';
+        $this->assignation['nodeTypeName'] = 'error404';
+        $this->assignation['errorMessage'] = $message;
+        $this->assignation['title'] = $this->get('translator')->trans('error404.title');
+        $this->assignation['content'] = $this->get('translator')->trans('error404.message');
+
+
+        $this->get('stopwatch')->start('twigRender');
         return new Response(
-            $this->getTwig()->render('@DefaultTheme/404.html.twig', $this->assignation),
+            $this->renderView('@DefaultTheme/pages/404.html.twig', $this->assignation),
             Response::HTTP_NOT_FOUND,
+            array('content-type' => 'text/html')
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function maintenanceAction(Request $request)
+    {
+        $translation = $this->bindLocaleFromRoute($request, $request->getLocale());
+        $this->prepareThemeAssignation(null, $translation);
+
+        $this->assignation['nodeName'] = 'maintenance' ;
+        $this->assignation['nodeTypeName'] = 'maintenance';
+        $this->assignation['title'] = $this->get('translator')->trans('website.is.under.maintenance');
+        $this->assignation['content'] = $this->get('translator')->trans('website.is.under.maintenance.we.will.be.back.soon');
+
+        $this->get('stopwatch')->start('twigRender');
+        return new Response(
+            $this->renderView('@DefaultTheme/pages/maintenance.html.twig', $this->assignation),
+            Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
     }

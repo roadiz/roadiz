@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Extension that allow render inner page part calling directly their
@@ -64,9 +66,9 @@ class BlockRenderExtension extends \Twig_Extension
      * @param array $assignation
      *
      * @return string
-     * @throws \Exception
+     * @throws \Twig_Error_Runtime
      */
-    public function blockRender(NodesSources $nodeSource, $themeName = "DefaultTheme", $assignation = [])
+    public function blockRender(NodesSources $nodeSource = null, $themeName = "DefaultTheme", $assignation = [])
     {
         if (null !== $nodeSource) {
             if (!empty($themeName)) {
@@ -76,10 +78,12 @@ class BlockRenderExtension extends \Twig_Extension
                 'Controller';
                 if (class_exists($class) &&
                     method_exists($class, 'blockAction')) {
+                    /** @var FrontendController $ctrl */
                     $ctrl = new $class();
                     $ctrl->setContainer($this->container);
                     $ctrl->__init();
 
+                    /** @var Response $response */
                     $response = $ctrl->blockAction(
                         $this->container['request'],
                         $nodeSource,
@@ -88,13 +92,12 @@ class BlockRenderExtension extends \Twig_Extension
 
                     return $response->getContent();
                 } else {
-                    throw new \Exception($class . "::blockAction() action does not exist.", 1);
+                    throw new \Twig_Error_Runtime($class . "::blockAction() action does not exist.");
                 }
             } else {
-                throw new \Exception("Invalid name formatting for your theme.", 1);
+                throw new \Twig_Error_Runtime("Invalid name formatting for your theme.");
             }
-        } else {
-            throw new \Exception("Invalid NodesSources.", 1);
         }
+        throw new \Twig_Error_Runtime("Invalid NodesSources.");
     }
 }

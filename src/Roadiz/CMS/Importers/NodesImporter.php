@@ -71,7 +71,7 @@ class NodesImporter implements ImporterInterface
      * @return null|Node
      * @throws EntityAlreadyExistsException
      */
-    protected static function browseTree($node, EntityManager $em)
+    protected static function browseTree(Node $node, EntityManager $em)
     {
         try {
             /*
@@ -88,13 +88,14 @@ class NodesImporter implements ImporterInterface
 
             /** @var NodesSources[] $sourceObj */
             $sourceObj = [];
-
+            /** @var Node $child */
             foreach ($node->getChildren() as $child) {
                 $childObj[] = static::browseTree($child, $em);
             }
             $node->getChildren()->clear();
+            /** @var NodesSources $nodeSource */
             foreach ($node->getNodeSources() as $nodeSource) {
-                $trans = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
+                $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findOneByLocale($nodeSource->getTranslation()->getLocale());
 
                 if (empty($trans)) {

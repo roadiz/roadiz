@@ -62,7 +62,7 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
 
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
-        $field = $this->getService('em')
+        $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
 
         if (null !== $response = $this->handleFieldActions($request, $field)) {

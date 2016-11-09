@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FolderTreeWidget extends AbstractWidget
 {
     protected $parentFolder = null;
+    protected $translation = null;
     protected $folders = null;
 
     /**
@@ -55,6 +56,9 @@ class FolderTreeWidget extends AbstractWidget
         parent::__construct($request, $refereeController);
 
         $this->parentFolder = $parent;
+        $this->translation = $this->getController()->getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findOneBy(['defaultTranslation' => true]);
         $this->getFolderTreeAssignationForParent();
     }
 
@@ -65,22 +69,18 @@ class FolderTreeWidget extends AbstractWidget
     {
         $this->folders = $this->getController()->getService('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-             ->findBy(
-                 ['parent' => $this->parentFolder],
-                 ['position' => 'ASC']
-             );
+             ->findByParentAndTranslation($this->parentFolder, $this->translation);
     }
 
     /**
      * @param Folder $parent
-     *
-     * @return ArrayCollection
+     * @return array
      */
     public function getChildrenFolders(Folder $parent)
     {
         return $this->folders = $this->getController()->getService('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                    ->findBy(['parent' => $parent], ['position' => 'ASC']);
+                    ->findByParentAndTranslation($parent, $this->translation);
     }
     /**
      * @return Folder
@@ -91,7 +91,7 @@ class FolderTreeWidget extends AbstractWidget
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function getFolders()
     {
