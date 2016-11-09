@@ -4,16 +4,24 @@
 var DocumentWidget = function () {
     var _this = this;
 
+    _this.$explorer = null;
+    _this.explorer = null;
+    _this.$explorerClose = null;
+    _this.uploader = null;
+
+    _this.options = {
+        selector: '.documents-widget .documents-widget-uploader',
+        headers: { "_token": Rozier.ajaxToken },
+        onSuccess : $.proxy(_this.onDocumentUploaded, _this),
+    };
+    $.extend(_this.options, Rozier.messages.dropzone);
+
     _this.$widgets = $('[data-document-widget]');
 
     if (_this.$widgets.length) {
         _this.$sortables = $('.documents-widget-sortable');
         _this.$toggleExplorerButtons = $('[data-document-widget-toggle-explorer]');
         _this.$toggleUploaderButtons = $('[data-document-widget-toggle-uploader]');
-        _this.$explorer = null;
-        _this.explorer = null;
-        _this.$explorerClose = null;
-        _this.uploader = null;
 
         _this.init();
     }
@@ -42,6 +50,20 @@ DocumentWidget.prototype.init = function() {
     _this.initUnlinkEvent();
 
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.on('uploader-open', $.proxy(_this.closeAll, _this));
+};
+
+DocumentWidget.prototype.closeAll = function(event) {
+    var _this = this;
+    event.preventDefault();
+
+    var $uploaders = $('.documents-widget-uploader');
+
+    if (null !== _this.uploader) {
+        _this.uploader = null;
+        _this.$toggleUploaderButtons.removeClass('active uk-active');
+        $uploaders.remove();
+    }
 };
 
 DocumentWidget.prototype.initUnlinkEvent = function() {
@@ -65,8 +87,6 @@ DocumentWidget.prototype.initUnlinkEvent = function() {
 DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, element) {
     var _this = this;
 
-    //console.log("Document: "+element.data('document-id'));
-    //console.log(element);
     $sortable = $(element).parent();
     var inputName = 'source['+$sortable.data('input-name')+']';
     $sortable.find('li').each(function (index) {
@@ -85,49 +105,52 @@ DocumentWidget.prototype.onSortableDocumentWidgetChange = function(event, list, 
 DocumentWidget.prototype.onUploaderToggle = function(event) {
     var _this = this;
 
-    var $btn = $(event.currentTarget);
-    var $widget = $btn.parents('.documents-widget').eq(0);
-    var $uploader = $widget.find('.documents-widget-uploader').eq(0);
+    _this.$btn = $(event.currentTarget);
 
-
-    if (null !== _this.uploader &&
-        $uploader.length) {
-        $uploader.remove();
+    if (_this.$btn.hasClass('active') &&
+        null !== _this.uploader &&
+        _this.$uploader &&
+        _this.$uploader.length) {
+        _this.$uploader.remove();
         _this.uploader = null;
-        $btn.removeClass('active uk-active');
+        _this.$btn.removeClass('active uk-active');
     } else {
-        $widget.append('<div class="documents-widget-uploader dropzone"></div>');
-        var $uploaderNew = $widget.find('.documents-widget-uploader').eq(0);
-        if ($uploaderNew.length) {
-            var options = {
-                selector: '.documents-widget .documents-widget-uploader',
-                headers: { "_token": Rozier.ajaxToken },
-                onSuccess : function (data) {
-                    if(typeof data.thumbnail !== "undefined") {
-                        var $sortable = $widget.find('.documents-widget-sortable');
-                        $sortable.append(data.thumbnail.html);
-                        var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]');
+        /*
+         * Dispatch event to close every other
+         * uploaders
+         */
+        var openevent = new CustomEvent("uploader-open", {"detail":_this});
+        window.dispatchEvent(openevent);
 
-                        _this.initUnlinkEvent();
-                        Rozier.lazyload.bindAjaxLink();
 
-                        _this.onSortableDocumentWidgetChange(null, $sortable, $element);
-                    }
-                }
-            };
+        _this.$widget = _this.$btn.parents('.documents-widget').eq(0);
+        _this.$widget.append('<div class="documents-widget-uploader dropzone"></div>');
+        _this.$uploader = _this.$widget.find('.documents-widget-uploader').eq(0);
 
-            $.extend(options, Rozier.messages.dropzone);
-            //console.log(options);
-            _this.uploader = new DocumentUploader(options);
-
-            $uploaderNew.slideDown(500);
-            $btn.addClass('active uk-active');
+        if (_this.$uploader) {
+            _this.uploader = new DocumentUploader(_this.options);
+            _this.$uploader.show();
+            _this.$btn.addClass('active uk-active');
         }
     }
 
     return false;
 };
 
+DocumentWidget.prototype.onDocumentUploaded = function(data) {
+    var _this = this;
+
+    if(typeof data.thumbnail !== "undefined" && _this.$widget.length) {
+        var $sortable = _this.$widget.find('.documents-widget-sortable');
+        $sortable.append(data.thumbnail.html);
+        var $element = $sortable.find('[data-document-id="'+data.thumbnail.id+'"]').eq(0);
+
+        _this.initUnlinkEvent();
+        Rozier.lazyload.bindAjaxLink();
+
+        _this.onSortableDocumentWidgetChange(null, $sortable, $element);
+    }
+};
 
 /**
  * Create document explorer.

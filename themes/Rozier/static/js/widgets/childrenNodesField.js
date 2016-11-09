@@ -109,9 +109,7 @@ ChildrenNodesField.prototype.dropDownize = function() {
         var $quickAddNode = $(_this.$fields[i]).find('.children-nodes-quick-creation');
 
         if(!$quickAddNode.hasClass('uk-dropdown') &&
-            $quickAddNode.find('a').length > 2){
-            console.log("Need to convert buttons to dropdown");
-
+            $quickAddNode.find('a').length > 2) {
             $quickAddNode.addClass('uk-dropdown uk-dropdown-navbar uk-dropdown-flip');
             $quickAddNode.removeClass('uk-button-group');
             $quickAddNode.wrap('<div data-uk-dropdown="{mode:\'click\'}"></div>');
