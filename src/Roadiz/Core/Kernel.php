@@ -59,7 +59,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.15.1";
+    public static $cmsVersion = "0.16.0";
     protected static $instance = null;
 
     public $container = null;
@@ -159,7 +159,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
@@ -302,7 +301,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function terminate(Request $request, Response $response)
     {
@@ -316,8 +314,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function shutdown()
     {
@@ -341,7 +337,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function getBundles()
     {
@@ -350,7 +345,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
      */
     public function getBundle($name, $first = true)
     {
@@ -358,7 +352,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
     /**
      * {@inheritdoc}
-     *
      */
     public function locateResource($name, $dir = null, $first = true)
     {
@@ -431,7 +424,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * Returns an array of bundles to register.
      *
      * @return BundleInterface[] An array of bundle instances.
-     *
      */
     public function registerBundles()
     {
@@ -442,7 +434,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * Loads the container configuration.
      *
      * @param LoaderInterface $loader A LoaderInterface instance
-     *
      * @return bool
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -451,7 +442,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     *
      * @deprecated since version 2.6, to be removed in 3.0.
      * @param string $class
      *
