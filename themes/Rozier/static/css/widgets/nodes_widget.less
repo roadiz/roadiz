@@ -90,7 +90,7 @@
 .nodes-widget-dragging {
     position: relative;
     display: inline-block;
-    width:225px;
+    width: 240px;
     height:@nodes-widget-height;
     margin:0 20px 8px 0;
     padding: 7px 0 6px 15px;
@@ -164,21 +164,20 @@
         }
     }
     .parent-node-name {
-        font-size: 9px;
+        font-size: 8px;
         text-transform: uppercase;
         display: block;
         line-height: 11px;
         color: rgba(0, 0, 0, 0.6);
-        letter-spacing: 0.03em;
+        letter-spacing: 0.07em;
         font-weight: 700;
-
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
         margin: 0;
+        padding-right: 10px;
 
         span {
-            display: inline-block;
             &.sub {
                 &:after {
                     content: '/';

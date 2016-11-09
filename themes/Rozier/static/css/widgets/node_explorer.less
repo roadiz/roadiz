@@ -6,7 +6,6 @@
 /* -------- STYLES -------- */
 
 .node-widget-explorer{
-
     background-color: #3D3D3D;
     position: fixed;
     left: 0px;
@@ -18,6 +17,10 @@
     .transition-timing-function(@easeOutExpo);
     overflow-y: auto;
     z-index:12;
+
+    .uk-sortable {
+        padding-left: 21px;
+    }
 
     .node-widget-explorer-header{
         height:60px;
@@ -203,11 +206,6 @@
 
         .parent-node-name {
             color: rgba(255, 255, 255, 0.25);
-            span {
-                &.sub {
-                    color: rgba(255, 255, 255, 0.20);
-                }
-            }
         }
 
         .uk-sortable-handle{
