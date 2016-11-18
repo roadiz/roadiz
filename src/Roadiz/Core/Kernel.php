@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
+use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -43,6 +44,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\EventListener\ResponseListener;
+use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -176,7 +179,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         }
 
         $this->container['request'] = $request;
-
         $this->initEvents();
 
         return $this->container['httpKernel']->handle($request, $type, $catch);
@@ -185,13 +187,15 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * Register KernelEvents subscribers.
      */
-    protected function initEvents()
+    public function initEvents()
     {
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $this->container['dispatcher'];
 
         $dispatcher->addSubscriber($this->container['routeListener']);
         $dispatcher->addSubscriber($this->container['firewall']);
+        $dispatcher->addSubscriber(new SaveSessionListener());
+        $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
         $dispatcher->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
@@ -205,6 +209,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         }
 
         $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
+        $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view

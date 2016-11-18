@@ -87,6 +87,7 @@ class RoadizApplication extends Application
     protected function getDefaultCommands()
     {
         $commands = array(
+            new DispatcherDebugCommand(),
             new TranslationsCommand(),
             new TranslationsCreationCommand(),
             new TranslationsDeleteCommand(),
