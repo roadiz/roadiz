@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
@@ -161,12 +162,37 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * {@inheritdoc}
+     * Handles a Roadiz master Request and transforms it into a Response.
+     *
+     * Roadiz default handling is by-passed for assets serving.
+     *
+     * @param Request $request
+     * @param int $type
+     * @param bool $catch
+     * @return Response
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         if (false === $this->booted) {
             $this->boot();
+        }
+
+        /*
+         * Bypass Roadiz kernel handling to directly serve images assets
+         * -----
+         * this is useful in preview mode in order to allow at least assets
+         * to be viewed (e.g. PDF generation which loads images in preview mode)
+         */
+        if (0 === strpos($request->getPathInfo(), '/assets') &&
+            preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
+        ) {
+            $ctrl = new AssetsController();
+            $ctrl->setContainer($this->getContainer());
+            $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
+            $response->headers->add(['X-ByPass-Kernel' => true]);
+            $response->prepare($request);
+
+            return $response;
         }
 
         /*
