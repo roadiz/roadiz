@@ -6,6 +6,9 @@
 /install.php
 /clear_cache.php
 
+# Ignore Google webmaster tool verification
+/google*.html
+
 # PHPCS report
 report.txt
 
