@@ -23,42 +23,43 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeSourceDocumentType.php
+ * @file NodeSourceNodeType.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class NodeSourceDocumentType
+ * Class NodeSourceNodeType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class NodeSourceDocumentType extends AbstractType
+class NodeSourceNodeType extends AbstractType
 {
     /**
      * @var NodesSources
      */
     private $nodeSource;
+
     /**
      * @var NodeTypeField
      */
     private $nodeTypeField;
 
     /**
-     * @var Document[]
+     * @var Node[]
      */
-    private $selectedDocuments;
+    private $selectedNodes;
 
     /**
      * @var EntityManager
@@ -71,8 +72,11 @@ class NodeSourceDocumentType extends AbstractType
      * @param NodeTypeField $nodeTypeField
      * @param EntityManager $entityManager
      */
-    public function __construct(NodesSources $nodeSource, NodeTypeField $nodeTypeField, EntityManager $entityManager)
-    {
+    public function __construct(
+        NodesSources $nodeSource,
+        NodeTypeField $nodeTypeField,
+        EntityManager $entityManager
+    ) {
         $this->nodeSource = $nodeSource;
         $this->nodeTypeField = $nodeTypeField;
         $this->entityManager = $entityManager;
@@ -104,9 +108,12 @@ class NodeSourceDocumentType extends AbstractType
             'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
-            'class' => '\RZ\Roadiz\Core\Entities\Document',
+            'class' => '\RZ\Roadiz\Core\Entities\Node',
             'multiple' => true,
             'property' => 'id',
+            'attr' => [
+                'data-nodetypes' => json_encode(explode(',', $this->nodeTypeField->getDefaultValues()))
+            ],
         ]);
     }
 
@@ -124,7 +131,7 @@ class NodeSourceDocumentType extends AbstractType
         /*
          * Inject data as plain documents entities
          */
-        $view->vars['data'] = $this->selectedDocuments;
+        $view->vars['data'] = $this->selectedNodes;
     }
 
     /**
@@ -132,7 +139,7 @@ class NodeSourceDocumentType extends AbstractType
      */
     public function getName()
     {
-        return 'documents';
+        return 'nodes';
     }
 
     /**
@@ -148,9 +155,13 @@ class NodeSourceDocumentType extends AbstractType
      */
     public function onPreSetData(FormEvent $event)
     {
-        $this->selectedDocuments = $this->nodeSource->getHandler()
-            ->getDocumentsFromFieldName($this->nodeTypeField->getName());
-        $event->setData($this->selectedDocuments);
+        $this->selectedNodes = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findByNodeAndFieldName(
+                $this->nodeSource->getNode(),
+                $this->nodeTypeField->getName()
+            );
+        $event->setData($this->selectedNodes);
     }
 
     /**
@@ -158,19 +169,19 @@ class NodeSourceDocumentType extends AbstractType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $hdlr = $this->nodeSource->getHandler();
-        $hdlr->cleanDocumentsFromField($this->nodeTypeField, false);
+        $hdlr = $this->nodeSource->getNode()->getHandler();
+        $hdlr->cleanNodesFromField($this->nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
-            foreach ($event->getData() as $documentId) {
-                $tempDoc = $this->entityManager
-                    ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
-                if ($tempDoc !== null) {
-                    $hdlr->addDocumentForField($tempDoc, $this->nodeTypeField, false, $position);
+            foreach ($event->getData() as $nodeId) {
+                $tempNode = $this->entityManager
+                    ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                if ($tempNode !== null) {
+                    $hdlr->addNodeForField($tempNode, $this->nodeTypeField, false, $position);
                     $position++;
                 } else {
-                    throw new \RuntimeException('Document #'.$documentId.' was not found during relationship creation.');
+                    throw new \RuntimeException('Node #'.$nodeId.' was not found during relationship creation.');
                 }
             }
         }

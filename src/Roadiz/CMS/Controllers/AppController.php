@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -559,5 +560,25 @@ class AppController extends Controller
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
+    }
+
+    /**
+     * @param Form $form
+     * @return array
+     */
+    protected function getErrorsAsArray(Form $form)
+    {
+        $errors = [];
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        foreach ($form->all() as $key => $child) {
+            $err = $this->getErrorsAsArray($child);
+            if ($err) {
+                $errors[$key] = $err;
+            }
+        }
+        return $errors;
     }
 }

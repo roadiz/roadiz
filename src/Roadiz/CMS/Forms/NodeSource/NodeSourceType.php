@@ -31,15 +31,11 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\CustomFormsNodesType;
-use RZ\Roadiz\CMS\Forms\DocumentsType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\CMS\Forms\MultipleEnumerationType;
-use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -153,26 +149,11 @@ class NodeSourceType extends AbstractType
     {
         switch ($field->getType()) {
             case NodeTypeField::DOCUMENTS_T:
-                /** @var Document[] $documents */
-                $documents = $nodeSource->getHandler()
-                    ->getDocumentsFromFieldName($field->getName());
-
-                return new DocumentsType($documents, $options['entityManager']);
+                return new NodeSourceDocumentType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::NODES_T:
-                /** @var Node[] $nodes */
-                $nodes = $options['entityManager']->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findByNodeAndFieldName(
-                        $nodeSource->getNode(),
-                        $field->getName()
-                    );
-
-                return new NodesType($nodes, $options['entityManager']);
+                return new NodeSourceNodeType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::CUSTOM_FORMS_T:
-                /** @var CustomForm[] $customForms */
-                $customForms = $nodeSource->getNode()->getHandler()
-                    ->getCustomFormsFromFieldName($field->getName());
-
-                return new CustomFormsNodesType($customForms, $options['entityManager']);
+                return new NodeSourceCustomFormType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::CHILDREN_T:
                 /*
                  * NodeTreeType is a virtual type which is only available

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,15 +31,16 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Newsletter;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
-use Themes\Rozier\Traits\NodesSourcesTrait;
 use Themes\Rozier\Traits\NodesTrait;
 
 /**
@@ -49,7 +50,6 @@ use Themes\Rozier\Traits\NodesTrait;
  */
 class NewslettersController extends RozierApp
 {
-    use NodesSourcesTrait;
     use NodesTrait;
 
     public function listAction(Request $request)
@@ -172,6 +172,7 @@ class NewslettersController extends RozierApp
             $newsletter = $this->get('em')
                                ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
 
+            /** @var NodesSources $source */
             $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                            ->findOneBy(['translation' => $translation, 'node' => $newsletter->getNode()]);
@@ -188,23 +189,56 @@ class NewslettersController extends RozierApp
                 /*
                  * Form
                  */
-                $form = $this->buildEditSourceForm($node, $source);
+                $form = $this->createForm(
+                    new NodeSourceType($node->getNodeType()),
+                    $source,
+                    [
+                        'controller' => $this,
+                        'entityManager' => $this->get('em'),
+                    ]
+                );
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
-                    $this->editNodeSource($form->getData(), $source);
+                if ($form->isSubmitted()) {
+                    if ($form->isValid()) {
+                        $this->get('em')->flush();
 
-                    $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', [
-                        '%newsletter%' => $source->getNode()->getNodeName(),
-                        '%translation%' => $source->getTranslation()->getName(),
-                    ]);
+                        $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', [
+                            '%newsletter%' => $source->getNode()->getNodeName(),
+                            '%translation%' => $source->getTranslation()->getName(),
+                        ]);
 
-                    $this->publishConfirmMessage($request, $msg);
+                        $this->publishConfirmMessage($request, $msg);
 
-                    return $this->redirect($this->generateUrl(
-                        'newslettersEditPage',
-                        ['newsletterId' => $newsletterId, 'translationId' => $translationId]
-                    ));
+                        if ($request->isXmlHttpRequest()) {
+                            $url = $this->generateUrl(
+                                'newslettersPreviewPage',
+                                ['newsletterId' => $newsletterId]
+                            );
+
+                            return new JsonResponse([
+                                'status' => 'success',
+                                'public_url' => $url,
+                                'errors' => []
+                            ]);
+                        }
+
+                        return $this->redirect($this->generateUrl(
+                            'newslettersEditPage',
+                            ['newsletterId' => $newsletterId, 'translationId' => $translationId]
+                        ));
+                    }
+                    /*
+                     * Handle errors when Ajax POST requests
+                     */
+                    if ($request->isXmlHttpRequest()) {
+                        $errors = $this->getErrorsAsArray($form);
+                        return new JsonResponse([
+                            'status' => 'fail',
+                            'errors' => $errors,
+                            'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                        ], JsonResponse::HTTP_BAD_REQUEST);
+                    }
                 }
 
                 $this->assignation['form'] = $form->createView();

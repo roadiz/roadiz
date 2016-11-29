@@ -126,6 +126,7 @@ class DocumentsType extends AbstractType
     {
         return 'hidden';
     }
+
     /**
      * {@inheritdoc}
      */
