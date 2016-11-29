@@ -30,15 +30,12 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -113,23 +110,6 @@ class NodeSourceCustomFormType extends AbstractType
             'multiple' => true,
             'property' => 'id',
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param FormView      $view
-     * @param FormInterface $form
-     * @param array         $options
-     */
-    public function finishView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::finishView($view, $form, $options);
-
-        /*
-         * Inject data as plain documents entities
-         */
-        $view->vars['data'] = $this->selectedCustomForms;
     }
 
     /**

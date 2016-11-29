@@ -36,8 +36,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -115,23 +113,6 @@ class NodeSourceNodeType extends AbstractType
                 'data-nodetypes' => json_encode(explode(',', $this->nodeTypeField->getDefaultValues()))
             ],
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param FormView      $view
-     * @param FormInterface $form
-     * @param array         $options
-     */
-    public function finishView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::finishView($view, $form, $options);
-
-        /*
-         * Inject data as plain documents entities
-         */
-        $view->vars['data'] = $this->selectedNodes;
     }
 
     /**

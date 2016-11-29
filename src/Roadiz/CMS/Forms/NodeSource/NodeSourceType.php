@@ -30,12 +30,10 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\CssType;
-use RZ\Roadiz\CMS\Forms\CustomFormsNodesType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\CMS\Forms\MultipleEnumerationType;
-use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
