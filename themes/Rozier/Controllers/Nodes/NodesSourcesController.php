@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -95,12 +96,20 @@ class NodesSourcesController extends RozierApp
                 /*
                  * Form
                  */
-                $form = $this->buildEditSourceForm($node, $source);
+                $form = $this->createForm(
+                    new NodeSourceType($node->getNodeType()),
+                    $source,
+                    [
+                        'controller' => $this,
+                        'entityManager' => $this->get('em'),
+                    ]);
+                //$form = $this->buildEditSourceForm($node, $source);
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        $this->editNodeSource($form->getData(), $source);
+                        //$this->editNodeSource($form->getData(), $source);
+                        $this->get('em')->flush();
                         /*
                          * Dispatch event
                          */
