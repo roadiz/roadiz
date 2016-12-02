@@ -33,6 +33,7 @@ namespace Themes\Rozier\Traits;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
@@ -64,6 +65,7 @@ trait NodesTrait
         $this->get('em')->persist($node);
 
         $sourceClass = "GeneratedNodeSources\\" . $node->getNodeType()->getSourceEntityClassName();
+        /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($title);
 

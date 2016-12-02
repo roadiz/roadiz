@@ -115,7 +115,7 @@ NodeWidget.prototype.onExplorerToggle = function(event) {
         };
 
         var nodeTypes = $currentWidget.attr('data-nodetypes');
-        if (nodeTypes !== '') {
+        if (nodeTypes && nodeTypes !== '') {
             ajaxData.nodeTypes = JSON.parse(nodeTypes);
         }
 

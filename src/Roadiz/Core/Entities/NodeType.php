@@ -245,7 +245,7 @@ class NodeType extends AbstractEntity
     /**
      * @param NodeTypeField $field
      *
-     * @return NodeTypeField
+     * @return NodeType
      */
     public function addField(NodeTypeField $field)
     {
@@ -259,7 +259,7 @@ class NodeType extends AbstractEntity
     /**
      * @param NodeTypeField $field
      *
-     * @return NodeTypeField
+     * @return NodeType
      */
     public function removeField(NodeTypeField $field)
     {

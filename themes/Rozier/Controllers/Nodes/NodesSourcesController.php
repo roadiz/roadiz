@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,18 +30,21 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Utils\Node\NodeNameChecker;
+use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
-use Themes\Rozier\Traits\NodesSourcesTrait;
 
 /**
  * Nodes sources controller.
@@ -50,8 +53,6 @@ use Themes\Rozier\Traits\NodesSourcesTrait;
  */
 class NodesSourcesController extends RozierApp
 {
-    use NodesSourcesTrait;
-
     /**
      * Return an edition form for requested node.
      *
@@ -95,12 +96,20 @@ class NodesSourcesController extends RozierApp
                 /*
                  * Form
                  */
-                $form = $this->buildEditSourceForm($node, $source);
+                $form = $this->createForm(
+                    new NodeSourceType($node->getNodeType()),
+                    $source,
+                    [
+                        'controller' => $this,
+                        'entityManager' => $this->get('em'),
+                        'withVirtual' => true,
+                    ]
+                );
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        $this->editNodeSource($form->getData(), $source);
+                        $this->get('em')->flush();
                         /*
                          * Dispatch event
                          */
@@ -156,26 +165,6 @@ class NodesSourcesController extends RozierApp
             }
         }
         return $this->throw404();
-    }
-
-    /**
-     * @param Form $form
-     * @return array
-     */
-    protected function getErrorsAsArray(Form $form)
-    {
-        $errors = [];
-        foreach ($form->getErrors() as $error) {
-            $errors[] = $error->getMessage();
-        }
-
-        foreach ($form->all() as $key => $child) {
-            $err = $this->getErrorsAsArray($child);
-            if ($err) {
-                $errors[$key] = $err;
-            }
-        }
-        return $errors;
     }
 
     /**
@@ -242,5 +231,48 @@ class NodesSourcesController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('nodes/deleteSource.html.twig', $this->assignation);
+    }
+
+    /**
+     * Update nodeName when title is available.
+     *
+     * @param  NodesSources $nodeSource
+     */
+    protected function updateNodeName(NodesSources $nodeSource)
+    {
+        $title = $nodeSource->getTitle();
+
+        /*
+         * update node name if dynamic option enabled and
+         * default translation
+         */
+        if ("" != $title &&
+            true === $nodeSource->getNode()->isDynamicNodeName() &&
+            $nodeSource->getTranslation()->isDefaultTranslation()) {
+            $testingNodeName = StringHandler::slugify($title);
+
+            /*
+             * Node name wont be updated if name already taken OR
+             * if it is ALREADY suffixed with a unique ID.
+             */
+            if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
+                $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->get('em'));
+                if (!$alreadyUsed) {
+                    $nodeSource->getNode()->setNodeName($title);
+                } else {
+                    $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
+                }
+                $this->get('em')->flush();
+
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($nodeSource->getNode());
+                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            } else {
+                $this->get('logger')->debug('Node name has not be changed.');
+            }
+        }
     }
 }
