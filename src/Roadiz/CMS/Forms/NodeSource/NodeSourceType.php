@@ -65,26 +65,30 @@ class NodeSourceType extends AbstractType
     {
         $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager']);
 
-        $builder->add(
-            'title',
-            'text',
-            [
-                'label' => 'title',
-                'required' => false,
-                'attr' => [
-                    'data-desc' => '',
-                    'data-field-group' => 'default',
-                    'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
-                ],
-            ]
-        );
+        if ($options['withTitle'] === true) {
+            $builder->add(
+                'title',
+                'text',
+                [
+                    'label' => 'title',
+                    'required' => false,
+                    'attr' => [
+                        'data-desc' => '',
+                        'data-field-group' => 'default',
+                        'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
+                    ],
+                ]
+            );
+        }
         /** @var NodeTypeField $field */
         foreach ($fields as $field) {
-            $builder->add(
-                $field->getName(),
-                $this->getFormTypeFromFieldType($builder->getData(), $field, $options),
-                $this->getFormOptionsFromFieldType($field)
-            );
+            if ($options['withVirtual'] === true || !$field->isVirtual()) {
+                $builder->add(
+                    $field->getName(),
+                    $this->getFormTypeFromFieldType($builder->getData(), $field, $options),
+                    $this->getFormOptionsFromFieldType($field)
+                );
+            }
         }
     }
 
@@ -95,7 +99,9 @@ class NodeSourceType extends AbstractType
     {
         $resolver->setDefaults([
             'class' => NodeType::getGeneratedEntitiesNamespace().'\\'.$this->nodeType->getSourceEntityClassName(),
-            'property' => 'id'
+            'property' => 'id',
+            'withTitle' => true,
+            'withVirtual' => true,
         ]);
         $resolver->setRequired([
             'entityManager',
@@ -103,6 +109,8 @@ class NodeSourceType extends AbstractType
         ]);
         $resolver->setAllowedTypes('controller', 'RZ\Roadiz\CMS\Controllers\Controller');
         $resolver->setAllowedTypes('entityManager', 'Doctrine\ORM\EntityManager');
+        $resolver->setAllowedTypes('withTitle', 'boolean');
+        $resolver->setAllowedTypes('withVirtual', 'boolean');
     }
 
     /**
@@ -124,6 +132,7 @@ class NodeSourceType extends AbstractType
             'nodeType' => $this->nodeType,
             'visible' => true,
         ];
+
         $position = [
             'position' => 'ASC',
         ];
