@@ -1,59 +1,37 @@
 #!/bin/bash
 #
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 export DEBIAN_FRONTEND=noninteractive
 
 DBPASSWD="roadiz"
 
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $DBPASSWD"
-sudo debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
-
 TEMP_DIR="/home/vagrant"
 PHPMYADMIN_DIR="/usr/share/phpmyadmin"
-PHPMYADMIN_ARCHIVE="phpMyAdmin-4.5.3.1-all-languages"
-PHPMYADMIN_ARCHIVE_URL="https://files.phpmyadmin.net/phpMyAdmin/4.5.3.1/${PHPMYADMIN_ARCHIVE}.tar.gz"
+PHPMYADMIN_VERSION="4.6.5.1"
+PHPMYADMIN_ARCHIVE="phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages"
+PHPMYADMIN_ARCHIVE_URL="https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/${PHPMYADMIN_ARCHIVE}.tar.gz"
 
-echo -e "\n--- Downloading phpmyadmin... ---\n"
+echo -e "\n--- Downloading phpmyadmin...\n"
 sudo wget -O ${TEMP_DIR}/${PHPMYADMIN_ARCHIVE}.tar.gz ${PHPMYADMIN_ARCHIVE_URL} > /dev/null 2>&1;
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL - Downloading ${PHPMYADMIN_ARCHIVE_URL} ${NC}\n"
+   echo -e "${RED}\t!!! Please verify PhpMyAdmin version exists and provision again.${NC}\n"
+   exit 1;
+fi
 
-echo -e "\n--- Uncompressing phpmyadmin... ---\n"
+echo -e "\n--- Uncompressing phpmyadmin...\n"
 sudo tar -xzvf ${TEMP_DIR}/${PHPMYADMIN_ARCHIVE}.tar.gz > /dev/null 2>&1;
+sudo rm -rf ${TEMP_DIR}/${PHPMYADMIN_ARCHIVE}.tar.gz;
 
-echo -e "\n--- Installing phpmyadmin... ---\n"
+echo -e "\n--- Installing phpmyadmin...\n"
 sudo mv ${TEMP_DIR}/${PHPMYADMIN_ARCHIVE} ${PHPMYADMIN_DIR} > /dev/null 2>&1;
 
-echo -e "\n--- Configure phpmyadmin to connect automatically for roadiz DB ---\n"
-sudo touch ${PHPMYADMIN_DIR}/config.inc.php > /dev/null 2>&1;
-sudo cat >> ${PHPMYADMIN_DIR}/config.inc.php <<'EOF'
-<?php
-/**
- * phpMyAdmin sample configuration, you can use it as base for
- * manual configuration. For easier setup you can use setup/
- *
- * All directives are explained in documentation in the doc/ folder
- * or at <http://docs.phpmyadmin.net/>.
- *
- * @package PhpMyAdmin
- */
-$cfg['blowfish_secret'] = 'Ultricies Quam Justo Magna Nibh';
+echo -e "\n--- Configure phpmyadmin to connect automatically for roadiz DB\n"
+sudo cp -a /var/www/samples/vagrant/phpmyadmin/config.inc.php ${PHPMYADMIN_DIR}/config.inc.php;
 
-/**
- * Servers configuration
- */
-$i = 0;
-$i++;
-/* Authentication type */
-$cfg['Servers'][$i]['auth_type'] = 'config';
-$cfg['Servers'][$i]['user'] = 'roadiz';
-$cfg['Servers'][$i]['password'] = 'roadiz';
-/* Server parameters */
-$cfg['Servers'][$i]['host'] = 'localhost';
-$cfg['Servers'][$i]['connect_type'] = 'tcp';
-$cfg['Servers'][$i]['compress'] = false;
-$cfg['Servers'][$i]['AllowNoPassword'] = true;
-EOF
 
 export PRIVATE_IP=`/sbin/ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 

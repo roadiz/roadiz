@@ -89,6 +89,9 @@ node_modules
 /Vagrantfile
 .vagrant/
 
+### Docker ###
+/docker-compose.yml
+
 ### grunt ###
 # Grunt usually compiles files inside this directory
 dist/
