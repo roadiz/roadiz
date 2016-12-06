@@ -116,7 +116,7 @@
                             {% endspaceless %}
                         </td>
                         <td class="mobile-hidden uk-visible-xlarge">{{ node.updatedAt|localizeddate('short', 'none') }}</td>
-                        <td>
+                        <td class="table-actions-row">
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree-mini"></i></a>

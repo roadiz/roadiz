@@ -38,7 +38,7 @@
                         <div class="uk-badge uk-badge-table uk-badge-notification" title="{% trans %}default.translation{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></div>
                         {% endif %}
                         </td>
-                        <td>
+                        <td class="table-actions-row">
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" title="{% trans %}edit{% endtrans %}" href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             {% if t.translation.isDefaultTranslation == false %}

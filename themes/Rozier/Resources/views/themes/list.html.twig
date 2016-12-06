@@ -56,7 +56,7 @@
                         {% if theme.isBackendTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-suitcase"></span> {% trans %}theme.backend{% endtrans %}</div>{% endif %}
                         {% if theme.isStaticTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-road"></span> {% trans %}theme.is_static{% endtrans %}</div>{% endif %}
                         </td>
-                        <td>
+                        <td class="table-actions-row">
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesEditPage', { themeId: theme.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>

@@ -45,9 +45,10 @@
     width:56px;
     .box-sizing();
     background:white;
-    .drop-shadow(3px, 5px, 30px, 0.1);
+    box-shadow: 3px 5px 30px rgba(0,0,0,0.1);
 
-    header, .uk-button {
+    header,
+    .uk-button {
         position: relative;
         .rounded(0);
         .box-sizing();
@@ -61,6 +62,7 @@
         background-image: none;
         background-color: white;
         z-index: 999;
+        justify-content: inherit;
 
         &.uk-button:first-child, &.uk-button:first-child .label {
             border-top: 0 none;
@@ -189,7 +191,6 @@
         position: relative;
         height:52px;
         border-top:none;
-        // border-top: 1px solid @separation-border-color;
         .box-sizing();
 
         &.node-status header {
@@ -230,7 +231,8 @@
                 border-left-color: lighten(@item-global-label-color, 10%)
             }
         }
-        nav,ul {
+        nav,
+        ul {
             display: none;
             position: absolute;
             margin: 0px;
@@ -240,9 +242,10 @@
             top: 52px;
             z-index: 10000;
             border-right: 1px dashed @item-global-border-color;
+            border-bottom: 1px solid @item-global-border-color;
             border-left: 4px solid @item-global-label-color;
             .box-sizing();
-            .drop-shadow(3px, 5px, 20px, 0.12);
+            box-shadow: 3px 5px 20px rgba(0,0,0,0.1);
 
             .uk-button, li {
                 position: relative;

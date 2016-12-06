@@ -8,10 +8,10 @@
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
-            	<a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.nodeType{% endtrans %}</a>
-				<a class="uk-button" href="{{ path('nodeTypesImportPage') }}"><i class="uk-icon-rz-import"></i> {% trans %}import.nodeType{% endtrans %}</a>
+                <a class="uk-button" href="{{ path('nodeTypesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.nodeType{% endtrans %}</a>
+                <a class="uk-button" href="{{ path('nodeTypesImportPage') }}"><i class="uk-icon-rz-import"></i> {% trans %}import.nodeType{% endtrans %}</a>
                 <a class="uk-button rz-no-ajax-link" href="{{ path('nodesTypesExportAllPage') }}"><i class="uk-icon-rz-export"></i> {% trans %}export.all{% endtrans %}</a>
-			</nav>
+            </nav>
         </div>
     </header>
 
@@ -20,10 +20,10 @@
     <article class="content content-no-action-menu content-node-types-list">
         <div class="content-table-cont">
             {% spaceless %}
-			<table class="node-types content-table uk-table">
-				<thead>
-			        <tr>
-			            <th>
+            <table class="node-types content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>
                             {% trans %}name{% endtrans %}
                             {% if request.query.get("field") == 'name' and request.query.get("ordering") == "DESC" %}
                                 <a href="?field=name&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
@@ -31,40 +31,40 @@
                                 <a href="?field=name&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
                             {% endif %}
                         </th>
-			            <th class="mobile-hidden uk-hidden-small">{% trans %}nodeType.displayName{% endtrans %}</th>
-			            <th class="mobile-hidden uk-hidden-small uk-visible-xlarge">{% trans %}nodeType.entityName{% endtrans %}</th>
-			            <th class="mobile-hidden uk-hidden-small uk-visible-large">{% trans %}nodeType.numberFields{% endtrans %}</th>
+                        <th class="mobile-hidden uk-hidden-small">{% trans %}nodeType.displayName{% endtrans %}</th>
+                        <th class="mobile-hidden uk-hidden-small uk-visible-xlarge">{% trans %}nodeType.entityName{% endtrans %}</th>
+                        <th class="mobile-hidden uk-hidden-small uk-visible-large">{% trans %}nodeType.numberFields{% endtrans %}</th>
                         <th class="mobile-hidden uk-hidden-small uk-visible-large">{% trans %}nodeType.status{% endtrans %}</th>
-			            <th class="table-actions-row table-actions-row-4">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for type in node_types %}
-						<tr>
-							<td class="name"><a href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}">
+                        <th class="table-actions-row table-actions-row-4">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for type in node_types %}
+                        <tr>
+                            <td class="name"><a href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}">
                                 <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getName }}
                             </a></td>
-							<td class="mobile-hidden uk-hidden-small">{{ type.getDisplayName }}</td>
-							<td class="mobile-hidden uk-hidden-small uk-visible-xlarge">{{ type.getSourceEntityClassName }}</td>
-							<td class="mobile-hidden uk-hidden-small uk-visible-large"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
+                            <td class="mobile-hidden uk-hidden-small">{{ type.getDisplayName }}</td>
+                            <td class="mobile-hidden uk-hidden-small uk-visible-xlarge">{{ type.getSourceEntityClassName }}</td>
+                            <td class="mobile-hidden uk-hidden-small uk-visible-large"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields{% endtranschoice %}</div></td>
                             <td class="mobile-hidden uk-hidden-small uk-visible-large">
                                 {% if not type.visible %}<span data-uk-tooltip="{animation:true}" title="{% trans %}nodeType.not_visible{% endtrans %}" class="uk-button-status"><i class="uk-icon-eye-slash"></i></span>{% endif %}
                                 {% if type.newsletterType %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}newsletter.nodeType{% endtrans %}"><i class="uk-icon-rz-newsletters"></i></span>{% endif %}
                                 {% if type.hidingNodes %}<span class="uk-button-status" data-uk-tooltip="{animation:true}" title="{% trans %}nodeType.hiding_nodes{% endtrans %}"><i class="uk-icon-rz-steril"></i></span>{% endif %}
                             </td>
-							<td>
+                            <td class="table-actions-row">
                             {% spaceless %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: type.getId }) }}" title="{% trans %}manage.nodeTypeFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('nodesTypesExportPage', { nodeTypeId: type.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('nodeTypesDeletePage', { nodeTypeId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endspaceless %}
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			{% endspaceless %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endspaceless %}
         </div>
     </article>
 

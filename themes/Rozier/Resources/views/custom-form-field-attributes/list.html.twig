@@ -12,23 +12,23 @@
     <article class="content content-no-action-menu content-node-types-list">
         <div class="content-table-cont">
             {% spaceless %}
-			<table class="node-types content-table uk-table">
-				<thead>
-			        <tr>
+            <table class="node-types content-table uk-table">
+                <thead>
+                    <tr>
                         <th>{% trans %}label{% endtrans %}</th>
-			            <th>{% trans %}value{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
+                        <th>{% trans %}value{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for type in fields %}
                         <tr>
-							<td>{{ type.customFormField.label }}</td>
+                            <td>{{ type.customFormField.label }}</td>
                             <td>{{ type.value }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			{% endspaceless %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endspaceless %}
         </div>
     </article>
 

@@ -8,31 +8,31 @@
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
-        		<a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.role{% endtrans %}</a>
-        		<a class="uk-button" href="{{ path('rolesImportPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}import.role{% endtrans %}</a>
+                <a class="uk-button" href="{{ path('rolesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.role{% endtrans %}</a>
+                <a class="uk-button" href="{{ path('rolesImportPage') }}"><i class="uk-icon-rz-upload"></i> {% trans %}import.role{% endtrans %}</a>
                 <a class="uk-button rz-no-ajax-link" href="{{ path('rolesExportAllPage') }}"><i class="uk-icon-rz-download"></i> {% trans %}export.all.roles{% endtrans %}</a>
             </nav>
         </div>
     </header>
 
-	{% include '@Rozier/widgets/filtersBar.html.twig' %}
-	<article class="content content-no-action-menu content-node-types-list">
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
+    <article class="content content-no-action-menu content-node-types-list">
         <div class="content-table-cont">
-			<table class="content-table roles uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}name{% endtrans %}</th>
-			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for role in roles %}
-					<tr>
-						<td>
-							{% if not role.required %}<a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">{{ role.getName }}</a>{% else %}
-							{{ role.getName }}{% endif %}
-						</td>
-						<td>
+            <table class="content-table roles uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in roles %}
+                    <tr>
+                        <td>
+                            {% if not role.required %}<a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">{{ role.getName }}</a>{% else %}
+                            {{ role.getName }}{% endif %}
+                        </td>
+                        <td class="table-actions-row">
                         {% spaceless %}
                             {% if not role.required %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('rolesEditPage', { roleId: role.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
@@ -42,12 +42,12 @@
                             <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}role.required{% endtrans %}</div> <!-- uk-badge-success -->
                             {% endif %}
                         {% endspaceless %}
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</article>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
 </section>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
-	<header class="content-header header-font header-font-list">
+    <header class="content-header header-font header-font-list">
         <h1 class="content-title font-list-title">{% trans %}fonts{% endtrans %}</h1>
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
@@ -11,47 +11,47 @@
         </div>
     </header>
 
-	{% include '@Rozier/widgets/filtersBar.html.twig' %}
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
-	<article class="content content-no-action-menu">
-		<div class="content-table-cont">
-			<table class="fonts content-table uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}name{% endtrans %}</th>
-			            <th>{% trans %}font.variant{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}font.files{% endtrans %}</th>
-			            <th class="mobile-hidden">{% trans %}font.cssfamily{% endtrans %}</th>
-			            <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for font in fonts %}
-					<tr>
-						<td>
-							<a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
-						</td>
-						<td>{{ font.getReadableVariant|trans }}</td>
-						<td class="mobile-hidden">
-							{% if font.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
-							{% if font.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}
-							{% if font.getWOFF2Filename %}<div class="uk-badge uk-badge-table">WOFF2</div>{% endif %}
-							{% if font.getSVGFilename %}<div class="uk-badge uk-badge-table">SVG</div>{% endif %}
-							{% if font.getOTFFilename %}<div class="uk-badge uk-badge-table">OTF</div>{% endif %}
-						</td>
-						<td class="mobile-hidden"><code>{{ font.getHash }}</code></td>
-						<td>
-						{% spaceless %}
-							<a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsEditPage', { fontId: font.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-							<a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}" title="{% trans %}download{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
-							<a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
-						{% endspaceless %}
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</article>
+    <article class="content content-no-action-menu">
+        <div class="content-table-cont">
+            <table class="fonts content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>{% trans %}font.variant{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}font.files{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}font.cssfamily{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for font in fonts %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
+                        </td>
+                        <td>{{ font.getReadableVariant|trans }}</td>
+                        <td class="mobile-hidden">
+                            {% if font.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
+                            {% if font.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}
+                            {% if font.getWOFF2Filename %}<div class="uk-badge uk-badge-table">WOFF2</div>{% endif %}
+                            {% if font.getSVGFilename %}<div class="uk-badge uk-badge-table">SVG</div>{% endif %}
+                            {% if font.getOTFFilename %}<div class="uk-badge uk-badge-table">OTF</div>{% endif %}
+                        </td>
+                        <td class="mobile-hidden"><code>{{ font.getHash }}</code></td>
+                        <td class="table-actions-row">
+                        {% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsEditPage', { fontId: font.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}" title="{% trans %}download{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
+                        {% endspaceless %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
 </section>
 {% endblock %}
