@@ -83,9 +83,9 @@ class NodeSourceDocumentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                array($this, 'onPreSetData')
-            )
+            FormEvents::PRE_SET_DATA,
+            array($this, 'onPreSetData')
+        )
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
                 array($this, 'onPostSubmit')
