@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
-  ~
-  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
-  ~ of this software and associated documentation files (the "Software"), to deal
-  ~ in the Software without restriction, including without limitation the rights
-  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  ~ copies of the Software, and to permit persons to whom the Software is furnished
-  ~ to do so, subject to the following conditions:
-  ~ The above copyright notice and this permission notice shall be included in all
-  ~ copies or substantial portions of the Software.
-  ~
-  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-  ~ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-  ~ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  ~ IN THE SOFTWARE.
-  ~
-  ~ Except as contained in this notice, the name of the ROADIZ shall not
-  ~ be used in advertising or otherwise to promote the sale, use or other dealings
-  ~ in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
-  ~
-  ~ @file messages.fr.xlf
-  ~ @author Ambroise Maupate <ambroise@rezo-zero.com>
-  -->
-
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="fr">
+  <file original="" source-language="en" datatype="plaintext" target-language="fr">
     <body>
       <trans-unit xml:space="preserve" id="2" approved="yes">
         <source>node.%name%.updated</source>
@@ -4641,13 +4613,13 @@
         <source>back_to.folders</source>
         <target xml:lang="fr">Retourner à la liste des dossiers</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="folder.settings">
+      <trans-unit xml:space="preserve" id="folder.settings" approved="yes">
         <source>folder.settings</source>
-        <target xml:lang="fr" state="translated">Paramètres</target>
+        <target xml:lang="fr">Paramètres</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="folder.labels">
+      <trans-unit xml:space="preserve" id="folder.labels" approved="yes">
         <source>folder.labels</source>
-        <target xml:lang="fr" state="translated">Libellés</target>
+        <target xml:lang="fr">Libellés</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="delete.folder.%name%" approved="yes">
           <source>delete.folder.%name%</source>
@@ -6316,10 +6288,43 @@
             <target xml:lang="fr">Réponses</target>
             <note>In custom form nav bar.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="markdown.preview">
+      <trans-unit xml:space="preserve" id="markdown.preview" approved="yes">
             <source>markdown.preview</source>
-            <target xml:lang="fr" state="translated">Aperçu du Markdown</target>
+            <target xml:lang="fr">Aperçu du Markdown</target>
             <note>For markdown.preview button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.relative_url" approved="yes">
+          <source>document.relative_url</source>
+          <target xml:lang="fr">URL relatif</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.absolute_url" approved="yes">
+          <source>document.absolute_url</source>
+          <target xml:lang="fr">URL absolu</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.unprocessed_url" approved="yes">
+          <source>document.unprocessed_url</source>
+          <target xml:lang="fr">URL non-modifié</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.source_url" approved="yes">
+          <source>document.source_url</source>
+          <target xml:lang="fr">URL source</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.width" approved="yes">
+          <source>document.width</source>
+          <target xml:lang="fr">Largeur</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.height" approved="yes">
+          <source>document.height</source>
+          <target xml:lang="fr">Hauteur</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.filesize" approved="yes">
+          <source>document.filesize</source>
+          <target xml:lang="fr">Taille du fichier</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="reachable" approved="yes">
+          <source>reachable</source>
+          <target xml:lang="fr">Accessible</target>
+          <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
         </trans-unit>
     </body>
   </file>

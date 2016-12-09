@@ -10,7 +10,7 @@
             "source": source,
         } only %}
         <h1 class="content-title node-edit-source-title">
-            {{ "edit.nodeSource.%name%"|trans({'%name%': currentTitle})|truncate(25, false, '[…]') }}
+            {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|truncate(30, false, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
         {#{% include '@Rozier/nodes/navBack.html.twig' %}#}

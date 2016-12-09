@@ -34,8 +34,12 @@
         }
     }
     &-nav{
-        height:55px;
+        height:45px;
         border-bottom:1px dashed @nodes-widget-border;
+
+        @media (min-width: @screen-lg-min) {
+            height: 55px;
+        }
 
         .uk-navbar-brand{
             .widgetNavBarBrand();

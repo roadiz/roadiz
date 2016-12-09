@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en-US" datatype="plaintext">
+  <file original="" source-language="en" datatype="plaintext">
     <body>
       <trans-unit xml:space="preserve" id="2">
         <source>node.%name%.updated</source>
@@ -6450,6 +6450,12 @@
         <trans-unit xml:space="preserve" id="document.filesize">
           <source>document.filesize</source>
           <target></target>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="reachable">
+          <source>reachable</source>
+          <target></target>
+          <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
         </trans-unit>
     </body>
   </file>

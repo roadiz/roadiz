@@ -34,8 +34,12 @@
 }
 
 .custom-forms-widget-nav{
-    height:55px;
+    height:45px;
     border-bottom:1px dashed @custom-forms-widget-border;
+
+    @media (min-width: @screen-lg-min) {
+        height: 55px;
+    }
 
     .uk-navbar-brand{
        .widgetNavBarBrand();

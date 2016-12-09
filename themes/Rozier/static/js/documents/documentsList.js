@@ -15,7 +15,7 @@ DocumentsList = function(){
     _this.itemsWidth = 576;
     _this.contMarginLeft = 0;
 
-    _this.resize();
+    //_this.resize();
 };
 
 /**
@@ -25,15 +25,12 @@ DocumentsList = function(){
 DocumentsList.prototype.resize = function(){
     var _this = this;
 
-    // console.log('documents list resize');
-
-    if(_this.$cont.length){
+    /*if(_this.$cont.length){
         _this.contWidth = _this.$cont.actual('width');
         _this.itemsPerLine = Math.floor(_this.contWidth / _this.itemWidth);
         _this.itemsWidth = (_this.itemWidth * _this.itemsPerLine) - 16;
         _this.contMarginLeft = Math.floor((_this.contWidth - _this.itemsWidth)/2);
 
         _this.$cont[0].style.marginLeft = _this.contMarginLeft+'px';
-    }
-
+    }*/
 };

@@ -41,7 +41,7 @@
                         <tr><td>{% trans %}document.source_url{% endtrans %}</td><td>{{ document.viewer.embedFinder.source }}</td></tr>
                     {% endif %}
                     {% for key, info in infos %}
-                        <tr><td>{{ 'document.' ~ key }}</td><td>{{ info }}</td></tr>
+                        <tr><td>{{ ('document.' ~ key)|trans }}</td><td>{{ info }}</td></tr>
                     {% endfor %}
                 </table>
             </div>

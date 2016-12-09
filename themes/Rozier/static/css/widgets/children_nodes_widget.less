@@ -48,9 +48,13 @@
 }
 
 .children-nodes-nav{
-    height:@children-node-height;
+    height: 45px;
     border-bottom:1px dashed @children-nodes-border;
     overflow: hidden;
+
+    @media (min-width: @screen-lg-min) {
+        height: @children-node-height;
+    }
 
     .uk-navbar-brand{
         .widgetNavBarBrand();

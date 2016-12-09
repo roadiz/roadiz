@@ -181,7 +181,6 @@ Lazyload.prototype.applyContent = function(data) {
         $old.remove();
 
         _this.generalBind();
-        if(isMobile.any() === null) Rozier.centerVerticalObjects('ajax');
         $tempData.fadeIn(200, function () {
 
             $tempData.removeClass('new-content-global');
@@ -229,7 +228,7 @@ Lazyload.prototype.generalBind = function() {
     new CustomFormFieldsPosition();
     _this.nodeTreeContextActions = new NodeTreeContextActions();
 
-    _this.documentsList = new DocumentsList();
+    //_this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();

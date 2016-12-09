@@ -34,10 +34,14 @@
 }
 
 .documents-widget-nav{
-    min-height:55px;
+    min-height:45px;
     border-bottom:1px dashed @documents-widget-border;
 
-    .uk-navbar-brand{
+    @media (min-width: @screen-lg-min) {
+        min-height:55px;
+    }
+
+    .uk-navbar-brand {
         .widgetNavBarBrand();
     }
 

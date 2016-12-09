@@ -2,33 +2,35 @@
     {% spaceless %}
     <ul class="uk-navbar-nav">
         {% if node != session.user.chroot %}
-        <li class="uk-navbar-item{% if current == 'source' %} uk-active{% endif %}">
-            {% if source and
-                  translation not in node.handler.availableTranslations %}
-            {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId:source.translation.id }) %}
-            {% else %}
-            {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId:translation.id }) %}
+            <li class="uk-navbar-item{% if current == 'source' %} uk-active{% endif %}">
+                {% if source and
+                      translation not in node.handler.availableTranslations %}
+                {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId:source.translation.id }) %}
+                {% else %}
+                {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId:translation.id }) %}
+                {% endif %}
+                <a class="uk-navbar-link" href="{{ url }}">{% trans %}node.content{% endtrans %}</a>
+            </li>
+            {% if node.nodeType.reachable and (is_granted('ROLE_ACCESS_NODES_SETTING')) %}
+                <li class="uk-navbar-item{% if current == 'edit' %} uk-active{% endif %}" >
+                    <a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.id }) }}">{% trans %}node.parameters{% endtrans %}</a>
+                </li>
             {% endif %}
-            <a class="uk-navbar-link" href="{{ url }}">{% trans %}node.content{% endtrans %}</a>
-        </li>
-        {% if (is_granted('ROLE_ACCESS_NODES_SETTING')) %}
-        <li class="uk-navbar-item{% if current == 'edit' %} uk-active{% endif %}" >
-            <a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.id }) }}">{% trans %}node.parameters{% endtrans %}</a>
-        </li>
-        {% endif %}
-        {% if (is_granted('ROLE_ACCESS_TAGS')) %}
-        <li class="uk-navbar-item{% if current == 'tags' %} uk-active{% endif %}">
-            <a class="uk-navbar-link" href="{{ path('nodesEditTagsPage', { nodeId: node.id}) }}">{% trans %}tags{% endtrans %}</a>
-        </li>
-        {% endif %}
-        <li class="uk-navbar-item{% if current == 'seo' %} uk-active{% endif %}">
-            <a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.id, translationId:translation.id}) }}">{% trans %}seo{% endtrans %}</a>
-        </li>
+            {% if (is_granted('ROLE_ACCESS_TAGS')) %}
+                <li class="uk-navbar-item{% if current == 'tags' %} uk-active{% endif %}">
+                    <a class="uk-navbar-link" href="{{ path('nodesEditTagsPage', { nodeId: node.id}) }}">{% trans %}tags{% endtrans %}</a>
+                </li>
+            {% endif %}
+            {% if node.nodeType.reachable %}
+                <li class="uk-navbar-item{% if current == 'seo' %} uk-active{% endif %}">
+                    <a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.id, translationId:translation.id}) }}">{% trans %}seo{% endtrans %}</a>
+                </li>
+            {% endif %}
         {% endif %}
         {% if not node.nodeType.isHidingNodes %}
-        <li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
-            <a class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.id}) }}">{% trans %}tree{% endtrans %}</a>
-        </li>
+            <li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
+                <a class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.id}) }}">{% trans %}tree{% endtrans %}</a>
+            </li>
         {% endif %}
         <li class="uk-navbar-item{% if current == 'history' %} uk-active{% endif %}">
             <a data-uk-tooltip="{animation:true}" title="{% trans %}history{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesHistoryPage', { nodeId: node.id}) }}"><i class="uk-icon uk-icon-clock-o"></i></a>

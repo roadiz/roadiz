@@ -47,8 +47,10 @@
     position: absolute;
     width: @login-W; height: @login-H;
     background-color: white;
-    margin: -@login-H/2 auto 0 -@login-W/2;
-    left: 50%;top: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
     padding: 0;
     text-align: center;
     .box-sizing();
@@ -56,8 +58,8 @@
     #login-infos {
         position: absolute;
         width: @login-BarW;
-
     }
+
     #login-logo {
         position: absolute;
         display: table-row;

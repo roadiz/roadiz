@@ -73,6 +73,10 @@ class NodeTypeType extends AbstractType
                     'label' => 'visible',
                     'required' => false,
                 ])
+                ->add('reachable', 'checkbox', [
+                    'label' => 'reachable',
+                    'required' => false,
+                ])
                 ->add('newsletterType', 'checkbox', [
                     'label' => 'nodeType.newsletterType',
                     'required' => false,

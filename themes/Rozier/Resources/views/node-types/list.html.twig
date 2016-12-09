@@ -40,7 +40,18 @@
                 </thead>
                 <tbody>
                     {% for type in node_types %}
-                        <tr>
+                        {% set classes = ['node-type-item'] %}
+                        {% if not type.reachable %}
+                            {% set classes = classes|merge(['not-reachable']) %}
+                        {% endif %}
+                        {% if not type.visible %}
+                            {% set classes = classes|merge(['not-visible']) %}
+                        {% endif %}
+                        {% if type.hidingNodes %}
+                            {% set classes = classes|merge(['hiding-children']) %}
+                        {% endif %}
+
+                        <tr class="{{ classes|join(' ') }}">
                             <td class="name"><a href="{{ path('nodeTypesEditPage', { nodeTypeId: type.getId }) }}">
                                 <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getName }}
                             </a></td>

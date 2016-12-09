@@ -2,72 +2,69 @@
    LESS 1280
 \*------------------------------------*/
 
+@media screen and (max-width: @screen-md-max) {
+    /* -------- STYLES -------- */
 
-/*
- * Styles for screens with width <= 1280
- */
+    // Node edit list
+    .node-type-field-head-name, .node-type-field-name{
+        width:25%;
+    }
 
-/* -------- STYLES -------- */
+    .node-type-field-head-label, .node-type-field-label{
+        width:25%;
+    }
 
-// Node edit list
-.node-type-field-head-name, .node-type-field-name{
-    width:25%;
-}
-
-.node-type-field-head-label, .node-type-field-label{
-    width:25%;
-}
-
-.node-type-field-head-type, .node-type-field-type{
-    width:25%;
-}
+    .node-type-field-head-type, .node-type-field-type{
+        width:25%;
+    }
 
 
-/* -------- User panel -------- */
+    /* -------- User panel -------- */
 
-#main-container-inner{
+    #main-container-inner{
 
-    #user-panel{
-        width:90px;
+        #user-panel{
+            width:90px;
 
-        .uk-icon-button{
-            margin: 0 5px 12px 5px;
-        }
+            .uk-icon-button{
+                margin: 0 5px 12px 5px;
+            }
 
-        #cms-version {
-            a {
-                display: block;
-                margin:0 auto 12px auto;
+            #cms-version {
+                a {
+                    display: block;
+                    margin:0 auto 12px auto;
+                }
+            }
+
+            .dev-mode {
+                font-size: 9px;
+            }
+
+            #user {
+                h3 {
+                    font-size: 10px;
+                    margin: 5px 6px;
+                }
             }
         }
 
-        .dev-mode {
-            font-size: 9px;
+        #user-picture{
+            width:56px; height:56px;
+
+            img{
+                width:56px; height:56px;
+            }
         }
 
         #user {
-            h3 {
-                font-size: 10px;
-                margin: 5px 6px;
+            .user-actions{
+                padding:15px 0px;
             }
         }
     }
 
-    #user-picture{
-        width:56px; height:56px;
-
-        img{
-            width:56px; height:56px;
-        }
+    .navbar-navigation > .uk-navbar-nav li a {
+        font-size: 12px;
     }
-
-    #user {
-        .user-actions{
-            padding:15px 0px;
-        }
-    }
-}
-
-.navbar-navigation > .uk-navbar-nav li a {
-    font-size: 12px;
 }

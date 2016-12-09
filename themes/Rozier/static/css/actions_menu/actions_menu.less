@@ -40,12 +40,18 @@
 
 .actions-menu {
     position: fixed;
-    right: 0px;
+    top: 220px;
+    right: -56px;
     z-index: 9999;
     width:56px;
     .box-sizing();
     background:white;
     box-shadow: 3px 5px 30px rgba(0,0,0,0.1);
+
+    @media (min-width: @screen-sm-min) and (min-height: 700px) {
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
     header,
     .uk-button {
@@ -128,8 +134,10 @@
             border-color:transparent;
             border-color:#ddd;
 
-            .label-text {
-                left: -100%;
+            @media (min-width: @screen-sm-min) {
+                .label-text {
+                    left: -100%;
+                }
             }
         }
 
@@ -153,8 +161,10 @@
             background-color: @alert-color;
         }
         &:hover {
-            .label-text {
-                left: -100%;
+            @media (min-width: @screen-sm-min) {
+                .label-text {
+                    left: -100%;
+                }
             }
         }
     }
