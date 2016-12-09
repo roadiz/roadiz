@@ -13,8 +13,12 @@
     position: absolute;
     right: 0;
     bottom: 0px;
-
     border:none;
+
+    @media (max-width: @screen-xs-max) {
+        top: 0;
+        bottom: auto;
+    }
 
     .uk-navbar-nav{
         & > li{
