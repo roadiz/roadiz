@@ -28,7 +28,7 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\DevKernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 
 if (version_compare(phpversion(), '5.4.3', '<')) {
@@ -58,7 +58,7 @@ define('ROADIZ_ROOT', dirname(__FILE__));
 require("vendor/autoload.php");
 
 
-$kernel = Kernel::getInstance('dev', true);
+$kernel = DevKernel::getInstance('dev', true, false, 'my_site');
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);
