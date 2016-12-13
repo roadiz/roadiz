@@ -262,6 +262,8 @@ class DocumentViewer implements ViewableInterface
         } elseif ($this->document->isAudio()) {
             $assignation['sources'] = $this->getSourcesFiles();
             return $this->getTwig()->render('documents/audio.html.twig', $assignation);
+        } elseif ($this->document->isPdf()) {
+            return $this->getTwig()->render('documents/pdf.html.twig', $assignation);
         } else {
             return 'document.format.unknown';
         }

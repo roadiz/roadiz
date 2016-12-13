@@ -1,0 +1,11 @@
+{% spaceless %}
+<object
+    type="application/pdf"
+    {% if width %}width="{{ width }}" {% endif %}
+    {% if height %}height="{{ height }}" {% endif %}
+    {% if class %}class="{{ class }}" {% endif %}
+    {% if identifier %}id="{{ identifier }}" {% endif %}
+    data="{{ url }}">
+    <p>Your browser does not support PDF native viewer.</p>
+</object>
+{% endspaceless %}

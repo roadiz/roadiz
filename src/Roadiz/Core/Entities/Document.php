@@ -264,6 +264,16 @@ class Document extends AbstractDateTimed
     }
 
     /**
+     * Is current document a PDF file.
+     *
+     * @return bool
+     */
+    public function isPdf()
+    {
+        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'pdf';
+    }
+
+    /**
      * @ORM\Column(type="string")
      */
     private $folder;
