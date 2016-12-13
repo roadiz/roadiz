@@ -181,7 +181,7 @@ class DocumentFactory
 
             if (StringHandler::cleanForFilename($this->uploadedFile->getClientOriginalName()) == $document->getFilename()) {
                 $finder = new Finder();
-                $previousFolder = $document->getFilesFolder() . '/' . $document->getFolder();
+                $previousFolder = Document::getFilesFolder() . '/' . $document->getFolder();
 
                 if ($fs->exists($previousFolder)) {
                     $finder->files()->in($previousFolder);

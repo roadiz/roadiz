@@ -56,6 +56,8 @@ class DocumentHandler
     /**
      * Make current document private moving its file
      * to the secured /files/private folder.
+     *
+     * You must explicitly call flush after this method.
      */
     public function makePrivate()
     {
@@ -74,7 +76,6 @@ class DocumentHandler
                     $this->document->getPrivateAbsolutePath()
                 );
                 $this->document->setPrivate(true);
-                Kernel::getService('em')->flush();
             } else {
                 throw new \RuntimeException("Can’t make private a document file which does not exist.", 1);
             }
@@ -86,6 +87,8 @@ class DocumentHandler
     /**
      * Make current document public moving off its file
      * from the secured /files/private folder into /files folder.
+     *
+     * You must explicitly call flush after this method.
      */
     public function makePublic()
     {
@@ -105,7 +108,6 @@ class DocumentHandler
                     $this->document->getPublicAbsolutePath()
                 );
                 $this->document->setPrivate(false);
-                Kernel::getService('em')->flush();
             } else {
                 throw new \RuntimeException("Can’t make public a document file which does not exist.", 1);
             }
