@@ -147,6 +147,8 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     {
         parent::getSource($options);
 
+        $queryString = [];
+
         if ($options['displayTitle']) {
             $queryString['title'] = (int) $options['displayTitle'];
         }

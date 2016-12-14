@@ -74,7 +74,7 @@ class ViewOptionsResolver extends UrlOptionsResolver
             /*
              * Youtube
              */
-            'modestbrandin' => true,
+            'modestbranding' => true,
             'rel' => false,
             'showinfo' => false,
             'start' => false,
@@ -112,7 +112,7 @@ class ViewOptionsResolver extends UrlOptionsResolver
         $this->setAllowedTypes('api', ['boolean']);
 
         // Youtube
-        $this->setAllowedTypes('modestbrandin', ['boolean']);
+        $this->setAllowedTypes('modestbranding', ['boolean']);
         $this->setAllowedTypes('rel', ['boolean']);
         $this->setAllowedTypes('showinfo', ['boolean']);
         $this->setAllowedTypes('start', ['boolean']);

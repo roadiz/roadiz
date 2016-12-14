@@ -624,6 +624,15 @@ class Document extends AbstractDateTimed
     }
 
     /**
+     * @return bool
+     */
+    public function fileExists()
+    {
+        $fs = new Filesystem();
+        return $fs->exists($this->getAbsolutePath());
+    }
+
+    /**
      * Unlink file after document has been deleted.
      *
      * @ORM\PostRemove

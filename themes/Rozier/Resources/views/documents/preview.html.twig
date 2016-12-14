@@ -12,6 +12,9 @@
 
         <article class="content content-document-preview">
             <div class="content-inner">
+                {% if not document.fileExists %}
+                    <p class="uk-alert uk-alert-danger"><i class="uk-icon-error"></i> {% trans %}current.document.file.does.not.exist{% endtrans %}</p>
+                {% endif %}
                 {% if not document.private %}
                     {% if document.image or document.svg or document.video or document.pdf %}
                         {% if document.pdf %}

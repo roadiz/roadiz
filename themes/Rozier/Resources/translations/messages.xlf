@@ -6452,6 +6452,12 @@
           <target></target>
         </trans-unit>
 
+        <trans-unit xml:space="preserve" id="current.document.file.does.not.exist">
+          <source>current.document.file.does.not.exist</source>
+          <target></target>
+        </trans-unit>
+
+
         <trans-unit xml:space="preserve" id="reachable">
           <source>reachable</source>
           <target></target>
