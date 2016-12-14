@@ -41,23 +41,14 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     protected static $platform = 'youtube';
 
     /**
-     * Create a new Youtube video handler with its embed id.
-     *
-     * @param string $embedId Youtube video identifier
-     */
-    public function __construct($embedId)
-    {
-        $this->embedId = $embedId;
-    }
-
-    /**
      * Tell if embed media exists after its API feed.
      *
      * @return boolean
      */
     public function exists()
     {
-        if ($this->getFeed() !== false && $this->getFeed()['items'][0]) {
+        if ($this->getFeed() !== false &&
+            isset($this->getFeed()['items'][0])) {
             return true;
         } else {
             return false;

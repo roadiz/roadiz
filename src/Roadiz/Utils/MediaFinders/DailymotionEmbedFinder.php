@@ -39,16 +39,6 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     protected static $platform = 'dailymotion';
 
     /**
-     * Create a new Dailymotion video handler with its embed id.
-     *
-     * @param string $embedId Dailymotion video identifier
-     */
-    public function __construct($embedId)
-    {
-        $this->embedId = $embedId;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getMediaTitle()

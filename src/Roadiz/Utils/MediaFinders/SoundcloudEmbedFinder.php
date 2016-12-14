@@ -41,16 +41,6 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
     protected static $platform = 'soundcloud';
 
     /**
-     * Create a new Soundcloud video handler with its embed id.
-     *
-     * @param string $embedId Soundcloud video identifier
-     */
-    public function __construct($embedId)
-    {
-        $this->embedId = $embedId;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getMediaTitle()

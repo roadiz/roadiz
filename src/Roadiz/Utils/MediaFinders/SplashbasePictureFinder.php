@@ -40,9 +40,20 @@ class SplashbasePictureFinder extends AbstractEmbedFinder
     private $client;
     protected static $platform = 'splashbase';
 
-    public function __construct()
+    /**
+     * SplashbasePictureFinder constructor.
+     * @param string $embedId
+     */
+    public function __construct($embedId = '')
     {
+        parent::__construct($embedId);
+
         $this->client = new Client();
+    }
+
+    protected function validateEmbedId($embedId = "")
+    {
+        return $embedId;
     }
 
     /**

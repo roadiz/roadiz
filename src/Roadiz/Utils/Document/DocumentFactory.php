@@ -39,6 +39,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -51,7 +52,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class DocumentFactory
 {
     /**
-     * @var UploadedFile
+     * @var File
      */
     private $uploadedFile;
     /**
@@ -74,14 +75,14 @@ class DocumentFactory
 
     /**
      * DocumentFactory constructor.
-     * @param UploadedFile $uploadedFile
+     * @param File $uploadedFile
      * @param EntityManager $em
      * @param EventDispatcherInterface $dispatcher
      * @param Folder $folder
      * @param LoggerInterface $logger
      */
     public function __construct(
-        UploadedFile $uploadedFile,
+        File $uploadedFile,
         EntityManager $em,
         EventDispatcherInterface $dispatcher,
         Folder $folder = null,
@@ -107,7 +108,7 @@ class DocumentFactory
     {
         if (($document->getMimeType() == "text/plain" ||
                 $document->getMimeType() == 'text/html') &&
-            preg_match('#\.svg$#', $this->uploadedFile->getClientOriginalName())) {
+                preg_match('#\.svg$#', $document->getFilename())) {
             $this->logger->debug('Uploaded a SVG without xml declaration. Presuming it’s a valid SVG file.');
             $document->setMimeType('image/svg+xml');
         }
@@ -121,82 +122,23 @@ class DocumentFactory
      */
     public function getDocument()
     {
-        if ($this->uploadedFile !== null &&
-            $this->uploadedFile->getError() == UPLOAD_ERR_OK &&
-            $this->uploadedFile->isValid()) {
-            try {
-                $document = new Document();
-                $document->setFilename($this->uploadedFile->getClientOriginalName());
-                $document->setMimeType($this->uploadedFile->getMimeType());
-                $this->em->persist($document);
-
-                $this->parseSvgMimeType($document);
-
-                if (null !== $this->folder) {
-                    $document->addFolder($this->folder);
-                    $this->folder->addDocument($document);
-                }
-
-                $this->uploadedFile->move(
-                    Document::getFilesFolder() . '/' . $document->getFolder(),
-                    $document->getFilename()
-                );
-
-                if ($document->isImage()) {
-                    $this->dispatcher->dispatch(
-                        DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
-                        new FilterDocumentEvent($document)
-                    );
-                }
-
-                return $document;
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
-                return null;
-            }
+        if ($this->uploadedFile instanceof UploadedFile &&
+            !$this->uploadedFile->isValid()) {
+            return null;
         }
 
-        return null;
-    }
-
-    /**
-     * Updates a document from UploadedFile, Be careful, this method does not flush.
-     *
-     * @param Document $document
-     * @return Document
-     */
-    public function updateDocument(Document $document)
-    {
-        $fs = new Filesystem();
-
-        if ($this->uploadedFile !== null &&
-            $this->uploadedFile->getError() == UPLOAD_ERR_OK &&
-            $this->uploadedFile->isValid()) {
-            /*
-             * In case file already exists
-             */
-            if ($fs->exists($document->getAbsolutePath())) {
-                $fs->remove($document->getAbsolutePath());
-            }
-
-            if (StringHandler::cleanForFilename($this->uploadedFile->getClientOriginalName()) == $document->getFilename()) {
-                $finder = new Finder();
-                $previousFolder = Document::getFilesFolder() . '/' . $document->getFolder();
-
-                if ($fs->exists($previousFolder)) {
-                    $finder->files()->in($previousFolder);
-                    // Remove Precious folder if it's empty
-                    if ($finder->count() == 0) {
-                        $fs->remove($previousFolder);
-                    }
-                }
-
-                $document->setFolder(substr(hash("crc32b", date('YmdHi')), 0, 12));
-            }
-
-            $document->setFilename($this->uploadedFile->getClientOriginalName());
+        try {
+            $document = new Document();
+            $document->setFilename($this->getFileName());
             $document->setMimeType($this->uploadedFile->getMimeType());
+            $this->em->persist($document);
+
             $this->parseSvgMimeType($document);
+
+            if (null !== $this->folder) {
+                $document->addFolder($this->folder);
+                $this->folder->addDocument($document);
+            }
 
             $this->uploadedFile->move(
                 Document::getFilesFolder() . '/' . $document->getFolder(),
@@ -209,7 +151,81 @@ class DocumentFactory
                     new FilterDocumentEvent($document)
                 );
             }
+
+            return $document;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return null;
         }
+    }
+
+    /**
+     * Updates a document from UploadedFile, Be careful, this method does not flush.
+     *
+     * @param Document $document
+     * @return Document
+     */
+    public function updateDocument(Document $document)
+    {
+        $fs = new Filesystem();
+
+        if ($this->uploadedFile instanceof UploadedFile &&
+            !$this->uploadedFile->isValid()) {
+            return $document;
+        }
+
+        /*
+         * In case file already exists
+         */
+        if ($fs->exists($document->getAbsolutePath())) {
+            $fs->remove($document->getAbsolutePath());
+        }
+
+        if (StringHandler::cleanForFilename($this->getFileName()) == $document->getFilename()) {
+            $finder = new Finder();
+            $previousFolder = Document::getFilesFolder() . '/' . $document->getFolder();
+
+            if ($fs->exists($previousFolder)) {
+                $finder->files()->in($previousFolder);
+                // Remove Precious folder if it's empty
+                if ($finder->count() == 0) {
+                    $fs->remove($previousFolder);
+                }
+            }
+
+            $document->setFolder(substr(hash("crc32b", date('YmdHi')), 0, 12));
+        }
+
+        $document->setFilename($this->getFileName());
+        $document->setMimeType($this->uploadedFile->getMimeType());
+        $this->parseSvgMimeType($document);
+
+        $this->uploadedFile->move(
+            Document::getFilesFolder() . '/' . $document->getFolder(),
+            $document->getFilename()
+        );
+
+        if ($document->isImage()) {
+            $this->dispatcher->dispatch(
+                DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
+                new FilterDocumentEvent($document)
+            );
+        }
+
         return $document;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFileName()
+    {
+        $fileName = $this->uploadedFile->getFilename();
+
+        if ($this->uploadedFile instanceof UploadedFile) {
+            $fileName = $this->uploadedFile->getClientOriginalName();
+        }
+
+        return $fileName;
     }
 }

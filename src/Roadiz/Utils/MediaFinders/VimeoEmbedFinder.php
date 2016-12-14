@@ -39,13 +39,17 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     protected static $platform = 'vimeo';
 
     /**
-     * Create a new Vimeo video handler with its embed id.
+     * Validate extern Id against platform naming policy.
      *
-     * @param string $embedId Vimeo video identifier
+     * @param string $embedId
+     * @return string
      */
-    public function __construct($embedId)
+    protected function validateEmbedId($embedId = "")
     {
-        $this->embedId = $embedId;
+        if (preg_match('#(?<id>[0-9]+)$#', $embedId, $matches)) {
+            return $matches['id'];
+        }
+        throw new \InvalidArgumentException('embedId.is_not_valid');
     }
 
     /**

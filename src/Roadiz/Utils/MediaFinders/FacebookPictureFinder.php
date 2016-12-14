@@ -36,6 +36,9 @@ use GuzzleHttp\Client;
  */
 class FacebookPictureFinder
 {
+    /**
+     * @var string
+     */
     protected $facebookUserAlias;
     protected $response;
 

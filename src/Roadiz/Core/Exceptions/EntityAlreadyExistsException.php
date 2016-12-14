@@ -33,7 +33,7 @@ namespace RZ\Roadiz\Core\Exceptions;
  * Exception raised when trying to create or update
  * an entity when a sibling already exists.
  */
-class EntityAlreadyExistsException extends \Exception
+class EntityAlreadyExistsException extends \RuntimeException
 {
 
 }
