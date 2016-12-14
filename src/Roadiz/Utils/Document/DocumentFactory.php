@@ -54,7 +54,7 @@ class DocumentFactory
     /**
      * @var File
      */
-    private $uploadedFile;
+    private $file;
     /**
      * @var Folder
      */
@@ -75,20 +75,20 @@ class DocumentFactory
 
     /**
      * DocumentFactory constructor.
-     * @param File $uploadedFile
+     * @param File $file
      * @param EntityManager $em
      * @param EventDispatcherInterface $dispatcher
      * @param Folder $folder
      * @param LoggerInterface $logger
      */
     public function __construct(
-        File $uploadedFile,
+        File $file,
         EntityManager $em,
         EventDispatcherInterface $dispatcher,
         Folder $folder = null,
         LoggerInterface $logger = null
     ) {
-        $this->uploadedFile = $uploadedFile;
+        $this->file = $file;
         $this->folder = $folder;
         $this->logger = $logger;
         $this->em = $em;
@@ -122,41 +122,36 @@ class DocumentFactory
      */
     public function getDocument()
     {
-        if ($this->uploadedFile instanceof UploadedFile &&
-            !$this->uploadedFile->isValid()) {
+        if ($this->file instanceof UploadedFile &&
+            !$this->file->isValid()) {
             return null;
         }
 
-        try {
-            $document = new Document();
-            $document->setFilename($this->getFileName());
-            $document->setMimeType($this->uploadedFile->getMimeType());
-            $this->em->persist($document);
+        $document = new Document();
+        $document->setFilename($this->getFileName());
+        $document->setMimeType($this->file->getMimeType());
+        $this->em->persist($document);
 
-            $this->parseSvgMimeType($document);
+        $this->parseSvgMimeType($document);
 
-            if (null !== $this->folder) {
-                $document->addFolder($this->folder);
-                $this->folder->addDocument($document);
-            }
+        if (null !== $this->folder) {
+            $document->addFolder($this->folder);
+            $this->folder->addDocument($document);
+        }
 
-            $this->uploadedFile->move(
-                Document::getFilesFolder() . '/' . $document->getFolder(),
-                $document->getFilename()
+        $this->file->move(
+            Document::getFilesFolder() . '/' . $document->getFolder(),
+            $document->getFilename()
+        );
+
+        if ($document->isImage()) {
+            $this->dispatcher->dispatch(
+                DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
+                new FilterDocumentEvent($document)
             );
-
-            if ($document->isImage()) {
-                $this->dispatcher->dispatch(
-                    DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
-                    new FilterDocumentEvent($document)
-                );
-            }
-
-            return $document;
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            return null;
         }
+
+        return $document;
     }
 
     /**
@@ -169,8 +164,8 @@ class DocumentFactory
     {
         $fs = new Filesystem();
 
-        if ($this->uploadedFile instanceof UploadedFile &&
-            !$this->uploadedFile->isValid()) {
+        if ($this->file instanceof UploadedFile &&
+            !$this->file->isValid()) {
             return $document;
         }
 
@@ -197,10 +192,10 @@ class DocumentFactory
         }
 
         $document->setFilename($this->getFileName());
-        $document->setMimeType($this->uploadedFile->getMimeType());
+        $document->setMimeType($this->file->getMimeType());
         $this->parseSvgMimeType($document);
 
-        $this->uploadedFile->move(
+        $this->file->move(
             Document::getFilesFolder() . '/' . $document->getFolder(),
             $document->getFilename()
         );
@@ -220,10 +215,10 @@ class DocumentFactory
      */
     protected function getFileName()
     {
-        $fileName = $this->uploadedFile->getFilename();
+        $fileName = $this->file->getFilename();
 
-        if ($this->uploadedFile instanceof UploadedFile) {
-            $fileName = $this->uploadedFile->getClientOriginalName();
+        if ($this->file instanceof UploadedFile) {
+            $fileName = $this->file->getClientOriginalName();
         }
 
         return $fileName;

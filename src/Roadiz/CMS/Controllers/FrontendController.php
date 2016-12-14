@@ -225,7 +225,7 @@ class FrontendController extends AppController
      * @param Container $themeContainer
      */
     public function __initFromOtherController(
-        array &$baseAssignation = null,
+        array &$baseAssignation = [],
         Container $themeContainer = null
     ) {
         $this->assignation = $baseAssignation;

@@ -138,8 +138,7 @@ class NodesSourcesHandler
      * Get documents linked to current node-source for a given fieldname.
      *
      * @param string $fieldName Name of the node-type field
-     *
-     * @return ArrayCollection Collection of documents
+     * @return Document[]
      */
     public function getDocumentsFromFieldName($fieldName)
     {

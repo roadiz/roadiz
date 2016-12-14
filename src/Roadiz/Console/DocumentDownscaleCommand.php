@@ -57,7 +57,8 @@ class DocumentDownscaleCommand extends Command
         $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $this->configuration = $this->getHelperSet()->get('configuration')->getConfiguration();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $this->questionHelper = $this->getHelperSet()->get('question');
+        $questionHelper = $this->getHelperSet()->get('question');
+        $text = '';
 
         if (!empty($this->configuration['assetsProcessing']['maxPixelSize']) &&
             $this->configuration['assetsProcessing']['maxPixelSize'] > 0) {
@@ -72,7 +73,7 @@ class DocumentDownscaleCommand extends Command
                 '<question>Are you sure to downscale all your image documents to ' . $this->configuration['assetsProcessing']['maxPixelSize'] . 'px?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
+            if ($questionHelper->ask(
                 $input,
                 $output,
                 $confirmation

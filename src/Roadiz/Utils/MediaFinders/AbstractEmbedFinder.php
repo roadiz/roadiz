@@ -225,7 +225,6 @@ abstract class AbstractEmbedFinder
             throw new \RuntimeException('no.embed.document.found');
         }
 
-
         $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
                                             ->findOneBy([
                                                 'embedId'=>$this->embedId,
@@ -246,6 +245,11 @@ abstract class AbstractEmbedFinder
         );
 
         $document = $documentFactory->getDocument();
+
+        if (null === $document) {
+            throw new \RuntimeException('document.cannot_persist');
+        }
+
         $document->setEmbedId($this->embedId);
         $document->setEmbedPlatform(static::$platform);
 
@@ -254,8 +258,8 @@ abstract class AbstractEmbedFinder
          * for each translation
          */
         $translations = $container['em']
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findAll();
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findAll();
 
         foreach ($translations as $translation) {
             $documentTr = new DocumentTranslation();
@@ -268,8 +272,8 @@ abstract class AbstractEmbedFinder
             $container['em']->persist($documentTr);
         }
 
-
         $container['em']->flush();
+
 
         return $document;
     }
@@ -325,7 +329,7 @@ abstract class AbstractEmbedFinder
      * Download a picture from the embed media platform
      * to get a thumbnail.
      *
-     * @return File|null.
+     * @return File|null
      */
     public function downloadThumbnail()
     {
@@ -365,7 +369,11 @@ abstract class AbstractEmbedFinder
     /**
      * Gets the value of key.
      *
-     * @return mixed
+     * Key is the access_token which could be asked to consume an API.
+     * For example, for Youtube it must be your API server key. For Soundcloud
+     * it should be you app client Id.
+     *
+     * @return string
      */
     public function getKey()
     {
@@ -379,7 +387,7 @@ abstract class AbstractEmbedFinder
      * For example, for Youtube it must be your API server key. For Soundcloud
      * it should be you app client Id.
      *
-     * @param mixed $key the key
+     * @param string $key the key
      *
      * @return self
      */

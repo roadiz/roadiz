@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -61,6 +62,7 @@ class NodesCommand extends Command
         $table = new Table($output);
         $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);
         $tableContent = [];
+        $nodes = [];
 
         if ($input->getOption('type')) {
             $nodeType = $this->entityManager
@@ -77,6 +79,7 @@ class NodesCommand extends Command
                 ->findBy([], ['nodeName' => 'ASC']);
         }
 
+        /** @var Node $node */
         foreach ($nodes as $node) {
             $tableContent[] = [
                 $node->getId(),

@@ -129,8 +129,7 @@ class NodeSourceDocumentType extends AbstractType
      */
     public function onPreSetData(FormEvent $event)
     {
-        $this->selectedDocuments = $this->nodeSource->getHandler()
-            ->getDocumentsFromFieldName($this->nodeTypeField->getName());
+        $this->selectedDocuments = $this->nodeSource->getHandler()->getDocumentsFromFieldName($this->nodeTypeField->getName());
         $event->setData($this->selectedDocuments);
     }
 

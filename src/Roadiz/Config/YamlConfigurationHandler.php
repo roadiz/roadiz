@@ -43,7 +43,7 @@ class YamlConfigurationHandler extends ConfigurationHandler
 {
     /**
      * @param string $file
-     * @return array
+     * @return string|array|\stdClass
      * @throws NoYamlConfigurationFoundException
      */
     protected function loadFromFile($file)
