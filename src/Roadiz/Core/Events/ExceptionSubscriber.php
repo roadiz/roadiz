@@ -33,6 +33,7 @@ use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -186,6 +187,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     protected function getHumanExceptionTitle(\Exception $e)
     {
+        if ($e instanceof NoConfigurationFoundException) {
+            return "No configuration file has been found. Did you run composer install before using Roadiz?";
+        }
+
         if ($e instanceof ResourceNotFoundException ||
             $e instanceof NotFoundHttpException) {
             return "Resource not found.";

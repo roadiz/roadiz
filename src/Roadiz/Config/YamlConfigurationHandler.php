@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2016.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,54 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file JsonConfigurationServiceProvider.php
- * @author Ambroise Maupate
+ * @file YamlConfigurationHandler.php
+ * @author ambroisemaupate
+ *
  */
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Config;
 
-use Pimple\Container;
-use RZ\Roadiz\Console\Tools\Configuration;
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
- * Register configuration services for dependency injection container.
+ * Class YamlConfiguration
+ * @package RZ\Roadiz\Console\Tools
  */
-class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvider
+class YamlConfigurationHandler extends ConfigurationHandler
 {
     /**
-     * @param Container $container [description]
-     * @return Container
+     * @param string $file
+     * @return array
+     * @throws NoYamlConfigurationFoundException
      */
-    public function register(Container $container)
+    protected function loadFromFile($file)
     {
-        parent::register($container);
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configuration = new Configuration(
-                $c['kernel']->getCacheDir(),
-                $c['kernel']->getRootDir() . '/conf/config.yml'
-            );
+        if (file_exists($file)) {
+            return Yaml::parse($file);
+        }
 
-            if (false !== $configuration->load()) {
-                return $configuration->getConfiguration();
-            } else {
-                throw new NoConfigurationFoundException();
-            }
-        };
+        throw new NoYamlConfigurationFoundException();
+    }
 
-        return $container;
+    /**
+     * @return bool
+     */
+    public function writeConfiguration()
+    {
+        if (file_exists($this->path)) {
+            unlink($this->path);
+        }
+
+        try {
+            $dumper = new Dumper();
+            $yaml = $dumper->dump($this->getConfiguration(), 4);
+
+            file_put_contents($this->path, $yaml);
+            return true;
+        } catch (ParseException $e) {
+            return false;
+        }
     }
 }

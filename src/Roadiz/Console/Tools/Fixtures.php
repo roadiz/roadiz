@@ -27,11 +27,11 @@
  * @file Fixtures.php
  * @author Ambroise Maupate
  */
-
 namespace RZ\Roadiz\Console\Tools;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Config\YamlConfigurationHandler;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -270,15 +270,13 @@ class Fixtures
          * Update timezone
          */
         if (!empty($data['timezone'])) {
-            $conf = new YamlConfiguration(
+            $conf = new YamlConfigurationHandler(
                 $this->cacheDir,
                 $this->debug,
                 $this->configPath
             );
-            if (false === $conf->load()) {
-                $conf->setConfiguration($conf->getDefaultConfiguration());
-            }
-            $config = $conf->getConfiguration();
+
+            $config = $conf->load();
             $config['timezone'] = $data['timezone'];
 
             $conf->setConfiguration($config);

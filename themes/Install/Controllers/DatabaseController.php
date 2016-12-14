@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,12 +29,13 @@
  */
 namespace Themes\Install\Controllers;
 
-use RZ\Roadiz\Console\Tools\Configuration;
+use RZ\Roadiz\Config\ConfigurationHandler;
 use RZ\Roadiz\Console\Tools\Fixtures;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
+use RZ\Roadiz\Config\YamlConfigurationHandler;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -55,73 +56,58 @@ class DatabaseController extends InstallApp
      */
     public function databaseAction(Request $request)
     {
-        $config = new YamlConfiguration(
-            $this->get('kernel')->getCacheDir(),
-            $this->get('kernel')->isDebug(),
-            $this->get('kernel')->getRootDir() . '/conf/config.yml'
-        );
-        if (false === $config->load()) {
-            $config->setConfiguration($config->getDefaultConfiguration());
-        }
-
-        $databaseForm = $this->buildDatabaseForm($request, $config);
+        $databaseForm = $this->buildDatabaseForm($request, $this->get('config'));
+        /** @var YamlConfigurationHandler $yamlConfigHandler */
+        $yamlConfigHandler = $this->get('config_handler');
 
         if ($databaseForm !== null) {
             $databaseForm->handleRequest($request);
 
             if ($databaseForm->isValid()) {
                 try {
-                    $config->testDoctrineConnexion($databaseForm->getData());
+                    $yamlConfigHandler->testDoctrineConnexion($databaseForm->getData());
 
-                    $tempConf = $config->getConfiguration();
+                    $tempConf = $yamlConfigHandler->getConfiguration();
                     foreach ($databaseForm->getData() as $key => $value) {
                         $tempConf['doctrine'][$key] = $value;
                     }
-                    $config->setConfiguration($tempConf);
+                    $yamlConfigHandler->setConfiguration($tempConf);
 
                     /*
                      * Test connexion
                      */
-                    try {
-                        $fixtures = new Fixtures(
-                            $this->get('em'),
-                            $this->get('kernel')->getCacheDir(),
-                            $this->get('kernel')->getRootDir() . '/conf/config.yml',
-                            $this->get('kernel')->isDebug(),
-                            $request
-                        );
-                        $fixtures->createFolders();
-                        $config->writeConfiguration();
+                    $fixtures = new Fixtures(
+                        $this->get('em'),
+                        $this->get('kernel')->getCacheDir(),
+                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
+                        $this->get('kernel')->isDebug(),
+                        $request
+                    );
+                    $fixtures->createFolders();
+                    $yamlConfigHandler->writeConfiguration();
 
-                        /*
-                         * Need to clear configuration cache.
-                         */
-                        $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
-                        $configurationClearer->clear();
+                    /*
+                     * Need to clear configuration cache.
+                     */
+                    $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
+                    $configurationClearer->clear();
 
-                        /*
-                         * Force redirect to avoid resending form when refreshing page
-                         */
-                        return $this->redirect($this->generateUrl(
-                            'installDatabaseSchemaPage'
-                        ));
-                    } catch (\PDOException $e) {
-                        $message = "";
-                        if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                            preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                            $message = $matches[3];
-                        } else {
-                            $message = $e->getMessage();
-                        }
-                        $this->assignation['error'] = true;
-                        $this->assignation['errorMessage'] = ucfirst($message);
-                    } catch (\Exception $e) {
-                        $this->assignation['error'] = true;
-                        $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl(
+                        'installDatabaseSchemaPage'
+                    ));
+                } catch (\PDOException $e) {
+                    if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                        preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                        $message = $matches[3];
+                    } else {
+                        $message = $e->getMessage();
                     }
+                    $databaseForm->addError(new FormError(ucfirst($message)));
                 } catch (\Exception $e) {
-                    $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage();
+                    $databaseForm->addError(new FormError($e->getMessage()));
                 }
             }
             $this->assignation['databaseForm'] = $databaseForm->createView();
@@ -237,17 +223,13 @@ class DatabaseController extends InstallApp
      * Build forms
      *
      * @param Request       $request
-     * @param Configuration $conf
+     * @param array $conf
      *
      * @return \Symfony\Component\Form\Form
      */
-    protected function buildDatabaseForm(Request $request, Configuration $conf)
+    protected function buildDatabaseForm(Request $request, array $conf)
     {
-        if (isset($conf->getConfiguration()['doctrine'])) {
-            $defaults = $conf->getConfiguration()['doctrine'];
-        } else {
-            $defaults = [];
-        }
+        $defaults = $conf['doctrine'];
 
         $builder = $this->createFormBuilder($defaults)
             ->add('driver', 'choice', [
@@ -255,7 +237,6 @@ class DatabaseController extends InstallApp
                     'pdo_mysql' => 'pdo_mysql',
                     'pdo_pgsql' => 'pdo_pgsql',
                     'pdo_sqlite' => 'pdo_sqlite',
-                    'oci8' => 'oci8',
                 ],
                 'label' => $this->getTranslator()->trans('driver'),
                 'constraints' => [
