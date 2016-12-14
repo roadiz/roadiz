@@ -6221,6 +6221,10 @@
           <source>embedId.does_not_exist</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+          <source>embedId.is_not_valid</source>
+          <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="youtube_needs_a_key">
           <source>YoutubeEmbedFinder needs a Google server key.</source>
           <target></target>
