@@ -131,60 +131,58 @@ class VimeoEmbedFinder extends AbstractEmbedFinder
     /**
      * Get embed media source URL.
      *
-     * ### Vimeo embed parameters
+     * ### Vimeo additional embed parameters
      *
      * * displayTitle
      * * byline
      * * portrait
-     * * autoplay
      * * color
-     * * loop
-     * * controls
      * * api
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string
      */
-    public function getSource(&$args = [])
+    public function getSource(array &$options = [])
     {
+        parent::getSource($options);
 
-        $queryString = [
-            'api' => 1,
-        ];
+        if ($options['displayTitle']) {
+            $queryString['title'] = (int) $options['displayTitle'];
+        }
+        if ($options['byline']) {
+            $queryString['byline'] = (int) $options['byline'];
+        }
+        if (null !== $options['color']) {
+            $queryString['color'] = $options['color'];
+        }
+        if ($options['portrait']) {
+            $queryString['portrait'] = (int) $options['portrait'];
+        }
+        if ($options['api']) {
+            $queryString['api'] = (int) $options['api'];
+        }
 
-        if (isset($args['displayTitle'])) {
-            $queryString['title'] = (int) $args['displayTitle'];
+        if (null !== $options['id']) {
+            $queryString['player_id'] = $options['id'];
         }
-        if (isset($args['byline'])) {
-            $queryString['byline'] = (int) $args['byline'];
+        if (null !== $options['identifier']) {
+            $queryString['player_id'] = $options['identifier'];
         }
-        if (isset($args['color'])) {
-            $queryString['color'] = $args['color'];
+        if ($options['loop']) {
+            $queryString['loop'] = (int) $options['loop'];
         }
-        if (isset($args['portrait'])) {
-            $queryString['portrait'] = (int) $args['portrait'];
+        if ($options['autoplay']) {
+            $queryString['autoplay'] = (int) $options['autoplay'];
         }
-        if (isset($args['id'])) {
-            $queryString['player_id'] = $args['id'];
+        if ($options['fullscreen']) {
+            $queryString['fullscreen'] = (int) $options['fullscreen'];
         }
-        if (isset($args['loop'])) {
-            $queryString['loop'] = (int) $args['loop'];
+        if ($options['controls']) {
+            $queryString['controls'] = (int) $options['controls'];
         }
-        if (isset($args['autoplay'])) {
-            $queryString['autoplay'] = (int) $args['autoplay'];
-        }
-        if (isset($args['fullscreen'])) {
-            $queryString['fullscreen'] = (int) $args['fullscreen'];
-        }
-        if (isset($args['api'])) {
-            $queryString['api'] = (int) $args['api'];
-        }
-        if (isset($args['controls'])) {
-            $queryString['controls'] = (int) $args['controls'];
-        }
-        if (isset($args['background'])) {
-            $queryString['background'] = (int) $args['background'];
+        if (null !== $options['background']) {
+            $queryString['background'] = (int) $options['background'];
         }
 
         return 'https://player.vimeo.com/video/'.$this->embedId.'?'.http_build_query($queryString);

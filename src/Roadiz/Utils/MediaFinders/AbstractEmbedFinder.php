@@ -36,6 +36,7 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Utils\Document\ViewOptionsResolver;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -84,11 +85,17 @@ abstract class AbstractEmbedFinder
     /**
      * Get embed media source URL.
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string
      */
-    abstract public function getSource(&$args = []);
+    public function getSource(array &$options = [])
+    {
+        $resolver = new ViewOptionsResolver();
+        $options = $resolver->resolve($options);
+
+        return "";
+    }
 
     /**
      * Crawl an embed API to get a Json feed.
@@ -119,48 +126,45 @@ abstract class AbstractEmbedFinder
      * * id
      * * class
      *
-     * @param  array $args
-     *
+     * @param  array $options
+     * @final
      * @return string
      */
-    public function getIFrame(&$args = [])
+    final public function getIFrame(array &$options = [])
     {
         $attributes = [];
+        /*
+         * getSource method will resolve all options for us.
+         */
+        $attributes['src'] = $this->getSource($options);
 
-        $attributes['src'] = $this->getSource($args);
-
-        if (isset($args['width'])) {
-            $attributes['width'] = $args['width'];
+        if ($options['width'] > 0) {
+            $attributes['width'] = $options['width'];
 
             /*
              * Default height is defined to 16:10
              */
-            if (!isset($args['height'])) {
-                $attributes['height'] = (int)(($args['width']*10)/16);
+            if ($options['height'] === 0) {
+                $attributes['height'] = (int)(($options['width']*10)/16);
             }
         }
-        if (isset($args['height'])) {
-            $attributes['height'] = $args['height'];
-        }
-        if (isset($args['title'])) {
-            $attributes['title'] = $args['title'];
-        }
-        if (isset($args['id'])) {
-            $attributes['id'] = $args['id'];
-        }
-        if (isset($args['class'])) {
-            $attributes['class'] = $args['class'];
+
+        if ($options['height'] > 0) {
+            $attributes['height'] = $options['height'];
         }
 
+        $attributes['title'] = $options['title'];
+        $attributes['id'] = $options['id'];
+        $attributes['class'] = $options['class'];
         $attributes['frameborder'] = "0";
 
-        if (!isset($args['fullscreen']) ||
-            (boolean) $args['fullscreen'] === true) {
+        if ($options['fullscreen']) {
             $attributes['webkitAllowFullScreen'] = "1";
             $attributes['mozallowfullscreen'] = "1";
             $attributes['allowFullScreen'] = "1";
         }
 
+        $attributes = array_filter($attributes);
 
         $htmlTag = '<iframe';
         foreach ($attributes as $key => $value) {

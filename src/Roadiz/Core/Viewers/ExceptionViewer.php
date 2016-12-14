@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
-
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
@@ -212,7 +211,8 @@ class ExceptionViewer
      * @param null $background_color
      * @return string
      */
-    public function getColoredString($string, $foreground_color = null, $background_color = null) {
+    public function getColoredString($string, $foreground_color = null, $background_color = null)
+    {
         $colored_string = "";
 
         // Check if given foreground color found
@@ -233,14 +233,16 @@ class ExceptionViewer
     /**
      * @return array Returns all foreground color names
      */
-    public function getForegroundColors() {
+    public function getForegroundColors()
+    {
         return array_keys($this->foreground_colors);
     }
 
     /**
      * @return array Returns all background color names
      */
-    public function getBackgroundColors() {
+    public function getBackgroundColors()
+    {
         return array_keys($this->background_colors);
     }
 }

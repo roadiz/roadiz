@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\Document;
+use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
 /**
  * Extension that allow render document images
@@ -57,10 +58,13 @@ class DocumentExtension extends \Twig_Extension
      */
     public function display(Document $document = null, array $criteria = [])
     {
-        if (null !== $document) {
-            return $document->getViewer()->getDocumentByArray($criteria);
+        if (null === $document) {
+            throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
         }
-
-        throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
+        try {
+            return $document->getViewer()->getDocumentByArray($criteria);
+        } catch (InvalidArgumentException $e) {
+            throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+        }
     }
 }

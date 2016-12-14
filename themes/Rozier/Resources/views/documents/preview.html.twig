@@ -27,7 +27,11 @@
                     {% if document.isEmbed and document.viewer.embedFinder %}
                         <hr />
                         <h3>{% trans %}embed.preview{% endtrans %}</h3>
-                        <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({embed:true, autoplay:true})) }}</figure>
+                        <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({
+                                embed:true,
+                                autoplay:false,
+                                fullscreen: true
+                            })) }}</figure>
                     {% endif %}
                 {% else %}
                     <p class="uk-alert uk-alert-warning"><i class="uk-icon-warning"></i> {% trans %}current.document.is.private.you.cannot.preview.it{% endtrans %}</p>

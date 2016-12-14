@@ -143,61 +143,59 @@ class YoutubeEmbedFinder extends AbstractEmbedFinder
     /**
      * Get embed media source URL.
      *
-     * ### Youtube embed parameters
+     * ### Youtube additional embed parameters
      *
-     * * autoplay
-     * * loop
-     * * color
-     * * controls
-     * * fs
      * * modestbrandin
      * * rel
      * * showinfo
      * * start
      * * enablejsapi
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string
      */
-    public function getSource(&$args = [])
+    public function getSource(array &$options = [])
     {
+        parent::getSource($options);
+
         $queryString = [
             'rel' => 0,
             'html5' => 1,
             'wmode' => 'transparent',
         ];
 
-        if (isset($args['autoplay'])) {
-            $queryString['autoplay'] = (int) $args['autoplay'];
+        if ($options['autoplay']) {
+            $queryString['autoplay'] = (int) $options['autoplay'];
         }
-        if (isset($args['loop'])) {
-            $queryString['loop'] = (int) $args['loop'];
+        if ($options['loop']) {
+            $queryString['loop'] = (int) $options['loop'];
             $queryString['playlist'] = $this->embedId;
         }
-        if (isset($args['color'])) {
-            $queryString['color'] = $args['color'];
+        if (null !== $options['color']) {
+            $queryString['color'] = $options['color'];
         }
-        if (isset($args['controls'])) {
-            $queryString['controls'] = (int) $args['controls'];
+        if ($options['controls']) {
+            $queryString['controls'] = (int) $options['controls'];
         }
-        if (isset($args['fs'])) {
-            $queryString['fs'] = (int) $args['fs'];
+        if ($options['fullscreen']) {
+            $queryString['fs'] = (int) $options['fullscreen'];
         }
-        if (isset($args['modestbranding'])) {
-            $queryString['modestbranding'] = (int) $args['modestbranding'];
+
+        if ($options['modestbranding']) {
+            $queryString['modestbranding'] = (int) $options['modestbranding'];
         }
-        if (isset($args['rel'])) {
-            $queryString['rel'] = (int) $args['rel'];
+        if ($options['rel']) {
+            $queryString['rel'] = (int) $options['rel'];
         }
-        if (isset($args['showinfo'])) {
-            $queryString['showinfo'] = (int) $args['showinfo'];
+        if ($options['showinfo']) {
+            $queryString['showinfo'] = (int) $options['showinfo'];
         }
-        if (isset($args['start'])) {
-            $queryString['start'] = (int) $args['start'];
+        if ($options['start']) {
+            $queryString['start'] = (int) $options['start'];
         }
-        if (isset($args['enablejsapi'])) {
-            $queryString['enablejsapi'] = (int) $args['enablejsapi'];
+        if ($options['enablejsapi']) {
+            $queryString['enablejsapi'] = (int) $options['enablejsapi'];
         }
 
         return '//www.youtube.com/embed/'.$this->embedId.'?'.http_build_query($queryString);

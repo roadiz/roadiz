@@ -110,46 +110,45 @@ class SoundcloudEmbedFinder extends AbstractEmbedFinder
      *
      * ## Available fields
      *
-     * * auto_play
      * * hide_related
      * * show_comments
      * * show_user
      * * show_reposts
      * * visual
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string
      */
-    public function getSource(&$args = [])
+    public function getSource(array &$options = [])
     {
+        parent::getSource($options);
+
         $queryString = [
             'url' => 'https://api.soundcloud.com/tracks/'.$this->embedId,
         ];
 
-        if (isset($args['hide_related'])) {
-            $queryString['hide_related'] = (int) $args['hide_related'];
+        if ($options['hide_related']) {
+            $queryString['hide_related'] = (int) $options['hide_related'];
         }
-        if (isset($args['show_comments'])) {
-            $queryString['show_comments'] = (int) $args['show_comments'];
+        if ($options['show_comments']) {
+            $queryString['show_comments'] = (int) $options['show_comments'];
         }
-        if (isset($args['show_user'])) {
-            $queryString['show_user'] = (int) $args['show_user'];
+        if ($options['show_user']) {
+            $queryString['show_user'] = (int) $options['show_user'];
         }
-        if (isset($args['show_reposts'])) {
-            $queryString['show_reposts'] = (int) $args['show_reposts'];
+        if ($options['show_reposts']) {
+            $queryString['show_reposts'] = (int) $options['show_reposts'];
         }
-        if (isset($args['autoplay'])) {
-            $queryString['auto_play'] = (int) $args['autoplay'];
+        if ($options['visual']) {
+            $queryString['visual'] = (int) $options['visual'];
         }
-        if (isset($args['auto_play'])) {
-            $queryString['auto_play'] = (int) $args['autoplay'];
+
+        if ($options['autoplay']) {
+            $queryString['auto_play'] = (int) $options['autoplay'];
         }
-        if (isset($args['visual'])) {
-            $queryString['visual'] = (int) $args['visual'];
-        }
-        if (isset($args['controls'])) {
-            $queryString['controls'] = (int) $args['controls'];
+        if ($options['controls']) {
+            $queryString['controls'] = (int) $options['controls'];
         }
 
 

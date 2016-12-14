@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
 /**
  * Extension that allow render nodes, nodesSources and documents Url
@@ -106,21 +107,23 @@ class UrlExtension extends \Twig_Extension
     {
         if (null !== $mixed) {
             if ($mixed instanceof Document) {
-                $absolute = false;
-                if (isset($criteria['absolute'])) {
-                    $absolute = (boolean) $criteria['absolute'];
+                try {
+                    $absolute = false;
+                    if (isset($criteria['absolute'])) {
+                        $absolute = (boolean) $criteria['absolute'];
+                    }
+                    return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
+                } catch (InvalidArgumentException $e) {
+                    throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
                 }
-                return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
             } elseif ($mixed instanceof NodesSources) {
                 return $this->getNodesSourceUrl($mixed, $criteria);
             } elseif ($mixed instanceof Node) {
                 return $this->getNodeUrl($mixed, $criteria);
             }
-
-            throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node", 1);
+            throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
         }
-
-        throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object", 1);
+        throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object");
     }
 
     /**

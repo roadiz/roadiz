@@ -32,6 +32,8 @@ namespace RZ\Roadiz\Core\Viewers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\Document\ViewOptionsResolver;
+use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
@@ -78,17 +80,16 @@ class DocumentViewer implements ViewableInterface
 
     /**
      *
-     * @param  array   $args
-     * @param  boolean $absolute
+     * @param  array   $options
      * @return string
      */
-    protected function parseSrcSet(array $args = [], $absolute = false)
+    protected function parseSrcSet(array &$options = [])
     {
-        if (isset($args['srcset']) && is_array($args['srcset'])) {
+        if (count($options['srcset']) > 0) {
             $srcset = [];
-            foreach ($args['srcset'] as $key => $set) {
+            foreach ($options['srcset'] as $key => $set) {
                 if (isset($set['format']) && isset($set['rule'])) {
-                    $srcset[] = $this->getDocumentUrlByArray($set['format'], $absolute) . ' ' . $set['rule'];
+                    $srcset[] = $this->getDocumentUrlByArray($set['format'], $options['absolute']) . ' ' . $set['rule'];
                 }
             }
             return implode(', ', $srcset);
@@ -99,13 +100,13 @@ class DocumentViewer implements ViewableInterface
 
     /**
      *
-     * @param  array  $args sizes
+     * @param  array  $options sizes
      * @return string
      */
-    protected function parseSizes(array $args = [])
+    protected function parseSizes(array &$options = [])
     {
-        if (isset($args['sizes']) && is_array($args['sizes'])) {
-            return implode(', ', $args['sizes']);
+        if (count($options['sizes']) > 0) {
+            return implode(', ', $options['sizes']);
         }
 
         return false;
@@ -130,7 +131,7 @@ class DocumentViewer implements ViewableInterface
      * - crop ({w}x{h}, for example : 100x200)
      * - fit ({w}x{h}, for example : 100x200)
      * - rotate (1-359 degrees, for example : 90)
-     * - grayscale / greyscale (boolean)
+     * - grayscale (boolean)
      * - quality (1-100)
      * - blur (1-100)
      * - sharpen (1-100)
@@ -159,59 +160,45 @@ class DocumentViewer implements ViewableInterface
      *
      * For videos, a poster can be set if you name a document after your video filename (without extension).
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string HTML output
      */
-    public function getDocumentByArray($args = [])
+    public function getDocumentByArray(array $options = [])
     {
-        $absolute = false;
-
-        if (!empty($args['absolute'])) {
-            $absolute = (boolean) $args['absolute'];
-        }
+        $resolver = new ViewOptionsResolver();
+        $options = $resolver->resolve($options);
 
         $assignation = [
             'document' => $this->document,
-            'url' => $this->getDocumentUrlByArray($args, $absolute),
-            'srcset' => $this->parseSrcSet($args, $absolute),
-            'sizes' => $this->parseSizes($args),
+            'url' => $this->getDocumentUrlByArray($options, $options['absolute']),
+            'srcset' => $this->parseSrcSet($options),
+            'sizes' => $this->parseSizes($options),
         ];
 
-        if (!empty($args['lazyload'])) {
-            $assignation['lazyload'] = (boolean) $args['lazyload'];
+        $assignation['lazyload'] = $options['lazyload'];
+        $assignation['autoplay'] = $options['autoplay'];
+        $assignation['loop'] = $options['loop'];
+        $assignation['controls'] = $options['controls'];
+
+        if ($options['width'] > 0) {
+            $assignation['width'] = $options['width'];
         }
-        if (!empty($args['width'])) {
-            $assignation['width'] = (int) $args['width'];
+        if ($options['height'] > 0) {
+            $assignation['height'] = $options['height'];
         }
-        if (!empty($args['height'])) {
-            $assignation['height'] = (int) $args['height'];
+
+        if (!empty($options['identifier'])) {
+            $assignation['identifier'] = $options['identifier'];
+            $assignation['id'] = $options['identifier'];
         }
-        /*
-         * Use fit value to set html width & height attributes
-         */
-        if (!empty($args['fit']) &&
-            1 === preg_match('#(?<width>[0-9]+)[x:\.](?<height>[0-9]+)#', $args['fit'], $matches)) {
-            $assignation['width'] = (int) $matches['width'];
-            $assignation['height'] = (int) $matches['height'];
+
+        if (!empty($options['class'])) {
+            $assignation['class'] = $options['class'];
         }
-        if (!empty($args['identifier'])) {
-            $assignation['identifier'] = $args['identifier'];
-        }
-        if (!empty($args['class'])) {
-            $assignation['class'] = $args['class'];
-        }
-        if (!empty($args['autoplay'])) {
-            $assignation['autoplay'] = (boolean) $args['autoplay'];
-        }
-        if (!empty($args['loop'])) {
-            $assignation['loop'] = (boolean) $args['loop'];
-        }
-        if (!empty($args['controls'])) {
-            $assignation['controls'] = (boolean) $args['controls'];
-        }
-        if (!empty($args['alt'])) {
-            $assignation['alt'] = $args['alt'];
+
+        if (!empty($options['alt'])) {
+            $assignation['alt'] = $options['alt'];
         } elseif (false !== $this->document->getDocumentTranslations()->first() &&
             "" != $this->document->getDocumentTranslations()->first()->getName()
         ) {
@@ -220,18 +207,12 @@ class DocumentViewer implements ViewableInterface
             $assignation['alt'] = $this->document->getFilename();
         }
 
-        if (isset($args['embed']) &&
-            true === $args['embed'] &&
+        if ($options['embed'] &&
             $this->isEmbedPlatformSupported()) {
-            return $this->getEmbedByArray($args);
+            return $this->getEmbedByArray($options);
         } elseif ($this->document->isSvg()) {
-            $asObject = false;
-            if (isset($args['inline']) &&
-                false === (boolean) $args['inline']) {
-                $asObject = true;
-            }
-
             try {
+                $asObject = !$options['inline'];
                 $viewer = new SvgDocumentViewer(
                     $this->document->getAbsolutePath(),
                     $assignation,
@@ -250,13 +231,13 @@ class DocumentViewer implements ViewableInterface
             /*
              * Use a user defined poster url
              */
-            if (!empty($args['custom_poster'])) {
-                $assignation['custom_poster'] = trim(strip_tags($args['custom_poster']));
+            if (!empty($options['custom_poster'])) {
+                $assignation['custom_poster'] = trim(strip_tags($options['custom_poster']));
             } else {
                 /*
                  * Look for poster with the same args as the video.
                  */
-                $assignation['poster'] = $this->getPosterFile($args, $absolute);
+                $assignation['poster'] = $this->getPosterFile($options, $options['absolute']);
             }
             return $this->getTwig()->render('documents/video.html.twig', $assignation);
         } elseif ($this->document->isAudio()) {
@@ -289,7 +270,7 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * @return bool
+     * @return bool|AbstractEmbedFinder
      */
     public function getEmbedFinder()
     {
@@ -309,15 +290,15 @@ class DocumentViewer implements ViewableInterface
     /**
      * Output an external media with an iframe according to the arguments array.
      *
-     * @param array|null $args
+     * @param array|null $options
      *
      * @return string
      * @see \RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
-    public function getEmbedByArray($args = [])
+    protected function getEmbedByArray(array $options = [])
     {
         if ($this->isEmbedPlatformSupported()) {
-            return $this->getEmbedFinder()->getIFrame($args);
+            return $this->getEmbedFinder()->getIFrame($options);
         } else {
             return false;
         }
@@ -331,7 +312,7 @@ class DocumentViewer implements ViewableInterface
      *
      * @return array|bool
      */
-    public function getSourcesFiles()
+    protected function getSourcesFiles()
     {
         $basename = pathinfo($this->document->getFilename());
         $basename = $basename['filename'];
@@ -372,11 +353,11 @@ class DocumentViewer implements ViewableInterface
     }
 
     /**
-     * @param array $args
+     * @param array $options
      * @param bool $absolute
      * @return array|bool
      */
-    protected function getPosterFile($args = [], $absolute = false)
+    protected function getPosterFile($options = [], $absolute = false)
     {
         if ($this->document->isVideo()) {
             $basename = pathinfo($this->document->getFilename());
@@ -400,7 +381,7 @@ class DocumentViewer implements ViewableInterface
             if (null !== $sourcesDoc && $sourcesDoc instanceof Document) {
                 return [
                     'mime' => $sourcesDoc->getMimeType(),
-                    'url' => $sourcesDoc->getViewer()->getDocumentUrlByArray($args, $absolute),
+                    'url' => $sourcesDoc->getViewer()->getDocumentUrlByArray($options, $absolute),
                 ];
             }
         }
@@ -419,7 +400,7 @@ class DocumentViewer implements ViewableInterface
      * - crop ({w}x{h}, for example : 100x200)
      * - fit ({w}x{h}, for example : 100x200)
      * - rotate (1-359 degrees, for example : 90)
-     * - grayscale / greyscale (boolean)
+     * - grayscale (boolean)
      * - quality (1-100) - default: 90
      * - blur (1-100)
      * - sharpen (1-100)
@@ -428,59 +409,57 @@ class DocumentViewer implements ViewableInterface
      * - progressive (boolean)
      * - noProcess (boolean) : Disable image resample
      *
-     * @param array $args
+     * @param array $options
      * @param boolean $absolute
      *
      * @return string Url
      */
-    public function getDocumentUrlByArray($args = [], $absolute = false)
+    public function getDocumentUrlByArray(array $options = [], $absolute = false)
     {
+        $resolver = new ViewOptionsResolver();
+        $options = $resolver->resolve($options);
+
         $packageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
 
-        if (count($args) === 0 ||
-            (isset($args['noProcess']) && $args['noProcess'] === true) ||
-            !$this->document->isImage()) {
+        if ($options['noProcess'] === true || !$this->document->isImage()) {
             return Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), $packageName);
         } else {
             $slirArgs = [];
 
-            if (!empty($args['width'])) {
-                $slirArgs['w'] = 'w' . (int) $args['width'];
+            if (null === $options['fit'] && $options['width'] > 0) {
+                $slirArgs['w'] = 'w' . (int) $options['width'];
             }
-            if (!empty($args['height'])) {
-                $slirArgs['h'] = 'h' . (int) $args['height'];
+            if (null === $options['fit'] && $options['height'] > 0) {
+                $slirArgs['h'] = 'h' . (int) $options['height'];
             }
-            if (!empty($args['crop'])) {
-                $slirArgs['c'] = 'c' . strip_tags($args['crop']);
+            if (null !== $options['crop']) {
+                $slirArgs['c'] = 'c' . strip_tags($options['crop']);
             }
-            if (!empty($args['blur'])) {
-                $slirArgs['l'] = 'l' . strip_tags($args['blur']);
+            if ($options['blur'] > 0) {
+                $slirArgs['l'] = 'l' . ($options['blur']);
             }
-            if (!empty($args['fit'])) {
-                $slirArgs['f'] = 'f' . strip_tags($args['fit']);
+            if (null !== $options['fit']) {
+                $slirArgs['f'] = 'f' . strip_tags($options['fit']);
             }
-            if (!empty($args['rotate'])) {
-                $slirArgs['r'] = 'r' . strip_tags($args['rotate']);
+            if ($options['rotate'] > 0) {
+                $slirArgs['r'] = 'r' . ($options['rotate']);
             }
-            if (!empty($args['sharpen'])) {
-                $slirArgs['s'] = 's' . strip_tags($args['sharpen']);
+            if ($options['sharpen'] > 0) {
+                $slirArgs['s'] = 's' . ($options['sharpen']);
             }
-            if (!empty($args['contrast'])) {
-                $slirArgs['k'] = 'k' . strip_tags($args['contrast']);
+            if ($options['contrast'] > 0) {
+                $slirArgs['k'] = 'k' . ($options['contrast']);
             }
-            if ((!empty($args['grayscale']) && $args['grayscale'] === true) ||
-                (!empty($args['greyscale']) && $args['greyscale'] === true)) {
+            if ($options['grayscale']) {
                 $slirArgs['g'] = 'g1';
             }
-            if (!empty($args['quality'])) {
-                $slirArgs['q'] = 'q' . (int) $args['quality'];
-            } else {
-                $slirArgs['q'] = 'q90'; // Set default quality to 90%
+            if ($options['quality'] > 0) {
+                $slirArgs['q'] = 'q' . $options['quality'];
             }
-            if (!empty($args['background'])) {
-                $slirArgs['b'] = 'b' . strip_tags($args['background']);
+            if (null !== $options['background']) {
+                $slirArgs['b'] = 'b' . strip_tags($options['background']);
             }
-            if (!empty($args['progressive']) && $args['progressive'] === true) {
+            if ($options['progressive']) {
                 $slirArgs['p'] = 'p1';
             }
 

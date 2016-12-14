@@ -11,18 +11,18 @@
     </header>
 
     <article class="content content-document-edit">
-    	{% form_theme form '@Rozier/forms.html.twig' %}
-    	<form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-    	    {{ form_widget(form) }}
-    	    <fieldset data-uk-margin>
-    	    	{% spaceless %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
                 <button data-action-save="#edit-document-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
                 {% endspaceless %}
-       		</fieldset>
-    	</form>
+            </fieldset>
+        </form>
 
         <dl class="document-paths">
             {% if not document.private %}
@@ -38,6 +38,6 @@
         </dl>
     </article>
 
-	{% include '@Rozier/documents/actionsMenu.html.twig' %}
+    {% include '@Rozier/documents/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
