@@ -39,7 +39,9 @@ use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Utils\DebugPanel;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,13 +104,19 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return;
         }
 
-        /*
-         * Register current Kernel as a service provider.
-         */
-        $this->container = new Container();
-        $this->container->register($this);
-
-        $this->booted = true;
+        try {
+            /*
+             * Register current Kernel as a service provider.
+             */
+            $this->container = new Container();
+            $this->container->register($this);
+            $this->booted = true;
+        } catch (InvalidConfigurationException $e) {
+            $view = new ExceptionViewer();
+            $response = $view->getResponse($e, Request::createFromGlobals(), $this->isDebug());
+            $response->send();
+            die(1);
+        }
     }
 
     /**

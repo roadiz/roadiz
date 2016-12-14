@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -53,8 +54,15 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RoadizApplication extends Application
 {
+    /**
+     * @var Kernel
+     */
     protected $kernel;
 
+    /**
+     * RoadizApplication constructor.
+     * @param Kernel $kernel
+     */
     public function __construct(Kernel $kernel)
     {
         $this->kernel = $kernel;

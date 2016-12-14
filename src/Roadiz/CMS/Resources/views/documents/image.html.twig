@@ -4,7 +4,7 @@
 } %}
 {% if lazyload %}
 {% set attributes = attributes|merge({datasrc : 'data-src="' ~ url ~ '"'}) %}
-    {% set attributes = attributes|merge({src : 'src="#"'}) %}
+    {% set attributes = attributes|merge({src : 'src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}) %}
     {% if srcset %}
     {% set attributes = attributes|merge({datasrcset : 'data-srcset="' ~ srcset ~ '"'}) %}
     {% endif %}
