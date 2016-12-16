@@ -40,9 +40,7 @@ Rozier.$backTopBtn = null;
 
 Rozier.entriesPanel = null;
 
-
 Rozier.onDocumentReady = function(event) {
-
     /*
      * Store Rozier configuration
      */
@@ -154,9 +152,9 @@ Rozier.maintreeElementNameRightClick = function(e){
     var $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu');
     if ($contextualMenu.length) {
         if($contextualMenu[0].className.indexOf('uk-open') == -1) {
-            addClass($contextualMenu[0], 'uk-open');
+            $contextualMenu.addClass('uk-open');
         }
-        else removeClass($contextualMenu[0], 'uk-open');
+        else $contextualMenu.removeClass('uk-open');
     }
 
     return false;
@@ -739,7 +737,6 @@ Rozier.resize = function(){
 
     // Set resize first to false
     if(_this.resizeFirst) _this.resizeFirst = false;
-
 };
 
 

@@ -95,28 +95,30 @@ var stripTags = function(input, allowed) {
 
 // Isset
 var isset = function(element) {
-    if (typeof(element) !== 'undefined') return true;
+    if (element) return true;
     else return false;
 };
 
 
 // Add class
 var addClass = function(el, classToAdd){
-
-    if (el.classList) el.classList.add(classToAdd);
-    else el.className += ' ' + classToAdd;
+    if (el) {
+        if (el.classList) el.classList.add(classToAdd);
+        else el.className += ' ' + classToAdd;
+    }
 };
 
 
 // Remove class
 var removeClass = function(el, classToRemove){
+    if (el) {
+        if(el.classList) el.classList.remove(classToRemove);
+        else{
+            el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
 
-    if(el.classList) el.classList.remove(classToRemove);
-    else{
-        el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
-
-        var posLastCar = el.className.length-1;
-        if(el.className[posLastCar] == ' ') el.className = el.className.substring(0, posLastCar);
+            var posLastCar = el.className.length-1;
+            if(el.className[posLastCar] == ' ') el.className = el.className.substring(0, posLastCar);
+        }
     }
 };
 

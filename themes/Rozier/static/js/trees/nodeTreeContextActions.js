@@ -6,8 +6,6 @@ var NodeTreeContextActions = function () {
     _this.$nodeMoveFirstLinks = $contextualMenus.find('a.move-node-first-position');
     _this.$nodeMoveLastLinks = $contextualMenus.find('a.move-node-last-position');
 
-    // console.log('NODE TREE');
-
     if(_this.$links.length){
         _this.bind();
     }

@@ -17,6 +17,7 @@ module.exports = function(grunt) {
     }
 
     var vendorFiles = [
+        //'bower_components/jquery/dist/jquery.js',
         'bower_components/uikit/js/uikit.js',
         'js/vendor/addons/sortable.js',
         //'bower_components/uikit/js/components/sortable.js', // Do not use vanilla sortable because of hardcoded link event in it.
@@ -25,11 +26,11 @@ module.exports = function(grunt) {
         'bower_components/uikit/js/components/pagination.js',
         'bower_components/uikit/js/components/notify.js',
         'bower_components/uikit/js/components/tooltip.js',
-        'bower_components/jquery-ui/ui/core.js',
-        'bower_components/jquery-ui/ui/widget.js',
-        'bower_components/jquery-ui/ui/menu.js',
-        'bower_components/jquery-ui/ui/position.js',
-        'bower_components/jquery-ui/ui/autocomplete.js',
+        //'bower_components/jquery-ui/ui/core.js',
+        //'bower_components/jquery-ui/ui/widget.js',
+        //'bower_components/jquery-ui/ui/position.js',
+        //'bower_components/jquery-ui/ui/widgets/menu.js',
+        //'bower_components/jquery-ui/ui/widgets/autocomplete.js',
         'bower_components/gsap/src/uncompressed/TweenMax.js',
         'bower_components/gsap/src/minified/plugins/ScrollToPlugin.min.js',
         'bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
@@ -95,6 +96,7 @@ module.exports = function(grunt) {
     var rozierFilesObject = objectify(rozierFiles);
 
     grunt.initConfig({
+        name: "rozier-backend-theme",
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             options: {
@@ -102,46 +104,48 @@ module.exports = function(grunt) {
             },
             vendor:{
                 'src': vendorFiles,
-                dest: 'dist/<%= pkg.name %>-vendor.js',
+                dest: 'dist/<%= name %>-vendor.js',
             },
             rezozero:{
                 'src': rozierFiles,
-                dest: 'dist/<%= pkg.name %>.js',
+                dest: 'dist/<%= name %>.js',
             },
             simple:{
                 'src': [
+                    //'bower_components/jquery/dist/jquery.js',
                     'bower_components/uikit/js/uikit.js',
                     'js/login/login.js'
                 ],
-                dest: 'dist/<%= pkg.name %>-simple.js',
+                dest: 'dist/<%= name %>-simple.js',
             },
             cforms:{
                 'src': [
+                    //'bower_components/jquery/dist/jquery.js',
                     'bower_components/uikit/js/uikit.js',
                     'bower_components/jquery-ui/jquery-ui.js'
                 ],
-                dest: 'dist/<%= pkg.name %>-cforms.js',
+                dest: 'dist/<%= name %>-cforms.js',
             }
         },
         uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
+                banner: '/*! <%= name %> <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n'
             },
             vendor: {
-                src: 'dist/<%= pkg.name %>-vendor.js',
-                dest: 'dist/<%= pkg.name %>-vendor.min.js'
+                src: 'dist/<%= name %>-vendor.js',
+                dest: 'dist/<%= name %>-vendor.min.js'
             },
             rezozero: {
-                src: 'dist/<%= pkg.name %>.js',
-                dest: 'dist/<%= pkg.name %>.min.js'
+                src: 'dist/<%= name %>.js',
+                dest: 'dist/<%= name %>.min.js'
             },
             simple: {
-                src: 'dist/<%= pkg.name %>-simple.js',
-                dest: 'dist/<%= pkg.name %>-simple.min.js'
+                src: 'dist/<%= name %>-simple.js',
+                dest: 'dist/<%= name %>-simple.min.js'
             },
             cforms: {
-                src: 'dist/<%= pkg.name %>-cforms.js',
-                dest: 'dist/<%= pkg.name %>-cforms.min.js'
+                src: 'dist/<%= name %>-cforms.js',
+                dest: 'dist/<%= name %>-cforms.min.js'
             }
         },
         less: {
@@ -178,10 +182,10 @@ module.exports = function(grunt) {
             scripts: {
                 files: [
                     'js/**/*.js',
-                    '!js/<%= pkg.name %>.js',
-                    '!js/<%= pkg.name %>.min.js',
-                    '!dist/<%= pkg.name %>.js',
-                    '!dist/<%= pkg.name %>.min.js',
+                    '!js/<%= name %>.js',
+                    '!js/<%= name %>.min.js',
+                    '!dist/<%= name %>.js',
+                    '!dist/<%= name %>.min.js',
                     'css/**/*.less',
                     'src-img/*.{png,jpg,gif}'
                 ],
@@ -199,8 +203,8 @@ module.exports = function(grunt) {
                 '!js/plugins.js',
                 '!js/vendor/**/*.js',
                 '!js/addons/**/*.js',
-                '!dist/<%= pkg.name %>*.js',
-                '!js/<%= pkg.name %>*.js'
+                '!dist/<%= name %>*.js',
+                '!js/<%= name %>*.js'
             ]
         },
         imagemin: {
@@ -278,8 +282,8 @@ module.exports = function(grunt) {
                  */
                 {
                     assets: [{
-                        src: [ 'dist/<%= pkg.name %>-simple.min.js' ],
-                        dest: 'dist/<%= pkg.name %>-simple.min.js'
+                        src: [ 'dist/<%= name %>-simple.min.js' ],
+                        dest: 'dist/<%= name %>-simple.min.js'
                     }],
                     key: 'simple',
                     dest: '',
@@ -311,8 +315,8 @@ module.exports = function(grunt) {
                 },
                 {
                     assets: [{
-                        src: [ 'dist/<%= pkg.name %>-cforms.min.js' ],
-                        dest: 'dist/<%= pkg.name %>-cforms.min.js'
+                        src: [ 'dist/<%= name %>-cforms.min.js' ],
+                        dest: 'dist/<%= name %>-cforms.min.js'
                     }],
                     key: 'custom-forms',
                     dest: '',
@@ -323,8 +327,8 @@ module.exports = function(grunt) {
             production: {
                 files: [{
                     assets: [{
-                        src: [ 'dist/<%= pkg.name %>.min.js' ],
-                        dest: 'dist/<%= pkg.name %>.min.js'
+                        src: [ 'dist/<%= name %>.min.js' ],
+                        dest: 'dist/<%= name %>.min.js'
                     }],
                     key: 'global',
                     dest: '',
@@ -333,8 +337,8 @@ module.exports = function(grunt) {
                 },
                 {
                     assets: [{
-                        src: [ 'dist/<%= pkg.name %>-vendor.min.js' ],
-                        dest: 'dist/<%= pkg.name %>-vendor.min.js'
+                        src: [ 'dist/<%= name %>-vendor.min.js' ],
+                        dest: 'dist/<%= name %>-vendor.min.js'
                     }],
                     key: 'global',
                     dest: '',
@@ -367,8 +371,8 @@ module.exports = function(grunt) {
                  */
                 {
                     assets: [{
-                        src: [ 'dist/<%= pkg.name %>-simple.min.js' ],
-                        dest: 'dist/<%= pkg.name %>-simple.min.js'
+                        src: [ 'dist/<%= name %>-simple.min.js' ],
+                        dest: 'dist/<%= name %>-simple.min.js'
                     }],
                     key: 'simple',
                     dest: '',
@@ -400,8 +404,8 @@ module.exports = function(grunt) {
                 },
                 {
                     assets: [{
-                        src: [ 'dist/<%= pkg.name %>-cforms.min.js' ],
-                        dest: 'dist/<%= pkg.name %>-cforms.min.js'
+                        src: [ 'dist/<%= name %>-cforms.min.js' ],
+                        dest: 'dist/<%= name %>-cforms.min.js'
                     }],
                     key: 'custom-forms',
                     dest: '',

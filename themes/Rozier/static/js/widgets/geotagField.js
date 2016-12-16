@@ -6,7 +6,6 @@ var GeotagField = function () {
 
     if( _this.$fields.length &&
         Rozier.googleClientId !== ""){
-
         _this.init();
     }
 };

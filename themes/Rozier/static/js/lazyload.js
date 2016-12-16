@@ -128,6 +128,7 @@ Lazyload.prototype.loadContent = function(state, location) {
     .done(function(data) {
         _this.applyContent(data);
         _this.canvasLoader.hide();
+
     })
     .fail(function(data) {
         console.log("error");
@@ -172,7 +173,6 @@ Lazyload.prototype.applyContent = function(data) {
     var $old = $container.find('.content-global');
 
     var $tempData = $(data);
-
     $tempData.addClass('new-content-global');
     $container.append($tempData);
     $tempData = $container.find('.new-content-global');
