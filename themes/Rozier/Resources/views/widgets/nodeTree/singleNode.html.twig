@@ -13,7 +13,7 @@ type|lower,
 ] %}
 
 {% if nodeTree.canReorder %}
-    {% set classes = classes|merge(['uk-nestable-list-item']) %}
+    {% set classes = classes|merge(['uk-nestable-item']) %}
 {% else %}
     {% set classes = classes|merge(['non-nestable-list-item']) %}
 {% endif %}
@@ -31,7 +31,7 @@ type|lower,
 
 {% set innerClasses = [
 'nodetree-element-inner',
-'uk-nestable-item',
+'uk-nestable-panel',
 ] %}
 {% if node.isHome and node.isHidingChildren %}{% set innerClasses = innerClasses|merge(['home-stack']) %}{% endif %}
 {% if node.isHome %}{% set innerClasses = innerClasses|merge(['home-node']) %}{% endif %}

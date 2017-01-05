@@ -10,9 +10,9 @@
 {% set children = tagTree.getChildrenTags(tag) %}
 
 <li data-tag-id="{{ tag.getId }}"
-    class="uk-nestable-list-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
+    class="uk-nestable-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
 
-    <div class="tagtree-element-inner uk-nestable-item uk-nestable-item-tag {% if not tag.isVisible %} hidden-tag{% endif %}">
+    <div class="tagtree-element-inner uk-nestable-panel uk-nestable-item-tag {% if not tag.isVisible %} hidden-tag{% endif %}">
         {% spaceless %}
         <div class="{% if canReorder %}uk-nestable-handle {% endif %}uk-nestable-handle-tag">
             <i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i>

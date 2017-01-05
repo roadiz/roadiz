@@ -27,7 +27,7 @@
     "gsap": "~1.19.0",
     "jquery-minicolors": "~2.1.10",
     "bootstrap-switch": "~3.3.2",
-    "uikit": "~2.18.0",
+    "uikit": "~2.27.2",
     "mousetrap": "~1.4.6",
     "codemirror": "~5.8.0",
     "dropzone": "~4.2.0",

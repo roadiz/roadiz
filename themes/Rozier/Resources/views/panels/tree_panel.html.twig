@@ -19,7 +19,7 @@
     <div id="tree-wrapper">
         {# Only display tabs if there are more than 1 available tree #}
         {% if tabCount > 1 %}
-        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container'}">
+        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container', swiping: false}">
             {% if is_granted('ROLE_ACCESS_NODES')%}
             <li class="tabs uk-active"><a class="tab-link" href="#"><i class="uk-icon-rz-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
             {% endif %}

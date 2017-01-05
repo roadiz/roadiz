@@ -423,14 +423,14 @@ Rozier.onSubmitSearchNodesSources = function(e){
  * @param status
  * @returns {boolean}
  */
-Rozier.onNestableNodeTreeChange = function (event, element, status) {
+Rozier.onNestableNodeTreeChange = function (event, rootEl, el, status) {
+    var element = $(el);
     /*
      * If node removed, do not do anything, the other change.uk.nestable nodeTree will be triggered
      */
     if (status == 'removed') {
         return false;
     }
-
     var node_id = parseInt(element.attr('data-node-id'));
     var parent_node_id = null;
     if (element.parents('.nodetree-element').length) {
@@ -455,7 +455,6 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
      */
     if (node_id === parent_node_id) {
         console.log("You cannot move a node inside itself!");
-        alert("You cannot move a node inside itself!");
         window.location.reload();
         return false;
     }
@@ -506,7 +505,8 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
  * @param status
  * @returns {boolean}
  */
-Rozier.onNestableTagTreeChange = function (event, element, status) {
+Rozier.onNestableTagTreeChange = function (event, rootEl, el, status) {
+    var element = $(el);
     /*
      * If tag removed, do not do anything, the other tagTree will be triggered
      */
@@ -586,7 +586,8 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
  * @param status
  * @returns {boolean}
  */
-Rozier.onNestableFolderTreeChange = function (event, element, status) {
+Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
+    var element = $(el);
     /*
      * If folder removed, do not do anything, the other folderTree will be triggered
      */
