@@ -52,7 +52,7 @@
 .children-nodes-nav{
     height: 45px;
     border-bottom:1px dashed @children-nodes-border;
-    overflow: hidden;
+    //overflow: hidden;
 
     @media (min-width: @screen-lg-min) {
         height: @children-node-height;
@@ -89,13 +89,15 @@
     }
     .children-nodes-quick-creation{
         margin: 0;
-        &.uk-dropdown {
-            top: auto;
-            width: auto;
+        .uk-dropdown {
             background: @children-nodes-btn-bg;
             margin-top: -1px;
-            margin-right: 10px;
-            padding:0px;
+            padding: 0;
+
+            &.uk-dropdown-top {
+                margin-top: 0;
+                margin-bottom: -2px;
+            }
 
             .uk-button {
                 position: relative;

@@ -19,8 +19,7 @@ module.exports = function(grunt) {
     var vendorFiles = [
         //'bower_components/jquery/dist/jquery.js',
         'bower_components/uikit/js/uikit.js',
-        'js/vendor/addons/sortable.js',
-        //'bower_components/uikit/js/components/sortable.js', // Do not use vanilla sortable because of hardcoded link event in it.
+        'bower_components/uikit/js/components/sortable.js',
         'bower_components/uikit/js/components/datepicker.js',
         'bower_components/uikit/js/components/nestable.js',
         'bower_components/uikit/js/components/pagination.js',
@@ -112,7 +111,6 @@ module.exports = function(grunt) {
             },
             simple:{
                 'src': [
-                    //'bower_components/jquery/dist/jquery.js',
                     'bower_components/uikit/js/uikit.js',
                     'js/login/login.js'
                 ],
@@ -120,7 +118,6 @@ module.exports = function(grunt) {
             },
             cforms:{
                 'src': [
-                    //'bower_components/jquery/dist/jquery.js',
                     'bower_components/uikit/js/uikit.js',
                     'bower_components/jquery-ui/jquery-ui.js'
                 ],

@@ -190,7 +190,6 @@ Lazyload.prototype.applyContent = function(data) {
 
 Lazyload.prototype.bindAjaxLink = function() {
     var _this = this;
-
     _this.parseLinks();
 
     var onClickProxy = $.proxy(_this.onClick, _this);

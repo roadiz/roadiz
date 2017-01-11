@@ -324,18 +324,24 @@
                     <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
                     <li class="uk-navbar-brand label">{{ label|trans }}</li>
                 </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="children-nodes-quick-creation uk-button-group">
-                        {% for linkedType in linkedTypes %}
-                            <a class="uk-button uk-button-small"
-                               href="#"
-                               data-children-node-type="{{ linkedType.getId }}"
-                               data-children-parent-node="{{ nodeTree.rootNode.getId }}"
-                               data-translation-id="{{ nodeTree.translation.getId }}">
-                                <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
-                            </a>
-                        {% endfor %}
-                    </div>
+                <div class="uk-navbar-flip">
+                    <ul class="uk-navbar-nav">
+                        <li class="children-nodes-quick-creation"
+                            data-uk-dropdown="{mode:'click'}">
+                            <div class="uk-button"><i class="uk-icon-rz-plus-simple"></i></div>
+                            <div class="uk-dropdown uk-dropdown-navbar">
+                                {% for linkedType in linkedTypes %}
+                                    <a class="uk-button uk-button-small"
+                                        href="#"
+                                        data-children-node-type="{{ linkedType.getId }}"
+                                        data-children-parent-node="{{ nodeTree.rootNode.getId }}"
+                                        data-translation-id="{{ nodeTree.translation.getId }}">
+                                        <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             <div class="children-nodes-tree">
