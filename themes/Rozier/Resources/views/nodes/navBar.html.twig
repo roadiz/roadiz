@@ -27,11 +27,10 @@
                 </li>
             {% endif %}
         {% endif %}
-        {% if not node.nodeType.isHidingNodes %}
-            <li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
-                <a class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.id}) }}">{% trans %}tree{% endtrans %}</a>
-            </li>
-        {% endif %}
+
+        <li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
+            <a data-uk-tooltip="{animation:true}" title="{% trans %}tree{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.id}) }}"><i class="uk-icon-rz-node-tree"></i></a>
+        </li>
         <li class="uk-navbar-item{% if current == 'history' %} uk-active{% endif %}">
             <a data-uk-tooltip="{animation:true}" title="{% trans %}history{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesHistoryPage', { nodeId: node.id}) }}"><i class="uk-icon uk-icon-clock-o"></i></a>
         </li>
