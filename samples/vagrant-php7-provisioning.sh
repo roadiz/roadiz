@@ -47,7 +47,7 @@ sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password 
 sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password_again password $DBPASSWD"
 
 echo -e "\n--- Install base servers and packages ---\n"
-sudo apt-get -qq -f -y install git zip nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
+sudo apt-get -qq -f -y install git nano zip nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
@@ -60,7 +60,7 @@ echo -e "\n--- Install all php7.0 extensions ---\n"
 sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-curl \
                                 php7.0-gd php7.0-intl php7.0-imap php7.0-mcrypt php7.0-pspell \
                                 php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc \
-                                php7.0-xsl php-apcu php-gd php-apcu-bc php-xdebug php-mbstring php-zip > /dev/null 2>&1;
+                                php7.0-xsl php-apcu php-gd php-apcu-bc php-xdebug php-mbstring php7.0-zip > /dev/null 2>&1;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
