@@ -27,14 +27,14 @@
  * Custom color on node tree
  * for {{ type.name }}
  */
-.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .non-nestable-handle:after,
-.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .uk-nestable-handle:after {
+.nodetree-element.{{ type.name|lower }} > .uk-nestable-panel > .non-nestable-handle:after,
+.nodetree-element.{{ type.name|lower }} > .uk-nestable-panel > .uk-nestable-handle:after {
     border-color:{{ type.color }};
 }
 .nodetree-element.{{ type.name|lower }} > .nodetree-list-item-color {
     background-color:{{ type.color }};
 }
-.nodetree-element.{{ type.name|lower }} > .nodetree-element-inner > .tree-contextualmenu .vertical-nodetype {
+.nodetree-element.{{ type.name|lower }} > .uk-nestable-panel > .tree-contextualmenu .vertical-nodetype {
     background-color:{{ type.color }};
 }
 {% endfor %}
@@ -44,7 +44,7 @@
  * for {{ tag.tagName }}
  */
 .tag-item[data-tag-id="{{ tag.id }}"] i,
-.tagtree-element[data-tag-id="{{ tag.id }}"] > .uk-nestable-item > .uk-nestable-handle i {
+.tagtree-element[data-tag-id="{{ tag.id }}"] > .uk-nestable-panel .uk-nestable-handle i {
     color:{{ tag.color }};
 }
 {% endfor %}
