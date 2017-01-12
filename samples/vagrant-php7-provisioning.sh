@@ -47,7 +47,7 @@ sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password 
 sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password_again password $DBPASSWD"
 
 echo -e "\n--- Install base servers and packages ---\n"
-sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
+sudo apt-get -qq -f -y install git zip nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
