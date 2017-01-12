@@ -91,7 +91,9 @@ NodeEditSource.prototype.init = function(){
     _this.$devNames = _this.$content.find('[data-dev-name]');
 
     for (var i = _this.$input.length - 1; i >= 0; i--) {
-        if(_this.$input[i].getAttribute('data-desc') !== ''){
+        if(_this.$input[i].getAttribute('data-desc') &&
+            null !== _this.$input[i].getAttribute('data-desc') &&
+            _this.$input[i].getAttribute('data-desc') !== ''){
             $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
         }
     }
