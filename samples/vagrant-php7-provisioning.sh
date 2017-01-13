@@ -103,14 +103,19 @@ sudo cp /var/www/samples/vagrant/nginx-conf.conf /etc/nginx/nginx.conf;
 sudo cp /var/www/samples/vagrant/nginx-vhost.conf /etc/nginx/sites-available/default;
 sudo cp /var/www/samples/vagrant/roadiz-nginx-include.conf /etc/nginx/snippets/roadiz.conf;
 
-echo -e "\n--- Generating a unique Diffie-Hellman Group ---\n"
-sudo openssl dhparam -out /etc/nginx/certs/default.dhparam.pem 2048 > /dev/null 2>&1;
+#
+# Do not generate default DH param and certificate
+# to speed up Vagrant provisioning
+#
 
-echo -e "\n--- Generating a self-signed SSL certificate ---\n"
-sudo openssl req -new -newkey rsa:2048 -days 365 -nodes \
-            -x509 -subj "/C=FR/ST=Rhonealpes/L=Lyon/O=ACME/CN=localhost" \
-            -keyout /etc/nginx/certs/default.key \
-            -out /etc/nginx/certs/default.crt > /dev/null 2>&1;
+#echo -e "\n--- Generating a unique Diffie-Hellman Group ---\n"
+#sudo openssl dhparam -out /etc/nginx/certs/default.dhparam.pem 2048 > /dev/null 2>&1;
+#
+#echo -e "\n--- Generating a self-signed SSL certificate ---\n"
+#sudo openssl req -new -newkey rsa:2048 -days 365 -nodes \
+#            -x509 -subj "/C=FR/ST=Rhonealpes/L=Lyon/O=ACME/CN=localhost" \
+#            -keyout /etc/nginx/certs/default.key \
+#            -out /etc/nginx/certs/default.crt > /dev/null 2>&1;
 
 echo -e "\n--- Configure PHP-FPM default pool ---\n"
 sudo rm /etc/php/7.0/fpm/pool.d/www.conf;
