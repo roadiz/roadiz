@@ -132,7 +132,7 @@ sudo service nginx restart > /dev/null 2>&1;
 sudo service php7.0-fpm restart > /dev/null 2>&1;
 
 ##### CLEAN UP #####
-sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
+sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesn't run well (e.g. loss of connection) this may resolve quite a few issues
 sudo apt-get autoremove -y  > /dev/null 2>&1; # remove obsolete packages
 
 # Set envvars
@@ -148,9 +148,9 @@ echo -e "\n----------- Your Roadiz Vagrant is ready in /var/www ------------"
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\nDo not forget to \"composer install\" and to add "
 echo -e "\nyour host IP into install.php and dev.php"
-echo -e "\nto get allowed in install and dev entrypoints."
+echo -e "\nto get allowed in install and dev entry-points."
 echo -e "\n* Type http://$PRIVATE_IP/install.php to proceed to install."
-echo -e "\n* Type https://$PRIVATE_IP/install.php to proceed using SSL (cert is not authentified)."
+#echo -e "\n* Type https://$PRIVATE_IP/install.php to proceed using SSL (cert is not authenticated)."
 echo -e "\n* MySQL User: $DBUSER"
 echo -e "\n* MySQL Password: $DBPASSWD"
 echo -e "\n* MySQL Database: $DBNAME"
