@@ -69,6 +69,19 @@ DocumentUploader.prototype.init = function() {
                 _this.options.onAdded(file);
             });
             this.on("success", function(file, data) {
+                /*
+                 * Remove previews after 3 sec not
+                 * to bloat the dropzone when dragging more than
+                 * 20 files…
+                 */
+                if (file.previewElement) {
+                    var $preview = $(file.previewElement);
+                    setTimeout(function () {
+                        $preview.fadeOut(500, function () {
+                            $preview.remove();
+                        });
+                    }, 3000);
+                }
                 _this.options.onSuccess(data);
                 Rozier.getMessages();
             });

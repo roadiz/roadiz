@@ -30,11 +30,14 @@
     "uikit": "~2.27.2",
     "mousetrap": "~1.4.6",
     "codemirror": "~5.8.0",
-    "dropzone": "~4.2.0",
+    "dropzone": "~4.3.0",
     "jquery.actual": "~1.0.17",
     "CanvasLoader": "~0.9.1",
     "jquery-tag-editor": "~1.0.18",
     "markdown-it-footnote": "~3.0.0",
     "markdown-it": "~7.0.0"
+  },
+  "resolutions": {
+    "jquery": "~2.2.4"
   }
 }
