@@ -33,7 +33,9 @@ use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -80,6 +82,7 @@ class ContactFormManager
      */
     protected $form = null;
     protected $emailTemplate = 'forms/contactForm.html.twig';
+    protected $emailPlainTextTemplate = 'forms/contactForm.txt.twig';
     protected $emailStylesheet = '/src/Roadiz/CMS/Resources/css/transactionalStyles.css';
     /**
      * @var array
@@ -375,6 +378,18 @@ class ContactFormManager
             'email' => $this->sender,
             'fields' => $fields,
         ];
+
+        /*
+         *  Site header image
+         */
+        $this->assignation['mainColor'] = SettingsBag::get('main_color');
+
+        $adminImage = SettingsBag::getDocument('admin_image');
+        if (null !== $adminImage &&
+            $adminImage instanceof Document) {
+            $documentViewer = new DocumentViewer($adminImage);
+            $this->assignation['headerImageSrc'] = $documentViewer->getDocumentUrlByArray([], true);
+        }
     }
 
     /**
@@ -417,7 +432,8 @@ class ContactFormManager
             throw new \Exception("Can’t send a contact form without data.", 1);
         }
 
-        $emailBody = $this->templating->render($this->emailTemplate, $this->assignation);
+        $emailBody = $this->templating->render($this->getEmailTemplate(), $this->assignation);
+        $emailTxtBody = $this->templating->render($this->getEmailPlainTextTemplate(), $this->assignation);
 
         /*
          * inline CSS
@@ -451,7 +467,8 @@ class ContactFormManager
              ->setTo([$this->receiver])
              ->setReturnPath($this->receiver)
              // Give it a body
-             ->setBody($htmldoc->getHTML(), 'text/html');
+             ->setBody($htmldoc->getHTML(), 'text/html')
+             ->addPart($emailTxtBody, 'text/plain');
 
         if (null !== $this->sender) {
             // Set the From address with an associative array
@@ -739,6 +756,24 @@ class ContactFormManager
     {
         $this->emailStylesheet = $emailStylesheet;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailPlainTextTemplate()
+    {
+        return $this->emailPlainTextTemplate;
+    }
+
+    /**
+     * @param string $emailPlainTextTemplate
+     * @return ContactFormManager
+     */
+    public function setEmailPlainTextTemplate($emailPlainTextTemplate)
+    {
+        $this->emailPlainTextTemplate = $emailPlainTextTemplate;
         return $this;
     }
 }

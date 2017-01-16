@@ -1,0 +1,14 @@
+{% block title %}Your Message Subject or Title{% endblock %}
+
+========
+
+{% block content_table %}{% endblock %}
+
+{% if mailContact %}
+--------
+{% trans %}for.questions.email{% endtrans %} {{ mailContact|escape }}.
+{% endif %}
+{% if disclaimer %}
+--------
+{{ disclaimer }}
+{% endif %}
