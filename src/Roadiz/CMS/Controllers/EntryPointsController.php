@@ -447,6 +447,8 @@ class EntryPointsController extends AppController
      * @param string                                    $customEmailReceiver Send contact form to a custom email (or emails)
      * @param string                                    $customEmailSubject  Customize email subject
      *
+     * @deprecated Use ContactFormManager instead
+     *
      * @return \Symfony\Component\Form\FormBuilder
      */
     public static function getContactFormBuilder(
@@ -508,6 +510,7 @@ class EntryPointsController extends AppController
      * @param string $receiver
      * @param string|null $subject
      * @param array $files
+     * @deprecated Use ContactFormManager instead
      *
      * @return boolean
      */

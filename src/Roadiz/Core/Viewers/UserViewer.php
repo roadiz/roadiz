@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -92,6 +93,17 @@ class UserViewer implements ViewableInterface
             'site' => $siteName,
             'mailContact' => $emailContact,
         ];
+        /*
+         *  Site header image
+         */
+        $assignation['mainColor'] = SettingsBag::get('main_color');
+        $adminImage = SettingsBag::getDocument('admin_image');
+        if (null !== $adminImage &&
+            $adminImage instanceof Document) {
+            $documentViewer = new DocumentViewer($adminImage);
+            $assignation['headerImageSrc'] = $documentViewer->getDocumentUrlByArray([], true);
+        }
+
         $emailBody = Kernel::getService('twig.environment')->render('users/newUser_email.html.twig', $assignation);
 
         /*
@@ -147,6 +159,16 @@ class UserViewer implements ViewableInterface
             'site' => $siteName,
             'mailContact' => $emailContact,
         ];
+        /*
+         *  Site header image
+         */
+        $assignation['mainColor'] = SettingsBag::get('main_color');
+        $adminImage = SettingsBag::getDocument('admin_image');
+        if (null !== $adminImage &&
+            $adminImage instanceof Document) {
+            $documentViewer = new DocumentViewer($adminImage);
+            $assignation['headerImageSrc'] = $documentViewer->getDocumentUrlByArray([], true);
+        }
         $emailBody = Kernel::getService('twig.environment')->render('users/reset_password_email.html.twig', $assignation);
 
         /*
