@@ -34,6 +34,7 @@
             {% endif %}
 
             {% set rootTreeClasses = [
+                'nodetree',
                 'root-tree',
             ] %}
             {% if nodeTree.canReorder %}{% set rootTreeClasses = rootTreeClasses|merge(['uk-nestable']) %}{% endif %}

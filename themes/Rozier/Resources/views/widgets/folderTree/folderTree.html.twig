@@ -12,7 +12,7 @@
     {% endif %}
     <div class="tree-scroll-cont">
         <div class="tree-scroll">
-            <ul class="root-tree uk-nestable uk-nestable-folder" data-uk-nestable="{'group':'folderTree'}" data-parent-folder-id="{{ folder.getId }}">
+            <ul class="foldertree root-tree uk-nestable uk-nestable-folder" data-uk-nestable="{'group':'folderTree'}" data-parent-folder-id="{{ folder.getId }}">
                 {% for cfolder in folderTree.getFolders %}
                     {% include '@Rozier/widgets/folderTree/singleFolder.html.twig' with { "folder":cfolder, "folderTree":folderTree } only %}
                 {% endfor %}

@@ -44,7 +44,7 @@ Rozier.onDocumentReady = function(event) {
     /*
      * Store Rozier configuration
      */
-    for( var index in temp ){
+    for(var index in temp){
         Rozier[index] = temp[index];
     }
 
@@ -111,10 +111,20 @@ Rozier.onDocumentReady = function(event) {
  */
 Rozier.initNestables = function  () {
     $('.uk-nestable').each(function (index, element) {
-        UIkit.nestable(element);
+        var $tree = $(element);
+        var options = {};
+
+        if ($tree.hasClass('nodetree')) {
+            options.group = 'nodeTree';
+        } else if ($tree.hasClass('tagtree')) {
+            options.group = 'tagTree';
+        } else if ($tree.hasClass('foldertree')) {
+            options.group = 'folderTree';
+        }
+
+        UIkit.nestable(element, options);
     });
 };
-
 
 /**
  * Bind main trees
