@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Widgets;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -194,7 +195,7 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Node $parent
      * @param bool $subRequest Default: false
-     * @return ArrayCollection
+     * @return array
      */
     public function getChildrenNodes(Node $parent = null, $subRequest = false)
     {
@@ -219,6 +220,7 @@ class NodeTreeWidget extends AbstractWidget
     {
         return $this->translation;
     }
+
     /**
      * @return array
      */

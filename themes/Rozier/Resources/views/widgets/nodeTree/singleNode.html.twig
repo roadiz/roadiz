@@ -93,7 +93,10 @@ type|lower,
         {% if nodeTree.isStackTree and node.tags|length %}
             <div class="nodetree-tags">
                 {% for tag in node.tags %}
-                    <a href="?tagId={{ tag.id }}" class="uk-badge">{{ tag.tagName }}</a>
+                    {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
+                    {% set tagName = ttag[0].name|default(tag.tagName) %}
+
+                    <a href="?tagId={{ tag.id }}" class="uk-badge">{{ tagName }}</a>
                 {% endfor %}
             </div>
         {% endif %}

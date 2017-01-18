@@ -653,6 +653,8 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * Get node-sources using a given translation.
+     *
      * @param Translation $translation
      * @return \Doctrine\Common\Collections\Collection
      */
