@@ -406,8 +406,8 @@ class ContactFormManager extends EmailManager
          * So you must return error email to receiver instead
          * of sender (who is your visitor).
          */
-        $this->message->setTo([$this->getReceiver()]);
-        $this->message->setReturnPath($this->getReceiver());
+        $this->message->setTo($this->getReceiver());
+        $this->message->setReturnPath($this->getReceiverEmail());
 
         /** @var UploadedFile $uploadedFile */
         foreach ($this->uploadedFiles as $uploadedFile) {

@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -121,6 +121,7 @@ class EntryPointsController extends AppController
      * * image/gif
      *
      * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @deprecated Use ContactFormManager instead
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -516,36 +517,36 @@ class EntryPointsController extends AppController
      */
     protected function sendContactForm($assignation, $receiver, $subject = null, $files = null)
     {
-        $emailBody = $this->get('twig.environment')->render('forms/contactForm.html.twig', $assignation);
-        /*
-         * inline CSS
-         */
-        $htmldoc = new InlineStyle($emailBody);
-        $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
-        ));
+        $emailManager = new EmailManager(
+            $this->get('request'),
+            $this->get('translator'),
+            $this->get('twig.environment'),
+            $this->get('mailer')
+        );
+        $emailManager->setAssignation($assignation);
+        $emailManager->setEmailTemplate('forms/contactForm.html.twig');
+        $emailManager->setEmailPlainTextTemplate('forms/contactForm.txt.twig');
 
         if (null !== $subject) {
-            $subject = trim(strip_tags($subject));
+            $emailManager->setSubject($subject);
         } else {
-            $subject = $this->getTranslator()->trans(
+            $emailManager->setSubject($this->getTranslator()->trans(
                 'new.contact.form.%site%',
                 ['%site%' => SettingsBag::get('site_name')]
-            );
+            ));
         }
 
-        // Create the message
-        $message = \Swift_Message::newInstance()
-        // Give the message a subject
-        ->setSubject($subject)
-        // Set the From address with an associative array
-        ->setFrom($receiver)
-        ->setReplyTo($assignation['email'])
-        // Set the To addresses with an associative array
-        ->setTo([$receiver])
-        // Give it a body
-        ->setBody($htmldoc->getHTML(), 'text/html');
+        $emailManager->setEmailTitle($assignation['title']);
 
+        if (empty($receiver)) {
+            $emailManager->setReceiver(SettingsBag::get('email_sender'));
+        } else {
+            $emailManager->setReceiver($receiver);
+        }
+
+        $emailManager->setSender($assignation['email']);
+
+        $message = $emailManager->createMessage();
         /*
          * Attach files
          */
@@ -556,6 +557,6 @@ class EntryPointsController extends AppController
         }
 
         // Send the message
-        return $this->get('mailer')->send($message);
+        return $emailManager->send();
     }
 }

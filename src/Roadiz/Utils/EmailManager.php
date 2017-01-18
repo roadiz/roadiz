@@ -115,6 +115,7 @@ class EmailManager
         $this->mailer = $mailer;
         $this->templating = $templating;
         $this->assignation = [];
+        $this->message = null;
     }
 
     /**
@@ -177,7 +178,7 @@ class EmailManager
     /**
      * @return \Swift_Message
      */
-    protected function createMessage()
+    public function createMessage()
     {
         $this->appendWebsiteIcon();
 
@@ -185,8 +186,9 @@ class EmailManager
             // Give the message a subject
             ->setSubject($this->getSubject())
             ->setFrom($this->getOrigin())
-            ->setTo([$this->getReceiver()])
-            ->setReturnPath($this->getSender());
+            ->setTo($this->getReceiver())
+            // Force using string and only one email
+            ->setReturnPath($this->getSenderEmail());
 
         if (null !== $this->getEmailTemplate()) {
             $this->message->setBody($this->renderHtmlEmailBodyWithCss(), 'text/html');
@@ -200,7 +202,7 @@ class EmailManager
          * to keep From: header with a know domain email.
          */
         if (null !== $this->getSender()) {
-            $this->message->setReplyTo([$this->getSender()]);
+            $this->message->setReplyTo($this->getSender());
         }
 
         return $this->message;
@@ -218,7 +220,9 @@ class EmailManager
             throw new \RuntimeException("Can’t send a contact form without data.");
         }
 
-        $this->message = $this->createMessage();
+        if (null === $this->message) {
+            $this->message = $this->createMessage();
+        }
 
         // Send the message
         return $this->mailer->send($this->message);
@@ -261,9 +265,9 @@ class EmailManager
     }
 
     /**
-     * Message destination email.
+     * Message destination email(s).
      *
-     * @return null|string
+     * @return null|array|string
      */
     public function getReceiver()
     {
@@ -271,17 +275,40 @@ class EmailManager
     }
 
     /**
+     * Return only one email as string.
+     *
+     * @return null|string
+     */
+    public function getReceiverEmail()
+    {
+        if (is_array($this->receiver) && count($this->receiver) > 0) {
+            $emails = array_keys($this->receiver);
+            return $emails[0];
+        }
+
+        return $this->receiver;
+    }
+
+    /**
      * Sets the value of receiver.
      *
-     * @param string $receiver the receiver
+     * @param string|array $receiver the receiver
      *
      * @return EmailManager
      * @throws \Exception
      */
     public function setReceiver($receiver)
     {
-        if (false === filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("Receiver must be a valid email address.", 1);
+        if (is_string($receiver)) {
+            if (false === filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
+                throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+            }
+        } elseif (is_array($receiver)) {
+            foreach ($receiver as $email => $name) {
+                if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+                }
+            }
         }
 
         $this->receiver = $receiver;
@@ -302,16 +329,39 @@ class EmailManager
     }
 
     /**
+     * Return only one email as string.
+     *
+     * @return null|string
+     */
+    public function getSenderEmail()
+    {
+        if (is_array($this->sender) && count($this->sender) > 0) {
+            $emails = array_keys($this->sender);
+            return $emails[0];
+        }
+
+        return $this->sender;
+    }
+
+    /**
      * Sets the value of sender.
      *
-     * @param string $sender the sender
+     * @param string|array $sender the sender
      * @return EmailManager
      * @throws \Exception
      */
-    protected function setSender($sender)
+    public function setSender($sender)
     {
-        if (false === filter_var($sender, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+        if (is_string($sender)) {
+            if (false === filter_var($sender, FILTER_VALIDATE_EMAIL)) {
+                throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+            }
+        } elseif (is_array($sender)) {
+            foreach ($sender as $email => $name) {
+                if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+                }
+            }
         }
 
         $this->sender = $sender;
@@ -507,6 +557,24 @@ class EmailManager
         }
 
         $this->origin = $origin;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssignation()
+    {
+        return $this->assignation;
+    }
+
+    /**
+     * @param array $assignation
+     * @return EmailManager
+     */
+    public function setAssignation($assignation)
+    {
+        $this->assignation = $assignation;
         return $this;
     }
 }

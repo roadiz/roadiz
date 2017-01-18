@@ -32,11 +32,10 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
@@ -88,48 +87,28 @@ class UserViewer implements ViewableInterface
             $siteName = "Unnamed site";
         }
 
-        $assignation = [
+        $emailManager = new EmailManager(
+            Kernel::getService('request'),
+            Kernel::getService('translator'),
+            Kernel::getService('twig.environment'),
+            Kernel::getService('mailer')
+        );
+        $emailManager->setAssignation([
             'user' => $this->user,
             'site' => $siteName,
             'mailContact' => $emailContact,
-        ];
-        /*
-         *  Site header image
-         */
-        $assignation['mainColor'] = SettingsBag::get('main_color');
-        $adminImage = SettingsBag::getDocument('admin_image');
-        if (null !== $adminImage &&
-            $adminImage instanceof Document) {
-            $documentViewer = new DocumentViewer($adminImage);
-            $assignation['headerImageSrc'] = $documentViewer->getDocumentUrlByArray([], true);
-        }
-
-        $emailBody = Kernel::getService('twig.environment')->render('users/newUser_email.html.twig', $assignation);
-
-        /*
-         * inline CSS
-         */
-        $htmldoc = new InlineStyle($emailBody);
-        $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
-        ));
-
-        // Create the message
-        $message = \Swift_Message::newInstance();
-        // Give the message a subject
-        $message->setSubject(Kernel::getService('translator')->trans(
+        ]);
+        $emailManager->setEmailTemplate('users/newUser_email.html.twig');
+        $emailManager->setEmailPlainTextTemplate('users/newUser_email.txt.twig');
+        $emailManager->setSubject(Kernel::getService('translator')->trans(
             'welcome.user.email.%site%',
             ['%site%' => $siteName]
         ));
-        // Set the From address with an associative array
-        $message->setFrom([$emailContact => $siteName]);
-        // Set the To addresses with an associative array
-        $message->setTo([$this->user->getEmail()]);
-        // Give it a body
-        $message->setBody($htmldoc->getHTML(), 'text/html');
+        $emailManager->setReceiver($this->user->getEmail());
+        $emailManager->setSender([$emailContact => $siteName]);
 
         // Send the message
-        return Kernel::getService('mailer')->send($message);
+        return $emailManager->send();
     }
 
     /**
@@ -151,48 +130,29 @@ class UserViewer implements ViewableInterface
             $siteName = "Unnamed site";
         }
 
-        $assignation = [
+        $emailManager = new EmailManager(
+            Kernel::getService('request'),
+            Kernel::getService('translator'),
+            Kernel::getService('twig.environment'),
+            Kernel::getService('mailer')
+        );
+        $emailManager->setAssignation([
             'resetLink' => $urlGenerator->generate('loginResetPage', [
                 'token' => $this->user->getConfirmationToken(),
             ], true),
             'user' => $this->user,
             'site' => $siteName,
             'mailContact' => $emailContact,
-        ];
-        /*
-         *  Site header image
-         */
-        $assignation['mainColor'] = SettingsBag::get('main_color');
-        $adminImage = SettingsBag::getDocument('admin_image');
-        if (null !== $adminImage &&
-            $adminImage instanceof Document) {
-            $documentViewer = new DocumentViewer($adminImage);
-            $assignation['headerImageSrc'] = $documentViewer->getDocumentUrlByArray([], true);
-        }
-        $emailBody = Kernel::getService('twig.environment')->render('users/reset_password_email.html.twig', $assignation);
-
-        /*
-         * inline CSS
-         */
-        $htmldoc = new InlineStyle($emailBody);
-        $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
-        ));
-
-        // Create the message
-        $message = \Swift_Message::newInstance();
-        // Give the message a subject
-        $message->setSubject(Kernel::getService('translator')->trans(
+        ]);
+        $emailManager->setEmailTemplate('users/reset_password_email.html.twig');
+        $emailManager->setEmailPlainTextTemplate('users/reset_password_email.txt.twig');
+        $emailManager->setSubject(Kernel::getService('translator')->trans(
             'reset.password.request'
         ));
-        // Set the From address with an associative array
-        $message->setFrom([$emailContact => $siteName]);
-        // Set the To addresses with an associative array
-        $message->setTo([$this->user->getEmail()]);
-        // Give it a body
-        $message->setBody($htmldoc->getHTML(), 'text/html');
+        $emailManager->setReceiver($this->user->getEmail());
+        $emailManager->setSender([$emailContact => $siteName]);
 
         // Send the message
-        return Kernel::getService('mailer')->send($message);
+        return $emailManager->send();
     }
 }

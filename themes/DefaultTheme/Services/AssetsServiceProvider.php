@@ -28,13 +28,13 @@ class AssetsServiceProvider implements ServiceProviderInterface
             $array = [];
 
             $array['headerImage'] = [
-                'width' => '1440',
+                'width' => 1440,
                 'progressive' => true,
                 'class' => 'img-responsive',
             ];
 
             $array['columnedImage'] = [
-                'width' => '720',
+                'width' => 720,
                 'progressive' => true,
                 'class' => 'img-responsive',
             ];

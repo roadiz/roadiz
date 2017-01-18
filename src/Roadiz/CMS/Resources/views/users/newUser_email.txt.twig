@@ -1,0 +1,20 @@
+{% extends 'base_email.txt.twig' %}
+
+{% block title %}{{ 'welcome.user.email.%site%'|trans({'%site%':site}) }}{% endblock %}
+
+{% block content_table %}
+{% trans %}your.user.account{% endtrans %}
+
+{{ url('loginPage') }}
+
+{% trans %}username{% endtrans %}:
+{{ user.username }}
+
+{% trans %}email{% endtrans %}:
+{{ user.email }}
+
+{% if user.getPlainPassword %}
+{% trans %}password{% endtrans %}:
+{{ user.plainPassword }}
+{% endif %}
+{% endblock %}
