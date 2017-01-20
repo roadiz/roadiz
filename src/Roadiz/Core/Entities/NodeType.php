@@ -152,11 +152,19 @@ class NodeType extends AbstractEntity
     private $reachable = true;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getReachable()
     {
         return $this->reachable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReachable()
+    {
+        return $this->getReachable();
     }
 
     /**
