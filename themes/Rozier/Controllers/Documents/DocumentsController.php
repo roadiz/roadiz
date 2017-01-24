@@ -812,7 +812,7 @@ class DocumentsController extends RozierApp
                 ],
             ])
             ->add('submitFolder', 'submit', [
-                'label' => 'link.folders',
+                'label' => false,
                 'attr' => [
                     'class' => 'uk-button uk-button-primary',
                     'title' => 'link.folders',
@@ -820,7 +820,7 @@ class DocumentsController extends RozierApp
                 ],
             ])
             ->add('submitUnfolder', 'submit', [
-                'label' => 'unlink.folders',
+                'label' => false,
                 'attr' => [
                     'class' => 'uk-button',
                     'title' => 'unlink.folders',

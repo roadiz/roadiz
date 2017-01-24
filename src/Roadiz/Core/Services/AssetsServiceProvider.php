@@ -33,6 +33,7 @@ use AM\InterventionRequest\Configuration;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
@@ -71,8 +72,9 @@ class AssetsServiceProvider implements ServiceProviderInterface
         };
 
         $container['interventionRequestConfiguration'] = function ($c) {
-
-            $cacheDir = $c['kernel']->getCacheDir() . '/rendered';
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $cacheDir = $kernel->getCacheDir() . '/rendered';
             if (!file_exists($cacheDir)) {
                 mkdir($cacheDir);
             }
@@ -84,7 +86,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
             $conf = new Configuration();
             $conf->setCachePath($cacheDir);
-            $conf->setImagesPath(ROADIZ_ROOT . '/files');
+            $conf->setImagesPath($kernel->getRootDir() . '/files');
             $conf->setDriver($imageDriver);
             $conf->setDefaultQuality($defaultQuality);
 

@@ -332,20 +332,14 @@ class AjaxNodesController extends AbstractAjaxController
                             $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
                             if ($request->get('statusName') == 'status') {
-                                $nodeStatuses = [
-                                    Node::DRAFT => 'draft',
-                                    Node::PENDING => 'pending',
-                                    Node::PUBLISHED => 'published',
-                                    Node::ARCHIVED => 'archived',
-                                    Node::DELETED => 'deleted',
-                                ];
                                 $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
                                     '%name%' => $node->getNodeName(),
-                                    '%status%' => $this->getTranslator()->trans($nodeStatuses[$node->getStatus()]),
+                                    '%status%' => $this->getTranslator()->trans(Node::getStatusLabel($node->getStatus())),
                                 ]);
                                 $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                                 $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
                             }
+
                             if ($request->get('statusName') == 'visible') {
                                 $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
                                     '%name%' => $node->getNodeName(),

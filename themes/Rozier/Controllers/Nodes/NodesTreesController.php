@@ -491,11 +491,12 @@ class NodesTreesController extends RozierApp
                         ->add('status', 'choice', [
                             'label' => false,
                             'data' => $status,
+                            'choices_as_values' => true,
                             'choices' => [
-                                Node::DRAFT => 'draft',
-                                Node::PENDING => 'pending',
-                                Node::PUBLISHED => 'published',
-                                Node::ARCHIVED => 'archived',
+                                Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
+                                Node::getStatusLabel(Node::PENDING) => Node::PENDING,
+                                Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
+                                Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
                             ],
                             'constraints' => [
                                 new NotBlank(),

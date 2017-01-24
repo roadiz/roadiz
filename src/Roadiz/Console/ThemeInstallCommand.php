@@ -39,6 +39,7 @@ use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -79,6 +80,8 @@ class ThemeInstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $classname = $input->getArgument('classname');
@@ -90,7 +93,7 @@ class ThemeInstallCommand extends Command
         try {
             $theme = $this->getTheme($classname);
             $array = explode('\\', $classname);
-            $this->themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
+            $this->themeRoot = $kernel->getRootDir() . "/themes/" . $array[count($array) - 2];
         } catch (TableNotFoundException $e) {
             $theme = null;
         }

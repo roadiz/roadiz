@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,7 +49,7 @@ class ImportController extends AppController
     {
         if (null !== $filename = $this->getFilename($request)) {
             if (null === $themeId) {
-                $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
+                $filename = $this->get('kernel')->getRootDir() . '/themes/Install/' . $filename;
             }
 
             return $this->importContent($filename, $classImporter, $themeId);
@@ -193,6 +194,7 @@ class ImportController extends AppController
             if (null === $themeId) {
                 $path = $pathFile;
             } else {
+                /** @var Theme $theme */
                 $theme = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
 
                 if ($theme === null) {
@@ -200,7 +202,7 @@ class ImportController extends AppController
                 }
 
                 $dir = explode('\\', $theme->getClassName());
-                $path = ROADIZ_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
+                $path = $this->get('kernel')->getRootDir() . "/themes/" . $dir[2] . '/' . $pathFile;
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);

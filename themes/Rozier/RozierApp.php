@@ -122,11 +122,11 @@ class RozierApp extends BackendController
         };
 
         $this->assignation['nodeStatuses'] = [
-            'draft' => Node::DRAFT,
-            'pending' => Node::PENDING,
-            'published' => Node::PUBLISHED,
-            'archived' => Node::ARCHIVED,
-            'deleted' => Node::DELETED,
+            Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
+            Node::getStatusLabel(Node::PENDING) => Node::PENDING,
+            Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
+            Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
+            Node::getStatusLabel(Node::DELETED) => Node::DELETED,
         ];
 
         return $this;

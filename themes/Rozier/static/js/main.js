@@ -140,11 +140,11 @@ Rozier.bindMainTrees = function () {
 
     var $tagTree = $('.tagtree-widget .root-tree');
     $tagTree.off('change.uk.nestable');
-    $tagTree.on('change.uk.nestable', Rozier.onNestableTagTreeChange );
+    $tagTree.on('change.uk.nestable', Rozier.onNestableTagTreeChange);
 
     var $folderTree = $('.foldertree-widget .root-tree');
     $folderTree.off('change.uk.nestable');
-    $folderTree.on('change.uk.nestable', Rozier.onNestableFolderTreeChange );
+    $folderTree.on('change.uk.nestable', Rozier.onNestableFolderTreeChange);
 
     // Tree element name
     _this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');

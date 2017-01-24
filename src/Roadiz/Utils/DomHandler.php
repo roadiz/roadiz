@@ -83,8 +83,6 @@ class DomHandler
         foreach ($cssFiles as $css) {
             if (file_exists($css)) {
                 $cssContent .= file_get_contents($css) . PHP_EOL;
-            } elseif (file_exists(ROADIZ_ROOT . $css)) {
-                $cssContent .= file_get_contents(ROADIZ_ROOT . $css) . PHP_EOL;
             }
         }
 

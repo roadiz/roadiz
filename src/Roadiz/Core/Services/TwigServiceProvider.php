@@ -36,6 +36,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
@@ -62,14 +63,18 @@ class TwigServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return $c['kernel']->getCacheDir() . '/twig_cache';
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return $kernel->getCacheDir() . '/twig_cache';
         };
 
         /*
          * Return every paths to search for twig templates.
          */
-        $container['twig.loaderFileSystem'] = function () {
-            $vendorDir = realpath(ROADIZ_ROOT . '/vendor');
+        $container['twig.loaderFileSystem'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $vendorDir = realpath($kernel->getRootDir() . '/vendor');
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
@@ -79,7 +84,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             return new \Twig_Loader_Filesystem([
                 // Default Form extension templates
                 $vendorTwigBridgeDir . '/Resources/views/Form',
-                ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views',
+                $kernel->getRootDir() . '/src/Roadiz/CMS/Resources/views',
             ]);
         };
 

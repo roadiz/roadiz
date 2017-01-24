@@ -118,7 +118,7 @@ class CustomFormController extends AppController
                 return $mixed->send();
             } else {
                 $this->assignation = array_merge($this->assignation, $mixed);
-                $this->assignation['grunt'] = include ROADIZ_ROOT . '/themes/Rozier/static/public/config/assets.config.php';
+                $this->assignation['grunt'] = include $this->get('kernel')->getRootDir() . '/themes/Rozier/static/public/config/assets.config.php';
 
                 return $this->render('forms/customForm.html.twig', $this->assignation);
             }
@@ -140,7 +140,7 @@ class CustomFormController extends AppController
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
-            $this->assignation['grunt'] = include ROADIZ_ROOT . '/themes/Rozier/static/public/config/assets.config.php';
+            $this->assignation['grunt'] = include $this->get('kernel')->getRootDir() . '/themes/Rozier/static/public/config/assets.config.php';
 
             return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }

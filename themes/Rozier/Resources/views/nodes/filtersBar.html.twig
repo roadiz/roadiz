@@ -56,20 +56,23 @@
 
                 {% if deleteNodesForm %}
                     {% form_theme deleteNodesForm '@Rozier/forms.html.twig' %}
-                    <form class="uk-form uk-form-horizontal node-bulk-delete-form" action="{{ path('nodesBulkDeletePage') }}" method="post" {{ form_enctype(deleteNodesForm) }}>
+                    <form class="uk-form uk-form-horizontal node-bulk-delete-form"
+                          action="{{ path('nodesBulkDeletePage') }}"
+                          method="post" {{ form_enctype(deleteNodesForm) }}>
                         {{ form_widget(deleteNodesForm) }}
-
                         <button type="submit"
                             class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-nodes"
                             title="{% trans %}bulk.delete.nodes{% endtrans %}"
-                            data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i> </button>
+                            data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></button>
                     </form>
                 {% endif %}
                 {# Forms #}
                 {% if tagNodesForm %}
                     <div class="bulk-folder-cont nodes-bulk-folder-cont">
                         {% form_theme tagNodesForm '@Rozier/forms.html.twig' %}
-                        <form class="uk-form uk-form-horizontal node-bulk-tag-form" action="#" method="post" {{ form_enctype(tagNodesForm) }}>
+                        <form class="uk-form uk-form-horizontal node-bulk-tag-form"
+                              action="#"
+                              method="post" {{ form_enctype(tagNodesForm) }}>
                             {{ form_widget(tagNodesForm) }}
                         </form>
                     </div>
@@ -77,13 +80,14 @@
                 {% if statusNodesForm %}
                     <div class="bulk-status-cont nodes-bulk-status-cont">
                         {% form_theme statusNodesForm '@Rozier/forms.html.twig' %}
-                        <form class="uk-form uk-form-horizontal node-bulk-status-form" action="{{ path('nodesBulkStatusPage') }}" method="get" {{ form_enctype(statusNodesForm) }}>
+                        <form class="uk-form uk-form-horizontal node-bulk-status-form"
+                              action="{{ path('nodesBulkStatusPage') }}"
+                              method="get" {{ form_enctype(statusNodesForm) }}>
                             {{ form_widget(statusNodesForm) }}
                         </form>
                     </div>
                 {% endif %}
             {% endspaceless %}
         </nav>
-
     </div>
 </nav>
