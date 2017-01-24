@@ -284,7 +284,6 @@ class AjaxNodesController extends AbstractAjaxController
                         ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
-
                         /*
                          * If node is published or more (archived/deleted)
                          * ask higher role to update
@@ -292,7 +291,6 @@ class AjaxNodesController extends AbstractAjaxController
                         if ($node->getStatus() >= Node::PUBLISHED &&
                             $request->get('statusName') == 'status' &&
                             !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-
                             return new JsonResponse(
                                 [
                                     'statusCode' => Response::HTTP_FORBIDDEN,
@@ -359,7 +357,6 @@ class AjaxNodesController extends AbstractAjaxController
                                 'name' => $request->get('statusName'),
                                 'value' => $value,
                             ];
-
                         } else {
                             $responseArray = [
                                 'statusCode' => Response::HTTP_FORBIDDEN,
