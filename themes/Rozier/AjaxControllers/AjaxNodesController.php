@@ -174,6 +174,8 @@ class AjaxNodesController extends AbstractAjaxController
 
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
+
+            /** @var Node $parent */
             $parent = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
@@ -190,6 +192,8 @@ class AjaxNodesController extends AbstractAjaxController
          */
         if (!empty($parameters['nextNodeId']) &&
             $parameters['nextNodeId'] > 0) {
+
+            /** @var Node $nextNode */
             $nextNode = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
@@ -197,6 +201,8 @@ class AjaxNodesController extends AbstractAjaxController
             }
         } elseif (!empty($parameters['prevNodeId']) &&
             $parameters['prevNodeId'] > 0) {
+
+            /** @var Node $prevNode */
             $prevNode = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
@@ -258,7 +264,9 @@ class AjaxNodesController extends AbstractAjaxController
 
         if ("nodeChangeStatus" == $request->get('_action') &&
             "" != $request->get('statusName')) {
-            // just verify role when updating status
+            /*
+             * just verify role when updating status
+             */
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
                 !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
@@ -266,13 +274,37 @@ class AjaxNodesController extends AbstractAjaxController
                     'statusCode' => Response::HTTP_FORBIDDEN,
                     'status' => 'danger',
                     'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
+                    'action' => $request->get('statusName'),
+                    'status_value' => $request->get('statusValue'),
                 ];
             } else {
                 if ($request->get('nodeId') > 0) {
+                    /** @var Node $node */
                     $node = $this->get('em')
                         ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
 
                     if (null !== $node) {
+
+                        /*
+                         * If node is published or more (archived/deleted)
+                         * ask higher role to update
+                         */
+                        if ($node->getStatus() >= Node::PUBLISHED &&
+                            $request->get('statusName') == 'status' &&
+                            !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
+
+                            return new JsonResponse(
+                                [
+                                    'statusCode' => Response::HTTP_FORBIDDEN,
+                                    'status' => 'danger',
+                                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
+                                    'action' => $request->get('statusName'),
+                                    'status_value' => $request->get('statusValue'),
+                                ],
+                                Response::HTTP_FORBIDDEN
+                            );
+                        }
+
                         /*
                          * Check if status name is a valid boolean node field.
                          */
@@ -280,68 +312,60 @@ class AjaxNodesController extends AbstractAjaxController
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
 
-                            if ($this->isGranted('ROLE_ACCESS_NODES_STATUS') ||
-                                $request->get('statusName') != 'status') {
-                                $node->$setter($value);
+                            $node->$setter($value);
 
-                                /*
-                                 * If set locked to true,
-                                 * need to disable dynamic nodeName
-                                 */
-                                if ($request->get('statusName') == 'locked' &&
-                                    $value === true) {
-                                    $node->setDynamicNodeName(false);
-                                }
-
-                                $this->em()->flush();
-
-                                /*
-                                 * Dispatch event
-                                 */
-                                $event = new FilterNodeEvent($node);
-                                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
-
-                                if ($request->get('statusName') == 'status') {
-                                    $nodeStatuses = [
-                                        Node::DRAFT => 'draft',
-                                        Node::PENDING => 'pending',
-                                        Node::PUBLISHED => 'published',
-                                        Node::ARCHIVED => 'archived',
-                                        Node::DELETED => 'deleted',
-                                    ];
-                                    $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
-                                        '%name%' => $node->getNodeName(),
-                                        '%status%' => $this->getTranslator()->trans($nodeStatuses[$node->getStatus()]),
-                                    ]);
-                                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-                                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
-                                }
-                                if ($request->get('statusName') == 'visible') {
-                                    $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
-                                        '%name%' => $node->getNodeName(),
-                                        '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
-                                    ]);
-                                    $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-                                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
-                                }
-
-                                $responseArray = [
-                                    'statusCode' => Response::HTTP_OK,
-                                    'status' => 'success',
-                                    'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', [
-                                        '%name%' => $node->getNodeName(),
-                                        '%field%' => $request->get('statusName'),
-                                    ]),
-                                    'name' => $request->get('statusName'),
-                                    'value' => $value,
-                                ];
-                            } else {
-                                $responseArray = [
-                                    'statusCode' => Response::HTTP_FORBIDDEN,
-                                    'status' => 'danger',
-                                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
-                                ];
+                            /*
+                             * If set locked to true,
+                             * need to disable dynamic nodeName
+                             */
+                            if ($request->get('statusName') == 'locked' &&
+                                $value === true) {
+                                $node->setDynamicNodeName(false);
                             }
+
+                            $this->em()->flush();
+
+                            /*
+                             * Dispatch event
+                             */
+                            $event = new FilterNodeEvent($node);
+                            $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+
+                            if ($request->get('statusName') == 'status') {
+                                $nodeStatuses = [
+                                    Node::DRAFT => 'draft',
+                                    Node::PENDING => 'pending',
+                                    Node::PUBLISHED => 'published',
+                                    Node::ARCHIVED => 'archived',
+                                    Node::DELETED => 'deleted',
+                                ];
+                                $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
+                                    '%name%' => $node->getNodeName(),
+                                    '%status%' => $this->getTranslator()->trans($nodeStatuses[$node->getStatus()]),
+                                ]);
+                                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+                                $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
+                            }
+                            if ($request->get('statusName') == 'visible') {
+                                $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
+                                    '%name%' => $node->getNodeName(),
+                                    '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
+                                ]);
+                                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+                                $this->get('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
+                            }
+
+                            $responseArray = [
+                                'statusCode' => Response::HTTP_OK,
+                                'status' => 'success',
+                                'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', [
+                                    '%name%' => $node->getNodeName(),
+                                    '%field%' => $request->get('statusName'),
+                                ]),
+                                'name' => $request->get('statusName'),
+                                'value' => $value,
+                            ];
+
                         } else {
                             $responseArray = [
                                 'statusCode' => Response::HTTP_FORBIDDEN,
