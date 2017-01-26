@@ -113,7 +113,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
         if ($matchedCtrl instanceof AppController) {
             $matchedCtrl->__init();
         }
-        
+
         if (null !== $this->stopwatch) {
             $this->stopwatch->stop('onControllerMatched');
         }

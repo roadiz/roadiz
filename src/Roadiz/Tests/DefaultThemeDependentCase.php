@@ -70,8 +70,8 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         static::$application->setAutoExit(false);
 
         static::runCommand('install -n');
-        static::runCommand('themes:install -n "Themes\\\\DefaultTheme\\\\DefaultThemeApp"');
-        static::runCommand('themes:install -n --data "Themes\\\\DefaultTheme\\\\DefaultThemeApp"');
+        static::runCommand('themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"');
+        static::runCommand('themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"');
         static::runCommand('generate:nsentities');
         static::runCommand('orm:schema-tool:update --dump-sql --force');
     }
