@@ -140,7 +140,7 @@ class ThemeInstaller
 
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
-                $assignation["status"]["import"][$filename] = file_exists(ROADIZ_ROOT . "/themes/" . $array[2] . "/" . $filename);
+                $assignation["status"]["import"][$filename] = file_exists($classname::getThemeFolder() . "/" . $filename);
                 $assignation['theme']['haveFileImport'] = true;
             }
         }
