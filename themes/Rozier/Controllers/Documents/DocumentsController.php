@@ -1114,6 +1114,7 @@ class DocumentsController extends RozierApp
                 $uploadedFile,
                 $this->get('em'),
                 $this->get('dispatcher'),
+                $this->get('kernel'),
                 null,
                 $this->get('logger')
             );
@@ -1148,6 +1149,7 @@ class DocumentsController extends RozierApp
                 $uploadedFile,
                 $this->get('em'),
                 $this->get('dispatcher'),
+                $this->get('kernel'),
                 $folder,
                 $this->get('logger')
             );

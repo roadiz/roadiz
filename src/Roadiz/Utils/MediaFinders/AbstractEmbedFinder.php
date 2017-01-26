@@ -240,6 +240,7 @@ abstract class AbstractEmbedFinder
             $file,
             $container['em'],
             $container['dispatcher'],
+            $container['kernel'],
             null,
             $container['logger']
         );

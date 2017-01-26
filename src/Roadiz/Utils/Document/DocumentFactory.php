@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\FileAwareInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -72,12 +73,17 @@ class DocumentFactory
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+    /**
+     * @var FileAwareInterface
+     */
+    private $fileAware;
 
     /**
      * DocumentFactory constructor.
      * @param File $file
      * @param EntityManager $em
      * @param EventDispatcherInterface $dispatcher
+     * @param FileAwareInterface $fileAware File system paths provider
      * @param Folder $folder
      * @param LoggerInterface $logger
      */
@@ -85,6 +91,7 @@ class DocumentFactory
         File $file,
         EntityManager $em,
         EventDispatcherInterface $dispatcher,
+        FileAwareInterface $fileAware,
         Folder $folder = null,
         LoggerInterface $logger = null
     ) {
@@ -93,6 +100,7 @@ class DocumentFactory
         $this->logger = $logger;
         $this->em = $em;
         $this->dispatcher = $dispatcher;
+        $this->fileAware = $fileAware;
 
         if (null === $this->logger) {
             $this->logger = new NullLogger();
@@ -140,7 +148,7 @@ class DocumentFactory
         }
 
         $this->file->move(
-            Document::getFilesFolder() . '/' . $document->getFolder(),
+            $this->fileAware->getPublicFilesPath() . '/' . $document->getFolder(),
             $document->getFilename()
         );
 
@@ -178,7 +186,7 @@ class DocumentFactory
 
         if (StringHandler::cleanForFilename($this->getFileName()) == $document->getFilename()) {
             $finder = new Finder();
-            $previousFolder = Document::getFilesFolder() . '/' . $document->getFolder();
+            $previousFolder = $this->fileAware->getPublicFilesPath() . '/' . $document->getFolder();
 
             if ($fs->exists($previousFolder)) {
                 $finder->files()->in($previousFolder);
@@ -196,7 +204,7 @@ class DocumentFactory
         $this->parseSvgMimeType($document);
 
         $this->file->move(
-            Document::getFilesFolder() . '/' . $document->getFolder(),
+            $this->fileAware->getPublicFilesPath() . '/' . $document->getFolder(),
             $document->getFilename()
         );
 

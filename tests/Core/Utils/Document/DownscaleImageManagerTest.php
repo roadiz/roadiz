@@ -133,7 +133,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
             $document->setFilename($image->getBasename());
             $document->setMimeType($image->getMimeType());
 
-            $fs->copy($file, Document::getFilesFolder() . '/' . $document->getFolder() . '/' . $document->getFilename());
+            $fs->copy($file, Kernel::getInstance()->getPublicFilesPath() . '/' . $document->getFolder() . '/' . $document->getFilename());
 
             Kernel::getService('em')->persist($document);
 

@@ -467,6 +467,7 @@ class Font extends AbstractDateTimed
 
     /**
      * @return string Return absolute path to fonts folder. This path should be protected.
+     * @deprecated Use Kernel::getFontsFilesPath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getFilesFolder()
     {
@@ -474,6 +475,7 @@ class Font extends AbstractDateTimed
     }
     /**
      * @return string
+     * @deprecated Use Kernel::getFontsFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getFilesFolderName()
     {

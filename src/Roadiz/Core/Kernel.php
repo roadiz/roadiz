@@ -73,7 +73,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  *
  */
-class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface
+class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
@@ -441,8 +441,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getName()
     {
@@ -451,8 +449,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getRootDir()
     {
@@ -461,8 +457,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getStartTime()
     {
@@ -471,8 +465,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getCacheDir()
     {
@@ -484,8 +476,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getLogDir()
     {
@@ -494,8 +484,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getCharset()
     {
@@ -526,7 +514,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * @deprecated since version 2.6, to be removed in 3.0.
      * @param string $class
-     *
      * @return bool
      */
     public function isClassInActiveBundle($class)
@@ -549,5 +536,53 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         list($environment, $debug, $preview) = unserialize($data);
         $this->__construct($environment, $debug, $preview);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublicFilesPath()
+    {
+        return $this->getRootDir() . $this->getPublicFilesBasePath();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublicFilesBasePath()
+    {
+        return '/files';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrivateFilesPath()
+    {
+        return $this->getRootDir() . $this->getPrivateFilesBasePath();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrivateFilesBasePath()
+    {
+        return '/files/private';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFontsFilesPath()
+    {
+        return $this->getRootDir() . $this->getFontsFilesBasePath();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFontsFilesBasePath()
+    {
+        return '/files/fonts';
     }
 }

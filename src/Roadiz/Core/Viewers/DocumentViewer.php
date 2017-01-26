@@ -419,74 +419,76 @@ class DocumentViewer implements ViewableInterface
         $resolver = new ViewOptionsResolver();
         $options = $resolver->resolve($options);
 
-        $packageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
-
         if ($options['noProcess'] === true || !$this->document->isImage()) {
-            return Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), $packageName);
-        } else {
-            $slirArgs = [];
-
-            if (null === $options['fit'] && $options['width'] > 0) {
-                $slirArgs['w'] = 'w' . (int) $options['width'];
-            }
-            if (null === $options['fit'] && $options['height'] > 0) {
-                $slirArgs['h'] = 'h' . (int) $options['height'];
-            }
-            if (null !== $options['crop']) {
-                $slirArgs['c'] = 'c' . strip_tags($options['crop']);
-            }
-            if ($options['blur'] > 0) {
-                $slirArgs['l'] = 'l' . ($options['blur']);
-            }
-            if (null !== $options['fit']) {
-                $slirArgs['f'] = 'f' . strip_tags($options['fit']);
-            }
-            if ($options['rotate'] > 0) {
-                $slirArgs['r'] = 'r' . ($options['rotate']);
-            }
-            if ($options['sharpen'] > 0) {
-                $slirArgs['s'] = 's' . ($options['sharpen']);
-            }
-            if ($options['contrast'] > 0) {
-                $slirArgs['k'] = 'k' . ($options['contrast']);
-            }
-            if ($options['grayscale']) {
-                $slirArgs['g'] = 'g1';
-            }
-            if ($options['quality'] > 0) {
-                $slirArgs['q'] = 'q' . $options['quality'];
-            }
-            if (null !== $options['background']) {
-                $slirArgs['b'] = 'b' . strip_tags($options['background']);
-            }
-            if ($options['progressive']) {
-                $slirArgs['p'] = 'p1';
-            }
-
-            $routeParams = [
-                'queryString' => implode('-', $slirArgs),
-                'filename' => $this->document->getRelativeUrl(),
-            ];
-
-            /*
-             * Direct return generated URL or path
-             * no need to use Assets package because it would
-             * duplicate path name if your website is not hosted at your
-             * server root.
-             */
-            if ($absolute === false) {
-                return Kernel::getService('urlGenerator')->generate(
-                    'interventionRequestProcess',
-                    $routeParams,
-                    UrlGenerator::ABSOLUTE_PATH
-                );
-            } else {
-                return Kernel::getService('urlGenerator')->generate(
-                    'interventionRequestProcess',
-                    $routeParams,
-                    UrlGenerator::ABSOLUTE_URL
-                );
-            }
+            $documentPackageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
+            return Kernel::getService('assetPackages')->getUrl(
+                $this->document->getRelativeUrl(),
+                $documentPackageName
+            );
         }
+
+        $defaultPackageName = $absolute ? Packages::ABSOLUTE : null;
+        return Kernel::getService('assetPackages')->getUrl(
+            $this->getProcessedDocumentUrlByArray($options, $absolute),
+            $defaultPackageName
+        );
+    }
+
+    /**
+     * @param array $options
+     * @param bool $absolute
+     * @return string
+     */
+    protected function getProcessedDocumentUrlByArray(array &$options = [], $absolute = false)
+    {
+        $interventionRequestOptions = [];
+
+        if (null === $options['fit'] && $options['width'] > 0) {
+            $interventionRequestOptions['w'] = 'w' . (int) $options['width'];
+        }
+        if (null === $options['fit'] && $options['height'] > 0) {
+            $interventionRequestOptions['h'] = 'h' . (int) $options['height'];
+        }
+        if (null !== $options['crop']) {
+            $interventionRequestOptions['c'] = 'c' . strip_tags($options['crop']);
+        }
+        if ($options['blur'] > 0) {
+            $interventionRequestOptions['l'] = 'l' . ($options['blur']);
+        }
+        if (null !== $options['fit']) {
+            $interventionRequestOptions['f'] = 'f' . strip_tags($options['fit']);
+        }
+        if ($options['rotate'] > 0) {
+            $interventionRequestOptions['r'] = 'r' . ($options['rotate']);
+        }
+        if ($options['sharpen'] > 0) {
+            $interventionRequestOptions['s'] = 's' . ($options['sharpen']);
+        }
+        if ($options['contrast'] > 0) {
+            $interventionRequestOptions['k'] = 'k' . ($options['contrast']);
+        }
+        if ($options['grayscale']) {
+            $interventionRequestOptions['g'] = 'g1';
+        }
+        if ($options['quality'] > 0) {
+            $interventionRequestOptions['q'] = 'q' . $options['quality'];
+        }
+        if (null !== $options['background']) {
+            $interventionRequestOptions['b'] = 'b' . strip_tags($options['background']);
+        }
+        if ($options['progressive']) {
+            $interventionRequestOptions['p'] = 'p1';
+        }
+
+        $routeParams = [
+            'queryString' => implode('-', $interventionRequestOptions),
+            'filename' => $this->document->getRelativeUrl(),
+        ];
+        
+        return Kernel::getService('urlGenerator')->generate(
+            'interventionRequestProcess',
+            $routeParams,
+            UrlGenerator::ABSOLUTE_PATH
+        );
     }
 }

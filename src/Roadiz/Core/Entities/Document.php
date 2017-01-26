@@ -290,7 +290,6 @@ class Document extends AbstractDateTimed
      * Set folder name.
      *
      * @param $folder
-     *
      * @return $this
      */
     public function setFolder($folder)
@@ -420,9 +419,9 @@ class Document extends AbstractDateTimed
     {
         return $this->private;
     }
+
     /**
      * @param boolean $private
-     *
      * @return $this
      */
     public function setPrivate($private)
@@ -439,6 +438,7 @@ class Document extends AbstractDateTimed
     {
         return new DocumentViewer($this);
     }
+
     /**
      * @return \RZ\Roadiz\Core\Handlers\DocumentHandler
      */
@@ -527,6 +527,9 @@ class Document extends AbstractDateTimed
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function hasTranslations()
     {
         return (boolean) $this->getDocumentTranslations()->count();
@@ -545,6 +548,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return string Return absolute path to public files.
+     * @deprecated Use Kernel::getPublicFilesPath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getFilesFolder()
     {
@@ -553,6 +557,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return string
+     * @deprecated Use Kernel::getPublicFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getFilesFolderName()
     {
@@ -561,6 +566,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return string Return absolute path to private files. This path should be protected.
+     * @deprecated Use Kernel::getPrivateFilesPath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getPrivateFilesFolder()
     {
@@ -569,6 +575,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return string
+     * @deprecated Use Kernel::getPrivateFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getPrivateFilesFolderName()
     {
