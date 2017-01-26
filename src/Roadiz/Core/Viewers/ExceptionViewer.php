@@ -34,6 +34,7 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -181,7 +182,7 @@ class ExceptionViewer
                 $this->getHttpStatusCode($e)
             );
         } else {
-            $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
+            $html = file_get_contents(CmsController::getViewsFolder() . '/emerg.html');
             $html = str_replace('{{ httpCode }}', $this->getHttpStatusCode($e), $html);
             $html = str_replace('{{ humanMessage }}', $humanMessage, $html);
 

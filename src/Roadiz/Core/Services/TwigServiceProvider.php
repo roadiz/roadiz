@@ -50,6 +50,7 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 
 /**
  * Register Twig services for dependency injection container.
@@ -78,13 +79,12 @@ class TwigServiceProvider implements ServiceProviderInterface
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
-            $vendorTwigBridgeDir =
-            $vendorDir . '/symfony/twig-bridge';
+            $vendorTwigBridgeDir = $vendorDir . '/symfony/twig-bridge';
 
             return new \Twig_Loader_Filesystem([
                 // Default Form extension templates
                 $vendorTwigBridgeDir . '/Resources/views/Form',
-                $kernel->getRootDir() . '/src/Roadiz/CMS/Resources/views',
+                CmsController::getViewsFolder(),
             ]);
         };
 

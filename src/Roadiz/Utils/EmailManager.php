@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 
 /**
  * Class EmailManager
@@ -79,7 +80,7 @@ class EmailManager
     protected $emailPlainTextTemplate = null;
 
     /** @var string */
-    protected $emailStylesheet = '/src/Roadiz/CMS/Resources/css/transactionalStyles.css';
+    protected $emailStylesheet;
 
     /**
      * @var Request
@@ -116,6 +117,11 @@ class EmailManager
         $this->templating = $templating;
         $this->assignation = [];
         $this->message = null;
+
+        /*
+         * Sets a default CSS for emails.
+         */
+        $this->emailStylesheet = CmsController::getResourcesFolder() . '/css/transactionalStyles.css';
     }
 
     /**
@@ -134,7 +140,7 @@ class EmailManager
         if (null !== $this->getEmailStylesheet()) {
             $htmldoc = new InlineStyle($this->renderHtmlEmailBody());
             $htmldoc->applyStylesheet(file_get_contents(
-                ROADIZ_ROOT . $this->getEmailStylesheet()
+                $this->getEmailStylesheet()
             ));
 
             return $htmldoc->getHTML();

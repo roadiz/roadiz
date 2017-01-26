@@ -44,7 +44,7 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 /**
  * Special controller app file for assets management with InterventionRequest lib.
  */
-class AssetsController extends AppController
+class AssetsController extends CmsController
 {
     /**
      * Initialize controller with NO twig environment.
@@ -58,23 +58,6 @@ class AssetsController extends AppController
      */
     public function prepareBaseAssignation()
     {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getRoutes()
-    {
-        $locator = new FileLocator([
-            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ]);
-
-        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
-            $loader = new YamlFileLoader($locator);
-            return $loader->load('assetsRoutes.yml');
-        }
-
-        return null;
     }
 
     /**

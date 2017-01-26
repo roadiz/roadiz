@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
@@ -65,7 +66,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (null !== $this->theme) {
                 $ctrl = $this->theme->getClassName();
             } else {
-                $ctrl = 'RZ\Roadiz\CMS\Controllers\FrontendController';
+                throw new NotFoundHttpException("Cannot find any available theme.");
             }
 
             if (null !== $this->logger) {

@@ -49,7 +49,7 @@ class DevKernel extends Kernel
      * @param bool $preview
      * @param string $appName
      */
-    public function __construct($environment, $debug, $preview = false, $appName = "roadiz_test")
+    public function __construct($environment, $debug, $preview = false, $appName = "roadiz_dev")
     {
         parent::__construct($environment, $debug, $preview);
 
@@ -63,7 +63,7 @@ class DevKernel extends Kernel
      * @param string $appName
      * @return null
      */
-    public static function getInstance($environment = 'prod', $debug = false, $preview = false, $appName = "roadiz_test")
+    public static function getInstance($environment = 'dev', $debug = true, $preview = false, $appName = "roadiz_dev")
     {
         if (static::$instance === null) {
             static::$instance = new DevKernel($environment, $debug, $preview, $appName);

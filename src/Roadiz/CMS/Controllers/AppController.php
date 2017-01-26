@@ -50,7 +50,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Base class for Roadiz themes.
  */
-class AppController extends Controller
+abstract class AppController extends Controller
 {
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
@@ -120,6 +120,20 @@ class AppController extends Controller
     }
 
     /**
+     * @return string Main theme class name
+     */
+    public static function getThemeMainClassName() {
+        return static::getThemeDir() . 'App';
+    }
+
+    /**
+     * @return string Main theme class (FQN class with namespace)
+     */
+    public static function getThemeMainClass() {
+        return '\\Themes\\' . static::getThemeDir() . '\\' . static::getThemeMainClassName();
+    }
+
+    /**
      * Theme requires a minimal CMS version.
      *
      * Example: "*" will accept any CMS version. Or "3.0.*" will
@@ -171,22 +185,31 @@ class AppController extends Controller
     }
 
     /**
+     * Return a file locator with theme
+     * Resource folder.
+     *
+     * @return FileLocator
+     */
+    public static function getFileLocator()
+    {
+        $resourcesFolder = static::getResourcesFolder();
+        return new FileLocator([
+            $resourcesFolder,
+            $resourcesFolder . '/routing',
+            $resourcesFolder . '/config',
+        ]);
+    }
+
+    /**
      * @return RouteCollection
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator([
-            static::getResourcesFolder(),
-        ]);
-
-        if (file_exists(static::getResourcesFolder() . '/routes.yml')) {
-            $loader = new YamlFileLoader($locator);
-
-            return $loader->load('routes.yml');
-        }
-
-        return null;
+        $locator = static::getFileLocator();
+        $loader = new YamlFileLoader($locator);
+        return $loader->load('routes.yml');
     }
+
     /**
      * These routes are used to extend Roadiz back-office.
      *
@@ -194,25 +217,29 @@ class AppController extends Controller
      */
     public static function getBackendRoutes()
     {
-        $locator = new FileLocator([
-            static::getResourcesFolder(),
-        ]);
+        $locator = static::getFileLocator();
 
-        if (file_exists(static::getResourcesFolder() . '/backend-routes.yml')) {
+        try {
             $loader = new YamlFileLoader($locator);
-
             return $loader->load('backend-routes.yml');
+        } catch (\InvalidArgumentException $e) {
+            return null;
         }
-
-        return null;
     }
 
     /**
+     * Return theme Resource folder according to
+     * main theme class inheriting AppController.
+     *
+     * Uses \ReflectionClass to resolve final theme class folder
+     * whether it’s located in project folder or in vendor folder.
+     *
      * @return string
      */
     public static function getResourcesFolder()
     {
-        return ROADIZ_ROOT . '/themes/' . static::$themeDir . '/Resources';
+        $class_info = new \ReflectionClass(static::getThemeMainClass());
+        return dirname($class_info->getFileName()) . '/Resources';
     }
     /**
      * @return string
@@ -220,6 +247,13 @@ class AppController extends Controller
     public static function getViewsFolder()
     {
         return static::getResourcesFolder() . '/views';
+    }
+    /**
+     * @return string
+     */
+    public static function getTranslationsFolder()
+    {
+        return static::getResourcesFolder() . '/translations';
     }
     /**
      * @return string
@@ -563,6 +597,8 @@ class AppController extends Controller
     }
 
     /**
+     * Return all Form errors as an array.
+     *
      * @param Form $form
      * @return array
      */

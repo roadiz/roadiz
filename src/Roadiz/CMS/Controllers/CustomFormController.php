@@ -47,39 +47,14 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomFormController extends AppController
+class CustomFormController extends CmsController
 {
-    /**
-     * @return string
-     */
-    public static function getResourcesFolder()
-    {
-        return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
-    }
     /**
      * @return string
      */
     public function getStaticResourcesUrl()
     {
         return $this->get('assetPackages')->getUrl('/themes/Rozier/static/');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getRoutes()
-    {
-        $locator = new FileLocator([
-            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ]);
-
-        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
-            $loader = new YamlFileLoader($locator);
-
-            return $loader->load('entryPointsRoutes.yml');
-        }
-
-        return null;
     }
 
     /**

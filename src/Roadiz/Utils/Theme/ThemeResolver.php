@@ -101,12 +101,9 @@ class ThemeResolver
                 $this->frontendThemes = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableFrontends();
 
                 if (count($this->frontendThemes) === 0) {
-                    $defaultTheme = new Theme();
-                    $defaultTheme->setClassName('RZ\Roadiz\CMS\Controllers\FrontendController');
-                    $defaultTheme->setAvailable(true);
-
-                    $this->frontendThemes[] = $defaultTheme;
+                    return [];
                 }
+
                 $this->stopwatch->stop('getFrontendThemes');
             }
             return $this->frontendThemes;

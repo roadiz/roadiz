@@ -24,56 +24,35 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file BackendController.php
+ * @file CmsController.php
  * @author Ambroise Maupate
  */
+
 namespace RZ\Roadiz\CMS\Controllers;
 
-use Pimple\Container;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Utils\Security\FirewallEntry;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 /**
- * Special controller app file for backend themes.
- *
- * This AppController implementation will use a security scheme
+ * Controller abstract class for global CMS util actions.
  */
-abstract class BackendController extends AppController
+abstract class CmsController extends AppController
 {
-    protected static $backendTheme = true;
+     /**
+     * {@inheritdoc}
+     */
+    public static function getResourcesFolder()
+    {
+        $class_info = new \ReflectionClass(get_called_class());
+        return realpath(dirname($class_info->getFileName()) . '/../Resources');
+    }
 
     /**
-     * Append objects to global container.
-     *
-     * @param Container $container
+     * {@inheritdoc}
      */
-    public static function setupDependencyInjection(Container $container)
+    public static function getRoutes()
     {
-        parent::setupDependencyInjection($container);
-
-        $firewallBasePattern = '^/rz-admin';
-        $firewallBasePath = '/rz-admin';
-        $firewallLogin = '/login';
-        $firewallLogout = $firewallBasePath . '/logout';
-        $firewallLoginCheck = $firewallBasePath . '/login_check';
-        $firewallBaseRole = Role::ROLE_BACKEND_USER;
-
-        $firewallEntry = new FirewallEntry(
-            $container,
-            $firewallBasePattern,
-            $firewallBasePath,
-            $firewallLogin,
-            $firewallLogout,
-            $firewallLoginCheck,
-            $firewallBaseRole
-        );
-        $firewallEntry->withSwitchUserListener();
-        $firewallEntry->withReferer();
-
-        $container['firewallMap']->add(
-            $firewallEntry->getRequestMatcher(),
-            $firewallEntry->getListeners(),
-            $container['firewallExceptionListener']
-        );
+        $locator = static::getFileLocator();
+        $loader = new YamlFileLoader($locator);
+        return $loader->load('routes.yml');
     }
 }

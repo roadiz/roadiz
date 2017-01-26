@@ -45,7 +45,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 /**
  * Defines entry points for Roadiz.
  */
-class EntryPointsController extends AppController
+class EntryPointsController extends CmsController
 {
     const CONTACT_FORM_TOKEN_INTENTION = 'contact_form';
 
@@ -53,32 +53,6 @@ class EntryPointsController extends AppController
         'email',
         'message',
     ];
-
-    /**
-     * @return string
-     */
-    public static function getResourcesFolder()
-    {
-        return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getRoutes()
-    {
-        $locator = new FileLocator([
-            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ]);
-
-        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
-            $loader = new YamlFileLoader($locator);
-
-            return $loader->load('entryPointsRoutes.yml');
-        }
-
-        return null;
-    }
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
