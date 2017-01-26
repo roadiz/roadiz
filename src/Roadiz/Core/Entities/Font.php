@@ -466,7 +466,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string Return absolute path to fonts folder. This path should be protected.
      */
     public static function getFilesFolder()
     {

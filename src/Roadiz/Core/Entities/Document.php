@@ -325,7 +325,7 @@ class Document extends AbstractDateTimed
     /**
      * Only return public absolute file path.
      *
-     * @return string
+     * @return string|null
      */
     public function getPublicAbsolutePath()
     {
@@ -339,7 +339,7 @@ class Document extends AbstractDateTimed
     /**
      * Only return private absolute file path.
      *
-     * @return string
+     * @return string|null
      */
     public function getPrivateAbsolutePath()
     {
@@ -544,7 +544,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string Return absolute path to public files.
      */
     public static function getFilesFolder()
     {
@@ -560,7 +560,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string Return absolute path to private files. This path should be protected.
      */
     public static function getPrivateFilesFolder()
     {

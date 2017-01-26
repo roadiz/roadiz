@@ -76,10 +76,8 @@ EOF
          */
         $kernel->initEvents();
 
-        $container = $kernel->getContainer();
-
         /** @var EventDispatcher $dispatcher */
-        $dispatcher = $container['dispatcher'];
+        $dispatcher = $kernel->get('dispatcher');
 
         $table = new Table($output);
         $table->setHeaders(['Event name', 'Listener', 'Method', 'Priority']);

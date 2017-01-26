@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -49,7 +50,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Base controller.
  */
-abstract class Controller
+abstract class Controller implements ContainerAwareInterface
 {
     /**
      * @var Container|null
@@ -70,16 +71,16 @@ abstract class Controller
      * Sets the Container associated with this Controller.
      *
      * @param Container $container
+     * @return ContainerAwareInterface
      */
     public function setContainer(Container $container)
     {
         $this->container = $container;
+        return $this;
     }
 
     /**
-     * Get general dependency injection container.
-     *
-     * @return Container
+     * {@inheritdoc}
      */
     public function getContainer()
     {
@@ -101,27 +102,19 @@ abstract class Controller
     }
 
     /**
-     * Gets a container service by its id.
-     *
-     * *Alias for `$this->container[$key]`*
-     *
-     * @param string $id
-     * @return mixed The service
+     * {@inheritdoc}
      */
-    public function get($id)
+    public function get($serviceName)
     {
-        return $this->container[$id];
+        return $this->container->offsetGet($serviceName);
     }
 
     /**
-     * Returns true if the service id is defined.
-     *
-     * @param string $id
-     * @return bool true if the service id is defined, false otherwise
+     * {@inheritdoc}
      */
-    public function has($id)
+    public function has($serviceName)
     {
-        return $this->container->offsetExists($id);
+        return $this->container->offsetExists($serviceName);
     }
 
     /**

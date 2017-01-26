@@ -73,7 +73,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  *
  */
-class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface
+class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
@@ -83,6 +83,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public static $cmsVersion = "0.16.0";
     protected static $instance = null;
 
+    /**
+     * @var Container|null
+     */
     public $container = null;
     protected $environment;
     protected $debug;
@@ -346,11 +349,36 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * @return \Pimple\Container
+     * {@inheritdoc}
      */
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($serviceName)
+    {
+        return $this->container->offsetGet($serviceName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($serviceName)
+    {
+        return $this->container->offsetExists($serviceName);
     }
 
     /**

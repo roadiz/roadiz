@@ -85,8 +85,7 @@ class InstallApp extends AppController
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
-                'filesUrl' => $this->getRequest()
-                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
