@@ -36,10 +36,8 @@ use Monolog\Logger;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Repositories\FontRepository;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 /**
  * Special controller app file for assets management with InterventionRequest lib.

@@ -110,7 +110,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
      * @param string                          $string
      * @param \RZ\Roadiz\Core\Entities\NodeType $type
      *
-     * @return \RZ\Roadiz\Core\Entities\NodeSource
+     * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
     public function deserializeWithNodeType($string, NodeType $type)
     {

@@ -117,7 +117,7 @@ class TagHandler
     }
 
     /**
-     * @return ArrayCollection ArrayCollection of Translation
+     * @return array Array of Translation
      */
     public function getAvailableTranslations()
     {
@@ -163,7 +163,7 @@ class TagHandler
     }
 
     /**
-     * @return ArrayCollection ArrayCollection of Translation
+     * @return array Array of Translation
      */
     public function getUnavailableTranslations()
     {

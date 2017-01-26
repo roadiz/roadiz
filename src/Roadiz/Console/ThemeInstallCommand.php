@@ -80,8 +80,6 @@ class ThemeInstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Kernel $kernel */
-        $kernel = $this->getHelper('kernel')->getKernel();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $text = "";
         $classname = $input->getArgument('classname');
@@ -92,7 +90,6 @@ class ThemeInstallCommand extends Command
 
         try {
             $theme = $this->getTheme($classname);
-            $array = explode('\\', $classname);
             $this->themeRoot = $classname::getThemeFolder();
         } catch (TableNotFoundException $e) {
             $theme = null;
@@ -207,6 +204,7 @@ class ThemeInstallCommand extends Command
 
     protected function importTheme($classname, &$text)
     {
+        /** @var Kernel $kernel */
         $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $themeFile = $classname;
         $themeFile = str_replace('\\', '/', $themeFile);

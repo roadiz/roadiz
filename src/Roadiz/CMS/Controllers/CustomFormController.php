@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use Themes\Rozier\RozierApp;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
@@ -40,13 +39,12 @@ use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Utils\CustomForm\CustomFormHelper;
 use RZ\Roadiz\Utils\EmailManager;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
+use Themes\Rozier\RozierApp;
 
 class CustomFormController extends CmsController
 {

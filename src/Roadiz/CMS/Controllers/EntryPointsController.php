@@ -34,12 +34,10 @@ use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**

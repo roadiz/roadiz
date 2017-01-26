@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -47,6 +49,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CacheCommand extends Command
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
     private $nsCacheHelper;
 
@@ -102,6 +107,7 @@ class CacheCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
+        /** @var Kernel $kernel */
         $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');

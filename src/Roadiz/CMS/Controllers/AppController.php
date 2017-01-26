@@ -122,14 +122,16 @@ abstract class AppController extends Controller
     /**
      * @return string Main theme class name
      */
-    public static function getThemeMainClassName() {
+    public static function getThemeMainClassName()
+    {
         return static::getThemeDir() . 'App';
     }
 
     /**
      * @return string Main theme class (FQN class with namespace)
      */
-    public static function getThemeMainClass() {
+    public static function getThemeMainClass()
+    {
         return '\\Themes\\' . static::getThemeDir() . '\\' . static::getThemeMainClassName();
     }
 

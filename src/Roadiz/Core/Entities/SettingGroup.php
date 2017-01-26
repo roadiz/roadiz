@@ -57,7 +57,7 @@ class SettingGroup extends AbstractEntity
     /**
      * @param string $name
      *
-     * @return $this
+     * @return SettingGroup
      */
     public function setName($name)
     {
@@ -80,7 +80,7 @@ class SettingGroup extends AbstractEntity
 
     /**
      * @param boolean $newinMenu
-     * @return $this
+     * @return SettingGroup
      */
     public function setInMenu($newinMenu)
     {
@@ -111,8 +111,7 @@ class SettingGroup extends AbstractEntity
     }
     /**
      * @param \RZ\Roadiz\Core\Entities\Setting $setting
-     *
-     * @return $this
+     * @return SettingGroup
      */
     public function addSetting($setting)
     {
@@ -124,8 +123,7 @@ class SettingGroup extends AbstractEntity
 
     /**
      * @param ArrayCollection $settings
-     *
-     * @return $this
+     * @return SettingGroup
      */
     public function addSettings($settings)
     {
@@ -134,5 +132,6 @@ class SettingGroup extends AbstractEntity
                 $this->settings->add($setting);
             }
         }
+        return $this;
     }
 }

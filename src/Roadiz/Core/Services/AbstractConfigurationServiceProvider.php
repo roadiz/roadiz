@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Register configuration services for dependency injection container.
@@ -61,8 +62,10 @@ abstract class AbstractConfigurationServiceProvider implements ServiceProviderIn
             /*
              * We need to work with absolute paths.
              */
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             foreach ($relPaths as $relPath) {
-                $absPaths[] = $c['kernel']->getRootDir() . '/' . $relPath;
+                $absPaths[] = $kernel->getRootDir() . '/' . $relPath;
             }
 
             return $absPaths;

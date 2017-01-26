@@ -63,11 +63,14 @@ class AssetsServiceProvider implements ServiceProviderInterface
          * @return Packages
          */
         $container['assetPackages'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+
             return new Packages(
                 $c['versionStrategy'],
                 $c['requestStack'],
                 SettingsBag::get('static_domain_name'),
-                $c['kernel']->isPreview()
+                $kernel->isPreview()
             );
         };
 

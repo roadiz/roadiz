@@ -39,6 +39,21 @@ use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Services\AssetsServiceProvider;
+use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
+use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
+use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
+use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\FormServiceProvider;
+use RZ\Roadiz\Core\Services\LoggerServiceProvider;
+use RZ\Roadiz\Core\Services\MailerServiceProvider;
+use RZ\Roadiz\Core\Services\RoutingServiceProvider;
+use RZ\Roadiz\Core\Services\SecurityServiceProvider;
+use RZ\Roadiz\Core\Services\SolrServiceProvider;
+use RZ\Roadiz\Core\Services\ThemeServiceProvider;
+use RZ\Roadiz\Core\Services\TranslationServiceProvider;
+use RZ\Roadiz\Core\Services\TwigServiceProvider;
+use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Utils\DebugPanel;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -142,21 +157,21 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
 
-        $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\AssetsServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\BackofficeServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\DoctrineServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\EntityApiServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\FormServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\MailerServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\RoutingServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\SecurityServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\SolrServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\ThemeServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\TranslationServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\TwigServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\LoggerServiceProvider());
+        $container->register(new YamlConfigurationServiceProvider());
+        $container->register(new AssetsServiceProvider());
+        $container->register(new BackofficeServiceProvider());
+        $container->register(new DoctrineServiceProvider());
+        $container->register(new EmbedDocumentsServiceProvider());
+        $container->register(new EntityApiServiceProvider());
+        $container->register(new FormServiceProvider());
+        $container->register(new MailerServiceProvider());
+        $container->register(new RoutingServiceProvider());
+        $container->register(new SecurityServiceProvider());
+        $container->register(new SolrServiceProvider());
+        $container->register(new ThemeServiceProvider());
+        $container->register(new TranslationServiceProvider());
+        $container->register(new TwigServiceProvider());
+        $container->register(new LoggerServiceProvider());
 
         /*
          * Load additional service providers

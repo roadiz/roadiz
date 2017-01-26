@@ -116,7 +116,6 @@ class ThemeInstaller
      */
     public static function assignSummaryInfo($classname, &$assignation, $locale)
     {
-        $array = explode('\\', $classname);
         $data = static::getThemeInformation($classname);
 
         $assignation["theme"] = [

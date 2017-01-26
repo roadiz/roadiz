@@ -24,8 +24,9 @@
             {% endblock %}
         </section>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.1.3.min.js"><\/script>')</script>
+        <!-- ##debug_panel## -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
 
         {% for jsMin in grunt.staticAssets['custom-forms'].js %}
         <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
