@@ -186,7 +186,7 @@ class DatabaseController extends InstallApp
         /*
          * files to import
          */
-        $installData = Yaml::parse(ROADIZ_ROOT . "/themes/Install/config.yml");
+        $installData = Yaml::parse(InstallApp::getThemeFolder() . "/config.yml");
         $this->assignation['imports'] = $installData['importFiles'];
 
         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);

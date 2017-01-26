@@ -37,13 +37,13 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
  */
 abstract class CmsController extends AppController
 {
-     /**
+    /**
      * {@inheritdoc}
      */
-    public static function getResourcesFolder()
+    public static function getThemeFolder()
     {
         $class_info = new \ReflectionClass(get_called_class());
-        return realpath(dirname($class_info->getFileName()) . '/../Resources');
+        return realpath(dirname($class_info->getFileName()) . '/../');
     }
 
     /**

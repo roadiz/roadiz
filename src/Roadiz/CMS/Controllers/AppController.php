@@ -228,6 +228,17 @@ abstract class AppController extends Controller
     }
 
     /**
+     * Return theme root folder.
+     *
+     * @return string
+     */
+    public static function getThemeFolder()
+    {
+        $class_info = new \ReflectionClass(static::getThemeMainClass());
+        return dirname($class_info->getFileName());
+    }
+
+    /**
      * Return theme Resource folder according to
      * main theme class inheriting AppController.
      *
@@ -238,8 +249,7 @@ abstract class AppController extends Controller
      */
     public static function getResourcesFolder()
     {
-        $class_info = new \ReflectionClass(static::getThemeMainClass());
-        return dirname($class_info->getFileName()) . '/Resources';
+        return static::getThemeFolder() . '/Resources';
     }
     /**
      * @return string

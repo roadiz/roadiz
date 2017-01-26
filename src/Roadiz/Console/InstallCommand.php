@@ -96,7 +96,7 @@ class InstallCommand extends Command
             /**
              * Import default data
              */
-            $installRoot = $kernel->getRootDir() . "/themes/Install";
+            $installRoot = InstallApp::getThemeFolder();
             $data = Yaml::parse($installRoot . "/config.yml");
 
             if (isset($data["importFiles"]['roles'])) {

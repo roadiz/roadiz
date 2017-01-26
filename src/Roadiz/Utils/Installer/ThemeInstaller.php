@@ -39,16 +39,14 @@ use Symfony\Component\Yaml\Yaml;
 class ThemeInstaller
 {
     /**
-     * get Theme informations.
+     * Get Theme informations from its config.yml file.
      *
      * @param $classname
-     *
      * @return array
      */
     public static function getThemeInformation($classname)
     {
-        $array = explode('\\', $classname);
-        $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
+        $file = $classname::getThemeFolder() . "/config.yml";
         return Yaml::parse($file);
     }
 

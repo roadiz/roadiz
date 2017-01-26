@@ -93,7 +93,7 @@ class ThemeInstallCommand extends Command
         try {
             $theme = $this->getTheme($classname);
             $array = explode('\\', $classname);
-            $this->themeRoot = $kernel->getRootDir() . "/themes/" . $array[count($array) - 2];
+            $this->themeRoot = $classname::getThemeFolder();
         } catch (TableNotFoundException $e) {
             $theme = null;
         }
@@ -212,6 +212,7 @@ class ThemeInstallCommand extends Command
         $themeFile = str_replace('\\', '/', $themeFile);
         $themeFile = str_replace('Themes', 'themes', $themeFile);
         $themeFile .= ".php";
+        $themeFile = $kernel->getRootDir() . $themeFile;
 
         if (file_exists($themeFile)) {
             $fixtures = new Fixtures(
