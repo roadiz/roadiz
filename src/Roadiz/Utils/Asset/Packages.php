@@ -273,4 +273,37 @@ class Packages extends BasePackages
             $this->versionStrategy
         );
     }
+
+    /**
+     * Shortcut for $this->getUrl($relativePath, static::FONTS_PATH).
+     *
+     * @param $relativePath
+     * @return string
+     */
+    public function getFontsPath($relativePath)
+    {
+        return $this->getUrl($relativePath, static::FONTS_PATH);
+    }
+
+    /**
+     * Shortcut for $this->getUrl($relativePath, static::PUBLIC_PATH).
+     *
+     * @param $relativePath
+     * @return string
+     */
+    public function getPublicFilesPath($relativePath)
+    {
+        return $this->getUrl($relativePath, static::PUBLIC_PATH);
+    }
+
+    /**
+     * Shortcut for $this->getUrl($relativePath, static::PRIVATE_PATH).
+     *
+     * @param $relativePath
+     * @return string
+     */
+    public function getPrivateFilesPath($relativePath)
+    {
+        return $this->getUrl($relativePath, static::PRIVATE_PATH);
+    }
 }

@@ -325,6 +325,7 @@ class Document extends AbstractDateTimed
      * Only return public absolute file path.
      *
      * @return string|null
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getPublicAbsolutePath()
     {
@@ -339,6 +340,7 @@ class Document extends AbstractDateTimed
      * Only return private absolute file path.
      *
      * @return string|null
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getPrivateAbsolutePath()
     {

@@ -36,6 +36,7 @@ use Monolog\Logger;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Repositories\FontRepository;
+use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -113,36 +114,39 @@ class AssetsController extends CmsController
     {
         /** @var FontRepository $repository */
         $repository = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font');
+                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
+        /** @var Packages $packages */
+        $packages = $this->get('assetPackages');
+
         if (null !== $font) {
             switch ($extension) {
                 case 'eot':
-                    $fontpath = $font->getEOTAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getEOTRelativeUrl());
                     $mime = Font::MIME_EOT;
                     break;
                 case 'woff':
-                    $fontpath = $font->getWOFFAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getWOFFRelativeUrl());
                     $mime = Font::MIME_WOFF;
                     break;
                 case 'woff2':
-                    $fontpath = $font->getWOFF2AbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getWOFF2RelativeUrl());
                     $mime = Font::MIME_WOFF2;
                     break;
                 case 'svg':
-                    $fontpath = $font->getSVGAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getSVGRelativeUrl());
                     $mime = Font::MIME_SVG;
                     break;
                 case 'otf':
                     $mime = Font::MIME_OTF;
-                    $fontpath = $font->getOTFAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 case 'ttf':
                     $mime = Font::MIME_TTF;
-                    $fontpath = $font->getOTFAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 default:
                     $fontpath = "";
@@ -151,6 +155,7 @@ class AssetsController extends CmsController
             }
 
             if ("" != $fontpath && file_exists($fontpath)) {
+
                 $response = new Response(
                     '',
                     Response::HTTP_NOT_MODIFIED,

@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;

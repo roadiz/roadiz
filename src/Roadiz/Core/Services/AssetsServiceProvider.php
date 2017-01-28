@@ -59,10 +59,10 @@ class AssetsServiceProvider implements ServiceProviderInterface
          * - absolute: absolute to root
          * - doc: relative to documents
          * - absolute_doc: absolute to documents
-         * @param $c
+         * @param Container $c
          * @return Packages
          */
-        $container['assetPackages'] = function ($c) {
+        $container['assetPackages'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
 
@@ -90,7 +90,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
             $conf = new Configuration();
             $conf->setCachePath($cacheDir);
-            $conf->setImagesPath($kernel->getRootDir() . '/files');
+            $conf->setImagesPath($kernel->getPublicFilesPath());
             $conf->setDriver($imageDriver);
             $conf->setDefaultQuality($defaultQuality);
 

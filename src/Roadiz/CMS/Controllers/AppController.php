@@ -349,6 +349,8 @@ abstract class AppController extends Controller
      */
     public function prepareBaseAssignation()
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->get('kernel');
         $this->assignation = [
             'request' => $this->getRequest(),
             'head' => [
@@ -356,11 +358,11 @@ abstract class AppController extends Controller
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => $this->get('kernel')->isDevMode(),
+                'devMode' => $kernel->isDevMode(),
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
-                'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'absoluteResourcesUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),

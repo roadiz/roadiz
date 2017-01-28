@@ -33,9 +33,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -45,7 +42,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FontRepository")
  * @ORM\Table(name="fonts",uniqueConstraints={
  *     @ORM\UniqueConstraint(columns={"name", "variant"})})
- * @ORM\HasLifecycleCallbacks
  */
 class Font extends AbstractDateTimed
 {
@@ -372,6 +368,7 @@ class Font extends AbstractDateTimed
     }
     /**
      * @return string
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getEOTAbsolutePath()
     {
@@ -386,6 +383,7 @@ class Font extends AbstractDateTimed
     }
     /**
      * @return string
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getWOFFAbsolutePath()
     {
@@ -400,6 +398,7 @@ class Font extends AbstractDateTimed
     }
     /**
      * @return string
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getWOFF2AbsolutePath()
     {
@@ -414,6 +413,7 @@ class Font extends AbstractDateTimed
     }
     /**
      * @return string
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getOTFAbsolutePath()
     {
@@ -428,6 +428,7 @@ class Font extends AbstractDateTimed
     }
     /**
      * @return string
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getSVGAbsolutePath()
     {
@@ -493,7 +494,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of eotFile.
      *
-     * @return File
+     * @return UploadedFile
      */
     public function getEotFile()
     {
@@ -503,11 +504,10 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of eotFile.
      *
-     * @param File $eotFile the eot file
-     *
-     * @return self
+     * @param UploadedFile $eotFile the eot file
+     * @return Font
      */
-    public function setEotFile(File $eotFile)
+    public function setEotFile(UploadedFile $eotFile = null)
     {
         $this->eotFile = $eotFile;
 
@@ -517,7 +517,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woffFile.
      *
-     * @return File
+     * @return UploadedFile
      */
     public function getWoffFile()
     {
@@ -527,21 +527,19 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of woffFile.
      *
-     * @param File $woffFile the woff file
-     *
-     * @return self
+     * @param UploadedFile $woffFile the woff file
+     * @return Font
      */
-    public function setWoffFile(File $woffFile)
+    public function setWoffFile(UploadedFile $woffFile = null)
     {
         $this->woffFile = $woffFile;
-
         return $this;
     }
 
     /**
      * Gets the value of woff2File.
      *
-     * @return File
+     * @return UploadedFile
      */
     public function getWoff2File()
     {
@@ -551,21 +549,19 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of woff2File.
      *
-     * @param File $woff2File the woff2 file
-     *
-     * @return self
+     * @param UploadedFile $woff2File the woff2 file
+     * @return Font
      */
-    public function setWoff2File(File $woff2File)
+    public function setWoff2File(UploadedFile $woff2File = null)
     {
         $this->woff2File = $woff2File;
-
         return $this;
     }
 
     /**
      * Gets the value of otfFile.
      *
-     * @return File
+     * @return UploadedFile
      */
     public function getOtfFile()
     {
@@ -575,21 +571,19 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of otfFile.
      *
-     * @param File $otfFile the otf file
-     *
-     * @return self
+     * @param UploadedFile $otfFile the otf file
+     * @return Font
      */
-    public function setOtfFile(File $otfFile)
+    public function setOtfFile(UploadedFile $otfFile = null)
     {
         $this->otfFile = $otfFile;
-
         return $this;
     }
 
     /**
      * Gets the value of svgFile.
      *
-     * @return File
+     * @return UploadedFile
      */
     public function getSvgFile()
     {
@@ -599,102 +593,12 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of svgFile.
      *
-     * @param File $svgFile the svg file
-     *
-     * @return self
+     * @param UploadedFile $svgFile the svg file
+     * @return Font
      */
-    public function setSvgFile(File $svgFile)
+    public function setSvgFile(UploadedFile $svgFile = null)
     {
         $this->svgFile = $svgFile;
-
         return $this;
-    }
-
-    /**
-     * Called before saving the entity
-     *
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preUpload()
-    {
-        if ($this->hash == "") {
-            $this->generateHashWithSecret('default_roadiz_secret');
-        }
-
-        if (null !== $this->svgFile) {
-            $this->setSVGFilename($this->svgFile->getClientOriginalName());
-        }
-        if (null !== $this->otfFile) {
-            $this->setOTFFilename($this->otfFile->getClientOriginalName());
-        }
-        if (null !== $this->eotFile) {
-            $this->setEOTFilename($this->eotFile->getClientOriginalName());
-        }
-        if (null !== $this->woffFile) {
-            $this->setWOFFFilename($this->woffFile->getClientOriginalName());
-        }
-        if (null !== $this->woff2File) {
-            $this->setWOFF2Filename($this->woff2File->getClientOriginalName());
-        }
-    }
-
-    /**
-     * Called after entity persistence
-     *
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function upload()
-    {
-        if (null !== $this->svgFile) {
-            $this->svgFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getSVGFilename());
-            $this->svgFile = null;
-        }
-        if (null !== $this->otfFile) {
-            $this->otfFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getOTFFilename());
-            $this->otfFile = null;
-        }
-        if (null !== $this->eotFile) {
-            $this->eotFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getEOTFilename());
-            $this->eotFile = null;
-        }
-        if (null !== $this->woffFile) {
-            $this->woffFile->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getWOFFFilename());
-            $this->woffFile = null;
-        }
-        if (null !== $this->woff2File) {
-            $this->woff2File->move(static::getFilesFolder() . '/' . $this->getFolder(), $this->getWOFF2Filename());
-            $this->woff2File = null;
-        }
-    }
-
-    /**
-     * Called before entity removal
-     *
-     * @ORM\PreRemove()
-     */
-    public function removeUpload()
-    {
-        $fs = new Filesystem();
-        try {
-            if (null !== $this->svgFilename) {
-                $fs->remove($this->getSVGAbsolutePath());
-            }
-            if (null !== $this->otfFilename) {
-                $fs->remove($this->getOTFAbsolutePath());
-            }
-            if (null !== $this->eotFilename) {
-                $fs->remove($this->getEOTAbsolutePath());
-            }
-            if (null !== $this->woffFilename) {
-                $fs->remove($this->getWOFFAbsolutePath());
-            }
-            if (null !== $this->woff2Filename) {
-                $fs->remove($this->getWOFF2AbsolutePath());
-            }
-        } catch (IOExceptionInterface $e) {
-            //do nothing
-        }
     }
 }
