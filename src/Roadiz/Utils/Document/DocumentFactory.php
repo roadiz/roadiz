@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
-use RZ\Roadiz\Core\FileAwareInterface;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -74,16 +74,16 @@ class DocumentFactory
      */
     private $dispatcher;
     /**
-     * @var FileAwareInterface
+     * @var Packages
      */
-    private $fileAware;
+    private $packages;
 
     /**
      * DocumentFactory constructor.
      * @param File $file
      * @param EntityManager $em
      * @param EventDispatcherInterface $dispatcher
-     * @param FileAwareInterface $fileAware File system paths provider
+     * @param Packages $packages
      * @param Folder $folder
      * @param LoggerInterface $logger
      */
@@ -91,7 +91,7 @@ class DocumentFactory
         File $file,
         EntityManager $em,
         EventDispatcherInterface $dispatcher,
-        FileAwareInterface $fileAware,
+        Packages $packages,
         Folder $folder = null,
         LoggerInterface $logger = null
     ) {
@@ -100,7 +100,7 @@ class DocumentFactory
         $this->logger = $logger;
         $this->em = $em;
         $this->dispatcher = $dispatcher;
-        $this->fileAware = $fileAware;
+        $this->packages = $packages;
 
         if (null === $this->logger) {
             $this->logger = new NullLogger();
@@ -148,7 +148,7 @@ class DocumentFactory
         }
 
         $this->file->move(
-            $this->fileAware->getPublicFilesPath() . '/' . $document->getFolder(),
+            $this->packages->getDocumentFolderPath($document),
             $document->getFilename()
         );
 
@@ -177,16 +177,18 @@ class DocumentFactory
             return $document;
         }
 
+        $documentPath = $this->packages->getDocumentFilePath($document);
+
         /*
          * In case file already exists
          */
-        if ($fs->exists($document->getAbsolutePath())) {
-            $fs->remove($document->getAbsolutePath());
+        if ($fs->exists($documentPath)) {
+            $fs->remove($documentPath);
         }
 
         if (StringHandler::cleanForFilename($this->getFileName()) == $document->getFilename()) {
             $finder = new Finder();
-            $previousFolder = $this->fileAware->getPublicFilesPath() . '/' . $document->getFolder();
+            $previousFolder = $this->packages->getDocumentFolderPath($document);
 
             if ($fs->exists($previousFolder)) {
                 $finder->files()->in($previousFolder);
@@ -204,7 +206,7 @@ class DocumentFactory
         $this->parseSvgMimeType($document);
 
         $this->file->move(
-            $this->fileAware->getPublicFilesPath() . '/' . $document->getFolder(),
+            $this->packages->getDocumentFolderPath($document),
             $document->getFilename()
         );
 

@@ -34,6 +34,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
@@ -68,6 +69,7 @@ class RoadizApplication extends Application
         $this->kernel = $kernel;
         $this->kernel->boot();
         $this->kernel->container['request'] = Request::createFromGlobals();
+        $this->kernel->container['requestStack']->push($this->kernel->container['request']);
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
@@ -163,6 +165,7 @@ class RoadizApplication extends Application
             new ProcessHelper(),
             new KernelHelper($this->kernel),
             new LoggerHelper($this->kernel),
+            new AssetPackagesHelper($this->kernel->container['assetPackages']),
             'question' => new QuestionHelper(),
             'configuration' => new ConfigurationHelper($this->kernel->container['config']),
             'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),

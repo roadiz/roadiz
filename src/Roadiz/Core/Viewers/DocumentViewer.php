@@ -212,12 +212,14 @@ class DocumentViewer implements ViewableInterface
             return $this->getEmbedByArray($options);
         } elseif ($this->document->isSvg()) {
             try {
+                /** @var Packages $packages */
+                $packages = Kernel::getService('assetPackages');
                 $asObject = !$options['inline'];
                 $viewer = new SvgDocumentViewer(
-                    $this->document->getAbsolutePath(),
+                    $packages->getDocumentFilePath($this->document),
                     $assignation,
                     $asObject,
-                    Kernel::getService('assetPackages')->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
+                    $packages->getUrl($this->document->getRelativeUrl(), Packages::DOCUMENTS)
                 );
                 return $viewer->getContent();
             } catch (FileNotFoundException $e) {

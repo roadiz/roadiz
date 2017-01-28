@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Console\Command\Command;
@@ -54,7 +56,10 @@ class DocumentDownscaleCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var Kernel $kernel */
         $kernel = $this->getHelperSet()->get('kernel')->getKernel();
+        /** @var Packages $packages */
+        $packages = $this->getHelperSet()->get('assetPackages')->getPackages();
         $this->configuration = $this->getHelperSet()->get('configuration')->getConfiguration();
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $questionHelper = $this->getHelperSet()->get('question');
@@ -64,13 +69,14 @@ class DocumentDownscaleCommand extends Command
             $this->configuration['assetsProcessing']['maxPixelSize'] > 0) {
             $this->downscaler = new DownscaleImageManager(
                 $this->entityManager,
+                $packages,
                 null,
                 $this->configuration['assetsProcessing']['driver'],
                 $this->configuration['assetsProcessing']['maxPixelSize']
             );
 
             $confirmation = new ConfirmationQuestion(
-                '<question>Are you sure to downscale all your image documents to ' . $this->configuration['assetsProcessing']['maxPixelSize'] . 'px?</question>',
+                '<question>Are you sure to downscale all your image documents to ' . $this->configuration['assetsProcessing']['maxPixelSize'] . 'px?</question> [y/N]: ',
                 false
             );
             if ($questionHelper->ask(

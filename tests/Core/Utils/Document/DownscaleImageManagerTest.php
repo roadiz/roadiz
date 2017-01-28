@@ -46,6 +46,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     {
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
+            Kernel::getService('assetPackages'),
             Kernel::getService('logger'),
             'gd',
             1920
@@ -60,6 +61,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
 
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
+            Kernel::getService('assetPackages'),
             Kernel::getService('logger'),
             'gd',
             100
@@ -99,6 +101,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          */
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
+            Kernel::getService('assetPackages'),
             Kernel::getService('logger'),
             'gd',
             100000

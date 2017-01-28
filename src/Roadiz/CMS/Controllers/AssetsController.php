@@ -155,7 +155,6 @@ class AssetsController extends CmsController
             }
 
             if ("" != $fontpath && file_exists($fontpath)) {
-
                 $response = new Response(
                     '',
                     Response::HTTP_NOT_MODIFIED,

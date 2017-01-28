@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,54 +23,44 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RawDocumentsSubscriber.php
- * @author Ambroise Maupate
+ * @file AssetPackagesHelper.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
-use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Events\DocumentEvents;
-use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+namespace RZ\Roadiz\Utils\Console\Helper;
+
 use RZ\Roadiz\Utils\Asset\Packages;
-use RZ\Roadiz\Utils\Document\DownscaleImageManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Console\Helper\Helper;
 
-/**
- * Create a raw image and downscale it to a new image file for a better web usage.
- */
-class RawDocumentsSubscriber implements EventSubscriberInterface
+class AssetPackagesHelper extends Helper
 {
-    protected $manager;
+    /**
+     * @var Packages
+     */
+    private $packages;
 
     /**
-     * @param EntityManager $em
+     * AssetPackagesHelper constructor.
      * @param Packages $packages
-     * @param LoggerInterface $logger
-     * @param EntityManager|string $imageDriver
-     * @param integer $maxPixelSize
-     * @param string $rawImageSuffix
      */
-    public function __construct(
-        EntityManager $em,
-        Packages $packages,
-        LoggerInterface $logger = null,
-        $imageDriver = 'gd',
-        $maxPixelSize = 0,
-        $rawImageSuffix = ".raw"
-    ) {
-        $this->manager = new DownscaleImageManager($em, $packages, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
+    public function __construct(Packages $packages)
+    {
+        $this->packages = $packages;
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return Packages
+     */
+    public function getPackages()
     {
-        return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onDocumentImageUploaded',
-        ];
+        return $this->packages;
     }
 
-    public function onDocumentImageUploaded(FilterDocumentEvent $event)
+    /**
+     * @return string
+     */
+    public function getName()
     {
-        $this->manager->processAndOverrideDocument($event->getDocument());
+        return 'assetPackages';
     }
 }

@@ -66,7 +66,7 @@ class InstallCommand extends Command
         $question = new ConfirmationQuestion(
             'Before installing Roadiz, did you create database schema? ' . PHP_EOL .
             'If not execute: <info>bin/roadiz orm:schema-tool:create</info>' . PHP_EOL .
-            '<question>Are you sure to perform installation?</question> : ',
+            '<question>Are you sure to perform installation?</question> [y/N]: ',
             false
         );
 

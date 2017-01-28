@@ -663,6 +663,7 @@ class Document extends AbstractDateTimed
      * Remove document directory if there is no other file in it.
      *
      * @return boolean
+     * @deprecated This will be removed in Standard Edition.
      */
     protected function cleanFileDirectory()
     {
@@ -702,6 +703,7 @@ class Document extends AbstractDateTimed
      * - Return `'portrait'` if height is strictly lower to width
      *
      * @return string|null
+     * @deprecated Document entity cannot know its real path. This will be removed in Standard Edition.
      */
     public function getOrientation()
     {
@@ -715,6 +717,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return array|null
+     * @deprecated Document entity cannot know its real path. This will be removed in Standard Edition.
      */
     public function getImageSize()
     {
@@ -732,6 +735,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return float|null
+     * @deprecated Document entity cannot know its real path. This will be removed in Standard Edition.
      */
     public function getImageSizeRatio()
     {

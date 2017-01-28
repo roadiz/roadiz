@@ -67,7 +67,7 @@ class SolrReindexCommand extends SolrCommand
         if (null !== $this->solr) {
             if (true === $this->getHelperSet()->get('solr')->ready()) {
                 $confirmation = new ConfirmationQuestion(
-                    '<question>Are you sure to reindex your Node and Document database? (y/N)</question>',
+                    '<question>Are you sure to reindex your Node and Document database?</question> [y/N]: ',
                     false
                 );
                 if (!$input->isInteractive() ||

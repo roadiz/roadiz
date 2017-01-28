@@ -176,7 +176,6 @@ class FontLifeCycleSubscriber implements EventSubscriber
                     $logger->debug('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
                     $fileSystem->remove($fontFolderPath);
                 }
-
             } catch (IOException $e) {
                 //do nothing
             }

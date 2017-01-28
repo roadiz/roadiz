@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
@@ -228,6 +229,10 @@ class DocumentsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
+            /** @var Packages $packages */
+            $packages = $this->get('assetPackages');
+            $documentPath = $packages->getDocumentFilePath($document);
+
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
                 'width' => 750,
@@ -235,10 +240,10 @@ class DocumentsController extends RozierApp
             ];
             if ($document->fileExists()) {
                 $this->assignation['infos'] = [
-                    'filesize' => sprintf('%.3f MB', (filesize($document->getAbsolutePath()))/pow(1024, 2)),
+                    'filesize' => sprintf('%.3f MB', (filesize($documentPath))/pow(1024, 2)),
                 ];
                 if ($document->isImage()) {
-                    list($width, $height) = getimagesize($document->getAbsolutePath());
+                    list($width, $height) = getimagesize($documentPath);
                     $this->assignation['infos']['width'] = $width . 'px';
                     $this->assignation['infos']['height'] = $height . 'px';
                 }
@@ -1063,16 +1068,21 @@ class DocumentsController extends RozierApp
          */
         if (!empty($data['filename']) &&
             $data['filename'] != $document->getFilename()) {
-            $oldUrl = $document->getAbsolutePath();
+
+            /** @var Packages $packages */
+            $packages = $this->get('assetPackages');
+            $oldPath = $packages->getDocumentFilePath($document);
+
             $fs = new Filesystem();
             /*
              * If file exists, just rename it
              */
             // set filename to clean given string before renaming file.
             $document->setFilename($data['filename']);
+            $newPath = $packages->getDocumentFilePath($document);
             $fs->rename(
-                $oldUrl,
-                $document->getAbsolutePath()
+                $oldPath,
+                $newPath
             );
 
             unset($data['filename']);
@@ -1114,7 +1124,7 @@ class DocumentsController extends RozierApp
                 $uploadedFile,
                 $this->get('em'),
                 $this->get('dispatcher'),
-                $this->get('kernel'),
+                $this->get('assetPackages'),
                 null,
                 $this->get('logger')
             );
@@ -1149,7 +1159,7 @@ class DocumentsController extends RozierApp
                 $uploadedFile,
                 $this->get('em'),
                 $this->get('dispatcher'),
-                $this->get('kernel'),
+                $this->get('assetPackages'),
                 $folder,
                 $this->get('logger')
             );

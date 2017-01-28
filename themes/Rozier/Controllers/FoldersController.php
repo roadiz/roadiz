@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FolderEvents;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -346,9 +347,12 @@ class FoldersController extends RozierApp
                               ->findBy([
                                   'folders' => [$folder],
                               ]);
+            /** @var Packages $packages */
+            $packages = $this->get('assetPackages');
+            
             /** @var Document $document */
             foreach ($documents as $document) {
-                $zip->addFile($document->getAbsolutePath(), $document->getFilename());
+                $zip->addFile($packages->getDocumentFilePath($document), $document->getFilename());
             }
 
             // Close and send to users

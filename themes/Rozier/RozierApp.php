@@ -207,6 +207,7 @@ class RozierApp extends BackendController
             $container['dispatcher']->addSubscriber(
                 new RawDocumentsSubscriber(
                     $container['em'],
+                    $container['assetPackages'],
                     $container['logger'],
                     $container['config']['assetsProcessing']['driver'],
                     $container['config']['assetsProcessing']['maxPixelSize']
