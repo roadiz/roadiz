@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Utils\Asset;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\FileAwareInterface;
 use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\Asset\Packages as BasePackages;
@@ -305,5 +306,29 @@ class Packages extends BasePackages
     public function getPrivateFilesPath($relativePath)
     {
         return $this->getUrl($relativePath, static::PRIVATE_PATH);
+    }
+
+    /**
+     * @param Document $document
+     * @return string Document file absolute path according if document is private or not.
+     */
+    public function getDocumentFilePath(Document $document)
+    {
+        if ($document->isPrivate()) {
+            return $this->getPrivateFilesPath($document->getRelativeUrl());
+        }
+        return $this->getPublicFilesPath($document->getRelativeUrl());
+    }
+
+    /**
+     * @param Document $document
+     * @return string Document folder absolute path according if document is private or not.
+     */
+    public function getDocumentFolderPath(Document $document)
+    {
+        if ($document->isPrivate()) {
+            return $this->getPrivateFilesPath($document->getFolder());
+        }
+        return $this->getPublicFilesPath($document->getFolder());
     }
 }

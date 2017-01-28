@@ -315,7 +315,7 @@ class Document extends AbstractDateTimed
      * privacy status.
      *
      * @return string
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
+     * @deprecated Use Packages::getDocumentFilePath() method instead. Will be removed in Standard Edition.
      */
     public function getAbsolutePath()
     {
