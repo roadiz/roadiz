@@ -238,7 +238,7 @@ class DocumentsController extends RozierApp
                 'width' => 750,
                 'controls' => true,
             ];
-            if ($document->fileExists()) {
+            if (file_exists($documentPath)) {
                 $this->assignation['infos'] = [
                     'filesize' => sprintf('%.3f MB', (filesize($documentPath))/pow(1024, 2)),
                 ];
@@ -722,6 +722,7 @@ class DocumentsController extends RozierApp
                     ]),
                     new UniqueFilename([
                         'document' => $document,
+                        'packages' => $this->get('assetPackages'),
                     ]),
                 ],
             ])

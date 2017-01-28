@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,21 +62,35 @@ class DocumentHandler
      */
     public function makePrivate()
     {
+        /** @var Packages $packages */
+        $packages = Kernel::getService('assetPackages');
+        $documentPublicPath = $packages->getPublicFilesPath($this->document->getRelativeUrl());
+        $documentPrivatePath = $packages->getPrivateFilesPath($this->document->getRelativeUrl());
+
         if (!$this->document->isPrivate()) {
             $fs = new Filesystem();
 
-            if ($fs->exists($this->document->getPublicAbsolutePath())) {
+            if ($fs->exists($documentPublicPath)) {
                 /*
                  * Create destination folder if not exist
                  */
-                if (!$fs->exists(dirname($this->document->getPrivateAbsolutePath()))) {
-                    $fs->mkdir(dirname($this->document->getPrivateAbsolutePath()));
+                if (!$fs->exists(dirname($documentPrivatePath))) {
+                    $fs->mkdir(dirname($documentPrivatePath));
                 }
                 $fs->rename(
-                    $this->document->getPublicAbsolutePath(),
-                    $this->document->getPrivateAbsolutePath()
+                    $documentPublicPath,
+                    $documentPrivatePath
                 );
                 $this->document->setPrivate(true);
+
+                /*
+                 * Bubble privatisation to raw document if available.
+                 */
+                if (null !== $this->document->getRawDocument() &&
+                    !$this->document->getRawDocument()->isPrivate()) {
+                    $rawHandler = new DocumentHandler($this->document->getRawDocument());
+                    $rawHandler->makePrivate();
+                }
             } else {
                 throw new \RuntimeException("Can’t make private a document file which does not exist.", 1);
             }
@@ -92,22 +107,36 @@ class DocumentHandler
      */
     public function makePublic()
     {
+        /** @var Packages $packages */
+        $packages = Kernel::getService('assetPackages');
+        $documentPublicPath = $packages->getPublicFilesPath($this->document->getRelativeUrl());
+        $documentPrivatePath = $packages->getPrivateFilesPath($this->document->getRelativeUrl());
+
         if ($this->document->isPrivate()) {
             $fs = new Filesystem();
 
-            if ($fs->exists($this->document->getPrivateAbsolutePath())) {
+            if ($fs->exists($documentPrivatePath)) {
                 /*
                  * Create destination folder if not exist
                  */
-                if (!$fs->exists(dirname($this->document->getPublicAbsolutePath()))) {
-                    $fs->mkdir(dirname($this->document->getPublicAbsolutePath()));
+                if (!$fs->exists(dirname($documentPublicPath))) {
+                    $fs->mkdir(dirname($documentPublicPath));
                 }
 
                 $fs->rename(
-                    $this->document->getPrivateAbsolutePath(),
-                    $this->document->getPublicAbsolutePath()
+                    $documentPrivatePath,
+                    $documentPublicPath
                 );
                 $this->document->setPrivate(false);
+
+                /*
+                 * Bubble un-privatisation to raw document if available.
+                 */
+                if (null !== $this->document->getRawDocument() &&
+                    $this->document->getRawDocument()->isPrivate()) {
+                    $rawHandler = new DocumentHandler($this->document->getRawDocument());
+                    $rawHandler->makePublic();
+                }
             } else {
                 throw new \RuntimeException("Can’t make public a document file which does not exist.", 1);
             }
@@ -128,17 +157,22 @@ class DocumentHandler
     public function getDownloadResponse()
     {
         $fs = new Filesystem();
-        if ($fs->exists($this->document->getAbsolutePath())) {
+
+        /** @var Packages $packages */
+        $packages = Kernel::getService('assetPackages');
+        $documentPath = $packages->getDocumentFilePath($this->document);
+
+        if ($fs->exists($documentPath)) {
             $response = new Response();
             // Set headers
             $response->headers->set('Cache-Control', 'private');
-            $response->headers->set('Content-type', mime_content_type($this->document->getAbsolutePath()));
-            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($this->document->getAbsolutePath()) . '";');
-            $response->headers->set('Content-length', filesize($this->document->getAbsolutePath()));
+            $response->headers->set('Content-type', mime_content_type($documentPath));
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($documentPath) . '";');
+            $response->headers->set('Content-length', filesize($documentPath));
             // Send headers before outputting anything
             $response->sendHeaders();
             // Set content
-            $response->setContent(readfile($this->document->getAbsolutePath()));
+            $response->setContent(readfile($documentPath));
 
             return $response;
         } else {

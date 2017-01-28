@@ -148,6 +148,8 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @return ArrayCollection
          */
         $container['twig.extensions'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             $extensions = new ArrayCollection();
             $extensions->add(new FormExtension(new TwigRenderer(
                 $c['twig.formRenderer'],
@@ -162,7 +164,6 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add($c['twig.routingExtension']);
             $extensions->add(new \Twig_Extensions_Extension_Text());
             $extensions->add(new BlockRenderExtension($c));
-            $extensions->add(new DocumentExtension());
             $extensions->add(new UrlExtension(
                 $c['request'],
                 $c['nodesSourcesUrlCacheProvider'],
@@ -173,13 +174,18 @@ class TwigServiceProvider implements ServiceProviderInterface
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
             }
-            if (true !== $c['kernel']->isInstallMode()) {
+            /*
+             * These extension need a valid Database connection
+             * with EntityManager not null.
+             */
+            if (true !== $kernel->isInstallMode()) {
+                $extensions->add(new DocumentExtension($c['assetPackages']));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
-                    $c['kernel']->isPreview()
+                    $kernel->isPreview()
                 ));
             }
-            if (true === $c['kernel']->isDebug()) {
+            if (true === $kernel->isDebug()) {
                 $extensions->add(new \Twig_Extension_Debug());
             }
 

@@ -635,6 +635,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return bool
+     * @deprecated Use Packages methods to manage documents server paths. This will be removed in Standard Edition.
      */
     public function fileExists()
     {
@@ -646,6 +647,7 @@ class Document extends AbstractDateTimed
      * Unlink file after document has been deleted.
      *
      * @ORM\PostRemove
+     * @deprecated This will be removed in Standard Edition.
      */
     public function postRemove()
     {
@@ -703,7 +705,7 @@ class Document extends AbstractDateTimed
      * - Return `'portrait'` if height is strictly lower to width
      *
      * @return string|null
-     * @deprecated Document entity cannot know its real path. This will be removed in Standard Edition.
+     * @deprecated Use Twig filter "imageOrientation" instead. This will be removed in Standard Edition.
      */
     public function getOrientation()
     {
@@ -717,7 +719,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return array|null
-     * @deprecated Document entity cannot know its real path. This will be removed in Standard Edition.
+     * @deprecated Use Twig filter "imageSize" instead. This will be removed in Standard Edition.
      */
     public function getImageSize()
     {
@@ -735,7 +737,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return float|null
-     * @deprecated Document entity cannot know its real path. This will be removed in Standard Edition.
+     * @deprecated Use Twig filter "imageRatio" instead. This will be removed in Standard Edition.
      */
     public function getImageSizeRatio()
     {
