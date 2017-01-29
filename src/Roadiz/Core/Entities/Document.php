@@ -38,13 +38,11 @@ use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
- * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
  *     @ORM\Index(columns={"private"})
@@ -641,50 +639,6 @@ class Document extends AbstractDateTimed
     {
         $fs = new Filesystem();
         return $fs->exists($this->getAbsolutePath());
-    }
-
-    /**
-     * Unlink file after document has been deleted.
-     *
-     * @ORM\PostRemove
-     * @deprecated This will be removed in Standard Edition.
-     */
-    public function postRemove()
-    {
-        $fs = new Filesystem();
-
-        $this->setRawDocument(null);
-
-        if ($fs->exists($this->getAbsolutePath())) {
-            $fs->remove($this->getAbsolutePath());
-        }
-        $this->cleanFileDirectory();
-    }
-
-    /**
-     * Remove document directory if there is no other file in it.
-     *
-     * @return boolean
-     * @deprecated This will be removed in Standard Edition.
-     */
-    protected function cleanFileDirectory()
-    {
-        $dir = dirname($this->getAbsolutePath());
-        $fs = new Filesystem();
-
-        if ($fs->exists($dir)) {
-            $finder = new Finder();
-            $finder->files()->in($dir);
-
-            if (count($finder) <= 0) {
-                /*
-                 * Directory is empty
-                 */
-                $fs->remove($dir);
-            }
-        }
-
-        return false;
     }
 
     /**

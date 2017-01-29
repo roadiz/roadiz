@@ -42,6 +42,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Kernel;
@@ -248,6 +249,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                      * Fonts life cycle manager.
                      */
                     $evm->addEventSubscriber(new FontLifeCycleSubscriber($c));
+
+                    /*
+                     * Documents life cycle manager.
+                     */
+                    $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
 
                     $c['stopwatch']->stop('initDoctrine');
                     return $em;
