@@ -30,6 +30,7 @@
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Install\InstallApp;
@@ -120,11 +121,14 @@ class ThemeController extends InstallApp
                  * Save informations
                  */
                 try {
+                    /** @var Kernel $kernel */
+                    $kernel = $this->get('kernel');
                     $fixtures = new Fixtures(
                         $this->get('em'),
-                        $this->get('kernel')->getCacheDir(),
-                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
-                        $this->get('kernel')->isDebug(),
+                        $kernel->getCacheDir(),
+                        $kernel->getRootDir() . '/conf/config.yml',
+                        $kernel->getRootDir(),
+                        $kernel->isDebug(),
                         $request
                     );
                     $fixtures->saveInformations($infosForm->getData());

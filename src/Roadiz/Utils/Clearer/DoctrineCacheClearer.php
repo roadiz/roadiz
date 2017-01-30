@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\Clearer;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -40,11 +41,22 @@ use Symfony\Component\Finder\Finder;
 class DoctrineCacheClearer extends Clearer
 {
     private $entityManager;
+    /**
+     * @var Kernel
+     */
+    private $kernel;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * DoctrineCacheClearer constructor.
+     *
+     * @param EntityManager $entityManager
+     * @param Kernel $kernel
+     */
+    public function __construct(EntityManager $entityManager, Kernel $kernel)
     {
         parent::__construct('');
         $this->entityManager = $entityManager;
+        $this->kernel = $kernel;
     }
 
     public function clear()
@@ -76,12 +88,13 @@ class DoctrineCacheClearer extends Clearer
          */
         $fs = new Filesystem();
         $finder = new Finder();
-        $finder->files()->in(ROADIZ_ROOT . '/gen-src/Proxies');
+        $proxyFolder = $this->kernel->getRootDir() . '/gen-src/Proxies';
+        $finder->files()->in($proxyFolder);
         $fs->remove($finder);
 
         $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $proxyFactory = $this->entityManager->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, ROADIZ_ROOT . '/gen-src/Proxies');
+        $proxyFactory->generateProxyClasses($meta, $proxyFolder);
         $this->output .= 'Doctrine proxy classes has been recreated.' . PHP_EOL;
     }
 }

@@ -177,14 +177,15 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     );
                 }
 
+                $proxyFolder = $kernel->getRootDir() . '/gen-src/Proxies';
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
                     $kernel->isDevMode(),
-                    $kernel->getRootDir() . '/gen-src/Proxies',
+                    $proxyFolder,
                     $cache,
                     false
                 );
-                $config->setProxyDir($kernel->getRootDir() . '/gen-src/Proxies');
+                $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
 
                 return $config;

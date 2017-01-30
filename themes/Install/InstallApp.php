@@ -178,11 +178,14 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
+                    /** @var Kernel $kernel */
+                    $kernel = $this->get('kernel');
                     $fixtures = new Fixtures(
                         $this->get('em'),
-                        $this->get('kernel')->getCacheDir(),
-                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
-                        $this->get('kernel')->isDebug(),
+                        $kernel->getCacheDir(),
+                        $kernel->getRootDir() . '/conf/config.yml',
+                        $kernel->getRootDir(),
+                        $kernel->isDebug(),
                         $request
                     );
                     $fixtures->createDefaultUser($userForm->getData());

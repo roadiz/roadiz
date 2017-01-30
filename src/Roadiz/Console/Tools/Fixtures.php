@@ -51,11 +51,13 @@ class Fixtures
     protected $cacheDir;
     protected $debug;
     protected $configPath;
+    private $rootDir;
 
     /**
      * @param EntityManager $entityManager
      * @param string $cacheDir
      * @param string $configPath
+     * @param $rootDir
      * @param boolean $debug
      * @param Request|null $request
      */
@@ -63,6 +65,7 @@ class Fixtures
         EntityManager $entityManager,
         $cacheDir,
         $configPath,
+        $rootDir,
         $debug = true,
         Request $request = null
     ) {
@@ -71,6 +74,7 @@ class Fixtures
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
         $this->configPath = $configPath;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -100,10 +104,10 @@ class Fixtures
         $fs = new Filesystem();
 
         $folders = [
-            ROADIZ_ROOT . '/cache',
-            ROADIZ_ROOT . '/gen-src/Compiled',
-            ROADIZ_ROOT . '/gen-src/Proxies',
-            ROADIZ_ROOT . '/gen-src/GeneratedNodeSources',
+            $this->rootDir . '/cache',
+            $this->rootDir . '/gen-src/Compiled',
+            $this->rootDir . '/gen-src/Proxies',
+            $this->rootDir . '/gen-src/GeneratedNodeSources',
         ];
 
         foreach ($folders as $folder) {
@@ -301,6 +305,7 @@ class Fixtures
      */
     public function installFrontendTheme($classname)
     {
+        /** @var Theme|null $existing */
         $existing = $this->entityManager
                          ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                          ->findOneByClassName($classname);

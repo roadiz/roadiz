@@ -32,6 +32,7 @@ namespace Themes\Install\Controllers;
 use RZ\Roadiz\Config\ConfigurationHandler;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
@@ -76,11 +77,14 @@ class DatabaseController extends InstallApp
                     /*
                      * Test connexion
                      */
+                    /** @var Kernel $kernel */
+                    $kernel = $this->get('kernel');
                     $fixtures = new Fixtures(
                         $this->get('em'),
-                        $this->get('kernel')->getCacheDir(),
-                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
-                        $this->get('kernel')->isDebug(),
+                        $kernel->getCacheDir(),
+                        $kernel->getRootDir() . '/conf/config.yml',
+                        $kernel->getRootDir(),
+                        $kernel->isDebug(),
                         $request
                     );
                     $fixtures->createFolders();
@@ -174,11 +178,15 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->get('kernel');
+
         $fixtures = new Fixtures(
             $this->get('em'),
-            $this->get('kernel')->getCacheDir(),
-            $this->get('kernel')->getRootDir() . '/conf/config.yml',
-            $this->get('kernel')->isDebug(),
+            $kernel->getCacheDir(),
+            $kernel->getRootDir() . '/conf/config.yml',
+            $kernel->getRootDir(),
+            $kernel->isDebug(),
             $request
         );
         $fixtures->installFixtures();
