@@ -75,7 +75,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         $container['twig.loaderFileSystem'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            $vendorDir = realpath($kernel->getRootDir() . '/vendor');
+            $vendorDir = realpath($kernel->getVendorDir());
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig

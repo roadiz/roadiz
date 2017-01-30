@@ -342,7 +342,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public static function getInstance($environment = 'prod', $debug = false, $preview = false)
     {
         if (static::$instance === null) {
-            static::$instance = new Kernel($environment, $debug, $preview);
+            static::$instance = new static($environment, $debug, $preview);
         }
 
         return static::$instance;
@@ -453,6 +453,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function getRootDir()
     {
         return ROADIZ_ROOT;
+    }
+
+    /**
+     * @return string Return Composer vendor root folder.
+     */
+    public function getVendorDir()
+    {
+        return $this->getRootDir() . '/vendor';
     }
 
     /**

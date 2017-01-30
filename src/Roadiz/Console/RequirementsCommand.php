@@ -70,7 +70,8 @@ class RequirementsCommand extends Command
         $text .= $this->folderWritable($kernel->getRootDir());
         $text .= $this->folderWritable($kernel->getRootDir() . '/conf');
         $text .= $this->folderWritable($kernel->getRootDir() . '/cache');
-        $text .= $this->folderWritable($kernel->getRootDir() . '/files');
+        $text .= $this->folderWritable($kernel->getPublicFilesPath());
+        $text .= $this->folderWritable($kernel->getPrivateFilesPath());
         $text .= $this->folderWritable($kernel->getRootDir() . '/gen-src');
 
         $output->writeln($text);

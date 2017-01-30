@@ -66,7 +66,7 @@ class DevKernel extends Kernel
     public static function getInstance($environment = 'dev', $debug = true, $preview = false, $appName = "roadiz_dev")
     {
         if (static::$instance === null) {
-            static::$instance = new DevKernel($environment, $debug, $preview, $appName);
+            static::$instance = new static($environment, $debug, $preview, $appName);
         }
         return static::$instance;
     }
