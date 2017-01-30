@@ -373,7 +373,7 @@ class AboutController extends RozierApp
         $this->canAutomaticUpdate();
 
         $clearers = [
-            new DoctrineCacheClearer($this->get('em')),
+            new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
             new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
             new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
             new TemplatesCacheClearer($this->get('kernel')->getCacheDir()),

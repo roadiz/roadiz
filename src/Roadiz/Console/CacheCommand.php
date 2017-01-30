@@ -113,7 +113,7 @@ class CacheCommand extends Command
         $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');
 
         $assetsClearer = new AssetsClearer($kernel->getCacheDir());
-        $doctrineClearer = new DoctrineCacheClearer($this->entityManager);
+        $doctrineClearer = new DoctrineCacheClearer($this->entityManager, $kernel);
         $routingClearer = new RoutingCacheClearer($kernel->getCacheDir());
         $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
         $translationsClearer = new TranslationsCacheClearer($kernel->getCacheDir());

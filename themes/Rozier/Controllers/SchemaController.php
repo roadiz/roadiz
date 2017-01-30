@@ -92,7 +92,7 @@ class SchemaController extends RozierApp
     {
         $token = new CsrfToken(static::SCHEMA_TOKEN_INTENTION, $_token);
         if ($this->get('csrfTokenManager')->isTokenValid($token)) {
-            $updater = new SchemaUpdater($this->get('em'));
+            $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
             $updater->updateSchema();
 
             $msg = $this->getTranslator()->trans('database.schema.updated');

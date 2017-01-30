@@ -60,7 +60,7 @@ class CacheController extends RozierApp
 
         if ($form->isValid()) {
             $clearers = [
-                new DoctrineCacheClearer($this->get('em')),
+                new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
                 new NodesSourcesUrlsCacheClearer($this->get('nodesSourcesUrlCacheProvider')),
                 new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
                 new RoutingCacheClearer($this->get('kernel')->getCacheDir()),

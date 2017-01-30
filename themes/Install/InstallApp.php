@@ -253,7 +253,7 @@ class InstallApp extends AppController
                     $this->get('session')->invalidate();
 
                     $clearers = [
-                        new DoctrineCacheClearer($this->get('em')),
+                        new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
                         new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
                         new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
                         new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),

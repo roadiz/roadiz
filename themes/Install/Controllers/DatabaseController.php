@@ -142,7 +142,7 @@ class DatabaseController extends InstallApp
                  * Use updateSchema instead of create to enable upgrading
                  * Roadiz database using Install theme.
                  */
-                $updater = new SchemaUpdater($this->get('em'));
+                $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
                 $updater->updateSchema();
 
                 /*
@@ -208,7 +208,7 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        $updater = new SchemaUpdater($this->get('em'));
+        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
         $updater->updateSchema();
 
         return new JsonResponse(['status' => true]);
@@ -221,7 +221,7 @@ class DatabaseController extends InstallApp
      */
     public function clearDoctrineCacheAction(Request $request)
     {
-        $doctrineClearer = new DoctrineCacheClearer($this->get('em'));
+        $doctrineClearer = new DoctrineCacheClearer($this->get('em'), $this->get('kernel'));
         $doctrineClearer->clear();
 
         return new JsonResponse(['status' => true]);

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -56,7 +56,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $updater = new SchemaUpdater($this->get('em'));
+        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
         $updater->updateSchema();
 
         return new JsonResponse(['status' => true]);
@@ -71,7 +71,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $doctrineClearer = new DoctrineCacheClearer($this->get('em'));
+        $doctrineClearer = new DoctrineCacheClearer($this->get('em'), $this->get('kernel'));
         $doctrineClearer->clear();
 
         $opcacheClearer = new OPCacheClearer();
