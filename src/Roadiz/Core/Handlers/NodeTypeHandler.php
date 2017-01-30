@@ -75,13 +75,21 @@ class NodeTypeHandler
     }
 
     /**
+     * @return string
+     */
+    public function getGeneratedEntitiesFolder()
+    {
+        return Kernel::getInstance()->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
+    }
+
+    /**
      * Remove node type entity class file from server.
      *
      * @return boolean
      */
     public function removeSourceEntityClass()
     {
-        $folder = Kernel::getInstance()->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
+        $folder = $this->getGeneratedEntitiesFolder();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (file_exists($file)) {
@@ -98,7 +106,7 @@ class NodeTypeHandler
      */
     public function generateSourceEntityClass()
     {
-        $folder = Kernel::getInstance()->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
+        $folder = $this->getGeneratedEntitiesFolder();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (!file_exists($folder)) {

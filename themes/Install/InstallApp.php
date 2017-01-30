@@ -153,9 +153,9 @@ class InstallApp extends AppController
      */
     public function requirementsAction(Request $request)
     {
-        $requ = new Requirements();
-        $this->assignation['requirements'] = $requ->getRequirements();
-        $this->assignation['totalSuccess'] = $requ->isTotalSuccess();
+        $requirements = new Requirements($this->get('kernel'));
+        $this->assignation['requirements'] = $requirements->getRequirements();
+        $this->assignation['totalSuccess'] = $requirements->isTotalSuccess();
         return $this->render('steps/requirements.html.twig', $this->assignation);
     }
 
