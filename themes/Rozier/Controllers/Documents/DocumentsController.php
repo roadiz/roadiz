@@ -955,8 +955,10 @@ class DocumentsController extends RozierApp
             $zip = new \ZipArchive();
             $zip->open($tmpFileName, \ZipArchive::CREATE);
 
+            /** @var Document $document */
             foreach ($documents as $document) {
-                $zip->addFile($document->getAbsolutePath(), $document->getFilename());
+                $documentPath = $this->get('assetPackages')->getDocumentFilePath($document);
+                $zip->addFile($documentPath, $document->getFilename());
             }
 
             $zip->close();
