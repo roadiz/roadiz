@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
 /**
@@ -72,6 +73,7 @@ class DocumentExtension extends \Twig_Extension
             new \Twig_SimpleFilter('imageSize', [$this, 'getImageSize']),
             new \Twig_SimpleFilter('imageOrientation', [$this, 'getImageOrientation']),
             new \Twig_SimpleFilter('path', [$this, 'getPath']),
+            new \Twig_SimpleFilter('exists', [$this, 'exists']),
         ];
     }
 
@@ -157,5 +159,19 @@ class DocumentExtension extends \Twig_Extension
         }
 
         return null;
+    }
+
+    /**
+     * @param Document|null $document
+     * @return bool
+     */
+    public function exists(Document $document = null)
+    {
+        if (null !== $document) {
+            $fs = new Filesystem();
+            return $fs->exists($this->packages->getDocumentFilePath($document));
+        }
+
+        return false;
     }
 }
