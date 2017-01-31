@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console\Tools;
+
 use RZ\Roadiz\Core\Kernel;
 
 /**
