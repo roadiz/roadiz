@@ -489,11 +489,11 @@ class NodesSourcesHandler
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
 
         return $repo->findOneBy(
-                $defaultCriteria,
-                $order,
-                $authorizationChecker,
-                $preview
-            );
+            $defaultCriteria,
+            $order,
+            $authorizationChecker,
+            $preview
+        );
     }
 
     /**
