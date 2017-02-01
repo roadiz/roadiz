@@ -140,6 +140,10 @@
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2017, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,45 +24,14 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file JsonType.php
+ * @file ValidYaml.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\CMS\Forms;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use RZ\Roadiz\CMS\Forms\Constraints\ValidYaml;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraint;
 
-/**
- * Yaml editor form field type.
- */
-class YamlType extends AbstractType
+class ValidYaml extends Constraint
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'textarea';
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'yaml';
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'required' => false,
-            'attr' => [
-                'class' => 'yaml_textarea',
-            ],
-            'constraints' => [
-                new ValidYaml()
-            ]
-        ]);
-    }
+    public $message = 'yaml.is.not.valid.{{ error }}';
 }

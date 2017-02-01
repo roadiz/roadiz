@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file  original="none" source-language="en" datatype="plaintext" target-language="en">
+  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="en">
     <body>
       <trans-unit xml:space="preserve" id="2" approved="yes">
         <source>node.%name%.updated</source>
@@ -4616,12 +4616,12 @@
       <trans-unit xml:space="preserve" id="folder.settings" approved="yes">
         <source>folder.settings</source>
         <target xml:lang="en">Settings</target>
-        <note>Nav bar label for editing folder id and visibility state</note>
+          <note>Nav bar label for editing folder id and visibility state</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.labels" approved="yes">
         <source>folder.labels</source>
         <target xml:lang="en">Labels</target>
-         <note>Nav bar label for editing folder label in each translation.</note>
+          <note>Nav bar label for editing folder label in each translation.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="delete.folder.%name%" approved="yes">
           <source>delete.folder.%name%</source>
@@ -6328,6 +6328,10 @@
           <target xml:lang="en">Reachable</target>
           <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.type">
+            <source>yaml.type</source>
+            <target xml:lang="en" state="translated">YAML code</target>
+          </trans-unit>
     </body>
   </file>
 </xliff>

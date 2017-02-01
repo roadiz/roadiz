@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
     <body>
@@ -40,9 +40,9 @@
         <source>form.successfully.sent</source>
         <target xml:lang="en">Your form has been successfully sent</target>
       </trans-unit>
-      <trans-unit id="form.has.errors">
+      <trans-unit id="form.has.errors" approved="yes">
         <source>form.has.errors</source>
-        <target xml:lang="en" state="translated">Your form is not valid, please fill correctly mandatory fields.</target>
+        <target xml:lang="en">Your form is not valid, please fill correctly mandatory fields.</target>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
@@ -98,7 +98,7 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%" approved="yes">
                 <source>you.asked.for.a.password.reset.on.%site%</source>
-                <target xml:lang="en">You asked for a password reset on &#x201C;%site%&#x201D;</target>
+                <target xml:lang="en">You asked for a password reset on “%site%”</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link" approved="yes">
                 <source>you.need.to.choose.a.new.password.using.following.link</source>
@@ -110,11 +110,11 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-                <target xml:lang="en">If you didn&#x2019;t ask for this email, just ignore it and your password won&#x2019;t be changed.</target>
+                <target xml:lang="en">If you didn’t ask for this email, just ignore it and your password won’t be changed.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="reset_your_password">
+      <trans-unit xml:space="preserve" id="reset_your_password" approved="yes">
                 <source>reset_your_password</source>
-                <target xml:lang="en" state="translated">Reset your password</target>
+                <target xml:lang="en">Reset your password</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>
@@ -131,6 +131,10 @@
       <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon" approved="yes">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
                 <target xml:lang="en">Website is currently under maintenance, it will be back soon!</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target xml:lang="en" state="translated">YAML code is not valid ({{ error }}).</target>
             </trans-unit>
     </body>
   </file>

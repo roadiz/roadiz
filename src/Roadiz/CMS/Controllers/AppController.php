@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -619,8 +620,13 @@ abstract class AppController extends Controller
     protected function getErrorsAsArray(Form $form)
     {
         $errors = [];
+        /** @var FormError $error */
         foreach ($form->getErrors() as $error) {
-            $errors[] = $error->getMessage();
+            if (count($error->getMessageParameters()) > 0) {
+                $errors[] = $this->get('translator')->trans($error->getMessageTemplate(), $error->getMessageParameters());
+            } else {
+                $errors[] = $error->getMessage();
+            }
         }
 
         foreach ($form->all() as $key => $child) {

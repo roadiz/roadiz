@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2017, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,45 +24,28 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file JsonType.php
+ * @file ValidYamlValidator.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\CMS\Forms;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use RZ\Roadiz\CMS\Forms\Constraints\ValidYaml;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
-/**
- * Yaml editor form field type.
- */
-class YamlType extends AbstractType
+class ValidYamlValidator extends ConstraintValidator
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function validate($value, Constraint $constraint)
     {
-        return 'textarea';
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'yaml';
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'required' => false,
-            'attr' => [
-                'class' => 'yaml_textarea',
-            ],
-            'constraints' => [
-                new ValidYaml()
-            ]
-        ]);
+        if ($value != "") {
+            try {
+                Yaml::parse($value);
+            } catch (ParseException $e) {
+                $this->context->addViolation($constraint->message, [
+                    '{{ error }}' => $e->getMessage()
+                ]);
+            }
+        }
     }
 }

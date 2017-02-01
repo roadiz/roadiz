@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="fr">
     <body>
       <!-- welcome.user.email -->
       <trans-unit id="welcome.user.email.%site%" approved="yes">
         <source>welcome.user.email.%site%</source>
-        <target xml:lang="fr">Un compte utilisateur a &#xE9;t&#xE9; cr&#xE9;&#xE9; sur %site% pour vous.</target>
+        <target xml:lang="fr">Un compte utilisateur a été créé sur %site% pour vous.</target>
       </trans-unit>
       <trans-unit id="your.user.account" approved="yes">
         <source>your.user.account</source>
@@ -13,7 +13,7 @@
       </trans-unit>
       <trans-unit id="username" approved="yes">
         <source>username</source>
-        <target xml:lang="fr">Nom d&#x2019;utilisateur</target>
+        <target xml:lang="fr">Nom d’utilisateur</target>
       </trans-unit>
       <trans-unit id="email" approved="yes">
         <source>email</source>
@@ -25,7 +25,7 @@
       </trans-unit>
       <trans-unit id="for.questions.email" approved="yes">
         <source>for.questions.email</source>
-        <target xml:lang="fr">Des questions&#xA0;? Contactez-nous &#xE0;&#xA0;:</target>
+        <target xml:lang="fr">Des questions ? Contactez-nous à :</target>
       </trans-unit>
       <!-- Contact forms -->
       <trans-unit id="contact.form" approved="yes">
@@ -38,11 +38,11 @@
       </trans-unit>
       <trans-unit id="form.successfully.sent" approved="yes">
         <source>form.successfully.sent</source>
-        <target xml:lang="fr">Votre formulaire a bien &#xE9;t&#xE9; envoy&#xE9;</target>
+        <target xml:lang="fr">Votre formulaire a bien été envoyé</target>
       </trans-unit>
-      <trans-unit id="form.has.errors">
+      <trans-unit id="form.has.errors" approved="yes">
         <source>form.has.errors</source>
-        <target xml:lang="fr" state="translated">Votre formulaire n&#x2019;est pas valide, merci de remplir correctement les champs obligatoires.</target>
+        <target xml:lang="fr">Votre formulaire n’est pas valide, merci de remplir correctement les champs obligatoires.</target>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
@@ -50,7 +50,7 @@
       </trans-unit>
       <trans-unit id="email.not.valid" approved="yes">
         <source>email.not.valid</source>
-        <target xml:lang="fr">Votre courriel n&#x2019;est pas valide</target>
+        <target xml:lang="fr">Votre courriel n’est pas valide</target>
       </trans-unit>
       <trans-unit id="date" approved="yes">
         <source>date</source>
@@ -62,7 +62,7 @@
       </trans-unit>
       <trans-unit id="submittedAt" approved="yes">
         <source>submittedAt</source>
-        <target xml:lang="fr">Envoy&#xE9; le</target>
+        <target xml:lang="fr">Envoyé le</target>
       </trans-unit>
       <trans-unit id="form.submit" approved="yes">
         <source>form.submit</source>
@@ -70,23 +70,23 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="answer.form" approved="yes">
                 <source>answer.form</source>
-                <target xml:lang="fr">Formulaire de r&#xE9;ponse</target>
+                <target xml:lang="fr">Formulaire de réponse</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
                 <source>customForm.%name%.send</source>
-                <target xml:lang="fr">Le formulaire &#xAB;%name%&#xBB; a bien &#xE9;t&#xE9; envoy&#xE9;</target>
+                <target xml:lang="fr">Le formulaire «%name%» a bien été envoyé</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
                 <source>new.answer.form.%site%</source>
-                <target xml:lang="fr">Nouvelle r&#xE9;ponse sur &#xAB;%site%&#xBB;</target>
+                <target xml:lang="fr">Nouvelle réponse sur «%site%»</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="file.not.accepted" approved="yes">
                 <source>file.not.accepted</source>
-                <target xml:lang="fr">Le fichier joint n&#x2019;a pas &#xE9;t&#xE9; accept&#xE9;.</target>
+                <target xml:lang="fr">Le fichier joint n’a pas été accepté.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.answer.sent" approved="yes">
                 <source>customForm.answer.sent</source>
-                <target xml:lang="fr">Votre r&#xE9;ponse a bien &#xE9;t&#xE9; envoy&#xE9;e.</target>
+                <target xml:lang="fr">Votre réponse a bien été envoyée.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="none" approved="yes">
                 <source>none</source>
@@ -94,15 +94,15 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="reset.password.request" approved="yes">
               <source>reset.password.request</source>
-              <target xml:lang="fr">Demande de r&#xE9;initialisation du mot de passe</target>
+              <target xml:lang="fr">Demande de réinitialisation du mot de passe</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%" approved="yes">
                 <source>you.asked.for.a.password.reset.on.%site%</source>
-                <target xml:lang="fr">Vous avez demand&#xE9; &#xE0; changer le mot de passe de votre compte sur &#xAB;&#xA0;%site%&#xA0;&#xBB;</target>
-            <alt-trans><target xml:lang="fr">Vous avez demand&#xE9; &#xE0; changer le mot de passe de votre compte sur &#x201C;%site%&#x201D;</target></alt-trans></trans-unit>
+                <target xml:lang="fr">Vous avez demandé à changer le mot de passe de votre compte sur « %site% »</target>
+            <alt-trans><target xml:lang="fr">Vous avez demandé à changer le mot de passe de votre compte sur “%site%”</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link" approved="yes">
                 <source>you.need.to.choose.a.new.password.using.following.link</source>
-                <target xml:lang="fr">Vous devez choisir une nouveau mot de passe &#xE0; l&#x2019;adresse suivante&#xA0;:</target>
+                <target xml:lang="fr">Vous devez choisir une nouveau mot de passe à l’adresse suivante :</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials" approved="yes">
                 <source>as.a.reminder.here.are.your.credentials</source>
@@ -110,11 +110,11 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-                <target xml:lang="fr">Si vous n&#x2019;avez pas sollicit&#xE9; cet email, veuillez l&#x2019;ignorer, votre mot de passe ne sera pas chang&#xE9;.</target>
+                <target xml:lang="fr">Si vous n’avez pas sollicité cet email, veuillez l’ignorer, votre mot de passe ne sera pas changé.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="reset_your_password">
+      <trans-unit xml:space="preserve" id="reset_your_password" approved="yes">
                 <source>reset_your_password</source>
-                <target xml:lang="fr" state="translated">R&#xE9;initialiser votre mot de passe</target>
+                <target xml:lang="fr">Réinitialiser votre mot de passe</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>
@@ -130,7 +130,11 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon" approved="yes">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
-                <target xml:lang="fr">Le site est actuellement en maintenance, il sera &#xE0; nouveau disponible d&#x2019;ici quelques minutes.</target>
+                <target xml:lang="fr">Le site est actuellement en maintenance, il sera à nouveau disponible d’ici quelques minutes.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target xml:lang="fr" state="translated">Le code YAML n’est pas valide ({{ error }}).</target>
             </trans-unit>
     </body>
   </file>
