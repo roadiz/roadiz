@@ -156,9 +156,13 @@ abstract class AbstractField extends AbstractEntity
      */
     const CSS_T = 24;
     /**
-     * Textarea to write CSS syntaxed code
+     * Selectbox to choose ISO Country
      */
     const COUNTRY_T = 25;
+    /**
+     * Textarea to write YAML syntaxed text
+     */
+    const YAML_T = 26;
 
     /**
      * Associates abstract field type to a readable string.
@@ -189,6 +193,7 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::JSON_T => 'json.type',
         AbstractField::CSS_T => 'css.type',
         AbstractField::COUNTRY_T => 'country.type',
+        AbstractField::YAML_T => 'yaml.type',
     ];
     /**
      * Associates abstract field type to a Doctrine type.
@@ -218,6 +223,7 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::JSON_T => 'text',
         AbstractField::CSS_T => 'text',
         AbstractField::COUNTRY_T => 'string',
+        AbstractField::YAML_T => 'text',
     ];
     /**
      * Associates abstract field type to a Symfony Form type.
@@ -247,6 +253,7 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::JSON_T => 'json_text',
         AbstractField::CSS_T => 'css_text',
         AbstractField::COUNTRY_T => 'country',
+        AbstractField::YAML_T => 'yaml_text',
     ];
 
     /**

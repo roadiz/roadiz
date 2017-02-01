@@ -34,6 +34,7 @@ use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\CMS\Forms\MultipleEnumerationType;
+use RZ\Roadiz\CMS\Forms\YamlType;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -175,6 +176,8 @@ class NodeSourceType extends AbstractType
                 return new JsonType();
             case NodeTypeField::CSS_T:
                 return new CssType();
+            case NodeTypeField::YAML_T:
+                return new YamlType();
             case NodeTypeField::MARKDOWN_T:
                 return new MarkdownType();
             case NodeTypeField::ENUM_T:

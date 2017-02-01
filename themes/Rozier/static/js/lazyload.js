@@ -240,6 +240,7 @@ Lazyload.prototype.generalBind = function() {
     _this.initMarkdownEditors();
     _this.initJsonEditors();
     _this.initCssEditors();
+    _this.initYamlEditors();
 
     _this.initFilterBars();
 
@@ -314,6 +315,22 @@ Lazyload.prototype.initCssEditors = function() {
         setTimeout(function(){
             for(var i = 0; i < editorCount; i++) {
                 new CssEditor(_this.$textareasCss.eq(i), i);
+            }
+        }, 100);
+    }
+};
+
+Lazyload.prototype.initYamlEditors = function() {
+    var _this = this;
+
+    // Init markdown-preview
+    _this.$textareasYaml = $('textarea[data-rz-yamleditor]');
+    var editorCount = _this.$textareasYaml.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new YamlEditor(_this.$textareasYaml.eq(i), i);
             }
         }, 100);
     }

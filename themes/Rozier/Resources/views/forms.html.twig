@@ -135,6 +135,17 @@
     {% endspaceless %}
 {% endblock css_widget %}
 
+
+{% block yaml_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <textarea {{ block('widget_attributes') }} data-rz-yamleditor>{{ value }}</textarea>
+        {% if attr['data-desc'] %}
+            <div class="form-help uk-alert uk-alert-large">{{ attr['data-desc'] }}</div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock yaml_widget %}
+
 {% block tags_widget %}
     {% spaceless %}
         <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>
