@@ -75,14 +75,14 @@ class DocumentRepository extends EntityRepository
      */
     protected function filterByFolder(&$criteria, &$qb)
     {
-        /*
-         * Do not filter if folder is null
-         */
-        if (isset($criteria['folders']) && is_null($criteria['folders'])) {
-            return;
-        }
-
         if (in_array('folders', array_keys($criteria))) {
+            /*
+             * Do not filter if folder is null
+             */
+            if (is_null($criteria['folders'])) {
+                return;
+            }
+
             if (is_array($criteria['folders']) ||
                 (is_object($criteria['folders']) &&
                     $criteria['folders'] instanceof Collection)) {

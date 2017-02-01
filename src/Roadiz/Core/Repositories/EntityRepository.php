@@ -506,50 +506,52 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     protected function buildTagFiltering(&$criteria, &$qb, $nodeAlias = 'n')
     {
-        /*
-         * Do not filter if tag is null
-         */
-        if (isset($criteria['tags']) && is_null($criteria['tags'])) {
-            return;
-        }
-
-        if (is_array($criteria['tags']) ||
-            (is_object($criteria['tags']) &&
-                $criteria['tags'] instanceof Collection)) {
+        if (in_array('tags', array_keys($criteria))) {
             /*
-             * Do not filter if tag array is empty.
+             * Do not filter if tag is null
              */
-            if (count($criteria['tags']) === 0) {
+            if (is_null($criteria['tags'])) {
                 return;
             }
-            if (in_array("tagExclusive", array_keys($criteria))
-                && $criteria["tagExclusive"] === true) {
-                // To get an exclusive tag filter
-                // we need to filter against each tag id
-                // and to inner join with a different alias for each tag
-                // with AND operator
-                foreach ($criteria['tags'] as $index => $tag) {
-                    $alias = 'tg' . $index;
-                    $qb->innerJoin($nodeAlias . '.tags', $alias);
-                    $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+
+            if (is_array($criteria['tags']) ||
+                (is_object($criteria['tags']) &&
+                    $criteria['tags'] instanceof Collection)) {
+                /*
+                 * Do not filter if tag array is empty.
+                 */
+                if (count($criteria['tags']) === 0) {
+                    return;
                 }
-                unset($criteria["tagExclusive"]);
-                unset($criteria['tags']);
+                if (in_array("tagExclusive", array_keys($criteria))
+                    && $criteria["tagExclusive"] === true) {
+                    // To get an exclusive tag filter
+                    // we need to filter against each tag id
+                    // and to inner join with a different alias for each tag
+                    // with AND operator
+                    foreach ($criteria['tags'] as $index => $tag) {
+                        $alias = 'tg' . $index;
+                        $qb->innerJoin($nodeAlias . '.tags', $alias);
+                        $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                    }
+                    unset($criteria["tagExclusive"]);
+                    unset($criteria['tags']);
+                } else {
+                    $qb->innerJoin(
+                        $nodeAlias . '.tags',
+                        'tg',
+                        'WITH',
+                        'tg.id IN (:tags)'
+                    );
+                }
             } else {
                 $qb->innerJoin(
                     $nodeAlias . '.tags',
                     'tg',
                     'WITH',
-                    'tg.id IN (:tags)'
+                    'tg.id = :tags'
                 );
             }
-        } else {
-            $qb->innerJoin(
-                $nodeAlias . '.tags',
-                'tg',
-                'WITH',
-                'tg.id = :tags'
-            );
         }
     }
 
