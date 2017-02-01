@@ -36,6 +36,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use RZ\Roadiz\Core\Entities\Tag;
 
 /**
  * EntityRepository that implements a simple countBy method.
@@ -505,9 +506,22 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     protected function buildTagFiltering(&$criteria, &$qb, $nodeAlias = 'n')
     {
+        /*
+         * Do not filter if tag is null
+         */
+        if (isset($criteria['tags']) && is_null($criteria['tags'])) {
+            return;
+        }
+
         if (is_array($criteria['tags']) ||
             (is_object($criteria['tags']) &&
                 $criteria['tags'] instanceof Collection)) {
+            /*
+             * Do not filter if tag array is empty.
+             */
+            if (count($criteria['tags']) === 0) {
+                return;
+            }
             if (in_array("tagExclusive", array_keys($criteria))
                 && $criteria["tagExclusive"] === true) {
                 // To get an exclusive tag filter
@@ -536,6 +550,28 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                 'WITH',
                 'tg.id = :tags'
             );
+        }
+    }
+
+    /**
+     * Bind tag parameters to final query
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByTag(array &$criteria, &$finalQuery)
+    {
+        if (in_array('tags', array_keys($criteria))) {
+            if ($criteria['tags'] instanceof Tag) {
+                $finalQuery->setParameter('tags', $criteria['tags']->getId());
+            } elseif (is_array($criteria['tags']) || $criteria['tags'] instanceof Collection) {
+                if (count($criteria['tags']) > 0) {
+                    $finalQuery->setParameter('tags', $criteria['tags']);
+                }
+            } elseif (is_integer($criteria['tags'])) {
+                $finalQuery->setParameter('tags', (int) $criteria['tags']);
+            }
+            unset($criteria['tags']);
         }
     }
 

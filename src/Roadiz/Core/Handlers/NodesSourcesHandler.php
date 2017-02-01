@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -458,7 +459,7 @@ class NodesSourcesHandler
             return null;
         }
 
-        $defaultCrit = [
+        $defaultCriteria = [
             'node.nodeType.newsletterType' => false,
             /*
              * Use < operator to get first next nodeSource
@@ -474,7 +475,7 @@ class NodesSourcesHandler
             'translation' => $this->nodeSource->getTranslation(),
         ];
         if (null !== $criteria) {
-            $defaultCrit = array_merge($defaultCrit, $criteria);
+            $defaultCriteria = array_merge($defaultCriteria, $criteria);
         }
 
         if (null === $order) {
@@ -483,10 +484,12 @@ class NodesSourcesHandler
 
         $order['node.position'] = 'DESC';
 
-        return Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-            ->findOneBy(
-                $defaultCrit,
+        /** @var NodesSourcesRepository $repo */
+        $repo = Kernel::getService('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+
+        return $repo->findOneBy(
+                $defaultCriteria,
                 $order,
                 $authorizationChecker,
                 $preview

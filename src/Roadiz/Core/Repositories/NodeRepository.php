@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
@@ -38,7 +37,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -217,27 +215,6 @@ class NodeRepository extends EntityRepository
             }
 
             $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
-        }
-    }
-
-    /**
-     * Bind tag parameter to final query
-     *
-     * @param array $criteria
-     * @param Query $finalQuery
-     */
-    protected function applyFilterByTag(array &$criteria, &$finalQuery)
-    {
-        if (in_array('tags', array_keys($criteria))) {
-            if ($criteria['tags'] instanceof Tag) {
-                $finalQuery->setParameter('tags', $criteria['tags']->getId());
-            } elseif (is_array($criteria['tags']) ||
-                $criteria['tags'] instanceof Collection) {
-                $finalQuery->setParameter('tags', $criteria['tags']);
-            } elseif (is_integer($criteria['tags'])) {
-                $finalQuery->setParameter('tags', (int) $criteria['tags']);
-            }
-            unset($criteria["tags"]);
         }
     }
 

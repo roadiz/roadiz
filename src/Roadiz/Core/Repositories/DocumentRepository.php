@@ -75,10 +75,23 @@ class DocumentRepository extends EntityRepository
      */
     protected function filterByFolder(&$criteria, &$qb)
     {
+        /*
+         * Do not filter if folder is null
+         */
+        if (isset($criteria['folders']) && is_null($criteria['folders'])) {
+            return;
+        }
+
         if (in_array('folders', array_keys($criteria))) {
             if (is_array($criteria['folders']) ||
                 (is_object($criteria['folders']) &&
                     $criteria['folders'] instanceof Collection)) {
+                /*
+                 * Do not filter if folder array is empty.
+                 */
+                if (count($criteria['folders']) === 0) {
+                    return;
+                }
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
                     // To get an exclusive folder filter
@@ -246,9 +259,10 @@ class DocumentRepository extends EntityRepository
         if (in_array('folders', array_keys($criteria))) {
             if ($criteria['folders'] instanceof Folder) {
                 $finalQuery->setParameter('folders', $criteria['folders']->getId());
-            } elseif (is_array($criteria['folders']) ||
-                $criteria['folders'] instanceof Collection) {
-                $finalQuery->setParameter('folders', $criteria['folders']);
+            } elseif (is_array($criteria['folders']) || $criteria['folders'] instanceof Collection) {
+                if (count($criteria['folders']) > 0) {
+                    $finalQuery->setParameter('folders', $criteria['folders']);
+                }
             } elseif (is_integer($criteria['folders'])) {
                 $finalQuery->setParameter('folders', (int) $criteria['folders']);
             }
