@@ -7,7 +7,7 @@ supportedLocale:
     - "en"
     - "fr"
     - "ru"
-versionRequire: "0.15.0"
+versionRequire: "0.17.0"
 importFiles:
     roles:
         - "Resources/import/roles.rzt"

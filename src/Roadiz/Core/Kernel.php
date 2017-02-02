@@ -80,7 +80,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.16.0";
+    public static $cmsVersion = "0.17.0";
     protected static $instance = null;
 
     /**
