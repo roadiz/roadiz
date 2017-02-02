@@ -64,6 +64,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     protected function buildComparison($value, $prefix, $key, $baseKey, QueryBuilder $qb)
     {
+        $res = '';
         if (is_object($value) && $value instanceof PersistableInterface) {
             $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif (is_array($value)) {

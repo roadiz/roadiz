@@ -60,7 +60,7 @@ class RecaptchaType extends AbstractType
 
     /**
      * (non-PHPdoc)
-     * @see Symfony\Component\Form.AbstractType::buildView()
+     * @see \Symfony\Component\Form\AbstractType::buildView()
      * @param FormView $view
      * @param FormInterface $form
      * @param array $options
@@ -71,7 +71,7 @@ class RecaptchaType extends AbstractType
     }
 
     /**
-     * @see Symfony\Component\Form.AbstractType::configureOptions()
+     * @see \Symfony\Component\Form\AbstractType::configureOptions()
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -92,7 +92,7 @@ class RecaptchaType extends AbstractType
     }
 
     /**
-     * @see Symfony\Component\Form.AbstractType::getParent()
+     * @see \Symfony\Component\Form\AbstractType::getParent()
      */
     public function getParent()
     {
@@ -100,7 +100,7 @@ class RecaptchaType extends AbstractType
     }
 
     /**
-     * @see Symfony\Component\Form.FormTypeInterface::getName()
+     * @see \Symfony\Component\Form\FormTypeInterface::getName()
      *
      *      {% block recaptcha_widget -%}
      *          <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>

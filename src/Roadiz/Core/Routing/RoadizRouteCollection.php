@@ -118,7 +118,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
     {
         $class = $this->themeResolver->getBackendClassName();
         if (class_exists($class)) {
-            $collection = $class::getRoutes();
+            $collection = call_user_func([$class, 'getRoutes']);
             if (null !== $collection) {
                 $this->addCollection($collection);
             }
@@ -134,9 +134,9 @@ class RoadizRouteCollection extends DeferredRouteCollection
             if ($theme instanceof Theme) {
                 $feClass = $theme->getClassName();
                 /** @var RouteCollection $feCollection */
-                $feCollection = $feClass::getRoutes();
+                $feCollection = call_user_func([$feClass, 'getRoutes']);
                 /** @var RouteCollection $feBackendCollection */
-                $feBackendCollection = $feClass::getBackendRoutes();
+                $feBackendCollection = call_user_func([$feClass, 'getBackendRoutes']);
 
                 if ($feCollection !== null) {
                     // set host pattern if defined

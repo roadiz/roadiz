@@ -46,7 +46,8 @@ class ThemeInstaller
      */
     public static function getThemeInformation($classname)
     {
-        $file = $classname::getThemeFolder() . "/config.yml";
+        $themeFolder = call_user_func([$classname, 'getThemeFolder']);
+        $file = $themeFolder . "/config.yml";
         return Yaml::parse($file);
     }
 
@@ -121,6 +122,7 @@ class ThemeInstaller
      */
     public static function assignSummaryInfo($classname, &$assignation, $locale)
     {
+        $themeFolder = call_user_func([$classname, 'getThemeFolder']);
         $data = static::getThemeInformation($classname);
 
         $assignation["theme"] = [
@@ -137,14 +139,13 @@ class ThemeInstaller
 
         $assignation["cms"]["locale"] = $locale;
         $assignation["status"]["locale"] = in_array($locale, $data["supportedLocale"]);
-
         $assignation["status"]["import"] = [];
 
         $assignation['theme']['haveFileImport'] = false;
 
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
-                $assignation["status"]["import"][$filename] = file_exists($classname::getThemeFolder() . "/" . $filename);
+                $assignation["status"]["import"][$filename] = file_exists($themeFolder . "/" . $filename);
                 $assignation['theme']['haveFileImport'] = true;
             }
         }

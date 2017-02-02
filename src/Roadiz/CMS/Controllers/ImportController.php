@@ -172,7 +172,7 @@ class ImportController extends AppController
     public function importNodesAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\NodesImporter",
+            'RZ\Roadiz\CMS\Importers\NodesImporter',
             $request,
             $themeId
         );
@@ -203,11 +203,12 @@ class ImportController extends AppController
                 }
 
                 $classname = $theme->getClassName();
-                $path = $classname::getThemeFolder() . '/' . $pathFile;
+                $themeFolder = call_user_func([$classname, 'getThemeFolder']);
+                $path = $themeFolder . '/' . $pathFile;
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                $classImporter::importJsonFile($file, $this->get('em'));
+                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'));
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

@@ -90,7 +90,7 @@ class ThemeInstallCommand extends Command
 
         try {
             $theme = $this->getTheme($classname);
-            $this->themeRoot = $classname::getThemeFolder();
+            $this->themeRoot = call_user_func([$classname, 'getThemeFolder']);
         } catch (TableNotFoundException $e) {
             $theme = null;
         }

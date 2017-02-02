@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -151,11 +150,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
         /** @var Theme $theme */
         foreach ($classes as $theme) {
             if (null !== $theme) {
-                /** @var FrontendController $themeClass */
-                $themeClass = $theme->getClassName();
+                $resourcesFolder = call_user_func([$theme->getClassName(), 'getResourcesFolder']);
                 $this->addTranslatorResource(
                     $translator,
-                    $themeClass::getResourcesFolder() . '/translations',
+                    $resourcesFolder . '/translations',
                     'xlf',
                     $locale
                 );
