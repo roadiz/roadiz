@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
+use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
@@ -180,6 +181,7 @@ class TwigServiceProvider implements ServiceProviderInterface
              */
             if (true !== $kernel->isInstallMode()) {
                 $extensions->add(new DocumentExtension($c['assetPackages']));
+                $extensions->add(new FontExtension($c['assetPackages']));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
                     $kernel->isPreview()
