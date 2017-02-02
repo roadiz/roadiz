@@ -84,7 +84,7 @@ $clearers = [
     new NodesSourcesUrlsCacheClearer($kernel->getService('nodesSourcesUrlCacheProvider')),
     new OPCacheClearer(),
     // Keep doctrine at the end
-    new DoctrineCacheClearer($kernel->getService('em')),
+    new DoctrineCacheClearer($kernel->getService('em'), $kernel),
 ];
 
 $text = [
