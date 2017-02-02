@@ -36,15 +36,14 @@ use Monolog\Logger;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Repositories\FontRepository;
-use Symfony\Component\Config\FileLocator;
+use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 
 /**
  * Special controller app file for assets management with InterventionRequest lib.
  */
-class AssetsController extends AppController
+class AssetsController extends CmsController
 {
     /**
      * Initialize controller with NO twig environment.
@@ -58,23 +57,6 @@ class AssetsController extends AppController
      */
     public function prepareBaseAssignation()
     {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getRoutes()
-    {
-        $locator = new FileLocator([
-            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ]);
-
-        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/assetsRoutes.yml')) {
-            $loader = new YamlFileLoader($locator);
-            return $loader->load('assetsRoutes.yml');
-        }
-
-        return null;
     }
 
     /**
@@ -132,36 +114,39 @@ class AssetsController extends AppController
     {
         /** @var FontRepository $repository */
         $repository = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font');
+                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
+        /** @var Packages $packages */
+        $packages = $this->get('assetPackages');
+
         if (null !== $font) {
             switch ($extension) {
                 case 'eot':
-                    $fontpath = $font->getEOTAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getEOTRelativeUrl());
                     $mime = Font::MIME_EOT;
                     break;
                 case 'woff':
-                    $fontpath = $font->getWOFFAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getWOFFRelativeUrl());
                     $mime = Font::MIME_WOFF;
                     break;
                 case 'woff2':
-                    $fontpath = $font->getWOFF2AbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getWOFF2RelativeUrl());
                     $mime = Font::MIME_WOFF2;
                     break;
                 case 'svg':
-                    $fontpath = $font->getSVGAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getSVGRelativeUrl());
                     $mime = Font::MIME_SVG;
                     break;
                 case 'otf':
                     $mime = Font::MIME_OTF;
-                    $fontpath = $font->getOTFAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 case 'ttf':
                     $mime = Font::MIME_TTF;
-                    $fontpath = $font->getOTFAbsolutePath();
+                    $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 default:
                     $fontpath = "";
@@ -239,7 +224,7 @@ class AssetsController extends AppController
             $assignation['fonts'][] = [
                 'font' => $font,
                 'site' => SettingsBag::get('site_name'),
-                'fontFolder' => '/' . Font::getFilesFolderName(),
+                'fontFolder' => $this->get('kernel')->getFontsFilesBasePath(),
                 'variantHash' => $variantHash,
             ];
         }

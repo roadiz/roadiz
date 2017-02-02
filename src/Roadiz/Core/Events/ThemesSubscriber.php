@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -83,16 +84,17 @@ class ThemesSubscriber implements EventSubscriberInterface
                 // Register back-end security scheme
                 $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
                 if (null !== $beClass) {
-                    $beClass::setupDependencyInjection($this->kernel->getContainer());
+                    call_user_func([$beClass, 'setupDependencyInjection'], $this->kernel->getContainer());
                 }
                 $this->stopwatch->stop('backendDependencyInjection');
             }
 
             $this->stopwatch->start('themeDependencyInjection');
             // Register front-end security scheme
+            /** @var Theme $theme */
             foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
                 $feClass = $theme->getClassName();
-                $feClass::setupDependencyInjection($this->kernel->getContainer());
+                call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
             }
             $this->stopwatch->stop('themeDependencyInjection');
         }

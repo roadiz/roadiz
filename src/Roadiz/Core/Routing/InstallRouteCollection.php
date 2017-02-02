@@ -47,8 +47,7 @@ class InstallRouteCollection extends DeferredRouteCollection
     public function parseResources()
     {
         if (class_exists($this->installClassname)) {
-            $classname = $this->installClassname;
-            $collection = $classname::getRoutes();
+            $collection = call_user_func([$this->installClassname, 'getRoutes']);
             if (null !== $collection) {
                 $this->addCollection($collection);
             }

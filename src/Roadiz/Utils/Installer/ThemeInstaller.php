@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,16 +39,15 @@ use Symfony\Component\Yaml\Yaml;
 class ThemeInstaller
 {
     /**
-     * get Theme informations.
+     * Get Theme informations from its config.yml file.
      *
-     * @param $classname
-     *
+     * @param string $classname
      * @return array
      */
     public static function getThemeInformation($classname)
     {
-        $array = explode('\\', $classname);
-        $file = ROADIZ_ROOT . "/themes/" . $array[2] . "/config.yml";
+        $themeFolder = call_user_func([$classname, 'getThemeFolder']);
+        $file = $themeFolder . "/config.yml";
         return Yaml::parse($file);
     }
 
@@ -69,15 +68,20 @@ class ThemeInstaller
             $em,
             "",
             "",
+            "",
             false,
             $request
         );
         $data["className"] = $classname;
         $fix->installTheme($data);
 
-        $installedLanguage = $em->getRepository("RZ\Roadiz\Core\Entities\Translation")
+        $installedLanguage = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findAll();
 
+        /**
+         * @var int $key
+         * @var Translation $locale
+         */
         foreach ($installedLanguage as $key => $locale) {
             $installedLanguage[$key] = $locale->getLocale();
         }
@@ -111,14 +115,14 @@ class ThemeInstaller
      * assign summary theme informations.
      *
      * @param string $classname
-     * @param array  $assignation
+     * @param array $assignation
      * @param string $locale
      *
      * @return array
      */
     public static function assignSummaryInfo($classname, &$assignation, $locale)
     {
-        $array = explode('\\', $classname);
+        $themeFolder = call_user_func([$classname, 'getThemeFolder']);
         $data = static::getThemeInformation($classname);
 
         $assignation["theme"] = [
@@ -135,14 +139,13 @@ class ThemeInstaller
 
         $assignation["cms"]["locale"] = $locale;
         $assignation["status"]["locale"] = in_array($locale, $data["supportedLocale"]);
-
         $assignation["status"]["import"] = [];
 
         $assignation['theme']['haveFileImport'] = false;
 
         foreach ($data["importFiles"] as $name => $filenames) {
             foreach ($filenames as $filename) {
-                $assignation["status"]["import"][$filename] = file_exists(ROADIZ_ROOT . "/themes/" . $array[2] . "/" . $filename);
+                $assignation["status"]["import"][$filename] = file_exists($themeFolder . "/" . $filename);
                 $assignation['theme']['haveFileImport'] = true;
             }
         }

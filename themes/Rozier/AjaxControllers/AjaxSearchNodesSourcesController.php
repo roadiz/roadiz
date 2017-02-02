@@ -30,8 +30,6 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

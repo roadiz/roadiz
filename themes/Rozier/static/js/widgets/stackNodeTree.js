@@ -25,20 +25,14 @@ StackNodeTree.prototype.init = function() {
 };
 StackNodeTree.prototype.onChangeLangClick = function(event) {
     var _this = this;
-
     event.preventDefault();
 
-    console.log('Changed lang on stack tree');
-
     var $link = $(event.currentTarget);
-
     var $nodeTree = _this.$page.find('.nodetree-widget');
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
     var translationId = parseInt($link.attr('data-translation-id'));
     var tagId = $link.attr('data-filter-tag');
-
     _this.refreshNodeTree(parentNodeId, translationId, tagId);
-
     return false;
 };
 
@@ -50,7 +44,6 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     }
 
     var $link = $(event.currentTarget);
-
     var nodeTypeId = parseInt($link.attr('data-children-node-type'));
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
 

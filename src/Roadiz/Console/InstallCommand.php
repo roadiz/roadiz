@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
@@ -39,12 +40,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Yaml\Yaml;
+use Themes\Install\InstallApp;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
  */
 class InstallCommand extends Command
 {
+    /** @var EntityManager */
     private $entityManager;
 
     protected function configure()
@@ -63,7 +66,7 @@ class InstallCommand extends Command
         $question = new ConfirmationQuestion(
             'Before installing Roadiz, did you create database schema? ' . PHP_EOL .
             'If not execute: <info>bin/roadiz orm:schema-tool:create</info>' . PHP_EOL .
-            '<question>Are you sure to perform installation?</question> : ',
+            '<question>Are you sure to perform installation?</question> [y/N]: ',
             false
         );
 
@@ -77,7 +80,7 @@ class InstallCommand extends Command
                 $theme = new Theme();
                 $theme->setAvailable(true)
                     ->setBackendTheme(true)
-                    ->setClassName("Themes\Rozier\RozierApp");
+                    ->setClassName('Themes\Rozier\RozierApp');
 
                 $this->entityManager->persist($theme);
                 $this->entityManager->flush();
@@ -90,7 +93,7 @@ class InstallCommand extends Command
             /**
              * Import default data
              */
-            $installRoot = ROADIZ_ROOT . "/themes/Install";
+            $installRoot = InstallApp::getThemeFolder();
             $data = Yaml::parse($installRoot . "/config.yml");
 
             if (isset($data["importFiles"]['roles'])) {
@@ -152,7 +155,7 @@ class InstallCommand extends Command
     private function hasDefaultBackend()
     {
         $default = $this->entityManager
-            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findOneBy(["backendTheme" => true]);
 
         return $default !== null ? true : false;
@@ -166,7 +169,7 @@ class InstallCommand extends Command
     public function hasDefaultTranslation()
     {
         $default = $this->entityManager
-            ->getRepository("RZ\Roadiz\Core\Entities\Translation")
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findOneBy([]);
 
         return $default !== null ? true : false;

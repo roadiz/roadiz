@@ -38,13 +38,11 @@ use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
- * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
  *     @ORM\Index(columns={"private"})
@@ -264,6 +262,16 @@ class Document extends AbstractDateTimed
     }
 
     /**
+     * Is current document a PDF file.
+     *
+     * @return bool
+     */
+    public function isPdf()
+    {
+        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'pdf';
+    }
+
+    /**
      * @ORM\Column(type="string")
      */
     private $folder;
@@ -280,7 +288,6 @@ class Document extends AbstractDateTimed
      * Set folder name.
      *
      * @param $folder
-     *
      * @return $this
      */
     public function setFolder($folder)
@@ -306,6 +313,7 @@ class Document extends AbstractDateTimed
      * privacy status.
      *
      * @return string
+     * @deprecated Use Packages::getDocumentFilePath() method instead. Will be removed in Standard Edition.
      */
     public function getAbsolutePath()
     {
@@ -315,7 +323,8 @@ class Document extends AbstractDateTimed
     /**
      * Only return public absolute file path.
      *
-     * @return string
+     * @return string|null
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getPublicAbsolutePath()
     {
@@ -329,7 +338,8 @@ class Document extends AbstractDateTimed
     /**
      * Only return private absolute file path.
      *
-     * @return string
+     * @return string|null
+     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
      */
     public function getPrivateAbsolutePath()
     {
@@ -410,9 +420,9 @@ class Document extends AbstractDateTimed
     {
         return $this->private;
     }
+
     /**
      * @param boolean $private
-     *
      * @return $this
      */
     public function setPrivate($private)
@@ -429,6 +439,7 @@ class Document extends AbstractDateTimed
     {
         return new DocumentViewer($this);
     }
+
     /**
      * @return \RZ\Roadiz\Core\Handlers\DocumentHandler
      */
@@ -517,6 +528,9 @@ class Document extends AbstractDateTimed
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function hasTranslations()
     {
         return (boolean) $this->getDocumentTranslations()->count();
@@ -534,7 +548,8 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string Return absolute path to public files.
+     * @deprecated Use Kernel::getPublicFilesPath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getFilesFolder()
     {
@@ -543,6 +558,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return string
+     * @deprecated Use Kernel::getPublicFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getFilesFolderName()
     {
@@ -550,7 +566,8 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string Return absolute path to private files. This path should be protected.
+     * @deprecated Use Kernel::getPrivateFilesPath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getPrivateFilesFolder()
     {
@@ -559,6 +576,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return string
+     * @deprecated Use Kernel::getPrivateFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
      */
     public static function getPrivateFilesFolderName()
     {
@@ -614,45 +632,13 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * Unlink file after document has been deleted.
-     *
-     * @ORM\PostRemove
+     * @return bool
+     * @deprecated Use Packages methods to manage documents server paths. This will be removed in Standard Edition.
      */
-    public function postRemove()
+    public function fileExists()
     {
         $fs = new Filesystem();
-
-        $this->setRawDocument(null);
-
-        if ($fs->exists($this->getAbsolutePath())) {
-            $fs->remove($this->getAbsolutePath());
-        }
-        $this->cleanFileDirectory();
-    }
-
-    /**
-     * Remove document directory if there is no other file in it.
-     *
-     * @return boolean
-     */
-    protected function cleanFileDirectory()
-    {
-        $dir = dirname($this->getAbsolutePath());
-        $fs = new Filesystem();
-
-        if ($fs->exists($dir)) {
-            $finder = new Finder();
-            $finder->files()->in($dir);
-
-            if (count($finder) <= 0) {
-                /*
-                 * Directory is empty
-                 */
-                $fs->remove($dir);
-            }
-        }
-
-        return false;
+        return $fs->exists($this->getAbsolutePath());
     }
 
     /**
@@ -673,6 +659,7 @@ class Document extends AbstractDateTimed
      * - Return `'portrait'` if height is strictly lower to width
      *
      * @return string|null
+     * @deprecated Use Twig filter "imageOrientation" instead. This will be removed in Standard Edition.
      */
     public function getOrientation()
     {
@@ -686,6 +673,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return array|null
+     * @deprecated Use Twig filter "imageSize" instead. This will be removed in Standard Edition.
      */
     public function getImageSize()
     {
@@ -703,6 +691,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return float|null
+     * @deprecated Use Twig filter "imageRatio" instead. This will be removed in Standard Edition.
      */
     public function getImageSizeRatio()
     {

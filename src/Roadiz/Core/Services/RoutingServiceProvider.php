@@ -65,9 +65,9 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['requestContext'] = function ($c) {
-            $rc = new RequestContext();
-            $rc->fromRequest($c['request']);
-            return $rc;
+            $requestContext = new RequestContext();
+            $requestContext->fromRequest($c['request']);
+            return $requestContext;
         };
 
         $container['resolver'] = function () {
@@ -127,14 +127,15 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['routeCollection'] = function ($c) {
-            if (true === $c['kernel']->isInstallMode()) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            if (true === $kernel->isInstallMode()) {
                 /*
                  * Get Install routes
                  */
-                $installClassname = Kernel::INSTALL_CLASSNAME;
-                $installClassname::setupDependencyInjection($c);
+                call_user_func([Kernel::INSTALL_CLASSNAME, 'setupDependencyInjection'], $c);
 
-                return new InstallRouteCollection($installClassname);
+                return new InstallRouteCollection(Kernel::INSTALL_CLASSNAME);
             } else {
                 /*
                  * Get App routes
@@ -142,7 +143,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $collection = new RoadizRouteCollection(
                     $c['themeResolver'],
                     $c['stopwatch'],
-                    $c['kernel']->isPreview()
+                    $kernel->isPreview()
                 );
 
                 return $collection;

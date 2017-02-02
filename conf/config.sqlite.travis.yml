@@ -9,11 +9,11 @@ doctrine:
 security:
     secret: "change#this#secret#very#important"
 cacheDriver:
-    type: null
-    host: null
-    port: null
+    type: ~
+    host: ~
+    port: ~
 mailer:
-    type: ""
+    type: ~
     host: "localhost"
     port: 25
     encryption: false

@@ -40,13 +40,11 @@ Rozier.$backTopBtn = null;
 
 Rozier.entriesPanel = null;
 
-
 Rozier.onDocumentReady = function(event) {
-
     /*
      * Store Rozier configuration
      */
-    for( var index in temp ){
+    for(var index in temp){
         Rozier[index] = temp[index];
     }
 
@@ -55,9 +53,6 @@ Rozier.onDocumentReady = function(event) {
 
     Rozier.$window = $(window);
     Rozier.$body = $('body');
-
-    if(isMobile.any() === null) Rozier.centerVerticalObjects(); // this must be done before generalBind!
-
 
     // --- Selectors --- //
     Rozier.$userPanelContainer = $('#user-panel-container');
@@ -116,10 +111,20 @@ Rozier.onDocumentReady = function(event) {
  */
 Rozier.initNestables = function  () {
     $('.uk-nestable').each(function (index, element) {
-        UIkit.nestable(element);
+        var $tree = $(element);
+        var options = {};
+
+        if ($tree.hasClass('nodetree')) {
+            options.group = 'nodeTree';
+        } else if ($tree.hasClass('tagtree')) {
+            options.group = 'tagTree';
+        } else if ($tree.hasClass('foldertree')) {
+            options.group = 'folderTree';
+        }
+
+        UIkit.nestable(element, options);
     });
 };
-
 
 /**
  * Bind main trees
@@ -135,11 +140,11 @@ Rozier.bindMainTrees = function () {
 
     var $tagTree = $('.tagtree-widget .root-tree');
     $tagTree.off('change.uk.nestable');
-    $tagTree.on('change.uk.nestable', Rozier.onNestableTagTreeChange );
+    $tagTree.on('change.uk.nestable', Rozier.onNestableTagTreeChange);
 
     var $folderTree = $('.foldertree-widget .root-tree');
     $folderTree.off('change.uk.nestable');
-    $folderTree.on('change.uk.nestable', Rozier.onNestableFolderTreeChange );
+    $folderTree.on('change.uk.nestable', Rozier.onNestableFolderTreeChange);
 
     // Tree element name
     _this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');
@@ -157,9 +162,9 @@ Rozier.maintreeElementNameRightClick = function(e){
     var $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu');
     if ($contextualMenu.length) {
         if($contextualMenu[0].className.indexOf('uk-open') == -1) {
-            addClass($contextualMenu[0], 'uk-open');
+            $contextualMenu.addClass('uk-open');
         }
-        else removeClass($contextualMenu[0], 'uk-open');
+        else $contextualMenu.removeClass('uk-open');
     }
 
     return false;
@@ -326,35 +331,6 @@ Rozier.refreshMainNodeTree = function (translationId) {
 };
 
 
-/*
- * Center vertically every DOM objects that have
- * the data-vertical-center attribute
- */
-Rozier.centerVerticalObjects = function(context) {
-    var $objects = $(".rz-vertical-align");
-
-    for(var i = 0; i < $objects.length; i++) {
-        var marginTop = $($objects[i]).actual('outerHeight')/-2;
-        $objects[i].style.top = '50%';
-        $objects[i].style.marginTop = marginTop +'px';
-        if($objects[i].className.indexOf('actions-menu') >= 0 && context == 'ajax') {
-            /*
-             * Add additional space at actionMenu top to let see translation menu bar.
-             */
-            var actionMenuHeight = $($objects[i]).actual('height');
-            var windowHeight = $(window).height();
-            var spaceTop = (windowHeight - actionMenuHeight) / 2;
-            if (spaceTop < 220) { // 220 is the header min height
-                var additionnalSpace = 220 - spaceTop;
-                $objects[i].style.marginTop = (marginTop + additionnalSpace) +'px';
-            }
-
-            $objects[i].style.right = - $($objects[i]).actual('outerWidth')+'px';
-        }
-    }
-};
-
-
 /**
  * Toggle trees panel
  * @param  {[type]} event [description]
@@ -457,14 +433,14 @@ Rozier.onSubmitSearchNodesSources = function(e){
  * @param status
  * @returns {boolean}
  */
-Rozier.onNestableNodeTreeChange = function (event, element, status) {
+Rozier.onNestableNodeTreeChange = function (event, rootEl, el, status) {
+    var element = $(el);
     /*
      * If node removed, do not do anything, the other change.uk.nestable nodeTree will be triggered
      */
     if (status == 'removed') {
         return false;
     }
-
     var node_id = parseInt(element.attr('data-node-id'));
     var parent_node_id = null;
     if (element.parents('.nodetree-element').length) {
@@ -489,7 +465,6 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
      */
     if (node_id === parent_node_id) {
         console.log("You cannot move a node inside itself!");
-        alert("You cannot move a node inside itself!");
         window.location.reload();
         return false;
     }
@@ -540,7 +515,8 @@ Rozier.onNestableNodeTreeChange = function (event, element, status) {
  * @param status
  * @returns {boolean}
  */
-Rozier.onNestableTagTreeChange = function (event, element, status) {
+Rozier.onNestableTagTreeChange = function (event, rootEl, el, status) {
+    var element = $(el);
     /*
      * If tag removed, do not do anything, the other tagTree will be triggered
      */
@@ -620,7 +596,8 @@ Rozier.onNestableTagTreeChange = function (event, element, status) {
  * @param status
  * @returns {boolean}
  */
-Rozier.onNestableFolderTreeChange = function (event, element, status) {
+Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
+    var element = $(el);
     /*
      * If folder removed, do not do anything, the other folderTree will be triggered
      */
@@ -719,7 +696,7 @@ Rozier.resize = function(){
     _this.windowHeight = _this.$window.height();
 
     // Close tree panel if small screen & first resize
-    if(_this.windowWidth > 768 &&
+    if(_this.windowWidth >= 768 &&
         _this.windowWidth <= 1200 &&
         _this.resizeFirst) {
         _this.$mainTrees[0].style.display = 'none';
@@ -733,12 +710,13 @@ Rozier.resize = function(){
     if(_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new RozierMobile(); // && isMobile.any() !== null
 
 
-    // Set height to panels (fix for IE9,10)
-    if(isMobile.any() === null){
-        _this.$userPanelContainer.height(_this.windowHeight);
+    if (_this.windowWidth >= 768) {
+        _this.$mainContentScrollable.height(_this.windowHeight);
+        _this.$mainTreesContainer[0].style.height = '';
+    } else {
+        _this.$mainContentScrollable[0].style.height = '';
         _this.$mainTreesContainer.height(_this.windowHeight);
     }
-    _this.$mainContentScrollable.height(_this.windowHeight);
 
     // Tree scroll height
     _this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
@@ -766,11 +744,10 @@ Rozier.resize = function(){
     _this.entriesPanel.replaceSubNavs();
 
     // Documents list
-    if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();
+    //if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();
 
     // Set resize first to false
     if(_this.resizeFirst) _this.resizeFirst = false;
-
 };
 
 

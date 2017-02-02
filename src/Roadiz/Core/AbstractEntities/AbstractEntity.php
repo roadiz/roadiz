@@ -46,7 +46,7 @@ abstract class AbstractEntity implements PersistableInterface
     protected $id;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -54,12 +54,12 @@ abstract class AbstractEntity implements PersistableInterface
     }
 
     /**
-     * @param $id
-     *
-     * @return int
+     * @param int $id
+     * @return AbstractEntity
      */
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 }

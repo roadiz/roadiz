@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Utils;
 
-use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -51,22 +50,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  * Class ContactFormManager
  * @package RZ\Roadiz\Utils
  */
-class ContactFormManager
+class ContactFormManager extends EmailManager
 {
-    protected $subject = null;
-    protected $emailTitle = null;
-    protected $receiver;
-    protected $sender = null;
+    /** @var array|null  */
     protected $uploadedFiles = null;
-    protected $successMessage = 'form.successfully.sent';
-    protected $failMessage = 'form.has.errors';
-    protected $translator;
-    protected $templating;
-    protected $mailer;
-    /**
-     * @var Request
-     */
-    protected $request;
+
     /**
      * @var string
      */
@@ -75,20 +63,12 @@ class ContactFormManager
      * @var FormBuilder
      */
     protected $formBuilder = null;
+
     /**
      * @var Form
      */
     protected $form = null;
-    protected $emailTemplate = 'forms/contactForm.html.twig';
-    protected $emailStylesheet = '/src/Roadiz/CMS/Resources/css/transactionalStyles.css';
-    /**
-     * @var array
-     */
-    protected $assignation;
-    /**
-     * @var \Swift_Message
-     */
-    protected $message;
+
     /**
      * @var array
      */
@@ -99,6 +79,7 @@ class ContactFormManager
         'image/png',
         'image/gif',
     ];
+
     /**
      * @var int
      */
@@ -119,18 +100,29 @@ class ContactFormManager
         \Twig_Environment $templating,
         \Swift_Mailer $mailer
     ) {
-        $this->request = $request;
-        $this->translator = $translator;
-        $this->mailer = $mailer;
-        $this->formFactory = $formFactory;
-        $this->templating = $templating;
+        parent::__construct($request, $translator, $templating, $mailer);
 
-        $this->formBuilder = $this->formFactory->createBuilder('form', null, [
+        $this->formBuilder = $formFactory->createBuilder('form', null, [
                  'attr' => [
                      'id' => 'contactForm',
                  ],
              ])
              ->setMethod('POST');
+
+        $this->successMessage = 'form.successfully.sent';
+        $this->failMessage = 'form.has.errors';
+        $this->emailTemplate = 'forms/contactForm.html.twig';
+        $this->emailPlainTextTemplate = 'forms/contactForm.txt.twig';
+
+        $this->setSubject($this->translator->trans(
+            'new.contact.form.%site%',
+            ['%site%' => SettingsBag::get('site_name')]
+        ));
+
+        $this->setEmailTitle($this->translator->trans(
+            'new.contact.form.%site%',
+            ['%site%' => SettingsBag::get('site_name')]
+        ));
     }
 
     /**
@@ -321,18 +313,6 @@ class ContactFormManager
      */
     protected function handleFormData(Form $form)
     {
-        /*
-         * Add subject
-         */
-        if (null !== $this->emailTitle) {
-            $this->emailTitle = trim(strip_tags($this->emailTitle));
-        } else {
-            $this->emailTitle = $this->translator->trans(
-                'new.contact.form.%site%',
-                ['%site%' => SettingsBag::get('site_name')]
-            );
-        }
-
         $formData = $form->getData();
         $fields = $this->flattenFormData($formData, []);
 
@@ -340,7 +320,7 @@ class ContactFormManager
          * Sender email
          */
         if (!empty($formData['email'])) {
-            $this->sender = $formData['email'];
+            $this->setSender($formData['email']);
         }
 
         /**
@@ -371,8 +351,8 @@ class ContactFormManager
 
         $this->assignation = [
             'mailContact' => SettingsBag::get('email_sender'),
-            'title' => $this->emailTitle,
-            'email' => $this->sender,
+            'title' => $this->getEmailTitle(),
+            'email' => $this->getSender(),
             'fields' => $fields,
         ];
     }
@@ -409,54 +389,25 @@ class ContactFormManager
     /**
      * Send contact form data by email.
      * @return int
-     * @throws \Exception
+     * @throws \RuntimeException
      */
-    protected function send()
+    public function send()
     {
         if (empty($this->assignation)) {
-            throw new \Exception("Can’t send a contact form without data.", 1);
+            throw new \RuntimeException("Can’t send a contact form without data.");
         }
 
-        $emailBody = $this->templating->render($this->emailTemplate, $this->assignation);
+        $this->message = $this->createMessage();
 
         /*
-         * inline CSS
+         * As this is a contact form
+         * email receiver is website owner or custom.
+         *
+         * So you must return error email to receiver instead
+         * of sender (who is your visitor).
          */
-        $htmldoc = new InlineStyle($emailBody);
-        $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT . $this->emailStylesheet
-        ));
-
-        if (null === $this->receiver) {
-            $this->receiver = SettingsBag::get('email_sender');
-        }
-
-        /*
-         * Add subject
-         */
-        if (null !== $this->subject) {
-            $this->subject = trim(strip_tags($this->subject));
-        } else {
-            $this->subject = $this->translator->trans(
-                'new.contact.form.%site%',
-                ['%site%' => SettingsBag::get('site_name')]
-            );
-        }
-
-        $this->message = \Swift_Message::newInstance()
-             // Give the message a subject
-             ->setSubject($this->subject)
-             // Set the To addresses with an associative array
-             ->setFrom($this->receiver)
-             ->setTo([$this->receiver])
-             ->setReturnPath($this->receiver)
-             // Give it a body
-             ->setBody($htmldoc->getHTML(), 'text/html');
-
-        if (null !== $this->sender) {
-            // Set the From address with an associative array
-            $this->message->setReplyTo([$this->sender]);
-        }
+        $this->message->setTo($this->getReceiver());
+        $this->message->setReturnPath($this->getReceiverEmail());
 
         /** @var UploadedFile $uploadedFile */
         foreach ($this->uploadedFiles as $uploadedFile) {
@@ -467,135 +418,6 @@ class ContactFormManager
 
         // Send the message
         return $this->mailer->send($this->message);
-    }
-
-    /**
-     * Gets the value of subject.
-     *
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * Sets the value of subject.
-     *
-     * @param string $subject the subject
-     *
-     * @return self
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of emailTitle.
-     *
-     * @return string
-     */
-    public function getEmailTitle()
-    {
-        return $this->emailTitle;
-    }
-
-    /**
-     * Sets the value of emailTitle.
-     *
-     * @param string $emailTitle the email title
-     *
-     * @return self
-     */
-    public function setEmailTitle($emailTitle)
-    {
-        $this->emailTitle = $emailTitle;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of receiver.
-     *
-     * @return string
-     */
-    public function getReceiver()
-    {
-        return $this->receiver;
-    }
-
-    /**
-     * Sets the value of receiver.
-     *
-     * @param string $receiver the receiver
-     *
-     * @return ContactFormManager
-     * @throws \Exception
-     */
-    public function setReceiver($receiver)
-    {
-        if (false === filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("Receiver must be a valid email address.", 1);
-        }
-
-        $this->receiver = $receiver;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of sender.
-     *
-     * @return string
-     */
-    public function getSender()
-    {
-        return $this->sender;
-    }
-
-    /**
-     * Sets the value of sender.
-     *
-     * @param string $sender the sender
-     * @return ContactFormManager
-     * @throws \Exception
-     */
-    protected function setSender($sender)
-    {
-        if (false === filter_var($sender, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
-        }
-
-        $this->sender = $sender;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of successMessage.
-     *
-     * @return string
-     */
-    public function getSuccessMessage()
-    {
-        return $this->successMessage;
-    }
-
-    /**
-     * Sets the value of successMessage.
-     *
-     * @param string $successMessage the success message
-     *
-     * @return self
-     */
-    public function setSuccessMessage($successMessage)
-    {
-        $this->successMessage = $successMessage;
-
-        return $this;
     }
 
     /**
@@ -671,74 +493,12 @@ class ContactFormManager
     }
 
     /**
-     * Gets the value of failMessage.
-     *
-     * @return string
+     * @return bool|null|string
      */
-    public function getFailMessage()
+    public function getReceiver()
     {
-        return $this->failMessage;
-    }
-
-    /**
-     * Sets the value of failMessage.
-     *
-     * @param string $failMessage the fail message
-     *
-     * @return self
-     */
-    public function setFailMessage($failMessage)
-    {
-        $this->failMessage = $failMessage;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of emailTemplate.
-     *
-     * @return string
-     */
-    public function getEmailTemplate()
-    {
-        return $this->emailTemplate;
-    }
-
-    /**
-     * Sets the value of emailTemplate.
-     *
-     * @param string $emailTemplate the email template
-     *
-     * @return self
-     */
-    public function setEmailTemplate($emailTemplate)
-    {
-        $this->emailTemplate = $emailTemplate;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of emailStylesheet.
-     *
-     * @return string
-     */
-    public function getEmailStylesheet()
-    {
-        return $this->emailStylesheet;
-    }
-
-    /**
-     * Sets the value of emailStylesheet.
-     *
-     * @param string $emailStylesheet the email stylesheet
-     *
-     * @return self
-     */
-    public function setEmailStylesheet($emailStylesheet)
-    {
-        $this->emailStylesheet = $emailStylesheet;
-
-        return $this;
+        return (null !== parent::getReceiver() && parent::getReceiver() != "") ?
+            (parent::getReceiver()) :
+            (SettingsBag::get('email_sender'));
     }
 }

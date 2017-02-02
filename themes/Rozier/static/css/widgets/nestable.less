@@ -60,8 +60,12 @@
 }
 
 .non-nestable-list-item,
-.uk-nestable-list-item {
+.uk-nestable-item {
     border-left: 1px solid @item-border-color;
+
+    & + .uk-nestable-item {
+        margin-top: 0;
+    }
 
     & > ul {
         & > li:last-child {
@@ -100,16 +104,20 @@
         }
     }
 }
-.uk-nestable-list-dragged,
+
 .uk-nestable-list {
     padding-left: 17px;
 
     .home-node{
         padding-left:10px !important;
     }
+
+    &:not(.uk-nestable-dragged) > .uk-nestable-item:first-child {
+        margin-top: -7px;
+    }
 }
 
-.uk-nestable-item {
+.uk-nestable-panel {
     background: 0 none;
     padding: 2px 5px 2px 12px;
     margin-bottom: 0px;
@@ -312,7 +320,7 @@
     border-left: 0 none;
     margin: 0px;
 
-    & > li {
+    & > .uk-nestable-item {
         border-left: none;
         border-top: 1px solid #BDBDBD;
         padding: 11px 0 10px 5px;
@@ -321,9 +329,9 @@
             border-top: none;
             padding-top: 0px;
         }
-
-        li {
-            // horizontal tick
+    }
+    .uk-nestable-list {
+        .uk-nestable-item:not(:first-child):not(:last-child) {
             &:before {
                 content: "";
                 display: block;
@@ -332,7 +340,7 @@
                 left: 0px;
                 height: 1px;
                 background: @item-border-color;
-                top: 15px;
+                top: 14px;
             }
         }
     }
@@ -418,12 +426,12 @@
     content:@tree-close;
 }
 
-.uk-collapsed > .uk-nestable-item [data-nestable-action=toggle]:after{
+.uk-collapsed > .uk-nestable-panel [data-nestable-action=toggle]:after{
     content:@tree-open;
 }
 
 // Moving
-.uk-nestable-list-dragged{
+.uk-nestable-dragged{
     background: #ddd;
     border: 1px dashed #b5b5b5;
     padding-left: 0px;
@@ -439,7 +447,7 @@
 }
 
 .uk-nestable-placeholder{
-    background: #aaa;
-    border: none;
-    margin-bottom: 0px;
+    background: #aaa !important;
+    border: none !important;
+    margin-bottom: 0px !important;
 }

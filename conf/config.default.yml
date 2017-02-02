@@ -10,13 +10,13 @@ doctrine:
 # http://symfony.com/doc/current/reference/configuration/doctrine.html#caching-drivers
 # If null or empty, Roadiz will try to detect best cache driver available
 cacheDriver:
-    type: null
-    host: null
-    port: null
+    type: ~
+    host: ~
+    port: ~
 security:
     secret: "change#this#secret#very#important"
 mailer:
-    type: ""
+    type: ~
     host: "localhost"
     port: 25
     encryption: false

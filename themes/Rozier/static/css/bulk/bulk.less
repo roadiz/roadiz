@@ -100,7 +100,8 @@
 #folderForm_submitFolder,
 #folderForm_submitUnfolder {
     position: relative;
-    width:32px; height:32px;
+    width:32px;
+    height:32px;
     padding:0;
     overflow: hidden;
 
@@ -109,11 +110,17 @@
         display: block;
         width:32px; height:32px;
         content:@plus;
-        font-size:16px; line-height:32px;
+        font-size:16px;
+        line-height:32px;
+        font-weight: normal;
         font-family: 'rz-icons';
         text-align: center;
     }
 
+
+    .button-text {
+        display: none;
+    }
 }
 
 #tagForm_submitTag,
@@ -133,6 +140,7 @@
 #statusForm_submitStatus {
     &:before{
         content:@save;
+        color: rgba(0, 0, 0, 0.69);
     }
 }
 

@@ -45,7 +45,7 @@ use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
  *
  * This class must be inherited in order to create a new theme.
  */
-class FrontendController extends AppController
+abstract class FrontendController extends AppController
 {
     /**
      * {@inheritdoc}
@@ -225,7 +225,7 @@ class FrontendController extends AppController
      * @param Container $themeContainer
      */
     public function __initFromOtherController(
-        array &$baseAssignation = null,
+        array &$baseAssignation = [],
         Container $themeContainer = null
     ) {
         $this->assignation = $baseAssignation;

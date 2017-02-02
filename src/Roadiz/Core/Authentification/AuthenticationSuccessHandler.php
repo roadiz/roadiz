@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Authentification;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
@@ -61,6 +62,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         parent::__construct($httpUtils, $options);
         $this->em = $em;
         $this->rememberMeServices = $rememberMeServices;
+
+        /*
+         * Enable session based _target_url
+         */
+        $this->setProviderKey(Kernel::SECURITY_DOMAIN);
     }
 
     /**

@@ -1,0 +1,17 @@
+{% extends 'base_email.txt.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content_table %}
+{% trans %}contact.form{% endtrans %}
+
+{% for field in fields %}
+{% if not field.name %}
+{{ field.value }}
+
+{% elseif not field.value %}
+{% else %}
+{{ field.name|trans }} : {{ field.value }}
+{% endif %}
+{% endfor %}
+{% endblock %}

@@ -36,8 +36,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
+use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
@@ -49,6 +51,7 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 
 /**
  * Register Twig services for dependency injection container.
@@ -62,24 +65,27 @@ class TwigServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['twig.cacheFolder'] = function ($c) {
-            return $c['kernel']->getCacheDir() . '/twig_cache';
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return $kernel->getCacheDir() . '/twig_cache';
         };
 
         /*
          * Return every paths to search for twig templates.
          */
-        $container['twig.loaderFileSystem'] = function () {
-            $vendorDir = realpath(ROADIZ_ROOT . '/vendor');
+        $container['twig.loaderFileSystem'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $vendorDir = realpath($kernel->getVendorDir());
 
             // le chemin vers TwigBridge pour que Twig puisse localiser
             // le fichier form_div_layout.html.twig
-            $vendorTwigBridgeDir =
-            $vendorDir . '/symfony/twig-bridge';
+            $vendorTwigBridgeDir = $vendorDir . '/symfony/twig-bridge';
 
             return new \Twig_Loader_Filesystem([
                 // Default Form extension templates
                 $vendorTwigBridgeDir . '/Resources/views/Form',
-                ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views',
+                CmsController::getViewsFolder(),
             ]);
         };
 
@@ -143,6 +149,8 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @return ArrayCollection
          */
         $container['twig.extensions'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             $extensions = new ArrayCollection();
             $extensions->add(new FormExtension(new TwigRenderer(
                 $c['twig.formRenderer'],
@@ -157,7 +165,6 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add($c['twig.routingExtension']);
             $extensions->add(new \Twig_Extensions_Extension_Text());
             $extensions->add(new BlockRenderExtension($c));
-            $extensions->add(new DocumentExtension());
             $extensions->add(new UrlExtension(
                 $c['request'],
                 $c['nodesSourcesUrlCacheProvider'],
@@ -168,13 +175,19 @@ class TwigServiceProvider implements ServiceProviderInterface
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
             }
-            if (true !== $c['kernel']->isInstallMode()) {
+            /*
+             * These extension need a valid Database connection
+             * with EntityManager not null.
+             */
+            if (true !== $kernel->isInstallMode()) {
+                $extensions->add(new DocumentExtension($c['assetPackages']));
+                $extensions->add(new FontExtension($c['assetPackages']));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
-                    $c['kernel']->isPreview()
+                    $kernel->isPreview()
                 ));
             }
-            if (true === $c['kernel']->isDebug()) {
+            if (true === $kernel->isDebug()) {
                 $extensions->add(new \Twig_Extension_Debug());
             }
 

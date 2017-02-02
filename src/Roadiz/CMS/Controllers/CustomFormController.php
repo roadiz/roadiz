@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
-use InlineStyle\InlineStyle;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -39,46 +38,22 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Utils\CustomForm\CustomFormHelper;
-use Symfony\Component\Config\FileLocator;
+use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
+use Themes\Rozier\RozierApp;
 
-class CustomFormController extends AppController
+class CustomFormController extends CmsController
 {
-    /**
-     * @return string
-     */
-    public static function getResourcesFolder()
-    {
-        return ROADIZ_ROOT . '/src/Roadiz/CMS/Resources';
-    }
     /**
      * @return string
      */
     public function getStaticResourcesUrl()
     {
         return $this->get('assetPackages')->getUrl('/themes/Rozier/static/');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getRoutes()
-    {
-        $locator = new FileLocator([
-            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources',
-        ]);
-
-        if (file_exists(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/entryPointsRoutes.yml')) {
-            $loader = new YamlFileLoader($locator);
-
-            return $loader->load('entryPointsRoutes.yml');
-        }
-
-        return null;
     }
 
     /**
@@ -117,7 +92,7 @@ class CustomFormController extends AppController
                 return $mixed->send();
             } else {
                 $this->assignation = array_merge($this->assignation, $mixed);
-                $this->assignation['grunt'] = include ROADIZ_ROOT . '/themes/Rozier/static/public/config/assets.config.php';
+                $this->assignation['grunt'] = include RozierApp::getThemeFolder() . '/static/public/config/assets.config.php';
 
                 return $this->render('forms/customForm.html.twig', $this->assignation);
             }
@@ -139,7 +114,7 @@ class CustomFormController extends AppController
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
-            $this->assignation['grunt'] = include ROADIZ_ROOT . '/themes/Rozier/static/public/config/assets.config.php';
+            $this->assignation['grunt'] = include RozierApp::getThemeFolder() . '/static/public/config/assets.config.php';
 
             return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }
@@ -150,45 +125,38 @@ class CustomFormController extends AppController
     /**
      * Send an answer form by Email.
      *
-     * @param  array             $assignation
-     * @param  string            $receiver
-     * @param  \Twig_Environment $twigEnv
-     * @param  \Swift_Mailer     $mailer
-     *
-     * @return boolean
+     * @param array $assignation
+     * @param string $receiver
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param \Twig_Environment $twigEnv
+     * @param \Swift_Mailer $mailer
+     * @return bool
      */
     public static function sendAnswer(
         $assignation,
         $receiver,
+        Request $request,
+        TranslatorInterface $translator,
         \Twig_Environment $twigEnv,
         \Swift_Mailer $mailer
     ) {
-        $emailBody = $twigEnv->render('forms/answerForm.html.twig', $assignation);
-
-        /*
-         * inline CSS
-         */
-        $htmldoc = new InlineStyle($emailBody);
-        $htmldoc->applyStylesheet(file_get_contents(
-            ROADIZ_ROOT . "/src/Roadiz/CMS/Resources/css/transactionalStyles.css"
-        ));
+        $emailManager = new EmailManager($request, $translator, $twigEnv, $mailer);
+        $emailManager->setAssignation($assignation);
+        $emailManager->setEmailTemplate('forms/answerForm.html.twig');
+        $emailManager->setEmailPlainTextTemplate('forms/answerForm.txt.twig');
+        $emailManager->setSubject($assignation['title']);
+        $emailManager->setEmailTitle($assignation['title']);
+        $emailManager->setSender(SettingsBag::get('email_sender'));
 
         if (empty($receiver)) {
-            $receiver = SettingsBag::get('email_sender');
+            $emailManager->setReceiver(SettingsBag::get('email_sender'));
+        } else {
+            $emailManager->setReceiver($receiver);
         }
-        // Create the message}
-        $message = \Swift_Message::newInstance();
-        // Give the message a subject
-        $message->setSubject($assignation['title']);
-        // Set the From address with an associative array
-        $message->setFrom([SettingsBag::get('email_sender')]);
-        // Set the To addresses with an associative array
-        $message->setTo([$receiver]);
-        // Give it a body
-        $message->setBody($htmldoc->getHTML(), 'text/html');
 
         // Send the message
-        return $mailer->send($message);
+        return $emailManager->send();
     }
 
     /**
@@ -371,6 +339,8 @@ class CustomFormController extends AppController
                         ),
                     ],
                     $customFormsEntity->getEmail(),
+                    $request,
+                    $translator,
                     $twigEnv,
                     $mailer
                 );

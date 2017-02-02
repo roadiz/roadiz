@@ -36,7 +36,7 @@ class NonSqlReservedWordValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (in_array(strtolower($value), $constraint::$forbiddenNames)) {
+        if (in_array(strtolower($value), NonSqlReservedWord::$forbiddenNames)) {
             $this->context->addViolation($constraint->message);
         }
     }

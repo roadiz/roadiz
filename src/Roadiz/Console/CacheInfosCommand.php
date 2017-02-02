@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,6 +40,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CacheInfosCommand extends Command
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
     private $nsCacheHelper;
 
@@ -51,7 +56,6 @@ class CacheInfosCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
-
         $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
         $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');
 
@@ -64,6 +68,7 @@ class CacheInfosCommand extends Command
     {
         $text = '';
 
+        /** @var CacheProvider $cacheDriver */
         $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
         if (null !== $cacheDriver) {
             $text .= "<info>Result cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
@@ -89,6 +94,7 @@ class CacheInfosCommand extends Command
         }
 
         if (null !== $this->nsCacheHelper->getCacheProvider()) {
+            /** @var CacheProvider $nsCache */
             $nsCache = $this->nsCacheHelper->getCacheProvider();
             $text .= "<info>Node-sources URLs cache driver:</info> " . get_class($nsCache) . PHP_EOL;
             $text .= "    <info>Namespace:</info> " . $nsCache->getNamespace() . PHP_EOL;

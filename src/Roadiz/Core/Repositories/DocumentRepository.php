@@ -76,9 +76,22 @@ class DocumentRepository extends EntityRepository
     protected function filterByFolder(&$criteria, &$qb)
     {
         if (in_array('folders', array_keys($criteria))) {
+            /*
+             * Do not filter if folder is null
+             */
+            if (is_null($criteria['folders'])) {
+                return;
+            }
+
             if (is_array($criteria['folders']) ||
                 (is_object($criteria['folders']) &&
                     $criteria['folders'] instanceof Collection)) {
+                /*
+                 * Do not filter if folder array is empty.
+                 */
+                if (count($criteria['folders']) === 0) {
+                    return;
+                }
                 if (in_array("folderExclusive", array_keys($criteria))
                     && $criteria["folderExclusive"] === true) {
                     // To get an exclusive folder filter
@@ -246,9 +259,10 @@ class DocumentRepository extends EntityRepository
         if (in_array('folders', array_keys($criteria))) {
             if ($criteria['folders'] instanceof Folder) {
                 $finalQuery->setParameter('folders', $criteria['folders']->getId());
-            } elseif (is_array($criteria['folders']) ||
-                $criteria['folders'] instanceof Collection) {
-                $finalQuery->setParameter('folders', $criteria['folders']);
+            } elseif (is_array($criteria['folders']) || $criteria['folders'] instanceof Collection) {
+                if (count($criteria['folders']) > 0) {
+                    $finalQuery->setParameter('folders', $criteria['folders']);
+                }
             } elseif (is_integer($criteria['folders'])) {
                 $finalQuery->setParameter('folders', (int) $criteria['folders']);
             }
@@ -398,7 +412,7 @@ class DocumentRepository extends EntityRepository
      * @param integer|null $offset
      * @param Translation|null $translation
      *
-     * @return ArrayCollection
+     * @return array|Paginator
      *
      */
     public function findBy(
@@ -433,7 +447,7 @@ class DocumentRepository extends EntityRepository
             try {
                 return $finalQuery->getResult();
             } catch (NoResultException $e) {
-                return new ArrayCollection();
+                return [];
             }
         }
     }
@@ -499,7 +513,7 @@ class DocumentRepository extends EntityRepository
         try {
             return $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 
@@ -507,7 +521,7 @@ class DocumentRepository extends EntityRepository
      * @param \RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *
-     * @return array|null
+     * @return array
      */
     public function findByNodeSourceAndField(
         $nodeSource,
@@ -528,7 +542,7 @@ class DocumentRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -536,7 +550,7 @@ class DocumentRepository extends EntityRepository
      * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param string                              $fieldName
      *
-     * @return array|null
+     * @return array
      */
     public function findByNodeSourceAndFieldName(
         $nodeSource,
@@ -559,14 +573,14 @@ class DocumentRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
      * Find documents used as Settings.
      *
-     * @return array|null
+     * @return array
      */
     public function findAllSettingDocuments()
     {
@@ -582,14 +596,14 @@ class DocumentRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
      * Find all unused document.
      *
-     * @return array|null
+     * @return array
      */
     public function findAllUnused()
     {
@@ -634,7 +648,7 @@ class DocumentRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 }

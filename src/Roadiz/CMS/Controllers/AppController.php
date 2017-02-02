@@ -32,7 +32,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -40,6 +39,8 @@ use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -49,7 +50,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Base class for Roadiz themes.
  */
-class AppController extends Controller
+abstract class AppController extends Controller
 {
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
@@ -119,6 +120,22 @@ class AppController extends Controller
     }
 
     /**
+     * @return string Main theme class name
+     */
+    public static function getThemeMainClassName()
+    {
+        return static::getThemeDir() . 'App';
+    }
+
+    /**
+     * @return string Main theme class (FQN class with namespace)
+     */
+    public static function getThemeMainClass()
+    {
+        return '\\Themes\\' . static::getThemeDir() . '\\' . static::getThemeMainClassName();
+    }
+
+    /**
      * Theme requires a minimal CMS version.
      *
      * Example: "*" will accept any CMS version. Or "3.0.*" will
@@ -170,22 +187,31 @@ class AppController extends Controller
     }
 
     /**
+     * Return a file locator with theme
+     * Resource folder.
+     *
+     * @return FileLocator
+     */
+    public static function getFileLocator()
+    {
+        $resourcesFolder = static::getResourcesFolder();
+        return new FileLocator([
+            $resourcesFolder,
+            $resourcesFolder . '/routing',
+            $resourcesFolder . '/config',
+        ]);
+    }
+
+    /**
      * @return RouteCollection
      */
     public static function getRoutes()
     {
-        $locator = new FileLocator([
-            static::getResourcesFolder(),
-        ]);
-
-        if (file_exists(static::getResourcesFolder() . '/routes.yml')) {
-            $loader = new YamlFileLoader($locator);
-
-            return $loader->load('routes.yml');
-        }
-
-        return null;
+        $locator = static::getFileLocator();
+        $loader = new YamlFileLoader($locator);
+        return $loader->load('routes.yml');
     }
+
     /**
      * These routes are used to extend Roadiz back-office.
      *
@@ -193,25 +219,39 @@ class AppController extends Controller
      */
     public static function getBackendRoutes()
     {
-        $locator = new FileLocator([
-            static::getResourcesFolder(),
-        ]);
+        $locator = static::getFileLocator();
 
-        if (file_exists(static::getResourcesFolder() . '/backend-routes.yml')) {
+        try {
             $loader = new YamlFileLoader($locator);
-
             return $loader->load('backend-routes.yml');
+        } catch (\InvalidArgumentException $e) {
+            return null;
         }
-
-        return null;
     }
 
     /**
+     * Return theme root folder.
+     *
+     * @return string
+     */
+    public static function getThemeFolder()
+    {
+        $class_info = new \ReflectionClass(static::getThemeMainClass());
+        return dirname($class_info->getFileName());
+    }
+
+    /**
+     * Return theme Resource folder according to
+     * main theme class inheriting AppController.
+     *
+     * Uses \ReflectionClass to resolve final theme class folder
+     * whether it’s located in project folder or in vendor folder.
+     *
      * @return string
      */
     public static function getResourcesFolder()
     {
-        return ROADIZ_ROOT . '/themes/' . static::$themeDir . '/Resources';
+        return static::getThemeFolder() . '/Resources';
     }
     /**
      * @return string
@@ -219,6 +259,13 @@ class AppController extends Controller
     public static function getViewsFolder()
     {
         return static::getResourcesFolder() . '/views';
+    }
+    /**
+     * @return string
+     */
+    public static function getTranslationsFolder()
+    {
+        return static::getResourcesFolder() . '/translations';
     }
     /**
      * @return string
@@ -302,6 +349,8 @@ class AppController extends Controller
      */
     public function prepareBaseAssignation()
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->get('kernel');
         $this->assignation = [
             'request' => $this->getRequest(),
             'head' => [
@@ -309,11 +358,11 @@ class AppController extends Controller
                 'cmsVersion' => Kernel::CMS_VERSION,
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
-                'devMode' => $this->get('kernel')->isDevMode(),
+                'devMode' => $kernel->isDevMode(),
                 'useCdn' => (boolean) SettingsBag::get('use_cdn'),
                 'universalAnalyticsId' => SettingsBag::get('universal_analytics_id'),
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
-                'filesUrl' => $this->getRequest()->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'absoluteResourcesUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
@@ -559,5 +608,32 @@ class AppController extends Controller
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
+    }
+
+    /**
+     * Return all Form errors as an array.
+     *
+     * @param Form $form
+     * @return array
+     */
+    protected function getErrorsAsArray(Form $form)
+    {
+        $errors = [];
+        /** @var FormError $error */
+        foreach ($form->getErrors() as $error) {
+            if (count($error->getMessageParameters()) > 0) {
+                $errors[] = $this->get('translator')->trans($error->getMessageTemplate(), $error->getMessageParameters());
+            } else {
+                $errors[] = $error->getMessage();
+            }
+        }
+
+        foreach ($form->all() as $key => $child) {
+            $err = $this->getErrorsAsArray($child);
+            if ($err) {
+                $errors[$key] = $err;
+            }
+        }
+        return $errors;
     }
 }

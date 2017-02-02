@@ -2,6 +2,9 @@
 #
 export DEBIAN_FRONTEND=noninteractive
 
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
 DBHOST="localhost"
 DBNAME="roadiz"
 DBUSER="roadiz"
@@ -15,14 +18,25 @@ sudo locale-gen fr_FR.utf8;
 
 echo -e "\n--- Add some repos to update our distro ---\n"
 LC_ALL=C.UTF-8 sudo add-apt-repository ppa:ondrej/php > /dev/null 2>&1;
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL${NC}\n"
+   echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
+   exit 1;
+fi
+
 
 # Use latest nginx for HTTP/2
-sudo touch /etc/apt/sources.list.d/nginx.list;
-sudo cat >> /etc/apt/sources.list.d/nginx.list <<'EOF'
-deb http://nginx.org/packages/mainline/ubuntu/ trusty nginx
-deb-src http://nginx.org/packages/mainline/ubuntu/ trusty nginx
-EOF
+sudo cp -a /var/www/samples/vagrant/sources.list.d/nginx.list /etc/apt/sources.list.d/nginx.list;
 wget -q -O- http://nginx.org/keys/nginx_signing.key | sudo apt-key add - > /dev/null 2>&1;
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL nginx key signing ${NC}\n"
+   echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
+   exit 1;
+fi
 
 echo -e "\n--- Updating packages list ---\n"
 sudo apt-get -qq update;
@@ -33,20 +47,42 @@ sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password 
 sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password_again password $DBPASSWD"
 
 echo -e "\n--- Install base servers and packages ---\n"
-sudo apt-get -qq -f -y install git nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
+sudo apt-get -qq -f -y install git nano zip nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL${NC}\n"
+   echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
+   exit 1;
+fi
 
 echo -e "\n--- Install all php7.0 extensions ---\n"
 sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-curl \
                                 php7.0-gd php7.0-intl php7.0-imap php7.0-mcrypt php7.0-pspell \
                                 php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc \
-                                php7.0-xsl php-apcu php-gd php-apcu-bc php-xdebug php-mbstring php-zip > /dev/null 2>&1;
+                                php7.0-xsl php-apcu php-gd php-apcu-bc php-xdebug php-mbstring php7.0-zip > /dev/null 2>&1;
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL${NC}\n"
+   echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
+   exit 1;
+fi
 
-echo -e "\n--- Setting up our MySQL user and db ---\n"
-sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME"
-mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
-echo -e "\n--- Setting up a db for tests ---\n"
-sudo mysql -uroot -p$DBPASSWD -e "CREATE DATABASE ${DBNAME}_test"
-mysql -uroot -p$DBPASSWD -e "grant all privileges on ${DBNAME}_test.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
+echo -e "\n--- Setting up our MySQL user, DB and test DB ---\n"
+sudo mysql -uroot -p$DBPASSWD <<EOF
+create database ${DBNAME};
+grant all privileges on ${DBNAME}.* to '${DBUSER}'@'localhost' identified by '${DBPASSWD}';
+create database ${DBNAME}_test;
+grant all privileges on ${DBNAME}_test.* to '${DBUSER}'@'localhost' identified by '${DBPASSWD}';
+EOF
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL creating databases${NC}\n"
+   echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
+   exit 1;
+fi
 
 echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
@@ -67,14 +103,19 @@ sudo cp /var/www/samples/vagrant/nginx-conf.conf /etc/nginx/nginx.conf;
 sudo cp /var/www/samples/vagrant/nginx-vhost.conf /etc/nginx/sites-available/default;
 sudo cp /var/www/samples/vagrant/roadiz-nginx-include.conf /etc/nginx/snippets/roadiz.conf;
 
-echo -e "\n--- Generating a unique Diffie-Hellman Group ---\n"
-sudo openssl dhparam -out /etc/nginx/certs/default.dhparam.pem 2048 > /dev/null 2>&1;
+#
+# Do not generate default DH param and certificate
+# to speed up Vagrant provisioning
+#
 
-echo -e "\n--- Generating a self-signed SSL certificate ---\n"
-sudo openssl req -new -newkey rsa:4096 -days 365 -nodes \
-            -x509 -subj "/C=FR/ST=Rhonealpes/L=Lyon/O=ACME/CN=localhost" \
-            -keyout /etc/nginx/certs/default.key \
-            -out /etc/nginx/certs/default.crt > /dev/null 2>&1;
+#echo -e "\n--- Generating a unique Diffie-Hellman Group ---\n"
+#sudo openssl dhparam -out /etc/nginx/certs/default.dhparam.pem 2048 > /dev/null 2>&1;
+#
+#echo -e "\n--- Generating a self-signed SSL certificate ---\n"
+#sudo openssl req -new -newkey rsa:2048 -days 365 -nodes \
+#            -x509 -subj "/C=FR/ST=Rhonealpes/L=Lyon/O=ACME/CN=localhost" \
+#            -keyout /etc/nginx/certs/default.key \
+#            -out /etc/nginx/certs/default.crt > /dev/null 2>&1;
 
 echo -e "\n--- Configure PHP-FPM default pool ---\n"
 sudo rm /etc/php/7.0/fpm/pool.d/www.conf;
@@ -91,7 +132,7 @@ sudo service nginx restart > /dev/null 2>&1;
 sudo service php7.0-fpm restart > /dev/null 2>&1;
 
 ##### CLEAN UP #####
-sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
+sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesn't run well (e.g. loss of connection) this may resolve quite a few issues
 sudo apt-get autoremove -y  > /dev/null 2>&1; # remove obsolete packages
 
 # Set envvars
@@ -107,9 +148,9 @@ echo -e "\n----------- Your Roadiz Vagrant is ready in /var/www ------------"
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\nDo not forget to \"composer install\" and to add "
 echo -e "\nyour host IP into install.php and dev.php"
-echo -e "\nto get allowed in install and dev entrypoints."
+echo -e "\nto get allowed in install and dev entry-points."
 echo -e "\n* Type http://$PRIVATE_IP/install.php to proceed to install."
-echo -e "\n* Type https://$PRIVATE_IP/install.php to proceed using SSL (cert is not authentified)."
+#echo -e "\n* Type https://$PRIVATE_IP/install.php to proceed using SSL (cert is not authenticated)."
 echo -e "\n* MySQL User: $DBUSER"
 echo -e "\n* MySQL Password: $DBPASSWD"
 echo -e "\n* MySQL Database: $DBNAME"

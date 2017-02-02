@@ -3,7 +3,7 @@
 
 {% block content %}
 <section class="content-global change-status-node">
-	<header class="content-header header-node header-node-preview">
+    <header class="content-header header-node header-node-preview">
         <h1 class="content-title node-change-status-title">{{ "change.nodes.status"|trans()|truncate(25, true, '[…]') }}</h1>
     </header>
 
@@ -27,15 +27,16 @@
         {% else %}
             {% set returnPath = path('nodesHomePage') %}
         {% endif %}
-		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<legend>{% trans %}are_you_sure.change-status.these.nodes{% endtrans %}</legend>
-		    	<a href="{{ returnPath }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-save"></i> {% trans %}change.nodes.status.all{% endtrans %}</button>
-	   		</fieldset>
-		</form>
-	</article>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend>{% trans %}are_you_sure.change-status.these.nodes{% endtrans %}</legend>
+                <a href="{{ returnPath }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-save"></i> <span
+                        class="button-text">{% trans %}change.nodes.status.all{% endtrans %}</span></button>
+            </fieldset>
+        </form>
+    </article>
 </section>
 {% endblock %}

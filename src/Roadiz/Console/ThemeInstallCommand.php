@@ -39,6 +39,7 @@ use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -89,8 +90,7 @@ class ThemeInstallCommand extends Command
 
         try {
             $theme = $this->getTheme($classname);
-            $array = explode('\\', $classname);
-            $this->themeRoot = ROADIZ_ROOT . "/themes/" . $array[count($array) - 2];
+            $this->themeRoot = call_user_func([$classname, 'getThemeFolder']);
         } catch (TableNotFoundException $e) {
             $theme = null;
         }
@@ -204,17 +204,20 @@ class ThemeInstallCommand extends Command
 
     protected function importTheme($classname, &$text)
     {
+        /** @var Kernel $kernel */
         $kernel = $this->getHelperSet()->get('kernel')->getKernel();
         $themeFile = $classname;
         $themeFile = str_replace('\\', '/', $themeFile);
         $themeFile = str_replace('Themes', 'themes', $themeFile);
         $themeFile .= ".php";
+        $themeFile = $kernel->getRootDir() . $themeFile;
 
         if (file_exists($themeFile)) {
             $fixtures = new Fixtures(
                 $this->entityManager,
                 $kernel->getCacheDir(),
                 $kernel->getRootDir() . '/conf/config.yml',
+                $kernel->getRootDir(),
                 $kernel->isDebug()
             );
             $fixtures->installFrontendTheme($classname);

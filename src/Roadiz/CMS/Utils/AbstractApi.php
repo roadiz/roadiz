@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Pimple\Container;
 
 /**
@@ -63,9 +64,8 @@ abstract class AbstractApi
     /**
      * Return an array of entities matching criteria array.
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\Tools\Pagination\Paginator|array $criteria
-     *
-     * @return array
+     * @param array $criteria
+     * @return array|Paginator
      */
     abstract public function getBy(array $criteria);
 

@@ -42,7 +42,7 @@
     position: relative;
     margin:0;
 
-    &> li{
+    & > li{
         position: relative;
         width:100%; height:100%;
     }
@@ -51,6 +51,20 @@
         position: relative;
         width:100%; height:100%;
     }
+
+    /*
+     * Hide tree item images
+     */
+    .nodetree-element-img {
+        display: none;
+    }
+    .nodetree-tags {
+        display: none;
+    }
+    .nodetree-bulk-selection {
+        display: none;
+    }
+
 
     .tree-head {
         h4 {
@@ -94,6 +108,10 @@
     position: relative;
     height:100%;
 
+    @media (max-width: @screen-xs-max) {
+        height: ~'calc(100vh - 220px)';
+    }
+
     & > div{
         overflow: hidden;
         overflow-y:auto;
@@ -116,7 +134,7 @@
     }
 }
 
-.nodetree-langs{
+.nodetree-langs {
    margin: 0;
    padding: 0;
    text-align: center;

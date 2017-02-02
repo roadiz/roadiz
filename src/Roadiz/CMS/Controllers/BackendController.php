@@ -38,7 +38,7 @@ use RZ\Roadiz\Utils\Security\FirewallEntry;
  *
  * This AppController implementation will use a security scheme
  */
-class BackendController extends AppController
+abstract class BackendController extends AppController
 {
     protected static $backendTheme = true;
 

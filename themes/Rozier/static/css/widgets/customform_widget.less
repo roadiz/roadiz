@@ -34,8 +34,12 @@
 }
 
 .custom-forms-widget-nav{
-    height:55px;
+    height:45px;
     border-bottom:1px dashed @custom-forms-widget-border;
+
+    @media (min-width: @screen-lg-min) {
+        height: 55px;
+    }
 
     .uk-navbar-brand{
        .widgetNavBarBrand();
@@ -75,19 +79,14 @@
     margin:0;
     padding:20px 25px 12px;
     background:#fff;
-
-    .uk-sortable-placeholder{
-        position: relative;
-        width:80px; height:80px;
-        margin-right:16px;
-    }
 }
 
-.custom-forms-widget-sortable-list-item, .custom-forms-widget-dragging{
+.custom-forms-widget-sortable-list-item,
+.custom-forms-widget-dragging {
     position: relative;
     display: inline-block;
     width:205px; height:32px;
-    margin:0 20px 8px 0;
+    margin:0 10px 0 0;
     padding-left:15px;
     background: @grey-verylight;
     color:#333;

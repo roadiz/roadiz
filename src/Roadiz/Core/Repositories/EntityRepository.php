@@ -36,6 +36,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use RZ\Roadiz\Core\Entities\Tag;
 
 /**
  * EntityRepository that implements a simple countBy method.
@@ -63,6 +64,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     protected function buildComparison($value, $prefix, $key, $baseKey, QueryBuilder $qb)
     {
+        $res = '';
         if (is_object($value) && $value instanceof PersistableInterface) {
             $res = $qb->expr()->eq($prefix . $key, ':' . $baseKey);
         } elseif (is_array($value)) {
@@ -505,37 +507,74 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      */
     protected function buildTagFiltering(&$criteria, &$qb, $nodeAlias = 'n')
     {
-        if (is_array($criteria['tags']) ||
-            (is_object($criteria['tags']) &&
-                $criteria['tags'] instanceof Collection)) {
-            if (in_array("tagExclusive", array_keys($criteria))
-                && $criteria["tagExclusive"] === true) {
-                // To get an exclusive tag filter
-                // we need to filter against each tag id
-                // and to inner join with a different alias for each tag
-                // with AND operator
-                foreach ($criteria['tags'] as $index => $tag) {
-                    $alias = 'tg' . $index;
-                    $qb->innerJoin($nodeAlias . '.tags', $alias);
-                    $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+        if (in_array('tags', array_keys($criteria))) {
+            /*
+             * Do not filter if tag is null
+             */
+            if (is_null($criteria['tags'])) {
+                return;
+            }
+
+            if (is_array($criteria['tags']) ||
+                (is_object($criteria['tags']) &&
+                    $criteria['tags'] instanceof Collection)) {
+                /*
+                 * Do not filter if tag array is empty.
+                 */
+                if (count($criteria['tags']) === 0) {
+                    return;
                 }
-                unset($criteria["tagExclusive"]);
-                unset($criteria['tags']);
+                if (in_array("tagExclusive", array_keys($criteria))
+                    && $criteria["tagExclusive"] === true) {
+                    // To get an exclusive tag filter
+                    // we need to filter against each tag id
+                    // and to inner join with a different alias for each tag
+                    // with AND operator
+                    foreach ($criteria['tags'] as $index => $tag) {
+                        $alias = 'tg' . $index;
+                        $qb->innerJoin($nodeAlias . '.tags', $alias);
+                        $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                    }
+                    unset($criteria["tagExclusive"]);
+                    unset($criteria['tags']);
+                } else {
+                    $qb->innerJoin(
+                        $nodeAlias . '.tags',
+                        'tg',
+                        'WITH',
+                        'tg.id IN (:tags)'
+                    );
+                }
             } else {
                 $qb->innerJoin(
                     $nodeAlias . '.tags',
                     'tg',
                     'WITH',
-                    'tg.id IN (:tags)'
+                    'tg.id = :tags'
                 );
             }
-        } else {
-            $qb->innerJoin(
-                $nodeAlias . '.tags',
-                'tg',
-                'WITH',
-                'tg.id = :tags'
-            );
+        }
+    }
+
+    /**
+     * Bind tag parameters to final query
+     *
+     * @param array $criteria
+     * @param Query $finalQuery
+     */
+    protected function applyFilterByTag(array &$criteria, &$finalQuery)
+    {
+        if (in_array('tags', array_keys($criteria))) {
+            if ($criteria['tags'] instanceof Tag) {
+                $finalQuery->setParameter('tags', $criteria['tags']->getId());
+            } elseif (is_array($criteria['tags']) || $criteria['tags'] instanceof Collection) {
+                if (count($criteria['tags']) > 0) {
+                    $finalQuery->setParameter('tags', $criteria['tags']);
+                }
+            } elseif (is_integer($criteria['tags'])) {
+                $finalQuery->setParameter('tags', (int) $criteria['tags']);
+            }
+            unset($criteria['tags']);
         }
     }
 

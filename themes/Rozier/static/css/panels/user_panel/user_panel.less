@@ -17,10 +17,6 @@
     .transition(width ease 0.5s);
     z-index:2;
 
-    #user-panel-container{
-        padding-bottom:0;
-    }
-
     p, a, li, h1, h2, h3, h4, h5, h6 {
         color: @user-panel-text-alt-color;
     }
@@ -28,6 +24,14 @@
         font-size: 16px;
         line-height: 1.2em;
         .transition(font-size ease 1s);
+    }
+
+    &-container{
+        padding-bottom:0;
+
+        @media (max-width: @screen-xs-max) {
+            height: auto !important;
+        }
     }
 
     #menu-mobile{

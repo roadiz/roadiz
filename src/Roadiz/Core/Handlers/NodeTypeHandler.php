@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
@@ -74,13 +75,21 @@ class NodeTypeHandler
     }
 
     /**
+     * @return string
+     */
+    public function getGeneratedEntitiesFolder()
+    {
+        return Kernel::getInstance()->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
+    }
+
+    /**
      * Remove node type entity class file from server.
      *
      * @return boolean
      */
     public function removeSourceEntityClass()
     {
-        $folder = ROADIZ_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
+        $folder = $this->getGeneratedEntitiesFolder();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (file_exists($file)) {
@@ -97,7 +106,7 @@ class NodeTypeHandler
      */
     public function generateSourceEntityClass()
     {
-        $folder = ROADIZ_ROOT.'/gen-src/'.NodeType::getGeneratedEntitiesNamespace();
+        $folder = $this->getGeneratedEntitiesFolder();
         $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
 
         if (!file_exists($folder)) {
@@ -201,7 +210,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
     protected function clearCaches()
     {
         $clearers = [
-            new DoctrineCacheClearer(Kernel::getService('em')),
+            new DoctrineCacheClearer(Kernel::getService('em'), Kernel::getInstance()),
             new OPCacheClearer(),
         ];
         foreach ($clearers as $clearer) {
@@ -226,6 +235,7 @@ class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
                 'nodeType' => $this->getNodeType()
             ]);
 
+        /** @var Node $node */
         foreach ($nodes as $node) {
             $node->getHandler()->removeWithChildrenAndAssociations();
         }

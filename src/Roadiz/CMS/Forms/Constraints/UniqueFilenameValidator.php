@@ -47,21 +47,24 @@ class UniqueFilenameValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        /** @var Document $document */
-        $document = $constraint->document;
-        /*
-         * If value is already the node name
-         * do nothing.
-         */
-        if (null !== $document &&
-            $value == $document->getFilename()) {
-            return;
-        }
+        if ($constraint instanceof UniqueFilename) {
+            /** @var Document $document */
+            $document = $constraint->document;
+            /*
+             * If value is already the filename
+             * do nothing.
+             */
+            if (null !== $document &&
+                $value == $document->getFilename()) {
+                return;
+            }
 
-        $fs = new Filesystem();
-        $folder = dirname($document->getAbsolutePath());
-        if ($fs->exists($folder . '/' . $value)) {
-            $this->context->addViolation($constraint->message);
+            $fs = new Filesystem();
+            $folder = $constraint->packages->getDocumentFolderPath($document);
+
+            if ($fs->exists($folder . '/' . $value)) {
+                $this->context->addViolation($constraint->message);
+            }
         }
     }
 }

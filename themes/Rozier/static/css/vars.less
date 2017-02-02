@@ -6,6 +6,18 @@
 /*
  * Global vars
  */
+@screen-lg-min: 1280px;
+
+@screen-md-min: 960px;
+@screen-md-max: (@screen-lg-min - 1);
+
+@screen-sm-min: 768px;
+@screen-sm-max: (@screen-md-min - 1);
+
+@screen-xs-min: 480px;
+@screen-xs-max: (@screen-sm-min - 1);
+
+
 
 
 /* -------- COLORS -------- */
@@ -108,15 +120,26 @@
  * (documents, nodes, children, customForm and geotag)
  */
 .widgetNavBarBrand() {
-    padding:0 10px 0 26px;
+    padding:0 10px 0 10px;
     color:#666;
-    line-height:55px;
+    line-height:45px;
+
+    @media (min-width: @screen-lg-min) {
+        padding:0 10px 0 20px;
+        line-height:55px;
+    }
 
     &.label {
-        height:55px;
+        height:45px;
         font-size: 12px;
-        line-height:59px;
+        line-height:49px;
         padding-left: 0px;
         margin-left: 0;
+
+        @media (min-width: @screen-lg-min) {
+            height:55px;
+            font-size: 12px;
+            line-height:59px;
+        }
     }
 }

@@ -94,10 +94,10 @@ class AddNodeType extends AbstractType
             'required' => true,
             'choices_as_values' => true,
             'choices' => [
-                'draft' => Node::DRAFT,
-                'pending' => Node::PENDING,
-                'published' => Node::PUBLISHED,
-                'archived' => Node::ARCHIVED,
+                Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
+                Node::getStatusLabel(Node::PENDING) => Node::PENDING,
+                Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
+                Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
             ],
         ])
         ;

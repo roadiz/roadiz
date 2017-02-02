@@ -30,8 +30,10 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
 
@@ -57,6 +59,45 @@ class PageController extends DefaultThemeApp
     ) {
         $this->prepareThemeAssignation($node, $translation);
 
+        /*
+         * You can add a NodeSourceType form to edit it
+         * right into your front page.
+         * Awesome isn’t it ?
+         */
+
         return $this->render('pages/page.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    protected function handleEditForm(Request $request)
+    {
+        /*
+         * Current page edition form
+         */
+        $form = $this->createForm(
+            new NodeSourceType($this->node->getNodeType()),
+            $this->nodeSource,
+            [
+                'controller' => $this,
+                'entityManager' => $this->get('em'),
+                'withVirtual' => false,
+                'withTitle' => false,
+            ]
+        );
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->get('em')->flush();
+
+            $urlGenerator = new NodesSourcesUrlGenerator($request, $this->nodeSource);
+
+            return $this->redirect($urlGenerator->getUrl());
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return null;
     }
 }

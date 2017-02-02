@@ -7,11 +7,6 @@
  * Nodes edit page
  */
 
-
-/* -------- VARS -------- */
-
-
-
 /* -------- STYLES -------- */
 
 .node-edit-node-type-circle{
@@ -35,18 +30,6 @@
     }
 }
 
-/*#edit-node-form{
-
-    .form-col-number{
-        display: inline-block;
-    }
-
-    .form-col-checkbox{
-        display: inline-block;
-        margin-left:30px;
-    }
-}*/
-
 #node-source-form-switcher-nav-cont {
     display: block;
     text-align: center;
@@ -69,7 +52,7 @@
     margin: 0 auto;
     position: relative;
 
-    li {
+    .switcher-nav-item {
         margin: 0px;
         padding-left: 0px;
 
@@ -80,7 +63,6 @@
             border-left: 0 none;
             font-size: 12px;
             line-height: 25px;
-
             padding: 1px 13px 0px;
 
             &:hover {
@@ -99,7 +81,6 @@
 
         &:first-child {
             margin-left: 50px;
-
             a {
                 border-radius: 5px 0 0 5px;
                 border-left: 1px solid #bfbfbf;
@@ -110,9 +91,8 @@
                 border-radius: 0 5px 5px 0;
             }
         }
-
         &.uk-active {
-            a {
+            & > a {
                 background-color: #666666;
                 border-color: #666666;
                 box-shadow: none;

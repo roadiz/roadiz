@@ -352,7 +352,7 @@ class SettingsController extends RozierApp
                     $this->get('em')->persist($document);
                     $this->get('em')->flush();
 
-                    $value->move(Document::getFilesFolder() . '/' . $document->getFolder(), $document->getFilename());
+                    $value->move($this->get('kernel')->getPublicFilesPath() . '/' . $document->getFolder(), $document->getFilename());
 
                     $setting->setValue($document->getId());
                 }

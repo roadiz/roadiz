@@ -12,7 +12,9 @@
 
 
 /* -------- STYLES -------- */
-
+.uk-nestable-handle {
+    display: inline-block;
+}
 .children-nodes-widget{
     position: relative;
     border:1px solid @children-nodes-border;
@@ -35,7 +37,7 @@
 
     .root-tree {
         margin: 0;
-        &>li {
+        & > .uk-nestable-item {
             padding:0px;
             border-top: 1px solid #E2E2E2;
 
@@ -48,9 +50,13 @@
 }
 
 .children-nodes-nav{
-    height:@children-node-height;
+    height: 45px;
     border-bottom:1px dashed @children-nodes-border;
-    overflow: hidden;
+    //overflow: hidden;
+
+    @media (min-width: @screen-lg-min) {
+        height: @children-node-height;
+    }
 
     .uk-navbar-brand{
         .widgetNavBarBrand();
@@ -83,13 +89,15 @@
     }
     .children-nodes-quick-creation{
         margin: 0;
-
-        &.uk-dropdown {
-            top: auto;
+        .uk-dropdown {
             background: @children-nodes-btn-bg;
             margin-top: -1px;
-            margin-right: 10px;
-            padding:0px;
+            padding: 0;
+
+            &.uk-dropdown-top {
+                margin-top: 0;
+                margin-bottom: -2px;
+            }
 
             .uk-button {
                 position: relative;
@@ -98,13 +106,13 @@
                 margin: 0px;
                 border: none;
                 height:auto;
-                padding:9px 10px 9px 33px;
+                padding: 8px 20px 7px 33px;
                 line-height:17px;
                 border-bottom: 1px solid @children-nodes-btn-border;
 
                 .uk-icon-rz-plus-simple{
                     position: absolute;
-                    top:10px; left:10px;
+                    top:4px; left:10px;
                 }
 
                 &:last-child{
@@ -166,17 +174,21 @@
         }
 
         .uk-dropdown {
-            margin-top: -5px;
-            margin-bottom: -5px;
+            margin-top: 0;
+            margin-bottom: 0;
+
+            // Align trigger with menu icons
+            transform: translateX(10px);
         }
     }
 }
 
-.children-node-widget,
-.children-node-widget-list {
-
+/*
+ * For each nestable group in children node-tree
+ */
+.children-nodes-tree ul {
     // 1st level
-    & > .uk-nestable-list-item{
+    & > .uk-nestable-item{
         position: relative;
         background:#fff;
 
@@ -214,7 +226,7 @@
             width:4px;
         }
 
-        .uk-nestable-item{
+        .uk-nestable-panel{
             height:@children-node-height;
             line-height:@children-node-height;
             padding: 0 5px 0 21px;
@@ -367,7 +379,7 @@
             padding-left:24px;
             margin:0 0 0 17px;
 
-            & > .uk-nestable-list-item {
+            & > .uk-nestable-item {
                 &:first-child{
                     margin-top:0;
                     padding-top: 0;
@@ -388,12 +400,11 @@
                 }
             }
 
-
             &.empty{
                 margin:0;
             }
 
-            .uk-nestable-list-item{
+            .uk-nestable-item{
                 position: relative;
                 border-bottom:none;
 
@@ -409,8 +420,13 @@
                 }
 
                 &:before{
-                    top:30px;
-                    width:30px;
+                    width:30px !important;
+                }
+
+                &:not(:first-child):not(:last-child) {
+                    &:before {
+                        top:30px;
+                    }
                 }
 
                 &:first-child{
@@ -428,7 +444,7 @@
                     top:1px; left:30px;
                 }
 
-                .uk-nestable-item{
+                .uk-nestable-panel{
                     margin-left:30px;
                     background:#F4F4F4;
                     border-top: 1px solid #e2e2e2;
@@ -446,7 +462,7 @@
                 .uk-nestable-list{
                     padding-left:@children-node-height;
 
-                    .uk-nestable-list-item{
+                    .uk-nestable-item{
                         margin-right:0;
 
                         &:first-child{
@@ -475,15 +491,16 @@
         }
     }
 }
-.uk-nestable-list-dragged {
+.uk-nestable-dragged {
     .nodetree-element-img{
         display: none;
     }
 }
 // Dragging
-.uk-nestable-moving body{
-    &> .children-node-widget, &> .children-node-widget-list{
-        &> .uk-nestable-list-item{
+.uk-nestable-moving body {
+    & > .children-node-widget,
+    & > .children-node-widget-list {
+        &> .uk-nestable-item{
             border-bottom: none;
         }
     }

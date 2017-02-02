@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright (c) 2016.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,47 +24,92 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file Configuration.php
- * @author Ambroise Maupate
+ * @file ConfigurationHandler.php
+ * @author ambroisemaupate
+ *
  */
-namespace RZ\Roadiz\Console\Tools;
+namespace RZ\Roadiz\Config;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Config\Configuration as Config;
 use Doctrine\ORM\Tools\Setup;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * Configuration class
  */
-class Configuration
+class ConfigurationHandler
 {
+    /**
+     * @var array
+     */
     protected $configuration;
+
+    /**
+     * @var string
+     */
     protected $cacheDir;
+
+    /**
+     * @var string
+     */
     protected $path;
 
     /**
+     * @var string
+     */
+    protected $cachePath;
+
+    /**
+     * @var ConfigCache
+     */
+    protected $confCache;
+
+    /**
      * @param string $cacheDir
+     * @param boolean $debug
      * @param string $path
      */
-    public function __construct($cacheDir, $path)
+    public function __construct($cacheDir, $debug, $path)
     {
         $this->cacheDir = $cacheDir;
         $this->path = $path;
+        $this->cachePath = $this->cacheDir . '/configuration.php';
+        $this->confCache = new ConfigCache($this->cachePath, $debug);
     }
 
+    /**
+     * @return string
+     */
     public function getCacheDir()
     {
         return $this->cacheDir;
     }
 
     /**
-     * Load default configuration file
+     * Load default configuration file.
      *
-     * @return boolean
+     * @return array
      */
     public function load()
     {
-        // Try to load existant configuration
-        return $this->loadFromFile($this->path);
+        if (!$this->confCache->isFresh()) {
+            $this->setConfiguration($this->loadFromFile($this->path));
+
+            $resources = [
+                new FileResource($this->path),
+            ];
+
+            $code = '<?php return ' . var_export($this->configuration, true) . ';' . PHP_EOL;
+            $this->confCache->write($code, $resources);
+        } else {
+            $this->configuration = require $this->cachePath;
+        }
+
+        return $this->configuration;
     }
 
     /**
@@ -76,61 +121,22 @@ class Configuration
     }
 
     /**
-     * @param array $configuration
+     * Set configuration after validating against Roadiz
+     * Configuration Schema.
      *
+     * @param array $configuration
      * @return $this
      */
-    public function setConfiguration($configuration)
+    public function setConfiguration(array $configuration)
     {
-        $this->configuration = $configuration;
+        $configs = [
+            $configuration,
+        ];
+        $processor = new Processor();
+        $roadizConfiguration = new Config();
+        $this->configuration = $processor->processConfiguration($roadizConfiguration, $configs);
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDefaultConfiguration()
-    {
-        return [
-            "appNamespace" => "chooseAnUniqueNameForYourApp",
-            "doctrine" => [
-                "driver" => "pdo_mysql",
-                "host" => "localhost",
-                "user" => "",
-                "password" => "",
-                "dbname" => "",
-            ],
-            "security" => [
-                "secret" => "change#this#secret#very#important",
-            ],
-            'cacheDriver' => [
-                'type' => null,
-                'host' => null,
-                'port' => null,
-            ],
-            "mailer" => [
-                "type" => "",
-                "host" => "localhost",
-                "port" => 25,
-                "encryption" => false,
-                "username" => "",
-                "password" => "",
-            ],
-            "entities" => [
-                "src/Roadiz/Core/Entities",
-                "src/Roadiz/Core/AbstractEntities",
-                "gen-src/GeneratedNodeSources",
-            ],
-            'rememberMeLifetime' => 2592000,
-            'additionalServiceProviders' => [],
-            'additionalCommands' => [],
-            'assetsProcessing' => [
-                'driver' => 'gd',
-                'defaultQuality' => 90,
-                'maxPixelSize' => 1920,
-            ],
-        ];
     }
 
     /**
@@ -155,55 +161,17 @@ class Configuration
     }
 
     /**
-     * Set devMode value.
-     *
-     * @param boolean $value
-     *
-     * @return $this
-     */
-    public function setDevMode($value = true)
-    {
-        if (null !== $this->configuration) {
-            $this->configuration["devMode"] = (boolean) $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set install value.
-     *
-     * @param boolean $value
-     *
-     * @return $this
-     */
-    public function setInstall($value = true)
-    {
-        if (null !== $this->configuration) {
-            $this->configuration["install"] = (boolean) $value;
-        }
-
-        return $this;
-    }
-
-    /**
      * @param string $file Absolute path to conf file
-     *
-     * @return boolean
+     * @return array
+     * @throws NoConfigurationFoundException
      */
-    public function loadFromFile($file)
+    protected function loadFromFile($file)
     {
         if (file_exists($file)) {
-            $conf = json_decode(file_get_contents($file), true);
-
-            if ($conf !== null && $conf !== false) {
-                $this->setConfiguration($conf);
-
-                return true;
-            }
+            return json_decode(file_get_contents($file), true);
         }
 
-        return false;
+        throw new NoConfigurationFoundException();
     }
 
     /**

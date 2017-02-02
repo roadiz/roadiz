@@ -82,6 +82,7 @@ class NodeTypeFieldHandler
         return $this->getORMAnnotation().
                $this->getFieldDeclaration().
                $this->generateSourceGetter().
+               $this->generateAlternativeGetter().
                $this->generateSourceSetter().PHP_EOL;
     }
     /**
@@ -268,5 +269,25 @@ class NodeTypeFieldHandler
         }
 
         return 1;
+    }
+
+    /**
+     * @return string
+     */
+    private function generateAlternativeGetter()
+    {
+        if ($this->nodeTypeField->getType() === NodeTypeField::YAML_T) {
+            $assignation = '$this->'.$this->nodeTypeField->getName();
+            return '
+    /**
+     * @return mixed
+     */
+    public function '.$this->nodeTypeField->getGetterName().'AsObject()
+    {
+        return \Symfony\Component\Yaml\Yaml::parse('.$assignation.');
+    }'.PHP_EOL;
+        }
+
+        return '';
     }
 }

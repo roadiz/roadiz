@@ -93,7 +93,7 @@ class UsersController extends RozierApp
             || $this->getUser()->getId() == $userId)) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
-
+        /** @var User $user */
         $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
@@ -150,7 +150,7 @@ class UsersController extends RozierApp
             || $this->getUser()->getId() == $userId)) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
-
+        /** @var User $user */
         $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
@@ -285,8 +285,11 @@ class UsersController extends RozierApp
                 $url = $facebook->getPictureUrl();
                 $user->setPictureUrl($url);
             } catch (\Exception $e) {
+                $user->setFacebookName('');
                 $user->setPictureUrl('');
             }
+        } else {
+            $user->setPictureUrl('');
         }
     }
 

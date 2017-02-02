@@ -41,9 +41,9 @@ NodeEditSource.prototype.wrapInTabs = function() {
         }
 
         if (fieldsGroupsLength > 1) {
-            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-switcher-nav uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\'}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
+            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', swiping:false}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
             var $formSwitcher = _this.$form.find('.uk-switcher');
-            var $formSwitcherNav = _this.$form.find('.uk-switcher-nav');
+            var $formSwitcherNav = _this.$form.find('#node-source-form-switcher-nav');
 
             /*
              * Sort tab name and put default in first
@@ -62,9 +62,9 @@ NodeEditSource.prototype.wrapInTabs = function() {
                 $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>');
 
                 if (groupName2 == 'default') {
-                    $formSwitcherNav.append('<li><a href="#"><i class="uk-icon-star"></i></a></li>');
+                    $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#"><i class="uk-icon-star"></i></a></li>');
                 } else {
-                    $formSwitcherNav.append('<li><a href="#">' + groupName2 + '</a></li>');
+                    $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#">' + groupName2 + '</a></li>');
                 }
                 var $group = $formSwitcher.find('#'+groupId);
 
@@ -91,7 +91,9 @@ NodeEditSource.prototype.init = function(){
     _this.$devNames = _this.$content.find('[data-dev-name]');
 
     for (var i = _this.$input.length - 1; i >= 0; i--) {
-        if(_this.$input[i].getAttribute('data-desc') !== ''){
+        if(_this.$input[i].getAttribute('data-desc') &&
+            null !== _this.$input[i].getAttribute('data-desc') &&
+            _this.$input[i].getAttribute('data-desc') !== ''){
             $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
         }
     }

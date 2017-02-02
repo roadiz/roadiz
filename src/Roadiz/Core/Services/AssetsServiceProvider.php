@@ -33,6 +33,7 @@ use AM\InterventionRequest\Configuration;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
@@ -58,21 +59,26 @@ class AssetsServiceProvider implements ServiceProviderInterface
          * - absolute: absolute to root
          * - doc: relative to documents
          * - absolute_doc: absolute to documents
-         * @param $c
+         * @param Container $c
          * @return Packages
          */
-        $container['assetPackages'] = function ($c) {
+        $container['assetPackages'] = function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+
             return new Packages(
                 $c['versionStrategy'],
                 $c['requestStack'],
+                $c['kernel'],
                 SettingsBag::get('static_domain_name'),
-                $c['kernel']->isPreview()
+                $kernel->isPreview()
             );
         };
 
         $container['interventionRequestConfiguration'] = function ($c) {
-
-            $cacheDir = $c['kernel']->getCacheDir() . '/rendered';
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $cacheDir = $kernel->getCacheDir() . '/rendered';
             if (!file_exists($cacheDir)) {
                 mkdir($cacheDir);
             }
@@ -84,7 +90,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
             $conf = new Configuration();
             $conf->setCachePath($cacheDir);
-            $conf->setImagesPath(ROADIZ_ROOT . '/files');
+            $conf->setImagesPath($kernel->getPublicFilesPath());
             $conf->setDriver($imageDriver);
             $conf->setDefaultQuality($defaultQuality);
 

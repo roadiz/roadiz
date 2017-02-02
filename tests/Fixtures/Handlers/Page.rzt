@@ -5,6 +5,7 @@
     "visible": true,
     "newsletterType": false,
     "hidingNodes": false,
+    "reachable": true,
     "fields": [
         {
             "name": "content",

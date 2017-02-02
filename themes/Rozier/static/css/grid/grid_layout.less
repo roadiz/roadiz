@@ -97,6 +97,7 @@
         }
 
         #back-top-button{
+            display: none;
             position: fixed;
             right:15px; bottom:15px;
             width:36px; height:36px;
@@ -111,6 +112,10 @@
             &:hover{
                 background: darken(#fff, 10%);
                 border-color: darken(#cbcbcb, 10%);
+            }
+
+            @media (min-width: @screen-md-min) {
+                display: block;
             }
         }
     }

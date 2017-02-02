@@ -42,6 +42,8 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Kernel;
 
@@ -161,7 +163,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
     {
         if ($container['config'] !== null &&
             isset($container['config']["doctrine"])) {
-            $container['em.config'] = function ($c) {
+            $container['em.config'] = function (Container $c) {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
                 $cache = null;
@@ -175,22 +177,23 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     );
                 }
 
+                $proxyFolder = $kernel->getRootDir() . '/gen-src/Proxies';
                 $config = Setup::createAnnotationMetadataConfiguration(
                     $c['entitiesPaths'],
                     $kernel->isDevMode(),
-                    $kernel->getRootDir() . '/gen-src/Proxies',
+                    $proxyFolder,
                     $cache,
                     false
                 );
-                $config->setProxyDir($kernel->getRootDir() . '/gen-src/Proxies');
+                $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
 
                 return $config;
             };
 
-            $container['em'] = function ($c) {
+            $container['em'] = function (Container $c) {
+                $c['stopwatch']->start('initDoctrine');
                 try {
-                    $c['stopwatch']->start('initDoctrine');
                     /** @var Kernel $kernel */
                     $kernel = $c['kernel'];
                     /** @var EntityManager $em */
@@ -243,11 +246,20 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                         Events::loadClassMetadata,
                         new DataInheritanceEvent($prefix)
                     );
+                    /*
+                     * Fonts life cycle manager.
+                     */
+                    $evm->addEventSubscriber(new FontLifeCycleSubscriber($c));
+
+                    /*
+                     * Documents life cycle manager.
+                     */
+                    $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
 
                     $c['stopwatch']->stop('initDoctrine');
-
                     return $em;
                 } catch (\PDOException $e) {
+                    $c['stopwatch']->stop('initDoctrine');
                     $c['logger']->error('Cannot create EntityManager: ' . $e->getMessage());
                     $c['session']->getFlashBag()->add('error', $e->getMessage());
                     return null;

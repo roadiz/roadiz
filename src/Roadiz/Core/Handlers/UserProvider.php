@@ -59,7 +59,7 @@ class UserProvider implements UserProviderInterface
      * @param string $username The username
      *
      * @return \RZ\Roadiz\Core\Entities\User
-     * @throws \Symfony\Component\Security\Core\User\UsernameNotFoundException if the user is not found
+     * @throws UsernameNotFoundException if the user is not found
      */
     public function loadUserByUsername($username)
     {
@@ -85,7 +85,7 @@ class UserProvider implements UserProviderInterface
      * @param \RZ\Roadiz\Core\Entities\User|UserInterface $user
      *
      * @return \RZ\Roadiz\Core\Entities\User
-     * @throws \UnsupportedUserException
+     * @throws UnsupportedUserException
      */
     public function refreshUser(UserInterface $user)
     {

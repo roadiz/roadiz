@@ -31,12 +31,13 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
+use Themes\Install\InstallApp;
 
 /**
  * Register Embed documents services for dependency injection container.
@@ -131,7 +132,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
          */
         $this->addTranslatorResource(
             $translator,
-            ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/translations',
+            CmsController::getTranslationsFolder(),
             'xlf',
             $locale
         );
@@ -141,7 +142,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
          */
         $this->addTranslatorResource(
             $translator,
-            ROADIZ_ROOT . '/themes/Install/Resources/translations',
+            InstallApp::getTranslationsFolder(),
             'xlf',
             $locale
         );
@@ -149,11 +150,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
         /** @var Theme $theme */
         foreach ($classes as $theme) {
             if (null !== $theme) {
-                /** @var FrontendController $themeClass */
-                $themeClass = $theme->getClassName();
+                $resourcesFolder = call_user_func([$theme->getClassName(), 'getResourcesFolder']);
                 $this->addTranslatorResource(
                     $translator,
-                    $themeClass::getResourcesFolder() . '/translations',
+                    $resourcesFolder . '/translations',
                     'xlf',
                     $locale
                 );

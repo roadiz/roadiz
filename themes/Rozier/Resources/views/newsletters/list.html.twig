@@ -50,32 +50,8 @@
                         <td class="nodes-list-item-link"><span class="nodes-list-item-color" style="background-color:{{ newsletter.node.nodeType.color }};"></span><a href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}">{{ newsletter.node.nodeName }}</a></td>
                         {% endif %}
                         <td class="mobile-hidden">{{ newsletter.node.nodeType.displayName }}</td>
-                        {# <td class="mobile-hidden">  <!-- style="text-align:center;" -->
-                            {% spaceless %}
-                                {% if newsletter.draft == true %}
-                                <div class="uk-button-status uk-button-draft" title="{% trans %}newsletter.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-draft-nodes"></i>
-                                </div><!-- uk-badge-warning -->
-                                {% endif %}
-                                {% if newsletter.pending == true %}
-                                <div class="uk-button-status uk-button-pending" title="{% trans %}newsletter.pending{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-pending-nodes"></i>
-                                </div><!-- uk-badge-warning -->
-                                {% endif %}
-                                {% if newsletter.sending == true %}
-                                <div class="uk-button-status uk-button-sending" title="{% trans %}newsletter.sending{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-truck"></i>
-                                </div><!-- uk-badge-danger -->
-                                {% endif %}
-                                {% if newsletter.sent == true %}
-                                <div class="uk-button-status uk-button-sent" title="{% trans %}newsletter.sent{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-check"></i>
-                                </div><!-- uk-badge-notification -->
-                                {% endif %}
-                            {% endspaceless %}
-                        </td> #}
                         <td class="mobile-hidden">{{ newsletter.node.updatedAt|localizeddate('short', 'none') }}</td>
-                        <td>
+                        <td class="table-actions-row">
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('newslettersEditPage', { newsletterId: newsletter.id, translationId: translation.id }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('newslettersDuplicatePage', { newsletterId: newsletter.id }) }}" title="{% trans %}duplicate{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-duplicate"></i></a>

@@ -29,23 +29,51 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
 /**
- * Extension that allow render document images
+ * Extension that allow render document images.
  */
 class DocumentExtension extends \Twig_Extension
 {
+    /**
+     * @var Packages
+     */
+    private $packages;
 
+    /**
+     * DocumentExtension constructor.
+     * @param Packages $packages
+     */
+    public function __construct(Packages $packages)
+    {
+        $this->packages = $packages;
+    }
+
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'documentExtension';
     }
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         return [
             new \Twig_SimpleFilter('display', [$this, 'display'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('imageRatio', [$this, 'getImageSize']),
+            new \Twig_SimpleFilter('imageSize', [$this, 'getImageSize']),
+            new \Twig_SimpleFilter('imageOrientation', [$this, 'getImageOrientation']),
+            new \Twig_SimpleFilter('path', [$this, 'getPath']),
+            new \Twig_SimpleFilter('exists', [$this, 'exists']),
         ];
     }
 
@@ -57,10 +85,93 @@ class DocumentExtension extends \Twig_Extension
      */
     public function display(Document $document = null, array $criteria = [])
     {
-        if (null !== $document) {
+        if (null === $document) {
+            throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
+        }
+        try {
             return $document->getViewer()->getDocumentByArray($criteria);
+        } catch (InvalidArgumentException $e) {
+            throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+        }
+    }
+
+    /**
+     * Get image orientation.
+     *
+     * - Return null if document is not an Image
+     * - Return `'landscape'` if width is higher or equal to height
+     * - Return `'portrait'` if height is strictly lower to width
+     *
+     * @param Document $document
+     * @return null|string
+     */
+    public function getImageOrientation(Document $document = null)
+    {
+        if (null !== $document && $document->isImage()) {
+            $size = $this->getImageSize($document);
+            return $size['width'] >= $size['height'] ? 'landscape' : 'portrait';
         }
 
-        throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
+        return null;
+    }
+
+    /**
+     * @param Document $document
+     * @return array|null
+     */
+    public function getImageSize(Document $document = null)
+    {
+        if (null !== $document && $document->isImage()) {
+            $manager = new ImageManager();
+            $documentPath = $this->packages->getDocumentFilePath($document);
+            $imageProcess = $manager->make($documentPath);
+            return [
+                'width' => $imageProcess->width(),
+                'height' => $imageProcess->height(),
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Document $document
+     * @return float|null
+     */
+    public function getImageRatio(Document $document = null)
+    {
+        if (null !== $document && $document->isImage()) {
+            $size = $this->getImageSize($document);
+            return $size['width']/$size['height'];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Document|null $document
+     * @return null|string
+     */
+    public function getPath(Document $document = null)
+    {
+        if (null !== $document) {
+            return $this->packages->getDocumentFilePath($document);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Document|null $document
+     * @return bool
+     */
+    public function exists(Document $document = null)
+    {
+        if (null !== $document) {
+            $fs = new Filesystem();
+            return $fs->exists($this->packages->getDocumentFilePath($document));
+        }
+
+        return false;
     }
 }

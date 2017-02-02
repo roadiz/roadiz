@@ -43,7 +43,8 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Table(name="node_types", indexes={
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"newsletter_type"}),
- *     @ORM\Index(columns={"hiding_nodes"})
+ *     @ORM\Index(columns={"hiding_nodes"}),
+ *     @ORM\Index(columns={"reachable"})
  * })
  */
 class NodeType extends AbstractEntity
@@ -139,6 +140,43 @@ class NodeType extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * Define if this node-type produces nodes that will be
+     * viewable from a Controller.
+     *
+     * Typically if a node has an URL.
+     *
+     * @ORM\Column(name="reachable", type="boolean", nullable=false, options={"default" = true})
+     */
+    private $reachable = true;
+
+    /**
+     * @return bool
+     */
+    public function getReachable()
+    {
+        return $this->reachable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReachable()
+    {
+        return $this->getReachable();
+    }
+
+    /**
+     * @param boolean $reachable
+     * @return NodeType
+     */
+    public function setReachable($reachable)
+    {
+        $this->reachable = (boolean) $reachable;
+        return $this;
+    }
+
     /**
      * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
      */
@@ -245,7 +283,7 @@ class NodeType extends AbstractEntity
     /**
      * @param NodeTypeField $field
      *
-     * @return NodeTypeField
+     * @return NodeType
      */
     public function addField(NodeTypeField $field)
     {
@@ -259,7 +297,7 @@ class NodeType extends AbstractEntity
     /**
      * @param NodeTypeField $field
      *
-     * @return NodeTypeField
+     * @return NodeType
      */
     public function removeField(NodeTypeField $field)
     {
@@ -309,23 +347,9 @@ class NodeType extends AbstractEntity
     /**
      * @return string
      */
-    public function getOneLineSummary()
+    public function __toString()
     {
-        return $this->getId() . " — " . $this->getName() .
-        (!$this->isVisible() ? ' - hidden' : '') . PHP_EOL;
-    }
-
-    /**
-     * @return string $text
-     */
-    public function getFieldsSummary()
-    {
-        $text = "|" . PHP_EOL;
-        foreach ($this->getFields() as $field) {
-            $text .= "|--- " . $field->getOneLineSummary();
-        }
-
-        return $text;
+        return '[#' . $this->getId() . '] ' . $this->getName() . ' ('.$this->getDisplayName().')';
     }
 
     /**

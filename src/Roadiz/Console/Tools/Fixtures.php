@@ -27,11 +27,11 @@
  * @file Fixtures.php
  * @author Ambroise Maupate
  */
-
 namespace RZ\Roadiz\Console\Tools;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Config\YamlConfigurationHandler;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -51,11 +51,13 @@ class Fixtures
     protected $cacheDir;
     protected $debug;
     protected $configPath;
+    private $rootDir;
 
     /**
      * @param EntityManager $entityManager
      * @param string $cacheDir
      * @param string $configPath
+     * @param $rootDir
      * @param boolean $debug
      * @param Request|null $request
      */
@@ -63,6 +65,7 @@ class Fixtures
         EntityManager $entityManager,
         $cacheDir,
         $configPath,
+        $rootDir,
         $debug = true,
         Request $request = null
     ) {
@@ -71,6 +74,7 @@ class Fixtures
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
         $this->configPath = $configPath;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -100,10 +104,10 @@ class Fixtures
         $fs = new Filesystem();
 
         $folders = [
-            ROADIZ_ROOT . '/cache',
-            ROADIZ_ROOT . '/gen-src/Compiled',
-            ROADIZ_ROOT . '/gen-src/Proxies',
-            ROADIZ_ROOT . '/gen-src/GeneratedNodeSources',
+            $this->rootDir . '/cache',
+            $this->rootDir . '/gen-src/Compiled',
+            $this->rootDir . '/gen-src/Proxies',
+            $this->rootDir . '/gen-src/GeneratedNodeSources',
         ];
 
         foreach ($folders as $folder) {
@@ -270,15 +274,13 @@ class Fixtures
          * Update timezone
          */
         if (!empty($data['timezone'])) {
-            $conf = new YamlConfiguration(
+            $conf = new YamlConfigurationHandler(
                 $this->cacheDir,
                 $this->debug,
                 $this->configPath
             );
-            if (false === $conf->load()) {
-                $conf->setConfiguration($conf->getDefaultConfiguration());
-            }
-            $config = $conf->getConfiguration();
+
+            $config = $conf->load();
             $config['timezone'] = $data['timezone'];
 
             $conf->setConfiguration($config);
@@ -303,6 +305,7 @@ class Fixtures
      */
     public function installFrontendTheme($classname)
     {
+        /** @var Theme|null $existing */
         $existing = $this->entityManager
                          ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                          ->findOneByClassName($classname);

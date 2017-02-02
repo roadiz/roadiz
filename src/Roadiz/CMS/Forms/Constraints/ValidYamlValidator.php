@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2017, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,28 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file JsonConfigurationServiceProvider.php
+ * @file ValidYamlValidator.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Pimple\Container;
-use RZ\Roadiz\Console\Tools\Configuration;
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
-/**
- * Register configuration services for dependency injection container.
- */
-class JsonConfigurationServiceProvider extends AbstractConfigurationServiceProvider
+class ValidYamlValidator extends ConstraintValidator
 {
-    /**
-     * @param Container $container [description]
-     * @return Container
-     */
-    public function register(Container $container)
+    public function validate($value, Constraint $constraint)
     {
-        parent::register($container);
-        /*
-         * Inject app config
-         */
-        $container['config'] = function ($c) {
-            $configuration = new Configuration(
-                $c['kernel']->getCacheDir(),
-                $c['kernel']->getRootDir() . '/conf/config.yml'
-            );
-
-            if (false !== $configuration->load()) {
-                return $configuration->getConfiguration();
-            } else {
-                throw new NoConfigurationFoundException();
+        if ($value != "") {
+            try {
+                Yaml::parse($value);
+            } catch (ParseException $e) {
+                $this->context->addViolation($constraint->message, [
+                    '{{ error }}' => $e->getMessage()
+                ]);
             }
-        };
-
-        return $container;
+        }
     }
 }

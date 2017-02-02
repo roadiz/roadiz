@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -44,20 +45,22 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
     protected $manager;
 
     /**
-     * @param EntityManager        $em
-     * @param LoggerInterface      $logger
+     * @param EntityManager $em
+     * @param Packages $packages
+     * @param LoggerInterface $logger
      * @param EntityManager|string $imageDriver
-     * @param integer              $maxPixelSize
-     * @param string               $rawImageSuffix
+     * @param integer $maxPixelSize
+     * @param string $rawImageSuffix
      */
     public function __construct(
         EntityManager $em,
+        Packages $packages,
         LoggerInterface $logger = null,
         $imageDriver = 'gd',
         $maxPixelSize = 0,
         $rawImageSuffix = ".raw"
     ) {
-        $this->manager = new DownscaleImageManager($em, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
+        $this->manager = new DownscaleImageManager($em, $packages, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
     }
 
     public static function getSubscribedEvents()

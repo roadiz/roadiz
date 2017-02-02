@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\Core\Entities\Theme;
+use Themes\Install\InstallApp;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,7 +50,7 @@ class ImportController extends AppController
     {
         if (null !== $filename = $this->getFilename($request)) {
             if (null === $themeId) {
-                $filename = ROADIZ_ROOT . '/themes/Install/' . $filename;
+                $filename =  InstallApp::getThemeFolder() . '/' . $filename;
             }
 
             return $this->importContent($filename, $classImporter, $themeId);
@@ -170,7 +172,7 @@ class ImportController extends AppController
     public function importNodesAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\NodesImporter",
+            'RZ\Roadiz\CMS\Importers\NodesImporter',
             $request,
             $themeId
         );
@@ -193,18 +195,20 @@ class ImportController extends AppController
             if (null === $themeId) {
                 $path = $pathFile;
             } else {
+                /** @var Theme $theme */
                 $theme = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
 
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');
                 }
 
-                $dir = explode('\\', $theme->getClassName());
-                $path = ROADIZ_ROOT . "/themes/" . $dir[2] . '/' . $pathFile;
+                $classname = $theme->getClassName();
+                $themeFolder = call_user_func([$classname, 'getThemeFolder']);
+                $path = $themeFolder . '/' . $pathFile;
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                $classImporter::importJsonFile($file, $this->get('em'));
+                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'));
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

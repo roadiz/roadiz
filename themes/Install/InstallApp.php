@@ -35,7 +35,6 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Bags\SettingsBag;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -85,8 +84,7 @@ class InstallApp extends AppController
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
-                'filesUrl' => $this->getRequest()
-                    ->getBaseUrl() . '/' . Document::getFilesFolderName(),
+                'filesUrl' => $this->getRequest()->getBaseUrl() . $this->get('kernel')->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
@@ -154,9 +152,9 @@ class InstallApp extends AppController
      */
     public function requirementsAction(Request $request)
     {
-        $requ = new Requirements();
-        $this->assignation['requirements'] = $requ->getRequirements();
-        $this->assignation['totalSuccess'] = $requ->isTotalSuccess();
+        $requirements = new Requirements($this->get('kernel'));
+        $this->assignation['requirements'] = $requirements->getRequirements();
+        $this->assignation['totalSuccess'] = $requirements->isTotalSuccess();
         return $this->render('steps/requirements.html.twig', $this->assignation);
     }
 
@@ -179,11 +177,14 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
+                    /** @var Kernel $kernel */
+                    $kernel = $this->get('kernel');
                     $fixtures = new Fixtures(
                         $this->get('em'),
-                        $this->get('kernel')->getCacheDir(),
-                        $this->get('kernel')->getRootDir() . '/conf/config.yml',
-                        $this->get('kernel')->isDebug(),
+                        $kernel->getCacheDir(),
+                        $kernel->getRootDir() . '/conf/config.yml',
+                        $kernel->getRootDir(),
+                        $kernel->isDebug(),
                         $request
                     );
                     $fixtures->createDefaultUser($userForm->getData());
@@ -251,7 +252,7 @@ class InstallApp extends AppController
                     $this->get('session')->invalidate();
 
                     $clearers = [
-                        new DoctrineCacheClearer($this->get('em')),
+                        new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
                         new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
                         new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
                         new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),

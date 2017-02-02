@@ -36,6 +36,9 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Utils\Document\DocumentFactory;
+use RZ\Roadiz\Utils\Document\ViewOptionsResolver;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -46,10 +49,36 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractEmbedFinder
 {
     protected $feed = null;
+    /**
+     * @var string
+     */
     protected $embedId;
     protected $key;
 
     protected static $platform = 'abstract';
+
+    /**
+     * AbstractEmbedFinder constructor.
+     * @param string $embedId
+     */
+    public function __construct($embedId = '')
+    {
+        $this->embedId = $this->validateEmbedId($embedId);
+    }
+
+    /**
+     * Validate extern Id against platform naming policy.
+     *
+     * @param string $embedId
+     * @return string
+     */
+    protected function validateEmbedId($embedId = "")
+    {
+        if (preg_match('#(?<id>[^\/^=^?]+)$#', $embedId, $matches)) {
+            return $matches['id'];
+        }
+        throw new \InvalidArgumentException('embedId.is_not_valid');
+    }
 
     /**
      * Tell if embed media exists after its API feed.
@@ -84,11 +113,17 @@ abstract class AbstractEmbedFinder
     /**
      * Get embed media source URL.
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string
      */
-    abstract public function getSource(&$args = []);
+    public function getSource(array &$options = [])
+    {
+        $resolver = new ViewOptionsResolver();
+        $options = $resolver->resolve($options);
+
+        return "";
+    }
 
     /**
      * Crawl an embed API to get a Json feed.
@@ -119,60 +154,57 @@ abstract class AbstractEmbedFinder
      * * id
      * * class
      *
-     * @param  array $args
-     *
+     * @param  array $options
+     * @final
      * @return string
      */
-    public function getIFrame(&$args = [])
+    final public function getIFrame(array &$options = [])
     {
         $attributes = [];
+        /*
+         * getSource method will resolve all options for us.
+         */
+        $attributes['src'] = $this->getSource($options);
 
-        $attributes['src'] = $this->getSource($args);
-
-        if (isset($args['width'])) {
-            $attributes['width'] = $args['width'];
+        if ($options['width'] > 0) {
+            $attributes['width'] = $options['width'];
 
             /*
              * Default height is defined to 16:10
              */
-            if (!isset($args['height'])) {
-                $attributes['height'] = (int)(($args['width']*10)/16);
+            if ($options['height'] === 0) {
+                $attributes['height'] = (int)(($options['width']*10)/16);
             }
         }
-        if (isset($args['height'])) {
-            $attributes['height'] = $args['height'];
-        }
-        if (isset($args['title'])) {
-            $attributes['title'] = $args['title'];
-        }
-        if (isset($args['id'])) {
-            $attributes['id'] = $args['id'];
-        }
-        if (isset($args['class'])) {
-            $attributes['class'] = $args['class'];
+
+        if ($options['height'] > 0) {
+            $attributes['height'] = $options['height'];
         }
 
+        $attributes['title'] = $options['title'];
+        $attributes['id'] = $options['id'];
+        $attributes['class'] = $options['class'];
         $attributes['frameborder'] = "0";
 
-        if (!isset($args['fullscreen']) ||
-            (boolean) $args['fullscreen'] === true) {
+        if ($options['fullscreen']) {
             $attributes['webkitAllowFullScreen'] = "1";
             $attributes['mozallowfullscreen'] = "1";
             $attributes['allowFullScreen'] = "1";
         }
 
+        $attributes = array_filter($attributes);
 
-        $htmlTag = '<iframe';
+
+        $htmlAttrs = [];
         foreach ($attributes as $key => $value) {
             if ($value == '') {
-                $htmlTag .= ' '.$key;
+                $htmlAttrs[] = $key;
             } else {
-                $htmlTag .= ' '.$key.'="'.addslashes($value).'"';
+                $htmlAttrs[] = $key.'="'.addslashes($value).'"';
             }
         }
-        $htmlTag .= ' ></iframe>';
 
-        return $htmlTag;
+        return '<iframe '.implode(' ', $htmlAttrs).'></iframe>';
     }
 
     /**
@@ -186,51 +218,49 @@ abstract class AbstractEmbedFinder
      */
     public function createDocumentFromFeed(Container $container)
     {
-        $url = $this->downloadThumbnail();
+        /** @var File $file */
+        $file = $this->downloadThumbnail();
 
-        if (!$this->exists()) {
+        if (!$this->exists() || null === $file) {
             throw new \RuntimeException('no.embed.document.found');
         }
 
-        if (false !== $url) {
-            $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                                ->findOneBy(['filename'=>$url]);
-        } else {
-            $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
-                                                ->findOneBy([
-                                                    'embedId'=>$this->embedId,
-                                                    'embedPlatform'=>static::$platform,
-                                                ]);
-        }
+        $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
+                                            ->findOneBy([
+                                                'embedId'=>$this->embedId,
+                                                'embedPlatform'=>static::$platform,
+                                            ]);
 
         if (null !== $existingDocument) {
             throw new EntityAlreadyExistsException('embed.document.already_exists');
         }
 
-        $document = new Document();
+
+        $documentFactory = new DocumentFactory(
+            $file,
+            $container['em'],
+            $container['dispatcher'],
+            $container['assetPackages'],
+            null,
+            $container['logger']
+        );
+
+        $document = $documentFactory->getDocument();
+
+        if (null === $document) {
+            throw new \RuntimeException('document.cannot_persist');
+        }
+
         $document->setEmbedId($this->embedId);
         $document->setEmbedPlatform(static::$platform);
-
-        if (false !== $url) {
-            /*
-             * Move file from documents file root to its folder.
-             */
-            $document->setFilename($url);
-            $document->setMimeType('image/jpeg');
-            if (!file_exists(Document::getFilesFolder().'/'.$document->getFolder())) {
-                mkdir(Document::getFilesFolder().'/'.$document->getFolder());
-            }
-            rename(Document::getFilesFolder().'/'.$url, $document->getAbsolutePath());
-        }
-        $container['em']->persist($document);
 
         /*
          * Create document metas
          * for each translation
          */
         $translations = $container['em']
-                            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findAll();
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findAll();
 
         foreach ($translations as $translation) {
             $documentTr = new DocumentTranslation();
@@ -243,8 +273,8 @@ abstract class AbstractEmbedFinder
             $container['em']->persist($documentTr);
         }
 
-
         $container['em']->flush();
+
 
         return $document;
     }
@@ -300,7 +330,7 @@ abstract class AbstractEmbedFinder
      * Download a picture from the embed media platform
      * to get a thumbnail.
      *
-     * @return string|false File URL in document files folder.
+     * @return File|null
      */
     public function downloadThumbnail()
     {
@@ -314,28 +344,37 @@ abstract class AbstractEmbedFinder
 
                 try {
                     $original = Stream::factory(fopen($url, 'r'));
-                    $local = Stream::factory(fopen(Document::getFilesFolder().'/'.$thumbnailName, 'w'));
-                    $local->write($original->getContents());
 
-                    if (file_exists(Document::getFilesFolder().'/'.$thumbnailName) &&
-                        filesize(Document::getFilesFolder().'/'.$thumbnailName) > 0) {
-                        return $thumbnailName;
-                    } else {
-                        return false;
+                    $tmpFile = tempnam(sys_get_temp_dir(), $thumbnailName);
+                    $handle = fopen($tmpFile, 'w');
+
+                    $local = Stream::factory($handle);
+                    $local->write($original->getContents());
+                    $local->close();
+
+                    $file = new File($tmpFile);
+
+                    if ($file->isReadable() &&
+                        filesize($file->getPathname()) > 0) {
+                        return $file;
                     }
                 } catch (RequestException $e) {
-                    return false;
+                    return null;
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Gets the value of key.
      *
-     * @return mixed
+     * Key is the access_token which could be asked to consume an API.
+     * For example, for Youtube it must be your API server key. For Soundcloud
+     * it should be you app client Id.
+     *
+     * @return string
      */
     public function getKey()
     {
@@ -349,7 +388,7 @@ abstract class AbstractEmbedFinder
      * For example, for Youtube it must be your API server key. For Soundcloud
      * it should be you app client Id.
      *
-     * @param mixed $key the key
+     * @param string $key the key
      *
      * @return self
      */

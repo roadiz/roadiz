@@ -24,7 +24,7 @@
 
         &:hover {
 
-            & > .uk-nestable-item > .tagtree-contextualmenu {
+            & > .uk-nestable-panel > .tagtree-contextualmenu {
                 .opacity(1);
             }
 
@@ -79,8 +79,8 @@
 
 #tagtree-widget{
     .root-tree{
-        &> .uk-nestable-list-item{
-            &> .uk-nestable-item{
+        &> .uk-nestable-item{
+            &> .uk-nestable-panel{
                 padding-left: 6px;
             }
         }
@@ -105,11 +105,11 @@
                 display: none;
             }
         }
+
     }
 }
 
-.uk-nestable-list-dragged {
-
+.uk-nestable-dragged {
      .uk-nestable-tag,
      .uk-nestable-list-tag {
 

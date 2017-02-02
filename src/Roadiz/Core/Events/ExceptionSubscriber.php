@@ -29,22 +29,15 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
-use Doctrine\DBAL\Exception\ConnectionException;
-use Doctrine\DBAL\Exception\TableNotFoundException;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
-use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
+use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class ExceptionSubscriber
@@ -52,8 +45,20 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ExceptionSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
+
+    /**
+     * @var bool
+     */
     protected $debug;
+
+    /**
+     * @var ExceptionViewer
+     */
+    protected $viewer;
 
     /**
      * ExceptionSubscriber constructor.
@@ -64,6 +69,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         $this->logger = $logger;
         $this->debug = $debug;
+
+        $this->viewer = new ExceptionViewer();
     }
 
     /**
@@ -100,13 +107,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
                 null !== $ctrl = $exception->getController()) {
                 $response = $ctrl->maintenanceAction($event->getRequest());
                 // Set http code according to status
-                $response->setStatusCode($this->getHttpStatusCode($exception));
+                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
                 $event->setResponse($response);
             } else {
                 // Customize your response object to display the exception details
                 $response = $this->getEmergencyResponse($exception, $event->getRequest());
                 // Set http code according to status
-                $response->setStatusCode($this->getHttpStatusCode($exception));
+                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
                 // HttpExceptionInterface is a special type of exception that
                 // holds status code and header details
                 if ($exception instanceof HttpExceptionInterface) {
@@ -133,99 +140,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
          * Log error before displaying a fallback page.
          */
         $class = get_class($e);
-        /*
-         * Get route defined format
-         * to use right response type.
-         */
-        $format = 'html';
-        if ($request->attributes->has('_format')) {
-            $format = $request->attributes->get('_format');
-        }
-        $humanMessage = $this->getHumanExceptionTitle($e);
 
-        $this->logger->emerg($e->getMessage(), [
+
+        $this->logger->emergency($e->getMessage(), [
             'trace' => $e->getTraceAsString(),
             'exception' => $class,
         ]);
 
-        if ($format == "json" || $request->isXmlHttpRequest()) {
-            return new JsonResponse(
-                [
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                    'exception' => $class,
-                    'humanMessage' => $humanMessage,
-                ],
-                Response::HTTP_SERVICE_UNAVAILABLE
-            );
-        } else {
-            $html = file_get_contents(ROADIZ_ROOT . '/src/Roadiz/CMS/Resources/views/emerg.html');
-            $html = str_replace('{{ httpCode }}', $this->getHttpStatusCode($e), $html);
-            $html = str_replace('{{ humanMessage }}', $humanMessage, $html);
-
-            if ($this->debug) {
-                $html = str_replace('{{ message }}', $e->getMessage(), $html);
-                $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
-                $html = str_replace('{{ details }}', $trace, $html);
-            } else {
-                $html = str_replace('{{ message }}', '', $html);
-                $html = str_replace('{{ details }}', '', $html);
-            }
-
-            return new Response(
-                $html,
-                Response::HTTP_SERVICE_UNAVAILABLE,
-                ['content-type' => 'text/html']
-            );
-        }
-    }
-
-    /**
-     * @param \Exception $e
-     * @return string
-     */
-    protected function getHumanExceptionTitle(\Exception $e)
-    {
-        if ($e instanceof ResourceNotFoundException ||
-            $e instanceof NotFoundHttpException) {
-            return "Resource not found.";
-        }
-
-        if ($e instanceof ConnectionException) {
-            return "Your database is not reachable. Did you run install before using Roadiz?";
-        }
-
-        if ($e instanceof TableNotFoundException) {
-            return "Your database is not synchronised to Roadiz data schema. Did you run install before using Roadiz?";
-        }
-
-        if ($e instanceof AccessDeniedException ||
-            $e instanceof AccessDeniedHttpException ||
-            $e instanceof PreviewNotAllowedException) {
-            return "Oups! Wrong way, you are not supposed to be here.";
-        }
-
-        return "A problem occured on our website. We are working on this to be back soon.";
-    }
-
-    /**
-     * @param \Exception $exception
-     * @return int
-     */
-    protected function getHttpStatusCode(\Exception $exception)
-    {
-        if ($exception instanceof HttpExceptionInterface) {
-            return $exception->getStatusCode();
-        } elseif ($exception instanceof ResourceNotFoundException) {
-            return Response::HTTP_NOT_FOUND;
-        } elseif ($exception instanceof MaintenanceModeException) {
-            return Response::HTTP_SERVICE_UNAVAILABLE;
-        } elseif ($exception instanceof AccessDeniedException ||
-            $exception instanceof AccessDeniedHttpException ||
-            $exception instanceof PreviewNotAllowedException) {
-            return Response::HTTP_FORBIDDEN;
-        }
-
-        return Response::HTTP_INTERNAL_SERVER_ERROR;
+        return $this->viewer->getResponse($e, $request, $this->debug);
     }
 }

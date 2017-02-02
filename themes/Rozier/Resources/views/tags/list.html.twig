@@ -53,7 +53,7 @@
                         <tr>
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
-                            <td>
+                            <td class="table-actions-row">
                             {% spaceless %}
                                 {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                 <div class="tagtree-bulk-selection">

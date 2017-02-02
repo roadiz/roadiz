@@ -39,7 +39,6 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Utils\XlsxExporter;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;

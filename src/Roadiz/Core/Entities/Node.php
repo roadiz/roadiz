@@ -63,6 +63,27 @@ class Node extends AbstractDateTimedPositioned
     const ARCHIVED = 40;
     const DELETED = 50;
 
+    /**
+     * @param int $status
+     * @return string
+     */
+    public static function getStatusLabel($status)
+    {
+        $nodeStatuses = [
+            static::DRAFT => 'draft',
+            static::PENDING => 'pending',
+            static::PUBLISHED => 'published',
+            static::ARCHIVED => 'archived',
+            static::DELETED => 'deleted',
+        ];
+
+        if (isset($nodeStatuses[$status])) {
+            return $nodeStatuses[$status];
+        }
+
+        throw new \RuntimeException('Status does not exist.');
+    }
+
     protected $handler;
 
     /**
@@ -653,6 +674,8 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * Get node-sources using a given translation.
+     *
      * @param Translation $translation
      * @return \Doctrine\Common\Collections\Collection
      */

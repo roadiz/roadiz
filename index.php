@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2017, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,24 +43,7 @@ require("vendor/autoload.php");
 
 $kernel = Kernel::getInstance('prod', false);
 $request = Request::createFromGlobals();
-$kernel->boot();
 
-/*
- * Bypass Roadiz kernel to directly serve images assets
- */
-if (0 === strpos($request->getPathInfo(), '/assets') &&
-    preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-) {
-    $ctrl = new \RZ\Roadiz\CMS\Controllers\AssetsController();
-    $ctrl->setContainer($kernel->getContainer());
-    $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
-    $response->prepare($request);
-} else {
-    /*
-     * Start Roadiz App handling
-     */
-    $response = $kernel->handle($request);
-}
-
+$response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);

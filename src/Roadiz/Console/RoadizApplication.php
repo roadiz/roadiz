@@ -34,6 +34,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
 use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
@@ -41,6 +42,7 @@ use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -53,13 +55,21 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class RoadizApplication extends Application
 {
+    /**
+     * @var Kernel
+     */
     protected $kernel;
 
+    /**
+     * RoadizApplication constructor.
+     * @param Kernel $kernel
+     */
     public function __construct(Kernel $kernel)
     {
         $this->kernel = $kernel;
         $this->kernel->boot();
         $this->kernel->container['request'] = Request::createFromGlobals();
+        $this->kernel->container['requestStack']->push($this->kernel->container['request']);
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
@@ -87,6 +97,7 @@ class RoadizApplication extends Application
     protected function getDefaultCommands()
     {
         $commands = array(
+            new DispatcherDebugCommand(),
             new TranslationsCommand(),
             new TranslationsCreationCommand(),
             new TranslationsDeleteCommand(),
@@ -154,6 +165,7 @@ class RoadizApplication extends Application
             new ProcessHelper(),
             new KernelHelper($this->kernel),
             new LoggerHelper($this->kernel),
+            new AssetPackagesHelper($this->kernel->container['assetPackages']),
             'question' => new QuestionHelper(),
             'configuration' => new ConfigurationHelper($this->kernel->container['config']),
             'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),

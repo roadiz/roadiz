@@ -71,9 +71,18 @@ table.documents {
     }
 }
 
-.documents-list{
-    margin:0 -10px;
+.documents-list {
+    margin:0;
+    padding: 0 30px;
     list-style-type:none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+    @media screen and (max-width: @screen-xs-max) {
+        padding: 0 5px;
+    }
 
     .document-checkbox {
         position: absolute;

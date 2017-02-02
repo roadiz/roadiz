@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console\Tools;
 
+use RZ\Roadiz\Core\Kernel;
+
 /**
  * Requirements class
  */
@@ -36,6 +38,19 @@ class Requirements
 {
     protected $totalChecks = 0;
     protected $successChecks = 0;
+    /**
+     * @var Kernel
+     */
+    private $kernel;
+
+    /**
+     * Requirements constructor.
+     * @param Kernel $kernel
+     */
+    public function __construct(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 
     /**
      * @return boolean
@@ -186,9 +201,9 @@ class Requirements
         $this->totalChecks++;
 
         $checks['files_folder_writable'] = [
-            'status' => $this->folderWritable(ROADIZ_ROOT . '/files'),
-            'folder' => ROADIZ_ROOT . '/files',
-            'mod' => fileperms(ROADIZ_ROOT . '/files'),
+            'status' => $this->folderWritable($this->kernel->getPublicFilesPath()),
+            'folder' => $this->kernel->getPublicFilesPath(),
+            'mod' => fileperms($this->kernel->getPublicFilesPath()),
             'message' => 'Storage folder is not writable by PHP, you must change its permissions.',
         ];
 

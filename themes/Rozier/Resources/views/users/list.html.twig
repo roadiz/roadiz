@@ -41,7 +41,7 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td class="mobile-hidden uk-visible-xlarge"><img width="45" height="45" class="uk-thumbnail" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
+                        <td class="mobile-hidden uk-visible-xlarge"><img width="45" height="45" class="uk-thumbnail gravatar user-image" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
                         <td><a href="{{ path('usersEditPage', { userId: user.getId }) }}">{{ user.getUsername|truncate(30) }}</a></td>
                         <td class="mobile-hidden">{{ user.getEmail|truncate(30) }}</td>
                         <td class="mobile-hidden uk-visible-xlarge">{% transchoice user.getRoles|length %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}</td>

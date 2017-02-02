@@ -18,26 +18,26 @@
 
 .content-table {
     font-size:12px;
-
     thead{
-
         th{
             vertical-align: top;
             height:43px;
             position: relative;
             color:@form-head-color;
-            padding:5px 15px 0;
+            padding:5px 10px 0;
             border-left:1px solid @form-head-border-color;
             .box-sizing();
-
             a{
                 margin-left:5px;
+            }
+
+            @media screen and (min-width: 1380px) {
+                padding:5px 15px 0;
             }
         }
     }
 
     tbody{
-
         tr{
             height:54px;
             background-color:white;
@@ -49,15 +49,17 @@
                 background-color:#F4F4F4;
             }
         }
-
         td{
             vertical-align: middle;
-            padding:2px 15px 0;
+            padding:2px 10px 0;
             line-height:13px;
             font-weight: 600;
             color:@grey-medium;
-        }
 
+            @media screen and (min-width: 1380px) {
+                padding:5px 15px 0;
+            }
+        }
     }
 
     a{
@@ -94,6 +96,11 @@
 
 .table-actions-row{
     width:70px;
+    white-space: nowrap;
+
+    td& {
+        padding: 0 10px 0 0 !important;
+    }
 }
 
 .table-actions-row-2{

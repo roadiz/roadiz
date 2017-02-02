@@ -6,9 +6,7 @@
 /*
  * Entry point, import of all less files
  */
-
 /* -------- VARS -------- */
-
 @import "vars.less";
 
 
@@ -100,6 +98,7 @@
 /* -------- WIDGETS -------- */
 
 @import "widgets/debugpanel.less";
+@import "widgets/sortable.less";
 @import "widgets/nestable.less";
 @import "widgets/node_tree.less";
 @import "widgets/tag_tree.less";
@@ -196,12 +195,8 @@
 /* -------- RESPONSIVE  -------- */
 
 /* Width < 1280 */
-@media screen and (max-width: 1280px) {
-    @import "responsive/less-1280.less";
-}
-
+@import "responsive/less-1280.less";
 
 /* Width < 768 */
-@media screen and (max-width: 768px) {
-    @import "responsive/less-768.less";
-}
+@import "responsive/less-768.less";
+

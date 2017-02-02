@@ -38,7 +38,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class NodesSourcesDocumentsRepository extends EntityRepository
 {
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSourcesDocument $nodeSource
+     * @param \RZ\Roadiz\Core\Entities\NodesSourcesDocuments $nodeSource
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField        $field
      *
      * @return integer

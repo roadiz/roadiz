@@ -73,10 +73,10 @@ class NodeTreeWidget extends AbstractWidget
         $this->translation = $translation;
 
         if ($this->translation === null) {
-            $this->translation = $this->getController()->getService('defaultTranslation');
+            $this->translation = $this->getController()->get('defaultTranslation');
         }
 
-        $this->availableTranslations = $this->getController()->getService('em')
+        $this->availableTranslations = $this->getController()->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Translation')
              ->findAll();
     }
@@ -194,7 +194,7 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Node $parent
      * @param bool $subRequest Default: false
-     * @return ArrayCollection
+     * @return array
      */
     public function getChildrenNodes(Node $parent = null, $subRequest = false)
     {
@@ -219,6 +219,7 @@ class NodeTreeWidget extends AbstractWidget
     {
         return $this->translation;
     }
+
     /**
      * @return array
      */

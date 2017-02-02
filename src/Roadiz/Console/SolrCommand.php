@@ -96,7 +96,7 @@ solr:
     /**
      * Empty Solr index.
      *
-     * @param  OutputInterface $output
+     * @param OutputInterface $output
      */
     protected function emptySolr(OutputInterface $output)
     {

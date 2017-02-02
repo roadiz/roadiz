@@ -31,18 +31,39 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
+use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Services\AssetsServiceProvider;
+use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
+use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
+use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
+use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\FormServiceProvider;
+use RZ\Roadiz\Core\Services\LoggerServiceProvider;
+use RZ\Roadiz\Core\Services\MailerServiceProvider;
+use RZ\Roadiz\Core\Services\RoutingServiceProvider;
+use RZ\Roadiz\Core\Services\SecurityServiceProvider;
+use RZ\Roadiz\Core\Services\SolrServiceProvider;
+use RZ\Roadiz\Core\Services\ThemeServiceProvider;
+use RZ\Roadiz\Core\Services\TranslationServiceProvider;
+use RZ\Roadiz\Core\Services\TwigServiceProvider;
+use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
+use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Utils\DebugPanel;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\EventListener\ResponseListener;
+use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -52,16 +73,19 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  *
  */
-class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface
+class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
     const CMS_VERSION = 'alpha';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.16.0";
+    public static $cmsVersion = "0.17.0";
     protected static $instance = null;
 
+    /**
+     * @var Container|null
+     */
     public $container = null;
     protected $environment;
     protected $debug;
@@ -98,13 +122,18 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return;
         }
 
-        /*
-         * Register current Kernel as a service provider.
-         */
-        $this->container = new Container();
-        $this->container->register($this);
-
-        $this->booted = true;
+        try {
+            /*
+             * Register current Kernel as a service provider.
+             */
+            $this->container = new Container();
+            $this->container->register($this);
+            $this->booted = true;
+        } catch (InvalidConfigurationException $e) {
+            $view = new ExceptionViewer();
+            $response = $view->getResponse($e, Request::createFromGlobals(), $this->isDebug());
+            $response->send();
+        }
     }
 
     /**
@@ -130,21 +159,21 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
 
-        $container->register(new \RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\AssetsServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\BackofficeServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\DoctrineServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\EntityApiServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\FormServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\MailerServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\RoutingServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\SecurityServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\SolrServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\ThemeServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\TranslationServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\TwigServiceProvider());
-        $container->register(new \RZ\Roadiz\Core\Services\LoggerServiceProvider());
+        $container->register(new YamlConfigurationServiceProvider());
+        $container->register(new AssetsServiceProvider());
+        $container->register(new BackofficeServiceProvider());
+        $container->register(new DoctrineServiceProvider());
+        $container->register(new EmbedDocumentsServiceProvider());
+        $container->register(new EntityApiServiceProvider());
+        $container->register(new FormServiceProvider());
+        $container->register(new MailerServiceProvider());
+        $container->register(new RoutingServiceProvider());
+        $container->register(new SecurityServiceProvider());
+        $container->register(new SolrServiceProvider());
+        $container->register(new ThemeServiceProvider());
+        $container->register(new TranslationServiceProvider());
+        $container->register(new TwigServiceProvider());
+        $container->register(new LoggerServiceProvider());
 
         /*
          * Load additional service providers
@@ -158,12 +187,37 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * {@inheritdoc}
+     * Handles a Roadiz master Request and transforms it into a Response.
+     *
+     * Roadiz default handling is by-passed for assets serving.
+     *
+     * @param Request $request
+     * @param int $type
+     * @param bool $catch
+     * @return Response
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         if (false === $this->booted) {
             $this->boot();
+        }
+
+        /*
+         * Bypass Roadiz kernel handling to directly serve images assets
+         * -----
+         * this is useful in preview mode in order to allow at least assets
+         * to be viewed (e.g. PDF generation which loads images in preview mode)
+         */
+        if (0 === strpos($request->getPathInfo(), '/assets') &&
+            preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
+        ) {
+            $ctrl = new AssetsController();
+            $ctrl->setContainer($this->getContainer());
+            $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
+            $response->headers->add(['X-ByPass-Kernel' => true]);
+            $response->prepare($request);
+
+            return $response;
         }
 
         /*
@@ -176,7 +230,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         }
 
         $this->container['request'] = $request;
-
         $this->initEvents();
 
         return $this->container['httpKernel']->handle($request, $type, $catch);
@@ -185,13 +238,15 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * Register KernelEvents subscribers.
      */
-    protected function initEvents()
+    public function initEvents()
     {
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $this->container['dispatcher'];
 
         $dispatcher->addSubscriber($this->container['routeListener']);
         $dispatcher->addSubscriber($this->container['firewall']);
+        $dispatcher->addSubscriber(new SaveSessionListener());
+        $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
         $dispatcher->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
@@ -205,6 +260,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         }
 
         $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
+        $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view
@@ -285,18 +341,43 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public static function getInstance($environment = 'prod', $debug = false, $preview = false)
     {
         if (static::$instance === null) {
-            static::$instance = new Kernel($environment, $debug, $preview);
+            static::$instance = new static($environment, $debug, $preview);
         }
 
         return static::$instance;
     }
 
     /**
-     * @return \Pimple\Container
+     * {@inheritdoc}
      */
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($serviceName)
+    {
+        return $this->container->offsetGet($serviceName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($serviceName)
+    {
+        return $this->container->offsetExists($serviceName);
     }
 
     /**
@@ -359,8 +440,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getName()
     {
@@ -369,8 +448,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getRootDir()
     {
@@ -378,9 +455,15 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
+     * @return string Return Composer vendor root folder.
+     */
+    public function getVendorDir()
+    {
+        return $this->getRootDir() . '/vendor';
+    }
+
+    /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getStartTime()
     {
@@ -389,8 +472,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getCacheDir()
     {
@@ -402,8 +483,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getLogDir()
     {
@@ -412,8 +491,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function getCharset()
     {
@@ -444,7 +521,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     /**
      * @deprecated since version 2.6, to be removed in 3.0.
      * @param string $class
-     *
      * @return bool
      */
     public function isClassInActiveBundle($class)
@@ -467,5 +543,53 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         list($environment, $debug, $preview) = unserialize($data);
         $this->__construct($environment, $debug, $preview);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublicFilesPath()
+    {
+        return $this->getRootDir() . $this->getPublicFilesBasePath();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublicFilesBasePath()
+    {
+        return '/files';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrivateFilesPath()
+    {
+        return $this->getRootDir() . $this->getPrivateFilesBasePath();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrivateFilesBasePath()
+    {
+        return '/files/private';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFontsFilesPath()
+    {
+        return $this->getRootDir() . $this->getFontsFilesBasePath();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFontsFilesBasePath()
+    {
+        return '/files/fonts';
     }
 }

@@ -1,0 +1,14 @@
+{% extends 'base_email.txt.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content_table %}
+{% trans %}answer.form{% endtrans %}
+
+---
+
+{% for field in fields %}
+{{ field.label|default(field.name|trans) }}: {% if field.name == "submittedAt" %}{{ field.value|localizeddate("medium", "short") }}{% else %}{{ field.value }}{% endif %}
+
+{% endfor %}
+{% endblock %}

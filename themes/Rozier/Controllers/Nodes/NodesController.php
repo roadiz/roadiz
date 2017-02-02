@@ -29,6 +29,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -289,6 +290,7 @@ class NodesController extends RozierApp
         $type = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
+        /** @var Translation $translation */
         $translation = $this->get('defaultTranslation');
 
         if ($translationId !== null) {
@@ -324,8 +326,11 @@ class NodesController extends RozierApp
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
                     return $this->redirect($this->generateUrl(
-                        'nodesEditPage',
-                        ['nodeId' => $node->getId()]
+                        'nodesEditSourcePage',
+                        [
+                            'nodeId' => $node->getId(),
+                            'translationId' => $translation->getId()
+                        ]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
                     $form->addError(new FormError($e->getMessage()));
@@ -364,11 +369,13 @@ class NodesController extends RozierApp
             ->countBy([]);
 
         if (null !== $translationId) {
+            /** @var Translation $translation */
             $translation = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
         }
 
         if ($nodeId > 0) {
+            /** @var Node $parentNode */
             $parentNode = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         } else {
@@ -404,8 +411,11 @@ class NodesController extends RozierApp
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
                     return $this->redirect($this->generateUrl(
-                        'nodesEditPage',
-                        ['nodeId' => $node->getId()]
+                        'nodesEditSourcePage',
+                        [
+                            'nodeId' => $node->getId(),
+                            'translationId' => $translation->getId()
+                        ]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
                     $form->addError(new FormError($e->getMessage()));

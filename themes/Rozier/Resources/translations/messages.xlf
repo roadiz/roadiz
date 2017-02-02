@@ -6451,6 +6451,16 @@
           <source>document.filesize</source>
           <target></target>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="reachable">
+          <source>reachable</source>
+          <target></target>
+          <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="yaml.type">
+            <source>yaml.type</source>
+            <target></target>
+          </trans-unit>
     </body>
   </file>
 </xliff>

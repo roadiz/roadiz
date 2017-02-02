@@ -43,8 +43,10 @@ RozierMobile = function(){
 RozierMobile.prototype.init = function(){
     var _this = this;
 
-    // Add class on user picture link to unbind default event
-    addClass(_this.$userPicture[0],'rz-no-ajax-link');
+    if (_this.$userPicture.length) {
+        // Add class on user picture link to unbind default event
+        addClass(_this.$userPicture[0],'rz-no-ajax-link');
+    }
 
     // Events
     _this.$menu.on('click', $.proxy(_this.menuClick, _this));
@@ -83,11 +85,11 @@ RozierMobile.prototype.menuClick = function(e){
  */
 RozierMobile.prototype.adminMenuNavParentClick = function(e){
     var _this = this;
-
+    var $target = $(e.currentTarget);
     var $ukNavSub = $(e.currentTarget).find('.uk-nav-sub');
 
     // Open
-    if(e.currentTarget.className.indexOf('nav-open') == -1) {
+    if(!$target.hasClass('nav-open')) {
         var $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item'),
             ukNavSubHeight = ($ukNavSubItem.length * 41) - 3;
 
@@ -95,8 +97,7 @@ RozierMobile.prototype.adminMenuNavParentClick = function(e){
         TweenLite.to($ukNavSub, 0.6, {height:ukNavSubHeight, ease:Expo.easeOut, onComplete:function(){
         }});
 
-        addClass(e.currentTarget, 'nav-open');
-
+        $target.addClass('nav-open');
     }
     // Close
     else{
@@ -104,7 +105,7 @@ RozierMobile.prototype.adminMenuNavParentClick = function(e){
             $ukNavSub[0].style.display = 'none';
         }});
 
-        removeClass(e.currentTarget, 'nav-open');
+        $target.removeClass('nav-open');
     }
 
 };
@@ -195,8 +196,7 @@ RozierMobile.prototype.openSearch = function(){
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
 
     // Add active class
-    addClass(_this.$searchButton[0],'active');
-
+    _this.$searchButton.addClass('active');
     _this.searchOpen = true;
 };
 
@@ -207,18 +207,14 @@ RozierMobile.prototype.openSearch = function(){
  */
 RozierMobile.prototype.closeSearch = function(){
     var _this = this;
-
     var searchPanelX = -Rozier.windowWidth*0.8;
-
     TweenLite.to(_this.$searchPanel, 0.6, {x:searchPanelX, ease:Expo.easeOut});
-
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$mainContentOverlay[0].style.display = 'none';
     }});
 
     // Remove active class
-    removeClass(_this.$searchButton[0],'active');
-
+    _this.$searchButton.removeClass('active');
     _this.searchOpen = false;
 };
 
@@ -268,7 +264,7 @@ RozierMobile.prototype.openTree = function(){
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
 
     // Add active class
-    addClass(_this.$treeButton[0],'active');
+    _this.$treeButton.addClass('active');
 
     _this.treeOpen = true;
 };
@@ -338,12 +334,13 @@ RozierMobile.prototype.openUser = function(){
     // Translate user panel
     TweenLite.to(_this.$userActions, 0.6, {x:0, ease:Expo.easeOut});
 
-    _this.$mainContentOverlay[0].style.display = 'block';
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
+    if (_this.$mainContentOverlay.length) {
+        _this.$mainContentOverlay[0].style.display = 'block';
+        TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0.5, ease:Expo.easeOut});
+    }
 
     // Add active class
-    addClass(_this.$userPicture[0],'active');
-
+    _this.$userPicture.addClass('active');
     _this.userOpen = true;
 };
 
@@ -354,18 +351,15 @@ RozierMobile.prototype.openUser = function(){
  */
 RozierMobile.prototype.closeUser = function(){
     var _this = this;
-
     var userActionsX = Rozier.windowWidth*0.8;
 
     TweenLite.to(_this.$userActions, 0.6, {x:userActionsX, ease:Expo.easeOut});
-
     TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity:0, ease:Expo.easeOut, onComplete:function(){
         _this.$mainContentOverlay[0].style.display = 'none';
     }});
 
     // Remove active class
-    removeClass(_this.$userPicture[0],'active');
-
+    _this.$userPicture.removeClass('active');
     _this.userOpen = false;
 };
 

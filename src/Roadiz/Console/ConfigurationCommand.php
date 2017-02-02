@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,6 +49,8 @@ class ConfigurationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
 
         $text .= '<info>Generating .htaccess files…</info>' . PHP_EOL;
 
@@ -68,8 +71,8 @@ class ConfigurationCommand extends Command
         /*
          * Protect root
          */
-        $filePath = ROADIZ_ROOT . "/.htaccess";
-        if (file_exists(ROADIZ_ROOT) &&
+        $filePath = $kernel->getRootDir() . "/.htaccess";
+        if (file_exists($kernel->getRootDir()) &&
             !file_exists($filePath)) {
             file_put_contents($filePath, $this->getMainHtaccessContent() . PHP_EOL);
             $text .= '    — ' . $filePath . PHP_EOL;
@@ -80,8 +83,8 @@ class ConfigurationCommand extends Command
         /*
          * Protect themes
          */
-        $filePath = ROADIZ_ROOT . "/themes/.htaccess";
-        if (file_exists(ROADIZ_ROOT . "/themes") &&
+        $filePath = $kernel->getRootDir() . "/themes/.htaccess";
+        if (file_exists($kernel->getRootDir() . "/themes") &&
             !file_exists($filePath)) {
             file_put_contents($filePath, $this->getThemesHtaccessContent() . PHP_EOL);
             $text .= '    — ' . $filePath . PHP_EOL;
@@ -94,9 +97,12 @@ class ConfigurationCommand extends Command
 
     protected function protectFolders(array $paths, &$text)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
+
         foreach ($paths as $path) {
-            $filePath = ROADIZ_ROOT . $path . "/.htaccess";
-            if (file_exists(ROADIZ_ROOT . $path) &&
+            $filePath = $kernel->getRootDir() . $path . "/.htaccess";
+            if (file_exists($kernel->getRootDir() . $path) &&
                 !file_exists($filePath)) {
                 file_put_contents($filePath, "deny from all" . PHP_EOL);
                 $text .= '    — ' . $filePath . PHP_EOL;

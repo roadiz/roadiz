@@ -82,6 +82,9 @@ class CustomFormsType extends AbstractType
             } else {
                 $option['required'] = false;
             }
+
+            $type = 'text';
+
             if ($field->getType() == AbstractField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);

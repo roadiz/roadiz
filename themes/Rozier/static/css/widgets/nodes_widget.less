@@ -34,8 +34,12 @@
         }
     }
     &-nav{
-        height:55px;
+        height:45px;
         border-bottom:1px dashed @nodes-widget-border;
+
+        @media (min-width: @screen-lg-min) {
+            height: 55px;
+        }
 
         .uk-navbar-brand{
             .widgetNavBarBrand();
@@ -43,7 +47,6 @@
 
         .uk-icon-rz-global-nodes{
             font-size: 30px;
-            line-height: 58px;
         }
 
         .nodes-widget-quick-creation{
@@ -76,12 +79,6 @@
         margin:0;
         padding:20px 25px 12px;
         background:#fff;
-
-        .uk-sortable-placeholder{
-            position: relative;
-            width:80px; height:80px;
-            margin-right:16px;
-        }
     }
 }
 
@@ -90,9 +87,9 @@
 .nodes-widget-dragging {
     position: relative;
     display: inline-block;
-    width: 240px;
-    height:@nodes-widget-height;
-    margin:0 20px 8px 0;
+    width: 240px - 15;
+    height: @nodes-widget-height - 7 - 6;
+    margin:0 10px 0 0;
     padding: 7px 0 6px 15px;
     background: #E5E5E5;
     color:#666;
@@ -102,7 +99,10 @@
     cursor: default;
     .border-radius(3px, 3px, 0, 0);
     .transition(0.4s background @easeOutExpo);
-    .box-sizing();
+
+    // Do not set border-box
+    // it bugs with dragged class
+    //.box-sizing();
 
     &:hover{
         background: darken(#DDD, 3%);
@@ -111,14 +111,14 @@
         }
     }
 
-    .uk-sortable-handle{
+    /*.uk-sortable-handle{
         position: absolute;
         width:80px; height:80px;
 
         &:after{
             display: none;
         }
-    }
+    }*/
 
     .node-border{
         position: absolute;

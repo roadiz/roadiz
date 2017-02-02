@@ -46,7 +46,9 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
     {
         $kernel = Kernel::getInstance('test', true, false);
         $kernel->boot();
+
         $kernel->container['request'] = Request::createFromGlobals();
+        $kernel->container['requestStack']->push($kernel->container['request']);
     }
 
     public static function tearDownAfterClass()

@@ -11,6 +11,9 @@
 /* -------- STYLES -------- */
 
 .uk-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     height: 30px;
     font-size: 11px;
     line-height: 30px;
@@ -18,6 +21,11 @@
     .border-radius(0px);
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
     .transition(~'0.35s ease border-color, 0.5s ease background, opacity 0.5s linear');
+    padding: 1px 8px 0;
+
+    @media (min-width: @screen-sm-min) {
+        padding: 1px 13px 0;
+    }
 
     background: @grey-form-submit;
     border-color: @grey-form-submit-border;
@@ -35,31 +43,103 @@
     }
 
     [class*=uk-icon-rz-] {
-      font-size: 14px;
+        font-size: 14px;
     }
-}
 
-@media screen and (min-width: 960px) {
-    .uk-button {
+    @media screen and (min-width: 1380px) {
         height: 36px;
         font-size: 12px;
         line-height: 36px;
 
         [class*=uk-icon-]{
-            font-size:14px;
-            margin:0 4px 0 0;
+            font-size: 16px;
         }
 
         [class*=uk-icon-rz-] {
             font-size: 16px;
         }
     }
+
+    &-small {
+        height: 25px;
+        line-height: 25px;
+
+        [class*=uk-icon-] {
+            font-size: 14px;
+            line-height: 25px;
+        }
+
+        @media screen and (min-width: 1380px) {
+            height: 30px;
+
+            [class*=uk-icon-] {
+                font-size: 16px;
+            }
+        }
+    }
+
+    &-select-all {
+        height: 32px;
+        line-height: 32px;
+
+        [class*=uk-icon-] {
+            font-size: 14px;
+        }
+    }
+
+    &-filter{
+        width:32px;
+        height:32px;
+        line-height: 32px;
+        padding:0;
+        background: white;
+        text-shadow: none;
+        color:#909090;
+        border-color:@grey-form-border;
+
+        [class*=uk-icon-]{
+            color:#909090;
+            margin:0;
+        }
+
+        &:hover{
+            background-color:@grey-verylight;
+            color: #333;
+
+            [class*=uk-icon-]{
+                color:#333;
+            }
+        }
+    }
+
+    &-content{
+        width: 25px;
+        padding:0;
+        margin-left:-1px;
+
+        &:first-child{
+            margin-left:0;
+        }
+
+        [class*=uk-icon-rz-]{
+            display: block;
+            margin:0;
+            color:#808080;
+        }
+
+        @media screen and (min-width: 1380px) {
+            width: 30px;
+        }
+    }
 }
 
+
 .uk-button-mini {
-    width: 17px; height: 17px;
+    width: 17px;
+    height: 17px;
     padding: 0px;
-    min-width: 17px; min-height: 17px;
+    min-width: 17px;
+    min-height: 17px;
     line-height: 19px;
     font-size: 10px;
     .rounded(100%);
@@ -70,35 +150,29 @@
 
 .uk-button-status{
     display: inline-block;
-    width:30px; height:30px;
+    width:20px;
+    height:20px;
     margin:2px;
-    line-height:30px;
+    line-height:20px;
     color: #666;
     border: 1px solid @grey-form-border;
     background-color: #F2F2F2;
     text-align: center;
-    .rounded(20px);
+    .rounded(100%);
 
     [class*=uk-icon-rz-]{
         margin:0;
-    }
-}
-
-.uk-button-content{
-    width:32px; height:32px;
-    padding:0;
-    margin-left:-1px;
-    line-height:32px;
-
-    &:first-child{
-        margin-left:0;
+        font-size: 14px;
     }
 
-    [class*=uk-icon-rz-]{
-        display: block;
-        margin:0;
-        color:#808080;
-        line-height:32px;
+    @media screen and (min-width: 1380px) {
+        width:30px;
+        height:30px;
+        line-height:30px;
+
+        [class*=uk-icon-rz-]{
+            font-size: 16px;
+        }
     }
 }
 
@@ -126,31 +200,6 @@
         background: @contrast-color;
         border-color: transparent;
         color: white;
-    }
-}
-
-
-.uk-button-filter{
-    width:32px; height:32px;
-    line-height: 31px;
-    padding:0;
-    background: white;
-    text-shadow: none;
-    color:#909090;
-    border-color:@grey-form-border;
-
-    [class*=uk-icon-]{
-        color:#909090;
-        margin:0;
-    }
-
-    &:hover{
-        background-color:@grey-verylight;
-        color: #333;
-
-        [class*=uk-icon-]{
-            color:#333;
-        }
     }
 }
 
@@ -188,7 +237,6 @@
 }
 
 .uk-button-dropdown{
-
     .uk-icon-caret-down{
         margin:-2px 0 0 4px;
     }
@@ -286,12 +334,16 @@
 
 
 .uk-button-bulk{
-    width:49px; height:53px;
+    width:  50px;
+    height: 50px;
     padding:8px 6px;
     margin-left:-1px;
 
     [class*=uk-icon-] {
-        width:34px; height:34px;
+        width:34px;
+        height:34px;
+        margin: 0;
+        font-size: 16px;
         line-height:34px;
         background:#fff;
         .rounded(18px);

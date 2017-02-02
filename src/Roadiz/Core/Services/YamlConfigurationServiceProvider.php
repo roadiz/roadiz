@@ -30,8 +30,7 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
-use RZ\Roadiz\Console\Tools\YamlConfiguration;
-use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
+use RZ\Roadiz\Config\YamlConfigurationHandler;
 use RZ\Roadiz\Core\Kernel;
 
 /**
@@ -61,24 +60,29 @@ class YamlConfigurationServiceProvider extends AbstractConfigurationServiceProvi
 
             return $configDir . '/config.yml';
         };
+
         /*
          * Inject app config
          */
-        $container['config'] = function ($c) {
+        $container['config_handler'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
 
-            $configuration = new YamlConfiguration(
+            return new YamlConfigurationHandler(
                 $kernel->getCacheDir(),
                 $kernel->isDebug(),
                 $c['config_path']
             );
+        };
 
-            if (false !== $configuration->load()) {
-                return $configuration->getConfiguration();
-            } else {
-                throw new NoYamlConfigurationFoundException();
-            }
+        /*
+         * Inject app config
+         */
+        $container['config'] = function ($c) {
+            /** @var YamlConfigurationHandler $configuration */
+            $configuration = $c['config_handler'];
+
+            return $configuration->load();
         };
 
         return $container;

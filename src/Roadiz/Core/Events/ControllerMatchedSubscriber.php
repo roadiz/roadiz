@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Controllers\Controller;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -82,17 +82,19 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
         /*
          * Inject current Kernel to the matched Controller
          */
-        if ($matchedCtrl instanceof Controller) {
+        if ($matchedCtrl instanceof ContainerAwareInterface) {
             $matchedCtrl->setContainer($this->kernel->getContainer());
         }
         /*
          * Do not inject current theme when
          * Install mode is active.
          */
+        $request = $event->getRequest();
         if (true !== $this->kernel->isInstallMode() &&
-            $event->getRequest() instanceof RoadizRequest) {
+            $request instanceof RoadizRequest &&
+            $matchedCtrl instanceof AppController) {
             // No node controller matching in install mode
-            $event->getRequest()->setTheme($matchedCtrl->getTheme());
+            $request->setTheme($matchedCtrl->getTheme());
         }
 
         /*
@@ -110,6 +112,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
         if ($matchedCtrl instanceof AppController) {
             $matchedCtrl->__init();
         }
+
         if (null !== $this->stopwatch) {
             $this->stopwatch->stop('onControllerMatched');
         }

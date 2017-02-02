@@ -57,7 +57,7 @@ class TagTreeWidget extends AbstractWidget
         parent::__construct($request, $refereeController);
 
         $this->parentTag = $parent;
-        $this->translation = $this->getController()->getService('em')
+        $this->translation = $this->getController()->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findOneBy(['defaultTranslation' => true]);
         $this->getTagTreeAssignationForParent();
@@ -81,7 +81,7 @@ class TagTreeWidget extends AbstractWidget
             $this->canReorder = false;
         }
 
-        $this->tags = $this->getController()->getService('em')
+        $this->tags = $this->getController()->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
              ->findBy(
                  [
@@ -110,7 +110,7 @@ class TagTreeWidget extends AbstractWidget
                 ];
             }
 
-            return $this->tags = $this->getController()->getService('em')
+            return $this->tags = $this->getController()->get('em')
                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                         ->findBy([
                             'parent' => $parent,

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,6 +48,8 @@ class RequirementsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
         $text = "";
 
         $text .= $this->testPHPVersion('5.4.3');
@@ -64,11 +67,12 @@ class RequirementsCommand extends Command
         $text .= $this->testPHPIntValue('upload_max_filesize', '16');
 
         $text .= $this->methodExists('gettext');
-        $text .= $this->folderWritable(ROADIZ_ROOT);
-        $text .= $this->folderWritable(ROADIZ_ROOT . '/conf');
-        $text .= $this->folderWritable(ROADIZ_ROOT . '/cache');
-        $text .= $this->folderWritable(ROADIZ_ROOT . '/files');
-        $text .= $this->folderWritable(ROADIZ_ROOT . '/gen-src');
+        $text .= $this->folderWritable($kernel->getRootDir());
+        $text .= $this->folderWritable($kernel->getRootDir() . '/conf');
+        $text .= $this->folderWritable($kernel->getRootDir() . '/cache');
+        $text .= $this->folderWritable($kernel->getPublicFilesPath());
+        $text .= $this->folderWritable($kernel->getPrivateFilesPath());
+        $text .= $this->folderWritable($kernel->getRootDir() . '/gen-src');
 
         $output->writeln($text);
     }

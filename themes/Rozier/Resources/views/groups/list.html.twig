@@ -38,7 +38,7 @@
                         <td class="mobile-hidden">
                             {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
                         </td>
-                        <td>
+                        <td class="table-actions-row">
                         {% spaceless %}
                             {% if not group.required %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditPage', { groupId: group.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

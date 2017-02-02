@@ -46,6 +46,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     {
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
+            Kernel::getService('assetPackages'),
             Kernel::getService('logger'),
             'gd',
             1920
@@ -60,6 +61,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
 
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
+            Kernel::getService('assetPackages'),
             Kernel::getService('logger'),
             'gd',
             100
@@ -99,6 +101,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          */
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
+            Kernel::getService('assetPackages'),
             Kernel::getService('logger'),
             'gd',
             100000
@@ -133,7 +136,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
             $document->setFilename($image->getBasename());
             $document->setMimeType($image->getMimeType());
 
-            $fs->copy($file, Document::getFilesFolder() . '/' . $document->getFolder() . '/' . $document->getFilename());
+            $fs->copy($file, Kernel::getInstance()->getPublicFilesPath() . '/' . $document->getFolder() . '/' . $document->getFilename());
 
             Kernel::getService('em')->persist($document);
 

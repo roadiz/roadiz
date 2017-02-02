@@ -29,7 +29,9 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**
@@ -65,6 +67,7 @@ class SettingsImporter implements ImporterInterface
              * Loop over settings to set their group
              * and move them to a temp collection
              */
+            /** @var Setting $setting */
             foreach ($settingGroup->getSettings() as $setting) {
                 if (!in_array($setting->getName(), $settingsNames)) {
                     // do nothing
@@ -124,7 +127,7 @@ class SettingsImporter implements ImporterInterface
 
         // Clear result cache
         $cacheDriver = $em->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null) {
+        if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
             $cacheDriver->deleteAll();
         }
 

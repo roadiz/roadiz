@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -85,7 +85,7 @@ class NodeTreeType extends AbstractType
     {
         parent::finishView($view, $form, $options);
 
-        $view->vars['authorizationChecker'] = $this->controller->getService('securityAuthorizationChecker');
+        $view->vars['authorizationChecker'] = $this->controller->get('securityAuthorizationChecker');
         /*
          * Inject data as plain documents entities
          */
@@ -97,11 +97,11 @@ class NodeTreeType extends AbstractType
             $this->nodeSource->getTranslation()
         );
         $view->vars['nodeStatuses'] = [
-            'draft' => Node::DRAFT,
-            'pending' => Node::PENDING,
-            'published' => Node::PUBLISHED,
-            'archived' => Node::ARCHIVED,
-            'deleted' => Node::DELETED,
+            Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
+            Node::getStatusLabel(Node::PENDING) => Node::PENDING,
+            Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
+            Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
+            Node::getStatusLabel(Node::DELETED) => Node::DELETED,
         ];
 
         /*
@@ -112,7 +112,7 @@ class NodeTreeType extends AbstractType
             $defaultValues[$key] = trim($value);
         }
 
-        $nodeTypes = $this->controller->getService('em')
+        $nodeTypes = $this->controller->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findBy(
                 ['name' => $defaultValues],

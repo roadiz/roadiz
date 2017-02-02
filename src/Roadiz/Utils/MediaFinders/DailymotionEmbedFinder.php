@@ -39,16 +39,6 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
     protected static $platform = 'dailymotion';
 
     /**
-     * Create a new Dailymotion video handler with its embed id.
-     *
-     * @param string $embedId Dailymotion video identifier
-     */
-    public function __construct($embedId)
-    {
-        $this->embedId = $embedId;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getMediaTitle()
@@ -109,22 +99,24 @@ class DailymotionEmbedFinder extends AbstractEmbedFinder
      * * autoplay
      * * controls
      *
-     * @param array $args
+     * @param array $options
      *
      * @return string
      */
-    public function getSource(&$args = [])
+    public function getSource(array &$options = [])
     {
+        parent::getSource($options);
+
         $queryString = [];
 
-        if (isset($args['loop'])) {
-            $queryString['loop'] = (int) $args['loop'];
+        if ($options['loop']) {
+            $queryString['loop'] = (int) $options['loop'];
         }
-        if (isset($args['autoplay'])) {
-            $queryString['autoplay'] = (int) $args['autoplay'];
+        if ($options['autoplay']) {
+            $queryString['autoplay'] = (int) $options['autoplay'];
         }
-        if (isset($args['controls'])) {
-            $queryString['controls'] = (int) $args['controls'];
+        if ($options['controls']) {
+            $queryString['controls'] = (int) $options['controls'];
         }
 
         $uri = '//www.dailymotion.com/embed/video/'.$this->embedId . '?' . http_build_query($queryString);

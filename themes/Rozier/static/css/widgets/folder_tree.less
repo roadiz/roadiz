@@ -70,10 +70,8 @@
 #foldertree-widget{
     .uk-nestable {
         &.root-tree{
-
-            &> .uk-nestable-list-item{
-
-                &> .uk-nestable-item{
+            & > .uk-nestable-item {
+                & > .uk-nestable-panel {
                     margin-bottom:2px;
                 }
             }
@@ -82,7 +80,7 @@
         .uk-nestable-list-folder{
             padding-left:13px;
 
-            &> .uk-nestable-list-item-folder{
+            & > .uk-nestable-list-item-folder{
 
                 .uk-nestable-item-folder{
                     padding-left:17px;
@@ -90,27 +88,12 @@
 
                 .uk-nestable-list-folder{
 
-                    .uk-nestable-list-item-folder{
+                    .uk-nestable-item-folder{
                         margin-left:11px;
                     }
                 }
 
             }
-
-            // &> .uk-nestable-list-item-folder{
-
-            //  &> .uk-nestable-list-folder{
-            //      padding-left:17px;
-
-            //      &> .uk-nestable-list-item-folder{
-
-                  //    &> .uk-nestable-list-folder{
-                  //        // display: none;
-                  //        // margin-left:10px;
-                  //    }
-                  //   }
-            //  }
-            // }
         }
 
         .uk-nestable-handle-folder{
@@ -127,17 +110,15 @@
 }
 
 .uk-nestable-moving body{
+     & > .uk-nestable-folder,
+     & > .uk-nestable-list-folder{
 
-     &> .uk-nestable-folder, &> .uk-nestable-list-folder{
-
-        &.uk-nestable-folder .uk-nestable-list-folder, &.uk-nestable-list-folder{
+        &.uk-nestable-folder .uk-nestable-list-folder,
+        &.uk-nestable-list-folder{
             padding-left:13px;
 
             .uk-nestable-item-folder{
                 padding-left:17px;
-
-                // .uk-nestable-item{
-                // }
             }
         }
 
@@ -149,5 +130,4 @@
             }
         }
     }
-
 }

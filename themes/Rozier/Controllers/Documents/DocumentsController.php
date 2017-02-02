@@ -32,14 +32,18 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
+use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -225,18 +229,24 @@ class DocumentsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
+            /** @var Packages $packages */
+            $packages = $this->get('assetPackages');
+            $documentPath = $packages->getDocumentFilePath($document);
+
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
                 'width' => 750,
                 'controls' => true,
             ];
-            $this->assignation['infos'] = [
-                'filesize' => sprintf('%.3f MB', (filesize($document->getAbsolutePath()))/pow(1024, 2)),
-            ];
-            if ($document->isImage()) {
-                list($width, $height) = getimagesize($document->getAbsolutePath());
-                $this->assignation['infos']['width'] = $width . 'px';
-                $this->assignation['infos']['height'] = $height . 'px';
+            if (file_exists($documentPath)) {
+                $this->assignation['infos'] = [
+                    'filesize' => sprintf('%.3f MB', (filesize($documentPath))/pow(1024, 2)),
+                ];
+                if ($document->isImage()) {
+                    list($width, $height) = getimagesize($documentPath);
+                    $this->assignation['infos']['width'] = $width . 'px';
+                    $this->assignation['infos']['height'] = $height . 'px';
+                }
             }
 
             return $this->render('documents/preview.html.twig', $this->assignation);
@@ -432,13 +442,15 @@ class DocumentsController extends RozierApp
                     DocumentEvents::DOCUMENT_CREATED,
                     new FilterDocumentEvent($document)
                 );
-            } catch (\Exception $e) {
-                $this->publishErrorMessage($request, $this->getTranslator()->trans($e->getMessage()));
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+            } catch (\RuntimeException $e) {
+                $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
+            } catch (\InvalidArgumentException $e) {
+                $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
             }
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
-            return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -710,6 +722,7 @@ class DocumentsController extends RozierApp
                     ]),
                     new UniqueFilename([
                         'document' => $document,
+                        'packages' => $this->get('assetPackages'),
                     ]),
                 ],
             ])
@@ -805,7 +818,7 @@ class DocumentsController extends RozierApp
                 ],
             ])
             ->add('submitFolder', 'submit', [
-                'label' => 'link.folders',
+                'label' => false,
                 'attr' => [
                     'class' => 'uk-button uk-button-primary',
                     'title' => 'link.folders',
@@ -813,7 +826,7 @@ class DocumentsController extends RozierApp
                 ],
             ])
             ->add('submitUnfolder', 'submit', [
-                'label' => 'unlink.folders',
+                'label' => false,
                 'attr' => [
                     'class' => 'uk-button',
                     'title' => 'unlink.folders',
@@ -942,8 +955,10 @@ class DocumentsController extends RozierApp
             $zip = new \ZipArchive();
             $zip->open($tmpFileName, \ZipArchive::CREATE);
 
+            /** @var Document $document */
             foreach ($documents as $document) {
-                $zip->addFile($document->getAbsolutePath(), $document->getFilename());
+                $documentPath = $this->get('assetPackages')->getDocumentFilePath($document);
+                $zip->addFile($documentPath, $document->getFilename());
             }
 
             $zip->close();
@@ -983,6 +998,8 @@ class DocumentsController extends RozierApp
             isset($data['embedPlatform']) &&
             in_array($data['embedPlatform'], array_keys($handlers))) {
             $class = $handlers[$data['embedPlatform']];
+
+            /** @var AbstractEmbedFinder $finder */
             $finder = new $class($data['embedId']);
 
             if ($finder instanceof YoutubeEmbedFinder) {
@@ -998,6 +1015,7 @@ class DocumentsController extends RozierApp
                 if (null !== $document &&
                     null !== $folderId &&
                     $folderId > 0) {
+                    /** @var Folder $folder */
                     $folder = $this->get('em')
                         ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
@@ -1053,16 +1071,21 @@ class DocumentsController extends RozierApp
          */
         if (!empty($data['filename']) &&
             $data['filename'] != $document->getFilename()) {
-            $oldUrl = $document->getAbsolutePath();
+
+            /** @var Packages $packages */
+            $packages = $this->get('assetPackages');
+            $oldPath = $packages->getDocumentFilePath($document);
+
             $fs = new Filesystem();
             /*
              * If file exists, just rename it
              */
             // set filename to clean given string before renaming file.
             $document->setFilename($data['filename']);
+            $newPath = $packages->getDocumentFilePath($document);
             $fs->rename(
-                $oldUrl,
-                $document->getAbsolutePath()
+                $oldPath,
+                $newPath
             );
 
             unset($data['filename']);
@@ -1104,6 +1127,7 @@ class DocumentsController extends RozierApp
                 $uploadedFile,
                 $this->get('em'),
                 $this->get('dispatcher'),
+                $this->get('assetPackages'),
                 null,
                 $this->get('logger')
             );
@@ -1138,6 +1162,7 @@ class DocumentsController extends RozierApp
                 $uploadedFile,
                 $this->get('em'),
                 $this->get('dispatcher'),
+                $this->get('assetPackages'),
                 $folder,
                 $this->get('logger')
             );

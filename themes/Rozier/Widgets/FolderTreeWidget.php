@@ -56,7 +56,7 @@ class FolderTreeWidget extends AbstractWidget
         parent::__construct($request, $refereeController);
 
         $this->parentFolder = $parent;
-        $this->translation = $this->getController()->getService('em')
+        $this->translation = $this->getController()->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findOneBy(['defaultTranslation' => true]);
         $this->getFolderTreeAssignationForParent();
@@ -67,7 +67,7 @@ class FolderTreeWidget extends AbstractWidget
      */
     protected function getFolderTreeAssignationForParent()
     {
-        $this->folders = $this->getController()->getService('em')
+        $this->folders = $this->getController()->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Folder')
              ->findByParentAndTranslation($this->parentFolder, $this->translation);
     }
@@ -78,7 +78,7 @@ class FolderTreeWidget extends AbstractWidget
      */
     public function getChildrenFolders(Folder $parent)
     {
-        return $this->folders = $this->getController()->getService('em')
+        return $this->folders = $this->getController()->get('em')
                     ->getRepository('RZ\Roadiz\Core\Entities\Folder')
                     ->findByParentAndTranslation($parent, $this->translation);
     }

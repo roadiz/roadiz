@@ -1,5 +1,5 @@
 {% spaceless %}
-<nav data-action-menu class="actions-menu uk-navbar rz-vertical-align">
+<nav data-action-menu class="actions-menu uk-navbar">
     {# Delete current node #}
 
     {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.locked ) %}
@@ -31,10 +31,13 @@
             <header><i class="uk-icon-rz-actions"></i><span class="label"><span class="label-text">{% trans %}actions{% endtrans %}</span></span></header>
             <nav>
                 <a class="uk-button publish-all-node" title="{% trans %}publish_node_offspring{% endtrans %}" href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}"><i class="uk-icon-rz-published-mini"></i><span class="label">{% trans %}publish_node_offspring{% endtrans %}</span></a>
-                {% if source and node.published %}
-                <a class="uk-button public-url-link" target="_blank" href="{{ source|url }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
-                {% elseif source %}
-                <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ source|url|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
+                {# Only add preview/see button for Reachable node-types #}
+                {% if node.nodeType.reachable %}
+                    {% if source and node.published %}
+                        <a class="uk-button public-url-link" target="_blank" href="{{ source|url }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                    {% elseif source %}
+                        <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ source|url|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
+                    {% endif %}
                 {% endif %}
                 <a class="uk-button rz-no-ajax-link" href="{{ path('nodesDuplicatePage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
                 <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>

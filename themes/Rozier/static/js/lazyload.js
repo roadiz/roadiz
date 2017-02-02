@@ -128,6 +128,7 @@ Lazyload.prototype.loadContent = function(state, location) {
     .done(function(data) {
         _this.applyContent(data);
         _this.canvasLoader.hide();
+
     })
     .fail(function(data) {
         console.log("error");
@@ -172,7 +173,6 @@ Lazyload.prototype.applyContent = function(data) {
     var $old = $container.find('.content-global');
 
     var $tempData = $(data);
-
     $tempData.addClass('new-content-global');
     $container.append($tempData);
     $tempData = $container.find('.new-content-global');
@@ -181,7 +181,6 @@ Lazyload.prototype.applyContent = function(data) {
         $old.remove();
 
         _this.generalBind();
-        if(isMobile.any() === null) Rozier.centerVerticalObjects('ajax');
         $tempData.fadeIn(200, function () {
 
             $tempData.removeClass('new-content-global');
@@ -191,7 +190,6 @@ Lazyload.prototype.applyContent = function(data) {
 
 Lazyload.prototype.bindAjaxLink = function() {
     var _this = this;
-
     _this.parseLinks();
 
     var onClickProxy = $.proxy(_this.onClick, _this);
@@ -229,7 +227,7 @@ Lazyload.prototype.generalBind = function() {
     new CustomFormFieldsPosition();
     _this.nodeTreeContextActions = new NodeTreeContextActions();
 
-    _this.documentsList = new DocumentsList();
+    //_this.documentsList = new DocumentsList();
     _this.settingsSaveButtons = new SettingsSaveButtons();
     _this.nodeTypeFieldEdit = new NodeTypeFieldEdit();
     _this.nodeEditSource = new NodeEditSource();
@@ -242,6 +240,7 @@ Lazyload.prototype.generalBind = function() {
     _this.initMarkdownEditors();
     _this.initJsonEditors();
     _this.initCssEditors();
+    _this.initYamlEditors();
 
     _this.initFilterBars();
 
@@ -316,6 +315,22 @@ Lazyload.prototype.initCssEditors = function() {
         setTimeout(function(){
             for(var i = 0; i < editorCount; i++) {
                 new CssEditor(_this.$textareasCss.eq(i), i);
+            }
+        }, 100);
+    }
+};
+
+Lazyload.prototype.initYamlEditors = function() {
+    var _this = this;
+
+    // Init markdown-preview
+    _this.$textareasYaml = $('textarea[data-rz-yamleditor]');
+    var editorCount = _this.$textareasYaml.length;
+
+    if(editorCount){
+        setTimeout(function(){
+            for(var i = 0; i < editorCount; i++) {
+                new YamlEditor(_this.$textareasYaml.eq(i), i);
             }
         }, 100);
     }

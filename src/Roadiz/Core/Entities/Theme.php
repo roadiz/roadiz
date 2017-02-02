@@ -140,12 +140,12 @@ class Theme extends AbstractEntity
 
         if (class_exists($class)) {
             $reflector = new \ReflectionClass($class);
-            if ($reflector->isSubclassOf("RZ\Roadiz\CMS\Controllers\AppController")) {
+            if ($reflector->isSubclassOf('RZ\Roadiz\CMS\Controllers\AppController')) {
                 return [
-                    'name'=> $class::getThemeName(),
-                    'author'=> $class::getThemeAuthor(),
-                    'copyright'=> $class::getThemeCopyright(),
-                    'dir'=> $class::getThemeDir()
+                    'name'=> call_user_func([$class, 'getThemeName']),
+                    'author'=> call_user_func([$class, 'getThemeAuthor']),
+                    'copyright'=> call_user_func([$class, 'getThemeCopyright']),
+                    'dir'=> call_user_func([$class, 'getThemeDir'])
                 ];
             }
         }

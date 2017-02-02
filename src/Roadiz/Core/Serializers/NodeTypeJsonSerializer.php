@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -48,7 +49,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a NodeType.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param NodeType $nodeType
      *
      * @return array
      */
@@ -63,6 +64,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $data['newsletterType'] = $nodeType->isNewsletterType();
         $data['hidingNodes'] = $nodeType->isHidingNodes();
         $data['color'] = $nodeType->getColor();
+        $data['reachable'] = $nodeType->isReachable();
         $data['fields'] = [];
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
@@ -92,6 +94,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
             'newsletterType',
             'color',
             'hidingNodes',
+            'reachable',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 

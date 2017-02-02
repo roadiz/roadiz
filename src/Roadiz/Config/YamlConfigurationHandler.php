@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright (c) 2016.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,74 +24,35 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file YamlConfiguration.php
- * @author Ambroise Maupate
+ * @file YamlConfigurationHandler.php
+ * @author ambroisemaupate
+ *
  */
-namespace RZ\Roadiz\Console\Tools;
+namespace RZ\Roadiz\Config;
 
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
+use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * YamlConfiguration class
+ * Class YamlConfiguration
+ * @package RZ\Roadiz\Console\Tools
  */
-class YamlConfiguration extends Configuration
+class YamlConfigurationHandler extends ConfigurationHandler
 {
-    protected $cachePath;
-    protected $confCache;
-
     /**
-     *
-     * @param string  $cacheDir
-     * @param boolean $debug
-     * @param string  $path
+     * @param string $file
+     * @return string|array|\stdClass
+     * @throws NoYamlConfigurationFoundException
      */
-    public function __construct($cacheDir, $debug, $path)
+    protected function loadFromFile($file)
     {
-        parent::__construct($cacheDir, $path);
-
-        $this->cachePath = $this->cacheDir . '/configuration.php';
-        $this->confCache = new ConfigCache($this->cachePath, $debug);
-    }
-
-    /**
-     * Load default configuration file
-     *
-     * @return boolean
-     */
-    public function load()
-    {
-        // Try to load existant configuration
-        return $this->loadFromFile($this->path);
-    }
-
-    /**
-     * @param string $file Absolute path to conf file
-     *
-     * @return boolean
-     */
-    public function loadFromFile($file)
-    {
-        if (!$this->confCache->isFresh()) {
-            $configuration = Yaml::parse($this->path);
-            $resources = [
-                new FileResource($this->path),
-            ];
-
-            // le code pour le « UserMatcher » est généré quelque part d'autre
-            $code = '<?php return ' . var_export($configuration, true) . ';' . PHP_EOL;
-
-            $this->confCache->write($code, $resources);
-        } else {
-            $configuration = include $this->cachePath;
+        if (file_exists($file)) {
+            return Yaml::parse($file);
         }
 
-        $this->setConfiguration($configuration);
-
-        return true;
+        throw new NoYamlConfigurationFoundException();
     }
 
     /**

@@ -44,12 +44,11 @@ NodeTypeFieldEdit.prototype.init = function(){
  */
 NodeTypeFieldEdit.prototype.btnClick = function(e){
     var _this = this;
-
     e.preventDefault();
 
     if(_this.indexOpen !== null){
         _this.closeForm();
-        _this.openFormDelay = 500;
+        _this.openFormDelay = 400;
     }
     else _this.openFormDelay = 0;
 
@@ -59,7 +58,11 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
         }
         Rozier.lazyload.canvasLoader.show();
 
-        setTimeout(function(){
+        if (_this.openTimeout) {
+            clearTimeout(_this.openTimeout);
+        }
+
+        _this.openTimeout = setTimeout(function(){
             console.log('Opening node-type field…');
             _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
 
@@ -151,7 +154,6 @@ NodeTypeFieldEdit.prototype.closeForm = function(){
         _this.indexOpen = null;
         _this.$formFieldCol.addClass('node-type-field-col');
     }});
-
 };
 
 

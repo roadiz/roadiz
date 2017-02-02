@@ -135,6 +135,17 @@
     {% endspaceless %}
 {% endblock css_widget %}
 
+
+{% block yaml_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <textarea {{ block('widget_attributes') }} data-rz-yamleditor>{{ value }}</textarea>
+        {% if attr['data-desc'] %}
+            <div class="form-help uk-alert uk-alert-large">{{ attr['data-desc'] }}</div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock yaml_widget %}
+
 {% block tags_widget %}
     {% spaceless %}
         <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>
@@ -324,18 +335,24 @@
                     <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
                     <li class="uk-navbar-brand label">{{ label|trans }}</li>
                 </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="children-nodes-quick-creation uk-button-group">
-                        {% for linkedType in linkedTypes %}
-                            <a class="uk-button uk-button-small"
-                               href="#"
-                               data-children-node-type="{{ linkedType.getId }}"
-                               data-children-parent-node="{{ nodeTree.rootNode.getId }}"
-                               data-translation-id="{{ nodeTree.translation.getId }}">
-                                <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
-                            </a>
-                        {% endfor %}
-                    </div>
+                <div class="uk-navbar-flip">
+                    <ul class="uk-navbar-nav">
+                        <li class="children-nodes-quick-creation"
+                            data-uk-dropdown="{mode:'click'}">
+                            <div class="uk-button"><i class="uk-icon-rz-plus-simple"></i></div>
+                            <div class="uk-dropdown uk-dropdown-navbar">
+                                {% for linkedType in linkedTypes %}
+                                    <a class="uk-button uk-button-small"
+                                        href="#"
+                                        data-children-node-type="{{ linkedType.getId }}"
+                                        data-children-parent-node="{{ nodeTree.rootNode.getId }}"
+                                        data-translation-id="{{ nodeTree.translation.getId }}">
+                                        <i class="uk-icon-rz-plus-simple"></i>{{ linkedType.getDisplayName }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             <div class="children-nodes-tree">
@@ -475,5 +492,6 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</button>
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}><span
+            class="button-text">{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</span></button>
 {%- endblock button_widget -%}

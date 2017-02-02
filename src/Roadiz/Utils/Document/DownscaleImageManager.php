@@ -35,18 +35,33 @@ use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 
 class DownscaleImageManager
 {
     protected $maxPixelSize = 0;
     protected $rawImageSuffix = ".raw";
+    /**
+     * @var ImageManager
+     */
     protected $manager;
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
+    /**
+     * @var EntityManager
+     */
     protected $em;
+    /**
+     * @var Packages
+     */
+    private $packages;
 
     /**
      * @param EntityManager $em
+     * @param Packages $packages
      * @param LoggerInterface $logger
      * @param string $imageDriver
      * @param integer $maxPixelSize
@@ -54,6 +69,7 @@ class DownscaleImageManager
      */
     public function __construct(
         EntityManager $em,
+        Packages $packages,
         LoggerInterface $logger = null,
         $imageDriver = 'gd',
         $maxPixelSize = 0,
@@ -64,6 +80,7 @@ class DownscaleImageManager
         $this->em = $em;
         $this->logger = $logger;
         $this->manager = new ImageManager(['driver' => $imageDriver]);
+        $this->packages = $packages;
     }
 
     /**
@@ -74,12 +91,14 @@ class DownscaleImageManager
     public function processAndOverrideDocument(Document $document = null)
     {
         if (null !== $document && $this->maxPixelSize > 0) {
-            $rawDocumentFile = $document->getAbsolutePath();
+            $rawDocumentFilePath = $this->packages->getDocumentFilePath($document);
 
-            if (false !== $processImage = $this->getDownscaledImage($this->manager->make($rawDocumentFile))) {
+            if (false !== $processImage = $this->getDownscaledImage($this->manager->make($rawDocumentFilePath))) {
                 if (false !== $this->createDocumentFromImage($document, $processImage) &&
                     null !== $this->logger) {
-                    $this->logger->info('Document ' . $document->getAbsolutePath() . ' has been downscaled.', ['path' => $document->getAbsolutePath()]);
+                    $this->logger->info('Document has been downscaled.', [
+                        'path' => $rawDocumentFilePath
+                    ]);
                 }
             }
         }
@@ -94,15 +113,15 @@ class DownscaleImageManager
     {
         if (null !== $document && $this->maxPixelSize > 0) {
             if (null !== $document->getRawDocument()) {
-                $rawDocumentFile = $document->getRawDocument()->getAbsolutePath();
+                $rawDocumentFile = $this->packages->getDocumentFilePath($document->getRawDocument());
             } else {
-                $rawDocumentFile = $document->getAbsolutePath();
+                $rawDocumentFile = $this->packages->getDocumentFilePath($document);
             }
 
             if (false !== $processImage = $this->getDownscaledImage($this->manager->make($rawDocumentFile))) {
                 if (false !== $this->createDocumentFromImage($document, $processImage, true) &&
                     null !== $this->logger) {
-                    $this->logger->info('Document ' . $document->getAbsolutePath() . ' has been downscaled.', ['path' => $document->getAbsolutePath()]);
+                    $this->logger->info('Document has been downscaled.', ['path' => $rawDocumentFile]);
                 }
             }
         }
@@ -136,8 +155,7 @@ class DownscaleImageManager
      * @param  Document $originalDocument
      * @param  Image|null $processImage
      * @param  boolean $keepExistingRaw
-     *
-     * @return Document
+     * @return Document|bool Return new Document or FALSE
      */
     protected function createDocumentFromImage(Document $originalDocument, Image $processImage = null, $keepExistingRaw = false)
     {
@@ -169,19 +187,26 @@ class DownscaleImageManager
              */
             if (null !== $processImage) {
                 $rawDocument = clone $originalDocument;
-                $rawDocumentName = preg_replace('#\.(jpe?g|gif|tiff?|png|psd)$#', $this->rawImageSuffix . '.$1', $originalDocument->getFilename());
+                $rawDocumentName = preg_replace(
+                    '#\.(jpe?g|gif|tiff?|png|psd)$#',
+                    $this->rawImageSuffix . '.$1',
+                    $originalDocument->getFilename()
+                );
                 $rawDocument->setFilename($rawDocumentName);
 
-                if ($fs->exists($originalDocument->getAbsolutePath()) &&
-                    !$fs->exists($rawDocument->getAbsolutePath())) {
+                $originalDocumentPath = $this->packages->getDocumentFilePath($originalDocument);
+                $rawDocumentPath = $this->packages->getDocumentFilePath($rawDocument);
+
+                if ($fs->exists($originalDocumentPath) &&
+                    !$fs->exists($rawDocumentPath)) {
                     /*
                      * Original document path becomes raw document path. Rename it.
                      */
-                    $fs->rename($originalDocument->getAbsolutePath(), $rawDocument->getAbsolutePath());
+                    $fs->rename($originalDocumentPath, $rawDocumentPath);
                     /*
                      * Then save downscaled image as original document path.
                      */
-                    $processImage->save($originalDocument->getAbsolutePath(), 100);
+                    $processImage->save($originalDocumentPath, 100);
 
                     $originalDocument->setRawDocument($rawDocument);
                     $rawDocument->setRaw(true);
@@ -197,14 +222,16 @@ class DownscaleImageManager
                 return $originalDocument;
             }
         } elseif (null !== $processImage) {
+            $originalDocumentPath = $this->packages->getDocumentFilePath($originalDocument);
+
             /*
              * Remove existing downscaled document.
              */
-            $fs->remove($originalDocument->getAbsolutePath());
+            $fs->remove($originalDocumentPath);
             /*
              * Then save downscaled image as original document path.
              */
-            $processImage->save($originalDocument->getAbsolutePath(), 100);
+            $processImage->save($originalDocumentPath, 100);
 
             $this->em->flush();
 
@@ -215,11 +242,15 @@ class DownscaleImageManager
              * we delete it and use it as new active document file.
              */
             $rawDocument = $originalDocument->getRawDocument();
+
+            $originalDocumentPath = $this->packages->getDocumentFilePath($originalDocument);
+            $rawDocumentPath = $this->packages->getDocumentFilePath($rawDocument);
+
             /*
              * Remove existing downscaled document.
              */
-            $fs->remove($originalDocument->getAbsolutePath());
-            $fs->copy($rawDocument->getAbsolutePath(), $originalDocument->getAbsolutePath(), true);
+            $fs->remove($originalDocumentPath);
+            $fs->copy($rawDocumentPath, $originalDocumentPath, true);
 
             /*
              * Remove Raw document

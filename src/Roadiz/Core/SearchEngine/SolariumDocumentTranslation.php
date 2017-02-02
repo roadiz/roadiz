@@ -28,13 +28,11 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
 use Parsedown;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
@@ -54,22 +52,17 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
     /** @var DocumentTranslation */
     protected $documentTranslation = null;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+
 
     /**
      * Create a new SolariumDocument.
      *
      * @param DocumentTranslation $documentTranslation
-     * @param EntityManager $entityManager
      * @param Client $client
      * @param Logger $logger
      */
     public function __construct(
         DocumentTranslation $documentTranslation,
-        EntityManager $entityManager,
         Client $client = null,
         Logger $logger = null
     ) {
@@ -81,7 +74,6 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $this->documentTranslation = $documentTranslation;
         $this->rzDocument = $documentTranslation->getDocument();
         $this->logger = $logger;
-        $this->entityManager = $entityManager;
     }
 
     /**

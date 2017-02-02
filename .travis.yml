@@ -33,11 +33,11 @@ install:
 script:
   - php bin/roadiz orm:schema-tool:create -n --env=install
   - php bin/roadiz install -n --env=install
-  - php bin/roadiz themes:install -n "Themes\\DefaultTheme\\DefaultThemeApp"
-  - php bin/roadiz themes:install -n --data "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"
+  - php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"
   - php bin/roadiz cache:clear --env=install
   - php bin/roadiz orm:schema-tool:update -n --force
-  - php bin/roadiz themes:install -n --nodes "Themes\\DefaultTheme\\DefaultThemeApp"
+  - php bin/roadiz themes:install -n --nodes "/Themes/DefaultTheme/DefaultThemeApp"
   - php bin/roadiz cache:clear --env=install
   - php bin/roadiz cache:clear --env=test
   - php bin/roadiz orm:schema-tool:drop --force

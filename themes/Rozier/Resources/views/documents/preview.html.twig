@@ -12,8 +12,14 @@
 
         <article class="content content-document-preview">
             <div class="content-inner">
+                {% if not document|exists %}
+                    <p class="uk-alert uk-alert-danger"><i class="uk-icon-error"></i> {% trans %}current.document.file.does.not.exist{% endtrans %}</p>
+                {% endif %}
                 {% if not document.private %}
-                    {% if document.image or document.svg or document.video %}
+                    {% if document.image or document.svg or document.video or document.pdf %}
+                        {% if document.pdf %}
+                            {% set thumbnailFormat = thumbnailFormat|merge({'height': 700}) %}
+                        {% endif %}
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                         {% if document.mimeType == 'image/gif' %}
                             <hr />
@@ -24,7 +30,11 @@
                     {% if document.isEmbed and document.viewer.embedFinder %}
                         <hr />
                         <h3>{% trans %}embed.preview{% endtrans %}</h3>
-                        <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({embed:true, autoplay:true})) }}</figure>
+                        <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({
+                                embed:true,
+                                autoplay:false,
+                                fullscreen: true
+                            })) }}</figure>
                     {% endif %}
                 {% else %}
                     <p class="uk-alert uk-alert-warning"><i class="uk-icon-warning"></i> {% trans %}current.document.is.private.you.cannot.preview.it{% endtrans %}</p>
@@ -41,7 +51,7 @@
                         <tr><td>{% trans %}document.source_url{% endtrans %}</td><td>{{ document.viewer.embedFinder.source }}</td></tr>
                     {% endif %}
                     {% for key, info in infos %}
-                        <tr><td>{{ 'document.' ~ key }}</td><td>{{ info }}</td></tr>
+                        <tr><td>{{ ('document.' ~ key)|trans }}</td><td>{{ info }}</td></tr>
                     {% endfor %}
                 </table>
             </div>
