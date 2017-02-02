@@ -384,6 +384,22 @@
                 "meta_keywords": "",
                 "meta_description": "",
                 "url_aliases": []
+            },
+            {
+                "translation": "fr",
+                "title": "main-menu",
+                "meta_title": "",
+                "meta_keywords": "",
+                "meta_description": "",
+                "url_aliases": []
+            },
+            {
+                "translation": "ru",
+                "title": "main-menu",
+                "meta_title": "",
+                "meta_keywords": "",
+                "meta_description": "",
+                "url_aliases": []
             }
         ],
         "tags": []
