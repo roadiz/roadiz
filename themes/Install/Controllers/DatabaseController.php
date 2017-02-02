@@ -29,9 +29,8 @@
  */
 namespace Themes\Install\Controllers;
 
-use RZ\Roadiz\Config\ConfigurationHandler;
-use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;

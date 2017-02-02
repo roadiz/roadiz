@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -41,7 +41,7 @@ class ThemeInstaller
     /**
      * Get Theme informations from its config.yml file.
      *
-     * @param $classname
+     * @param string $classname
      * @return array
      */
     public static function getThemeInformation($classname)
@@ -114,7 +114,7 @@ class ThemeInstaller
      * assign summary theme informations.
      *
      * @param string $classname
-     * @param array  $assignation
+     * @param array $assignation
      * @param string $locale
      *
      * @return array

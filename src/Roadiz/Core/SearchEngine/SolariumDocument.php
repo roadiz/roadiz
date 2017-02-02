@@ -92,7 +92,6 @@ class SolariumDocument extends AbstractSolarium
         foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
             $this->documentTranslationItems[] = new SolariumDocumentTranslation(
                 $documentTranslation,
-                $entityManager,
                 $client,
                 $logger
             );

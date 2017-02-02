@@ -133,7 +133,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             $view = new ExceptionViewer();
             $response = $view->getResponse($e, Request::createFromGlobals(), $this->isDebug());
             $response->send();
-            die(1);
         }
     }
 
