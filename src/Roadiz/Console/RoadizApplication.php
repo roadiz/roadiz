@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -43,11 +42,7 @@ use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\DebugFormatterHelper;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\ProcessHelper;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -76,8 +71,8 @@ class RoadizApplication extends Application
         $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
         $this->getDefinition()->addOption(new InputOption('--preview', null, InputOption::VALUE_NONE, 'Preview mode.'));
         $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
-        // Use default Doctrine commands
-        ConsoleRunner::addCommands($this);
+
+        $this->addDoctrineCommands();
 
         /*
          * Define a request wide timezone
@@ -87,6 +82,16 @@ class RoadizApplication extends Application
         } else {
             date_default_timezone_set("Europe/Paris");
         }
+    }
+
+    protected function addDoctrineCommands()
+    {
+        $this->addCommands(array(
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\InfoCommand(),
+        ));
     }
 
     /**
@@ -133,6 +138,7 @@ class RoadizApplication extends Application
             new ThemeInstallCommand(),
             new DocumentDownscaleCommand(),
             new NodesOrphansCommand(),
+            new DatabaseDumpCommand(),
         );
 
         /*
@@ -159,20 +165,18 @@ class RoadizApplication extends Application
      */
     protected function getDefaultHelperSet()
     {
-        return new HelperSet([
-            new FormatterHelper(),
-            new DebugFormatterHelper(),
-            new ProcessHelper(),
-            new KernelHelper($this->kernel),
-            new LoggerHelper($this->kernel),
-            new AssetPackagesHelper($this->kernel->container['assetPackages']),
-            'question' => new QuestionHelper(),
-            'configuration' => new ConfigurationHelper($this->kernel->container['config']),
-            'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),
-            'em' => new EntityManagerHelper($this->kernel->container['em']),
-            'solr' => new SolrHelper($this->kernel->container['solr']),
-            'ns-cache' => new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']),
-            'mailer' => new MailerHelper($this->kernel->container['mailer']),
-        ]);
+        $helperSet = parent::getDefaultHelperSet();
+
+        $helperSet->set(new KernelHelper($this->kernel));
+        $helperSet->set(new LoggerHelper($this->kernel));
+        $helperSet->set(new AssetPackagesHelper($this->kernel->container['assetPackages']));
+        $helperSet->set(new ConfigurationHelper($this->kernel->container['config']));
+        $helperSet->set(new ConnectionHelper($this->kernel->container['em']->getConnection()));
+        $helperSet->set(new EntityManagerHelper($this->kernel->container['em']));
+        $helperSet->set(new SolrHelper($this->kernel->container['solr']));
+        $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
+        $helperSet->set(new MailerHelper($this->kernel->container['mailer']));
+
+        return $helperSet;
     }
 }
