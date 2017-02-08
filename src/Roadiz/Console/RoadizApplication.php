@@ -174,7 +174,8 @@ class RoadizApplication extends Application
         $helperSet->set(new AssetPackagesHelper($this->kernel->container['assetPackages']));
         $helperSet->set(new ConfigurationHelper($this->kernel->container['config']));
         $helperSet->set(new ConnectionHelper($this->kernel->container['em']->getConnection()));
-        $helperSet->set(new EntityManagerHelper($this->kernel->container['em']));
+        // We need to set «em» alias as Doctrine misnamed its Helper :-(
+        $helperSet->set(new EntityManagerHelper($this->kernel->container['em']), 'em');
         $helperSet->set(new SolrHelper($this->kernel->container['solr']));
         $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
         $helperSet->set(new MailerHelper($this->kernel->container['mailer']));
