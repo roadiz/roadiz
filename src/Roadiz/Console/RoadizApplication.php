@@ -139,6 +139,8 @@ class RoadizApplication extends Application
             new DocumentDownscaleCommand(),
             new NodesOrphansCommand(),
             new DatabaseDumpCommand(),
+            new FilesExportCommand(),
+            new FilesImportCommand(),
         );
 
         /*
