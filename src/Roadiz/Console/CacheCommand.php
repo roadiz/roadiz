@@ -108,9 +108,9 @@ class CacheCommand extends Command
     {
         $text = "";
         /** @var Kernel $kernel */
-        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');
+        $kernel = $this->getHelper('kernel')->getKernel();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->nsCacheHelper = $this->getHelper('ns-cache');
 
         $assetsClearer = new AssetsClearer($kernel->getCacheDir());
         $doctrineClearer = new DoctrineCacheClearer($this->entityManager, $kernel);

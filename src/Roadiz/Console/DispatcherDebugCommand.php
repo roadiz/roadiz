@@ -70,7 +70,7 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var Kernel $kernel */
-        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
+        $kernel = $this->getHelper('kernel')->getKernel();
         /*
          * Force kernel to register subscribers
          */

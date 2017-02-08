@@ -58,14 +58,14 @@ class SolrReindexCommand extends SolrCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $this->solr = $this->getHelperSet()->get('solr')->getSolr();
+        $this->questionHelper = $this->getHelper('question');
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->solr = $this->getHelper('solr')->getSolr();
 
         $text = "";
 
         if (null !== $this->solr) {
-            if (true === $this->getHelperSet()->get('solr')->ready()) {
+            if (true === $this->getHelper('solr')->ready()) {
                 $confirmation = new ConfirmationQuestion(
                     '<question>Are you sure to reindex your Node and Document database?</question> [y/N]: ',
                     false
@@ -136,7 +136,7 @@ class SolrReindexCommand extends SolrCommand
             $solarium = new SolariumNodeSource(
                 $ns,
                 $this->solr,
-                $this->getHelperSet()->get('logger')->getLogger()
+                $this->getHelper('logger')->getLogger()
             );
             $solarium->createEmptyDocument($update);
             $solarium->index();
@@ -181,7 +181,7 @@ class SolrReindexCommand extends SolrCommand
                 $doc,
                 $this->entityManager,
                 $this->solr,
-                $this->getHelperSet()->get('logger')->getLogger()
+                $this->getHelper('logger')->getLogger()
             );
             $solarium->createEmptyDocument($update);
             $solarium->index();

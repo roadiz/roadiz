@@ -57,7 +57,7 @@ class NodeTypesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $name = $input->getArgument('name');
 

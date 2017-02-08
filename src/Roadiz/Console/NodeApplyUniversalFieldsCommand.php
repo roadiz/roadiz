@@ -53,8 +53,8 @@ class NodeApplyUniversalFieldsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('em')->getEntityManager();
-        $questionHelper = $this->getHelperSet()->get('question');
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $questionHelper = $this->getHelper('question');
 
         $translation = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
                             ->findDefault();

@@ -63,7 +63,7 @@ class NodesOrphansCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('n')

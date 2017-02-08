@@ -60,7 +60,7 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
 
         $question = new ConfirmationQuestion(
