@@ -25,6 +25,10 @@
         </form>
 
         <dl class="document-paths">
+            <dt>{% trans %}updatedAt{% endtrans %}</dt>
+            <dd>{{ document.updatedAt|localizeddate('medium', 'short') }}</dd>
+            <dt>{% trans %}createdAt{% endtrans %}</dt>
+            <dd>{{ document.createdAt|localizeddate('medium', 'short') }}</dd>
             {% if not document.private %}
             <dt>{% trans %}document.public_url{% endtrans %}</dt>
             <dd>{{ document|url({noProcess: true}) }}</dd>
