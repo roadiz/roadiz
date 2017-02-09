@@ -89,6 +89,7 @@ class RoadizApplication extends Application
         $this->addCommands(array(
             new \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand(),
             new \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand(),
             new \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand(),
             new \Doctrine\ORM\Tools\Console\Command\InfoCommand(),
         ));
