@@ -29,9 +29,11 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
@@ -106,7 +108,6 @@ class CacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text = "";
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
@@ -123,45 +124,68 @@ class CacheCommand extends Command
         $clearers = [
             $configurationClearer,
             $assetsClearer,
-            $doctrineClearer,
             $routingClearer,
             $templatesClearer,
             $translationsClearer,
             $nodeSourcesUrlsClearer,
             new OPCacheClearer(),
+            $doctrineClearer,
         ];
 
-        $text .= 'Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment.' . PHP_EOL . PHP_EOL;
-
-        if ($input->getOption('clear-configuration')) {
-            $configurationClearer->clear();
-            $text .= '— ' . $configurationClearer->getOutput();
-        } elseif ($input->getOption('clear-doctrine')) {
-            $doctrineClearer->clear();
-            $text .= '— ' . $doctrineClearer->getOutput();
-        } elseif ($input->getOption('clear-routes')) {
-            $routingClearer->clear();
-            $text .= '— ' . $routingClearer->getOutput();
-        } elseif ($input->getOption('clear-assets')) {
-            $assetsClearer->clear();
-            $text .= '— ' . $assetsClearer->getOutput();
-        } elseif ($input->getOption('clear-templates')) {
-            $templatesClearer->clear();
-            $text .= '— ' . $templatesClearer->getOutput();
-        } elseif ($input->getOption('clear-translations')) {
-            $translationsClearer->clear();
-            $text .= '— ' . $translationsClearer->getOutput();
-        } elseif ($input->getOption('clear-nsurls')) {
-            $nodeSourcesUrlsClearer->clear();
-            $text .= '— ' . $nodeSourcesUrlsClearer->getOutput();
-        } else {
-            foreach ($clearers as $clearer) {
-                $clearer->clear();
-                $text .= $clearer->getOutput();
-            }
-            $text .= PHP_EOL . '<info>All caches have been been purged…</info>' . PHP_EOL;
+        $output->write('Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment. ');
+        if ($kernel->isPreview()) {
+            $output->write('[<info>Preview</info>]');
         }
+        $output->write(PHP_EOL);
 
-        $output->writeln($text);
+        try {
+            if ($input->getOption('clear-configuration')) {
+                $configurationClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $configurationClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-doctrine')) {
+                $doctrineClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $doctrineClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-routes')) {
+                $routingClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $routingClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-assets')) {
+                $assetsClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $assetsClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-templates')) {
+                $templatesClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $templatesClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-translations')) {
+                $translationsClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $translationsClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-nsurls')) {
+                $nodeSourcesUrlsClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $nodeSourcesUrlsClearer->getOutput());
+                }
+            } else {
+                /** @var ClearerInterface $clearer */
+                foreach ($clearers as $clearer) {
+                    $clearer->clear();
+                    if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                        $output->writeln($clearer->getOutput());
+                    }
+                }
+                $output->writeln('<info>All caches have been been purged…</info>');
+            }
+        } catch (ConnectionException $e) {
+            $output->writeln('<error>Can’t connect to database to empty Doctrine caches.</error>');
+        }
     }
 }

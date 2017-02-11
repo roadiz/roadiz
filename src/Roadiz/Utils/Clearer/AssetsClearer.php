@@ -45,8 +45,7 @@ class AssetsClearer extends Clearer
         if ($fs->exists($this->getCacheDir() . '/rendered')) {
             $finder->in($this->getCacheDir() . '/rendered');
             $fs->remove($finder);
-
-            $this->output .= 'Assets cache has been purged.'.PHP_EOL;
+            $this->output .= 'Assets cache has been purged.';
 
             return true;
         }

@@ -50,7 +50,7 @@ class ConfigurationCacheClearer extends Clearer
 
             $fs->remove($finder);
 
-            $this->output .= 'Compiled configuration files have been deleted.' . PHP_EOL;
+            $this->output .= 'Compiled configuration files have been deleted.';
         }
 
         return true;

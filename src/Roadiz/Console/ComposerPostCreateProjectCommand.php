@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,35 +23,17 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TemplatesCacheClearer.php
- * @author Ambroise Maupate
+ * @file ComposerPostCreateProjectCommand.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Utils\Clearer;
+namespace RZ\Roadiz\Console;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-
-/**
- * TemplatesCacheClearer.
- */
-class TemplatesCacheClearer extends Clearer
+class ComposerPostCreateProjectCommand extends ComposerPostInstallCommand
 {
-    public function clear()
+    protected function configure()
     {
-        $fs = new Filesystem();
-        $finder = new Finder();
-
-        if ($fs->exists($this->getCacheDir())) {
-            if ($fs->exists($this->getCacheDir() . '/twig_cache')) {
-                $finder->in($this->getCacheDir() . '/twig_cache');
-                $fs->remove($finder);
-
-                $this->output .= 'Compiled Twig templates have been purged.';
-
-                return true;
-            }
-        }
-
-        return false;
+        $this
+            ->setName('composer:post-create-project')
+            ->setDescription('Perform file copy after a project creation with Composer.');
     }
 }

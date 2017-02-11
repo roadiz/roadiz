@@ -46,8 +46,7 @@ class RoutingCacheClearer extends Clearer
             if ($fs->exists($this->getCacheDir() . '/routing')) {
                 $finder->in($this->getCacheDir() . '/routing');
                 $fs->remove($finder);
-
-                $this->output .= 'Compiled route collections have been purged.'.PHP_EOL;
+                $this->output .= 'Compiled route collections have been purged.';
 
                 return true;
             }

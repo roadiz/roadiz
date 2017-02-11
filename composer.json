@@ -109,11 +109,18 @@
     },
     "bin": ["bin/roadiz"],
     "scripts": {
+        "cache-scripts": [
+            "php bin/roadiz cache:clear -e prod",
+            "php bin/roadiz cache:clear -e dev",
+            "php bin/roadiz cache:clear -e prod --preview"
+        ],
         "post-install-cmd": [
-            "RZ\\Roadiz\\Utils\\Composer::postInstall"
+            "php bin/roadiz composer:post-install",
+            "@cache-scripts"
         ],
         "post-update-cmd": [
-            "RZ\\Roadiz\\Utils\\Composer::postUpdate"
+            "php bin/roadiz composer:post-update",
+            "@cache-scripts"
         ]
     }
 }

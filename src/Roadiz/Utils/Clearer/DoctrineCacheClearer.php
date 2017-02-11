@@ -77,7 +77,6 @@ class DoctrineCacheClearer extends Clearer
         if ($cacheDriver !== null) {
             $this->output .= 'Doctrine ' . $description . ' cache: ' . $cacheDriver->getNamespace() . ' — ';
             $this->output .= $cacheDriver->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
-            $this->output .= PHP_EOL;
         }
     }
 
@@ -95,6 +94,6 @@ class DoctrineCacheClearer extends Clearer
         $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $proxyFactory = $this->entityManager->getProxyFactory();
         $proxyFactory->generateProxyClasses($meta, $proxyFolder);
-        $this->output .= 'Doctrine proxy classes has been recreated.' . PHP_EOL;
+        $this->output .= 'Doctrine proxy classes has been recreated.';
     }
 }

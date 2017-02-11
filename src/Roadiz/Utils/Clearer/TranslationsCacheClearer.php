@@ -47,7 +47,7 @@ class TranslationsCacheClearer extends Clearer
                 $finder->in($this->getCacheDir() . '/translations');
                 $fs->remove($finder);
 
-                $this->output .= 'Compiled translation catalogues have been purged.'.PHP_EOL;
+                $this->output .= 'Compiled translation catalogues have been purged.';
 
                 return true;
             }
