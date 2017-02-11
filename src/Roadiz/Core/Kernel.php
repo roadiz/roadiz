@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
@@ -175,14 +176,19 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new TwigServiceProvider());
         $container->register(new LoggerServiceProvider());
 
-        /*
-         * Load additional service providers
-         */
-        if (isset($container['config']['additionalServiceProviders'])) {
-            foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
-                $container->register(new $providerClass());
+        try {
+            /*
+             * Load additional service providers
+             */
+            if (isset($container['config']['additionalServiceProviders'])) {
+                foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
+                    $container->register(new $providerClass());
+                }
             }
+        } catch (NoConfigurationFoundException $e) {
+            // Do nothing if no configuration file is found.
         }
+
         $container['stopwatch']->stop('registerServices');
     }
 
@@ -219,7 +225,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
             return $response;
         }
-
+        
         /*
          * Define a request wide timezone
          */

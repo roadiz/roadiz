@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
@@ -74,12 +75,16 @@ class RoadizApplication extends Application
 
         $this->addDoctrineCommands();
 
-        /*
-         * Define a request wide timezone
-         */
-        if (!empty($this->kernel->container['config']["timezone"])) {
-            date_default_timezone_set($this->kernel->container['config']["timezone"]);
-        } else {
+        try {
+            /*
+             * Define a request wide timezone
+             */
+            if (!empty($this->kernel->container['config']["timezone"])) {
+                date_default_timezone_set($this->kernel->container['config']["timezone"]);
+            } else {
+                date_default_timezone_set("Europe/Paris");
+            }
+        } catch (NoConfigurationFoundException $e) {
             date_default_timezone_set("Europe/Paris");
         }
     }
@@ -151,15 +156,20 @@ class RoadizApplication extends Application
          * Register user defined Commands
          * Add them in your config.yml
          */
-        if (isset($this->kernel->container['config']['additionalCommands'])) {
-            foreach ($this->kernel->container['config']['additionalCommands'] as $commandClass) {
-                if (class_exists($commandClass)) {
-                    $commands[] = new $commandClass();
-                } else {
-                    throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
+        try {
+            if (isset($this->kernel->container['config']['additionalCommands'])) {
+                foreach ($this->kernel->container['config']['additionalCommands'] as $commandClass) {
+                    if (class_exists($commandClass)) {
+                        $commands[] = new $commandClass();
+                    } else {
+                        throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
+                    }
                 }
             }
+        } catch (NoConfigurationFoundException $e) {
+            // Do not load additional commands if configuration is not available
         }
+
 
         return array_merge(parent::getDefaultCommands(), $commands);
     }
@@ -176,13 +186,27 @@ class RoadizApplication extends Application
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
         $helperSet->set(new AssetPackagesHelper($this->kernel->container['assetPackages']));
-        $helperSet->set(new ConfigurationHelper($this->kernel->container['config']));
-        $helperSet->set(new ConnectionHelper($this->kernel->container['em']->getConnection()));
-        // We need to set «em» alias as Doctrine misnamed its Helper :-(
-        $helperSet->set(new EntityManagerHelper($this->kernel->container['em']), 'em');
-        $helperSet->set(new SolrHelper($this->kernel->container['solr']));
         $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
-        $helperSet->set(new MailerHelper($this->kernel->container['mailer']));
+
+        /*
+         * Configuration dependent helpers.
+         */
+        try {
+            $helperSet->set(new ConfigurationHelper($this->kernel->container['config']));
+            $helperSet->set(new MailerHelper($this->kernel->container['mailer']));
+        } catch (NoConfigurationFoundException $e) {
+            $helperSet->set(new ConfigurationHelper([]));
+        }
+
+        /*
+         * Entity manager dependent helpers.
+         */
+        if (null !== $this->kernel->container['em']) {
+            $helperSet->set(new ConnectionHelper($this->kernel->container['em']->getConnection()));
+            // We need to set «em» alias as Doctrine misnamed its Helper :-(
+            $helperSet->set(new EntityManagerHelper($this->kernel->container['em']), 'em');
+            $helperSet->set(new SolrHelper($this->kernel->container['solr']));
+        }
 
         return $helperSet;
     }

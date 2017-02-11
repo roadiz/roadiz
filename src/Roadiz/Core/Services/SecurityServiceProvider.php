@@ -33,6 +33,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
@@ -92,18 +93,22 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['session.storage'] = function ($c) {
-            if ($c['config'] !== null &&
-                isset($c['config']["sessionStorage"])) {
-                if ($c['config']["sessionStorage"]["type"] == "pdo" &&
-                    isset($c['config']["sessionStorage"]["options"])) {
-                    return new NativeSessionStorage(
-                        [],
-                        new PdoSessionHandler(
-                            $c['session.pdo'],
-                            $c['config']["sessionStorage"]["options"]
-                        )
-                    );
+            try {
+                if ($c['config'] !== null &&
+                    isset($c['config']["sessionStorage"])) {
+                    if ($c['config']["sessionStorage"]["type"] == "pdo" &&
+                        isset($c['config']["sessionStorage"]["options"])) {
+                        return new NativeSessionStorage(
+                            [],
+                            new PdoSessionHandler(
+                                $c['session.pdo'],
+                                $c['config']["sessionStorage"]["options"]
+                            )
+                        );
+                    }
                 }
+            } catch (NoConfigurationFoundException $e) {
+                return null;
             }
 
             return null;

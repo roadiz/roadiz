@@ -42,9 +42,10 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 
 /**
@@ -161,9 +162,8 @@ class DoctrineServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        if ($container['config'] !== null &&
-            isset($container['config']["doctrine"])) {
-            $container['em.config'] = function (Container $c) {
+        $container['em.config'] = function (Container $c) {
+            try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
                 $cache = null;
@@ -189,94 +189,103 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 $config->setProxyNamespace('Proxies');
 
                 return $config;
-            };
+            } catch (NoConfigurationFoundException $e) {
+                return null;
+            }
+        };
 
-            $container['em'] = function (Container $c) {
-                $c['stopwatch']->start('initDoctrine');
-                try {
-                    /** @var Kernel $kernel */
-                    $kernel = $c['kernel'];
-                    /** @var EntityManager $em */
-                    $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
-                    $evm = $em->getEventManager();
+        $container['em'] = function (Container $c) {
+            $c['stopwatch']->start('initDoctrine');
+            try {
+                /** @var Kernel $kernel */
+                $kernel = $c['kernel'];
+                /** @var EntityManager $em */
+                $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
+                $evm = $em->getEventManager();
 
-                    $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
+                $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
 
-                    /** @var CacheProvider $resultCacheDriver */
-                    $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
-                    if ($resultCacheDriver !== null) {
-                        $resultCacheDriver->setNamespace($this->getNamespace(
-                            $c['config']["appNamespace"],
-                            $kernel->isPreview(),
-                            $kernel->getEnvironment()
-                        ));
-                    }
-                    /** @var CacheProvider $hydratationCacheDriver */
-                    $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
-                    if ($hydratationCacheDriver !== null) {
-                        $hydratationCacheDriver->setNamespace($this->getNamespace(
-                            $c['config']["appNamespace"],
-                            $kernel->isPreview(),
-                            $kernel->getEnvironment()
-                        ));
-                    }
-                    /** @var CacheProvider $queryCacheDriver */
-                    $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
-                    if ($queryCacheDriver !== null) {
-                        $queryCacheDriver->setNamespace($this->getNamespace(
-                            $c['config']["appNamespace"],
-                            $kernel->isPreview(),
-                            $kernel->getEnvironment()
-                        ));
-                    }
-                    /** @var CacheProvider $metadataCacheDriver */
-                    $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
-                    if (null !== $metadataCacheDriver) {
-                        $metadataCacheDriver->setNamespace($this->getNamespace(
-                            $c['config']["appNamespace"],
-                            $kernel->isPreview(),
-                            $kernel->getEnvironment()
-                        ));
-                    }
-
-                    /*
-                     * Create dynamic discriminator map for our Node system
-                     */
-                    $evm->addEventListener(
-                        Events::loadClassMetadata,
-                        new DataInheritanceEvent($prefix)
-                    );
-                    /*
-                     * Fonts life cycle manager.
-                     */
-                    $evm->addEventSubscriber(new FontLifeCycleSubscriber($c));
-
-                    /*
-                     * Documents life cycle manager.
-                     */
-                    $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
-
-                    $c['stopwatch']->stop('initDoctrine');
-                    return $em;
-                } catch (\PDOException $e) {
-                    $c['stopwatch']->stop('initDoctrine');
-                    $c['logger']->error('Cannot create EntityManager: ' . $e->getMessage());
-                    $c['session']->getFlashBag()->add('error', $e->getMessage());
-                    return null;
+                /** @var CacheProvider $resultCacheDriver */
+                $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
+                if ($resultCacheDriver !== null) {
+                    $resultCacheDriver->setNamespace($this->getNamespace(
+                        $c['config']["appNamespace"],
+                        $kernel->isPreview(),
+                        $kernel->getEnvironment()
+                    ));
                 }
-            };
-        }
+                /** @var CacheProvider $hydratationCacheDriver */
+                $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
+                if ($hydratationCacheDriver !== null) {
+                    $hydratationCacheDriver->setNamespace($this->getNamespace(
+                        $c['config']["appNamespace"],
+                        $kernel->isPreview(),
+                        $kernel->getEnvironment()
+                    ));
+                }
+                /** @var CacheProvider $queryCacheDriver */
+                $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
+                if ($queryCacheDriver !== null) {
+                    $queryCacheDriver->setNamespace($this->getNamespace(
+                        $c['config']["appNamespace"],
+                        $kernel->isPreview(),
+                        $kernel->getEnvironment()
+                    ));
+                }
+                /** @var CacheProvider $metadataCacheDriver */
+                $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
+                if (null !== $metadataCacheDriver) {
+                    $metadataCacheDriver->setNamespace($this->getNamespace(
+                        $c['config']["appNamespace"],
+                        $kernel->isPreview(),
+                        $kernel->getEnvironment()
+                    ));
+                }
+
+                /*
+                 * Create dynamic discriminator map for our Node system
+                 */
+                $evm->addEventListener(
+                    Events::loadClassMetadata,
+                    new DataInheritanceEvent($prefix)
+                );
+                /*
+                 * Fonts life cycle manager.
+                 */
+                $evm->addEventSubscriber(new FontLifeCycleSubscriber($c));
+
+                /*
+                 * Documents life cycle manager.
+                 */
+                $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
+
+                $c['stopwatch']->stop('initDoctrine');
+                return $em;
+            } catch (NoConfigurationFoundException $e) {
+                $c['stopwatch']->stop('initDoctrine');
+                $c['session']->getFlashBag()->add('error', $e->getMessage());
+                return null;
+            } catch (\PDOException $e) {
+                $c['stopwatch']->stop('initDoctrine');
+                $c['session']->getFlashBag()->add('error', $e->getMessage());
+                return null;
+            }
+        };
+
         /*
          *
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            // clone existing cache to be able to vary namespace
-            $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
-            if ($cache instanceof CacheProvider) {
-                $cache->setNamespace($cache->getNamespace() . "nsurls_"); // to avoid collisions
+            if (null !== $c['em']) {
+                // clone existing cache to be able to vary namespace
+                $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
+                if ($cache instanceof CacheProvider) {
+                    $cache->setNamespace($cache->getNamespace() . "nsurls_"); // to avoid collisions
+                }
+                return $cache;
+            } else {
+                return new ArrayCache();
             }
-
-            return $cache;
         };
 
         return $container;
