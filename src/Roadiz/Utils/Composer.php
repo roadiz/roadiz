@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Utils;
 
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -44,6 +45,7 @@ class Composer
     public static function postUpdate()
     {
         static::copyDefaultConfiguration();
+        static::copyProductionEnvironment();
         static::copyInstallEnvironment();
         static::copyDevEnvironment();
         static::copyClearCacheEntryPoint();
@@ -55,16 +57,25 @@ class Composer
     public static function postInstall()
     {
         static::copyDefaultConfiguration();
+        static::copyProductionEnvironment();
         static::copyInstallEnvironment();
         static::copyDevEnvironment();
         static::copyClearCacheEntryPoint();
     }
+    /**
+     * @return Kernel
+     */
+    public static function getKernel()
+    {
+        return new Kernel('prod', false);
+    }
 
     public static function copyDefaultConfiguration()
     {
+        $kernel = static::getKernel();
         $fs = new Filesystem();
-        $configFile = 'conf/config.yml';
-        $configFileSrc = 'conf/config.default.yml';
+        $configFile = $kernel->getRootDir() . '/conf/config.yml';
+        $configFileSrc = $kernel->getRootDir() . '/conf/config.default.yml';
 
         if (!$fs->exists($configFile) &&
             $fs->exists($configFileSrc)) {
@@ -73,10 +84,25 @@ class Composer
         }
     }
 
+    public static function copyProductionEnvironment()
+    {
+        $kernel = static::getKernel();
+        $fs = new Filesystem();
+        $indexFile = $kernel->getPublicDir() . '/index.php';
+        $indexFileSrc = 'samples/index.php.sample';
+
+        if (!$fs->exists($indexFile) &&
+            $fs->exists($indexFileSrc)) {
+            $fs->copy($indexFileSrc, $indexFile);
+            echo 'Copying index.php entry point.' . PHP_EOL;
+        }
+    }
+
     public static function copyInstallEnvironment()
     {
+        $kernel = static::getKernel();
         $fs = new Filesystem();
-        $installFile = 'install.php';
+        $installFile = $kernel->getPublicDir() . '/install.php';
         $installFileSrc = 'samples/install.php.sample';
 
         if (!$fs->exists($installFile) &&
@@ -88,8 +114,9 @@ class Composer
 
     public static function copyDevEnvironment()
     {
+        $kernel = static::getKernel();
         $fs = new Filesystem();
-        $devFile = 'dev.php';
+        $devFile = $kernel->getPublicDir() . '/dev.php';
         $devFileSrc = 'samples/dev.php.sample';
 
         if (!$fs->exists($devFile) &&
@@ -101,8 +128,9 @@ class Composer
 
     public static function copyClearCacheEntryPoint()
     {
+        $kernel = static::getKernel();
         $fs = new Filesystem();
-        $clearCacheFile = 'clear_cache.php';
+        $clearCacheFile = $kernel->getPublicDir() . '/clear_cache.php';
         $clearCacheFileSrc = 'samples/clear_cache.php.sample';
 
         if (!$fs->exists($clearCacheFile) &&

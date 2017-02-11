@@ -455,6 +455,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
+     * @return string Return web public root.
+     */
+    public function getPublicDir()
+    {
+        return ROADIZ_ROOT;
+    }
+
+    /**
      * @return string Return Composer vendor root folder.
      */
     public function getVendorDir()
@@ -550,7 +558,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getPublicFilesPath()
     {
-        return $this->getRootDir() . $this->getPublicFilesBasePath();
+        return $this->getPublicDir() . $this->getPublicFilesBasePath();
     }
 
     /**
