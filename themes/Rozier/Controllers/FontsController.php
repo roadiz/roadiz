@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFontVariant;
 use RZ\Roadiz\Core\Entities\Font;
+use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\StringHandler;
@@ -174,6 +175,7 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
+        /** @var Font $font */
         $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
@@ -195,12 +197,13 @@ class FontsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     /*
-                     * need to force font upload if no changes
-                     * has been made in entity fields
+                     * Force updating files if uploaded
+                     * as doctrine wont see any changes.
                      */
-                    $font->preUpload();
+                    $fontSubscriber = new FontLifeCycleSubscriber($this->getContainer());
+                    $fontSubscriber->setFontFilesNames($font);
+                    $fontSubscriber->upload($font);
                     $this->get('em')->flush();
-                    $font->upload();
 
                     $msg = $this->getTranslator()->trans(
                         'font.%name%.updated',
