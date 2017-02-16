@@ -225,7 +225,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
             return $response;
         }
-        
+
         /*
          * Define a request wide timezone
          */

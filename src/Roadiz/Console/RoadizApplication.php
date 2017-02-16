@@ -140,7 +140,7 @@ class RoadizApplication extends Application
             new SolrOptimizeCommand(),
             new CacheCommand(),
             new CacheInfosCommand(),
-            new ConfigurationCommand(),
+            new HtaccessCommand(),
             new ThemeInstallCommand(),
             new DocumentDownscaleCommand(),
             new NodesOrphansCommand(),
@@ -150,6 +150,7 @@ class RoadizApplication extends Application
             new ComposerPostCreateProjectCommand(),
             new ComposerPostInstallCommand(),
             new ComposerPostUpdateCommand(),
+            new ThemeGenerateCommand(),
         );
 
         /*
