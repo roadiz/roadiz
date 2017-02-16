@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,6 +101,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var Node $node */
         $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -114,12 +116,14 @@ class AjaxNodesController extends AbstractAjaxController
                     $responseArray = $this->updatePosition($request->request->all(), $node);
                     break;
                 case 'duplicate':
-                    $newNode = $node->getHandler()->duplicate();
+                    $duplicator = new NodeDuplicator($node, $this->get('em'));
+                    $newNode = $duplicator->duplicate();
                     /*
                      * Dispatch event
                      */
                     $event = new FilterNodeEvent($newNode);
                     $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_DUPLICATED, $event);
 
                     $responseArray = [
                         'statusCode' => '200',

@@ -578,6 +578,7 @@ class NodeHandler
      * Duplicate current node with all its children.
      *
      * @return Node
+     * @deprecated Use NodeDuplicator::duplicate() instead.
      */
     public function duplicate()
     {
