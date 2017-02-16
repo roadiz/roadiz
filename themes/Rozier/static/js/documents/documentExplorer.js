@@ -74,30 +74,29 @@ DocumentExplorer.prototype.toggleFolders = function(event) {
     if (_this.folderExplorer === null ||
         _this.folderExplorer.destroyed === true) {
 
-        Rozier.lazyload.canvasLoader.show();
-
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken
-        };
-
-        $.ajax({
-            url: Rozier.routes.foldersAjaxExplorer,
-            type: 'GET',
-            dataType: 'json',
-            cache: false,
-            data: ajaxData
-        })
-        .done(function(data) {
-            console.log(data);
-            _this.folderExplorer = new FolderExplorer(data, _this);
-        })
-        .fail(function() {
-            console.log("error");
-        })
-        .always(function() {
-            Rozier.lazyload.canvasLoader.hide();
-        });
+        if (_this.toggleTimeout) {
+            clearTimeout(_this.toggleTimeout);
+        }
+        _this.toggleTimeout = window.setTimeout(function () {
+            Rozier.lazyload.canvasLoader.show();
+            var ajaxData = {
+                '_action':'toggleExplorer',
+                '_token': Rozier.ajaxToken
+            };
+            $.ajax({
+                url: Rozier.routes.foldersAjaxExplorer,
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                data: ajaxData
+            })
+            .done(function(data) {
+                _this.folderExplorer = new FolderExplorer(data, _this);
+            })
+            .always(function() {
+                Rozier.lazyload.canvasLoader.hide();
+            });
+        }, 100);
     } else {
         _this.folderExplorer.destroy();
         _this.folderExplorer = null;
@@ -236,7 +235,6 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
         };
 
         Rozier.lazyload.canvasLoader.show();
-
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -245,8 +243,6 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            //console.log(data);
-            //console.log("success");
             Rozier.lazyload.canvasLoader.hide();
             if (typeof data.documents != "undefined") {
                 _this.appendItemsToExplorer(data, true);
@@ -254,7 +250,6 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
         })
         .fail(function(data) {
             console.log(data.responseText);
-            console.log("error");
         });
     }
 

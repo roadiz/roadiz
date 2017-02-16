@@ -72,7 +72,7 @@ DocumentWidget.prototype.initUnlinkEvent = function() {
     _this.$unlinkDocumentButtons = $('[data-document-widget-unlink-document]');
 
     var onUnlinkDocumentP = $.proxy(_this.onUnlinkDocument, _this);
-    _this.$unlinkDocumentButtons.off('click', onUnlinkDocumentP);
+    _this.$unlinkDocumentButtons.off('click');
     _this.$unlinkDocumentButtons.on('click', onUnlinkDocumentP);
 };
 
@@ -165,33 +165,35 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
     var $widget = $btn.parents('.documents-widget').eq(0);
 
     if (_this.$explorer === null && $widget.length) {
-        $btn.addClass('uk-active');
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken
-        };
-
-        Rozier.lazyload.canvasLoader.show();
-
-        $.ajax({
-            url: Rozier.routes.documentsAjaxExplorer,
-            type: 'get',
-            dataType: 'json',
-            cache: false,
-            data: ajaxData
-        })
-        .success(function(data) {
-            Rozier.lazyload.canvasLoader.hide();
-            if (typeof data.documents != "undefined") {
-
-                var $currentsortable = $(event.currentTarget).parents('.documents-widget').eq(0).find('.documents-widget-sortable');
-                _this.createExplorer(data, $currentsortable);
-            }
-        })
-        .fail(function(data) {
-            console.log(data.responseText);
-            console.log("error");
-        });
+        if (_this.toggleTimeout) {
+            clearTimeout(_this.toggleTimeout);
+        }
+        _this.toggleTimeout = window.setTimeout(function () {
+            $btn.addClass('uk-active');
+            var ajaxData = {
+                '_action':'toggleExplorer',
+                '_token': Rozier.ajaxToken
+            };
+            Rozier.lazyload.canvasLoader.show();
+            $.ajax({
+                    url: Rozier.routes.documentsAjaxExplorer,
+                    type: 'get',
+                    dataType: 'json',
+                    cache: false,
+                    data: ajaxData
+                })
+                .success(function(data) {
+                    Rozier.lazyload.canvasLoader.hide();
+                    if (typeof data.documents != "undefined") {
+                        var $currentsortable = $(event.currentTarget).parents('.documents-widget').eq(0).find('.documents-widget-sortable');
+                        _this.createExplorer(data, $currentsortable);
+                    }
+                })
+                .fail(function(data) {
+                    console.log(data.responseText);
+                    console.log("error");
+                });
+        }, 100);
     }
     else _this.explorer.closeExplorer();
 

@@ -53,10 +53,8 @@ FolderExplorer.prototype.destroy = function() {
 
 FolderExplorer.prototype.onFolderClick = function(event) {
     var _this = this;
-
     var $link = $(event.currentTarget);
     var folderId = parseInt($link.attr('data-folder-id'));
-
     var ajaxData = {
         '_action':'toggleExplorer',
         '_token': Rozier.ajaxToken,
@@ -82,7 +80,6 @@ FolderExplorer.prototype.onFolderClick = function(event) {
     })
     .fail(function(data) {
         console.log(data.responseText);
-        console.log("error");
     })
     .always(function() {
         Rozier.lazyload.canvasLoader.hide();

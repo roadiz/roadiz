@@ -52,7 +52,6 @@ Lazyload.prototype.initLoader = function(){
 
 Lazyload.prototype.parseLinks = function() {
     var _this = this;
-
     _this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link');
 };
 
@@ -74,8 +73,14 @@ Lazyload.prototype.onClick = function(event) {
         (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '/' || href.charAt(0) == '?')) {
         event.preventDefault();
 
-        history.pushState({}, null, $link.attr('href'));
-        _this.onPopState(null);
+        if (_this.clickTimeout) {
+            clearTimeout(_this.clickTimeout);
+        }
+        _this.clickTimeout = window.setTimeout(function () {
+            history.pushState({}, null, $link.attr('href'));
+            _this.onPopState(null);
+        }, 50);
+
         return false;
     }
 };
@@ -114,50 +119,52 @@ Lazyload.prototype.onPopState = function(event) {
 Lazyload.prototype.loadContent = function(state, location) {
     var _this = this;
 
-    if(_this.currentRequest && _this.currentRequest.readyState != 4){
-        _this.currentRequest.abort();
+    /*
+     * Delay loading if user is click like devil
+     */
+    if (_this.currentTimeout) {
+        clearTimeout(_this.currentTimeout);
     }
 
-    _this.currentRequest = $.ajax({
-        url: location.href,
-        type: 'get',
-        dataType: 'html',
-        cache: false,
-        data: state.headerData
-    })
-    .done(function(data) {
-        _this.applyContent(data);
-        _this.canvasLoader.hide();
+    _this.currentTimeout = window.setTimeout(function () {
+        _this.currentRequest = $.ajax({
+            url: location.href,
+            type: 'get',
+            dataType: 'html',
+            cache: false,
+            data: state.headerData
+        })
+            .done(function(data) {
+                _this.applyContent(data);
+                _this.canvasLoader.hide();
+            })
+            .fail(function(data) {
+                console.log(data);
+                if (typeof data.responseText !== "undefined") {
+                    try {
+                        var exception = JSON.parse(data.responseText);
+                        UIkit.notify({
+                            message : exception.message,
+                            status  : 'danger',
+                            timeout : 3000,
+                            pos     : 'top-center'
+                        });
+                    } catch (e) {
+                        // No valid JsonResponse, need to refresh page
+                        window.location.href = location.href;
+                    }
+                } else {
+                    UIkit.notify({
+                        message : Rozier.messages.forbiddenPage,
+                        status  : 'danger',
+                        timeout : 3000,
+                        pos     : 'top-center'
+                    });
+                }
 
-    })
-    .fail(function(data) {
-        console.log("error");
-        console.log(data);
-
-        if (typeof data.responseText !== "undefined") {
-            try {
-                var exception = JSON.parse(data.responseText);
-                UIkit.notify({
-                    message : exception.message,
-                    status  : 'danger',
-                    timeout : 3000,
-                    pos     : 'top-center'
-                });
-            } catch (e) {
-                // No valid JsonResponse, need to refresh page
-                window.location.href = location.href;
-            }
-        } else {
-            UIkit.notify({
-                message : Rozier.messages.forbiddenPage,
-                status  : 'danger',
-                timeout : 3000,
-                pos     : 'top-center'
+                _this.canvasLoader.hide();
             });
-        }
-
-        _this.canvasLoader.hide();
-    });
+    }, 100);
 };
 
 

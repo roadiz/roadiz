@@ -109,8 +109,6 @@ Import.prototype.callSingleImport = function( index ) {
             }
         },
         complete: function(data) {
-            //console.log("complete");
-            //console.log(index);
             $icon.removeClass('uk-icon-spin');
         }
     });

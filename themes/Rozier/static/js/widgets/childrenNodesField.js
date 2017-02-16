@@ -40,62 +40,59 @@ ChildrenNodesField.prototype.treeAvailable  = function() {
 ChildrenNodesField.prototype.onQuickAddClick = function(event) {
     var _this = this;
 
-    if(_this.currentRequest && _this.currentRequest.readyState != 4){
-        _this.currentRequest.abort();
+    if (_this.ajaxTimeout) {
+        clearTimeout(_this.ajaxTimeout);
     }
+    _this.ajaxTimeout = window.setTimeout(function () {
+        var $link = $(event.currentTarget);
+        var nodeTypeId = parseInt($link.attr('data-children-node-type'));
+        var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+        var translationId = parseInt($link.attr('data-translation-id'));
 
-    var $link = $(event.currentTarget);
+        if(nodeTypeId > 0 && parentNodeId > 0) {
+            var postData = {
+                "_token": Rozier.ajaxToken,
+                "_action":'quickAddNode',
+                "nodeTypeId":nodeTypeId,
+                "parentNodeId":parentNodeId,
+                "translationId":translationId
+            };
+            $.ajax({
+                url: Rozier.routes.nodesQuickAddAjax,
+                type: 'post',
+                dataType: 'json',
+                data: postData,
+            })
+            .done(function(data) {
+                Rozier.refreshMainNodeTree();
+                var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
+                _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
 
-    var nodeTypeId = parseInt($link.attr('data-children-node-type'));
-    var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-    var translationId = parseInt($link.attr('data-translation-id'));
+                UIkit.notify({
+                    message : data.responseText,
+                    status  : data.status,
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            })
+            .fail(function(data) {
+                console.log("error");
+                console.log(data);
 
-    if(nodeTypeId > 0 &&
-       parentNodeId > 0) {
+                data = JSON.parse(data.responseText);
 
-        var postData = {
-            "_token": Rozier.ajaxToken,
-            "_action":'quickAddNode',
-            "nodeTypeId":nodeTypeId,
-            "parentNodeId":parentNodeId,
-            "translationId":translationId
-        };
-
-        _this.currentRequest = $.ajax({
-            url: Rozier.routes.nodesQuickAddAjax,
-            type: 'post',
-            dataType: 'json',
-            data: postData,
-        })
-        .done(function(data) {
-            Rozier.refreshMainNodeTree();
-            var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
-            _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
-
-            UIkit.notify({
-                message : data.responseText,
-                status  : data.status,
-                timeout : 3000,
-                pos     : 'top-center'
+                UIkit.notify({
+                    message : data.responseText,
+                    status  : data.status,
+                    timeout : 3000,
+                    pos     : 'top-center'
+                });
+            })
+            .always(function() {
+                //console.log("complete");
             });
-        })
-        .fail(function(data) {
-            console.log("error");
-            console.log(data);
-
-            data = JSON.parse(data.responseText);
-
-            UIkit.notify({
-                message : data.responseText,
-                status  : data.status,
-                timeout : 3000,
-                pos     : 'top-center'
-            });
-        })
-        .always(function() {
-            //console.log("complete");
-        });
-    }
+        }
+    }, 200);
 
     return false;
 };
