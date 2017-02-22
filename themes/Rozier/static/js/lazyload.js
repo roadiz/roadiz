@@ -127,6 +127,13 @@ Lazyload.prototype.loadContent = function(state, location) {
     }
 
     _this.currentTimeout = window.setTimeout(function () {
+        /*
+         * Trigger event on window to notify open
+         * widgets to close.
+         */
+        var pageChangeEvent = new CustomEvent('pagechange');
+        window.dispatchEvent(pageChangeEvent);
+
         _this.currentRequest = $.ajax({
             url: location.href,
             type: 'get',

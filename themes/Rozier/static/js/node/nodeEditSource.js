@@ -149,6 +149,13 @@ NodeEditSource.prototype.onFormSubmit = function(event) {
     }
 
     _this.currentTimeout = setTimeout(function () {
+        /*
+         * Trigger event on window to notify open
+         * widgets to close.
+         */
+        var pageChangeEvent = new CustomEvent('pagechange');
+        window.dispatchEvent(pageChangeEvent);
+
         var formData = new FormData(_this.$form.get(0));
         $.ajax({
             url: window.location.href,

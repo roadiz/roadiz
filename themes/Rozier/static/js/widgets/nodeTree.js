@@ -42,13 +42,3 @@ NodeTree.prototype.dropdownFlip = function(){
         addClass(_this.$dropdown[i], 'uk-dropdown-up');
     }
 };
-
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-NodeTree.prototype.resize = function(){
-    var _this = this;
-
-};

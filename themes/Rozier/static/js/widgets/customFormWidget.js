@@ -6,6 +6,8 @@ var CustomFormWidget = function () {
 
     _this.currentRequest = null;
     _this.$widgets = $('[data-custom-form-widget]');
+    _this.bindedCloseExplorer = $.proxy(_this.closeExplorer, _this);
+
     if (_this.$widgets.length) {
         _this.$sortables = $('.custom-forms-widget-sortable');
         _this.$toggleExplorerButtons = $('[data-custom-form-widget-toggle-explorer]');
@@ -34,13 +36,23 @@ CustomFormWidget.prototype.init = function() {
     _this.initUnlinkEvent();
 
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.on('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.on('explorer-open', _this.bindedCloseExplorer);
+};
+
+CustomFormWidget.prototype.destroy = function() {
+    var _this = this;
+
+    Rozier.$window.off('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.off('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.off('explorer-open', _this.bindedCloseExplorer);
+    _this.isDestroyed = true;
 };
 
 CustomFormWidget.prototype.initUnlinkEvent = function() {
     var _this = this;
 
     _this.$unlinkCustomFormButtons = $('[data-custom-form-widget-unlink-custom-form]');
-
     var onUnlinkCustomFormP = $.proxy(_this.onUnlinkCustomForm, _this);
     _this.$unlinkCustomFormButtons.off('click', onUnlinkCustomFormP);
     _this.$unlinkCustomFormButtons.on('click', onUnlinkCustomFormP);
@@ -77,34 +89,43 @@ CustomFormWidget.prototype.onExplorerToggle = function(event) {
     var _this = this;
 
     if (_this.$explorer === null) {
-        if(_this.currentRequest && _this.currentRequest.readyState != 4){
-            _this.currentRequest.abort();
+        if (_this.toggleTimeout) {
+            clearTimeout(_this.toggleTimeout);
         }
 
-        _this.$toggleExplorerButtons.addClass('uk-active');
+        /*
+         * Dispatch event to close every other
+         * uploaders
+         */
+        var openevent = new CustomEvent("explorer-open", {"detail":_this});
+        window.dispatchEvent(openevent);
 
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken
-        };
+        _this.toggleTimeout = window.setTimeout(function () {
+            _this.$toggleExplorerButtons.addClass('uk-active');
 
-        _this.currentRequest = $.ajax({
-            url: Rozier.routes.customFormsAjaxExplorer,
-            type: 'get',
-            dataType: 'json',
-            cache: false,
-            data: ajaxData
-        })
-        .success(function(data) {
-            if (typeof data.customForms != "undefined") {
-                var $currentsortable = $($(event.currentTarget).parents('.custom-forms-widget')[0]).find('.custom-forms-widget-sortable');
-                _this.createExplorer(data, $currentsortable);
-            }
-        })
-        .fail(function(data) {
-            console.log(data.responseText);
-            console.log("error");
-        });
+            var ajaxData = {
+                '_action': 'toggleExplorer',
+                '_token': Rozier.ajaxToken
+            };
+
+            _this.currentRequest = $.ajax({
+                url: Rozier.routes.customFormsAjaxExplorer,
+                type: 'get',
+                dataType: 'json',
+                cache: false,
+                data: ajaxData
+            })
+            .success(function (data) {
+                if (typeof data.customForms != "undefined") {
+                    var $currentsortable = $(event.currentTarget).parents('.custom-forms-widget').eq(0).find('.custom-forms-widget-sortable');
+                    _this.createExplorer(data, $currentsortable);
+                }
+            })
+            .fail(function (data) {
+                console.log(data.responseText);
+                console.log("error");
+            });
+        }, 100);
     }
     else _this.closeExplorer();
 
@@ -218,9 +239,6 @@ CustomFormWidget.prototype.onUnlinkCustomForm = function( event ) {
  */
 CustomFormWidget.prototype.createExplorer = function(data, $originWidget) {
     var _this = this;
-    // console.log($originWidget);
-    var changeProxy = $.proxy(_this.onSortableCustomFormWidgetChange, _this);
-
     var explorerDom = [
         '<div class="custom-form-widget-explorer">',
             '<div class="custom-form-widget-explorer-header">',
@@ -242,9 +260,7 @@ CustomFormWidget.prototype.createExplorer = function(data, $originWidget) {
     $("body").append(explorerDom);
     _this.$explorer = $('.custom-form-widget-explorer');
     _this.$explorerClose = $('.custom-form-widget-explorer-close');
-
     _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
-
     _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this, $originWidget));
     _this.appendItemsToExplorer(data, $originWidget);
 
@@ -302,7 +318,6 @@ CustomFormWidget.prototype.appendItemsToExplorer = function(data, $originWidget,
     }
 };
 
-
 CustomFormWidget.prototype.onAddCustomFormClick = function($originWidget, event) {
     var _this = this;
 
@@ -338,12 +353,13 @@ CustomFormWidget.prototype.echapKey = function(e){
 CustomFormWidget.prototype.closeExplorer = function(){
     var _this = this;
 
-    _this.$toggleExplorerButtons.removeClass('uk-active');
-    _this.$explorer.removeClass('visible');
-    _this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
-        /* Act on the event */
-        _this.$explorer.remove();
-        _this.$explorer = null;
-    });
-
+    if (null !== _this.$explorer && _this.$explorer.length) {
+        _this.$toggleExplorerButtons.removeClass('uk-active');
+        _this.$explorer.removeClass('visible');
+        _this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
+            /* Act on the event */
+            _this.$explorer.remove();
+            _this.$explorer = null;
+        });
+    }
 };

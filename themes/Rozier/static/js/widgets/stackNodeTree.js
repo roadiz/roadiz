@@ -28,7 +28,6 @@ StackNodeTree.prototype.onChangeLangClick = function(event) {
     event.preventDefault();
 
     var $link = $(event.currentTarget);
-    var $nodeTree = _this.$page.find('.nodetree-widget');
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
     var translationId = parseInt($link.attr('data-translation-id'));
     var tagId = $link.attr('data-filter-tag');
@@ -177,6 +176,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
                     Rozier.lazyload.bindAjaxLink();
                     $nodeTree.fadeIn();
                     Rozier.resize();
+                    new NodesBulk();
 
                     _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
                     if(_this.$switchLangButtons.length){

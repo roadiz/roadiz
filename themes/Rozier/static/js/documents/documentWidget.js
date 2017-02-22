@@ -51,6 +51,8 @@ DocumentWidget.prototype.init = function() {
 
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
     Rozier.$window.on('uploader-open', $.proxy(_this.closeAll, _this));
+    Rozier.$window.on('explorer-open', $.proxy(_this.closeUploader, _this));
+    Rozier.$window.on('pagechange', $.proxy(_this.closeAll, _this));
 };
 
 DocumentWidget.prototype.closeAll = function(event) {
@@ -111,9 +113,7 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
         null !== _this.uploader &&
         _this.$uploader &&
         _this.$uploader.length) {
-        _this.$uploader.remove();
-        _this.uploader = null;
-        _this.$btn.removeClass('active uk-active');
+        _this.closeUploader(event);
     } else {
         /*
          * Dispatch event to close every other
@@ -132,6 +132,25 @@ DocumentWidget.prototype.onUploaderToggle = function(event) {
             _this.$uploader.show();
             _this.$btn.addClass('active uk-active');
         }
+    }
+
+    return false;
+};
+
+/**
+ * On uploader toggle
+ * @param  {[type]} event [description]
+ * @return {[type]}       [description]
+ */
+DocumentWidget.prototype.closeUploader = function(event) {
+    var _this = this;
+
+    if (null !== _this.uploader &&
+        _this.$uploader &&
+        _this.$uploader.length) {
+        _this.$uploader.remove();
+        _this.uploader = null;
+        _this.$btn.removeClass('active uk-active');
     }
 
     return false;
@@ -168,6 +187,13 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
         if (_this.toggleTimeout) {
             clearTimeout(_this.toggleTimeout);
         }
+        /*
+         * Dispatch event to close every other
+         * uploaders
+         */
+        var openevent = new CustomEvent("explorer-open", {"detail":_this});
+        window.dispatchEvent(openevent);
+
         _this.toggleTimeout = window.setTimeout(function () {
             $btn.addClass('uk-active');
             var ajaxData = {
@@ -194,8 +220,10 @@ DocumentWidget.prototype.onExplorerToggle = function(event) {
                     console.log("error");
                 });
         }, 100);
+    } else {
+        _this.explorer.closeExplorer();
+        _this.explorer = null;
     }
-    else _this.explorer.closeExplorer();
 
     return false;
 };

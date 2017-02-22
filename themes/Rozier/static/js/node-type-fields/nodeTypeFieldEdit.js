@@ -63,7 +63,14 @@ NodeTypeFieldEdit.prototype.btnClick = function(e){
         }
 
         _this.openTimeout = setTimeout(function(){
-            console.log('Opening node-type field…');
+
+            /*
+             * Trigger event on window to notify open
+             * widgets to close.
+             */
+            var pageChangeEvent = new CustomEvent('pagechange');
+            window.dispatchEvent(pageChangeEvent);
+
             _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
 
             _this.currentRequest = $.ajax({

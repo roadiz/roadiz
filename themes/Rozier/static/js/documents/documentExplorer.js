@@ -38,6 +38,7 @@ var DocumentExplorer = function ($explorer, data, $originWidget, documentWidget)
     _this.$explorerSearchForm = _this.$explorer.find('.explorer-search');
     _this.appendItemsToExplorer(data);
     _this.folderExplorer = null;
+    _this.bindedCloseExplorer = $.proxy(_this.closeExplorer, _this);
 
     _this.init();
 
@@ -55,14 +56,21 @@ DocumentExplorer.prototype.init = function() {
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
     _this.$explorerFolderToggle.off('click');
     _this.$explorerFolderToggle.on('click', $.proxy(_this.toggleFolders, _this));
-    _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
+    _this.$explorerClose.on('click', _this.bindedCloseExplorer);
     _this.$explorerSearchForm.on('submit', $.proxy(_this.onExplorerSearch, _this));
+
+    Rozier.$window.on('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.on('uploader-open', _this.bindedCloseExplorer);
+    Rozier.$window.on('explorer-open', _this.bindedCloseExplorer);
 };
 
 DocumentExplorer.prototype.destroy = function() {
     var _this = this;
 
     Rozier.$window.off('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.off('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.off('uploader-open', _this.bindedCloseExplorer);
+    Rozier.$window.off('explorer-open', _this.bindedCloseExplorer);
     _this.$explorerFolderToggle.off('click');
     _this.$explorerClose.off('click');
     _this.$explorerSearchForm.off('submit');
@@ -206,13 +214,15 @@ DocumentExplorer.prototype.closeExplorer = function(){
     }
 
     _this.documentWidget.$toggleExplorerButtons.removeClass('uk-active');
-    TweenLite.to(_this.$explorer, 0.5, {x: _this.$explorer.outerWidth()*-1, opacity:0, ease:Expo.easeOut, onComplete: function () {
-        _this.destroyed = true;
-        _this.destroy();
-        _this.$explorer.remove();
-        _this.documentWidget.$explorer = null;
-        _this.$explorer = null;
-    }});
+    if (_this.$explorer) {
+        TweenLite.to(_this.$explorer, 0.5, {x: _this.$explorer.outerWidth()*-1, opacity:0, ease:Expo.easeOut, onComplete: function () {
+            _this.destroyed = true;
+            _this.destroy();
+            _this.$explorer.remove();
+            _this.documentWidget.$explorer = null;
+            _this.$explorer = null;
+        }});
+    }
 };
 
 

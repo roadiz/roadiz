@@ -35,6 +35,7 @@ var NodeExplorer = function ($explorer, data, $originWidget, nodeWidget) {
     _this.$originWidget = $originWidget;
     _this.$parentWidget = $($originWidget.parents('.nodes-widget')[0]);
     _this.isDestroyed = false;
+    _this.bindedCloseExplorer = $.proxy(_this.closeExplorer, _this);
 
     _this.init();
 };
@@ -43,16 +44,29 @@ NodeExplorer.prototype.init = function() {
     var _this = this;
 
     _this.$explorerClose = _this.$explorer.find('.node-widget-explorer-close');
-
-    _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
+    _this.$explorerClose.on('click', _this.bindedCloseExplorer);
     _this.$explorer.find('.explorer-search').on('submit', $.proxy(_this.onExplorerSearch, _this));
     _this.appendItemsToExplorer(_this.data);
 
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.on('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.on('explorer-open', _this.bindedCloseExplorer);
 
     window.setTimeout(function () {
         _this.$explorer.addClass('visible');
     }, 0);
+};
+
+NodeExplorer.prototype.destroy = function() {
+    var _this = this;
+
+    /* Act on the event */
+    _this.$explorer.remove();
+    _this.$explorer = null;
+    Rozier.$window.off('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.off('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.off('explorer-open', _this.bindedCloseExplorer);
+    _this.isDestroyed = true;
 };
 
 
@@ -112,7 +126,6 @@ NodeExplorer.prototype.onExplorerSearch = function(event) {
 NodeExplorer.prototype.onExplorerNextPage = function(filters, event) {
     var _this = this;
 
-    console.log(_this.$originWidget);
     if (_this.$explorer !== null){
         console.log(filters);
         var ajaxData = {
@@ -232,14 +245,12 @@ NodeExplorer.prototype.echapKey = function(e){
  */
 NodeExplorer.prototype.closeExplorer = function(){
     var _this = this;
-
     _this.nodeWidget.$toggleExplorerButtons.removeClass('uk-active');
-    _this.$explorer.removeClass('visible');
-    _this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function(event) {
-        /* Act on the event */
-        _this.$explorer.remove();
-        _this.$explorer = null;
-        Rozier.$window.off('keyup', $.proxy(_this.echapKey, _this));
-        _this.isDestroyed = true;
-    });
+    if (null !== _this.$explorer) {
+        _this.$explorer.removeClass('visible');
+        _this.$explorer.one('transitionend webkitTransitionEnd mozTransitionEnd msTransitionEnd', function() {
+            /* Act on the event */
+            _this.destroy();
+        });
+    }
 };

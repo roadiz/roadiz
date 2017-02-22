@@ -45,8 +45,6 @@ var NodeWidget = function () {
     }
 };
 
-
-
 NodeWidget.prototype.init = function() {
     var _this = this;
 
@@ -75,14 +73,13 @@ NodeWidget.prototype.initUnlinkEvent = function() {
  * Update node widget input values after being sorted.
  *
  * @param  {[type]} event   [description]
+ * @param list
  * @param  {[type]} element [description]
- * @return {void}
+ * @return {false}
  */
 NodeWidget.prototype.onSortableNodeWidgetChange = function(event, list, element) {
     var _this = this;
 
-    //console.log("Node: "+element.data('node-id'));
-    //console.log(element);
     $sortable = $(element).parent();
     var inputName = 'source['+$sortable.data('input-name')+']';
     $sortable.find('li').each(function (index) {
@@ -101,43 +98,52 @@ NodeWidget.prototype.onSortableNodeWidgetChange = function(event, list, element)
 NodeWidget.prototype.onExplorerToggle = function(event) {
     var _this = this;
 
-    if (_this.explorer === null || _this.explorer.isDestroyed) {
-        if(_this.currentRequest && _this.currentRequest.readyState != 4){
-            _this.currentRequest.abort();
+    if (_this.explorer === null) {
+        if (_this.toggleTimeout) {
+            clearTimeout(_this.toggleTimeout);
         }
 
-        _this.$toggleExplorerButtons.addClass('uk-active');
-        $currentWidget = $($(event.currentTarget).parents('.nodes-widget')[0]);
+        /*
+         * Dispatch event to close every other
+         * uploaders
+         */
+        var openevent = new CustomEvent("explorer-open", {"detail":_this});
+        window.dispatchEvent(openevent);
 
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken
-        };
+        _this.toggleTimeout = window.setTimeout(function () {
+            _this.$toggleExplorerButtons.addClass('uk-active');
+            var $currentWidget = $(event.currentTarget).parents('.nodes-widget').eq(0);
 
-        var nodeTypes = $currentWidget.attr('data-nodetypes');
-        if (nodeTypes && nodeTypes !== '') {
-            ajaxData.nodeTypes = JSON.parse(nodeTypes);
-        }
-
-        _this.currentRequest = $.ajax({
-            url: Rozier.routes.nodesAjaxExplorer,
-            type: 'get',
-            dataType: 'json',
-            cache: false,
-            data: ajaxData
-        })
-        .success(function(data) {
-            if (typeof data.nodes != "undefined") {
-                var $currentsortable = $currentWidget.find('.nodes-widget-sortable');
-                _this.createExplorer(data, $currentsortable);
+            var ajaxData = {
+                '_action':'toggleExplorer',
+                '_token': Rozier.ajaxToken
+            };
+            var nodeTypes = $currentWidget.attr('data-nodetypes');
+            if (nodeTypes && nodeTypes !== '') {
+                ajaxData.nodeTypes = JSON.parse(nodeTypes);
             }
-        })
-        .fail(function(data) {
-            console.log(data.responseText);
-            console.log("error");
-        });
+
+            _this.currentRequest = $.ajax({
+                url: Rozier.routes.nodesAjaxExplorer,
+                type: 'get',
+                dataType: 'json',
+                cache: false,
+                data: ajaxData
+            })
+            .success(function(data) {
+                if (typeof data.nodes != "undefined") {
+                    var $currentsortable = $currentWidget.find('.nodes-widget-sortable');
+                    _this.createExplorer(data, $currentsortable);
+                }
+            })
+            .fail(function(data) {
+                console.log(data.responseText);
+                console.log("error");
+            });
+        }, 100);
     } else {
         _this.explorer.closeExplorer();
+        _this.explorer = null;
     }
 
     return false;
@@ -148,7 +154,6 @@ NodeWidget.prototype.onUnlinkNode = function( event ) {
     var _this = this;
 
     var $element = $(event.currentTarget);
-
     var $doc = $($element.parents('li')[0]);
     var $widget = $element.parents('.nodes-widget-sortable').first();
 
@@ -161,12 +166,11 @@ NodeWidget.prototype.onUnlinkNode = function( event ) {
 /**
  * Populate explorer with nodes thumbnails
  * @param  {[type]} data [description]
+ * @param $originWidget
  * @return {[type]}      [description]
  */
 NodeWidget.prototype.createExplorer = function(data, $originWidget) {
     var _this = this;
-    var changeProxy = $.proxy(_this.onSortableNodeWidgetChange, _this);
-
     var explorerDom = [
         '<div class="node-widget-explorer">',
             '<div class="node-widget-explorer-header">',
@@ -183,7 +187,6 @@ NodeWidget.prototype.createExplorer = function(data, $originWidget) {
             '<ul class="uk-sortable"></ul>',
         '</div>'
     ].join('');
-
 
     $("body").append(explorerDom);
     _this.$explorer = $('.node-widget-explorer');
