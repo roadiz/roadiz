@@ -4657,13 +4657,13 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.settings">
         <source>folder.settings</source>
-          <note>Nav bar label for editing folder id and visibility state</note>
         <target></target>
+        <note>Nav bar label for editing folder id and visibility state</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.labels">
         <source>folder.labels</source>
-          <note>Nav bar label for editing folder label in each translation.</note>
         <target></target>
+        <note>Nav bar label for editing folder label in each translation.</note>
       </trans-unit>
 
 
