@@ -217,34 +217,30 @@ class SettingGroupsController extends RozierApp
      */
     private function editSettingGroup($data, SettingGroup $settingGroup)
     {
-        if ($data['id'] == $settingGroup->getId()) {
-            unset($data['id']);
-
-            if (isset($data['name']) &&
-                $data['name'] != $settingGroup->getName() &&
-                $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-                ->exists($data['name'])) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans(
-                    'settingGroup.%name%.no_update.already_exists',
-                    ['%name%' => $settingGroup->getName()]
-                ), 1);
+        if (isset($data['name']) &&
+            $data['name'] != $settingGroup->getName() &&
+            $this->get('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+            ->exists($data['name'])) {
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans(
+                'settingGroup.%name%.no_update.already_exists',
+                ['%name%' => $settingGroup->getName()]
+            ), 1);
+        }
+        try {
+            foreach ($data as $key => $value) {
+                $setter = 'set' . ucwords($key);
+                $settingGroup->$setter($value);
             }
-            try {
-                foreach ($data as $key => $value) {
-                    $setter = 'set' . ucwords($key);
-                    $settingGroup->$setter($value);
-                }
 
-                $this->get('em')->flush();
+            $this->get('em')->flush();
 
-                return true;
-            } catch (\Exception $e) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans(
-                    'settingGroup.%name%.no_update.already_exists',
-                    ['%name%' => $settingGroup->getName()]
-                ), 1);
-            }
+            return true;
+        } catch (\Exception $e) {
+            throw new EntityAlreadyExistsException($this->getTranslator()->trans(
+                'settingGroup.%name%.no_update.already_exists',
+                ['%name%' => $settingGroup->getName()]
+            ), 1);
         }
     }
 
@@ -333,7 +329,6 @@ class SettingGroupsController extends RozierApp
     private function buildEditForm(SettingGroup $settingGroup)
     {
         $defaults = [
-            'id' => $settingGroup->getId(),
             'name' => $settingGroup->getName(),
             'inMenu' => $settingGroup->isInMenu(),
         ];
@@ -345,14 +340,6 @@ class SettingGroupsController extends RozierApp
                             [
                                 'label' => 'name',
                                 'constraints' => [new NotBlank()],
-                            ]
-                        )
-                        ->add(
-                            'id',
-                            'hidden',
-                            [
-                                'data' => $settingGroup->getId(),
-                                'required' => true,
                             ]
                         )
                         ->add(
