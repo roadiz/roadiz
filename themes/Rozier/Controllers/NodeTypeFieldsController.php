@@ -108,9 +108,6 @@ class NodeTypeFieldsController extends RozierApp
                     'nodeTypesFieldSchemaUpdate',
                     [
                         'nodeTypeId' => $field->getNodeType()->getId(),
-                        '_token' => $this->get('csrfTokenManager')->getToken(
-                            static::SCHEMA_TOKEN_INTENTION
-                        ),
                     ]
                 ));
             }
@@ -178,9 +175,6 @@ class NodeTypeFieldsController extends RozierApp
                         'nodeTypesFieldSchemaUpdate',
                         [
                             'nodeTypeId' => $nodeTypeId,
-                            '_token' => $this->get('csrfTokenManager')->getToken(
-                                static::SCHEMA_TOKEN_INTENTION
-                            ),
                         ]
                     ));
                 } catch (\Exception $e) {
@@ -252,9 +246,6 @@ class NodeTypeFieldsController extends RozierApp
                     'nodeTypesFieldSchemaUpdate',
                     [
                         'nodeTypeId' => $nodeTypeId,
-                        '_token' => $this->get('csrfTokenManager')->getToken(
-                            static::SCHEMA_TOKEN_INTENTION
-                        ),
                     ]
                 ));
             }

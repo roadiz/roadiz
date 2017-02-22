@@ -114,12 +114,7 @@ class NodeTypesController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                return $this->redirect($this->generateUrl(
-                    'nodeTypesSchemaUpdate',
-                    [
-                        '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
-                    ]
-                ));
+                return $this->redirect($this->generateUrl('nodeTypesSchemaUpdate'));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -166,12 +161,7 @@ class NodeTypesController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    return $this->redirect($this->generateUrl(
-                        'nodeTypesSchemaUpdate',
-                        [
-                            '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
-                        ]
-                    ));
+                    return $this->redirect($this->generateUrl('nodeTypesSchemaUpdate'));
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                     return $this->redirect($this->generateUrl(
@@ -222,12 +212,7 @@ class NodeTypesController extends RozierApp
                 /*
                  * Redirect to update schema page
                  */
-                return $this->redirect($this->generateUrl(
-                    'nodeTypesSchemaUpdate',
-                    [
-                        '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
-                    ]
-                ));
+                return $this->redirect($this->generateUrl('nodeTypesSchemaUpdate'));
             }
 
             $this->assignation['form'] = $form->createView();
