@@ -112,7 +112,14 @@ Rozier.onDocumentReady = function(event) {
 Rozier.initNestables = function  () {
     $('.uk-nestable').each(function (index, element) {
         var $tree = $(element);
-        var options = {};
+        /*
+         * make drag&drop only available on handle
+         * very important for Touch based device which need to
+         * scroll on trees.
+         */
+        var options = {
+            handleClass: 'uk-nestable-handle'
+        };
 
         if ($tree.hasClass('nodetree')) {
             options.group = 'nodeTree';

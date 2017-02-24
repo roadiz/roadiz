@@ -45,7 +45,7 @@
             {% endif %}
 
             <ul class="{{ rootTreeClasses|join(' ') }}"
-                {% if nodeTree.canReorder %}data-uk-nestable="{'group':'nodeTree'}"{% endif %}
+                {% if nodeTree.canReorder %}data-uk-nestable="{'group':'nodeTree', handleClass:'uk-nestable-handle'}"{% endif %}
                 data-parent-node-id="{{ nodeTree.rootNode.id }}"
                 data-translation-id="{{ nodeTree.translation.id }}"
                 {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
