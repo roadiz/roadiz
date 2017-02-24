@@ -64,6 +64,8 @@ class NodesTreesController extends RozierApp
             }
 
             $this->get('em')->refresh($node);
+        } elseif (null !== $this->getUser()) {
+            $node = $this->getUser()->getChroot();
         } else {
             $node = null;
         }

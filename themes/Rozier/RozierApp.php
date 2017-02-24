@@ -87,7 +87,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['themeName'] = static::$themeName;
 
         $this->themeContainer['nodeTree'] = function () {
-            if (is_object($this->getUser())) {
+            if (null !== $this->getUser()) {
                 $parent = $this->getUser()->getChroot();
             } else {
                 $parent = null;

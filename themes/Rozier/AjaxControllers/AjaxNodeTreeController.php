@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -75,6 +75,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                      '\RZ\Roadiz\Core\Entities\Node',
                                      (int) $request->get('parentNodeId')
                                  );
+                } elseif (null !== $this->getUser()) {
+                    $node = $this->getUser()->getChroot();
                 } else {
                     $node = null;
                 }
@@ -85,7 +87,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $translation
                 );
 
-                if ($request->get('tagId') && $request->get('tagId') > 0) {
+                if ($request->get('tagId') &&
+                    $request->get('tagId') > 0) {
                     $filterTag = $this->get('em')
                                         ->find(
                                             '\RZ\Roadiz\Core\Entities\Tag',
@@ -106,10 +109,15 @@ class AjaxNodeTreeController extends AbstractAjaxController
              * Main panel tree nodeTree
              */
             case 'requestMainNodeTree':
+                $parent = null;
+                if (null !== $this->getUser()) {
+                    $parent = $this->getUser()->getChroot();
+                }
+
                 $this->assignation['nodeTree'] = new NodeTreeWidget(
                     $this->getRequest(),
                     $this,
-                    null,
+                    $parent,
                     $translation
                 );
                 $this->assignation['mainNodeTree'] = true;
