@@ -63,6 +63,7 @@
 .uk-nestable-item {
     border-left: 1px solid @item-border-color;
 
+    & + .non-nestable-list-item,
     & + .uk-nestable-item {
         margin-top: 0;
     }
@@ -320,6 +321,7 @@
     border-left: 0 none;
     margin: 0px;
 
+    & > .non-nestable-list-item,
     & > .uk-nestable-item {
         border-left: none;
         border-top: 1px solid #BDBDBD;
@@ -327,17 +329,18 @@
 
         &:first-child{
             border-top: none;
-            padding-top: 0px;
+            padding-top: 0;
         }
     }
     .uk-nestable-list {
+        .non-nestable-list-item:not(:first-child):not(:last-child),
         .uk-nestable-item:not(:first-child):not(:last-child) {
             &:before {
                 content: "";
                 display: block;
                 width: 13px;
                 position: relative;
-                left: 0px;
+                left: 0;
                 height: 1px;
                 background: @item-border-color;
                 top: 14px;

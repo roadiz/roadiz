@@ -38,7 +38,8 @@
 
     &-contextualmenu {
         position: absolute;
-        top: 3px; right: 22px;
+        top: 3px;
+        right: 22px;
 
         .opacity(0);
 
@@ -47,28 +48,29 @@
             margin: 0 0 0 1px;
         }
 
-        .uk-dropdown-small{
-            padding:0;
+        .uk-dropdown-small {
+            padding: 0;
 
-            .uk-nav{
+            .uk-nav {
 
-                &> p{
-                    padding:0;
-                    height:40px; line-height:40px;
+                & > p {
+                    padding: 0;
+                    height: 40px;
+                    line-height: 40px;
 
-                    &:hover{
+                    &:hover {
                         background: #ebebeb;
                     }
 
-                    &> a{
+                    & > a {
                         display: block;
                         border-bottom: 1px dashed @contextualdropdown-border-color;
                         padding-left: 16px;
                         padding-right: 11px;
                         font-weight: bold;
 
-                        &> i{
-                            line-height:40px;
+                        & > i {
+                            line-height: 40px;
                         }
                     }
                 }
@@ -77,19 +79,19 @@
     }
 }
 
-#tagtree-widget{
-    .root-tree{
-        &> .uk-nestable-item{
-            &> .uk-nestable-panel{
+#tagtree-widget {
+    .root-tree {
+        & > .uk-nestable-item {
+            & > .uk-nestable-panel {
                 padding-left: 6px;
             }
         }
     }
-    .uk-nestable{
-        .uk-nestable-list-tag{
-            padding-left:13px;
+    .uk-nestable {
+        .uk-nestable-list-tag {
+            padding-left: 13px;
 
-            &> .uk-nestable-list-item-tag {
+            & > .uk-nestable-list-item-tag {
                 .uk-nestable-list-item-tag {
                     margin-left: 6px;
                 }
@@ -101,7 +103,7 @@
             vertical-align: middle;
             color: darken(@maintree-global-bg, 30%);
 
-            &:after{
+            &:after {
                 display: none;
             }
         }
@@ -110,8 +112,8 @@
 }
 
 .uk-nestable-dragged {
-     .uk-nestable-tag,
-     .uk-nestable-list-tag {
+    .uk-nestable-tag,
+    .uk-nestable-list-tag {
 
         .uk-nestable-handle {
             &:after {
@@ -119,9 +121,9 @@
             }
         }
 
-        .uk-nestable-handle-tag{
-            color:darken(@maintree-global-bg, 30%);
-            &:after{
+        .uk-nestable-handle-tag {
+            color: darken(@maintree-global-bg, 30%);
+            &:after {
                 display: none;
             }
         }

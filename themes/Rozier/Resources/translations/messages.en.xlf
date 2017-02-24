@@ -3580,20 +3580,20 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="354" approved="yes">
         <source>node.content</source>
-        <target xml:lang="en">Node content</target>
+        <target xml:lang="en">Content</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">35</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Node content</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="355" approved="yes">
         <source>node.parameters</source>
-        <target xml:lang="en">Node parameters</target>
+        <target xml:lang="en">Parameters</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">48</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Node parameters</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="356" approved="yes">
         <source>seo</source>
         <target xml:lang="en">SEO</target>
@@ -4260,8 +4260,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="save.settingGroup" approved="yes">
         <source>save.settingGroup</source>
-        <target xml:lang="en">Save setting group</target>
-      </trans-unit>
+        <target xml:lang="en">Save</target>
+      <alt-trans><target xml:lang="en">Save setting group</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.settingGroup" approved="yes">
         <source>are_you_sure.delete.settingGroup</source>
         <target xml:lang="en">Are you sure you want to delete this setting group ?</target>
@@ -4616,12 +4616,12 @@
       <trans-unit xml:space="preserve" id="folder.settings" approved="yes">
         <source>folder.settings</source>
         <target xml:lang="en">Settings</target>
-          <note>Nav bar label for editing folder id and visibility state</note>
+        <note>Nav bar label for editing folder id and visibility state</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.labels" approved="yes">
         <source>folder.labels</source>
         <target xml:lang="en">Labels</target>
-          <note>Nav bar label for editing folder label in each translation.</note>
+        <note>Nav bar label for editing folder label in each translation.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="delete.folder.%name%" approved="yes">
           <source>delete.folder.%name%</source>
@@ -6328,9 +6328,9 @@
           <target xml:lang="en">Reachable</target>
           <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="yaml.type">
+      <trans-unit xml:space="preserve" id="yaml.type" approved="yes">
             <source>yaml.type</source>
-            <target xml:lang="en" state="translated">YAML code</target>
+            <target xml:lang="en">YAML code</target>
           </trans-unit>
     </body>
   </file>
