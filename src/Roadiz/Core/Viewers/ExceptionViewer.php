@@ -171,7 +171,9 @@ class ExceptionViewer
                     'content-type' => 'text/plain',
                 ]
             );
-        } elseif ($format == "json" || $request->isXmlHttpRequest()) {
+        } elseif ($format == "json" ||
+            $request->isXmlHttpRequest() ||
+            in_array('application/json', $request->getAcceptableContentTypes())) {
             return new JsonResponse(
                 [
                     'message' => $e->getMessage(),
