@@ -177,7 +177,7 @@ class ExceptionViewer
             return new JsonResponse(
                 [
                     'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
+                    'trace' => $e->getTrace(),
                     'exception' => $class,
                     'humanMessage' => $humanMessage,
                 ],
