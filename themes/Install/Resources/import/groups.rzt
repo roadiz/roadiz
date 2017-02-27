@@ -62,6 +62,9 @@
             },
             {
                 "name": "ROLE_ACCESS_CUSTOMFORMS_DELETE"
+            },
+            {
+                "name": "ROLE_ACCESS_REDIRECTIONS"
             }
         ]
     }

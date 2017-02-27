@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Http redirection which are administrable by BO users.
@@ -63,8 +64,8 @@ class Redirection extends AbstractEntity
      * @ORM\Column(type="integer")
      * @var int
      */
-    private $type = 301;
-
+    private $type;
+    
     /**
      * @return string
      */
@@ -124,7 +125,20 @@ class Redirection extends AbstractEntity
      */
     public function getType()
     {
-        return $this->type ?: 301;
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeAsString()
+    {
+        $types = [
+            Response::HTTP_MOVED_PERMANENTLY => 'redirection.moved_permanently',
+            Response::HTTP_FOUND => 'redirection.moved_temporarily',
+        ];
+
+        return isset($types[$this->type]) ? $types[$this->type] : '';
     }
 
     /**
@@ -135,5 +149,10 @@ class Redirection extends AbstractEntity
     {
         $this->type = $type;
         return $this;
+    }
+
+    public function __construct()
+    {
+        $this->type = Response::HTTP_MOVED_PERMANENTLY;
     }
 }

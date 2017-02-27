@@ -1,0 +1,48 @@
+{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+
+{% block content %}
+<section class="content-global  content-nav-and-filters">
+    <header class="content-header header-redirection header-redirection-list">
+        <h1 class="content-title redirection-title">{% trans %}redirections{% endtrans %}</h1>
+        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
+        <div class="content-header-action-menu">
+            <nav>
+                <a class="uk-button" href="{{ path('redirectionsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.redirection{% endtrans %}</a>
+            </nav>
+        </div>
+    </header>
+
+    {% include '@Rozier/widgets/filtersBar.html.twig' %}
+    <article class="content content-no-action-menu content-node-types-list">
+        <div class="content-table-cont">
+            <table class="content-table redirections uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}redirection.query{% endtrans %}</th>
+                        <th>{% trans %}redirection.redirect_uri{% endtrans %}</th>
+                        <th>{% trans %}redirection.type{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for redirection in redirections %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('redirectionsEditPage', { redirectionId: redirection.id }) }}">{{ redirection.query }}</a>
+                        </td>
+                        <td>{{ redirection.redirectUri }}</td>
+                        <td>{{ redirection.typeAsString|trans }}</td>
+                        <td class="table-actions-row">
+                        {% spaceless %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('redirectionsEditPage', { redirectionId: redirection.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('redirectionsDeletePage', { redirectionId: redirection.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                        {% endspaceless %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+{% endblock %}

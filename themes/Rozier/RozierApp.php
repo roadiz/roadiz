@@ -321,6 +321,12 @@ class RozierApp extends BackendController
                         'icon' => 'uk-icon-rz-fontes',
                         'roles' => ['ROLE_ACCESS_FONTS'],
                     ],
+                    'manage.redirections' => [
+                        'name' => 'manage.redirections',
+                        'path' => $urlGenerator->generate('redirectionsHomePage'),
+                        'icon' => 'uk-icon-compass',
+                        'roles' => ['ROLE_ACCESS_REDIRECTIONS'],
+                    ],
                 ],
             ];
 
