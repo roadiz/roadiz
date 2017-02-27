@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,21 +23,20 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeRouter.php
- * @author Ambroise Maupate
+ * @file RedirectionRouter.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class NodeRouter extends Router
+class RedirectionRouter extends Router
 {
     protected $em;
     protected $stopwatch;
@@ -46,38 +44,28 @@ class NodeRouter extends Router
      * @var bool
      */
     protected $preview;
-    /**
-     * @var ThemeResolver
-     */
-    private $themeResolver;
 
     /**
      * NodeRouter constructor.
      *
      * @param EntityManager $em
-     * @param ThemeResolver $themeResolver
      * @param array $options
      * @param RequestContext|null $context
      * @param LoggerInterface|null $logger
      * @param Stopwatch|null $stopwatch
-     * @param bool $preview
      */
     public function __construct(
         EntityManager $em,
-        ThemeResolver $themeResolver,
         array $options = [],
         RequestContext $context = null,
         LoggerInterface $logger = null,
-        Stopwatch $stopwatch = null,
-        $preview = false
+        Stopwatch $stopwatch = null
     ) {
         $this->em = $em;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
         $this->context = $context ?: new RequestContext();
         $this->setOptions($options);
-        $this->preview = $preview;
-        $this->themeResolver = $themeResolver;
     }
 
     /**
@@ -106,13 +94,12 @@ class NodeRouter extends Router
         if (null !== $this->matcher) {
             return $this->matcher;
         }
-        return $this->matcher = new NodeUrlMatcher(
+
+        return $this->matcher = new RedirectionMatcher(
             $this->context,
             $this->em,
-            $this->themeResolver,
             $this->stopwatch,
-            $this->logger,
-            $this->preview
+            $this->logger
         );
     }
 

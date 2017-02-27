@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -110,9 +111,9 @@ class TagMultiCreationController extends RozierApp
             $this->assignation['tag'] = $parentTag;
 
             return $this->render('tags/add-multiple.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

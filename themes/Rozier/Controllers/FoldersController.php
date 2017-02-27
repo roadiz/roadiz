@@ -41,6 +41,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\FolderTranslationType;
 use Themes\Rozier\Forms\FolderType;
 use Themes\Rozier\RozierApp;
@@ -181,9 +182,9 @@ class FoldersController extends RozierApp
             $this->assignation['folder'] = $folder;
 
             return $this->render('folders/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -243,7 +244,8 @@ class FoldersController extends RozierApp
 
             return $this->render('folders/edit.html.twig', $this->assignation);
         }
-        return $this->throw404();
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -317,7 +319,8 @@ class FoldersController extends RozierApp
 
             return $this->render('folders/edit.html.twig', $this->assignation);
         }
-        return $this->throw404();
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -349,7 +352,7 @@ class FoldersController extends RozierApp
                               ]);
             /** @var Packages $packages */
             $packages = $this->get('assetPackages');
-            
+
             /** @var Document $document */
             foreach ($documents as $document) {
                 $zip->addFile($packages->getDocumentFilePath($document), $document->getFilename());
@@ -372,9 +375,9 @@ class FoldersController extends RozierApp
             unlink($file);
 
             return $response;
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

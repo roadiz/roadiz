@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeFieldType;
 use Themes\Rozier\RozierApp;
@@ -63,9 +64,9 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['fields'] = $fields;
 
             return $this->render('node-type-fields/list.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -115,9 +116,9 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-type-fields/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -194,9 +195,9 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-type-fields/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -253,9 +254,9 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-type-fields/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

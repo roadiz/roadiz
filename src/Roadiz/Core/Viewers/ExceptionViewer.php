@@ -53,6 +53,9 @@ class ExceptionViewer
     private $foreground_colors = [];
     private $background_colors = [];
 
+    /**
+     * ExceptionViewer constructor.
+     */
     public function __construct()
     {
         // Set up shell colors
@@ -105,9 +108,9 @@ class ExceptionViewer
     }
 
     /**
-     * @param \Exception $e
-     * @return string
-     */
+ * @param \Exception $e
+ * @return string
+ */
     public function getHumanExceptionTitle(\Exception $e)
     {
         if ($e instanceof NoConfigurationFoundException) {
@@ -134,8 +137,42 @@ class ExceptionViewer
             return "Oups! Wrong way, you are not supposed to be here.";
         }
 
-        return "A problem occured on our website. We are working on this to be back soon.";
+        return "A problem occurred on our website. We are working on this to be back soon.";
     }
+
+    /**
+     * @param \Exception $e
+     * @return string
+     */
+    public function getJsonError(\Exception $e)
+    {
+        if ($e instanceof NoConfigurationFoundException) {
+            return "no_configuration_file";
+        }
+
+        if ($e instanceof ResourceNotFoundException ||
+            $e instanceof NotFoundHttpException) {
+            return "not_found";
+        }
+
+        if ($e instanceof ConnectionException ||
+            $e instanceof \Doctrine\DBAL\ConnectionException) {
+            return "database_not_reachable";
+        }
+
+        if ($e instanceof TableNotFoundException) {
+            return "database_not_uptodate";
+        }
+
+        if ($e instanceof AccessDeniedException ||
+            $e instanceof AccessDeniedHttpException ||
+            $e instanceof PreviewNotAllowedException) {
+            return "access_denied";
+        }
+
+        return "general_error";
+    }
+
 
     /**
      * @param \Exception $e
@@ -149,14 +186,7 @@ class ExceptionViewer
          * Log error before displaying a fallback page.
          */
         $class = get_class($e);
-        /*
-         * Get route defined format
-         * to use right response type.
-         */
-        $format = 'html';
-        if ($request->attributes->has('_format')) {
-            $format = $request->attributes->get('_format');
-        }
+
         $humanMessage = $this->getHumanExceptionTitle($e);
 
         if (php_sapi_name() === 'cli-server' ||
@@ -171,22 +201,22 @@ class ExceptionViewer
                     'content-type' => 'text/plain',
                 ]
             );
-        } elseif ($format == "json" ||
-            $request->isXmlHttpRequest() ||
-            in_array('application/json', $request->getAcceptableContentTypes())) {
-            return new JsonResponse(
-                [
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTrace(),
-                    'exception' => $class,
-                    'humanMessage' => $humanMessage,
-                ],
-                $this->getHttpStatusCode($e)
-            );
+        } elseif ($this->isFormatJson($request)) {
+            $data = [
+                'error' => $this->getJsonError($e),
+                'error_message' => $e->getMessage(),
+                'message' => $e->getMessage(),
+                'exception' => $class,
+                'humanMessage' => $humanMessage,
+            ];
+            if ($debug) {
+                $data['error_trace'] =  $e->getTrace();
+            }
+            return new JsonResponse($data, $this->getHttpStatusCode($e));
         } else {
             $html = file_get_contents(CmsController::getViewsFolder() . '/emerg.html');
-            $html = str_replace('{{ httpCode }}', $this->getHttpStatusCode($e), $html);
-            $html = str_replace('{{ humanMessage }}', $humanMessage, $html);
+            $html = str_replace('{{ http_code }}', $this->getHttpStatusCode($e), $html);
+            $html = str_replace('{{ human_message }}', $humanMessage, $html);
 
             if ($debug) {
                 $html = str_replace('{{ message }}', $e->getMessage(), $html);
@@ -206,6 +236,29 @@ class ExceptionViewer
                 ]
             );
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function isFormatJson(Request $request)
+    {
+        if ($request->attributes->has('_format') &&
+            $request->attributes->get('_format') == 'json') {
+            return true;
+        }
+
+        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+            return true;
+        }
+
+        if (count($request->getAcceptableContentTypes()) == 1 &&
+            in_array('application/json', $request->getAcceptableContentTypes())) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

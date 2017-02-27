@@ -253,7 +253,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $dispatcher->addSubscriber($this->container['firewall']);
         $dispatcher->addSubscriber(new SaveSessionListener());
         $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
-        $dispatcher->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
+        $dispatcher->addSubscriber(new ExceptionSubscriber($this, $this->container['themeResolver'], $this->container['logger'], $this->isDebug()));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 

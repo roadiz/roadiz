@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
@@ -46,7 +46,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('findTheme');
         }
-        $this->theme = $this->findTheme();
+        $this->theme = $this->themeResolver->findTheme($this->context->getHost());
         if (null !== $this->stopwatch) {
             $this->stopwatch->stop('findTheme');
         }
@@ -62,26 +62,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 $this->logger->debug('NodeUrlMatcher has matched node (' . $ret['node']->getNodeName() . ').', $ret);
             }
             return $ret;
-        } else {
-            if (null !== $this->theme) {
-                $ctrl = $this->theme->getClassName();
-            } else {
-                throw new NotFoundHttpException("Cannot find any available theme.");
-            }
-
-            if (null !== $this->logger) {
-                $this->logger->debug('NodeUrlMatcher is unable to find any matching node.');
-            }
-
-            return [
-                '_controller' => $ctrl . '::throw404',
-                'message' => 'Unable to find any matching route nor matching node. ' .
-                'Check your `Resources/routes.yml` file.',
-                'node' => null,
-                'translation' => null,
-                '_route' => null,
-            ];
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

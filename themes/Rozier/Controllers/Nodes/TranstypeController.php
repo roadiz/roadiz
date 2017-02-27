@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
 
@@ -65,7 +66,7 @@ class TranstypeController extends RozierApp
         $this->get('em')->refresh($node);
 
         if (null === $node) {
-            return $this->throw404();
+            throw new ResourceNotFoundException();
         }
 
         /** @var Form $form */

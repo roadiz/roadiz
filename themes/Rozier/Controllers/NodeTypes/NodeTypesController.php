@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeType;
 use Themes\Rozier\RozierApp;
@@ -120,9 +121,9 @@ class NodeTypesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-types/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -173,9 +174,9 @@ class NodeTypesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-types/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -218,9 +219,9 @@ class NodeTypesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-types/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -118,9 +119,9 @@ class DocumentTranslationsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('document-translations/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -192,9 +193,9 @@ class DocumentTranslationsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('document-translations/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

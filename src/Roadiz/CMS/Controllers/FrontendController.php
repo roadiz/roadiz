@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
@@ -263,7 +264,7 @@ abstract class FrontendController extends AppController
                 $node->getNodeName() .
                 "' node. You need to create a " . $controllerPath . ".";
 
-                return $this->throw404($msg);
+                throw new ResourceNotFoundException($msg);
             }
 
             $ctrl = new $controllerPath();
@@ -290,9 +291,9 @@ abstract class FrontendController extends AppController
                 $node,
                 $translation
             );
-        } else {
-            return $this->throw404("No front-end controller found");
         }
+
+        throw new ResourceNotFoundException("No front-end controller found");
     }
 
     /**
