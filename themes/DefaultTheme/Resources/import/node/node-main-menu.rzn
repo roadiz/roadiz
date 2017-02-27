@@ -68,6 +68,15 @@
                                 "meta_description": "",
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
+                            },
+                            {
+                                "translation": "tr",
+                                "title": "Ullamcorper Quam Purus",
+                                "meta_title": "",
+                                "meta_keywords": "",
+                                "meta_description": "",
+                                "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
+                                "url_aliases": []
                             }
                         ],
                         "tags": []
@@ -107,6 +116,15 @@
                             },
                             {
                                 "translation": "ru",
+                                "title": "Sem Elit Lorem",
+                                "meta_title": "",
+                                "meta_keywords": "",
+                                "meta_description": "",
+                                "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                                "url_aliases": []
+                            },
+                            {
+                                "translation": "tr",
                                 "title": "Sem Elit Lorem",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -158,6 +176,15 @@
                                 "meta_description": "",
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
+                            },
+                            {
+                                "translation": "tr",
+                                "title": "Fermentum Porta Fusce",
+                                "meta_title": "",
+                                "meta_keywords": "",
+                                "meta_description": "",
+                                "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                                "url_aliases": []
                             }
                         ],
                         "tags": []
@@ -189,6 +216,15 @@
                         "meta_keywords": "",
                         "meta_description": "",
                         "content": "Добро пожаловать в тему Roadiz по умолчанию. Это сделано для Вас, чтобы создать свою собственную тему с простым базы.\r\n\r\nЧтобы отредактировать эту страницу , подключение к бэк-офиса на **/rz-admin**",
+                        "url_aliases": []
+                    },
+                    {
+                        "translation": "tr",
+                        "title": "Hello Roadiz!",
+                        "meta_title": "Hello Roadiz!",
+                        "meta_keywords": "",
+                        "meta_description": "",
+                        "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                         "url_aliases": []
                     }
                 ],
@@ -249,6 +285,15 @@
                                 "meta_description": "",
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
+                            },
+                            {
+                                "translation": "tr",
+                                "title": "Ullamcorper Quam Purus",
+                                "meta_title": "",
+                                "meta_keywords": "",
+                                "meta_description": "",
+                                "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
+                                "url_aliases": []
                             }
                         ],
                         "tags": []
@@ -288,6 +333,15 @@
                             },
                             {
                                 "translation": "ru",
+                                "title": "Sem Elit Lorem",
+                                "meta_title": "",
+                                "meta_keywords": "",
+                                "meta_description": "",
+                                "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                                "url_aliases": []
+                            },
+                            {
+                                "translation": "tr",
                                 "title": "Sem Elit Lorem",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -339,6 +393,15 @@
                                 "meta_description": "",
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
+                            },
+                            {
+                                "translation": "tr",
+                                "title": "Fermentum Porta Fusce",
+                                "meta_title": "",
+                                "meta_keywords": "",
+                                "meta_description": "",
+                                "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+                                "url_aliases": []
                             }
                         ],
                         "tags": []
@@ -371,6 +434,15 @@
                         "meta_description": "",
                         "content": "Это пример страницы. \r\n\r\nЧтобы отредактировать эту страницу , подключиться к бэк-офиса в **/rz-admin**",
                         "url_aliases": []
+                    },
+                    {
+                        "translation": "tr",
+                        "title": "About",
+                        "meta_title": "",
+                        "meta_keywords": "",
+                        "meta_description": "",
+                        "content": "This is a about example page.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
+                        "url_aliases": []
                     }
                 ],
                 "tags": []
@@ -395,6 +467,14 @@
             },
             {
                 "translation": "ru",
+                "title": "main-menu",
+                "meta_title": "",
+                "meta_keywords": "",
+                "meta_description": "",
+                "url_aliases": []
+            },
+            {
+                "translation": "tr",
                 "title": "main-menu",
                 "meta_title": "",
                 "meta_keywords": "",
