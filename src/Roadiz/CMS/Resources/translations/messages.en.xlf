@@ -132,9 +132,14 @@
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
                 <target xml:lang="en">Website is currently under maintenance, it will be back soon!</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid" approved="yes">
                 <source>yaml.is.not.valid.{{ error }}</source>
-                <target xml:lang="en" state="translated">YAML code is not valid ({{ error }}).</target>
+                <target xml:lang="en">YAML code is not valid ({{ error }}).</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target xml:lang="en" state="translated">This value is already used.</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
             </trans-unit>
     </body>
   </file>

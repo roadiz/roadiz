@@ -6462,6 +6462,11 @@
             <target></target>
           </trans-unit>
 
+            <trans-unit xml:space="preserve" id="manage.redirections">
+              <source>manage.redirections</source>
+              <target></target>
+              <note>Redirection section button label</note>
+            </trans-unit>
             <trans-unit xml:space="preserve" id="delete.redirection">
               <source>delete.redirection</source>
               <target></target>

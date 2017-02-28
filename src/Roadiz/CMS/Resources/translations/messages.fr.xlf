@@ -5,7 +5,10 @@
       <!-- welcome.user.email -->
       <trans-unit id="welcome.user.email.%site%" approved="yes">
         <source>welcome.user.email.%site%</source>
-        <target xml:lang="fr">Un compte utilisateur a été créé sur %site% pour vous.</target>
+        <target xml:lang="fr">Un compte utilisateur vous a été créé sur %site%.</target>
+        <alt-trans>
+          <target xml:lang="fr">Un compte utilisateur a été créé sur %site% pour vous.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="your.user.account" approved="yes">
         <source>your.user.account</source>
@@ -132,9 +135,14 @@
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
                 <target xml:lang="fr">Le site est actuellement en maintenance, il sera à nouveau disponible d’ici quelques minutes.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid" approved="yes">
                 <source>yaml.is.not.valid.{{ error }}</source>
-                <target xml:lang="fr" state="translated">Le code YAML n’est pas valide ({{ error }}).</target>
+                <target xml:lang="fr">Le code YAML n’est pas valide ({{ error }}).</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target xml:lang="fr" state="translated">Cette valeur est déjà utilisée.</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
             </trans-unit>
     </body>
   </file>
