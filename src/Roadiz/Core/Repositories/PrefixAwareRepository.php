@@ -339,7 +339,7 @@ class PrefixAwareRepository extends EntityRepository
         $this->applyComparisons($criteria, $finalQuery);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }

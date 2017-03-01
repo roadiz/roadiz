@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
 class UniversalDataDuplicator
@@ -65,7 +66,7 @@ class UniversalDataDuplicator
          * Only if source is default translation.
          * Non-default translation source should not contain universal fields.
          */
-        if ($source->getTranslation()->isDefaultTranslation()) {
+        if ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source)) {
             $universalFields = $this->em
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                 ->findAllUniversal($source->getNode()->getNodeType());
@@ -96,6 +97,25 @@ class UniversalDataDuplicator
         }
 
         return false;
+    }
+
+    /**
+     * @param NodesSources $source
+     * @return bool
+     */
+    private function hasDefaultTranslation(NodesSources $source)
+    {
+        /** @var Translation $defaultTranslation */
+        $defaultTranslation = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findDefault();
+
+        $sourceCount = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->countBy([
+                'node' => $source->getNode(),
+                'translation' => $defaultTranslation,
+            ]);
+
+        return $sourceCount === 1;
     }
 
     /**

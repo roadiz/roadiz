@@ -344,7 +344,7 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }

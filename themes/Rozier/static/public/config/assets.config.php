@@ -3,28 +3,28 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/vendor.303ca180.css',
-                '/style.d8b78b31.css',
+                '/vendor.5c6b2574.css',
+                '/style.a1a622df.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.26517a2d.min.js',
-                '/rozier-backend-theme-vendor.a424169f.min.js',
+                '/rozier-backend-theme.dec13ed2.min.js',
+                '/rozier-backend-theme-vendor.7a538807.min.js',
             ),
         ),
         'simple' => array(
             'css' => array(
             ),
             'js' => array(
-                '/rozier-backend-theme-simple.fa8dfae5.min.js',
+                '/rozier-backend-theme-simple.27362b51.min.js',
             ),
         ),
         'custom-forms' => array(
             'css' => array(
-                '/vendor.303ca180.css',
-                '/custom-forms-front.cd47dba9.css',
+                '/vendor.5c6b2574.css',
+                '/custom-forms-front.59926a39.css',
             ),
             'js' => array(
-                '/rozier-backend-theme-cforms.e7c74970.min.js',
+                '/rozier-backend-theme-cforms.7042f10b.min.js',
             ),
         ),
     )

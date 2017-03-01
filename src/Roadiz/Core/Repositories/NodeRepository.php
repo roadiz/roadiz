@@ -74,7 +74,7 @@ class NodeRepository extends EntityRepository
         $this->applyTranslationByTag($finalQuery, $translation);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }

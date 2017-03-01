@@ -191,7 +191,7 @@
             <nav class="documents-widget-nav uk-navbar">
                 <ul class="uk-navbar-nav">
                     <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}</li>
                 </ul>
                 <div class="uk-navbar-content uk-navbar-flip">
                     <div class="documents-widget-quick-creation uk-button-group">
@@ -397,7 +397,7 @@
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
-        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans }}</label>
+        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans }}{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}</label>
     {%- endif %}
 {%- endblock form_label %}
 

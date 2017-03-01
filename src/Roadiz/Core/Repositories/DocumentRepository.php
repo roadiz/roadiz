@@ -511,7 +511,7 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
@@ -622,7 +622,8 @@ class DocumentRepository extends EntityRepository
         $subQuery = $qb2->getQuery();
         $array = $subQuery->getScalarResult();
         $idArray = [];
-        foreach ($array as $key => $value) {
+
+        foreach ($array as $value) {
             $idArray[] = (int) $value['value'];
         }
 
