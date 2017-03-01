@@ -96,6 +96,7 @@ class RedirectionsController extends RozierApp
         }
 
         $this->assignation['form'] = $form->createView();
+        $this->assignation['redirection'] = $redirection;
 
         return $this->render('redirections/edit.html.twig', $this->assignation);
     }
@@ -126,6 +127,7 @@ class RedirectionsController extends RozierApp
             return $this->redirect($this->generateUrl('redirectionsHomePage'));
         }
         $this->assignation['form'] = $form->createView();
+        $this->assignation['redirection'] = $redirection;
 
         return $this->render('redirections/delete.html.twig', $this->assignation);
     }

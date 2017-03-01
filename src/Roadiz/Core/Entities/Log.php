@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 /**
  * Log Entity
  *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\LogRepository")
  * @ORM\Table(name="log", indexes={
  *     @ORM\Index(columns={"datetime"}),
  *     @ORM\Index(columns={"level"})
