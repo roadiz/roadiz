@@ -108,6 +108,12 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'filters' => $listManager->getAssignation(),
         ];
 
+        if ($request->get('folderId') > 0) {
+            $responseArray['filters'] = array_merge($responseArray['filters'], [
+                'folderId' => $request->get('folderId')
+            ]);
+        }
+
         return new JsonResponse(
             $responseArray,
             Response::HTTP_OK

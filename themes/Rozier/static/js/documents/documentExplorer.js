@@ -277,14 +277,17 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
 DocumentExplorer.prototype.onExplorerNextPage = function(filters, event) {
     var _this = this;
 
-    if (_this.$explorer !== null){
-        console.log(filters);
+    if (_this.$explorer !== null) {
         var ajaxData = {
             '_action':'toggleExplorer',
             '_token': Rozier.ajaxToken,
             'search': filters.search,
             'page': filters.nextPage
         };
+
+        if (filters.folderId > 0) {
+            ajaxData.folderId = filters.folderId;
+        }
 
         Rozier.lazyload.canvasLoader.show();
 
@@ -296,8 +299,6 @@ DocumentExplorer.prototype.onExplorerNextPage = function(filters, event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
             Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {
