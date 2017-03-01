@@ -4207,8 +4207,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="449" approved="yes">
         <source>document.embedId</source>
-        <target xml:lang="en">Platform media identifier</target>
-      </trans-unit>
+        <target xml:lang="en">Media identifier on platform</target>
+      <alt-trans><target xml:lang="en">Platform media identifier</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="en">“%field%” name is a reserved word, please choose another one.</target>
@@ -5819,8 +5819,8 @@
       <!-- Some constraints messages -->
       <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters" approved="yes">
           <source>string.should.only.contain.latin.characters</source>
-          <target xml:lang="en">String should only contain simple latin characters</target>
-      </trans-unit>
+          <target xml:lang="en">Characters string should only contain simple latin alphabet</target>
+      <alt-trans><target xml:lang="en">String should only contain simple latin characters</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word" approved="yes">
           <source>string.should.not.be.a.sql.reserved.word</source>
           <target xml:lang="en">String should not be a SQL reserved word</target>
@@ -6332,6 +6332,61 @@
             <source>yaml.type</source>
             <target xml:lang="en">YAML code</target>
           </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.redirections">
+              <source>manage.redirections</source>
+              <target xml:lang="en" state="translated">Redirections</target>
+              <note>Redirection section button label</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.redirection">
+              <source>delete.redirection</source>
+              <target xml:lang="en" state="translated">Delete redirection</target>
+              <note>Delete redirection page title</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
+              <source>are_you_sure.delete.redirection</source>
+              <target xml:lang="en" state="translated">Are you sure you want to delete this redirection?</target>
+              <note>Delete redirection page confirmation message</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.redirection">
+              <source>add.a.redirection</source>
+              <target xml:lang="en" state="translated">Add a redirection</target>
+              <note>Add redirection page title</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.redirections">
+              <source>back_to.redirections</source>
+              <target xml:lang="en" state="translated">Back to redirections</target>
+              <note>Back button label for redirections</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.redirection">
+              <source>edit.redirection</source>
+              <target xml:lang="en" state="translated">Edit redirection</target>
+              <note>Edit redirection page title</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.query">
+              <source>redirection.query</source>
+              <target xml:lang="en" state="translated">Query</target>
+              <note>Redirection field which stands for the query: the URL to listen for a redirection</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.redirect_uri">
+              <source>redirection.redirect_uri</source>
+              <target xml:lang="en" state="translated">Destination URI</target>
+              <note>Redirection field which stands for the redirect URI: the destination URI</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.type">
+              <source>redirection.type</source>
+              <target xml:lang="en" state="translated">Redirection type</target>
+              <note>Redirection field which stands for HTTP code: 301 or 302</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_permanently">
+              <source>redirection.moved_permanently</source>
+              <target xml:lang="en" state="translated">Moved permanently</target>
+              <note>Redirection type description for 301 Moved Permanently</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_temporarily">
+              <source>redirection.moved_temporarily</source>
+              <target xml:lang="en" state="translated">Moved temporarily</target>
+              <note>Redirection type description for 302 Moved Temporarily</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

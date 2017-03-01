@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Entities\Theme;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Install\InstallApp;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,9 +55,9 @@ class ImportController extends AppController
             }
 
             return $this->importContent($filename, $classImporter, $themeId);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException("No file to import found.");
     }
 
     /**

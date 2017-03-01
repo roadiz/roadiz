@@ -113,7 +113,6 @@ class RoadizRouteCollection extends DeferredRouteCollection
         }
     }
 
-
     protected function addBackendCollection()
     {
         $class = $this->themeResolver->getBackendClassName();

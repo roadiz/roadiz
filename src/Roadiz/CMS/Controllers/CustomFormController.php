@@ -42,6 +42,7 @@ use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 use Themes\Rozier\RozierApp;
@@ -98,7 +99,7 @@ class CustomFormController extends CmsController
             }
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -119,7 +120,7 @@ class CustomFormController extends CmsController
             return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**

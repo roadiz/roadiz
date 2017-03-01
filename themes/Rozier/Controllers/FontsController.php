@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\FontType;
 use Themes\Rozier\RozierApp;
 
@@ -158,9 +159,9 @@ class FontsController extends RozierApp
             $this->assignation['font'] = $font;
 
             return $this->render('fonts/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -223,9 +224,9 @@ class FontsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('fonts/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
     /**
      * Return a ZipArchive of requested font.
@@ -281,9 +282,9 @@ class FontsController extends RozierApp
             unlink($file);
 
             return $response;
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

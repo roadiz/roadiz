@@ -39,6 +39,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms;
 use Themes\Rozier\RozierApp;
@@ -236,7 +237,7 @@ class NodesController extends RozierApp
             return $this->render('nodes/edit.html.twig', $this->assignation);
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -269,9 +270,9 @@ class NodesController extends RozierApp
             $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
             return $this->redirect($this->generateUrl('nodesEditPage', ['nodeId'=>$node->getId()]));
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -343,9 +344,9 @@ class NodesController extends RozierApp
             $this->assignation['nodeTypesCount'] = true;
 
             return $this->render('nodes/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -428,9 +429,9 @@ class NodesController extends RozierApp
             $this->assignation['nodeTypesCount'] = $nodeTypesCount;
 
             return $this->render('nodes/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -490,9 +491,9 @@ class NodesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('nodes/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -591,9 +592,9 @@ class NodesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('nodes/undelete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     public function generateAndAddNodeAction(Request $request)
@@ -616,8 +617,7 @@ class NodesController extends RozierApp
             ));
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans('node.noCreation.alreadyExists');
-
-            return $this->throw404($msg);
+            throw new ResourceNotFoundException($msg);
         }
     }
     /**
@@ -659,8 +659,8 @@ class NodesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('nodes/publishAll.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 }

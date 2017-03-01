@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\CustomFormType;
 use Themes\Rozier\RozierApp;
@@ -112,9 +113,9 @@ class CustomFormsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-forms/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -165,9 +166,9 @@ class CustomFormsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-forms/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -209,9 +210,9 @@ class CustomFormsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-forms/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

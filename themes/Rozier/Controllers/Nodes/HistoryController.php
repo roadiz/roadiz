@@ -31,6 +31,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
@@ -54,7 +55,7 @@ class HistoryController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
         if (null === $node) {
-            return $this->throw404();
+            throw new ResourceNotFoundException();
         }
 
         $listManager = $this->createEntityListManager(

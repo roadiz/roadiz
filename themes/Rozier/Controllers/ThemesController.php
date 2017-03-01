@@ -39,6 +39,7 @@ use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -247,9 +248,9 @@ class ThemesController extends RozierApp
             $this->assignation['theme'] = $theme;
 
             return $this->render('themes/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -293,9 +294,9 @@ class ThemesController extends RozierApp
             $this->assignation['theme'] = $theme;
 
             return $this->render('themes/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

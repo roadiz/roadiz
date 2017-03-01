@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -209,9 +210,9 @@ class DocumentsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('documents/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -250,9 +251,9 @@ class DocumentsController extends RozierApp
             }
 
             return $this->render('documents/preview.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -300,9 +301,9 @@ class DocumentsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('documents/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -350,9 +351,9 @@ class DocumentsController extends RozierApp
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return $this->render('documents/bulkDelete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -397,9 +398,9 @@ class DocumentsController extends RozierApp
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
             return $this->render('documents/bulkDownload.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -514,7 +515,8 @@ class DocumentsController extends RozierApp
             null !== $response = $document->getHandler()->getDownloadResponse()) {
             return $response->send();
         }
-        return $this->throw404();
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -633,9 +635,9 @@ class DocumentsController extends RozierApp
             $this->assignation['usages'] = $document->getNodesSourcesByFields();
 
             return $this->render('documents/usage.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -977,9 +979,9 @@ class DocumentsController extends RozierApp
             unlink($tmpFileName);
 
             return $response;
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

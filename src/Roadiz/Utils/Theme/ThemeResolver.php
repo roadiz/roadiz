@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\Theme;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Theme;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -110,5 +111,36 @@ class ThemeResolver
         } else {
             return [];
         }
+    }
+
+
+    /**
+     * Get Theme front controller class FQN.
+     *
+     * @param string $host Current request host
+     * @return null|Theme
+     */
+    public function findTheme($host)
+    {
+        if (!$this->installMode) {
+            /*
+             * First we look for theme according to hostname.
+             */
+            $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->findAvailableNonStaticFrontendWithHost($host);
+
+            /*
+             * If no theme for current host, we look for
+             * any frontend available theme.
+             */
+            if (null === $theme) {
+                $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                    ->findFirstAvailableNonStaticFrontend();
+            }
+
+            return $theme;
+        }
+
+        return null;
     }
 }

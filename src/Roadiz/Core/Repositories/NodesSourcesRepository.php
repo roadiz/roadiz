@@ -521,11 +521,16 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findByLatestUpdated($maxResult = 5)
     {
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('sns.id')
+                 ->from('RZ\Roadiz\Core\Entities\Log', 'slog')
+                 ->innerJoin('RZ\Roadiz\Core\Entities\NodesSources', 'sns')
+                 ->andWhere($subQuery->expr()->isNotNull('slog.nodeSource'))
+                 ->orderBy('slog.datetime', 'DESC');
+
         $query = $this->createQueryBuilder('ns');
-        $query->addSelect('log');
-        $query->innerJoin('ns.logs', 'log');
+        $query->andWhere($query->expr()->in('ns.id', $subQuery->getQuery()->getDQL()));
         $query->setMaxResults($maxResult);
-        $query->orderBy('log.datetime', 'DESC');
 
         return new Paginator($query->getQuery());
     }

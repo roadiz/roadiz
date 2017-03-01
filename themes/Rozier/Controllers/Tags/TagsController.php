@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\TagTranslationType;
 use Themes\Rozier\Forms\TagType;
@@ -202,15 +203,15 @@ class TagsController extends RozierApp
                             'translationId' => $translation->getId(),
                         ]
                     ));
-                } else {
-                    return $this->throw404();
                 }
+
+                throw new ResourceNotFoundException();
             }
 
             return $this->render('tags/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -263,7 +264,7 @@ class TagsController extends RozierApp
             }
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -322,9 +323,9 @@ class TagsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('tags/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -457,9 +458,9 @@ class TagsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('tags/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -532,9 +533,9 @@ class TagsController extends RozierApp
             $this->assignation['parentTag'] = $parentTag;
 
             return $this->render('tags/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -572,9 +573,9 @@ class TagsController extends RozierApp
             $this->assignation['translation'] = $translation;
 
             return $this->render('tags/nodes.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

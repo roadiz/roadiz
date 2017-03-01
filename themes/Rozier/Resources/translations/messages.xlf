@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en-US" datatype="plaintext">
-    <body>
-      <trans-unit xml:space="preserve" id="2">
+    <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en-US" datatype="plaintext">
+        <body>
+            <trans-unit xml:space="preserve" id="2">
         <source>node.%name%.updated</source>
         <target></target>
         <context-group purpose="location">
@@ -4027,8 +4027,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- Count translations -->
-      <trans-unit xml:space="preserve" id="409">
+            <!-- Count translations -->
+            <trans-unit xml:space="preserve" id="409">
         <source><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></source>
         <target></target>
       </trans-unit>
@@ -4132,8 +4132,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- Node type fields datatypes -->
-      <trans-unit xml:space="preserve" id="433">
+            <!-- Node type fields datatypes -->
+            <trans-unit xml:space="preserve" id="433">
         <source>string.type</source>
         <target></target>
       </trans-unit>
@@ -4198,8 +4198,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- Dynamic button in nodeTree add.a.%nodeType% -->
-      <trans-unit xml:space="preserve" id="445">
+            <!-- Dynamic button in nodeTree add.a.%nodeType% -->
+            <trans-unit xml:space="preserve" id="445">
         <source>add.a.%nodeType%</source>
         <target></target>
       </trans-unit>
@@ -4226,9 +4226,9 @@
         <target></target>
       </trans-unit>
 
-      <!-- Setting groups -->
+            <!-- Setting groups -->
 
-      <trans-unit xml:space="preserve" id="settingGroup">
+            <trans-unit xml:space="preserve" id="settingGroup">
         <source>settingGroup</source>
         <target></target>
       </trans-unit>
@@ -4308,8 +4308,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- Default settings names -->
-      <trans-unit xml:space="preserve" id="display_debug_panel">
+            <!-- Default settings names -->
+            <trans-unit xml:space="preserve" id="display_debug_panel">
         <source>display_debug_panel</source>
         <target></target>
       </trans-unit>
@@ -4396,8 +4396,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- document usage -->
-      <trans-unit xml:space="preserve" id="document.%name%.usage">
+            <!-- document usage -->
+            <trans-unit xml:space="preserve" id="document.%name%.usage">
         <source>document.%name%.usage</source>
         <target></target>
       </trans-unit>
@@ -4422,8 +4422,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- node statuses -->
-      <trans-unit xml:space="preserve" id="all.nodes">
+            <!-- node statuses -->
+            <trans-unit xml:space="preserve" id="all.nodes">
         <source>all.nodes</source>
         <target></target>
       </trans-unit>
@@ -4482,13 +4482,13 @@
         <target></target>
       </trans-unit>
 
-      <!-- are_you_sure.undelete.node.and.data -->
-      <trans-unit xml:space="preserve" id="are_you_sure.undelete.node.and.data">
+            <!-- are_you_sure.undelete.node.and.data -->
+            <trans-unit xml:space="preserve" id="are_you_sure.undelete.node.and.data">
         <source>are_you_sure.undelete.node.and.data</source>
         <target></target>
       </trans-unit>
-      <!-- undelete.node.%name% -->
-      <trans-unit xml:space="preserve" id="undelete.node.%name%">
+            <!-- undelete.node.%name% -->
+            <trans-unit xml:space="preserve" id="undelete.node.%name%">
         <source>undelete.node.%name%</source>
         <target></target>
       </trans-unit>
@@ -4498,8 +4498,8 @@
         <target></target>
       </trans-unit>
 
-      <!-- embed documents -->
-      <trans-unit xml:space="preserve" id="embed.document">
+            <!-- embed documents -->
+            <trans-unit xml:space="preserve" id="embed.document">
         <source>embed.document</source>
         <target></target>
       </trans-unit>
@@ -4527,9 +4527,9 @@
       </trans-unit>
 
 
-      <!-- stacks -->
+            <!-- stacks -->
 
-      <trans-unit xml:space="preserve" id="add.stack.type">
+            <trans-unit xml:space="preserve" id="add.stack.type">
         <source>add.stack.type</source>
         <target></target>
       </trans-unit>
@@ -5903,8 +5903,8 @@
           <target></target>
       </trans-unit>
 
-      <!-- Node tree contextual menu commands -->
-      <trans-unit xml:space="preserve" id="node.hide">
+            <!-- Node tree contextual menu commands -->
+            <trans-unit xml:space="preserve" id="node.hide">
           <source>node.hide</source>
           <target></target>
       </trans-unit>
@@ -5925,8 +5925,8 @@
           <target></target>
       </trans-unit>
 
-      <!-- Some constraints messages -->
-      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+            <!-- Some constraints messages -->
+            <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
           <source>string.should.only.contain.latin.characters</source>
           <target></target>
       </trans-unit>
@@ -5943,8 +5943,8 @@
           <target></target>
       </trans-unit>
 
-      <!-- Font variantes -->
-      <trans-unit xml:space="preserve" id="font_variant.regular">
+            <!-- Font variantes -->
+            <trans-unit xml:space="preserve" id="font_variant.regular">
           <source>font_variant.regular</source>
           <target></target>
       </trans-unit>
@@ -6273,8 +6273,8 @@
           <source>%node%.transtyped_to.%type%</source>
           <target></target>
       </trans-unit>
-      <!-- Tag multiple children creation -->
-      <trans-unit xml:space="preserve" id="add_all">
+            <!-- Tag multiple children creation -->
+            <trans-unit xml:space="preserve" id="add_all">
           <source>add_all</source>
           <target></target>
       </trans-unit>
@@ -6295,8 +6295,8 @@
           <target></target>
       </trans-unit>
 
-      <!-- Raw documents -->
-      <trans-unit xml:space="preserve" id="download.raw.document">
+            <!-- Raw documents -->
+            <trans-unit xml:space="preserve" id="download.raw.document">
           <source>download.raw.document</source>
           <target></target>
       </trans-unit>
@@ -6314,8 +6314,8 @@
           <target></target>
       </trans-unit>
 
-      <!-- Bulk tags -->
-      <trans-unit xml:space="preserve" id="delete.tags">
+            <!-- Bulk tags -->
+            <trans-unit xml:space="preserve" id="delete.tags">
           <source>delete.tags</source>
           <target></target>
       </trans-unit>
@@ -6400,8 +6400,8 @@
             <target></target>
             <note>In node-type section, label for the parameters section.</note>
         </trans-unit>
-        <!-- Custom form nav bar -->
-        <trans-unit xml:space="preserve" id="custom-form.parameters">
+            <!-- Custom form nav bar -->
+            <trans-unit xml:space="preserve" id="custom-form.parameters">
             <source>custom-form.parameters</source>
             <target></target>
             <note>In custom form nav bar.</note>
@@ -6461,6 +6461,62 @@
             <source>yaml.type</source>
             <target></target>
           </trans-unit>
-    </body>
-  </file>
+
+            <trans-unit xml:space="preserve" id="manage.redirections">
+              <source>manage.redirections</source>
+              <target></target>
+              <note>Redirection section button label</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="delete.redirection">
+              <source>delete.redirection</source>
+              <target></target>
+              <note>Delete redirection page title</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
+              <source>are_you_sure.delete.redirection</source>
+              <target></target>
+              <note>Delete redirection page confirmation message</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="add.a.redirection">
+              <source>add.a.redirection</source>
+              <target></target>
+              <note>Add redirection page title</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="back_to.redirections">
+              <source>back_to.redirections</source>
+              <target></target>
+              <note>Back button label for redirections</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="edit.redirection">
+              <source>edit.redirection</source>
+              <target></target>
+              <note>Edit redirection page title</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="redirection.query">
+              <source>redirection.query</source>
+              <target></target>
+              <note>Redirection field which stands for the query: the URL to listen for a redirection</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="redirection.redirect_uri">
+              <source>redirection.redirect_uri</source>
+              <target></target>
+              <note>Redirection field which stands for the redirect URI: the destination URI</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="redirection.type">
+              <source>redirection.type</source>
+              <target></target>
+              <note>Redirection field which stands for HTTP code: 301 or 302</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="redirection.moved_permanently">
+              <source>redirection.moved_permanently</source>
+              <target></target>
+              <note>Redirection type description for 301 Moved Permanently</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="redirection.moved_temporarily">
+              <source>redirection.moved_temporarily</source>
+              <target></target>
+              <note>Redirection type description for 302 Moved Temporarily</note>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>

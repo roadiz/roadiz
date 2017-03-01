@@ -43,6 +43,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -164,7 +165,8 @@ class NodesSourcesController extends RozierApp
                 return $this->render('nodes/editSource.html.twig', $this->assignation);
             }
         }
-        return $this->throw404();
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -178,6 +180,9 @@ class NodesSourcesController extends RozierApp
     public function removeAction(Request $request, $nodeSourceId)
     {
         $ns = $this->get("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
+        if (null === $ns) {
+            throw new ResourceNotFoundException();
+        }
 
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 

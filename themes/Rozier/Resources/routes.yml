@@ -126,6 +126,16 @@ documentsRoutes:
     resource: "routing/documents.yml"
     prefix: /rz-admin/documents
 
+
+# DOCUMENTS
+redirectionsHomePage:
+    path:     /rz-admin/redirections
+    defaults:
+        _controller: Themes\Rozier\Controllers\RedirectionsController::indexAction
+redirectionsRoutes:
+    resource: "routing/redirections.yml"
+    prefix: /rz-admin/redirections
+
 # THEMES
 themesHomePage:
     path:     /rz-admin/themes

@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -85,9 +86,9 @@ class SettingsController extends RozierApp
             }
 
             return $this->render('settings/list.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     protected function commonSettingList(Request $request, $settingGroup = null)
@@ -194,9 +195,9 @@ class SettingsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('settings/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -237,9 +238,9 @@ class SettingsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('settings/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -280,9 +281,9 @@ class SettingsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('settings/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

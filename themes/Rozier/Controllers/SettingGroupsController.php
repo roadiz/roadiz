@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -111,9 +112,9 @@ class SettingGroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('settingGroups/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -157,9 +158,9 @@ class SettingGroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('settingGroups/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -203,9 +204,9 @@ class SettingGroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('settingGroups/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

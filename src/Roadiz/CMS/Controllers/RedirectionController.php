@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,52 +23,39 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- * @file DashboardController.php
- * @author Ambroise Maupate
+ * @file RedirectionController.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\Controllers;
 
-use Doctrine\Common\Collections\Criteria;
-use RZ\Roadiz\Core\Entities\Log;
-use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\RozierApp;
+namespace RZ\Roadiz\CMS\Controllers;
+
+use RZ\Roadiz\Core\Entities\Redirection;
+use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
- * Main backoffice entrance.
+ * Class RedirectionController
+ * @package RZ\Roadiz\CMS\Controllers
  */
-class DashboardController extends RozierApp
+class RedirectionController extends AppController
 {
     /**
      * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response $response
+     * @param Redirection $redirection
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function indexAction(Request $request)
+    public function redirectAction(Request $request, Redirection $redirection)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
-
-        $this->assignation['latestLogs'] = [];
-
-        $logs = $this->get('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\Log')
-             ->findLatestByNodesSources(8);
-
-        $criteria = Criteria::create()
-            ->orderBy(["datetime" => Criteria::DESC])
-            ->setFirstResult(0)
-            ->setMaxResults(1);
-
-        /*
-         * Ensure that we really get latest log for
-         * given nodeSource because of GROUP BY sql command.
-         */
-        /** @var Log $log */
-        foreach ($logs as $log) {
-            $nodeSource = $log->getNodeSource();
-            $this->assignation['latestLogs'][] = $nodeSource->getLogs()->matching($criteria)->get(0);
+        if (null !== $redirection->getRedirectNodeSource()) {
+            $urlGenerator = new NodesSourcesUrlGenerator($request, $redirection->getRedirectNodeSource());
+            return $this->redirect($urlGenerator->getUrl(), $redirection->getType());
         }
 
-        return $this->render('dashboard/index.html.twig', $this->assignation);
+        if (strlen($redirection->getRedirectUri()) > 0) {
+            return $this->redirect($redirection->getRedirectUri(), $redirection->getType());
+        }
+
+        throw new ResourceNotFoundException();
     }
 }

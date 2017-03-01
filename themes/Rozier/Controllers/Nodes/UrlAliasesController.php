@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -223,7 +224,7 @@ class UrlAliasesController extends RozierApp
             return $this->render('nodes/editAliases.html.twig', $this->assignation);
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**

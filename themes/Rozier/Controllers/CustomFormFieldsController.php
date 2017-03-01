@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\CustomFormFieldType;
 use Themes\Rozier\RozierApp;
@@ -63,9 +64,9 @@ class CustomFormFieldsController extends RozierApp
             $this->assignation['fields'] = $fields;
 
             return $this->render('custom-form-fields/list.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -114,9 +115,9 @@ class CustomFormFieldsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-form-fields/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -183,9 +184,9 @@ class CustomFormFieldsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-form-fields/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -238,9 +239,9 @@ class CustomFormFieldsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-form-fields/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
