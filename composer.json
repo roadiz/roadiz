@@ -80,7 +80,8 @@
         "ambroisemaupate/intervention-request":"~0.1.7",
         "intervention/image": "~2.3.2",
         "erusev/parsedown-extra": "~0.7.1",
-        "graylog2/gelf-php": "~1.0"
+        "graylog2/gelf-php": "~1.0",
+        "enshrined/svg-sanitize": "^0.5.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",

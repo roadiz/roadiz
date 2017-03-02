@@ -123,4 +123,5 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 AjaxDocumentsExplorerController::$thumbnailArray = [
     "fit" => "40x40",
     "quality" => 50,
+    "inline" => false,
 ];

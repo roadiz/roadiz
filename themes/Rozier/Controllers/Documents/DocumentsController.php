@@ -65,6 +65,7 @@ class DocumentsController extends RozierApp
     protected $thumbnailFormat = [
         'quality' => 50,
         'fit' => '128x128',
+        'inline' => false,
     ];
 
     /**

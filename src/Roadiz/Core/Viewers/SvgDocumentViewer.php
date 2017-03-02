@@ -29,13 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Viewers;
 
+use enshrined\svgSanitize\Sanitizer;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class SvgDocumentViewer
 {
     protected $imagePath;
     protected $attributes;
-    protected $xml;
     protected $asObject = false;
     protected $imageUrl;
 
@@ -66,23 +66,6 @@ class SvgDocumentViewer
         if (!file_exists($this->imagePath)) {
             throw new FileNotFoundException('SVG file does not exist: ' . $this->imagePath);
         }
-
-        if (false === $this->asObject) {
-            $this->xml = new \SimpleXMLElement(file_get_contents($this->imagePath));
-            $this->xml->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
-            $this->xml->registerXPathNamespace('xlink', 'http://www.w3.org/1999/xlink');
-            $this->xml->registerXPathNamespace('a', 'http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/');
-            $this->xml->registerXPathNamespace('ns1', 'http://ns.adobe.com/Flows/1.0/');
-            $this->xml->registerXPathNamespace('ns0', 'http://ns.adobe.com/SaveForWeb/1.0/');
-            $this->xml->registerXPathNamespace('ns', 'http://ns.adobe.com/Variables/1.0/');
-            $this->xml->registerXPathNamespace('i', 'http://ns.adobe.com/AdobeIllustrator/10.0/');
-            $this->xml->registerXPathNamespace('x', 'http://ns.adobe.com/Extensibility/1.0/');
-            $this->xml->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
-            $this->xml->registerXPathNamespace('cc', 'http://creativecommons.org/ns#');
-            $this->xml->registerXPathNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-            $this->xml->registerXPathNamespace('sodipodi', 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd');
-            $this->xml->registerXPathNamespace('inkscape', 'http://www.inkscape.org/namespaces/inkscape');
-        }
     }
 
     /**
@@ -99,53 +82,82 @@ class SvgDocumentViewer
         }
     }
 
-    protected function getInlineSvg()
-    {
-        $xmlAttributes = $this->xml->attributes();
-        $existingAttributesKeys = [];
-        foreach ($xmlAttributes as $key => $value) {
-            $existingAttributesKeys[] = $key;
-        }
-
-        foreach ($this->attributes as $key => $value) {
-            if (in_array($key, static::$allowedAttributes)) {
-                if ($key == 'identifier') {
-                    if (in_array('id', $existingAttributesKeys)) {
-                        $xmlAttributes['id'] = $value;
-                    } else {
-                        $this->xml->addAttribute('id', $value);
-                    }
-                } else {
-                    if (in_array($key, $existingAttributesKeys)) {
-                        $xmlAttributes[$key] = $value;
-                    } else {
-                        $this->xml->addAttribute($key, $value);
-                    }
-                }
-            }
-        }
-
-        /*
-         * Remove xml DOCTYPE to comply to W3C HTML Validator
-         */
-        return preg_replace('#^<\?xml[^\?]+\?>#', '', $this->xml->asXML());
-    }
-
-    protected function getObjectSvg()
+    /**
+     * @return array
+     */
+    protected function getAllowedAttributes()
     {
         $attributes = [];
-        $attributes['type'] = 'image/svg+xml';
-        $attributes['data'] = $this->imageUrl;
-
         foreach ($this->attributes as $key => $value) {
             if (in_array($key, static::$allowedAttributes)) {
-                if ($key == 'identifier') {
+                if ($key === 'identifier') {
                     $attributes['id'] = $value;
                 } else {
                     $attributes[$key] = $value;
                 }
             }
         }
+        return $attributes;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getInlineSvg()
+    {
+        // Create a new sanitizer instance
+        $sanitizer = new Sanitizer();
+        $sanitizer->minify(true);
+
+        // Load the dirty svg
+        $dirtySVG = file_get_contents($this->imagePath);
+        $cleanSVG = $sanitizer->sanitize($dirtySVG);
+        // Pass it to the sanitizer and get it back clean
+        return $this->injectAttributes($cleanSVG);
+    }
+
+    /**
+     * @param string $svg
+     * @return string
+     */
+    protected function injectAttributes($svg)
+    {
+        $attributes = $this->getAllowedAttributes();
+        if (count($attributes) > 0) {
+            $xml = new \SimpleXMLElement($svg);
+            $xml->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
+            $xml->registerXPathNamespace('xlink', 'http://www.w3.org/1999/xlink');
+            $xml->registerXPathNamespace('a', 'http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/');
+            $xml->registerXPathNamespace('ns1', 'http://ns.adobe.com/Flows/1.0/');
+            $xml->registerXPathNamespace('ns0', 'http://ns.adobe.com/SaveForWeb/1.0/');
+            $xml->registerXPathNamespace('ns', 'http://ns.adobe.com/Variables/1.0/');
+            $xml->registerXPathNamespace('i', 'http://ns.adobe.com/AdobeIllustrator/10.0/');
+            $xml->registerXPathNamespace('x', 'http://ns.adobe.com/Extensibility/1.0/');
+            $xml->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+            $xml->registerXPathNamespace('cc', 'http://creativecommons.org/ns#');
+            $xml->registerXPathNamespace('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+            $xml->registerXPathNamespace('sodipodi', 'http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd');
+            $xml->registerXPathNamespace('inkscape', 'http://www.inkscape.org/namespaces/inkscape');
+
+            foreach ($attributes as $key => $value) {
+                if (isset($xml->attributes()->$key)) {
+                    $xml->attributes()->$key = $value;
+                } else {
+                    $xml->addAttribute($key, $value);
+                }
+            }
+
+            $svg = preg_replace('#^<\?xml[^\?]+\?>#', '', $xml->asXML());
+        }
+
+        return $svg;
+    }
+
+    protected function getObjectSvg()
+    {
+        $attributes = $this->getAllowedAttributes();
+        $attributes['type'] = 'image/svg+xml';
+        $attributes['data'] = $this->imageUrl;
 
         if (isset($attributes['alt'])) {
             unset($attributes['alt']);
