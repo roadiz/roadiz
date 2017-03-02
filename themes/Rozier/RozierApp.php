@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Themes\Rozier\Events\ExifDocumentSubscriber;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
@@ -209,10 +210,21 @@ class RozierApp extends BackendController
         );
 
         /*
-         * Add custom event subscriber to manage node duplication
+         * Add custom event subscriber to manage Svg document sanitizing
          */
         $container['dispatcher']->addSubscriber(
             new SvgDocumentSubscriber(
+                $container['assetPackages'],
+                $container['logger']
+            )
+        );
+
+        /*
+         * Add custom event subscriber to manage document EXIF
+         */
+        $container['dispatcher']->addSubscriber(
+            new ExifDocumentSubscriber(
+                $container['em'],
                 $container['assetPackages'],
                 $container['logger']
             )
