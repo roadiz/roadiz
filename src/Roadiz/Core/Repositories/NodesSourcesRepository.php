@@ -512,6 +512,45 @@ class NodesSourcesRepository extends EntityRepository
         return [];
     }
 
+    public function findByTextQuery(
+        $textQuery,
+        AuthorizationChecker &$authorizationChecker = null,
+        $preview = false,
+        $nodeTypes = [],
+        $onlyVisible = false
+    ) {
+        $qb = $this->createQueryBuilder('ns');
+        $qb->select('ns, n')
+            ->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->like('ns.title', ':query'),
+                $qb->expr()->like('ns.metaTitle', ':query'),
+                $qb->expr()->like('ns.metaKeywords', ':query'),
+                $qb->expr()->like('ns.metaDescription', ':query')
+            ))
+            ->orderBy('ns.title', 'ASC')
+            ->setParameter(':query', '%' . $textQuery . '%');
+
+        $criteria = [];
+        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
+
+        if (count($nodeTypes) > 0) {
+            $qb->andWhere($qb->expr()->in('n.nodeType', ':types'))
+                ->setParameter(':types', $nodeTypes);
+        }
+
+        if (true === $onlyVisible) {
+            $qb->andWhere($qb->expr()->eq('n.visible', ':visible'))
+                ->setParameter(':visible', true);
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
     /**
      * Find latest updated NodesSources using Log table.
      *
