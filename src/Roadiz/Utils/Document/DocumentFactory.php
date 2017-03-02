@@ -152,6 +152,16 @@ class DocumentFactory
             $document->getFilename()
         );
 
+        $this->dispatchEvents($document);
+
+        return $document;
+    }
+
+    /**
+     * @param Document $document
+     */
+    protected function dispatchEvents(Document $document)
+    {
         if ($document->isImage()) {
             $this->dispatcher->dispatch(
                 DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
@@ -159,7 +169,12 @@ class DocumentFactory
             );
         }
 
-        return $document;
+        if ($document->getMimeType() == 'image/svg+xml') {
+            $this->dispatcher->dispatch(
+                DocumentEvents::DOCUMENT_SVG_UPLOADED,
+                new FilterDocumentEvent($document)
+            );
+        }
     }
 
     /**
@@ -210,12 +225,7 @@ class DocumentFactory
             $document->getFilename()
         );
 
-        if ($document->isImage()) {
-            $this->dispatcher->dispatch(
-                DocumentEvents::DOCUMENT_IMAGE_UPLOADED,
-                new FilterDocumentEvent($document)
-            );
-        }
+        $this->dispatchEvents($document);
 
         return $document;
     }

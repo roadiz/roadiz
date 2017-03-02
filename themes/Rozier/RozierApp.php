@@ -41,6 +41,7 @@ use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
 use Themes\Rozier\Events\SolariumSubscriber;
+use Themes\Rozier\Events\SvgDocumentSubscriber;
 use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -205,6 +206,16 @@ class RozierApp extends BackendController
          */
         $container['dispatcher']->addSubscriber(
             new NodeDuplicationSubscriber($container['em'])
+        );
+
+        /*
+         * Add custom event subscriber to manage node duplication
+         */
+        $container['dispatcher']->addSubscriber(
+            new SvgDocumentSubscriber(
+                $container['assetPackages'],
+                $container['logger']
+            )
         );
 
         /*
