@@ -53,6 +53,12 @@ class ThemeGenerateCommand extends Command
                 'd',
                 InputOption::VALUE_NONE,
                 'Use BaseTheme develop branch instead of master.'
+            )
+            ->addOption(
+                'branch',
+                'b',
+                InputOption::VALUE_REQUIRED,
+                'Choose BaseTheme branch.'
             );
     }
 
@@ -99,6 +105,11 @@ class ThemeGenerateCommand extends Command
         if ($input->getOption('develop')) {
             $branch = 'develop';
             $output->writeln('Using <info>develop</info> branch.');
+        }
+
+        if ($input->getOption('branch')) {
+            $branch = $input->getOption('branch');
+            $output->writeln('Using <info>'.$branch.'</info> branch.');
         }
 
         /*
