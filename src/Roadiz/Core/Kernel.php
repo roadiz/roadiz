@@ -76,7 +76,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
-    const CMS_VERSION = 'alpha';
+    const CMS_VERSION = 'beta';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
