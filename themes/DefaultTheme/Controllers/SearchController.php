@@ -35,7 +35,6 @@ use Themes\DefaultTheme\DefaultThemeApp;
 
 class SearchController extends DefaultThemeApp
 {
-
     /**
      * Default action for searching a Page source.
      *

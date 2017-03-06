@@ -163,7 +163,6 @@ class NodeSourceApi extends AbstractApi
                     $this->container['kernel']->isPreview()
                 );
         }
-
     }
 
     /**

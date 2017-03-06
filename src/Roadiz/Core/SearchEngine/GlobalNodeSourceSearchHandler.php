@@ -77,20 +77,20 @@ class GlobalNodeSourceSearchHandler
          */
         /** @var array $nodesSources */
         $nodesSources = $this->repository->findBySearchQuery(
-                $safeSearchTerms,
-                $resultCount
-            );
+            $safeSearchTerms,
+            $resultCount
+        );
 
         /*
          * Second try with sources fields
          */
         if (count($nodesSources) === 0) {
             $nodesSources = $this->repository->searchBy(
-                    $safeSearchTerms,
-                    [],
-                    [],
-                    $resultCount
-                );
+                $safeSearchTerms,
+                [],
+                [],
+                $resultCount
+            );
 
             if (count($nodesSources) === 0) {
                 /*
