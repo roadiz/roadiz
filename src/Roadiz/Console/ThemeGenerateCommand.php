@@ -177,7 +177,7 @@ class ThemeGenerateCommand extends Command
         $kernel = $this->getHelper('kernel')->getKernel();
         if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
             $filesystem->mkdir($kernel->getPublicDir() . '/themes/' . $themeName);
-            $filesystem->symlink($themePath . '/static', $kernel->getPublicDir() . '/themes/' . $themeName . '/static');
+            $filesystem->symlink('../../../themes/' . $themeName . '/static', $kernel->getPublicDir() . '/themes/' . $themeName . '/static');
             $output->writeln('Create a symlink in web/ dir.');
         }
 
