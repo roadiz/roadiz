@@ -88,7 +88,6 @@ class NodeSourceApi extends AbstractApi
         $offset = null
     ) {
         $this->secureQuery($criteria);
-
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()
@@ -110,7 +109,6 @@ class NodeSourceApi extends AbstractApi
         array $criteria
     ) {
         $this->secureQuery($criteria);
-
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()
@@ -129,7 +127,6 @@ class NodeSourceApi extends AbstractApi
     public function getOneBy(array $criteria, array $order = null)
     {
         $this->secureQuery($criteria);
-
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()
@@ -139,6 +136,33 @@ class NodeSourceApi extends AbstractApi
                         $this->container['securityAuthorizationChecker'],
                         $this->container['kernel']->isPreview()
                     );
+    }
+
+    /**
+     * Search Nodes-Sources using LIKE condition on title,
+     * meta-title, meta-keywords and meta-description.
+     *
+     * @param $textQuery
+     * @param int $limit
+     * @param array $nodeTypes
+     * @param bool $onlyVisible
+     * @return array
+     */
+    public function searchBy($textQuery, $limit = 0, $nodeTypes = [], $onlyVisible = false)
+    {
+        $repository = $this->getRepository();
+
+        if ($repository instanceof NodesSourcesRepository) {
+            return $this->getRepository()
+                ->findByTextQuery(
+                    $textQuery,
+                    $limit,
+                    $nodeTypes,
+                    $onlyVisible,
+                    $this->container['securityAuthorizationChecker'],
+                    $this->container['kernel']->isPreview()
+                );
+        }
     }
 
     /**

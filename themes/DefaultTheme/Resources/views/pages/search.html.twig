@@ -1,0 +1,17 @@
+{% extends '@DefaultTheme/pages/base.html.twig' %}
+
+{% block inner_content %}
+    <h1 class="page-title">{% trans %}search{% endtrans %}</h1>
+    <h2>« {{ query }} »</h2>
+
+    <div class="page-text">
+        <div class="list-group">
+            {% for nodeSource in nodeSources %}
+                <a class="list-group-item" href="{{ nodeSource|url }}">
+                    <h3 class="list-group-item-heading">{{ nodeSource.title }}</h3>
+                    <div class="list-group-item-text">{{ nodeSource.content|truncate(50)|inlineMarkdown }}</div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

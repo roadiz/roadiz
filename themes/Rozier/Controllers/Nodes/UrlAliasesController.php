@@ -264,12 +264,12 @@ class UrlAliasesController extends RozierApp
                 } catch (\Exception $e) {
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.no_creation.already_exists', ['%alias%' => $testingAlias]);
 
-                    throw new EntityAlreadyExistsException($msg, 1);
+                    throw new EntityAlreadyExistsException($msg);
                 }
             } else {
                 $msg = $this->getTranslator()->trans('url_alias.no_translation.%translation%', ['%translation%' => $translation->getName()]);
 
-                throw new NoTranslationAvailableException($msg, 1);
+                throw new NoTranslationAvailableException($msg);
             }
         }
 

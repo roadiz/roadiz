@@ -12,19 +12,26 @@ homePageLocale:
 
 contactPage:
     path:     /contact
-    defaults: { _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction }
+    defaults:
+        _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction
+        _locale: en
 contactPageLocale:
     path:     /{_locale}/contact
     defaults: { _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction }
     requirements:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
-feedRSS:
-    path:     /feed
-    defaults: { _controller: Themes\DefaultTheme\Controllers\FeedController::indexAction }
-sitemap:
-    path:     /sitemap.xml
-    defaults: { _controller: Themes\DefaultTheme\Controllers\SitemapController::indexAction }
+searchPage:
+    path:     /search
+    defaults:
+        _controller: Themes\DefaultTheme\Controllers\SearchController::defaultAction
+        _locale: en
+searchPageLocale:
+    path:     /{_locale}/search
+    defaults: { _controller: Themes\DefaultTheme\Controllers\SearchController::defaultAction }
+    requirements:
+        _locale: "[a-z]{2}_?[A-Z]{0,2}"
+
 defaultRemoveTrailingSlash:
     path: /{url}
     defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::removeTrailingSlashAction }

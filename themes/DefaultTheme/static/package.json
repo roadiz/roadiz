@@ -2,9 +2,10 @@
     "name": "default-theme",
     "version": "0.17.0",
     "dependencies": {
-        "less": "^2.7.1"
+        "less": "^2.7.2"
     },
     "scripts": {
-        "less" : "lessc -x ./less/style.less ./css/style.min.css"
+        "less" : "lessc -x ./less/style.less ./css/style.min.css",
+        "build" : "lessc -x ./less/style.less ./css/style.min.css"
     }
 }
