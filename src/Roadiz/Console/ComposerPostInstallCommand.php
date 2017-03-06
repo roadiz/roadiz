@@ -62,6 +62,7 @@ class ComposerPostInstallCommand extends Command
         $this->executeDevEntryPoint($input, $output);
         $this->executeInstallEntryPoint($input, $output);
         $this->executeClearCacheEntryPoint($input, $output);
+        $this->executeVagrantfile($input, $output);
     }
 
     /**
@@ -218,6 +219,37 @@ class ComposerPostInstallCommand extends Command
             )) {
                 $fs->copy($clearCacheFileSrc, $clearCacheFile);
                 $output->writeln('<info>Clearing cache entry-point (clear_cache.php) copied</info> to ' . $this->kernel->getPublicDir());
+            }
+        }
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function executeVagrantfile(InputInterface $input, OutputInterface $output)
+    {
+        $questionHelper = $this->getHelper('question');
+        $fs = new Filesystem();
+
+        /*
+         * Need to copy to project root, not Kernel root!
+         */
+        $clearCacheFile = ROADIZ_ROOT . '/Vagrantfile';
+        $clearCacheFileSrc = 'samples/Vagrantfile.sample';
+
+        /*
+         * Copy config
+         */
+        if (!$fs->exists($clearCacheFile) && $fs->exists($clearCacheFileSrc)) {
+            $configQuestion = new ConfirmationQuestion('<question>Do you want to copy a Vagrantfile sample for development VM (Vagrantfile)?</question> [Y/n]', true);
+            if ($questionHelper->ask(
+                $input,
+                $output,
+                $configQuestion
+            )) {
+                $fs->copy($clearCacheFileSrc, $clearCacheFile);
+                $output->writeln('<info>Vagrantfile sample copied</info> to ' . ROADIZ_ROOT);
             }
         }
     }
