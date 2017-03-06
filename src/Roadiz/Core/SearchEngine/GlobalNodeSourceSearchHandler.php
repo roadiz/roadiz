@@ -33,6 +33,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
 /**
  * Class GlobalNodeSourceSearchHandler
@@ -46,12 +47,19 @@ class GlobalNodeSourceSearchHandler
     private $em;
 
     /**
+     * @var NodesSourcesRepository
+     */
+    private $repository;
+
+    /**
      * GlobalNodeSourceSearchHandler constructor.
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        /** @var NodesSourcesRepository repository */
+        $this->repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
     }
 
     /**
@@ -68,9 +76,7 @@ class GlobalNodeSourceSearchHandler
          * First try with Solr
          */
         /** @var array $nodesSources */
-        $nodesSources = $this->em
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-            ->findBySearchQuery(
+        $nodesSources = $this->repository->findBySearchQuery(
                 $safeSearchTerms,
                 $resultCount
             );
@@ -79,9 +85,7 @@ class GlobalNodeSourceSearchHandler
          * Second try with sources fields
          */
         if (count($nodesSources) === 0) {
-            $nodesSources = $this->em
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                ->searchBy(
+            $nodesSources = $this->repository->searchBy(
                     $safeSearchTerms,
                     [],
                     [],
@@ -93,9 +97,7 @@ class GlobalNodeSourceSearchHandler
                  * Then try with node name.
                  */
                 /** @var QueryBuilder $qb */
-                $qb = $this->em
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                    ->createQueryBuilder('ns');
+                $qb = $this->repository->createQueryBuilder('ns');
 
                 $qb->select('ns, n')
                     ->innerJoin('ns.node', 'n')

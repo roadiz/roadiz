@@ -512,16 +512,29 @@ class NodesSourcesRepository extends EntityRepository
         return [];
     }
 
+    /**
+     * Search Nodes-Sources using LIKE condition on title
+     * meta-title, meta-keywords, meta-description.
+     *
+     * @param $textQuery
+     * @param int $limit
+     * @param array $nodeTypes
+     * @param bool $onlyVisible
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
+     * @return array
+     */
     public function findByTextQuery(
         $textQuery,
-        AuthorizationChecker &$authorizationChecker = null,
-        $preview = false,
+        $limit = 0,
         $nodeTypes = [],
-        $onlyVisible = false
+        $onlyVisible = false,
+        AuthorizationChecker &$authorizationChecker = null,
+        $preview = false
     ) {
         $qb = $this->createQueryBuilder('ns');
         $qb->select('ns, n')
-            ->innerJoin('ns.node', 'n')
+            //->innerJoin('ns.node', 'n')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->like('ns.title', ':query'),
                 $qb->expr()->like('ns.metaTitle', ':query'),
@@ -531,8 +544,15 @@ class NodesSourcesRepository extends EntityRepository
             ->orderBy('ns.title', 'ASC')
             ->setParameter(':query', '%' . $textQuery . '%');
 
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
         $criteria = [];
-        $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
+
+        if (false === $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview)) {
+            $qb->innerJoin('ns.node', 'n');
+        }
 
         if (count($nodeTypes) > 0) {
             $qb->andWhere($qb->expr()->in('n.nodeType', ':types'))
