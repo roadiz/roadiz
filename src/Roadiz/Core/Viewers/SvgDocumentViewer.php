@@ -112,8 +112,11 @@ class SvgDocumentViewer
         // Load the dirty svg
         $dirtySVG = file_get_contents($this->imagePath);
         $cleanSVG = $sanitizer->sanitize($dirtySVG);
-        // Pass it to the sanitizer and get it back clean
-        return $this->injectAttributes($cleanSVG);
+        if (false !== $cleanSVG) {
+            // Pass it to the sanitizer and get it back clean
+            return $this->injectAttributes($cleanSVG);
+        }
+        return $dirtySVG;
     }
 
     /**
