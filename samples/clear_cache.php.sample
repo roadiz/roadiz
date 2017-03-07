@@ -29,6 +29,7 @@
  */
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -82,6 +83,7 @@ $clearers = [
     new TranslationsCacheClearer($kernel->getCacheDir()),
     new ConfigurationCacheClearer($kernel->getCacheDir()),
     new NodesSourcesUrlsCacheClearer($kernel->getService('nodesSourcesUrlCacheProvider')),
+    new AppCacheClearer($kernel->getCacheDir()),
     new OPCacheClearer(),
     // Keep doctrine at the end
     new DoctrineCacheClearer($kernel->getService('em'), $kernel),

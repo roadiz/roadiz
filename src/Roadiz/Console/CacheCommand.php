@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Console;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
@@ -103,6 +104,12 @@ class CacheCommand extends Command
                 InputOption::VALUE_NONE,
                 'Clear cached node-sources Urls.'
             )
+            ->addOption(
+                'clear-appcache',
+                'a',
+                InputOption::VALUE_NONE,
+                'Clear application cache.'
+            )
         ;
     }
 
@@ -119,10 +126,12 @@ class CacheCommand extends Command
         $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
         $translationsClearer = new TranslationsCacheClearer($kernel->getCacheDir());
         $configurationClearer = new ConfigurationCacheClearer($kernel->getCacheDir());
+        $appCacheClearer = new AppCacheClearer($kernel->getCacheDir());
         $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
 
         $clearers = [
             $configurationClearer,
+            $appCacheClearer,
             $assetsClearer,
             $routingClearer,
             $templatesClearer,
@@ -143,6 +152,11 @@ class CacheCommand extends Command
                 $configurationClearer->clear();
                 if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
                     $output->writeln('— ' . $configurationClearer->getOutput());
+                }
+            } elseif ($input->getOption('clear-appcache')) {
+                $appCacheClearer->clear();
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $output->writeln('— ' . $appCacheClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-doctrine')) {
                 $doctrineClearer->clear();
