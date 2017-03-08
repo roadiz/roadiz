@@ -285,10 +285,9 @@ Rozier.refreshMainNodeTree = function (translationId) {
     var _this = this;
 
     var $currentNodeTree = $('#tree-container').find('.nodetree-widget');
-    var $currentRootTree = $($currentNodeTree.find('.root-tree')[0]);
+    var $currentRootTree = $currentNodeTree.find('.root-tree').eq(0);
 
-    if($currentNodeTree.length){
-
+    if($currentNodeTree.length) {
         var postData = {
             "_token": Rozier.ajaxToken,
             "_action":'requestMainNodeTree'

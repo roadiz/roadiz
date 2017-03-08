@@ -24,6 +24,21 @@ StackNodeTree.prototype.getCurrentPage = function() {
     return currentPage;
 };
 
+/**
+ * @return {Number|null}
+ */
+StackNodeTree.prototype.getTranslationId = function() {
+    var _this = this;
+
+    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
+    var currentTranslationId = parseInt(_this.$nodeTree.attr('data-translation-id'));
+    if (isNaN(currentTranslationId)) {
+        return null;
+    }
+
+    return currentTranslationId;
+};
+
 StackNodeTree.prototype.init = function() {
     var _this = this;
 
@@ -47,7 +62,7 @@ StackNodeTree.prototype.onChangeLangClick = function(event) {
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
     var translationId = parseInt($link.attr('data-translation-id'));
     var tagId = $link.attr('data-filter-tag');
-    _this.refreshNodeTree(parentNodeId, translationId, tagId, 1);
+    _this.refreshNodeTree(parentNodeId, translationId, tagId);
     return false;
 };
 
@@ -155,13 +170,20 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
             "_action": 'requestNodeTree',
             "stackTree": true,
             "parentNodeId": rootNodeId,
-            "page": _this.getCurrentPage()
+            "page": _this.getCurrentPage(),
+            'translationId': _this.getTranslationId()
         };
 
         var url = Rozier.routes.nodesTreeAjax;
-        if(isset(translationId) && translationId > 0){
-            url += '/'+translationId;
+        if(isset(translationId) && translationId > 0) {
             postData.translationId = parseInt(translationId);
+        }
+
+        /*
+         * Add translation id route param manually
+         */
+        if (isset(postData.translationId) && null !== postData.translationId) {
+           url += '/' + postData.translationId;
         }
 
         if (isset(page)) {
