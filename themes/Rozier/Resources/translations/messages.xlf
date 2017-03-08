@@ -6517,6 +6517,11 @@
               <target></target>
               <note>Redirection type description for 302 Moved Temporarily</note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="login_image">
+              <source>login_image</source>
+              <target></target>
+              <note>Global parameter to customize login screen background image</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>
