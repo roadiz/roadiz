@@ -36,6 +36,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -154,5 +156,19 @@ class NodeSourceDocumentType extends AbstractType
                 }
             }
         }
+    }
+
+    /**
+     * Pass nodeSource to form twig template.
+     *
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        $view->vars['nodeSource'] = $this->nodeSource;
     }
 }

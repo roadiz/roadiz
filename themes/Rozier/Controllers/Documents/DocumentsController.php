@@ -199,12 +199,21 @@ class DocumentsController extends RozierApp
                     DocumentEvents::DOCUMENT_UPDATED,
                     new FilterDocumentEvent($document)
                 );
+
+                $routeParams = ['documentId' => $document->getId()];
+
+                if ($form->get('referer')->getData()) {
+                    $routeParams = array_merge($routeParams, [
+                        'referer' => $form->get('referer')->getData()
+                    ]);
+                }
+
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 return $this->redirect($this->generateUrl(
                     'documentsEditPage',
-                    ['documentId' => $document->getId()]
+                    $routeParams
                 ));
             }
 
@@ -713,6 +722,10 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
+            ->add('referer', 'hidden', [
+                'data' => $this->get('request')->get('referer'),
+                'mapped' => false,
+            ])
             ->add('filename', 'text', [
                 'label' => 'filename',
                 'required' => false,

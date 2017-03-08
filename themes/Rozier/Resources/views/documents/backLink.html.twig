@@ -1,0 +1,10 @@
+{% if request %}
+    {% set link = path('documentsHomePage') %}
+    {% set titleLink = 'back_to.documents'|trans %}
+
+    {% if request.get('referer') %}
+        {% set link = request.get('referer') %}
+        {% set titleLink = 'back'|trans %}
+    {% endif %}
+    <a class="content-header-nav-back uk-navbar-content" href="{{ link }}" title="{{ titleLink }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+{% endif %}
