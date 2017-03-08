@@ -1,12 +1,27 @@
 var StackNodeTree = function () {
     var _this = this;
-
     _this.$page = $('.stack-tree').eq(0);
     _this.currentRequest = null;
     _this.$quickAddNodeButtons = _this.$page.find('.stack-tree-quick-creation a');
     _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
+    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
 
     _this.init();
+};
+
+/**
+ * @return {Number}
+ */
+StackNodeTree.prototype.getCurrentPage = function() {
+    var _this = this;
+
+    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
+    var currentPage = parseInt(_this.$nodeTree.attr('data-page'));
+    if (isNaN(currentPage)) {
+        return 1;
+    }
+
+    return currentPage;
 };
 
 StackNodeTree.prototype.init = function() {
@@ -23,6 +38,7 @@ StackNodeTree.prototype.init = function() {
         _this.$switchLangButtons.on("click", proxiedChangeLang);
     }
 };
+
 StackNodeTree.prototype.onChangeLangClick = function(event) {
     var _this = this;
     event.preventDefault();
@@ -31,7 +47,7 @@ StackNodeTree.prototype.onChangeLangClick = function(event) {
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
     var translationId = parseInt($link.attr('data-translation-id'));
     var tagId = $link.attr('data-filter-tag');
-    _this.refreshNodeTree(parentNodeId, translationId, tagId);
+    _this.refreshNodeTree(parentNodeId, translationId, tagId, 1);
     return false;
 };
 
@@ -46,21 +62,17 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     var nodeTypeId = parseInt($link.attr('data-children-node-type'));
     var parentNodeId = parseInt($link.attr('data-children-parent-node'));
 
-    if(nodeTypeId > 0 &&
-       parentNodeId > 0) {
-
+    if(nodeTypeId > 0 && parentNodeId > 0) {
         var postData = {
             "_token": Rozier.ajaxToken,
             "_action":'quickAddNode',
-            "nodeTypeId":nodeTypeId,
-            "parentNodeId":parentNodeId,
-            "pushTop":1
+            "nodeTypeId": nodeTypeId,
+            "parentNodeId": parentNodeId,
+            "pushTop": 1
         };
-
         if (isset($link.attr('data-filter-tag'))) {
             postData.tagId = parseInt($link.attr('data-filter-tag'));
         }
-
         _this.currentRequest = $.ajax({
             url: Rozier.routes.nodesQuickAddAjax,
             type: 'post',
@@ -69,8 +81,7 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
         })
         .done(function(data) {
             Rozier.refreshMainNodeTree();
-            _this.refreshNodeTree(parentNodeId, null, postData.tagId);
-
+            _this.refreshNodeTree(parentNodeId, null, postData.tagId, 1);
             UIkit.notify({
                 message : data.responseText,
                 status  : data.status,
@@ -99,11 +110,9 @@ StackNodeTree.prototype.onQuickAddClick = function(event) {
     return false;
 };
 
-StackNodeTree.prototype.treeAvailable  = function() {
+StackNodeTree.prototype.treeAvailable = function() {
     var _this = this;
-
     var $nodeTree = _this.$page.find('.nodetree-widget');
-
     if($nodeTree.length) {
         return true;
     } else {
@@ -111,7 +120,14 @@ StackNodeTree.prototype.treeAvailable  = function() {
     }
 };
 
-StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, tagId) {
+/**
+ *
+ * @param rootNodeId
+ * @param translationId
+ * @param tagId
+ * @param page
+ */
+StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, tagId, page) {
     var _this = this;
 
     if(_this.currentRequest && _this.currentRequest.readyState != 4){
@@ -120,9 +136,8 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
 
     var $nodeTree = _this.$page.find('.nodetree-widget');
 
-    if($nodeTree.length){
-
-        var $rootTree = $($nodeTree.find('.root-tree')[0]);
+    if($nodeTree.length) {
+        var $rootTree = $nodeTree.find('.root-tree').eq(0);
 
         if (typeof rootNodeId === "undefined") {
             if (!$rootTree.attr("data-parent-node-id")) {
@@ -136,10 +151,11 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
 
         Rozier.lazyload.canvasLoader.show();
         var postData = {
-            "_token":       Rozier.ajaxToken,
-            "_action":      'requestNodeTree',
-            "stackTree":    true,
-            "parentNodeId": rootNodeId
+            "_token": Rozier.ajaxToken,
+            "_action": 'requestNodeTree',
+            "stackTree": true,
+            "parentNodeId": rootNodeId,
+            "page": _this.getCurrentPage()
         };
 
         var url = Rozier.routes.nodesTreeAjax;
@@ -148,12 +164,16 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
             postData.translationId = parseInt(translationId);
         }
 
+        if (isset(page)) {
+            postData.page = parseInt(page);
+        }
+
         //data-filter-tag
         if (isset(tagId)) {
             postData.tagId = parseInt(tagId);
         }
 
-        console.log(postData);
+        console.log('refresh stackNodeTree', postData);
 
         _this.currentRequest = $.ajax({
             url: url,
@@ -163,10 +183,7 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
             data: postData,
         })
         .done(function(data) {
-
-            if($nodeTree.length &&
-                typeof data.nodeTree != "undefined"){
-
+            if($nodeTree.length && typeof data.nodeTree != "undefined") {
                 $nodeTree.fadeOut('slow', function() {
                     $nodeTree.replaceWith(data.nodeTree);
                     $nodeTree = _this.$page.find('.nodetree-widget');
@@ -179,6 +196,8 @@ StackNodeTree.prototype.refreshNodeTree = function(rootNodeId, translationId, ta
                     new NodesBulk();
 
                     _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
+                    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
+
                     if(_this.$switchLangButtons.length){
                         var proxiedChangeLang = $.proxy(_this.onChangeLangClick, _this);
                         _this.$switchLangButtons.off("click", proxiedChangeLang);

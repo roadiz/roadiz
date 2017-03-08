@@ -40,6 +40,11 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
  */
 class AjaxNodeTreeController extends AbstractAjaxController
 {
+    /**
+     * @param Request $request
+     * @param null $translationId
+     * @return JsonResponse
+     */
     public function getTreeAction(Request $request, $translationId = null)
     {
         /*
@@ -64,6 +69,9 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                 );
         }
 
+        /** @var NodeTreeWidget|null $nodeTree */
+        $nodeTree = null;
+
         switch ($request->get("_action")) {
             /*
              * Inner node edit for nodeTree
@@ -80,7 +88,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
                 } else {
                     $node = null;
                 }
-                $this->assignation['nodeTree'] = new NodeTreeWidget(
+
+                $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
                     $this,
                     $node,
@@ -95,13 +104,13 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                             (int) $request->get('tagId')
                                         );
 
-                    $this->assignation['nodeTree']->setTag($filterTag);
+                    $nodeTree->setTag($filterTag);
                 }
 
                 $this->assignation['mainNodeTree'] = false;
 
                 if (true === (boolean) $request->get('stackTree')) {
-                    $this->assignation['nodeTree']->setStackTree(true);
+                    $nodeTree->setStackTree(true);
                 }
 
                 break;
@@ -114,7 +123,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $parent = $this->getUser()->getChroot();
                 }
 
-                $this->assignation['nodeTree'] = new NodeTreeWidget(
+                $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
                     $this,
                     $parent,
@@ -125,6 +134,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                 break;
         }
 
+        $this->assignation['nodeTree'] = $nodeTree;
 
         $responseArray = [
             'statusCode' => '200',
