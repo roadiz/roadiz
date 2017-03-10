@@ -432,8 +432,9 @@
             {{- block('choice_widget_options') -}}
         </select>
     {% else %}
+        <h1>{{ selected }}</h1>
         <div class="rz-select">
-            <select {{ block('widget_attributes') }}>
+            <select {{ block('widget_attributes') }} v-model="selected">
                 {% if placeholder is not none -%}
                     <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain) }}</option>
                 {%- endif %}
