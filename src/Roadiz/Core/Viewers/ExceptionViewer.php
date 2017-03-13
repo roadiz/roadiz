@@ -189,8 +189,7 @@ class ExceptionViewer
 
         $humanMessage = $this->getHumanExceptionTitle($e);
 
-        if (php_sapi_name() === 'cli-server' ||
-            php_sapi_name() === 'cli') {
+        if (php_sapi_name() === 'cli') {
             return new Response(
                 implode(PHP_EOL, [
                     $this->getColoredString('['.$class.']', 'white', 'red'),
