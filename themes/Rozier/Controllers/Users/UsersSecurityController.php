@@ -30,6 +30,7 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
@@ -50,6 +51,7 @@ class UsersSecurityController extends RozierApp
         // Only user managers can review security
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
+        /** @var User $user */
         $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
@@ -103,6 +105,7 @@ class UsersSecurityController extends RozierApp
             'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null,
         ];
 
+        /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('source', 'form', $defaults);
 
@@ -169,7 +172,7 @@ class UsersSecurityController extends RozierApp
                     $this->publishErrorMessage($request, $msg);
                 }
                 if ($value !== null) {
-                    $n = $this->get('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $n = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', $value[0]);
                     $user->$setter($n);
                 } else {
                     $user->$setter(null);

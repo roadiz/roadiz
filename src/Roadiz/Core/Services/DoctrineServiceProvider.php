@@ -45,6 +45,7 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 
@@ -258,6 +259,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  * Documents life cycle manager.
                  */
                 $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
+
+                /*
+                 * Users life cycle manager.
+                 */
+                $evm->addEventSubscriber(new UserLifeCycleSubscriber($c));
 
                 $c['stopwatch']->stop('initDoctrine');
                 return $em;

@@ -74,6 +74,7 @@ class UserViewer implements ViewableInterface
      * Send an email with credentials details to user.
      *
      * @return boolean
+     * @deprecated Sign in confirmation is already sent by user lifecycle events.
      */
     public function sendSignInConfirmation()
     {

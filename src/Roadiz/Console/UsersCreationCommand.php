@@ -88,6 +88,7 @@ class UsersCreationCommand extends UsersCommand
         OutputInterface $output
     ) {
         $user = new User();
+        $user->sendCreationConfirmationEmail(true);
         $user->setUsername($username);
 
         do {
@@ -131,7 +132,6 @@ class UsersCreationCommand extends UsersCommand
         }
 
         $this->entityManager->persist($user);
-        $user->getViewer()->sendSignInConfirmation();
         $this->entityManager->flush();
 
         $text = '<info>User “' . $username . '”<' . $email . '> created…</info>' . PHP_EOL;
