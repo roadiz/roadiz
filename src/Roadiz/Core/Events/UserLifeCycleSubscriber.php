@@ -39,7 +39,6 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
-use RZ\Roadiz\Utils\Security\SaltGenerator;
 
 class UserLifeCycleSubscriber implements EventSubscriber
 {
@@ -153,9 +152,6 @@ class UserLifeCycleSubscriber implements EventSubscriber
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
-            $saltGenerator = new SaltGenerator();
-            $user->setSalt($saltGenerator->generateSalt());
-
             /*
              * If no plain password is present, we must generate one
              */

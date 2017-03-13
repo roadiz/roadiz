@@ -34,6 +34,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Viewers\UserViewer;
+use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -781,6 +782,9 @@ class User extends AbstractHuman implements AdvancedUserInterface
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->sendCreationConfirmationEmail(false);
+
+        $saltGenerator = new SaltGenerator();
+        $this->setSalt($saltGenerator->generateSalt());
     }
 
     /**

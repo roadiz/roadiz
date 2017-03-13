@@ -325,7 +325,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['userImplementations'] = function ($c) {
             return [
-                'RZ\\Roadiz\\Core\\Entities\\User' => $c['passwordEncoder'],
+                'RZ\Roadiz\Core\Entities\User' => $c['passwordEncoder'],
             ];
         };
 

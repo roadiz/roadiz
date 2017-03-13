@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -58,11 +59,12 @@ class UserProvider implements UserProviderInterface
      *
      * @param string $username The username
      *
-     * @return \RZ\Roadiz\Core\Entities\User
+     * @return User
      * @throws UsernameNotFoundException if the user is not found
      */
     public function loadUserByUsername($username)
     {
+        /** @var User|null $user */
         $user = $this->em
                      ->getRepository('RZ\Roadiz\Core\Entities\User')
                      ->findOneBy(['username' => $username]);
@@ -82,13 +84,13 @@ class UserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @param \RZ\Roadiz\Core\Entities\User|UserInterface $user
-     *
-     * @return \RZ\Roadiz\Core\Entities\User
+     * @param UserInterface $user
+     * @return User
      * @throws UnsupportedUserException
      */
     public function refreshUser(UserInterface $user)
     {
+        /** @var User|null $refreshUser */
         $refreshUser = $this->em->find('RZ\Roadiz\Core\Entities\User', (int) $user->getId());
 
         if ($refreshUser !== null) {
@@ -106,7 +108,7 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        if ($class == "RZ\Roadiz\Core\Entities\User") {
+        if ($class == 'RZ\Roadiz\Core\Entities\User') {
             return true;
         }
 
