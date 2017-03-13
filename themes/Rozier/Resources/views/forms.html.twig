@@ -203,12 +203,13 @@
             <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
                 {% for doc in data %}
                     {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
-                    'document':doc,
+                    'document': doc,
                     'name': name,
-                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                    'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
                     'read_only': read_only,
-                    'disabled':disabled,
-                    'required':required,
+                    'disabled': disabled,
+                    'required': required,
+                    'nodeSource': nodeSource,
                     'attr': attr
                     } only %}
                 {% endfor %}
