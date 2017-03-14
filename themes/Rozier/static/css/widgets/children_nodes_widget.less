@@ -196,21 +196,20 @@
             position: relative;
             vertical-align: top;
         }
+    }
+    .unpublished-node .nodetree-element-img {
+        top: 12px;
+        left: 6px;
+        width: 30px;
+        height: 30px;
+        .rounded(0);
+        .transform(rotate(45deg));
 
-        .unpublished-node & {
-            top: 12px;
-            left: 6px;
-            width: 30px;
-            height: 30px;
-            .rounded(0);
-            .transform(rotate(45deg));
-
-            img {
-                .transform(rotate(-45deg) scale(1.4));
-            }
-            object {
-                .transform(rotate(-45deg));
-            }
+        img {
+            .transform(rotate(-45deg) scale(1.4));
+        }
+        object {
+            .transform(rotate(-45deg));
         }
     }
 }

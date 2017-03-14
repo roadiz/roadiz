@@ -380,6 +380,43 @@
     display: inline-block;
 }
 
+.form-col-nodesourcebase {
+    background: #EFEFEF;
+    margin: -30px -15px 0;
+    padding: 30px 15px 0;
+
+    & > .data-uk-margin {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .uk-form-row {
+        margin: 0 0 20px 0;
+
+        &:first-child {
+            flex-grow: 2;
+            margin: 0 30px 20px 0;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+@media (min-width: @screen-sm-min) {
+    .form-col-nodesourcebase {
+        margin: -30px -80px 0 -30px;
+        padding: 30px 80px 0 30px;
+    }
+}
+@media (min-width: @screen-lg-min) {
+    .form-col-nodesourcebase {
+        margin: -40px -100px 0 -50px;
+        padding: 40px 100px 0 50px;
+    }
+}
 
 .required-mention {
     font-size: 13px;

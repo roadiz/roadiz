@@ -68,19 +68,13 @@ class NodeSourceType extends AbstractType
         $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager']);
 
         if ($options['withTitle'] === true) {
-            $builder->add(
-                'title',
-                'text',
-                [
-                    'label' => 'title',
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => '',
-                        'data-field-group' => 'default',
-                        'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
-                    ],
-                ]
-            );
+            /**
+             * @todo Added a dedicated form group for title and future publishedAt field.
+             * Be careful, sub fields should catchs errors in JS.
+             */
+            $builder->add('base', new NodeSourceBaseType(), [
+                'publishable' => false,
+            ]);
         }
         /** @var NodeTypeField $field */
         foreach ($fields as $field) {
