@@ -60,10 +60,9 @@ class AssetsController extends CmsController
     }
 
     /**
-     *
-     * @param  Request $request
-     * @param  string  $queryString
-     * @param  string  $filename
+     * @param Request $request
+     * @param string $queryString
+     * @param string $filename
      * @return Response
      */
     public function interventionRequestAction(Request $request, $queryString, $filename)

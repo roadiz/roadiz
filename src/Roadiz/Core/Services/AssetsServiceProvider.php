@@ -104,6 +104,14 @@ class AssetsServiceProvider implements ServiceProviderInterface
             return $conf;
         };
 
+        /**
+         * @param Container $c
+         * @return array
+         */
+        $container['interventionRequestSubscribers'] = function (Container $c) {
+            return [];
+        };
+
         return $container;
     }
 }
