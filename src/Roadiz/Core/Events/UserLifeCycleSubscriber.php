@@ -136,7 +136,7 @@ class UserLifeCycleSubscriber implements EventSubscriber
     public function postPersist(LifecycleEventArgs $event)
     {
         $user = $event->getEntity();
-        if ($user instanceof User ) {
+        if ($user instanceof User) {
             if ($user->willSendCreationConfirmationEmail()) {
                 $this->sendSignInConfirmation($user);
             }
