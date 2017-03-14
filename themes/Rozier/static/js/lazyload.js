@@ -144,6 +144,8 @@ Lazyload.prototype.loadContent = function(state, location) {
             .done(function(data) {
                 _this.applyContent(data);
                 _this.canvasLoader.hide();
+                var pageLoadEvent = new CustomEvent('pageload', { 'detail': data });
+                window.dispatchEvent(pageLoadEvent);
             })
             .fail(function(data) {
                 console.log(data);

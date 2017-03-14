@@ -403,7 +403,7 @@
 {%- endblock form_label %}
 
 {% block form_widget_compound -%}
-    <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
+    <div {{ block('widget_container_attributes') }}>
         {%- if form.parent is empty -%}
             {{ form_errors(form) }}
         {%- endif -%}
@@ -435,7 +435,7 @@
     {% else %}
         <h1>{{ selected }}</h1>
         <div class="rz-select">
-            <select {{ block('widget_attributes') }} v-model="selected">
+            <select {{ block('widget_attributes') }}>
                 {% if placeholder is not none -%}
                     <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain) }}</option>
                 {%- endif %}

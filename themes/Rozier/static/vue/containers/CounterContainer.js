@@ -1,9 +1,23 @@
 import Vue from 'vue'
-import Counter from '../components/CounterButton.vue'
 import store from '../store'
 
-new Vue({
-    el: '#app-2',
-    store,
-    render: h => h(Counter)
-})
+// Components
+import CounterButton from '../components/CounterButton.vue'
+
+// new Vue({
+//     el: '#dynamic-form',
+//     store,
+//     data: () => {
+//         return {
+//             text: 'default'
+//         }
+//     },
+//     components: {
+//         CounterButton
+//     },
+//     watch: {
+//         text: (newValue, oldValue) => {
+//             console.log(newValue)
+//         }
+//     }
+// })

@@ -8,7 +8,8 @@
          <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypeFieldsListPage', { nodeTypeId: nodeType.getId }) }}" title="{% trans %}back_to.nodeTypeFields{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
-    <article class="content">
+    <article id="test" class="content">
+        <node-type-field-form-container-bis data-vue></node-type-field-form-container-bis>
         {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="add-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}

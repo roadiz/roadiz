@@ -34,7 +34,7 @@
                     </thead>
                     <tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'rz-node-type-field-dragged', handleClass:'node-type-field-col'}">
                     {% for field in fields %}
-                        <tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="node-type-field-row">
+                        <tr data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="node-type-field-row">
                             <td class="node-type-field-col node-type-field-col-1">
                                 <a class="node-type-field-edit-button edit-button-chevron rz-no-ajax-link" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
                                     <i class="uk-icon-chevron-right"></i>{{ field.getName }}
