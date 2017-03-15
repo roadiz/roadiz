@@ -20,6 +20,9 @@ var isMobile = {
     }
 };
 
+var toType = function(obj) {
+    return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+};
 
 // Avoid `console` errors in browsers that lack a console.
 (function() {

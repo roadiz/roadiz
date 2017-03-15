@@ -47,20 +47,17 @@ class NodeSourceBaseType extends AbstractType
             'required' => false,
             'attr' => [
                 'data-desc' => '',
-                'data-field-group' => 'default',
                 'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
             ],
         ]);
 
         if ($options['publishable'] === true) {
             $builder->add('publishedAt', 'datetime', [
-                'label' => 'published_at',
+                'label' => 'publishedAt',
                 'required' => false,
-                'mapped' => false,
                 'attr' => [
                     'class' => 'rz-datetime-field',
                     'data-desc' => '',
-                    'data-field-group' => 'default',
                     'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('publishedAt') . ' }}',
                 ],
                 'date_widget' => 'single_text',

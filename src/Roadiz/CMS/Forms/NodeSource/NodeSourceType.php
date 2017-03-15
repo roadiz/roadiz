@@ -73,7 +73,7 @@ class NodeSourceType extends AbstractType
              * Be careful, sub fields should catchs errors in JS.
              */
             $builder->add('base', new NodeSourceBaseType(), [
-                'publishable' => false,
+                'publishable' => $this->nodeType->isPublishable(),
             ]);
         }
         /** @var NodeTypeField $field */

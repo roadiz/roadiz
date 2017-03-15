@@ -72,18 +72,30 @@ class NodeTypeType extends AbstractType
                 ->add('visible', 'checkbox', [
                     'label' => 'visible',
                     'required' => false,
+                    'attr' => [
+                        'data-desc' => 'this_node_type_will_be_available_for_creating_root_nodes',
+                    ]
+                ])
+                ->add('publishable', 'checkbox', [
+                    'label' => 'publishable',
+                    'required' => false,
+                    'attr' => [
+                        'data-desc' => 'enables_published_at_field_for_time_based_publication'
+                    ]
                 ])
                 ->add('reachable', 'checkbox', [
                     'label' => 'reachable',
                     'required' => false,
-                ])
-                ->add('newsletterType', 'checkbox', [
-                    'label' => 'nodeType.newsletterType',
-                    'required' => false,
+                    'attr' => [
+                        'data-desc' => 'mark_this_typed_nodes_as_reachable_with_an_url'
+                    ]
                 ])
                 ->add('hidingNodes', 'checkbox', [
                     'label' => 'nodeType.hidingNodes',
                     'required' => false,
+                    'attr' => [
+                        'data-desc' => 'this_node_type_will_hide_all_children_nodes'
+                    ]
                 ])
                 ->add('color', 'text', [
                     'label' => 'nodeType.color',
@@ -92,6 +104,10 @@ class NodeTypeType extends AbstractType
                     'constraints' => [
                         new HexadecimalColor(),
                     ],
+                ])
+                ->add('newsletterType', 'checkbox', [
+                    'label' => 'nodeType.newsletterType',
+                    'required' => false,
                 ]);
     }
 

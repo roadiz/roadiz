@@ -273,9 +273,7 @@ Lazyload.prototype.generalBind = function() {
     Rozier.nodeStatuses = new NodeStatuses();
 
     // Switch checkboxes
-    $(".rz-boolean-checkbox").bootstrapSwitch({
-        size: 'small'
-    });
+    _this.initBootstrapSwitches();
 
     Rozier.getMessages();
 
@@ -284,6 +282,16 @@ Lazyload.prototype.generalBind = function() {
         Rozier.import = new Import(Rozier.importRoutes);
         Rozier.importRoutes = null;
     }
+};
+
+Lazyload.prototype.initBootstrapSwitches = function() {
+    var _this = this;
+
+    var $checkboxes = $(".rz-boolean-checkbox");
+    // Switch checkboxes
+    $checkboxes.bootstrapSwitch({
+        size: 'small'
+    });
 };
 
 Lazyload.prototype.initMarkdownEditors = function() {
