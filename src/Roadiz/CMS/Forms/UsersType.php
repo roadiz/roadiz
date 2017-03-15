@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -58,14 +59,16 @@ class UsersType extends AbstractType
             ->findAll();
 
         $choices = [];
+        /** @var User $user */
         foreach ($users as $user) {
             if (!$this->users->contains($user)) {
-                $choices[$user->getId()] = $user->getUserName();
+                $choices[$user->getUserName()] = $user->getId();
             }
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
+            'choices_as_values' => true,
         ]);
     }
     /**

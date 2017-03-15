@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Form\AbstractType;
@@ -49,6 +50,11 @@ class ThemesType extends AbstractType
             ->getRepository('RZ\Roadiz\Core\Entities\Theme')
             ->findAll();
 
+        $existingThemes = [Kernel::INSTALL_CLASSNAME];
+        /** @var Theme $theme */
+        foreach ($themes as $theme) {
+            $existingThemes[] = $theme->getClassName();
+        }
         $choices = [];
 
         $finder = new Finder();
@@ -71,14 +77,8 @@ class ThemesType extends AbstractType
              * Parsed file is not or does not contain any PHP Class
              * Bad Theme !
              */
-            $choices[$classname] = $data['name'];
-        }
-        foreach ($themes as $theme) {
-            if (array_key_exists($theme->getClassName(), $choices)) {
-                unset($choices[$theme->getClassName()]);
-            }
-            if (array_key_exists(Kernel::INSTALL_CLASSNAME, $choices)) {
-                unset($choices[Kernel::INSTALL_CLASSNAME]);
+            if (!in_array($classname, $existingThemes)) {
+                $choices[$data['name']] = $classname;
             }
         }
         $this->choices = $choices;
@@ -96,6 +96,7 @@ class ThemesType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => $this->choices,
+            'choices_as_values' => true,
         ]);
     }
 

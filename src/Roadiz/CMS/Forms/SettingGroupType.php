@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,13 +52,15 @@ class SettingGroupType extends AbstractType
 
         $choices = [];
 
+        /** @var SettingGroup $group */
         foreach ($groups as $group) {
-            $choices[$group->getId()] = $group->getName();
+            $choices[$group->getName()] = $group->getId();
         }
 
         $resolver->setDefaults([
+            'choices_as_values' => true,
             'choices' => $choices,
-            'placeholder' => '---------'
+            'placeholder' => '---------',
         ]);
     }
     /**

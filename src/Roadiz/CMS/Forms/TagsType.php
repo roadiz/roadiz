@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,10 +40,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TagsType extends AbstractType
 {
+    /** @var null|ArrayCollection  */
     protected $tags;
 
     /**
-     * {@inheritdoc}
+     * TagsType constructor.
+     * @param ArrayCollection|null $tags
      */
     public function __construct($tags = null)
     {
@@ -60,14 +64,16 @@ class TagsType extends AbstractType
             ->findAllWithDefaultTranslation();
 
         $choices = [];
+        /** @var Tag $tag */
         foreach ($tags as $tag) {
             if (!$this->tags->contains($tag)) {
-                $choices[$tag->getId()] = $tag->getTranslatedTags()->first()->getName();
+                $choices[$tag->getTranslatedTags()->first()->getName()] = $tag->getId();
             }
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
+            'choices_as_values' => true,
         ]);
     }
 

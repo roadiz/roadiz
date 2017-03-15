@@ -114,7 +114,7 @@ trait NodesTrait
                             ->add('nodeId', 'hidden', [
                                 'data' => (int) $node->getId(),
                             ])
-                            ->add('nodeTypeId', new NodeTypesType(), [
+                            ->add('nodeTypeId', new NodeTypesType(true), [
                                 'label' => 'nodeType',
                                 'constraints' => [
                                     new NotBlank(),

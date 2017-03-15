@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,24 +40,45 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NodeTypesType extends AbstractType
 {
     /**
+     * @var bool
+     */
+    private $showInvisible;
+
+    /**
+     * NodeTypesType constructor.
+     * @param bool $showInvisible
+     */
+    public function __construct($showInvisible = false)
+    {
+        $this->showInvisible = $showInvisible;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $criteria = [
+            'newsletterType' => false,
+        ];
+
+        if ($this->showInvisible === false) {
+            $criteria['visible'] = true;
+        }
+
         $nodeTypes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy([
-                'newsletterType' => false,
-                'visible' => true
-            ]);
+            ->findBy($criteria);
 
         $choices = [];
+        /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
-            $choices[$nodeType->getId()] = $nodeType->getDisplayName();
+            $choices[$nodeType->getDisplayName()] = $nodeType->getId();
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices_as_values' => true,
+            'choices' => $choices,
         ]);
     }
     /**

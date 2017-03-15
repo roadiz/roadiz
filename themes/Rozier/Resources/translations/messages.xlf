@@ -6522,6 +6522,11 @@
               <target></target>
               <note>Global parameter to customize login screen background image</note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="publishedAt">
+              <source>publishedAt</source>
+              <target></target>
+              <note>Field label for node-source publication date and time.</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

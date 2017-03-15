@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -59,14 +60,16 @@ class RolesType extends AbstractType
 
         $choices = [];
 
+        /** @var Role $role */
         foreach ($roles as $role) {
             if (!$this->roles->contains($role)) {
-                $choices[$role->getId()] = $role->getName();
+                $choices[$role->getName()] = $role->getId();
             }
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices_as_values' => true,
+            'choices' => $choices,
         ]);
     }
     /**

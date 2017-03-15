@@ -74,14 +74,6 @@ type|lower,
             {% endif %}
         </div>
 
-        {#
-         # Node statuses
-         #}
-        {# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
-        {# {% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %} #}
-        {# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
-        {# {% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %} #}
-
         <div class="tree-element-name nodetree-element-name">
             {% if node.isHidingChildren %}
                 <a href="{{ path('nodesTreePage', { nodeId:node.getId }) }}">{{ name }}</a>
@@ -90,13 +82,16 @@ type|lower,
             {% endif %}
         </div>
 
+        {% if nodeTree.isStackTree and source.publishedAt %}
+            <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|localizeddate('short', 'none') }}</div>
+        {% endif %}
         {% if nodeTree.isStackTree and node.tags|length %}
             <div class="nodetree-tags">
                 {% for tag in node.tags %}
                     {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
                     {% set tagName = ttag[0].name|default(tag.tagName) %}
 
-                    <a href="?tagId={{ tag.id }}" class="uk-badge">{{ tagName }}</a>
+                    <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName }}</a>
                 {% endfor %}
             </div>
         {% endif %}

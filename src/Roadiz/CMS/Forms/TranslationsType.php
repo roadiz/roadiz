@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,12 +49,14 @@ class TranslationsType extends AbstractType
             ->findAll();
 
         $choices = [];
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
-            $choices[$translation->getId()] = $translation->getName();
+            $choices[$translation->getName()] = $translation->getId();
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
+            'choices_as_values' => true,
         ]);
     }
     /**

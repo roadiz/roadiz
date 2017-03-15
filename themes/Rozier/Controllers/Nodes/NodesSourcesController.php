@@ -104,6 +104,7 @@ class NodesSourcesController extends RozierApp
                         'controller' => $this,
                         'entityManager' => $this->get('em'),
                         'withVirtual' => true,
+                        'withTitle' => true,
                     ]
                 );
                 $form->handleRequest($request);
