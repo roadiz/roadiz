@@ -57,11 +57,17 @@ class NodeTypeFieldType extends AbstractType
                 new NonSqlReservedWord(),
                 new SimpleLatinString(),
             ],
+            'attr' => [
+                'data-desc' => 'technical_name_for_database_and_templating'
+            ],
         ])
         ->add('label', 'text', [
             'label' => 'label',
             'constraints' => [
                 new NotBlank(),
+            ],
+            'attr' => [
+                'data-desc' => 'human_readable_field_name'
             ],
         ])
         ->add('type', 'choice', [
@@ -77,30 +83,39 @@ class NodeTypeFieldType extends AbstractType
         ->add('groupName', 'text', [
             'label' => 'groupName',
             'required' => false,
+            'attr' => [
+                'data-desc' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs'
+            ],
         ])
         ->add('visible', 'checkbox', [
             'label' => 'visible',
             'required' => false,
+            'attr' => [
+                'data-desc' => 'disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice'
+            ],
         ])
         ->add('indexed', 'checkbox', [
             'label' => 'indexed',
             'required' => false,
+            'attr' => [
+                'data-desc' => 'field_should_be_indexed_if_you_plan_to_query_or_order_by_it'
+            ],
         ])
         ->add('universal', 'checkbox', [
             'label' => 'universal',
             'required' => false,
+            'attr' => [
+                'data-desc' => 'universal_fields_will_be_only_editable_from_default_translation'
+            ],
         ])
-        ->add(
-            'defaultValues',
-            'text',
-            [
-                'label' => 'defaultValues',
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'enter_values_comma_separated',
-                ],
-            ]
-        )
+        ->add('defaultValues', 'text', [
+            'label' => 'defaultValues',
+            'required' => false,
+            'attr' => [
+                'placeholder' => 'enter_values_comma_separated',
+                'data-desc' => 'for_children_node_and_node_references_enter_node_type_names_comma_separated'
+            ],
+        ])
         ->add(
             'minLength',
             'integer',

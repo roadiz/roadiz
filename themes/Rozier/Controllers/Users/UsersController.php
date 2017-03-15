@@ -31,7 +31,6 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;

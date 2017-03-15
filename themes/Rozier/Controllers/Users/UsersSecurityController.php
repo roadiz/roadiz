@@ -121,10 +121,12 @@ class UsersSecurityController extends RozierApp
                     'label' => 'user.expiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
+                    'date_widget' => 'single_text',
+                    'date_format' => 'yyyy-MM-dd',
+                    'attr' => [
+                        'class' => 'rz-datetime-field',
+                    ],
                     'placeholder' => [
-                        'year' => 'year',
-                        'month' => 'month',
-                        'day' => 'day',
                         'hour' => 'hour',
                         'minute' => 'minute',
                     ],
@@ -137,10 +139,12 @@ class UsersSecurityController extends RozierApp
                     'label' => 'user.credentialsExpiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
+                    'date_widget' => 'single_text',
+                    'date_format' => 'yyyy-MM-dd',
+                    'attr' => [
+                        'class' => 'rz-datetime-field',
+                    ],
                     'placeholder' => [
-                        'year' => 'year',
-                        'month' => 'month',
-                        'day' => 'day',
                         'hour' => 'hour',
                         'minute' => 'minute',
                     ],

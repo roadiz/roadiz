@@ -70,9 +70,18 @@ class UserDetailsType extends AbstractType
                 ])
                 ->add('birthday', 'date', [
                     'label' => 'birthday',
-                    'empty_value' => ['year' => 'year', 'month' => 'month', 'day' => 'day'],
+                    'empty_value' => [
+                        'year' => 'year',
+                        'month' => 'month',
+                        'day' => 'day'
+                    ],
                     'required' => false,
                     'years' => range(1920, date('Y') - 6),
+                    'widget' => 'single_text',
+                    'format' => 'yyyy-MM-dd',
+                    'attr' => [
+                        'class' => 'rz-datetime-field',
+                    ],
                 ]);
     }
 
