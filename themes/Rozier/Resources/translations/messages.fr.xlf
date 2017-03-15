@@ -6392,6 +6392,31 @@
               <target xml:lang="fr" state="translated">Fond d'écran de la page de connexion</target>
               <note>Global parameter to customize login screen background image</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="publishedAt">
+              <source>publishedAt</source>
+              <target xml:lang="fr" state="translated">Date et heure de publication</target>
+              <note>Field label for node-source publication date and time.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="this_node_type_will_be_available_for_creating_root_nodes">
+              <source>this_node_type_will_be_available_for_creating_root_nodes</source>
+              <target xml:lang="fr" state="translated">Ce type de nœud sera disponible pour créer des nœuds à la racine de votre site.</target>
+              <note>Help message to explain node-type "visible" field.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="enables_published_at_field_for_time_based_publication">
+              <source>enables_published_at_field_for_time_based_publication</source>
+              <target xml:lang="fr" state="translated">Ce type de nœud affichera une date et heure de publication.</target>
+              <note>Help message to explain node-type "publishedAt" field.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="mark_this_typed_nodes_as_reachable_with_an_url">
+              <source>mark_this_typed_nodes_as_reachable_with_an_url</source>
+              <target xml:lang="fr" state="translated">Ce type de nœud sera accessible avec une adresse URL publique.</target>
+              <note>Help message to explain node-type "reachable" field.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="this_node_type_will_hide_all_children_nodes">
+              <source>this_node_type_will_hide_all_children_nodes</source>
+              <target xml:lang="fr" state="translated">Ce type de nœud cachera tout ses nœuds enfant.</target>
+              <note>Help message to explain node-type "hiding_nodes" field.</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

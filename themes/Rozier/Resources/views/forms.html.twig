@@ -454,7 +454,7 @@
             {{- form_label(form) -}}
         {% endif %}
         {% if attr['data-desc'] %}
-            <p class="form-row-desc">{{ attr['data-desc'] }}</p>
+            <p class="form-row-desc">{{ attr['data-desc']|trans }}</p>
         {% endif %}
         {{- form_errors(form) -}}
         {{- form_widget(form) -}}
