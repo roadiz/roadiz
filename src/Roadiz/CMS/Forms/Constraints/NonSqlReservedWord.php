@@ -41,7 +41,8 @@ class NonSqlReservedWord extends Constraint
      * @var array
      */
     public static $forbiddenNames = [
-        'title', 'id', 'translation', 'node', 'urlAliases', 'documentsByFields',
+        'title', 'id', 'translation', 'node', 'urlAliases', 'url_aliases', 'documentsByFields',
+        'publishedAt', 'published_at', 'published at', 'documents_by_fields',
         'metaTitle', 'metaKeywords', 'metaDescription', 'order', 'integer', 'int', 'float', 'join',
         'inner', 'select', 'from', 'where', 'by', 'varchar',
         'text', 'enum', 'left', 'outer', 'blob', 'accessible',
