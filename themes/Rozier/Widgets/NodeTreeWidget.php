@@ -153,7 +153,6 @@ class NodeTreeWidget extends AbstractWidget
         if (null !== $parent &&
             $parent->getChildrenOrder() !== 'order' &&
             $parent->getChildrenOrder() !== 'position') {
-
             $ordering = [
                 $parent->getChildrenOrder() => $parent->getChildrenOrderDirection(),
             ];
