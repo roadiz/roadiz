@@ -62,7 +62,6 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
         Packages $packages,
         LoggerInterface $logger = null
     ) {
-
         $this->packages = $packages;
         $this->logger = $logger;
         $this->entityManager = $entityManager;
@@ -91,6 +90,9 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
                     $description = $this->getDescription($exif);
 
                     if (null !== $copyright || null !== $description) {
+                        if (null !== $this->logger) {
+                            $this->logger->debug('EXIF information available for document.', ['document' => $document->getFilename()]);
+                        }
                         $defaultTranslation = $this->entityManager
                                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                                    ->findDefault();

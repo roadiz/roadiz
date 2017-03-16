@@ -29,7 +29,6 @@
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
 use enshrined\svgSanitize\Sanitizer;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Events\DocumentEvents;

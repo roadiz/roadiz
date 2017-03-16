@@ -30,7 +30,6 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
-use Pimple\Container;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
