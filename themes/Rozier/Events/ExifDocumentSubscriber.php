@@ -81,7 +81,8 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
     {
         if (function_exists('exif_read_data')) {
             $document = $event->getDocument();
-            if ($document->getDocumentTranslations()->count() === 0) {
+            if ($document->getDocumentTranslations()->count() === 0 &&
+                ($document->getMimeType() == 'image/jpeg' || $document->getMimeType() == 'image/tiff')) {
                 $filePath = $this->packages->getDocumentFilePath($document);
                 $exif = exif_read_data($filePath, 0, false);
 
