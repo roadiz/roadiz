@@ -29,7 +29,12 @@
         {% endif %}
 
         <li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
-            <a data-uk-tooltip="{animation:true}" title="{% trans %}tree{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesTreePage', { nodeId: node.id}) }}"><i class="uk-icon-rz-node-tree"></i></a>
+            {% if source %}
+                {% set tree_url = path('nodesTreePage', { nodeId: node.id, translationId: source.translation.id }) %}
+            {% else %}
+                {% set tree_url = path('nodesTreePage', { nodeId: node.id }) %}
+            {% endif %}
+            <a data-uk-tooltip="{animation:true}" title="{% trans %}tree{% endtrans %}" class="uk-navbar-link" href="{{ tree_url }}"><i class="uk-icon-rz-node-tree"></i></a>
         </li>
         <li class="uk-navbar-item{% if current == 'history' %} uk-active{% endif %}">
             <a data-uk-tooltip="{animation:true}" title="{% trans %}history{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesHistoryPage', { nodeId: node.id}) }}"><i class="uk-icon uk-icon-clock-o"></i></a>
