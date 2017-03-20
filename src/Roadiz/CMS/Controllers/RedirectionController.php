@@ -48,8 +48,7 @@ class RedirectionController extends AppController
     public function redirectAction(Request $request, Redirection $redirection)
     {
         if (null !== $redirection->getRedirectNodeSource()) {
-            $urlGenerator = new NodesSourcesUrlGenerator($request, $redirection->getRedirectNodeSource());
-            return $this->redirect($urlGenerator->getUrl(), $redirection->getType());
+            return $this->redirect($this->generateUrl($redirection->getRedirectNodeSource()), $redirection->getType());
         }
 
         if (strlen($redirection->getRedirectUri()) > 0) {

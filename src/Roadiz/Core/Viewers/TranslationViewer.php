@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Router;
 
 /**
  * TranslationViewer
@@ -93,6 +94,8 @@ class TranslationViewer implements ViewableInterface
         $name = "";
         $forceLocale = (boolean) SettingsBag::get('force_locale');
 
+        $absolute = $absolute ? Router::ABSOLUTE_URL : Router::ABSOLUTE_PATH;
+
         /** @var \Rz\Roadiz\Core\Entities\Node $node */
         if (in_array("node", array_keys($attr), true)) {
             $node = $attr["node"];
@@ -128,15 +131,11 @@ class TranslationViewer implements ViewableInterface
             $url = null;
 
             if ($node) {
-                $urlGenerator = new NodesSourcesUrlGenerator(
-                    $request,
+                $url = Kernel::getService('router')->generate(
                     $node->getHandler()->getNodeSourceByTranslation($translation),
-                    $forceLocale
+                    $query,
+                    $absolute
                 );
-                $url = $urlGenerator->getUrl($absolute);
-                if (!empty($query)) {
-                    $url .= "?" . http_build_query($query);
-                }
             } elseif (!empty($attr["_route"])) {
                 $name = $attr["_route"];
                 /*
@@ -165,7 +164,7 @@ class TranslationViewer implements ViewableInterface
                     unset($query["_locale"]);
                 }
 
-                $url = Kernel::getService("urlGenerator")->generate(
+                $url = Kernel::getService("router")->generate(
                     $name,
                     array_merge($attr["_route_params"], $query),
                     $absolute

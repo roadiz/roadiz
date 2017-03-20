@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -45,6 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -164,17 +166,17 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * Wrap `$this->container['urlGenerator']->generate`
+     * Wrap `$this->container['router']->generate`
      *
-     * @param  string  $route
-     * @param  mixed  $parameters
-     * @param  boolean $absolute
+     * @param string|NodesSources $route
+     * @param mixed  $parameters
+     * @param int $referenceType
      *
      * @return string
      */
-    public function generateUrl($route, $parameters = [], $absolute = false)
+    public function generateUrl($route, $parameters = [], $referenceType = Router::ABSOLUTE_PATH)
     {
-        return $this->get('urlGenerator')->generate($route, $parameters, $absolute);
+        return $this->get('router')->generate($route, $parameters, $referenceType);
     }
 
     /**

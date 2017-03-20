@@ -131,8 +131,7 @@ class NodesSourcesController extends RozierApp
                         $this->publishConfirmMessage($request, $msg, $source);
 
                         if ($request->isXmlHttpRequest()) {
-                            $urlGenerator = new NodesSourcesUrlGenerator($request, $source);
-                            $url = $urlGenerator->getUrl();
+                            $url = $this->generateUrl($source);
                             $previewUrl = '/preview.php' . str_replace('/dev.php', '', $url);
 
                             return new JsonResponse([
