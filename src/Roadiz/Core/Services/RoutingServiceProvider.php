@@ -142,6 +142,10 @@ class RoutingServiceProvider implements ServiceProviderInterface
             );
         };
 
+        /*
+         * As we are using CMF ChainRouter, it take responsability for
+         * URL generation.
+         */
         $container['urlGenerator'] = function ($c) {
             return $c['router'];
         };

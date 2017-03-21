@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -183,6 +184,10 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
+        if (null === $name || !$name instanceof NodesSources) {
+            throw new RouteNotFoundException();
+        }
+
         $resourcePath = $this->getResourcePath($name);
 
         if (!empty($parameters['canonicalScheme'])) {
@@ -239,11 +244,13 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     {
         $scheme = $this->getContext()->getScheme();
 
-        if (('http' == $scheme && $this->getContext()->getHttpPort() == 80) ||
-            ('https' == $scheme && $this->getContext()->getHttpsPort() == 443)) {
-            return $this->getContext()->getHost();
+        $port = '';
+        if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
+            $port = ':'.$this->context->getHttpPort();
+        } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+            $port = ':'.$this->context->getHttpsPort();
         }
 
-        return $this->getContext()->getHost().':'.$this->getContext()->getHttpPort();
+        return $this->getContext()->getHost() . $port;
     }
 }

@@ -166,7 +166,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * Wrap `$this->container['router']->generate`
+     * Wrap `$this->container['urlGenerator']->generate`
      *
      * @param string|NodesSources $route
      * @param mixed  $parameters
@@ -176,7 +176,7 @@ abstract class Controller implements ContainerAwareInterface
      */
     public function generateUrl($route, $parameters = [], $referenceType = Router::ABSOLUTE_PATH)
     {
-        return $this->get('router')->generate($route, $parameters, $referenceType);
+        return $this->get('urlGenerator')->generate($route, $parameters, $referenceType);
     }
 
     /**
