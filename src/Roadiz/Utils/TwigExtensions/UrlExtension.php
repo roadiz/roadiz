@@ -129,8 +129,9 @@ class UrlExtension extends \Twig_Extension
     /**
      * Get nodeSource url using cache.
      *
-     * @param  NodesSources $ns
-     * @param  array        $criteria
+     * @param NodesSources $ns
+     * @param array        $criteria
+     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])

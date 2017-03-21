@@ -60,8 +60,9 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * Get a resource Url.
      *
      * @param boolean $absolute Use Url with domain name [default: false]
-     * @param string $canonicalSchemeAuthority Override protocol, host and port to generate Url. Need absolute tot true
+     * @param string $canonicalSchemeAuthority Override protocol, host and port to generate Url. Need absolute to true
      * @return string
+     * @deprecated Do not use this method directly to generate NodesSources URI but ChainRouter::generate method.
      */
     public function getUrl($absolute = false, $canonicalSchemeAuthority = '')
     {
@@ -92,7 +93,6 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * It returns a relative url to Roadiz, not relative to your server root.
      *
      * @param \RZ\Roadiz\Core\Entities\Theme $theme
-     *
      * @return string
      */
     public function getNonContextualUrl(Theme $theme = null)

@@ -107,7 +107,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $container['nodeRouter'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            return new NodeRouter(
+            $router = new NodeRouter(
                 $c['em'],
                 $c['themeResolver'],
                 [
@@ -121,6 +121,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['stopwatch'],
                 $kernel->isPreview()
             );
+            $router->setNodeSourceUrlCacheProvider($c['nodesSourcesUrlCacheProvider']);
+            return $router;
         };
         $container['redirectionRouter'] = function ($c) {
             /** @var Kernel $kernel */
@@ -141,7 +143,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['urlGenerator'] = function ($c) {
-            return $c['staticRouter']->getGenerator();
+            return $c['router'];
         };
 
         $container['httpUtils'] = function ($c) {

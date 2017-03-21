@@ -45,7 +45,7 @@
      # Canonical url -----------------------------------------------------------
      #}
     {% if node %}
-        <link rel="canonical" href="{{ nodeSource|url({'absolute':true}) }}" />
+        <link rel="canonical" href="{{ url(nodeSource) }}" />
     {% endif %}
 
     {#

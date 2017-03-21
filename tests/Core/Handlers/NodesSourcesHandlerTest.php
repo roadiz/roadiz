@@ -135,7 +135,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $n5 = static::createNode("Page 5", $en);
         $ns5 = $n5->getNodeSources()->first();
 
-        $a5 = new Urlalias($ns5);
+        $a5 = new UrlAlias($ns5);
         $a5->setAlias('tralala-en');
         static::getManager()->persist($a5);
         $ns5->getUrlAliases()->add($a5);

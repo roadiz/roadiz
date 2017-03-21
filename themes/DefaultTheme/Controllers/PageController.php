@@ -90,10 +90,7 @@ class PageController extends DefaultThemeApp
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->get('em')->flush();
-
-            $urlGenerator = new NodesSourcesUrlGenerator($request, $this->nodeSource);
-
-            return $this->redirect($urlGenerator->getUrl());
+            return $this->redirect($this->generateUrl($this->nodeSource));
         }
 
         $this->assignation['form'] = $form->createView();
