@@ -34,7 +34,6 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\RouteHandler;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 
@@ -94,6 +93,9 @@ class TranslationViewer implements ViewableInterface
         $name = "";
         $forceLocale = (boolean) SettingsBag::get('force_locale');
 
+        /*
+         * Fix absolute boolean to Int constant.
+         */
         $absolute = $absolute ? Router::ABSOLUTE_URL : Router::ABSOLUTE_PATH;
 
         /** @var \Rz\Roadiz\Core\Entities\Node $node */

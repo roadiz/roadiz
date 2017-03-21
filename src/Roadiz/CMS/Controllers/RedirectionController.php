@@ -31,7 +31,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Entities\Redirection;
 use RZ\Roadiz\Core\HttpFoundation\Request;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**

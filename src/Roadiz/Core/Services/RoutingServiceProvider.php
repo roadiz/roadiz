@@ -143,7 +143,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['urlGenerator'] = function ($c) {
-            return $c['staticRouter']->getGenerator();
+            return $c['router'];
         };
 
         $container['httpUtils'] = function ($c) {
