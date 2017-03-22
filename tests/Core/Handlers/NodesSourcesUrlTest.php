@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesHandlerTest.php
+ * @file NodesSourcesUrlTest.php
  * @author Ambroise Maupate
  */
 use RZ\Roadiz\Core\Entities\Translation;
@@ -34,26 +34,10 @@ use RZ\Roadiz\Tests\SchemaDependentCase;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 
 /**
- * Class NodesSourcesHandlerTest
+ * Class NodesSourcesUrlTest
  */
-class NodesSourcesHandlerTest extends SchemaDependentCase
+class NodesSourcesUrlTest extends SchemaDependentCase
 {
-    /**
-     *
-     */
-    public function testGetUrl()
-    {
-        $sources = $this->getUrlProvider();
-
-        foreach ($sources as $sourceTuple) {
-            $nodeSource = $sourceTuple[0];
-            $expectedUrl = $sourceTuple[1];
-            $generator = new NodesSourcesUrlGenerator(Kernel::getService('request'), $nodeSource);
-
-            $this->assertEquals($generator->getUrl(), $expectedUrl);
-        }
-    }
-
     /**
      * Nothing special to do except init collection
      * array.
@@ -80,12 +64,28 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
     }
 
 
+    public function testGetUrl()
+    {
+        $sources = $this->getUrlProvider();
+
+        foreach ($sources as $index => $sourceTuple) {
+            $nodeSource = $sourceTuple[0];
+            $expectedUrl = $sourceTuple[1];
+
+            $nsUrlGenerator = new NodesSourcesUrlGenerator(Kernel::getService('request'), $nodeSource);
+
+            $this->assertEquals($expectedUrl, $nsUrlGenerator->getUrl());
+            //$this->assertEquals($expectedUrl, Kernel::getService('urlGenerator')->generate($nodeSource));
+        }
+    }
+
+
     /**
      * @return array
      */
-    private function getUrlProvider()
+    public function getUrlProvider()
     {
-        $sources = array();
+        $sources = [];
 
         $fr = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
@@ -99,9 +99,10 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
          * Test 1 - regular node
          */
         $n1 = static::createNode("Page", $fr);
+        $n1->setVisible(true);
         $ns1 = $n1->getNodeSources()->first();
 
-        $sources[] = array($ns1, '/page');
+        $sources[] = [$ns1, '/page'];
 
         /*
          * Test 2  - regular node
@@ -109,7 +110,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $n2 = static::createNode("Page 2", $en);
         $ns2 = $n2->getNodeSources()->first();
 
-        $sources[] = array($ns2, '/en/page-2');
+        $sources[] = [$ns2, '/en/page-2'];
 
         /*
          * Test 3 - home node
@@ -118,7 +119,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $ns3 = $n3->getNodeSources()->first();
         $n3->setHome(true);
 
-        $sources[] = array($ns3, '/');
+        $sources[] = [$ns3, '/'];
 
         /*
          * Test 4 - home node non-default
@@ -127,7 +128,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $ns4 = $n4->getNodeSources()->first();
         $n4->setHome(true);
 
-        $sources[] = array($ns4, '/en');
+        $sources[] = [$ns4, '/en'];
 
         /*
          * Test 5  - regular node with alias
@@ -140,16 +141,16 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         static::getManager()->persist($a5);
         $ns5->getUrlAliases()->add($a5);
 
-        $sources[] = array($ns5, '/tralala-en');
+        $sources[] = [$ns5, '/tralala-en'];
 
         /*
          * Test 6  - regular node with 1 parent
          */
         $n6 = static::createNode("Page 6", $fr);
         $ns6 = $n6->getNodeSources()->first();
-        $ns6->getHandler()->setParentNodeSource($ns1);
+        $n6->setParent($n1);
 
-        $sources[] = array($ns6, '/page/page-6');
+        $sources[] = [$ns6, '/page/page-6'];
 
         /*
          * Test 7  - regular node with 2 parents
@@ -158,7 +159,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $ns7 = $n7->getNodeSources()->first();
         $n7->setParent($n6);
 
-        $sources[] = array($ns7, '/page/page-6/page-7');
+        $sources[] = [$ns7, '/page/page-6/page-7'];
 
         /*
          * Test 8  - regular node with 1 parent and 2 alias
@@ -172,7 +173,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $ns8->getUrlAliases()->add($a8);
         static::getManager()->persist($a8);
 
-        $sources[] = array($ns8, '/tralala-en/other-tralala-en');
+        $sources[] = [$ns8, '/tralala-en/other-tralala-en'];
 
         /*
          * Test 9 - hidden node
@@ -181,7 +182,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $ns9 = $n9->getNodeSources()->first();
         $n9->setVisible(false);
 
-        $sources[] = array($ns9, '/hidden-page');
+        $sources[] = [$ns9, '/hidden-page'];
 
         /*
          * Test 10 - regular node with hidden parent
@@ -190,58 +191,7 @@ class NodesSourcesHandlerTest extends SchemaDependentCase
         $ns10 = $n10->getNodeSources()->first();
         $n10->setParent($n9);
 
-        $sources[] = array($ns10, '/page-with-hidden-parent');
-
-        static::getManager()->flush();
-
-        return $sources;
-    }
-
-
-    public function testGetParent()
-    {
-        $sources = $this->getSourcesParentsProvider();
-
-        foreach ($sources as $source) {
-            /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
-            $nodeSource = $source[0];
-            /** @var \RZ\Roadiz\Core\Entities\NodesSources $expectedParent */
-            $expectedParent = $source[1];
-
-            $this->assertEquals($nodeSource->getHandler()->getParent(), $expectedParent);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    private function getSourcesParentsProvider()
-    {
-        $sources = [];
-
-        $fr = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findOneByLocale('fr');
-
-        $n1 = static::createNode("Page 0", $fr);
-        $ns1 = $n1->getNodeSources()->first();
-
-        $n2 = static::createNode("Page 0-1", $fr);
-        $n2->setParent($n1);
-        $ns2 = $n2->getNodeSources()->first();
-
-        $n3 = static::createNode("Page 0-2", $fr);
-        $n3->setParent($n1);
-        $ns3 = $n3->getNodeSources()->first();
-
-        $n4 = static::createNode("Page 0-2-1", $fr);
-        $n4->setParent($n3);
-        $ns4 = $n4->getNodeSources()->first();
-
-        $sources[] = array($ns1, null);
-        $sources[] = array($ns2, $ns1);
-        $sources[] = array($ns3, $ns1);
-        $sources[] = array($ns4, $ns3);
+        $sources[] = [$ns10, '/page-with-hidden-parent'];
 
         static::getManager()->flush();
 

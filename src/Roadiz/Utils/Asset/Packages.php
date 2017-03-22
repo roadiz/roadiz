@@ -331,4 +331,22 @@ class Packages extends BasePackages
         }
         return $this->getPublicFilesPath($document->getFolder());
     }
+
+    /**
+     * @return string
+     */
+    public function getStaticDomain()
+    {
+        return $this->staticDomain;
+    }
+
+    /**
+     * @param string $staticDomain
+     * @return Packages
+     */
+    public function setStaticDomain($staticDomain)
+    {
+        $this->staticDomain = $staticDomain;
+        return $this;
+    }
 }

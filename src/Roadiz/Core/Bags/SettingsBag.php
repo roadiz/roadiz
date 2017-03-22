@@ -92,4 +92,12 @@ class SettingsBag
 
         return isset(static::$settings[$settingName]) ? static::$settings[$settingName] : false;
     }
+
+    /**
+     * Clear static cache.
+     */
+    public static function clear()
+    {
+        static::$settings = [];
+    }
 }

@@ -30,11 +30,16 @@
 namespace RZ\Roadiz\Tests;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\SchemaTool;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.
@@ -46,13 +51,18 @@ use RZ\Roadiz\Core\Kernel;
 abstract class SchemaDependentCase extends KernelDependentCase
 {
     /**
+     * @var EntityManager
+     */
+    static $entityManager;
+
+    /**
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        $em = Kernel::getService('em');
+        $em = static::getManager();
         $schemaTool = new SchemaTool($em);
         $metadata = $em->getMetadataFactory()->getAllMetadata();
 
@@ -67,13 +77,13 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
     public static function tearDownAfterClass()
     {
-        $em = Kernel::getService('em');
+        $em = static::getManager();
         $schemaTool = new SchemaTool($em);
 
         // Drop and recreate tables for all entities
         $schemaTool->dropDatabase();
-
         $em->close();
+        static::$entityManager = null;
 
         parent::tearDownAfterClass();
     }
@@ -87,6 +97,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
     {
         $node = new Node();
         $node->setNodeName($title);
+        $node->setVisible(true);
         static::getManager()->persist($node);
 
         $ns = new NodesSources($node, $translation);
@@ -103,6 +114,38 @@ abstract class SchemaDependentCase extends KernelDependentCase
      */
     public static function getManager()
     {
-        return Kernel::getService('em');
+        if (static::$entityManager === null) {
+            $config = Kernel::getService('config');
+            $emConfig = Kernel::getService('em.config');
+            static::$entityManager = EntityManager::create($config["doctrine"], $emConfig);
+            $evm = static::$entityManager->getEventManager();
+
+            $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
+
+            /*
+             * Create dynamic discriminator map for our Node system
+             */
+            $evm->addEventListener(
+                Events::loadClassMetadata,
+                new DataInheritanceEvent($prefix)
+            );
+
+            /*
+             * Fonts life cycle manager.
+             */
+            $evm->addEventSubscriber(new FontLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
+
+            /*
+             * Documents life cycle manager.
+             */
+            $evm->addEventSubscriber(new DocumentLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
+
+            /*
+             * Users life cycle manager.
+             */
+            $evm->addEventSubscriber(new UserLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
+        }
+
+        return static::$entityManager;
     }
 }

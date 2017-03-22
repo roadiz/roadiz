@@ -354,6 +354,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
+     * Clear Kernel singleton.
+     */
+    public static function destroy()
+    {
+        static::$instance = null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getContainer()
