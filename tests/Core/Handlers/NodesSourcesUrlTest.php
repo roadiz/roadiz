@@ -72,10 +72,17 @@ class NodesSourcesUrlTest extends SchemaDependentCase
             $nodeSource = $sourceTuple[0];
             $expectedUrl = $sourceTuple[1];
 
-            $nsUrlGenerator = new NodesSourcesUrlGenerator(Kernel::getService('request'), $nodeSource);
+            $nsUrlGenerator = new NodesSourcesUrlGenerator(null, $nodeSource);
 
+            /*
+             * Test previous syntax
+             */
             $this->assertEquals($expectedUrl, $nsUrlGenerator->getUrl());
-            //$this->assertEquals($expectedUrl, Kernel::getService('urlGenerator')->generate($nodeSource));
+
+            /*
+             * Test current syntax
+             */
+            $this->assertEquals($expectedUrl, Kernel::getService('urlGenerator')->generate($nodeSource));
         }
     }
 

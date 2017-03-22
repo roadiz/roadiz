@@ -282,7 +282,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          *
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            if (null !== $c['em']) {
+            if (null !== $c['em'] && $c['kernel']->getEnvironment() != 'test') {
                 // clone existing cache to be able to vary namespace
                 $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
                 if ($cache instanceof CacheProvider) {

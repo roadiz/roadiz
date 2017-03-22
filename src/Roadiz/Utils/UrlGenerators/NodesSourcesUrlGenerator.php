@@ -82,7 +82,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             '/' .
             $this->getNonContextualUrl($this->request->getTheme());
         } else {
-            return $this->getNonContextualUrl();
+            return '/' . $this->getNonContextualUrl();
         }
     }
 
