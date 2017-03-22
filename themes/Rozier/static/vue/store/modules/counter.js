@@ -1,33 +1,40 @@
-import { COUNTER_INCREMENT } from '../mutationTypes'
+import { COUNTER_INCREMENT, COUNTER_DECREMENT } from '../mutationTypes'
 
+/**
+ * Module state
+ */
 const state = {
     number: 0
 }
 
-
-// GETTERS
-
+/**
+ * Getters
+ */
 const getters = {
     getNumber: state => state.number
 }
 
-
-// ACTIONS
-
+/**
+ * Actions
+ */
 const actions =  {
-    increment ({ commit }) {
-        commit(COUNTER_INCREMENT, {
-            plus: 10
-        })
-    }
+    increment ({ commit }, e, value = 10) {
+        commit(COUNTER_INCREMENT, { value })
+    },
+    decrement ({ commit }, e, value = 10) {
+        commit(COUNTER_DECREMENT, { value })
+    },
 }
 
-
-// MUTATIONS
-
+/**
+ * Mutations
+ */
 const mutations = {
-    [COUNTER_INCREMENT] (state, { plus }) {
-        state.number += plus
+    [COUNTER_INCREMENT] (state, { value }) {
+        state.number += value
+    },
+    [COUNTER_DECREMENT] (state, { value }) {
+        state.number -= value
     }
 }
 

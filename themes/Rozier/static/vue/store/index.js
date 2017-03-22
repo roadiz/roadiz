@@ -2,13 +2,11 @@ import Vuex from 'vuex'
 
 // modules
 import counter from './modules/counter'
-
-const state = {
-    number: 0
-}
+import nodesSearch from './modules/nodesSearch'
 
 export default new Vuex.Store({
     modules: {
-        counter
+        counter,
+        nodesSearch
     }
 })

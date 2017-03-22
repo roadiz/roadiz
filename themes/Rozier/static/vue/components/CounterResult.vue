@@ -1,12 +1,12 @@
 <template>
     <div>
-        <h1>Counter</h1>
-        <p>counter: {{ getTotal }}</p>
+        <p>Total: {{ getTotal }}</p>
     </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
     computed: {

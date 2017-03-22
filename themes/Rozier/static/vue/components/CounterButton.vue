@@ -1,22 +1,19 @@
 <template>
     <div>
-        <counter-result></counter-result>
-        <button @click.prevent="increment">+10</button>
+        <button class="uk-button uk-button-primary" @click.prevent="increment">+10</button>
+        <button class="uk-button uk-button-primary" @click.prevent="decrement">-10</button>
     </div>
 </template>
 
 <script>
     import { mapActions } from 'vuex'
-    import CounterResult from './CounterResult.vue'
 
     export default {
         methods: {
             ...mapActions('counter', [
-                'increment'
+                'increment',
+                'decrement'
             ])
-        },
-        components: {
-            CounterResult
         }
     }
 </script>

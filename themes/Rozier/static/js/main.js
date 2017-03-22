@@ -69,23 +69,23 @@ Rozier.onDocumentReady = function(event) {
     }
 
     // Search node
-    var $searchInput = $('#nodes-sources-search-input');
-    var $search = $('#nodes-sources-search');
-    var $searchResults = $('#nodes-sources-search-results');
-    $searchInput.on('focus', function(){
-        $search.addClass("focus-on");
-        $searchResults.fadeIn();
-        setTimeout(function(){ Rozier.resize(); }, 500);
-    });
-    $searchInput.on('focusout', function(){
-        $searchResults.fadeOut();
-        $search.removeClass("focus-on");
-        $(this).val("");
-        setTimeout(function(){ Rozier.resize(); }, 500);
-    });
-
-    $searchInput.on('keyup', Rozier.onSearchNodesSources);
-    $("#nodes-sources-search-form").on('submit', Rozier.onSubmitSearchNodesSources);
+    // var $searchInput = $('#nodes-sources-search-input');
+    // var $search = $('#nodes-sources-search');
+    // var $searchResults = $('#nodes-sources-search-results');
+    // $searchInput.on('focus', function(){
+    //     $search.addClass("focus-on");
+    //     $searchResults.fadeIn();
+    //     setTimeout(function(){ Rozier.resize(); }, 500);
+    // });
+    // $searchInput.on('focusout', function(){
+    //     $searchResults.fadeOut();
+    //     $search.removeClass("focus-on");
+    //     $(this).val("");
+    //     setTimeout(function(){ Rozier.resize(); }, 500);
+    // });
+    //
+    // $searchInput.on('keyup', Rozier.onSearchNodesSources);
+    // $("#nodes-sources-search-form").on('submit', Rozier.onSubmitSearchNodesSources);
 
     // Minify trees panel toggle button
     Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);

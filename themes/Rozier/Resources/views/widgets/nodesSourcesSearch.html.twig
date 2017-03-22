@@ -1,13 +1,27 @@
-<div id="nodes-sources-search">
-    <form id="nodes-sources-search-form" action="{{ path('searchNodesSourcesAjax') }}" method="POST" class="uk-form">
-        <div class="uk-form-icon">
-            <i class="uk-icon-search"></i>
-            <input id="nodes-sources-search-input" type="search"
-                        name="searchTerms"
-                        value=""
-                        placeholder="{% trans %}search.node{% endtrans %}"/>
+<nodes-search-container inline-template>
+    <div id="nodes-sources-search" v-bind:class="{ 'focus-on': isFocus }">
+        <form id="nodes-sources-search-form" action="{{ path('searchNodesSourcesAjax') }}" method="POST" class="uk-form">
+            <div class="uk-form-icon">
+                <i class="uk-icon-search"></i>
+                <input id="nodes-sources-search-input"
+                       type="search"
+                       name="searchTerms"
+                       value=""
+                       v-model="search"
+                       debounce="250"
+                       @focus="toggleFocus"
+                       @blur="toggleFocus"
+                       placeholder="{% trans %}search.node{% endtrans %}"/>
 
-        </div>
-    </form>
-    <ul id="nodes-sources-search-results"></ul>
-</div>
+            </div>
+        </form>
+
+        <ul v-if="isFocus">
+            <li v-for="item in items">
+                <div>${ item.name }</div>
+            </li>
+        </ul>
+
+        <ul id="nodes-sources-search-results"></ul>
+    </div>
+</nodes-search-container>

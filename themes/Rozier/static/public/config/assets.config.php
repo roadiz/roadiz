@@ -45,7 +45,7 @@ return array(
                 '/rozierMobile.02f53ed9.min.js',
                 '/lazyload.471c8c4e.min.js',
                 '/plugins.3f99cf4d.min.js',
-                '/main.d86def00.min.js',
+                '/main.f1cf6020.min.js',
                 '/uikit.16c31cc8.min.js',
                 '/sortable.fa438a02.min.js',
                 '/datepicker.6d1d4ea6.min.js',
@@ -79,7 +79,7 @@ return array(
             'css' => array(
             ),
             'js' => array(
-                '/rozier-backend-theme-simple.181f893b.min.js',
+                '/rozier-backend-theme-simple.8aef8219.min.js',
             ),
         ),
         'custom-forms' => array(
@@ -88,7 +88,7 @@ return array(
                 '/custom-forms-front.59926a39.css',
             ),
             'js' => array(
-                '/rozier-backend-theme-cforms.58fd638f.min.js',
+                '/rozier-backend-theme-cforms.0377fb2d.min.js',
             ),
         ),
     )
