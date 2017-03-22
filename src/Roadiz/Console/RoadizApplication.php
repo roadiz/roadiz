@@ -65,7 +65,8 @@ class RoadizApplication extends Application
         $this->kernel = $kernel;
         $this->kernel->boot();
 
-        if (null === $this->kernel->container->offsetGet('request')) {
+        if (!$this->kernel->container->offsetExists('request') ||
+            null === $this->kernel->container->offsetGet('request')) {
             $this->kernel->container['request'] = Request::createFromGlobals();
             $this->kernel->container['requestStack']->push($this->kernel->container['request']);
         }
