@@ -149,7 +149,7 @@ IndexIgnore *
     #RewriteCond %{HTTP_HOST} !^www\.
     #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ index.php/$1 [QSA,L]
+    RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
 </IfModule>' . PHP_EOL;
     }
 
