@@ -67,7 +67,7 @@ class UsersEnableCommand extends UsersCommand
                     '<question>Do you really want to enable user “' . $user->getUsername() . '”?</question> [y/N]:',
                     false
                 );
-                if ($user !== null && $this->questionHelper->ask(
+                if (!$input->isInteractive() || $this->questionHelper->ask(
                     $input,
                     $output,
                     $confirmation
@@ -79,7 +79,7 @@ class UsersEnableCommand extends UsersCommand
                     $text = PHP_EOL . '<info>[Cancelled]</info> User “' . $name . '” was not enabled.' . PHP_EOL;
                 }
             } else {
-                $text = PHP_EOL . '<error>User “' . $name . '” does not exist.</error>' . PHP_EOL;
+                throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
 
