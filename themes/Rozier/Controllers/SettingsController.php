@@ -30,6 +30,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\SettingGroupType;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -452,7 +453,7 @@ class SettingsController extends RozierApp
                         ])
                         ->add(
                             'settingGroup',
-                            new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
+                            new SettingGroupType($this->get('em')),
                             [
                                 'label' => 'setting.group',
                             ]
@@ -525,7 +526,7 @@ class SettingsController extends RozierApp
                         )
                         ->add(
                             'settingGroup',
-                            new \RZ\Roadiz\CMS\Forms\SettingGroupType(),
+                            new SettingGroupType($this->get('em')),
                             [
                                 'label' => 'setting.group',
                             ]
@@ -536,6 +537,7 @@ class SettingsController extends RozierApp
 
     /**
      * @param Setting $setting
+     * @return \RZ\Roadiz\CMS\Forms\CssType|\RZ\Roadiz\CMS\Forms\JsonType|\RZ\Roadiz\CMS\Forms\MarkdownType
      */
     protected function getFormTypeFromSettingType(Setting $setting)
     {

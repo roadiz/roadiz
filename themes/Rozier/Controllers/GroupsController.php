@@ -30,6 +30,8 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\RolesType;
+use RZ\Roadiz\CMS\Forms\UsersType;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
@@ -453,7 +455,7 @@ class GroupsController extends RozierApp
                         ])
                         ->add(
                             'roleId',
-                            new \RZ\Roadiz\CMS\Forms\RolesType($group->getRolesEntities()),
+                            new RolesType($this->get('em'), $group->getRolesEntities()),
                             ['label' => 'choose.role']
                         );
 
@@ -479,7 +481,7 @@ class GroupsController extends RozierApp
                         ])
                         ->add(
                             'userId',
-                            new \RZ\Roadiz\CMS\Forms\UsersType($group->getUsers()),
+                            new UsersType($this->get('em'), $group->getUsers()),
                             [
                                 'label' => 'choose.user',
                                 'constraints' => [

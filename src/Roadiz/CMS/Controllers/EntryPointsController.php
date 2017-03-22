@@ -421,7 +421,6 @@ class EntryPointsController extends CmsController
      * @param string                                    $customEmailSubject  Customize email subject
      *
      * @deprecated Use ContactFormManager instead
-     *
      * @return \Symfony\Component\Form\FormBuilder
      */
     public static function getContactFormBuilder(

@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,14 +43,20 @@ class NodeTypesType extends AbstractType
      * @var bool
      */
     private $showInvisible;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
      * NodeTypesType constructor.
+     * @param EntityManager $entityManager
      * @param bool $showInvisible
      */
-    public function __construct($showInvisible = false)
+    public function __construct(EntityManager $entityManager, $showInvisible = false)
     {
         $this->showInvisible = $showInvisible;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -66,9 +72,7 @@ class NodeTypesType extends AbstractType
             $criteria['visible'] = true;
         }
 
-        $nodeTypes = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy($criteria);
+        $nodeTypes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy($criteria);
 
         $choices = [];
         /** @var NodeType $nodeType */
