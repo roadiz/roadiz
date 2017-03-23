@@ -15,14 +15,15 @@
 
             </div>
         </form>
-
-        <ul id="nodes-sources-search-results" v-if="isFocus">
-            <li v-for="item in items">
-                <a v-bind:href="item.url" @click.prevent="onItemClick" v-bind:style="{ borderLeftColor: item.typeColor }">
-                    <span class="title"> ${item.title}</span>
-                    <span class="type">${item.typeName}</span>
-                </a>
-            </li>
-        </ul>
+        <transition name="fade">
+            <ul id="nodes-sources-search-results" v-if="isFocus">
+                <li v-for="item in items">
+                    <a v-bind:href="item.url" @click.prevent="onItemClick" v-bind:style="{ borderLeftColor: item.typeColor }">
+                        <span class="title"> ${item.title}</span>
+                        <span class="type">${item.typeName}</span>
+                    </a>
+                </li>
+            </ul>
+        </transition>
     </div>
 </nodes-search-container>

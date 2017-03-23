@@ -37,8 +37,6 @@ const actions =  {
 
         commit(NODES_SEARCH_REQUEST, { searchTerms })
 
-        console.log(api)
-
         api.getNodesSourceFromSearch(searchTerms)
             .then((items) => {
                 commit(NODES_SEARCH_SUCCESS, { items })

@@ -3,8 +3,8 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/vendor.5c6b2574.css',
-                '/style.a1a622df.css',
+                '/vendor.ce132d7a.css',
+                '/style.f5e84ec8.css',
             ),
             'js' => array(
                 '/auto-update.f46be045.min.js',
@@ -84,8 +84,8 @@ return array(
         ),
         'custom-forms' => array(
             'css' => array(
-                '/vendor.5c6b2574.css',
-                '/custom-forms-front.59926a39.css',
+                '/vendor.ce132d7a.css',
+                '/custom-forms-front.151e88f2.css',
             ),
             'js' => array(
                 '/rozier-backend-theme-cforms.0164387d.min.js',
