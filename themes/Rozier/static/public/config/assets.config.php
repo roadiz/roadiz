@@ -79,7 +79,7 @@ return array(
             'css' => array(
             ),
             'js' => array(
-                '/rozier-backend-theme-simple.8aef8219.min.js',
+                '/rozier-backend-theme-simple.89227673.min.js',
             ),
         ),
         'custom-forms' => array(
@@ -88,7 +88,7 @@ return array(
                 '/custom-forms-front.59926a39.css',
             ),
             'js' => array(
-                '/rozier-backend-theme-cforms.0377fb2d.min.js',
+                '/rozier-backend-theme-cforms.0164387d.min.js',
             ),
         ),
     )

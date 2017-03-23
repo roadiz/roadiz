@@ -1,4 +1,5 @@
 <!-- Inline template for this component -->
+<!-- Template: widgets/nodesSourcesSearch.html.twig -->
 <script>
     import { mapState, mapActions } from 'vuex'
 
@@ -6,21 +7,26 @@
         props: ['url'],
         data: function () {
             return {
-                search: null,
+                searchTerms: null,
                 isFocus: false,
             }
         },
         computed: {
-            ...mapState('nodesSearch', ['search', 'items']),
+            ...mapState('nodesSourceSearch', ['searchTerms', 'items']),
         },
         methods: {
-            ...mapActions('nodesSearch', ['updateSearch']),
+            ...mapActions('nodesSourceSearch', ['updateSearch']),
             toggleFocus: function () {
-                this.isFocus = !this.isFocus
+                window.setTimeout(() => {
+                    this.isFocus = !this.isFocus
+                }, 50)
+            },
+            onItemClick: (e) => {
+                Rozier.lazyload.onClick(e)
             }
         },
         watch: {
-            search: function (newValue, oldValue) {
+            searchTerms: function (newValue, oldValue) {
                 this.updateSearch(newValue, oldValue)
             }
         }

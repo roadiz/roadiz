@@ -2,11 +2,11 @@ import Vuex from 'vuex'
 
 // modules
 import counter from './modules/counter'
-import nodesSearch from './modules/nodesSearch'
+import nodesSourceSearch from './modules/nodesSourceSearch'
 
 export default new Vuex.Store({
     modules: {
         counter,
-        nodesSearch
+        nodesSourceSearch
     }
 })
