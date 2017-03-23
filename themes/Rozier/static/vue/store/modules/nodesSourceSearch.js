@@ -2,7 +2,6 @@ import api from '../../api'
 import {
     NODES_SEARCH_REQUEST,
     NODES_SEARCH_SUCCESS,
-    NODES_SEARCH_FAILURE,
     NODES_SEARCH_RESET,
     NODES_SEARCH_FAILED
 } from '../mutationTypes'

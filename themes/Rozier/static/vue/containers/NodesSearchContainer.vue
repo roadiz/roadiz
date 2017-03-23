@@ -3,8 +3,10 @@
 <script>
     import { mapState, mapActions } from 'vuex'
 
+    // Components
+    import AjaxLink from '../components/AjaxLink.vue'
+
     export default {
-        props: ['url'],
         data: function () {
             return {
                 searchTerms: null,
@@ -20,15 +22,15 @@
                 window.setTimeout(() => {
                     this.isFocus = !this.isFocus
                 }, 50)
-            },
-            onItemClick: (e) => {
-                Rozier.lazyload.onClick(e)
             }
         },
         watch: {
             searchTerms: function (newValue, oldValue) {
                 this.updateSearch(newValue, oldValue)
             }
+        },
+        components: {
+            AjaxLink
         }
     }
 </script>

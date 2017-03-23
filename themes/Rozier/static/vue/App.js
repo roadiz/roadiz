@@ -9,8 +9,7 @@ import NodesSearchContainer from './containers/NodesSearchContainer.vue'
 
 class AppVue {
     constructor () {
-        this.mainNavPanelComponent = null
-        this.mainTreesPanelComponent = null
+        this.navTrees = null
         this.mainContentComponents = []
         this.registeredComponents = {
             PageContainer,
@@ -24,8 +23,7 @@ class AppVue {
     }
 
     init () {
-        this.buildNavPanelComponent()
-        this.buildMainTreesPanelComponent()
+        this.buildNavTrees()
         this.buildMainContentComponents()
     }
 
@@ -43,15 +41,9 @@ class AppVue {
         })
     }
 
-    buildNavPanelComponent () {
-        if (document.getElementById('admin-menu')) {
-            this.mainNavPanelComponent = this.buildComponent('#admin-menu')
-        }
-    }
-
-    buildMainTreesPanelComponent () {
+    buildNavTrees () {
         if (document.getElementById('main-trees')) {
-            this.mainTreesPanelComponent = this.buildComponent('#main-trees')
+            this.navTrees = this.buildComponent('#main-trees')
         }
     }
 

@@ -30,57 +30,55 @@
         <script src="{{ head.resourcesUrl }}js/vendor/modernizr.custom.50380.js"></script>
     </head>
     <body>
-        <div>
-            <div id="main-container" >
-                <div id="main-container-inner">
-                    <section class="main-container-section" id="user-panel">
-                        {% include '@Rozier/panels/user_panel.html.twig' with {
-                            'session' : session,
-                            'head' : head,
-                            'authorizationChecker' : authorizationChecker,
+        <div id="main-container" >
+            <div id="main-container-inner">
+                <section class="main-container-section" id="user-panel">
+                    {% include '@Rozier/panels/user_panel.html.twig' with {
+                        'session' : session,
+                        'head' : head,
+                        'authorizationChecker' : authorizationChecker,
+                        'tokenStorage': tokenStorage,
+                        'themeServices':themeServices,
+                        'request':request
+                    } only %}
+                </section>
+                <section class="main-container-section" id="admin-menu">
+                    {% include '@Rozier/panels/admin_menu.html.twig' with {
+                        'themeServices' : themeServices,
+                        'authorizationChecker' : authorizationChecker,
+                        'tokenStorage': tokenStorage,
+                        'backofficeEntries':backofficeEntries,
+                        'request':request
+                    } only %}
+                </section>
+                {% if (is_granted('ROLE_ACCESS_NODES') or
+                       is_granted('ROLE_ACCESS_DOCUMENTS') or
+                       is_granted('ROLE_ACCESS_TAGS')) %}
+                <section id="main-trees" class="main-container-section">
+                    <div id="main-trees-overlay"></div>
+                    <div id="main-trees-container">
+                        {% include '@Rozier/panels/tree_panel.html.twig' with {
+                            'authorizationChecker': authorizationChecker,
                             'tokenStorage': tokenStorage,
-                            'themeServices':themeServices,
-                            'request':request
+                            'themeServices': themeServices,
+                            "nodeStatuses":nodeStatuses,
+                            "request":request,
                         } only %}
-                    </section>
-                    <section class="main-container-section" id="admin-menu">
-                        {% include '@Rozier/panels/admin_menu.html.twig' with {
-                            'themeServices' : themeServices,
-                            'authorizationChecker' : authorizationChecker,
-                            'tokenStorage': tokenStorage,
-                            'backofficeEntries':backofficeEntries,
-                            'request':request
-                        } only %}
-                    </section>
-                    {% if (is_granted('ROLE_ACCESS_NODES') or
-                           is_granted('ROLE_ACCESS_DOCUMENTS') or
-                           is_granted('ROLE_ACCESS_TAGS')) %}
-                    <section id="main-trees" class="main-container-section">
-                        <div id="main-trees-overlay"></div>
-                        <div id="main-trees-container">
-                            {% include '@Rozier/panels/tree_panel.html.twig' with {
-                                'authorizationChecker': authorizationChecker,
-                                'tokenStorage': tokenStorage,
-                                'themeServices': themeServices,
-                                "nodeStatuses":nodeStatuses,
-                                "request":request,
-                            } only %}
-                        </div>
-                    </section>
-                    {% endif %}
-                    <!-- Add your site or application content here -->
-                    <section id="main-content" class="main-container-section" data-uk-observe>
-                        <div id="main-content-overlay"></div>
-                        <div id="main-content-scrollable">
-                            {% block content %}
-                                <h1>{% trans %}Welcome{% endtrans %}</h1>
-                            {% endblock %}
-                            <div id="canvasloader-container"></div>
-                            <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
-                            {# This is a debug panel placeholder… do not remove it. #}
-                        </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
+                {% endif %}
+                <!-- Add your site or application content here -->
+                <section id="main-content" class="main-container-section" data-uk-observe>
+                    <div id="main-content-overlay"></div>
+                    <div id="main-content-scrollable">
+                        {% block content %}
+                            <h1>{% trans %}Welcome{% endtrans %}</h1>
+                        {% endblock %}
+                        <div id="canvasloader-container"></div>
+                        <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
+                        {# This is a debug panel placeholder… do not remove it. #}
+                    </div>
+                </section>
             </div>
         </div>
 
@@ -115,7 +113,7 @@
                     'moreNodes':         '{{ 'more.nodes'|trans() }}',
                     'moreCustomForms':   '{{ 'more.custom_forms'|trans() }}',
                     'dropzone' : {
-                        'maxFilesize' :                 {{ themeServices.maxFilesize }},
+                        'maxFilesize':                 {{ themeServices.maxFilesize }},
                         'dictDefaultMessage':           "{{ 'drop.files.here.to.upload.or.click.to.open.your.explorer'|trans() }}",
                         'dictFallbackMessage':          "{{ 'your.browser.does.not.support.dragndrop.file.uploads'|trans() }}",
                         'dictFallbackText':             "{{ 'please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days'|trans() }}",
