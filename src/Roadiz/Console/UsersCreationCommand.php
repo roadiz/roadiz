@@ -113,8 +113,7 @@ class UsersCreationCommand extends UsersCommand
                     $output,
                     $questionEmail
                 );
-            } while (
-                !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+            } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
                 $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
             );
         } else {
@@ -125,7 +124,7 @@ class UsersCreationCommand extends UsersCommand
             if ($this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)) {
                 throw new \InvalidArgumentException('Email already exists.');
             }
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL) ) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 throw new \InvalidArgumentException('Email is not valid.');
             }
         }
