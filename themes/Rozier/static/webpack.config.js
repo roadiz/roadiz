@@ -7,6 +7,7 @@ module.exports = {
         vue: 'Vue',
         vuex: 'Vuex'
     },
+    devtool: 'eval-source-map',
     module: {
         rules: [
             {

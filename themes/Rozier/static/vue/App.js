@@ -6,16 +6,33 @@ import NodeTypeFieldFormContainer from './containers/NodeTypeFieldFormContainer.
 import NodeTypeFieldFormContainerBis from './containers/NodeTypeFieldFormContainerBis.vue'
 import PageContainer from './containers/PageContainer.vue'
 import NodesSearchContainer from './containers/NodesSearchContainer.vue'
+import DocumentExplorerContainer from './containers/DocumentExplorerContainer.vue'
+import DocumentWidgetContainer from './containers/DocumentWidgetContainer.vue'
+
+// Components
+import DocumentExplorerButton from './components/DocumentExplorerButton.vue'
 
 class AppVue {
     constructor () {
         this.navTrees = null
+        this.documentExplorer = null
         this.mainContentComponents = []
-        this.registeredComponents = {
+        this.registeredContainers = {
             PageContainer,
             NodeTypeFieldFormContainer,
             NodeTypeFieldFormContainerBis,
-            NodesSearchContainer
+            NodesSearchContainer,
+            DocumentExplorerContainer,
+            DocumentWidgetContainer
+        }
+
+        this.registeredComponents = {
+            DocumentExplorerButton
+        }
+
+        this.vuejsElements = {
+            ...this.registeredComponents,
+            ...this.registeredContainers
         }
 
         this.init()
@@ -24,6 +41,7 @@ class AppVue {
 
     init () {
         this.buildNavTrees()
+        this.buildDocumentExplorer()
         this.buildMainContentComponents()
     }
 
@@ -39,6 +57,12 @@ class AppVue {
         this.mainContentComponents.forEach((component) => {
             component.$destroy()
         })
+    }
+
+    buildDocumentExplorer () {
+        if (document.getElementById('document-explorer')) {
+            this.documentExplorer = this.buildComponent('#document-explorer')
+        }
     }
 
     buildNavTrees () {
@@ -65,7 +89,7 @@ class AppVue {
             delimiters: ['${', '}'],
             el: el,
             store,
-            components: this.registeredComponents
+            components: this.vuejsElements
         })
     }
 }

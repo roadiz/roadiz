@@ -5,10 +5,9 @@
                 <i class="uk-icon-search"></i>
                 <input id="nodes-sources-search-input"
                        type="search"
-                       name="searchTerms"
+                       {#name="searchTerms"#}
                        value=""
                        v-model="searchTerms"
-                       debounce="250"
                        @focus="toggleFocus"
                        @blur="toggleFocus"
                        placeholder="{% trans %}search.node{% endtrans %}"/>

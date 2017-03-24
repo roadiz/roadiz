@@ -171,36 +171,40 @@
 {% block documents_widget %}
     {% spaceless %}
         <div class="uk-form-row documents-widget" data-document-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
+            <document-widget-container data-vuejs>
+                {% if label is empty -%}
+                    {% set label = name|humanize %}
+                {%- endif -%}
 
-            <nav class="documents-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="documents-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
-                        <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                <nav class="documents-widget-nav uk-navbar">
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
+                        <li class="uk-navbar-brand label">{{ label|trans }}{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}</li>
+                    </ul>
+                    <div class="uk-navbar-content uk-navbar-flip">
+                        <div class="documents-widget-quick-creation uk-button-group">
+                            <document-explorer-button>
+                                {% trans %}documents.toggle-explorer{% endtrans %}
+                            </document-explorer-button>
+                            <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                        </div>
                     </div>
-                </div>
-            </nav>
-            <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
-                {% for doc in data %}
-                    {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
-                    'document': doc,
-                    'name': name,
-                    'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
-                    'read_only': read_only,
-                    'disabled': disabled,
-                    'required': required,
-                    'nodeSource': nodeSource,
-                    'attr': attr
-                    } only %}
-                {% endfor %}
-            </ul>
+                </nav>
+                <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
+                    {% for doc in data %}
+                        {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
+                        'document': doc,
+                        'name': name,
+                        'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
+                        'read_only': read_only,
+                        'disabled': disabled,
+                        'required': required,
+                        'nodeSource': nodeSource,
+                        'attr': attr
+                        } only %}
+                    {% endfor %}
+                </ul>
+            </document-widget-container>
         </div>
     {% endspaceless %}
 {% endblock documents_widget %}

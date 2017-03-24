@@ -33,26 +33,26 @@ var DocumentWidget = function () {
  * @return {[type]} [description]
  */
 DocumentWidget.prototype.init = function() {
-    var _this = this;
-
-    var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
-    _this.$sortables.off('change.uk.sortable', changeProxy);
-    _this.$sortables.on('change.uk.sortable', changeProxy);
-
-    var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
-    _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
-    _this.$toggleExplorerButtons.on('click', onExplorerToggleP);
-
-    var onUploaderToggleP = $.proxy(_this.onUploaderToggle, _this);
-    _this.$toggleUploaderButtons.off('click', onUploaderToggleP);
-    _this.$toggleUploaderButtons.on('click', onUploaderToggleP);
-
-    _this.initUnlinkEvent();
-
-    Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
-    Rozier.$window.on('uploader-open', $.proxy(_this.closeAll, _this));
-    Rozier.$window.on('explorer-open', $.proxy(_this.closeUploader, _this));
-    Rozier.$window.on('pagechange', $.proxy(_this.closeAll, _this));
+    // var _this = this;
+    //
+    // var changeProxy = $.proxy(_this.onSortableDocumentWidgetChange, _this);
+    // _this.$sortables.off('change.uk.sortable', changeProxy);
+    // _this.$sortables.on('change.uk.sortable', changeProxy);
+    //
+    // var onExplorerToggleP = $.proxy(_this.onExplorerToggle, _this);
+    // _this.$toggleExplorerButtons.off('click', onExplorerToggleP);
+    // _this.$toggleExplorerButtons.on('click', onExplorerToggleP);
+    //
+    // var onUploaderToggleP = $.proxy(_this.onUploaderToggle, _this);
+    // _this.$toggleUploaderButtons.off('click', onUploaderToggleP);
+    // _this.$toggleUploaderButtons.on('click', onUploaderToggleP);
+    //
+    // _this.initUnlinkEvent();
+    //
+    // Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
+    // Rozier.$window.on('uploader-open', $.proxy(_this.closeAll, _this));
+    // Rozier.$window.on('explorer-open', $.proxy(_this.closeUploader, _this));
+    // Rozier.$window.on('pagechange', $.proxy(_this.closeAll, _this));
 };
 
 DocumentWidget.prototype.closeAll = function(event) {

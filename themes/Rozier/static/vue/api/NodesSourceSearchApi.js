@@ -3,7 +3,7 @@ import request from 'axios'
 /**
  * Fetch Nodes Source from search terms.
  *
- * @param  String searchTerms
+ * @param  {String} searchTerms
  * @return Promise
  */
 export function getNodesSourceFromSearch (searchTerms) {
@@ -18,16 +18,16 @@ export function getNodesSourceFromSearch (searchTerms) {
         url: Rozier.routes.searchNodesSourcesAjax,
         params: postData
     })
-    .then((response) => {
-        if (typeof response.data.data != 'undefined' && response.data.data.length > 0) {
-            return response.data.data
-        } else {
-            return []
-        }
-    })
-    .catch((error) => {
-        // TODO
-        // Log request error or display a message
-        throw new Error(error)
-    })
+        .then((response) => {
+            if (typeof response.data.data != 'undefined' && response.data.data.length > 0) {
+                return response.data.data
+            } else {
+                return []
+            }
+        })
+        .catch((error) => {
+            // TODO
+            // Log request error or display a message
+            throw new Error(error)
+        })
 }

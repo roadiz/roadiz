@@ -1,0 +1,10 @@
+.slide-left-leave-active,
+.slide-left-enter-active {
+    transition: transform 0.5s @easeOutExpo, opacity 0.5s;
+}
+
+.slide-left-leave-to,
+.slide-left-enter {
+    transform: translateX(-100%);
+    opacity: 0;
+}

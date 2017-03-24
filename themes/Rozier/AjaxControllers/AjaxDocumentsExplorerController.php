@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,11 +92,30 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         $documents = $listManager->getEntities();
 
         $documentsArray = [];
+
+        /** @var Document $doc */
         foreach ($documents as $doc) {
+            $editRouteParams = [
+                'documentId' => $doc->getId()
+            ];
+
             $documentsArray[] = [
                 'id' => $doc->getId(),
                 'filename' => $doc->getFilename(),
+                'isImage' => $doc->isImage(),
+                'isSvg' => $doc->isSvg(),
+                'isPrivate' => $doc->isPrivate(),
+                'shortType' => $doc->getShortType(),
+                'editUrl' => $this->generateUrl('documentsEditPage', $editRouteParams),
                 'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
+                'isEmbed' => $doc->isEmbed(),
+                'embedPlatform' => $doc->getEmbedPlatform(),
+                'shortMimeType' => $doc->getShortMimeType(),
+                'thumbnail_80' => $doc->getViewer()->getDocumentUrlByArray([
+                    "fit" => "80x80",
+                    "quality" => 50,
+                    "inline" => false,
+                ]),
                 'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $doc]),
             ];
         }
@@ -106,6 +126,11 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'documents' => $documentsArray,
             'documentsCount' => count($documents),
             'filters' => $listManager->getAssignation(),
+            'trans' => [
+                'editDocument' => $this->getTranslator()->trans('edit.document'),
+                'unlinkDocument' => $this->getTranslator()->trans('unlink.document'),
+                'linkDocument' => $this->getTranslator()->trans('link.document'),
+            ]
         ];
 
         if ($request->get('folderId') > 0) {

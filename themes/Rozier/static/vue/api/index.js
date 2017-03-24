@@ -1,7 +1,9 @@
-import * as NodesSourceSearch from './nodesSourceSearch'
+import * as NodesSourceSearchApi from './NodesSourceSearchApi'
+import * as DocumentExplorerApi from './DocumentExplorerApi'
 
 const api = {
-    ...NodesSourceSearch
+    ...NodesSourceSearchApi,
+    ...DocumentExplorerApi
 }
 
 export default api

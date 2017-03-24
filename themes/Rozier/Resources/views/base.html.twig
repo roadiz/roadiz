@@ -82,6 +82,8 @@
             </div>
         </div>
 
+        <document-explorer-container id="document-explorer"></document-explorer-container>
+
         <!-- ##debug_panel## -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="https://unpkg.com/vue"></script>
@@ -92,7 +94,6 @@
         {% for jsMin in themeServices.grunt.staticAssets.global.js %}
         <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
         {% endfor %}
-        <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
 
         <script type="text/javascript">
             var temp = {
@@ -174,6 +175,7 @@
                 }
             };
         </script>
+        <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
 
         {% block customScripts %}{% endblock %}
     </body>

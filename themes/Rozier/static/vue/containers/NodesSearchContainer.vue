@@ -2,6 +2,7 @@
 <!-- Template: widgets/nodesSourcesSearch.html.twig -->
 <script>
     import { mapState, mapActions } from 'vuex'
+    import _ from 'lodash'
 
     // Components
     import AjaxLink from '../components/AjaxLink.vue'
@@ -18,16 +19,14 @@
         },
         methods: {
             ...mapActions('nodesSourceSearch', ['updateSearch']),
-            toggleFocus: function () {
-                window.setTimeout(() => {
-                    this.isFocus = !this.isFocus
-                }, 50)
-            }
+            toggleFocus: _.debounce(function () {
+                this.isFocus = !this.isFocus
+            }, 50)
         },
         watch: {
-            searchTerms: function (newValue, oldValue) {
+            searchTerms: _.debounce(function (newValue, oldValue) {
                 this.updateSearch(newValue, oldValue)
-            }
+            }, 350)
         },
         components: {
             AjaxLink
