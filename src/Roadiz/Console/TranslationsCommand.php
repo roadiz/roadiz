@@ -49,7 +49,7 @@ class TranslationsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $translations = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findAll();

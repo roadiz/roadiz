@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -60,10 +61,12 @@ class NodesTreesController extends RozierApp
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
             if (null === $node) {
-                return $this->throw404();
+                throw new ResourceNotFoundException();
             }
 
             $this->get('em')->refresh($node);
+        } elseif (null !== $this->getUser()) {
+            $node = $this->getUser()->getChroot();
         } else {
             $node = null;
         }
@@ -194,7 +197,7 @@ class NodesTreesController extends RozierApp
             }
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -250,7 +253,7 @@ class NodesTreesController extends RozierApp
             }
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 
     /**

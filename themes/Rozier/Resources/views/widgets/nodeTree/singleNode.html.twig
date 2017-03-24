@@ -40,15 +40,18 @@ type|lower,
 {% if not node.isPublished %}{% set innerClasses = innerClasses|merge(['unpublished-node']) %}{% endif %}
 {% if not node.isArchived %}{% set innerClasses = innerClasses|merge(['archived-node']) %}{% endif %}
 {% if not node.isLocked %}{% set innerClasses = innerClasses|merge(['locked-node']) %}{% endif %}
+{% if nodeTree.isStackTree and source.publishedAt %}
+    {% set innerClasses = innerClasses|merge(['datetime-publishable']) %}
+    {% if source.publishedAt > date() %}
+        {% set innerClasses = innerClasses|merge(['datetime-publishable-future']) %}
+    {% endif %}
+{% endif %}
 
 
-<li data-node-id="{{ node.getId }}"
-    class="{{ classes|join(' ') }}">
-
+<li data-node-id="{{ node.getId }}" class="{{ classes|join(' ') }}">
     {% if not mainNodeTree and not nodeTree.isStackTree %}
         <span class="nodetree-list-item-color"></span>
     {% endif %}
-
     <div class="{{ innerClasses|join(' ') }}">
         <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}">
             {% if not mainNodeTree and not nodeTree.isStackTree %}
@@ -72,15 +75,10 @@ type|lower,
             {% elseif node.isHome and node.isHidingChildren %}
                 <i class="uk-icon-rz-building"></i>
             {% endif %}
+            {% if nodeTree.isStackTree and source.publishedAt %}
+                <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|localizeddate('short', 'none') }}</div>
+            {% endif %}
         </div>
-
-        {#
-         # Node statuses
-         #}
-        {# {% if not node.isVisible %}<i class="uk-icon-eye-slash"></i> {% endif %} #}
-        {# {% if node.isLocked %}<i class="uk-icon-locked-on"></i> {% endif %} #}
-        {# {% if not node.isPublished %}<i class="uk-icon-unpublished"></i> {% endif %} #}
-        {# {% if node.isArchived %}<i class="uk-icon-archive"></i> {% endif %} #}
 
         <div class="tree-element-name nodetree-element-name">
             {% if node.isHidingChildren %}
@@ -96,7 +94,7 @@ type|lower,
                     {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
                     {% set tagName = ttag[0].name|default(tag.tagName) %}
 
-                    <a href="?tagId={{ tag.id }}" class="uk-badge">{{ tagName }}</a>
+                    <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName }}</a>
                 {% endfor %}
             </div>
         {% endif %}

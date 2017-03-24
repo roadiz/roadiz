@@ -32,6 +32,7 @@ namespace Themes\Install;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
+use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Bags\SettingsBag;
@@ -304,6 +305,7 @@ class InstallApp extends AppController
                     'en' => 'English',
                     'fr' => 'Français',
                     'ru' => 'Русский язык',
+                    'tr' => 'Türkçe',
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -413,7 +415,7 @@ class InstallApp extends AppController
                 'required' => true,
             ]);
 
-        $themesType = new \RZ\Roadiz\CMS\Forms\ThemesType();
+        $themesType = new ThemesType($this->get('em'));
 
         if ($themesType->getSize() > 0) {
             $builder->add('separator_1', new SeparatorType(), [

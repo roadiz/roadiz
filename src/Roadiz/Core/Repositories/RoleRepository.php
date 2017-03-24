@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Role;
 
 /**
@@ -39,43 +40,46 @@ class RoleRepository extends EntityRepository
     /**
      * @param string $roleName
      *
-     * @return Role or null
+     * @return int
      */
     public function countByName($roleName)
     {
         $roleName = Role::cleanName($roleName);
 
-        $query = $this->_em->createQuery('
-            SELECT COUNT(r) FROM RZ\Roadiz\Core\Entities\Role r
-            WHERE r.name = :name')
-        ->setParameter('name', $roleName);
+        $query = $this->createQueryBuilder('r');
+        $query->select($query->expr()->countDistinct('r'))
+              ->andWhere($query->expr()->eq('r.name', ':name'))
+              ->setParameter('name', $roleName);
 
-        return $query->getSingleScalarResult();
+        try {
+            return (int) $query->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return 0;
+        }
     }
 
     /**
      * @param string $roleName
-     *
      * @return Role
      */
     public function findOneByName($roleName)
     {
         $roleName = Role::cleanName($roleName);
 
-        if (0 == $this->countByName($roleName)) {
+        $query = $this->createQueryBuilder('r');
+        $query->andWhere($query->expr()->eq('r.name', ':name'))
+              ->setMaxResults(1)
+              ->setParameter('name', $roleName);
+
+        try {
+            $role = $query->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
             $role = new Role($roleName);
             $this->_em->persist($role);
             $this->_em->flush();
-
-            return $role;
-        } else {
-            $query = $this->_em->createQuery('
-                SELECT r FROM RZ\Roadiz\Core\Entities\Role r
-                WHERE r.name = :name')
-                ->setParameter('name', $roleName);
-
-            return $query->getSingleResult();
         }
+
+        return $role;
     }
 
     /**
@@ -85,16 +89,20 @@ class RoleRepository extends EntityRepository
      */
     public function getAllBasicRoleName()
     {
-        $query = $this->_em->createQuery('
-            SELECT r.name FROM RZ\Roadiz\Core\Entities\Role r
-            WHERE r.name != :name')
-            ->setParameter('name', Role::ROLE_SUPERADMIN);
+        $builder = $this->createQueryBuilder('r');
+        $builder->select('r.name')
+              ->andWhere($builder->expr()->neq('r.name', ':name'))
+              ->setParameter('name', Role::ROLE_SUPERADMIN);
 
-        $query->useResultCache(true, 3600, 'RZRoleAll');
+        $query = $builder->getQuery();
+        $query->useResultCache(true, 3600, 'RZRoleAllBasic');
 
-        $rolesNames = $query->getScalarResult();
-
-        return array_map('current', $rolesNames);
+        try {
+            $rolesNames = $query->getScalarResult();
+            return array_map('current', $rolesNames);
+        } catch (NoResultException $e) {
+            return [];
+        }
     }
 
     /**
@@ -104,12 +112,17 @@ class RoleRepository extends EntityRepository
      */
     public function getAllRoleName()
     {
-        $query = $this->_em->createQuery('
-            SELECT r.name FROM RZ\Roadiz\Core\Entities\Role r
-        ');
+        $builder = $this->createQueryBuilder('r');
+        $builder->select('r.name');
 
-        $rolesNames = $query->getScalarResult();
+        $query = $builder->getQuery();
+        $query->useResultCache(true, 3600, 'RZRoleAll');
 
-        return array_map('current', $rolesNames);
+        try {
+            $rolesNames = $query->getScalarResult();
+            return array_map('current', $rolesNames);
+        } catch (NoResultException $e) {
+            return [];
+        }
     }
 }

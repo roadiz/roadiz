@@ -84,7 +84,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        // perhaps you only want to act on some "Product" entity
+        // perhaps you only want to act on some "Font" entity
         if ($entity instanceof Font) {
             $this->setFontFilesNames($entity);
         }
@@ -96,7 +96,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
     public function preUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        // perhaps you only want to act on some "Product" entity
+        // perhaps you only want to act on some "Font" entity
         if ($entity instanceof Font) {
             $this->setFontFilesNames($entity);
         }
@@ -108,7 +108,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        // perhaps you only want to act on some "Product" entity
+        // perhaps you only want to act on some "Font" entity
         if ($entity instanceof Font) {
             $this->upload($entity);
         }
@@ -120,7 +120,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
     public function postUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        // perhaps you only want to act on some "Product" entity
+        // perhaps you only want to act on some "Font" entity
         if ($entity instanceof Font) {
             $this->upload($entity);
         }
@@ -185,7 +185,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
     /**
      * @param Font $font
      */
-    protected function setFontFilesNames(Font $font)
+    public function setFontFilesNames(Font $font)
     {
         if ($font->getHash() == "") {
             $font->generateHashWithSecret('default_roadiz_secret');
@@ -211,7 +211,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
     /**
      * @param Font $font
      */
-    protected function upload(Font $font)
+    public function upload(Font $font)
     {
         /** @var Packages $packages */
         $packages = $this->container->offsetGet('assetPackages');

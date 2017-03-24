@@ -31,8 +31,8 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\Forms\UserType;
@@ -129,9 +129,9 @@ class UsersController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -156,13 +156,10 @@ class UsersController extends RozierApp
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-
             $form = $this->createForm(new UserDetailsType(), $user);
-
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->updateProfileImage($user);
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -183,9 +180,9 @@ class UsersController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/editDetails.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -200,6 +197,7 @@ class UsersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = new User();
+        $user->sendCreationConfirmationEmail(true);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -211,11 +209,8 @@ class UsersController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->updateProfileImage($user);
                 $this->get('em')->persist($user);
                 $this->get('em')->flush();
-
-                $user->getViewer()->sendSignInConfirmation();
 
                 $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -226,9 +221,9 @@ class UsersController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -243,12 +238,12 @@ class UsersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
 
+        /** @var User $user */
         $user = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-
             $form = $this->buildDeleteForm($user);
 
             $form->handleRequest($request);
@@ -270,27 +265,9 @@ class UsersController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
-    }
-    /**
-     * @param User $user
-     */
-    private function updateProfileImage(User $user)
-    {
-        if ($user->getFacebookName() != '') {
-            try {
-                $facebook = new FacebookPictureFinder($user->getFacebookName());
-                $url = $facebook->getPictureUrl();
-                $user->setPictureUrl($url);
-            } catch (\Exception $e) {
-                $user->setFacebookName('');
-                $user->setPictureUrl('');
-            }
-        } else {
-            $user->setPictureUrl('');
-        }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

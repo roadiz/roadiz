@@ -255,7 +255,7 @@ class FolderRepository extends EntityRepository
     /**
      * @param string $pattern
      * @param array $criteria
-     * @return null
+     * @return int
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -266,11 +266,11 @@ class FolderRepository extends EntityRepository
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         try {
-            return $qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } catch (QueryException $e) {
-            return null;
+            return 0;
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 

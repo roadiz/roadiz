@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "NODE_ENV=production grunt",
+    "dev": "grunt watch"
+  },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
     "csswring": "^3.0.5",

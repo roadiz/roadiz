@@ -42,6 +42,7 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeTypeRepository")
  * @ORM\Table(name="node_types", indexes={
  *     @ORM\Index(columns={"visible"}),
+ *     @ORM\Index(columns={"publishable"}),
  *     @ORM\Index(columns={"newsletter_type"}),
  *     @ORM\Index(columns={"hiding_nodes"}),
  *     @ORM\Index(columns={"reachable"})
@@ -73,9 +74,11 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var string
      * @ORM\Column(name="display_name", type="string")
      */
     private $displayName;
+
     /**
      * @return string
      */
@@ -83,6 +86,7 @@ class NodeType extends AbstractEntity
     {
         return $this->displayName;
     }
+
     /**
      * @param string $displayName
      *
@@ -96,9 +100,11 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
     /**
      * @return string
      */
@@ -106,6 +112,7 @@ class NodeType extends AbstractEntity
     {
         return $this->description;
     }
+
     /**
      * @param string $description
      *
@@ -119,9 +126,11 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $visible = true;
+
     /**
      * @return boolean
      */
@@ -142,11 +151,36 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     */
+    private $publishable = false;
+
+    /**
+     * @return bool
+     */
+    public function isPublishable()
+    {
+        return $this->publishable;
+    }
+
+    /**
+     * @param bool $publishable
+     * @return NodeType
+     */
+    public function setPublishable($publishable)
+    {
+        $this->publishable = $publishable;
+        return $this;
+    }
+
+    /**
      * Define if this node-type produces nodes that will be
      * viewable from a Controller.
      *
      * Typically if a node has an URL.
      *
+     * @var bool
      * @ORM\Column(name="reachable", type="boolean", nullable=false, options={"default" = true})
      */
     private $reachable = true;
@@ -168,7 +202,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @param boolean $reachable
+     * @param bool $reachable
      * @return NodeType
      */
     public function setReachable($reachable)
@@ -178,6 +212,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var bool
      * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
      */
     private $newsletterType = false;
@@ -200,6 +235,7 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
+     * @var bool
      * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})
      */
     private $hidingNodes = false;

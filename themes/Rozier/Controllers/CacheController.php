@@ -30,6 +30,8 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -59,13 +61,16 @@ class CacheController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            /** @var Kernel $kernel */
+            $kernel = $this->get('kernel');
             $clearers = [
-                new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
+                new DoctrineCacheClearer($this->get('em'), $kernel),
                 new NodesSourcesUrlsCacheClearer($this->get('nodesSourcesUrlCacheProvider')),
-                new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
-                new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
-                new TemplatesCacheClearer($this->get('kernel')->getCacheDir()),
-                new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),
+                new TranslationsCacheClearer($kernel->getCacheDir()),
+                new RoutingCacheClearer($kernel->getCacheDir()),
+                new TemplatesCacheClearer($kernel->getCacheDir()),
+                new ConfigurationCacheClearer($kernel->getCacheDir()),
+                new AppCacheClearer($kernel->getCacheDir()),
                 new OPCacheClearer(),
             ];
             foreach ($clearers as $clearer) {

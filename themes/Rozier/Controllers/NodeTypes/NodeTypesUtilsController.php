@@ -179,12 +179,7 @@ class NodeTypesUtilsController extends RozierApp
                     /*
                      * Redirect to update schema page
                      */
-                    return $this->redirect($this->generateUrl(
-                        'nodeTypesSchemaUpdate',
-                        [
-                            '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
-                        ]
-                    ));
+                    return $this->redirect($this->generateUrl('nodeTypesSchemaUpdate'));
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
                     $request->getSession()->getFlashBag()->add('error', $msg);

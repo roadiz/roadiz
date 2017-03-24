@@ -208,6 +208,13 @@ class NodeTreeWidget extends AbstractWidget
         return $this->parentNode;
     }
 
+    /**
+     * Get entity list manager filters.
+     *
+     * Call getNodes() first to populate this.
+     *
+     * @return array|null
+     */
     public function getFilters()
     {
         return $this->filters;
@@ -227,6 +234,7 @@ class NodeTreeWidget extends AbstractWidget
     {
         return $this->availableTranslations;
     }
+
     /**
      * @return ArrayCollection
      */

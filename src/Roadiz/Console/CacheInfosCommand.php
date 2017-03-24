@@ -56,8 +56,8 @@ class CacheInfosCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $this->nsCacheHelper = $this->getHelperSet()->get('ns-cache');
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->nsCacheHelper = $this->getHelper('ns-cache');
 
         $text .= $this->getInformations();
 

@@ -29,23 +29,24 @@
 
 namespace RZ\Roadiz\Utils\Console\Helper;
 
+use Pimple\Container;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Console\Helper\Helper;
 
 class AssetPackagesHelper extends Helper
 {
     /**
-     * @var Packages
+     * @var Container
      */
-    private $packages;
+    private $container;
 
     /**
      * AssetPackagesHelper constructor.
-     * @param Packages $packages
+     * @param Container $container
      */
-    public function __construct(Packages $packages)
+    public function __construct(Container $container)
     {
-        $this->packages = $packages;
+        $this->container = $container;
     }
 
     /**
@@ -53,7 +54,7 @@ class AssetPackagesHelper extends Helper
      */
     public function getPackages()
     {
-        return $this->packages;
+        return $this->container->offsetGet('assetPackages');
     }
 
     /**

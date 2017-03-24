@@ -62,8 +62,8 @@ class TranslationsCreationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->questionHelper = $this->getHelper('question');
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $name = $input->getArgument('name');
         $locale = $input->getArgument('locale');

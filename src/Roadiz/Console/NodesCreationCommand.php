@@ -70,7 +70,7 @@ class NodesCreationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->questionHelper = $this->getHelper('question');
-        $this->entityManager = $this->getHelper('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $nodeName = $input->getArgument('node-name');
         $typeName = $input->getArgument('node-type');

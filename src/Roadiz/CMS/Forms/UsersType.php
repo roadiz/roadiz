@@ -29,7 +29,9 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,32 +42,37 @@ class UsersType extends AbstractType
 {
     protected $users;
     /**
-     * {@inheritdoc}
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users
+     * @var EntityManager
      */
-    public function __construct($users = null)
+    private $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     * @param ArrayCollection $users
+     */
+    public function __construct(EntityManager $entityManager, $users = null)
     {
         $this->users = $users;
+        $this->entityManager = $entityManager;
     }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $users = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\User')
-            ->findAll();
+        $users = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->findAll();
 
         $choices = [];
+        /** @var User $user */
         foreach ($users as $user) {
             if (!$this->users->contains($user)) {
-                $choices[$user->getId()] = $user->getUserName();
+                $choices[$user->getUserName()] = $user->getId();
             }
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
+            'choices_as_values' => true,
         ]);
     }
     /**

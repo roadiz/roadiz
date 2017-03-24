@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -114,9 +115,9 @@ class CustomFormAnswersController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('custom-form-answers/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

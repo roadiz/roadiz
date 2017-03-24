@@ -184,6 +184,12 @@
                 "visible": true
             },
             {
+                "name": "login_image",
+                "value": null,
+                "type": 9,
+                "visible": true
+            },
+            {
                 "name": "static_domain_name",
                 "value": "",
                 "type": 0,

@@ -49,7 +49,7 @@ class NodesSourcesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
 
         $nodetypes = $this->entityManager

@@ -34,7 +34,6 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Csrf\CsrfToken;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -54,14 +53,13 @@ class SchemaController extends RozierApp
 
     /**
      * @param Request $request
-     * @param string  $_token
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateNodeTypesSchemaAction(Request $request, $_token)
+    public function updateNodeTypesSchemaAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-        $this->updateSchema($request, $_token);
+        $this->updateSchema($request);
 
         return $this->redirect($this->generateUrl(
             'nodeTypesHomePage'
@@ -70,15 +68,14 @@ class SchemaController extends RozierApp
 
     /**
      * @param Request $request
-     * @param string  $_token
      * @param int     $nodeTypeId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateNodeTypeFieldsSchemaAction(Request $request, $_token, $nodeTypeId)
+    public function updateNodeTypeFieldsSchemaAction(Request $request, $nodeTypeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
-        $this->updateSchema($request, $_token);
+        $this->updateSchema($request);
 
         return $this->redirect($this->generateUrl(
             'nodeTypeFieldsListPage',
@@ -88,17 +85,15 @@ class SchemaController extends RozierApp
         ));
     }
 
-    protected function updateSchema(Request $request, $_token)
+    /**
+     * @param Request $request
+     */
+    protected function updateSchema(Request $request)
     {
-        $token = new CsrfToken(static::SCHEMA_TOKEN_INTENTION, $_token);
-        if ($this->get('csrfTokenManager')->isTokenValid($token)) {
-            $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
-            $updater->updateSchema();
+        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
+        $updater->updateSchema();
 
-            $msg = $this->getTranslator()->trans('database.schema.updated');
-            $this->publishConfirmMessage($request, $msg);
-        } else {
-            throw new \RuntimeException($this->getTranslator()->trans('database.schema.cannot_updated'), 1);
-        }
+        $msg = $this->getTranslator()->trans('database.schema.updated');
+        $this->publishConfirmMessage($request, $msg);
     }
 }

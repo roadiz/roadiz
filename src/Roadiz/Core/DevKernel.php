@@ -61,7 +61,7 @@ class DevKernel extends Kernel
      * @param bool $debug
      * @param bool $preview
      * @param string $appName
-     * @return null
+     * @return DevKernel
      */
     public static function getInstance($environment = 'dev', $debug = true, $preview = false, $appName = "roadiz_dev")
     {

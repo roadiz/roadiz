@@ -37,7 +37,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
  */
-class ConfigurationCommand extends Command
+class HtaccessCommand extends Command
 {
     protected function configure()
     {
@@ -46,6 +46,11 @@ class ConfigurationCommand extends Command
             ->setDescription('Generate .htaccess files to protect critical directories');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
@@ -145,7 +150,7 @@ IndexIgnore *
     #RewriteCond %{HTTP_HOST} !^www\.
     #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ index.php/$1 [QSA,L]
+    RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>' . PHP_EOL;
     }
 

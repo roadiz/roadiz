@@ -66,8 +66,8 @@ class UsersRolesCommand extends UsersCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->questionHelper = $this->getHelper('question');
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $name = $input->getArgument('username');
 
@@ -117,7 +117,7 @@ class UsersRolesCommand extends UsersCommand
                     $text = '<info>' . $user . '</info>' . PHP_EOL;
                 }
             } else {
-                $text = PHP_EOL . '<error>User “' . $name . '” does not exist.</error>' . PHP_EOL;
+                throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
 

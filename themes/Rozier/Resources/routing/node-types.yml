@@ -25,6 +25,5 @@ nodesTypesExportAllPage:
     defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportAllAction }
 
 nodeTypesSchemaUpdate:
-    path:     /update-schema/{_token}
+    path:     /update-schema
     defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction }
-    requirements: { _token : "[A-z0-9\-\_\$]+" }

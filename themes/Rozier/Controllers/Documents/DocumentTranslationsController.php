@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -67,6 +68,7 @@ class DocumentTranslationsController extends RozierApp
              ->getRepository('RZ\Roadiz\Core\Entities\Translation')
              ->findAll();
 
+        /** @var Document $document */
         $document = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
         $documentTr = $this->get('em')
@@ -103,24 +105,32 @@ class DocumentTranslationsController extends RozierApp
                     new FilterDocumentEvent($document)
                 );
 
+                $routeParams = [
+                    'documentId' => $document->getId(),
+                    'translationId' => $translationId,
+                ];
+
+                if ($form->get('referer')->getData()) {
+                    $routeParams = array_merge($routeParams, [
+                        'referer' => $form->get('referer')->getData()
+                    ]);
+                }
+
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
                 return $this->redirect($this->generateUrl(
                     'documentsMetaPage',
-                    [
-                        'documentId' => $document->getId(),
-                        'translationId' => $translationId,
-                    ]
+                    $routeParams
                 ));
             }
 
             $this->assignation['form'] = $form->createView();
 
             return $this->render('document-translations/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -192,9 +202,9 @@ class DocumentTranslationsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('document-translations/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -231,6 +241,10 @@ class DocumentTranslationsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
+                        ->add('referer', 'hidden', [
+                            'data' => $this->get('request')->get('referer'),
+                            'mapped' => false,
+                        ])
                         ->add('name', 'text', [
                             'label' => 'name',
                             'required' => false,

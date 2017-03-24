@@ -46,13 +46,13 @@ class SolrOptimizeCommand extends SolrCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $this->solr = $this->getHelperSet()->get('solr')->getSolr();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->solr = $this->getHelper('solr')->getSolr();
 
         $text = "";
 
         if (null !== $this->solr) {
-            if (true === $this->getHelperSet()->get('solr')->ready()) {
+            if (true === $this->getHelper('solr')->ready()) {
                 $this->optimizeSolr($output);
                 $text = '<info>Solr core has been optimized.</info>' . PHP_EOL;
             } else {

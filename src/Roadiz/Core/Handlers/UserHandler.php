@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 /**
  * Handle operations with users entities.
@@ -38,6 +39,9 @@ use RZ\Roadiz\Core\Kernel;
 class UserHandler
 {
     private $user;
+
+    /** @var EncoderFactory  */
+    private $encoderFactory;
 
     /**
      * @return User
@@ -55,6 +59,7 @@ class UserHandler
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->encoderFactory = Kernel::getService('userEncoderFactory');
     }
 
     /**
@@ -65,7 +70,7 @@ class UserHandler
     public function encodePassword()
     {
         if ($this->user->getPlainPassword() != '') {
-            $encoder = Kernel::getService('userEncoderFactory')->getEncoder($this->user);
+            $encoder = $this->encoderFactory->getEncoder($this->user);
             $encodedPassword = $encoder->encodePassword(
                 $this->user->getPlainPassword(),
                 $this->user->getSalt()
@@ -82,10 +87,11 @@ class UserHandler
      * @param string $plainPassword Submitted password to validate
      *
      * @return boolean
+     * @deprecated Use directly encoderFactory service.
      */
     public function isPasswordValid($plainPassword)
     {
-        $encoder = Kernel::getService('userEncoderFactory')->getEncoder($this->user);
+        $encoder = $this->encoderFactory->getEncoder($this->user);
 
         return $encoder->isPasswordValid(
             $this->user->getPassword(),

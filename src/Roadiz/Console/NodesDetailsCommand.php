@@ -54,7 +54,7 @@ class NodesDetailsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
 
         $translation = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                            ->findOneBy(['locale' => $input->getArgument('locale')]);

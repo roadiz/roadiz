@@ -7,6 +7,17 @@
 {% set classes = classes|merge(['not-image']) %}
 {% endif %}
 
+{% set editRouteParams = { documentId: document.getId } %}
+
+{% if nodeSource %}
+    {% set refererPath = path('nodesEditSourcePage', {
+        'nodeId': nodeSource.node.id,
+        'translationId': nodeSource.translation.id
+    }) %}
+
+    {% set editRouteParams = editRouteParams|merge({ referer: refererPath }) %}
+{% endif %}
+
 {% spaceless %}
 <li class="{{ classes|join(' ') }}"
     data-document-id="{{ document.getId }}"
@@ -28,7 +39,7 @@
     <input type="hidden" name="{{ full_name }}" value="{{ document.getId }}" />
     <div class="document-overflow">
         <div class="document-links">
-             <a href="{{ path('documentsEditPage', { documentId: document.getId}) }}" class="uk-button document-link uk-button-mini">
+             <a href="{{ path('documentsEditPage', editRouteParams) }}" class="uk-button document-link uk-button-mini">
                 <i class="uk-icon-rz-pencil"></i>
                 <span class="label">{% trans %}edit.document{% endtrans %}</span>
             </a>

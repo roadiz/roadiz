@@ -57,7 +57,7 @@ class NodesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('em')->getEntityManager();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $table = new Table($output);
         $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);

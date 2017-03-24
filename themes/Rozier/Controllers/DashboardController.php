@@ -30,6 +30,8 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use Doctrine\Common\Collections\Criteria;
+use RZ\Roadiz\Core\Entities\Log;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -47,9 +49,26 @@ class DashboardController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
-        $this->assignation['latestSources'] = $this->get('em')
-             ->getRepository("RZ\Roadiz\Core\Entities\NodesSources")
-             ->findByLatestUpdated(4);
+        $this->assignation['latestLogs'] = [];
+
+        $logs = $this->get('em')
+             ->getRepository('RZ\Roadiz\Core\Entities\Log')
+             ->findLatestByNodesSources(8);
+
+        $criteria = Criteria::create()
+            ->orderBy(["datetime" => Criteria::DESC])
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+
+        /*
+         * Ensure that we really get latest log for
+         * given nodeSource because of GROUP BY sql command.
+         */
+        /** @var Log $log */
+        foreach ($logs as $log) {
+            $nodeSource = $log->getNodeSource();
+            $this->assignation['latestLogs'][] = $nodeSource->getLogs()->matching($criteria)->get(0);
+        }
 
         return $this->render('dashboard/index.html.twig', $this->assignation);
     }

@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
@@ -39,6 +40,9 @@ use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Type;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -119,7 +123,7 @@ class ThemesController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['themes'] = $listManager->getEntities();
 
-        $themeType = new \RZ\Roadiz\CMS\Forms\ThemesType();
+        $themeType = new ThemesType($this->get('em'));
         $this->assignation['availableThemesCount'] = $themeType->getSize();
 
         return $this->render('themes/list.html.twig', $this->assignation);
@@ -247,9 +251,9 @@ class ThemesController extends RozierApp
             $this->assignation['theme'] = $theme;
 
             return $this->render('themes/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -293,9 +297,9 @@ class ThemesController extends RozierApp
             $this->assignation['theme'] = $theme;
 
             return $this->render('themes/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -315,13 +319,13 @@ class ThemesController extends RozierApp
          */
         $builder->add(
             'className',
-            new \RZ\Roadiz\CMS\Forms\ThemesType(),
+            new ThemesType($this->get('em')),
             [
                 'label' => 'themeClass',
                 'required' => true,
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\NotNull(),
-                    new \Symfony\Component\Validator\Constraints\Type('string'),
+                    new NotNull(),
+                    new Type('string'),
                 ],
             ]
         );

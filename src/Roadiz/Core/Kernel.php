@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
@@ -75,12 +76,12 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
-    const CMS_VERSION = 'alpha';
+    const CMS_VERSION = 'beta';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.17.0";
+    public static $cmsVersion = "0.18.0";
     protected static $instance = null;
 
     /**
@@ -175,14 +176,19 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new TwigServiceProvider());
         $container->register(new LoggerServiceProvider());
 
-        /*
-         * Load additional service providers
-         */
-        if (isset($container['config']['additionalServiceProviders'])) {
-            foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
-                $container->register(new $providerClass());
+        try {
+            /*
+             * Load additional service providers
+             */
+            if (isset($container['config']['additionalServiceProviders'])) {
+                foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
+                    $container->register(new $providerClass());
+                }
             }
+        } catch (NoConfigurationFoundException $e) {
+            // Do nothing if no configuration file is found.
         }
+
         $container['stopwatch']->stop('registerServices');
     }
 
@@ -247,7 +253,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $dispatcher->addSubscriber($this->container['firewall']);
         $dispatcher->addSubscriber(new SaveSessionListener());
         $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
-        $dispatcher->addSubscriber(new ExceptionSubscriber($this->container['logger'], $this->isDebug()));
+        $dispatcher->addSubscriber(new ExceptionSubscriber($this, $this->container['themeResolver'], $this->container['logger'], $this->isDebug()));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 
@@ -345,6 +351,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Clear Kernel singleton.
+     */
+    public static function destroy()
+    {
+        static::$instance = null;
     }
 
     /**
@@ -455,6 +469,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
+     * @return string Return web public root.
+     */
+    public function getPublicDir()
+    {
+        return ROADIZ_ROOT;
+    }
+
+    /**
      * @return string Return Composer vendor root folder.
      */
     public function getVendorDir()
@@ -550,7 +572,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getPublicFilesPath()
     {
-        return $this->getRootDir() . $this->getPublicFilesBasePath();
+        return $this->getPublicDir() . $this->getPublicFilesBasePath();
     }
 
     /**

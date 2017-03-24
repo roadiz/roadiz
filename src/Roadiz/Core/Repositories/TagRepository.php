@@ -395,7 +395,6 @@ class TagRepository extends EntityRepository
      *
      * @param array            $criteria
      * @param Translation|null $translation
-     *
      * @return int
      */
     public function countBy(
@@ -414,9 +413,9 @@ class TagRepository extends EntityRepository
         $this->applyTranslationByTag($criteria, $finalQuery, $translation);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 
@@ -619,9 +618,8 @@ class TagRepository extends EntityRepository
 
     /**
      * @param string $pattern  Search pattern
-     * @param array  $criteria Additionnal criteria
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @param array $criteria Additional criteria
+     * @return int
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -632,11 +630,11 @@ class TagRepository extends EntityRepository
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         try {
-            return $qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } catch (Query\QueryException $e) {
-            return null;
+            return 0;
         } catch (NoResultException $e) {
-            return null;
+            return 0;
         }
     }
 

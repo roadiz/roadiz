@@ -53,6 +53,7 @@ class TranstypeType extends AbstractType
             'nodeTypeId',
             'choice',
             [
+                'choices_as_values' => true,
                 'choices' => $this->getAvailableTypes($options['em'], $options['currentType']),
                 'label' => 'nodeType',
                 'constraints' => [
@@ -110,8 +111,9 @@ class TranstypeType extends AbstractType
             $types = $qb->getQuery()->getResult();
 
             $choices = [];
+            /** @var NodeType $type */
             foreach ($types as $type) {
-                $choices[$type->getId()] = $type->getDisplayName();
+                $choices[$type->getDisplayName()] = $type->getId();
             }
 
             return $choices;

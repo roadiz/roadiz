@@ -48,7 +48,6 @@ class NodesSourcesUrlsCacheClearer extends Clearer
     {
         $this->output .= 'Node-sources URLs cache: ' . $this->cacheProvider->getNamespace() . ' — ';
         $this->output .= $this->cacheProvider->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
-        $this->output .= PHP_EOL;
 
         return true;
     }

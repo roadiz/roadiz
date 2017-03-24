@@ -13,14 +13,49 @@
         padding-right:70px;
     }
 
+    /*
+     * All levels
+     */
     .uk-nestable-panel {
         &.stack-node {
             & > .non-nestable-handle,
-            & > .uk-nestable-handle{
-                width:36px;
-                top: -6px;
-                left: -3px
+            & > .uk-nestable-handle {
+                width: 36px;
+                //top: -7px;
+                top: -11px;
+                left: -2px;
+
+                .nodetree-published-at {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    /*
+     * 2nd level
+     */
+    .uk-nestable-list {
+        .uk-nestable-panel {
+            &.stack-node {
+                & > .non-nestable-handle,
+                & > .uk-nestable-handle {
+                    top: -11px;
+                    left: -6px;
+                }
             }
         }
     }
 }
+// Different display in main content
+#main-content-scrollable {
+    .stack-tree-widget  {
+        & > .non-nestable-list-item,
+        & > .uk-nestable-item {
+            padding: 11px 0;
+            background-color: #F0F0F0;
+            border-color: #D2D2D2;
+        }
+    }
+}
+

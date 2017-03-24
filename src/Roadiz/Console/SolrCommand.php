@@ -54,13 +54,13 @@ class SolrCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $this->solr = $this->getHelperSet()->get('solr')->getSolr();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->solr = $this->getHelper('solr')->getSolr();
 
         $text = "";
 
         if (null !== $this->solr) {
-            if (true === $this->getHelperSet()->get('solr')->ready()) {
+            if (true === $this->getHelper('solr')->ready()) {
                 $text .= '<info>Solr search engine server is running…</info>' . PHP_EOL;
             } else {
                 $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;

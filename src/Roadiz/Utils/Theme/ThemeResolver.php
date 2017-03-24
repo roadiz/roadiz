@@ -111,4 +111,35 @@ class ThemeResolver
             return [];
         }
     }
+
+
+    /**
+     * Get Theme front controller class FQN.
+     *
+     * @param string $host Current request host
+     * @return null|Theme
+     */
+    public function findTheme($host)
+    {
+        if (!$this->installMode) {
+            /*
+             * First we look for theme according to hostname.
+             */
+            $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->findAvailableNonStaticFrontendWithHost($host);
+
+            /*
+             * If no theme for current host, we look for
+             * any frontend available theme.
+             */
+            if (null === $theme) {
+                $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                    ->findFirstAvailableNonStaticFrontend();
+            }
+
+            return $theme;
+        }
+
+        return null;
+    }
 }

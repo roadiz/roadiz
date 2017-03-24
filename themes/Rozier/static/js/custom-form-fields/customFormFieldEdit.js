@@ -51,12 +51,12 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
     }
     else _this.openFormDelay = 0;
 
-    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ){
-
-        setTimeout(function(){
-
+    if(_this.indexOpen !==  parseInt(e.currentTarget.getAttribute('data-index')) ) {
+        if (_this.openTimeout) {
+            clearTimeout(_this.openTimeout);
+        }
+        _this.openTimeout = setTimeout(function(){
             _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
-
             $.ajax({
                 url: e.currentTarget.href,
                 type: 'get',
@@ -77,7 +77,6 @@ CustomFormFieldEdit.prototype.btnClick = function(e){
             });
 
         }, _this.openFormDelay);
-
     }
 
     return false;

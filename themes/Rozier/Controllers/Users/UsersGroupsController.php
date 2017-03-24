@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Users;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -81,9 +82,9 @@ class UsersGroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/groups.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -132,9 +133,9 @@ class UsersGroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('users/removeGroup.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

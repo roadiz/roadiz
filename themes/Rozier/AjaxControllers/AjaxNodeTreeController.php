@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,6 +40,11 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
  */
 class AjaxNodeTreeController extends AbstractAjaxController
 {
+    /**
+     * @param Request $request
+     * @param null $translationId
+     * @return JsonResponse
+     */
     public function getTreeAction(Request $request, $translationId = null)
     {
         /*
@@ -64,6 +69,9 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                 );
         }
 
+        /** @var NodeTreeWidget|null $nodeTree */
+        $nodeTree = null;
+
         switch ($request->get("_action")) {
             /*
              * Inner node edit for nodeTree
@@ -75,48 +83,56 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                      '\RZ\Roadiz\Core\Entities\Node',
                                      (int) $request->get('parentNodeId')
                                  );
+                } elseif (null !== $this->getUser()) {
+                    $node = $this->getUser()->getChroot();
                 } else {
                     $node = null;
                 }
-                $this->assignation['nodeTree'] = new NodeTreeWidget(
+
+                $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
                     $this,
                     $node,
                     $translation
                 );
 
-                if ($request->get('tagId') && $request->get('tagId') > 0) {
+                if ($request->get('tagId') &&
+                    $request->get('tagId') > 0) {
                     $filterTag = $this->get('em')
                                         ->find(
                                             '\RZ\Roadiz\Core\Entities\Tag',
                                             (int) $request->get('tagId')
                                         );
 
-                    $this->assignation['nodeTree']->setTag($filterTag);
+                    $nodeTree->setTag($filterTag);
                 }
 
                 $this->assignation['mainNodeTree'] = false;
 
                 if (true === (boolean) $request->get('stackTree')) {
-                    $this->assignation['nodeTree']->setStackTree(true);
+                    $nodeTree->setStackTree(true);
                 }
-
                 break;
             /*
              * Main panel tree nodeTree
              */
             case 'requestMainNodeTree':
-                $this->assignation['nodeTree'] = new NodeTreeWidget(
+                $parent = null;
+                if (null !== $this->getUser()) {
+                    $parent = $this->getUser()->getChroot();
+                }
+
+                $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
                     $this,
-                    null,
+                    $parent,
                     $translation
                 );
                 $this->assignation['mainNodeTree'] = true;
-
                 break;
         }
 
+        $this->assignation['nodeTree'] = $nodeTree;
 
         $responseArray = [
             'statusCode' => '200',

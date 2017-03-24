@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,6 +65,7 @@ class AjaxNodesController extends AbstractAjaxController
         }
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         $tags = [];
+        /** @var Node $node */
         $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -100,6 +102,7 @@ class AjaxNodesController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var Node $node */
         $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
@@ -114,19 +117,24 @@ class AjaxNodesController extends AbstractAjaxController
                     $responseArray = $this->updatePosition($request->request->all(), $node);
                     break;
                 case 'duplicate':
-                    $newNode = $node->getHandler()->duplicate();
+                    $duplicator = new NodeDuplicator($node, $this->get('em'));
+                    $newNode = $duplicator->duplicate();
                     /*
                      * Dispatch event
                      */
                     $event = new FilterNodeEvent($newNode);
                     $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_DUPLICATED, $event);
+
+                    $msg = $this->getTranslator()->trans('duplicated.node.%name%', [
+                        '%name%' => $node->getNodeName(),
+                    ]);
+                    $this->get('logger')->info($msg, ['source' => $newNode->getNodeSources()->first()]);
 
                     $responseArray = [
                         'statusCode' => '200',
                         'status' => 'success',
-                        'responseText' => $this->getTranslator()->trans('duplicated.node.%name%', [
-                            '%name%' => $node->getNodeName(),
-                        ]),
+                        'responseText' => $msg,
                     ];
                     break;
             }
@@ -427,18 +435,22 @@ class AjaxNodesController extends AbstractAjaxController
             $event = new FilterNodeEvent($source->getNode());
             $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
 
+            $msg = $this->getTranslator()->trans(
+                'added.node.%name%',
+                [
+                    '%name%' => $source->getTitle(),
+                ]
+            );
+            $this->get('logger')->info($msg, ['source' => $source]);
+
             $responseArray = [
                 'statusCode' => Response::HTTP_OK,
                 'status' => 'success',
-                'responseText' => $this->getTranslator()->trans(
-                    'added.node.%name%',
-                    [
-                        '%name%' => $source->getTitle(),
-                    ]
-                ),
+                'responseText' => $msg,
             ];
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans($e->getMessage());
+            $this->get('logger')->error($msg);
 
             $responseArray = [
                 'statusCode' => Response::HTTP_FORBIDDEN,

@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
+use RZ\Roadiz\Core\Routing\RedirectionRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
 use Symfony\Cmf\Component\Routing\ChainRouter;
@@ -75,18 +76,27 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['router'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             $router = new ChainRouter($c['logger']);
-            $router->add($c['staticRouter'], 1);
-            $router->add($c['nodeRouter'], 0);
             $router->setContext($c['requestContext']);
+            $router->add($c['staticRouter'], 2);
+
+            if (false === $kernel->isInstallMode()) {
+                $router->add($c['nodeRouter'], 1);
+                $router->add($c['redirectionRouter'], 0);
+            }
+
             return $router;
         };
         $container['staticRouter'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             return new StaticRouter(
                 $c['routeCollection'],
                 [
-                    'cache_dir' => $c['kernel']->getCacheDir() . '/routing',
-                    'debug' => $c['kernel']->isDebug(),
+                    'cache_dir' => $kernel->getCacheDir() . '/routing',
+                    'debug' => $kernel->isDebug(),
                     'generator_cache_class' => 'StaticUrlGenerator',
                     'matcher_cache_class' => 'StaticUrlMatcher',
                 ],
@@ -95,23 +105,51 @@ class RoutingServiceProvider implements ServiceProviderInterface
             );
         };
         $container['nodeRouter'] = function ($c) {
-            return new NodeRouter(
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $router = new NodeRouter(
                 $c['em'],
+                $c['themeResolver'],
                 [
-                    'cache_dir' => $c['kernel']->getCacheDir() . '/routing',
-                    'debug' => $c['kernel']->isDebug(),
+                    'cache_dir' => $kernel->getCacheDir() . '/routing',
+                    'debug' => $kernel->isDebug(),
                     'generator_cache_class' => 'NodeUrlGenerator',
                     'matcher_cache_class' => 'NodeUrlMatcher',
                 ],
                 $c['requestContext'],
                 $c['logger'],
                 $c['stopwatch'],
-                $c['kernel']->isPreview()
+                $kernel->isPreview()
+            );
+            $router->setNodeSourceUrlCacheProvider($c['nodesSourcesUrlCacheProvider']);
+            return $router;
+        };
+        $container['redirectionRouter'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return new RedirectionRouter(
+                $c['em'],
+                [
+                    'cache_dir' => $kernel->getCacheDir() . '/routing',
+                    'debug' => $kernel->isDebug(),
+                    'generator_cache_class' => 'NodeUrlGenerator',
+                    'matcher_cache_class' => 'NodeUrlMatcher',
+                ],
+                $c['requestContext'],
+                $c['logger'],
+                $c['stopwatch'],
+                $kernel->isPreview()
             );
         };
+
+        /*
+         * As we are using CMF ChainRouter, it take responsability for
+         * URL generation.
+         */
         $container['urlGenerator'] = function ($c) {
-            return $c['staticRouter']->getGenerator();
+            return $c['router'];
         };
+
         $container['httpUtils'] = function ($c) {
             return new HttpUtils($c['router'], $c['router']);
         };

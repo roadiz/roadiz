@@ -13,7 +13,8 @@
     display:inline-block;
     position: relative;
     .box-sizing();
-    width:24px; height:24px;
+    width:24px;
+    height:24px;
     .rounded(20px);
     line-height:20px;
     background-color:#E0E0E0;
@@ -23,6 +24,7 @@
 
     .uk-icon-rz-infos{
         -webkit-font-smoothing: none;
+        line-height: 24px;
     }
     &:hover {
         background-color: darken(#E0E0E0, 10%);
@@ -35,6 +37,11 @@
     text-align: center;
     margin: 0 auto 20px;
     position: relative;
+
+    #source + & {
+        margin-top: 20px;
+    }
+
 
     &:before {
         position: absolute;

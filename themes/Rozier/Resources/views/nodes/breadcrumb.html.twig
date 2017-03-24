@@ -17,7 +17,11 @@
             }) %}
         {% else %}
             {% if parent.node.isHidingChildren %}
-                {% set url = path('nodesTreePage', { nodeId: parent.node.id }) %}
+                {% if parent.translation %}
+                    {% set url = path('nodesTreePage', { nodeId: parent.node.id, translationId: parent.translation.id }) %}
+                {% else %}
+                    {% set url = path('nodesTreePage', { nodeId: parent.node.id }) %}
+                {% endif %}
             {% else %}
                 {% set url = path('nodesEditSourcePage', {
                     nodeId: parent.node.id,

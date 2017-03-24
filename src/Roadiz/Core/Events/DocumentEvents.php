@@ -90,6 +90,17 @@ final class DocumentEvents
     const DOCUMENT_IMAGE_UPLOADED = 'document.image.uploaded';
 
     /**
+     * Event document.svg.uploaded is triggered each time a document
+     * valid SVG formatted is uploaded. Even if the document is new or existing.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterDocumentEvent instance
+     *
+     * @var string
+     */
+    const DOCUMENT_SVG_UPLOADED = 'document.svg.uploaded';
+
+    /**
      * Event document.in.folder is triggered each time a document is linked to a folder.
      *
      * Event listener will be given a:

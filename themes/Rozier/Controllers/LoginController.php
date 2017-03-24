@@ -31,9 +31,12 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -89,14 +92,25 @@ class LoginController extends RozierApp
     public function imageAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $splash = new SplashbasePictureFinder();
             $response = new JsonResponse();
-            $response->setData($splash->getRandom());
+
+            if (false !== $document = SettingsBag::getDocument('login_image')) {
+                $documentViewer = new DocumentViewer($document);
+
+                $response->setData([
+                    'url' => $documentViewer->getDocumentUrlByArray([
+                        'noProcess' => true
+                    ])
+                ]);
+            } else {
+                $splash = new SplashbasePictureFinder();
+                $response->setData($splash->getRandom());
+            }
 
             return $response;
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

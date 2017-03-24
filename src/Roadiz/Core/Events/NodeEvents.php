@@ -68,6 +68,17 @@ final class NodeEvents
     const NODE_DELETED = 'node.deleted';
 
     /**
+     * Event node.duplicated is triggered each time a node
+     * is duplicated.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterNodeEvent instance
+     *
+     * @var string
+     */
+    const NODE_DUPLICATED = 'node.duplicated';
+
+    /**
      * Event node.undeleted is triggered each time a node
      * is undeleted.
      *

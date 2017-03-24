@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Log;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Themes\Rozier\RozierApp;
 
@@ -121,8 +122,8 @@ class HistoryController extends RozierApp
             $this->assignation['user'] = $user;
 
             return $this->render('history/list.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 }

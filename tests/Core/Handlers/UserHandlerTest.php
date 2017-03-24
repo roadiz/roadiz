@@ -42,19 +42,36 @@ class UserHandlerTest extends SchemaDependentCase
      */
     public function testEncodeUser($userName, $email, $plainPassword)
     {
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = Kernel::getService("em");
+
+        /** @var \Symfony\Component\Security\Core\Encoder\EncoderFactory $encoderFactory */
+        $encoderFactory = Kernel::getService('userEncoderFactory');
+
         $user = new User();
-        $user->setUserName($userName);
+        $user->setUsername($userName);
         $user->setEmail($email);
         $user->setPlainPassword($plainPassword);
 
-        Kernel::getService("em")->persist($user);
-        Kernel::getService("em")->flush();
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-        $this->assertTrue($user->getHandler()->isPasswordValid($plainPassword));
+        $this->assertTrue($encoderFactory->getEncoder($user)->isPasswordValid(
+            $user->getPassword(),
+            $plainPassword,
+            $user->getSalt()
+        ));
 
-        Kernel::getService("em")->remove($user);
-        Kernel::getService("em")->flush();
+        $this->assertNotEmpty($user->getPassword());
+        $this->assertNotEmpty($user->getSalt());
+        $this->assertNotEmpty($user->getPictureUrl());
+        $this->assertFalse($user->willSendCreationConfirmationEmail());
+        $this->assertCount(1, $user->getRoles());
     }
+
+    /**
+     * @return array
+     */
     public function encodeUserProvider()
     {
         return [

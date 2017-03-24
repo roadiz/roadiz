@@ -60,7 +60,7 @@ echo -e "\n--- Install all php7.0 extensions ---\n"
 sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-curl \
                                 php7.0-gd php7.0-intl php7.0-imap php7.0-mcrypt php7.0-pspell \
                                 php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc \
-                                php7.0-xsl php-apcu php-gd php-apcu-bc php-xdebug php-mbstring php7.0-zip > /dev/null 2>&1;
+                                php7.0-xsl php7.0-apcu php7.0-gd php7.0-apcu-bc php7.0-xdebug php7.0-mbstring php7.0-zip > /dev/null 2>&1;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
@@ -85,8 +85,10 @@ else
 fi
 
 echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
-sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
-sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/fpm/php.ini
+sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
+sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/fpm/php.ini
+sudo sed -i "s/;realpath_cache_size = .*/realpath_cache_size = 4096k/" /etc/php/7.0/fpm/php.ini
+sudo sed -i "s/;realpath_cache_ttl = .*/realpath_cache_ttl = 600/" /etc/php/7.0/fpm/php.ini
 
 echo -e "\n--- Fix php-fpm startup PID path ---\n"
 sudo sed -i "s/\/run\/php\/php7.0-fpm.pid/\/run\/php7.0-fpm.pid/" /etc/php/7.0/fpm/php-fpm.conf

@@ -30,11 +30,14 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\RolesType;
+use RZ\Roadiz\CMS\Forms\UsersType;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 
@@ -138,9 +141,9 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -183,9 +186,9 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -226,9 +229,9 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/roles.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -272,9 +275,9 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/removeRole.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -313,9 +316,9 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/users.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -360,9 +363,9 @@ class GroupsController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/removeUser.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -452,7 +455,7 @@ class GroupsController extends RozierApp
                         ])
                         ->add(
                             'roleId',
-                            new \RZ\Roadiz\CMS\Forms\RolesType($group->getRolesEntities()),
+                            new RolesType($this->get('em'), $group->getRolesEntities()),
                             ['label' => 'choose.role']
                         );
 
@@ -478,7 +481,7 @@ class GroupsController extends RozierApp
                         ])
                         ->add(
                             'userId',
-                            new \RZ\Roadiz\CMS\Forms\UsersType($group->getUsers()),
+                            new UsersType($this->get('em'), $group->getUsers()),
                             [
                                 'label' => 'choose.user',
                                 'constraints' => [

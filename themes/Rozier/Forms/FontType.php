@@ -42,16 +42,26 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class FontType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', [
                 'label' => 'font.name',
+                'attr' => [
+                    'data-desc' => 'font_name_should_be_the_same_for_all_variants'
+                ],
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('hash', 'text', [
                 'label' => 'font.cssfamily',
+                'attr' => [
+                    'data-desc' => 'css_font_family_hash_is_automatically_generated_from_font_name'
+                ]
             ])
             ->add('variant', new FontVariantsType(), [
                 'label' => 'font.variant',

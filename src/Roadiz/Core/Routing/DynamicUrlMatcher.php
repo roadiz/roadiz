@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
+use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -55,10 +56,15 @@ class DynamicUrlMatcher extends UrlMatcher
     protected $logger;
     /** @var bool */
     protected $preview;
+    /**
+     * @var ThemeResolver
+     */
+    protected $themeResolver;
 
     /**
      * @param RequestContext $context
      * @param EntityManager $em
+     * @param ThemeResolver $themeResolver
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      * @param bool $preview
@@ -66,6 +72,7 @@ class DynamicUrlMatcher extends UrlMatcher
     public function __construct(
         RequestContext $context,
         EntityManager $em,
+        ThemeResolver $themeResolver,
         Stopwatch $stopwatch = null,
         LoggerInterface $logger = null,
         $preview = false
@@ -75,32 +82,7 @@ class DynamicUrlMatcher extends UrlMatcher
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
         $this->preview = $preview;
-    }
-
-    /**
-     * Get Theme front controller class FQN.
-     *
-     * @return \RZ\Roadiz\Core\Entities\Theme
-     */
-    protected function findTheme()
-    {
-        $host = $this->context->getHost();
-        /*
-         * First we look for theme according to hostname.
-         */
-        $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findAvailableNonStaticFrontendWithHost($host);
-
-        /*
-         * If no theme for current host, we look for
-         * any frontend available theme.
-         */
-        if (null === $theme) {
-            $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                ->findFirstAvailableNonStaticFrontend();
-        }
-
-        return $theme;
+        $this->themeResolver = $themeResolver;
     }
 
     /**

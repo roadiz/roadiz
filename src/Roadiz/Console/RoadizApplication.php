@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
@@ -43,11 +43,7 @@ use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\DebugFormatterHelper;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\ProcessHelper;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -68,25 +64,44 @@ class RoadizApplication extends Application
     {
         $this->kernel = $kernel;
         $this->kernel->boot();
-        $this->kernel->container['request'] = Request::createFromGlobals();
-        $this->kernel->container['requestStack']->push($this->kernel->container['request']);
+
+        if (!$this->kernel->container->offsetExists('request') ||
+            null === $this->kernel->container->offsetGet('request')) {
+            $this->kernel->container['request'] = Request::createFromGlobals();
+            $this->kernel->container['requestStack']->push($this->kernel->container['request']);
+        }
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
         $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
         $this->getDefinition()->addOption(new InputOption('--preview', null, InputOption::VALUE_NONE, 'Preview mode.'));
         $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
-        // Use default Doctrine commands
-        ConsoleRunner::addCommands($this);
 
-        /*
-         * Define a request wide timezone
-         */
-        if (!empty($this->kernel->container['config']["timezone"])) {
-            date_default_timezone_set($this->kernel->container['config']["timezone"]);
-        } else {
+        $this->addDoctrineCommands();
+
+        try {
+            /*
+             * Define a request wide timezone
+             */
+            if (!empty($this->kernel->container['config']["timezone"])) {
+                date_default_timezone_set($this->kernel->container['config']["timezone"]);
+            } else {
+                date_default_timezone_set("Europe/Paris");
+            }
+        } catch (NoConfigurationFoundException $e) {
             date_default_timezone_set("Europe/Paris");
         }
+    }
+
+    protected function addDoctrineCommands()
+    {
+        $this->addCommands(array(
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand(),
+            new \Doctrine\ORM\Tools\Console\Command\InfoCommand(),
+        ));
     }
 
     /**
@@ -129,25 +144,37 @@ class RoadizApplication extends Application
             new SolrOptimizeCommand(),
             new CacheCommand(),
             new CacheInfosCommand(),
-            new ConfigurationCommand(),
+            new HtaccessCommand(),
             new ThemeInstallCommand(),
             new DocumentDownscaleCommand(),
             new NodesOrphansCommand(),
+            new DatabaseDumpCommand(),
+            new FilesExportCommand(),
+            new FilesImportCommand(),
+            new ComposerPostCreateProjectCommand(),
+            new ComposerPostInstallCommand(),
+            new ComposerPostUpdateCommand(),
+            new ThemeGenerateCommand(),
         );
 
         /*
          * Register user defined Commands
          * Add them in your config.yml
          */
-        if (isset($this->kernel->container['config']['additionalCommands'])) {
-            foreach ($this->kernel->container['config']['additionalCommands'] as $commandClass) {
-                if (class_exists($commandClass)) {
-                    $commands[] = new $commandClass();
-                } else {
-                    throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
+        try {
+            if (isset($this->kernel->container['config']['additionalCommands'])) {
+                foreach ($this->kernel->container['config']['additionalCommands'] as $commandClass) {
+                    if (class_exists($commandClass)) {
+                        $commands[] = new $commandClass();
+                    } else {
+                        throw new \Exception("Command class does not exists (" . $commandClass . ")", 1);
+                    }
                 }
             }
+        } catch (NoConfigurationFoundException $e) {
+            // Do not load additional commands if configuration is not available
         }
+
 
         return array_merge(parent::getDefaultCommands(), $commands);
     }
@@ -159,20 +186,33 @@ class RoadizApplication extends Application
      */
     protected function getDefaultHelperSet()
     {
-        return new HelperSet([
-            new FormatterHelper(),
-            new DebugFormatterHelper(),
-            new ProcessHelper(),
-            new KernelHelper($this->kernel),
-            new LoggerHelper($this->kernel),
-            new AssetPackagesHelper($this->kernel->container['assetPackages']),
-            'question' => new QuestionHelper(),
-            'configuration' => new ConfigurationHelper($this->kernel->container['config']),
-            'db' => new ConnectionHelper($this->kernel->container['em']->getConnection()),
-            'em' => new EntityManagerHelper($this->kernel->container['em']),
-            'solr' => new SolrHelper($this->kernel->container['solr']),
-            'ns-cache' => new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']),
-            'mailer' => new MailerHelper($this->kernel->container['mailer']),
-        ]);
+        $helperSet = parent::getDefaultHelperSet();
+
+        $helperSet->set(new KernelHelper($this->kernel));
+        $helperSet->set(new LoggerHelper($this->kernel));
+        $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
+        $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
+
+        /*
+         * Configuration dependent helpers.
+         */
+        try {
+            $helperSet->set(new ConfigurationHelper($this->kernel->container['config']));
+            $helperSet->set(new MailerHelper($this->kernel->container['mailer']));
+        } catch (NoConfigurationFoundException $e) {
+            $helperSet->set(new ConfigurationHelper([]));
+        }
+
+        /*
+         * Entity manager dependent helpers.
+         */
+        if (null !== $this->kernel->container['em']) {
+            $helperSet->set(new ConnectionHelper($this->kernel->container['em']->getConnection()));
+            // We need to set «em» alias as Doctrine misnamed its Helper :-(
+            $helperSet->set(new EntityManagerHelper($this->kernel->container['em']), 'em');
+            $helperSet->set(new SolrHelper($this->kernel->container['solr']));
+        }
+
+        return $helperSet;
     }
 }

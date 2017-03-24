@@ -17,14 +17,16 @@
                 {#
                  # Page contact
                  #}
-                {% if request.locale != _default_locale %}
-                    <li class="nav-item{% if route == 'contactPageLocale' %} active{% endif %}"><a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a></li>
-                {% else %}
-                    <li class="nav-link{% if route == 'contactPage' %} active{% endif %}"><a href="{{ path('contactPage') }}">{% trans %}contact{% endtrans %}</a></li>
-                {% endif %}
-
+                <li class="nav-item{% if route == 'contactPageLocale' %} active{% endif %}">
+                    <a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a>
+                </li>
             {% endif %}
         </ul>
+        <form class="navbar-form navbar-left" action="{{ path('searchPageLocale', {'_locale': request.locale}) }}" method="get" role="search">
+            <div class="form-group">
+                <input name="query" {% if query %}value="{{ query }}"{% endif %}  class="form-control" type="search" placeholder="{{ 'search'|trans }}"/>
+            </div>
+        </form>
         {# Lang #}
         {% if translation %}
             <ul class="nav-list nav navbar-nav navbar-right" id="nav-lang">

@@ -3580,20 +3580,20 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="354" approved="yes">
         <source>node.content</source>
-        <target xml:lang="en">Node content</target>
+        <target xml:lang="en">Content</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">35</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Node content</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="355" approved="yes">
         <source>node.parameters</source>
-        <target xml:lang="en">Node parameters</target>
+        <target xml:lang="en">Parameters</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">48</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Node parameters</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="356" approved="yes">
         <source>seo</source>
         <target xml:lang="en">SEO</target>
@@ -4207,8 +4207,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="449" approved="yes">
         <source>document.embedId</source>
-        <target xml:lang="en">Platform media identifier</target>
-      </trans-unit>
+        <target xml:lang="en">Media identifier on platform</target>
+      <alt-trans><target xml:lang="en">Platform media identifier</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="en">“%field%” name is a reserved word, please choose another one.</target>
@@ -4260,8 +4260,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="save.settingGroup" approved="yes">
         <source>save.settingGroup</source>
-        <target xml:lang="en">Save setting group</target>
-      </trans-unit>
+        <target xml:lang="en">Save</target>
+      <alt-trans><target xml:lang="en">Save setting group</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.settingGroup" approved="yes">
         <source>are_you_sure.delete.settingGroup</source>
         <target xml:lang="en">Are you sure you want to delete this setting group ?</target>
@@ -4616,12 +4616,12 @@
       <trans-unit xml:space="preserve" id="folder.settings" approved="yes">
         <source>folder.settings</source>
         <target xml:lang="en">Settings</target>
-          <note>Nav bar label for editing folder id and visibility state</note>
+        <note>Nav bar label for editing folder id and visibility state</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="folder.labels" approved="yes">
         <source>folder.labels</source>
         <target xml:lang="en">Labels</target>
-          <note>Nav bar label for editing folder label in each translation.</note>
+        <note>Nav bar label for editing folder label in each translation.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="delete.folder.%name%" approved="yes">
           <source>delete.folder.%name%</source>
@@ -5819,8 +5819,8 @@
       <!-- Some constraints messages -->
       <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters" approved="yes">
           <source>string.should.only.contain.latin.characters</source>
-          <target xml:lang="en">String should only contain simple latin characters</target>
-      </trans-unit>
+          <target xml:lang="en">Characters string should only contain simple latin alphabet</target>
+      <alt-trans><target xml:lang="en">String should only contain simple latin characters</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word" approved="yes">
           <source>string.should.not.be.a.sql.reserved.word</source>
           <target xml:lang="en">String should not be a SQL reserved word</target>
@@ -6214,124 +6214,267 @@
           <target xml:lang="en">Selected tags have been deleted</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="tag.childrenOrder" approved="yes">
-            <source>tag.childrenOrder</source>
-            <target xml:lang="en">Children tags are ordered by</target>
-        </trans-unit>
+          <source>tag.childrenOrder</source>
+          <target xml:lang="en">Children tags are ordered by</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="tag.childrenOrderDirection" approved="yes">
-            <source>tag.childrenOrderDirection</source>
-            <target xml:lang="en">Children tags order direction</target>
-        </trans-unit>
+          <source>tag.childrenOrderDirection</source>
+          <target xml:lang="en">Children tags order direction</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%" approved="yes">
-            <source>node.%name%.status_changed_to.%status%</source>
-            <target xml:lang="en">"%name%" node status has been changed to: %status%.</target>
-        <alt-trans><target xml:lang="en">« %name% » node status has been changed to: %status%.</target></alt-trans></trans-unit>
+          <source>node.%name%.status_changed_to.%status%</source>
+          <target xml:lang="en">"%name%" node status has been changed to: %status%.</target>
+      <alt-trans><target xml:lang="en">« %name% » node status has been changed to: %status%.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%" approved="yes">
-            <source>node.%name%.visibility_changed_to.%visible%</source>
-            <target xml:lang="en">"%name%" node visibility has been changed to: %visible%.</target>
-        </trans-unit>
+          <source>node.%name%.visibility_changed_to.%visible%</source>
+          <target xml:lang="en">"%name%" node visibility has been changed to: %visible%.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%" approved="yes">
-            <source>stack_type.%type%.has_been_removed.%name%</source>
-            <target xml:lang="en">Stack type "%type%" has been removed from "%name%" node.</target>
-        </trans-unit>
+          <source>stack_type.%type%.has_been_removed.%name%</source>
+          <target xml:lang="en">Stack type "%type%" has been removed from "%name%" node.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields" approved="yes">
-            <source>form_has_errors.check_you_fields</source>
-            <target xml:lang="en">Your form has errors, check highlighted fields.</target>
-        </trans-unit>
+          <source>form_has_errors.check_you_fields</source>
+          <target xml:lang="en">Your form has errors, check highlighted fields.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="no_more_translation_available" approved="yes">
-            <source>no_more_translation_available</source>
-            <target xml:lang="en">No more translation is available for current node.</target>
-        </trans-unit>
+          <source>no_more_translation_available</source>
+          <target xml:lang="en">No more translation is available for current node.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="translate_offspring" approved="yes">
-            <source>translate_offspring</source>
-            <target xml:lang="en">Translate node hierarchy</target>
-        </trans-unit>
+          <source>translate_offspring</source>
+          <target xml:lang="en">Translate node hierarchy</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.undeleted" approved="yes">
-            <source>node.%name%.undeleted</source>
-            <target xml:lang="en">Node %name% has been undeleted</target>
-        </trans-unit>
+          <source>node.%name%.undeleted</source>
+          <target xml:lang="en">Node %name% has been undeleted</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="universal" approved="yes">
-            <source>universal</source>
-            <target xml:lang="en">Universal</target>
-            <note>Universal node-type fields are common over translations.</note>
-        </trans-unit>
+          <source>universal</source>
+          <target xml:lang="en">Universal</target>
+          <note>Universal node-type fields are common over translations.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename" approved="yes">
-            <source>value_is_not_a_valid_filename</source>
-            <target xml:lang="en">Please enter a valid file name with an extension.</target>
-            <note>In document edit page when you rename your file without file extension.</note>
-        </trans-unit>
+          <source>value_is_not_a_valid_filename</source>
+          <target xml:lang="en">Please enter a valid file name with an extension.</target>
+          <note>In document edit page when you rename your file without file extension.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="filename.alreadyExists" approved="yes">
-            <source>filename.alreadyExists</source>
-            <target xml:lang="en">File name is already used.</target>
-            <note>In document edit page when you rename your file but filename already exists in folder.</note>
-        </trans-unit>
+          <source>filename.alreadyExists</source>
+          <target xml:lang="en">File name is already used.</target>
+          <note>In document edit page when you rename your file but filename already exists in folder.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="classname" approved="yes">
-            <source>classname</source>
-            <target xml:lang="en">Entity class name</target>
-            <note>In node-type edit page, label for the current node-type class name..</note>
-        </trans-unit>
+          <source>classname</source>
+          <target xml:lang="en">Entity class name</target>
+          <note>In node-type edit page, label for the current node-type class name..</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node-type.parameters" approved="yes">
-            <source>node-type.parameters</source>
-            <target xml:lang="en">Parameters</target>
-            <note>In node-type section, label for the parameters section.</note>
-        </trans-unit>
+          <source>node-type.parameters</source>
+          <target xml:lang="en">Parameters</target>
+          <note>In node-type section, label for the parameters section.</note>
+      </trans-unit>
       <!-- Custom form nav bar -->
       <trans-unit xml:space="preserve" id="custom-form.parameters" approved="yes">
-            <source>custom-form.parameters</source>
-            <target xml:lang="en">Parameters</target>
-            <note>In custom form nav bar.</note>
-        </trans-unit>
+          <source>custom-form.parameters</source>
+          <target xml:lang="en">Parameters</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="custom-form.fields" approved="yes">
-            <source>custom-form.fields</source>
-            <target xml:lang="en">Questions</target>
-            <note>In custom form nav bar.</note>
-        </trans-unit>
+          <source>custom-form.fields</source>
+          <target xml:lang="en">Questions</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="custom-form.answers" approved="yes">
-            <source>custom-form.answers</source>
-            <target xml:lang="en">Answers</target>
-            <note>In custom form nav bar.</note>
-        </trans-unit>
+          <source>custom-form.answers</source>
+          <target xml:lang="en">Answers</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="markdown.preview" approved="yes">
-            <source>markdown.preview</source>
-            <target xml:lang="en">Markdown preview</target>
-            <note>For markdown.preview button label</note>
-        </trans-unit>
+          <source>markdown.preview</source>
+          <target xml:lang="en">Markdown preview</target>
+          <note>For markdown.preview button label</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.relative_url" approved="yes">
-          <source>document.relative_url</source>
-          <target xml:lang="en">Relative URL</target>
-        </trans-unit>
+        <source>document.relative_url</source>
+        <target xml:lang="en">Relative URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.absolute_url" approved="yes">
-          <source>document.absolute_url</source>
-          <target xml:lang="en">Absolute URL</target>
-        </trans-unit>
+        <source>document.absolute_url</source>
+        <target xml:lang="en">Absolute URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.unprocessed_url" approved="yes">
-          <source>document.unprocessed_url</source>
-          <target xml:lang="en">Unprocessed URL</target>
-        </trans-unit>
+        <source>document.unprocessed_url</source>
+        <target xml:lang="en">Unprocessed URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.source_url" approved="yes">
-          <source>document.source_url</source>
-          <target xml:lang="en">Source URL</target>
-        </trans-unit>
+        <source>document.source_url</source>
+        <target xml:lang="en">Source URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.width" approved="yes">
-          <source>document.width</source>
-          <target xml:lang="en">Width</target>
-        </trans-unit>
+        <source>document.width</source>
+        <target xml:lang="en">Width</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.height" approved="yes">
-          <source>document.height</source>
-          <target xml:lang="en">Height</target>
-        </trans-unit>
+        <source>document.height</source>
+        <target xml:lang="en">Height</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.filesize" approved="yes">
-          <source>document.filesize</source>
-          <target xml:lang="en">File size</target>
-        </trans-unit>
+        <source>document.filesize</source>
+        <target xml:lang="en">File size</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="reachable" approved="yes">
-          <source>reachable</source>
-          <target xml:lang="en">Reachable</target>
-          <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="yaml.type">
-            <source>yaml.type</source>
-            <target xml:lang="en" state="translated">YAML code</target>
-          </trans-unit>
+        <source>reachable</source>
+        <target xml:lang="en">Reachable</target>
+        <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.type" approved="yes">
+        <source>yaml.type</source>
+        <target xml:lang="en">YAML code</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.redirections">
+        <source>manage.redirections</source>
+        <target xml:lang="en" state="translated">Redirections</target>
+        <note>Redirection section button label</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.redirection">
+        <source>delete.redirection</source>
+        <target xml:lang="en" state="translated">Delete redirection</target>
+        <note>Delete redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
+        <source>are_you_sure.delete.redirection</source>
+        <target xml:lang="en" state="translated">Are you sure you want to delete this redirection?</target>
+        <note>Delete redirection page confirmation message</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.redirection">
+        <source>add.a.redirection</source>
+        <target xml:lang="en" state="translated">Add a redirection</target>
+        <note>Add redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.redirections">
+        <source>back_to.redirections</source>
+        <target xml:lang="en" state="translated">Back to redirections</target>
+        <note>Back button label for redirections</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.redirection">
+        <source>edit.redirection</source>
+        <target xml:lang="en" state="translated">Edit redirection</target>
+        <note>Edit redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.query">
+        <source>redirection.query</source>
+        <target xml:lang="en" state="translated">Query</target>
+        <note>Redirection field which stands for the query: the URL to listen for a redirection</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.redirect_uri">
+        <source>redirection.redirect_uri</source>
+        <target xml:lang="en" state="translated">Destination URI</target>
+        <note>Redirection field which stands for the redirect URI: the destination URI</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.type">
+        <source>redirection.type</source>
+        <target xml:lang="en" state="translated">Redirection type</target>
+        <note>Redirection field which stands for HTTP code: 301 or 302</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_permanently">
+        <source>redirection.moved_permanently</source>
+        <target xml:lang="en" state="translated">Moved permanently</target>
+        <note>Redirection type description for 301 Moved Permanently</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_temporarily">
+        <source>redirection.moved_temporarily</source>
+        <target xml:lang="en" state="translated">Moved temporarily</target>
+        <note>Redirection type description for 302 Moved Temporarily</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="login_image">
+        <source>login_image</source>
+        <target xml:lang="en" state="translated">Login page background image</target>
+        <note>Global parameter to customize login screen background image</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishedAt">
+        <source>publishedAt</source>
+        <target xml:lang="en" state="translated">Publication date and time</target>
+        <note>Field label for node-source publication date and time.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishable">
+        <source>publishable</source>
+        <target xml:lang="en" state="translated">Date and time publishable</target>
+        <note>Field label for node-type publishable status.</note>
+      </trans-unit>
+      <!-- Node form help messages -->
+      <trans-unit xml:space="preserve" id="this_node_type_will_be_available_for_creating_root_nodes">
+        <source>this_node_type_will_be_available_for_creating_root_nodes</source>
+        <target xml:lang="en" state="translated">This node-type will be available for creating nodes at root level.</target>
+        <note>Help message to explain node-type "visible" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="enables_published_at_field_for_time_based_publication">
+        <source>enables_published_at_field_for_time_based_publication</source>
+        <target xml:lang="en" state="translated">This node-type will have a publication date and time.</target>
+        <note>Help message to explain node-type "publishedAt" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="mark_this_typed_nodes_as_reachable_with_an_url">
+        <source>mark_this_typed_nodes_as_reachable_with_an_url</source>
+        <target xml:lang="en" state="translated">This node-type will be reachable with a public URL.</target>
+        <note>Help message to explain node-type "reachable" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="this_node_type_will_hide_all_children_nodes">
+        <source>this_node_type_will_hide_all_children_nodes</source>
+        <target xml:lang="en" state="translated">This node-type will hide all its children nodes.</target>
+        <note>Help message to explain node-type "hiding_nodes" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="dynamic_node_name_will_follow_any_title_change_on_default_translation">
+        <source>dynamic_node_name_will_follow_any_title_change_on_default_translation</source>
+        <target xml:lang="en" state="translated">A dynamic node name will follow any title changes on your default translation.</target>
+        <note>Help message to explain node dynamic-node-name field.</note>
+      </trans-unit>
+      <!-- Font form help messages -->
+      <trans-unit xml:space="preserve" id="font_name_should_be_the_same_for_all_variants">
+        <source>font_name_should_be_the_same_for_all_variants</source>
+        <target xml:lang="en" state="translated">Font name should be the same for all font variants.</target>
+        <note>Help message to explain font name field should be the same over all variants.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css_font_family_hash_is_automatically_generated_from_font_name">
+        <source>css_font_family_hash_is_automatically_generated_from_font_name</source>
+        <target xml:lang="en" state="translated">CSS font-family hash is automatically generated from your font name.</target>
+        <note>Help message to explain font css family field will be automatically generated from font name, it should be the same for all variants.</note>
+      </trans-unit>
+      <!-- Node type field form help messages -->
+      <trans-unit xml:space="preserve" id="technical_name_for_database_and_templating">
+        <source>technical_name_for_database_and_templating</source>
+        <target xml:lang="en" state="translated">Technical name for database and templating.</target>
+        <note>Help message to explain node-type-field name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="human_readable_field_name">
+        <source>human_readable_field_name</source>
+        <target xml:lang="en" state="translated">Human readable field name.</target>
+        <note>Help message to explain node-type-field label.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use_the_same_group_names_over_fields_to_gather_them_in_tabs">
+        <source>use_the_same_group_names_over_fields_to_gather_them_in_tabs</source>
+        <target xml:lang="en" state="translated">Use the same group name over your node-type field to gather them into tabs.</target>
+        <note>Help message to explain node-type-field group name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice">
+        <source>disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice</source>
+        <target xml:lang="en" state="translated">Disable field visibility if you don’t want it to be editable from Roadiz back-office.</target>
+        <note>Help message to explain node-type-field visible switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field_should_be_indexed_if_you_plan_to_query_or_order_by_it">
+        <source>field_should_be_indexed_if_you_plan_to_query_or_order_by_it</source>
+        <target xml:lang="en" state="translated">Field should be indexed if you plan to query or order by it in your theme.</target>
+        <note>Help message to explain node-type-field indexed switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal_fields_will_be_only_editable_from_default_translation">
+        <source>universal_fields_will_be_only_editable_from_default_translation</source>
+        <target xml:lang="en" state="translated">Universal fields will only be editable from your default translation, other translations will be duplicated.</target>
+        <note>Help message to explain node-type-field universal switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="for_children_node_and_node_references_enter_node_type_names_comma_separated">
+        <source>for_children_node_and_node_references_enter_node_type_names_comma_separated</source>
+        <target xml:lang="en" state="translated">For “children node” and “node references” types, you can enter node-type names comma separated.</target>
+        <note>Help message to explain node-type-field default values.</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

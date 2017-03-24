@@ -364,7 +364,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             }
 
             try {
-                return $finalQuery->getSingleScalarResult();
+                return (int) $finalQuery->getSingleScalarResult();
             } catch (NoResultException $e) {
                 return 0;
             }
@@ -494,7 +494,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
         $this->applyComparisons($criteria, $finalQuery);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }

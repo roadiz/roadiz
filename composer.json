@@ -63,7 +63,7 @@
         "symfony/security":            "2.8.*",
         "symfony/asset":               "2.8.*",
         "symfony/translation":         "2.8.*",
-        "symfony-cmf/routing":         "1.3.*",
+        "symfony-cmf/routing":         "~1.4.0",
         "twig/twig":                   "1.*",
         "twig/extensions":             "1.*",
         "guzzlehttp/guzzle":           "~5.3",
@@ -73,14 +73,14 @@
         "pimple/pimple":               "3.0.*",
         "inlinestyle/inlinestyle":     "1.2.*",
         "phpoffice/phpexcel":          "1.8.*",
-        "guzzlehttp/cache-subscriber": "0.1.*",
         "asm89/twig-cache-extension":  "~1.0",
         "wikimedia/composer-merge-plugin": "~1.0",
         "monolog/monolog":"~1.22.0",
         "ambroisemaupate/intervention-request":"~0.1.7",
         "intervention/image": "~2.3.2",
         "erusev/parsedown-extra": "~0.7.1",
-        "graylog2/gelf-php": "~1.0"
+        "graylog2/gelf-php": "~1.0",
+        "enshrined/svg-sanitize": "^0.5.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",
@@ -109,11 +109,18 @@
     },
     "bin": ["bin/roadiz"],
     "scripts": {
+        "cache-scripts": [
+            "php bin/roadiz cache:clear -e prod",
+            "php bin/roadiz cache:clear -e dev",
+            "php bin/roadiz cache:clear -e prod --preview"
+        ],
         "post-install-cmd": [
-            "RZ\\Roadiz\\Utils\\Composer::postInstall"
+            "php bin/roadiz composer:post-install",
+            "@cache-scripts"
         ],
         "post-update-cmd": [
-            "RZ\\Roadiz\\Utils\\Composer::postUpdate"
+            "php bin/roadiz composer:post-update",
+            "@cache-scripts"
         ]
     }
 }

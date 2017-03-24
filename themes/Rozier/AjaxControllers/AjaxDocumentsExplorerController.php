@@ -108,6 +108,12 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'filters' => $listManager->getAssignation(),
         ];
 
+        if ($request->get('folderId') > 0) {
+            $responseArray['filters'] = array_merge($responseArray['filters'], [
+                'folderId' => $request->get('folderId')
+            ]);
+        }
+
         return new JsonResponse(
             $responseArray,
             Response::HTTP_OK
@@ -117,4 +123,5 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 AjaxDocumentsExplorerController::$thumbnailArray = [
     "fit" => "40x40",
     "quality" => 50,
+    "inline" => false,
 ];

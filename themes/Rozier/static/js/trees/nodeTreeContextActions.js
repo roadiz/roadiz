@@ -69,45 +69,46 @@ NodeTreeContextActions.prototype.onClick = function(event) {
 NodeTreeContextActions.prototype.changeStatus = function(node_id, statusName, statusValue) {
     var _this = this;
 
-    var postData = {
-        "_token": Rozier.ajaxToken,
-        "_action":'nodeChangeStatus',
-        "nodeId":node_id,
-        "statusName": statusName,
-        "statusValue": statusValue
-    };
-    //console.log(postData);
+    if (_this.ajaxTimeout) {
+        clearTimeout(_this.ajaxTimeout);
+    }
+    _this.ajaxTimeout = window.setTimeout(function () {
+        var postData = {
+            "_token": Rozier.ajaxToken,
+            "_action":'nodeChangeStatus',
+            "nodeId":node_id,
+            "statusName": statusName,
+            "statusValue": statusValue
+        };
 
-    $.ajax({
-        url: Rozier.routes.nodesStatusesAjax,
-        type: 'post',
-        dataType: 'json',
-        data: postData
-    })
-    .done(function(data) {
-        //console.log(data);
-        Rozier.refreshAllNodeTrees();
-        UIkit.notify({
-            message : data.responseText,
-            status  : data.status,
-            timeout : 3000,
-            pos     : 'top-center'
+        $.ajax({
+            url: Rozier.routes.nodesStatusesAjax,
+            type: 'post',
+            dataType: 'json',
+            data: postData
+        })
+        .done(function(data) {
+            Rozier.refreshAllNodeTrees();
+            UIkit.notify({
+                message : data.responseText,
+                status  : data.status,
+                timeout : 3000,
+                pos     : 'top-center'
+            });
+        })
+        .fail(function(data) {
+            data = JSON.parse(data.responseText);
+            UIkit.notify({
+                message : data.responseText,
+                status  : data.status,
+                timeout : 3000,
+                pos     : 'top-center'
+            });
+        })
+        .always(function() {
+            Rozier.lazyload.canvasLoader.hide();
         });
-    })
-    .fail(function(data) {
-        //console.log(data.responseJSON);
-        data = JSON.parse(data.responseText);
-
-        UIkit.notify({
-            message : data.responseText,
-            status  : data.status,
-            timeout : 3000,
-            pos     : 'top-center'
-        });
-    })
-    .always(function() {
-        Rozier.lazyload.canvasLoader.hide();
-    });
+    }, 100);
 };
 
 /**
@@ -118,37 +119,37 @@ NodeTreeContextActions.prototype.changeStatus = function(node_id, statusName, st
 NodeTreeContextActions.prototype.duplicateNode = function(node_id) {
     var _this = this;
 
-    var postData = {
-        _token: Rozier.ajaxToken,
-        _action: 'duplicate',
-        nodeId: node_id
-    };
-
-    $.ajax({
-        url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    })
-    .done(function( data ) {
-        console.log(data);
-
-        Rozier.refreshAllNodeTrees();
-
-        UIkit.notify({
-            message : data.responseText,
-            status  : data.status,
-            timeout : 3000,
-            pos     : 'top-center'
+    if (_this.ajaxTimeout) {
+        clearTimeout(_this.ajaxTimeout);
+    }
+    _this.ajaxTimeout = window.setTimeout(function () {
+        var postData = {
+            _token: Rozier.ajaxToken,
+            _action: 'duplicate',
+            nodeId: node_id
+        };
+        $.ajax({
+            url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
+            type: 'POST',
+            dataType: 'json',
+            data: postData
+        })
+        .done(function(data) {
+            Rozier.refreshAllNodeTrees();
+            UIkit.notify({
+                message : data.responseText,
+                status  : data.status,
+                timeout : 3000,
+                pos     : 'top-center'
+            });
+        })
+        .fail(function( data ) {
+            console.log(data);
+        })
+        .always(function() {
+            Rozier.lazyload.canvasLoader.hide();
         });
-
-    })
-    .fail(function( data ) {
-        console.log(data);
-    })
-    .always(function() {
-        Rozier.lazyload.canvasLoader.hide();
-    });
+    }, 100);
 };
 
 /**
@@ -189,7 +190,6 @@ NodeTreeContextActions.prototype.moveNodeToPosition = function (position, event)
     }
     postData.newParent = parent_node_id;
 
-    //console.log(postData);
     $.ajax({
         url: Rozier.routes.nodeAjaxEdit.replace("%nodeId%", node_id),
         type: 'POST',
@@ -197,20 +197,13 @@ NodeTreeContextActions.prototype.moveNodeToPosition = function (position, event)
         data: postData
     })
     .done(function( data ) {
-        //console.log(data);
-
         Rozier.refreshAllNodeTrees();
-
         UIkit.notify({
             message : data.responseText,
             status  : data.status,
             timeout : 3000,
             pos     : 'top-center'
         });
-
-    })
-    .fail(function( data ) {
-        //console.log(data);
     })
     .always(function() {
         Rozier.lazyload.canvasLoader.hide();

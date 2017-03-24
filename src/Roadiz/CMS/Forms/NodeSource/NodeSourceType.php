@@ -38,6 +38,7 @@ use RZ\Roadiz\CMS\Forms\YamlType;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -67,19 +68,9 @@ class NodeSourceType extends AbstractType
         $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager']);
 
         if ($options['withTitle'] === true) {
-            $builder->add(
-                'title',
-                'text',
-                [
-                    'label' => 'title',
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => '',
-                        'data-field-group' => 'default',
-                        'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
-                    ],
-                ]
-            );
+            $builder->add('base', new NodeSourceBaseType(), [
+                'publishable' => $this->nodeType->isPublishable(),
+            ]);
         }
         /** @var NodeTypeField $field */
         foreach ($fields as $field) {
@@ -137,12 +128,43 @@ class NodeSourceType extends AbstractType
         $position = [
             'position' => 'ASC',
         ];
-        if (!$source->getTranslation()->isDefaultTranslation()) {
+
+        if (!$this->needsUniversalFields($source, $entityManager)) {
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
         return $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
             ->findBy($criteria, $position);
+    }
+
+    /**
+     * @param NodesSources $source
+     * @param EntityManager $entityManager
+     * @return bool
+     */
+    private function needsUniversalFields(NodesSources $source, EntityManager $entityManager)
+    {
+        return ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source, $entityManager));
+    }
+
+    /**
+     * @param NodesSources $source
+     * @param EntityManager $entityManager
+     * @return bool
+     */
+    private function hasDefaultTranslation(NodesSources $source, EntityManager $entityManager)
+    {
+        /** @var Translation $defaultTranslation */
+        $defaultTranslation = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                            ->findDefault();
+
+        $sourceCount = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                                     ->countBy([
+                                         'node' => $source->getNode(),
+                                         'translation' => $defaultTranslation,
+                                     ]);
+
+        return $sourceCount === 1;
     }
 
     /**

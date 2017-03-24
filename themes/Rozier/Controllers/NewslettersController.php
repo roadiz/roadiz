@@ -39,6 +39,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
@@ -142,9 +143,9 @@ class NewslettersController extends RozierApp
             $this->assignation['nodeTypesCount'] = true;
 
             return $this->render('newsletters/add.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -247,6 +248,6 @@ class NewslettersController extends RozierApp
             }
         }
 
-        return $this->throw404();
+        throw new ResourceNotFoundException();
     }
 }

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,7 +28,6 @@
  * @file NodesUtilsController.php
  * @author Thomas Aufresne
  */
-
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
@@ -59,6 +58,7 @@ class NodesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var Node $existingNode */
         $existingNode = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
         $this->get('em')->refresh($existingNode);
@@ -151,6 +151,7 @@ class NodesUtilsController extends RozierApp
              */
             $event = new FilterNodeEvent($newNode);
             $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+            $this->get('dispatcher')->dispatch(NodeEvents::NODE_DUPLICATED, $event);
 
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", [
                 '%name%' => $existingNode->getNodeName(),

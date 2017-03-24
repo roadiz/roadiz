@@ -33,7 +33,6 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
 
@@ -90,10 +89,7 @@ class PageController extends DefaultThemeApp
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->get('em')->flush();
-
-            $urlGenerator = new NodesSourcesUrlGenerator($request, $this->nodeSource);
-
-            return $this->redirect($urlGenerator->getUrl());
+            return $this->redirect($this->generateUrl($this->nodeSource));
         }
 
         $this->assignation['form'] = $form->createView();

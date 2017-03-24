@@ -52,8 +52,8 @@ class UsersEnableCommand extends UsersCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelperSet()->get('question');
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
+        $this->questionHelper = $this->getHelper('question');
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $name = $input->getArgument('username');
 
@@ -67,7 +67,7 @@ class UsersEnableCommand extends UsersCommand
                     '<question>Do you really want to enable user “' . $user->getUsername() . '”?</question> [y/N]:',
                     false
                 );
-                if ($user !== null && $this->questionHelper->ask(
+                if (!$input->isInteractive() || $this->questionHelper->ask(
                     $input,
                     $output,
                     $confirmation
@@ -79,7 +79,7 @@ class UsersEnableCommand extends UsersCommand
                     $text = PHP_EOL . '<info>[Cancelled]</info> User “' . $name . '” was not enabled.' . PHP_EOL;
                 }
             } else {
-                $text = PHP_EOL . '<error>User “' . $name . '” does not exist.</error>' . PHP_EOL;
+                throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
 

@@ -35,7 +35,7 @@ use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\ViewOptionsResolver;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class DocumentViewer
@@ -431,17 +431,16 @@ class DocumentViewer implements ViewableInterface
 
         $defaultPackageName = $absolute ? Packages::ABSOLUTE : null;
         return Kernel::getService('assetPackages')->getUrl(
-            $this->getProcessedDocumentUrlByArray($options, $absolute),
+            $this->getProcessedDocumentUrlByArray($options),
             $defaultPackageName
         );
     }
 
     /**
      * @param array $options
-     * @param bool $absolute
      * @return string
      */
-    protected function getProcessedDocumentUrlByArray(array &$options = [], $absolute = false)
+    protected function getProcessedDocumentUrlByArray(array &$options = [])
     {
         $interventionRequestOptions = [];
 
@@ -486,11 +485,21 @@ class DocumentViewer implements ViewableInterface
             'queryString' => implode('-', $interventionRequestOptions),
             'filename' => $this->document->getRelativeUrl(),
         ];
-        
-        return Kernel::getService('urlGenerator')->generate(
+
+        $path = Kernel::getService('urlGenerator')->generate(
             'interventionRequestProcess',
             $routeParams,
-            UrlGenerator::ABSOLUTE_PATH
+            UrlGeneratorInterface::ABSOLUTE_PATH
         );
+
+        /*
+         * Need to remove base-path from url as AssetPackages will prepend it.
+         */
+        $basePath = Kernel::getService('request')->getBasePath();
+        if ($basePath != '') {
+            $path = substr($path, strlen($basePath));
+        }
+
+        return $path;
     }
 }

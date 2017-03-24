@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\RozierApp;
@@ -148,9 +149,9 @@ class RolesController extends RozierApp
             $this->assignation['form'] = $form->createView();
 
             return $this->render('roles/delete.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -195,9 +196,9 @@ class RolesController extends RozierApp
             $this->assignation['role'] = $role;
 
             return $this->render('roles/edit.html.twig', $this->assignation);
-        } else {
-            return $this->throw404();
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**

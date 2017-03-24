@@ -14,39 +14,39 @@
     </header>
 
     <article class="content content-dashboard">
-        {% if latestSources %}
+        {% if latestLogs and is_granted('ROLE_ACCESS_NODES') %}
         <div id="latest-sources">
             <h3>{% trans %}latest.node-sources.updates{% endtrans %}</h3>
             {% spaceless %}
-            {% for source in latestSources %}
-            {% set log = source.logs.first %}
-            <div class="latest-source">
-                <a href="{{ path("nodesEditSourcePage", {"nodeId":log.nodeSource.node.id, "translationId":log.nodeSource.translation.id }) }}">
-                    {% set thumbnail = source.getDocumentsByFields.first.getDocument %}
-                    <figure>
-                        {% if thumbnail and thumbnail.image %}
-                        <img width="150"
-                             height="150"
-                             class="source-image"
-                             src="{{ thumbnail|url({"width":150, "crop":"1x1", "quality":80}) }}" alt="{{ log.nodeSource.title }}">
-                        {% else %}
-                        <span class="no-thumb"></span>
-                        {% endif %}
-                        {% if log.user %}
-                        <img width="60"
-                             height="60"
-                             class="user-image"
-                             src="{{ log.user.pictureUrl }}"
-                             alt="{{ log.user.identifier }}"
-                             title="{{ log.user.identifier }}"
-                             data-uk-tooltip="{animation:true}" />
-                        {% endif %}
-                    </figure>
-                    <p class="source-title">{{ source.title }}</p>
-                    <p class="source-update-date">{{ log.datetime|localizeddate('medium', 'short') }}</p>
-                </a>
-            </div>
-            {% endfor %}
+                {% for log in latestLogs %}
+                    {% set source = log.nodeSource %}
+                    <div class="latest-source">
+                        <a href="{{ path("nodesEditSourcePage", {"nodeId":source.node.id, "translationId":source.translation.id }) }}">
+                            {% set thumbnail = source.documentsByFields.first.document %}
+                            <figure>
+                                {% if thumbnail and thumbnail.image %}
+                                <img width="150"
+                                     height="150"
+                                     class="source-image"
+                                     src="{{ thumbnail|url({"width":150, "crop":"1x1", "quality":80}) }}" alt="{{ source.title }}">
+                                {% else %}
+                                <span class="no-thumb"></span>
+                                {% endif %}
+                                {% if log.user %}
+                                <img width="60"
+                                     height="60"
+                                     class="user-image"
+                                     src="{{ log.user.pictureUrl }}"
+                                     alt="{{ log.user.identifier }}"
+                                     title="{{ log.user.identifier }}"
+                                     data-uk-tooltip="{animation:true}" />
+                                {% endif %}
+                            </figure>
+                            <p class="source-title">{{ source.title }}</p>
+                            <p class="source-update-date">{{ log.datetime|localizeddate('medium', 'short') }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
             {% endspaceless %}
         </div>
         {% endif %}

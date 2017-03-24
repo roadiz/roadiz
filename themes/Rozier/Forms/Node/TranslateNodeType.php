@@ -31,6 +31,7 @@ namespace Themes\Rozier\Forms\Node;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,17 +52,19 @@ class TranslateNodeType extends AbstractType
         $em = $options['em'];
         $translations = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
                            ->findUnavailableTranslationForNode($options['node']);
-        
-        
+
+
         $choices = [];
 
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
-            $choices[$translation->getId()] = $translation->getName();
+            $choices[$translation->getName()] = $translation->getId();
         }
 
         $builder->add('translation', 'choice', [
             'label' => 'translation',
             'choices' => $choices,
+            'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
         ])

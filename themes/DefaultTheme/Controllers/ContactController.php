@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\File;
 use Themes\DefaultTheme\DefaultThemeApp;
 
@@ -106,7 +107,7 @@ class ContactController extends DefaultThemeApp
 
             return $this->render('pages/contact.html.twig', $this->assignation);
         } catch (NoTranslationAvailableException $e) {
-            return $this->throw404();
+            throw new ResourceNotFoundException($e->getMessage(), 0, $e);
         }
     }
 }

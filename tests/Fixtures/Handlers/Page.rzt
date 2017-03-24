@@ -6,6 +6,7 @@
     "newsletterType": false,
     "hidingNodes": false,
     "reachable": true,
+    "publishable": false,
     "fields": [
         {
             "name": "content",

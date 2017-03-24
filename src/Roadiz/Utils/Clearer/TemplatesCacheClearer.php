@@ -47,7 +47,7 @@ class TemplatesCacheClearer extends Clearer
                 $finder->in($this->getCacheDir() . '/twig_cache');
                 $fs->remove($finder);
 
-                $this->output .= 'Compiled Twig templates have been purged.'.PHP_EOL;
+                $this->output .= 'Compiled Twig templates have been purged.';
 
                 return true;
             }

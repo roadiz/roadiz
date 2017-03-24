@@ -57,12 +57,12 @@ class DocumentDownscaleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var Kernel $kernel */
-        $kernel = $this->getHelperSet()->get('kernel')->getKernel();
+        $kernel = $this->getHelper('kernel')->getKernel();
         /** @var Packages $packages */
-        $packages = $this->getHelperSet()->get('assetPackages')->getPackages();
-        $this->configuration = $this->getHelperSet()->get('configuration')->getConfiguration();
-        $this->entityManager = $this->getHelperSet()->get('em')->getEntityManager();
-        $questionHelper = $this->getHelperSet()->get('question');
+        $packages = $this->getHelper('assetPackages')->getPackages();
+        $this->configuration = $this->getHelper('configuration')->getConfiguration();
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $questionHelper = $this->getHelper('question');
         $text = '';
 
         if (!empty($this->configuration['assetsProcessing']['maxPixelSize']) &&

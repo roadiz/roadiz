@@ -29,7 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -39,24 +40,49 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NodeTypesType extends AbstractType
 {
     /**
+     * @var bool
+     */
+    private $showInvisible;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * NodeTypesType constructor.
+     * @param EntityManager $entityManager
+     * @param bool $showInvisible
+     */
+    public function __construct(EntityManager $entityManager, $showInvisible = false)
+    {
+        $this->showInvisible = $showInvisible;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $nodeTypes = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findBy([
-                'newsletterType' => false,
-                'visible' => true
-            ]);
+        $criteria = [
+            'newsletterType' => false,
+        ];
+
+        if ($this->showInvisible === false) {
+            $criteria['visible'] = true;
+        }
+
+        $nodeTypes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy($criteria);
 
         $choices = [];
+        /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
-            $choices[$nodeType->getId()] = $nodeType->getDisplayName();
+            $choices[$nodeType->getDisplayName()] = $nodeType->getId();
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices_as_values' => true,
+            'choices' => $choices,
         ]);
     }
     /**

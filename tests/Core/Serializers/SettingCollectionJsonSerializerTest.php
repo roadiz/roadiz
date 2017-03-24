@@ -95,7 +95,7 @@ class SettingCollectionJsonSerializerTest extends SchemaDependentCase
         return array(
             array(
                 file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Serializers/settingCollectionJsonSerializer01.json'),
-                "Doctrine\Common\Collections\ArrayCollection",
+                'Doctrine\Common\Collections\ArrayCollection',
             ),
         );
     }

@@ -60,7 +60,8 @@ class TranslationType extends AbstractType
             [
                 'label' => 'locale',
                 'required' => true,
-                'choices' => Translation::$availableLocales,
+                'choices_as_values' => true,
+                'choices' => array_flip(Translation::$availableLocales),
                 'constraints' => [
                     new UniqueTranslationLocale([
                         'entityManager' => $options['em'],

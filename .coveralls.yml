@@ -1,5 +1,6 @@
 # for php-coveralls
 service_name: travis-ci
+repo_token: auwcnYiFOeFFp0vxd4Tx158ToE5YvMAHg
 src_dir: src
 coverage_clover: build/logs/clover.xml
 json_path: build/logs/coveralls-upload.json

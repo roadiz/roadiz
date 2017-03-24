@@ -38,6 +38,7 @@ var DocumentExplorer = function ($explorer, data, $originWidget, documentWidget)
     _this.$explorerSearchForm = _this.$explorer.find('.explorer-search');
     _this.appendItemsToExplorer(data);
     _this.folderExplorer = null;
+    _this.bindedCloseExplorer = $.proxy(_this.closeExplorer, _this);
 
     _this.init();
 
@@ -55,14 +56,21 @@ DocumentExplorer.prototype.init = function() {
     Rozier.$window.on('keyup', $.proxy(_this.echapKey, _this));
     _this.$explorerFolderToggle.off('click');
     _this.$explorerFolderToggle.on('click', $.proxy(_this.toggleFolders, _this));
-    _this.$explorerClose.on('click', $.proxy(_this.closeExplorer, _this));
+    _this.$explorerClose.on('click', _this.bindedCloseExplorer);
     _this.$explorerSearchForm.on('submit', $.proxy(_this.onExplorerSearch, _this));
+
+    Rozier.$window.on('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.on('uploader-open', _this.bindedCloseExplorer);
+    Rozier.$window.on('explorer-open', _this.bindedCloseExplorer);
 };
 
 DocumentExplorer.prototype.destroy = function() {
     var _this = this;
 
     Rozier.$window.off('keyup', $.proxy(_this.echapKey, _this));
+    Rozier.$window.off('pagechange', _this.bindedCloseExplorer);
+    Rozier.$window.off('uploader-open', _this.bindedCloseExplorer);
+    Rozier.$window.off('explorer-open', _this.bindedCloseExplorer);
     _this.$explorerFolderToggle.off('click');
     _this.$explorerClose.off('click');
     _this.$explorerSearchForm.off('submit');
@@ -74,30 +82,29 @@ DocumentExplorer.prototype.toggleFolders = function(event) {
     if (_this.folderExplorer === null ||
         _this.folderExplorer.destroyed === true) {
 
-        Rozier.lazyload.canvasLoader.show();
-
-        var ajaxData = {
-            '_action':'toggleExplorer',
-            '_token': Rozier.ajaxToken
-        };
-
-        $.ajax({
-            url: Rozier.routes.foldersAjaxExplorer,
-            type: 'GET',
-            dataType: 'json',
-            cache: false,
-            data: ajaxData
-        })
-        .done(function(data) {
-            console.log(data);
-            _this.folderExplorer = new FolderExplorer(data, _this);
-        })
-        .fail(function() {
-            console.log("error");
-        })
-        .always(function() {
-            Rozier.lazyload.canvasLoader.hide();
-        });
+        if (_this.toggleTimeout) {
+            clearTimeout(_this.toggleTimeout);
+        }
+        _this.toggleTimeout = window.setTimeout(function () {
+            Rozier.lazyload.canvasLoader.show();
+            var ajaxData = {
+                '_action':'toggleExplorer',
+                '_token': Rozier.ajaxToken
+            };
+            $.ajax({
+                url: Rozier.routes.foldersAjaxExplorer,
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                data: ajaxData
+            })
+            .done(function(data) {
+                _this.folderExplorer = new FolderExplorer(data, _this);
+            })
+            .always(function() {
+                Rozier.lazyload.canvasLoader.hide();
+            });
+        }, 100);
     } else {
         _this.folderExplorer.destroy();
         _this.folderExplorer = null;
@@ -207,13 +214,15 @@ DocumentExplorer.prototype.closeExplorer = function(){
     }
 
     _this.documentWidget.$toggleExplorerButtons.removeClass('uk-active');
-    TweenLite.to(_this.$explorer, 0.5, {x: _this.$explorer.outerWidth()*-1, opacity:0, ease:Expo.easeOut, onComplete: function () {
-        _this.destroyed = true;
-        _this.destroy();
-        _this.$explorer.remove();
-        _this.documentWidget.$explorer = null;
-        _this.$explorer = null;
-    }});
+    if (_this.$explorer) {
+        TweenLite.to(_this.$explorer, 0.5, {x: _this.$explorer.outerWidth()*-1, opacity:0, ease:Expo.easeOut, onComplete: function () {
+            _this.destroyed = true;
+            _this.destroy();
+            _this.$explorer.remove();
+            _this.documentWidget.$explorer = null;
+            _this.$explorer = null;
+        }});
+    }
 };
 
 
@@ -236,7 +245,6 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
         };
 
         Rozier.lazyload.canvasLoader.show();
-
         $.ajax({
             url: Rozier.routes.documentsAjaxExplorer,
             type: 'get',
@@ -245,8 +253,6 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
             data: ajaxData
         })
         .success(function(data) {
-            //console.log(data);
-            //console.log("success");
             Rozier.lazyload.canvasLoader.hide();
             if (typeof data.documents != "undefined") {
                 _this.appendItemsToExplorer(data, true);
@@ -254,7 +260,6 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
         })
         .fail(function(data) {
             console.log(data.responseText);
-            console.log("error");
         });
     }
 
@@ -272,14 +277,17 @@ DocumentExplorer.prototype.onExplorerSearch = function(event) {
 DocumentExplorer.prototype.onExplorerNextPage = function(filters, event) {
     var _this = this;
 
-    if (_this.$explorer !== null){
-        console.log(filters);
+    if (_this.$explorer !== null) {
         var ajaxData = {
             '_action':'toggleExplorer',
             '_token': Rozier.ajaxToken,
             'search': filters.search,
             'page': filters.nextPage
         };
+
+        if (filters.folderId > 0) {
+            ajaxData.folderId = filters.folderId;
+        }
 
         Rozier.lazyload.canvasLoader.show();
 
@@ -291,8 +299,6 @@ DocumentExplorer.prototype.onExplorerNextPage = function(filters, event) {
             data: ajaxData
         })
         .success(function(data) {
-            console.log(data);
-            console.log("success");
             Rozier.lazyload.canvasLoader.hide();
 
             if (typeof data.documents != "undefined") {

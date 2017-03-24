@@ -344,7 +344,7 @@ class NodesSourcesRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $finalQuery);
 
         try {
-            return $finalQuery->getSingleScalarResult();
+            return (int) $finalQuery->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
@@ -513,6 +513,65 @@ class NodesSourcesRepository extends EntityRepository
     }
 
     /**
+     * Search Nodes-Sources using LIKE condition on title
+     * meta-title, meta-keywords, meta-description.
+     *
+     * @param $textQuery
+     * @param int $limit
+     * @param array $nodeTypes
+     * @param bool $onlyVisible
+     * @param AuthorizationChecker $authorizationChecker
+     * @param bool $preview
+     * @return array
+     */
+    public function findByTextQuery(
+        $textQuery,
+        $limit = 0,
+        $nodeTypes = [],
+        $onlyVisible = false,
+        AuthorizationChecker &$authorizationChecker = null,
+        $preview = false
+    ) {
+        $qb = $this->createQueryBuilder('ns');
+        $qb->select('ns, n')
+            //->innerJoin('ns.node', 'n')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->like('ns.title', ':query'),
+                $qb->expr()->like('ns.metaTitle', ':query'),
+                $qb->expr()->like('ns.metaKeywords', ':query'),
+                $qb->expr()->like('ns.metaDescription', ':query')
+            ))
+            ->orderBy('ns.title', 'ASC')
+            ->setParameter(':query', '%' . $textQuery . '%');
+
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        $criteria = [];
+
+        if (false === $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview)) {
+            $qb->innerJoin('ns.node', 'n');
+        }
+
+        if (count($nodeTypes) > 0) {
+            $qb->andWhere($qb->expr()->in('n.nodeType', ':types'))
+                ->setParameter(':types', $nodeTypes);
+        }
+
+        if (true === $onlyVisible) {
+            $qb->andWhere($qb->expr()->eq('n.visible', ':visible'))
+                ->setParameter(':visible', true);
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
      * Find latest updated NodesSources using Log table.
      *
      * @param integer $maxResult
@@ -521,11 +580,16 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findByLatestUpdated($maxResult = 5)
     {
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('sns.id')
+                 ->from('RZ\Roadiz\Core\Entities\Log', 'slog')
+                 ->innerJoin('RZ\Roadiz\Core\Entities\NodesSources', 'sns')
+                 ->andWhere($subQuery->expr()->isNotNull('slog.nodeSource'))
+                 ->orderBy('slog.datetime', 'DESC');
+
         $query = $this->createQueryBuilder('ns');
-        $query->addSelect('log');
-        $query->innerJoin('ns.logs', 'log');
+        $query->andWhere($query->expr()->in('ns.id', $subQuery->getQuery()->getDQL()));
         $query->setMaxResults($maxResult);
-        $query->orderBy('log.datetime', 'DESC');
 
         return new Paginator($query->getQuery());
     }

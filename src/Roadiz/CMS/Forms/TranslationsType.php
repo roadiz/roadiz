@@ -29,7 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use RZ\Roadiz\Core\Kernel;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -39,21 +40,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TranslationsType extends AbstractType
 {
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * TranslationsType constructor.
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $translations = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findAll();
+        $translations = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')->findAll();
 
         $choices = [];
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
-            $choices[$translation->getId()] = $translation->getName();
+            $choices[$translation->getName()] = $translation->getId();
         }
 
         $resolver->setDefaults([
-            'choices' => $choices
+            'choices' => $choices,
+            'choices_as_values' => true,
         ]);
     }
     /**

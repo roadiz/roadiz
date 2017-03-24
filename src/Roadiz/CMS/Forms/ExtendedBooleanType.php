@@ -43,7 +43,11 @@ class ExtendedBooleanType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices' => [true => 'true', false => 'false'],
+            'choices' => [
+                'true' => true,
+                'false' => false,
+            ],
+            'choices_as_values' => true,
             'placeholder' => 'ignore',
             'required' => false,
             'expanded' => true,

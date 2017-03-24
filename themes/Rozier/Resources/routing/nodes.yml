@@ -53,12 +53,14 @@ nodesEditSEOPage:
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\UrlAliasesController::editAliasesAction }
     requirements: { nodeId : "[0-9]+" }
 nodesTreePage:
-    path:     /tree/{nodeId}
+    path:     /tree/{nodeId}/{translationId}
     defaults:
         _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::treeAction
         nodeId : null
+        translationId : null
     requirements:
         nodeId : "[0-9]+"
+        translationId : "[0-9]+"
 nodesBulkDeletePage:
     path:     /bulk-delete
     defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkDeleteAction }
