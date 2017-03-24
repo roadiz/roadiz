@@ -31,7 +31,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Entities\Redirection;
 use RZ\Roadiz\Core\HttpFoundation\Request;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
@@ -48,8 +47,7 @@ class RedirectionController extends AppController
     public function redirectAction(Request $request, Redirection $redirection)
     {
         if (null !== $redirection->getRedirectNodeSource()) {
-            $urlGenerator = new NodesSourcesUrlGenerator($request, $redirection->getRedirectNodeSource());
-            return $this->redirect($urlGenerator->getUrl(), $redirection->getType());
+            return $this->redirect($this->generateUrl($redirection->getRedirectNodeSource()), $redirection->getType());
         }
 
         if (strlen($redirection->getRedirectUri()) > 0) {

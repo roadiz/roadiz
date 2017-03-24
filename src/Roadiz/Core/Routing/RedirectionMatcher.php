@@ -95,6 +95,7 @@ class RedirectionMatcher extends UrlMatcher
          * Try nodes routes
          */
         if (null !== $redirection = $this->matchRedirection($decodedUrl)) {
+            $this->logger->debug('Matched redirection.', ['query' => $redirection->getQuery()]);
             return [
                 '_controller' => 'RZ\Roadiz\CMS\Controllers\RedirectionController::redirectAction',
                 'redirection' => $redirection,

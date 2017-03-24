@@ -34,7 +34,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 use RZ\Roadiz\Core\Handlers\UserHandler;
 use RZ\Roadiz\Core\Viewers\UserViewer;
-use RZ\Roadiz\Utils\Security\PasswordGenerator;
 use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -51,6 +50,35 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 class User extends AbstractHuman implements AdvancedUserInterface
 {
+    /**
+     * @var bool
+     */
+    protected $sendCreationConfirmationEmail;
+
+    /**
+     * Tells if we need Roadiz to send a default email
+     * when User will be persisted. Default: false.
+     *
+     * @return bool
+     */
+    public function willSendCreationConfirmationEmail()
+    {
+        return $this->sendCreationConfirmationEmail;
+    }
+
+    /**
+     * Set if we need Roadiz to send a default email
+     * when User will be persisted.
+     *
+     * @param bool $sendCreationConfirmationEmail
+     * @return User
+     */
+    public function sendCreationConfirmationEmail($sendCreationConfirmationEmail)
+    {
+        $this->sendCreationConfirmationEmail = $sendCreationConfirmationEmail;
+        return $this;
+    }
+
     /**
      * @ORM\Column(type="string", unique=true)
      * @var string
@@ -220,7 +248,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @param string $plainPassword
      *
-     * @return string $plainPassword
+     * @return User
      */
     public function setPlainPassword($plainPassword)
     {
@@ -244,7 +272,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * Internally, if this method returns false, the authentication system
      * will throw a DisabledException and prevent login.
      *
-     * @return bool    true if the user is enabled, false otherwise
+     * @return bool true if the user is enabled, false otherwise
      *
      * @see DisabledException
      */
@@ -256,7 +284,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @param boolean $enabled
      *
-     * @return boolean $enabled
+     * @return User
      */
     public function setEnabled($enabled)
     {
@@ -282,7 +310,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @param \DateTime $lastLogin
      *
-     * @return \DateTime $lastLogin
+     * @return User
      */
     public function setLastLogin($lastLogin)
     {
@@ -719,8 +747,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @param Node $chroot
-     *
-     * @return Node
+     * @return User
      */
     public function setChroot(Node $chroot = null)
     {
@@ -735,49 +762,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function getChroot()
     {
         return $this->chroot;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        parent::prePersist();
-
-        $saltGenerator = new SaltGenerator();
-        $this->salt = $saltGenerator->generateSalt();
-
-        /*
-         * If no plain password is present, we must generate one
-         */
-        if ($this->getPlainPassword() == '') {
-            $passwordGenerator = new PasswordGenerator();
-            $this->setPlainPassword($passwordGenerator->generatePassword(12));
-        }
-
-        $this->getHandler()->encodePassword();
-
-        /*
-         * Force a gravatar image if not defined
-         */
-        if ($this->getPictureUrl() == '') {
-            $this->setPictureUrl($this->getGravatarUrl());
-        }
-    }
-
-    /**
-     * @ORM\preUpdate
-     */
-    public function preUpdate()
-    {
-        parent::preUpdate();
-
-        /*
-         * Force a gravatar image if not defined
-         */
-        if ($this->getPictureUrl() == '') {
-            $this->setPictureUrl($this->getGravatarUrl());
-        }
     }
 
     /**
@@ -797,6 +781,10 @@ class User extends AbstractHuman implements AdvancedUserInterface
     {
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->sendCreationConfirmationEmail(false);
+
+        $saltGenerator = new SaltGenerator();
+        $this->setSalt($saltGenerator->generateSalt());
     }
 
     /**

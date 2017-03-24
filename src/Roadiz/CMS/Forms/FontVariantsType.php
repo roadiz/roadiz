@@ -45,7 +45,8 @@ class FontVariantsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices' => Font::$variantToHuman,
+            'choices' => array_flip(Font::$variantToHuman),
+            'choices_as_values' => true,
         ]);
     }
     /**

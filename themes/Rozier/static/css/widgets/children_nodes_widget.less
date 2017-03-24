@@ -160,7 +160,7 @@
         }
     }
     .nodetree-contextualmenu {
-        top: 0px;
+        top: 0;
 
         .tree-contextualmenu-button {
             display: inline-block;
@@ -196,21 +196,20 @@
             position: relative;
             vertical-align: top;
         }
+    }
+    .unpublished-node .nodetree-element-img {
+        top: 12px;
+        left: 6px;
+        width: 30px;
+        height: 30px;
+        .rounded(0);
+        .transform(rotate(45deg));
 
-        .unpublished-node & {
-            top: 12px;
-            left: 6px;
-            width: 30px;
-            height: 30px;
-            .rounded(0);
-            .transform(rotate(45deg));
-
-            img {
-                .transform(rotate(-45deg) scale(1.4));
-            }
-            object {
-                .transform(rotate(-45deg));
-            }
+        img {
+            .transform(rotate(-45deg) scale(1.4));
+        }
+        object {
+            .transform(rotate(-45deg));
         }
     }
 }
@@ -286,8 +285,8 @@
                     }
                 }
             }
-            & > .non-nestable-handle:after,
-            & > .uk-nestable-handle:after {
+            & > .non-nestable-handle:before,
+            & > .uk-nestable-handle:before {
                 width: 40px;
                 height: 40px;
                 top: 6px;
@@ -296,8 +295,8 @@
             }
 
             &.unpublished-node {
-                & > .non-nestable-handle:after,
-                & > .uk-nestable-handle:after {
+                & > .non-nestable-handle:before,
+                & > .uk-nestable-handle:before {
                     top: 11px;
                     left: 7px;
                     width: @children-node-height / 2;
@@ -311,19 +310,21 @@
                 & > .uk-nestable-handle {
                     position: relative;
                     width: 32px;
+                    //top: -20px;
                     top: 7px;
                     left: -7px;
                     border-color: #a0a0a0;
                     z-index: 2;
                 }
 
-                & > .non-nestable-handle:after
-                & > .uk-nestable-handle:after,
+                & > .non-nestable-handle:before,
+                & > .uk-nestable-handle:before,
                 .uk-icon-folder:before {
                     display: none;
                 }
 
-                .icon-stack-folder, .uk-icon-folder {
+                .icon-stack-folder,
+                .uk-icon-folder {
                     content: "";
                     font-family: FontAwesome;
                     color: @item-color;
@@ -337,12 +338,21 @@
                     top: 6px;
                     left: 9px;
                     position: absolute;
+
+                    transition: color 0.3s linear, border-color 0.3s linear, background 0.3s linear;
                 }
+
+                &.unpublished-node {
+                    .icon-stack-folder,
+                    .uk-icon-folder {
+                        .rounded(15%);
+                    }
+                }
+
                 .icon-stack-folder {
                     left: 15px;
                     &-final {
                         left: 21px;
-
                         &:after {
                             // position: relative;
                             position: absolute;
@@ -360,6 +370,16 @@
                         }
                     }
                 }
+                &.unpublished-node {
+                    .icon-stack-folder {
+                        &-final {
+                            &:after {
+                                .rounded(15%);
+                            }
+                        }
+                    }
+                }
+
                 .nodetree-element-name {
                     left: 9px;
                 }
@@ -375,7 +395,6 @@
                         background: @nestable-handle-border-color-hover;
                     }
                 }
-
             }
         }
 

@@ -25,7 +25,6 @@
 {% block markdown_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
-        <!-- {{ attr['data-desc'] }} -->
         <textarea {{ block('widget_attributes') }} data-rz-markdowneditor>{{ value }}</textarea>
         <nav class="markdown-editor-navbar">
             <ul class="markdown-editor-navbar-nav">
@@ -107,9 +106,6 @@
             </ul>
         </nav>
         <div class="markdown-editor-count"><span class="count-current"></span>/<span class="count-limit"></span></div>
-        {% if attr['data-desc'] %}
-            <div class="form-help uk-alert uk-alert-large">{{ attr['data-desc'] }}</div>
-        {% endif %}
     {% endspaceless %}
 {% endblock markdown_widget %}
 
@@ -118,9 +114,6 @@
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-rz-jsoneditor>{{ value }}</textarea>
-        {% if attr['data-desc'] %}
-            <div class="form-help uk-alert uk-alert-large">{{ attr['data-desc'] }}</div>
-        {% endif %}
     {% endspaceless %}
 {% endblock json_widget %}
 
@@ -129,9 +122,6 @@
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-rz-csseditor>{{ value }}</textarea>
-        {% if attr['data-desc'] %}
-            <div class="form-help uk-alert uk-alert-large">{{ attr['data-desc'] }}</div>
-        {% endif %}
     {% endspaceless %}
 {% endblock css_widget %}
 
@@ -140,9 +130,6 @@
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-rz-yamleditor>{{ value }}</textarea>
-        {% if attr['data-desc'] %}
-            <div class="form-help uk-alert uk-alert-large">{{ attr['data-desc'] }}</div>
-        {% endif %}
     {% endspaceless %}
 {% endblock yaml_widget %}
 
@@ -274,7 +261,7 @@
                     {% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {
                     'customForm':customForm,
                     'name': name,
-                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
+                    'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
                     'read_only': read_only,
                     'disabled':disabled,
                     'required':required,
@@ -311,7 +298,6 @@
         </div>
     {%- endif %}
 {%- endblock time_widget %}
-
 
 {# Override default error block #}
 {% block form_errors -%}
@@ -403,6 +389,11 @@
 {%- endblock form_label %}
 
 {% block form_widget_compound -%}
+
+    {% set attr = attr|merge({
+        'class': attr.class ~ ' data-uk-margin'
+    }) %}
+
     <div {{ block('widget_container_attributes') }}>
         {%- if form.parent is empty -%}
             {{ form_errors(form) }}
@@ -463,6 +454,9 @@
     <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group']|trans }}"{% endif %} class="{{ rowClasses|join(' ') }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
             {{- form_label(form) -}}
+        {% endif %}
+        {% if attr['data-desc'] %}
+            <p class="form-row-desc">{{ attr['data-desc']|trans }}</p>
         {% endif %}
         {{- form_errors(form) -}}
         {{- form_widget(form) -}}

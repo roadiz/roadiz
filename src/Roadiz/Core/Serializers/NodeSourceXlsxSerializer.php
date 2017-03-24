@@ -79,6 +79,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
             $data['translation'] = $nodeSource->getTranslation()->getLocale();
             $data['title'] = $nodeSource->getTitle();
+            $data['published_at'] = $nodeSource->getPublishedAt();
             $data['meta_title'] = $nodeSource->getMetaTitle();
             $data['meta_keywords'] = $nodeSource->getMetaKeywords();
             $data['meta_description'] = $nodeSource->getMetaDescription();

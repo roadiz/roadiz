@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
@@ -48,10 +48,10 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     protected $urlGenerator;
 
     /**
-     * @param UrlGenerator $urlGenerator
+     * @param UrlGeneratorInterface $urlGenerator
      * @param LoggerInterface $logger
      */
-    public function __construct(UrlGenerator $urlGenerator, LoggerInterface $logger)
+    public function __construct(UrlGeneratorInterface $urlGenerator, LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->urlGenerator = $urlGenerator;

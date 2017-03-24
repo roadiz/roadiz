@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -36,7 +37,11 @@ class NonSqlReservedWordValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (in_array(strtolower($value), NonSqlReservedWord::$forbiddenNames)) {
+        $fieldName = StringHandler::variablize($value);
+        $lowerName = strtolower($value);
+        if (in_array($value, NonSqlReservedWord::$forbiddenNames) ||
+            in_array($lowerName, NonSqlReservedWord::$forbiddenNames) ||
+            in_array($fieldName, NonSqlReservedWord::$forbiddenNames)) {
             $this->context->addViolation($constraint->message);
         }
     }

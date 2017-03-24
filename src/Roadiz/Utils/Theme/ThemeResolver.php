@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Utils\Theme;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Theme;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**

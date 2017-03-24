@@ -68,19 +68,9 @@ class NodeSourceType extends AbstractType
         $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager']);
 
         if ($options['withTitle'] === true) {
-            $builder->add(
-                'title',
-                'text',
-                [
-                    'label' => 'title',
-                    'required' => false,
-                    'attr' => [
-                        'data-desc' => '',
-                        'data-field-group' => 'default',
-                        'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
-                    ],
-                ]
-            );
+            $builder->add('base', new NodeSourceBaseType(), [
+                'publishable' => $this->nodeType->isPublishable(),
+            ]);
         }
         /** @var NodeTypeField $field */
         foreach ($fields as $field) {

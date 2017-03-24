@@ -68,7 +68,7 @@ class UsersPasswordCommand extends UsersCommand
                     '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question> [y/N]: ',
                     false
                 );
-                if ($this->questionHelper->ask(
+                if (!$input->isInteractive() || $this->questionHelper->ask(
                     $input,
                     $output,
                     $confirmation
@@ -83,7 +83,7 @@ class UsersPasswordCommand extends UsersCommand
                     $text = '<info>[Cancelled]</info> User password was not changed.' . PHP_EOL;
                 }
             } else {
-                $text = PHP_EOL . '<error>User “' . $name . '” does not exist.</error>' . PHP_EOL;
+                throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
 

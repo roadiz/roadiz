@@ -34,7 +34,6 @@ use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
-use RZ\Roadiz\Core\Exceptions\ThemableResourceNotFoundException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;

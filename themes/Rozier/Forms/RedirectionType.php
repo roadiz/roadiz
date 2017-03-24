@@ -30,7 +30,6 @@ namespace Themes\Rozier\Forms;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueFolderName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;

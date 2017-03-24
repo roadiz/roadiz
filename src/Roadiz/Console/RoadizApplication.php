@@ -64,8 +64,12 @@ class RoadizApplication extends Application
     {
         $this->kernel = $kernel;
         $this->kernel->boot();
-        $this->kernel->container['request'] = Request::createFromGlobals();
-        $this->kernel->container['requestStack']->push($this->kernel->container['request']);
+
+        if (!$this->kernel->container->offsetExists('request') ||
+            null === $this->kernel->container->offsetGet('request')) {
+            $this->kernel->container['request'] = Request::createFromGlobals();
+            $this->kernel->container['requestStack']->push($this->kernel->container['request']);
+        }
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
@@ -186,7 +190,7 @@ class RoadizApplication extends Application
 
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
-        $helperSet->set(new AssetPackagesHelper($this->kernel->container['assetPackages']));
+        $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
         $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
 
         /*

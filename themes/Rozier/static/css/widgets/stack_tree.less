@@ -13,13 +13,36 @@
         padding-right:70px;
     }
 
+    /*
+     * All levels
+     */
     .uk-nestable-panel {
         &.stack-node {
             & > .non-nestable-handle,
-            & > .uk-nestable-handle{
-                width:36px;
-                top: -6px;
-                left: -3px
+            & > .uk-nestable-handle {
+                width: 36px;
+                //top: -7px;
+                top: -11px;
+                left: -2px;
+
+                .nodetree-published-at {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    /*
+     * 2nd level
+     */
+    .uk-nestable-list {
+        .uk-nestable-panel {
+            &.stack-node {
+                & > .non-nestable-handle,
+                & > .uk-nestable-handle {
+                    top: -11px;
+                    left: -6px;
+                }
             }
         }
     }

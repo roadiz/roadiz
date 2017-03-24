@@ -65,6 +65,7 @@ class AjaxNodesController extends AbstractAjaxController
         }
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         $tags = [];
+        /** @var Node $node */
         $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 

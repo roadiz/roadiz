@@ -62,7 +62,8 @@ class CustomFormFieldType extends AbstractType
             ->add('type', 'choice', [
                 'label' => 'type',
                 'required' => true,
-                'choices' => CustomFormField::$typeToHuman,
+                'choices' => array_flip(CustomFormField::$typeToHuman),
+                'choices_as_values' => true,
             ])
             ->add('required', 'checkbox', [
                 'label' => 'required',

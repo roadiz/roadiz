@@ -45,6 +45,7 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 
@@ -259,6 +260,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  */
                 $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
 
+                /*
+                 * Users life cycle manager.
+                 */
+                $evm->addEventSubscriber(new UserLifeCycleSubscriber($c));
+
                 $c['stopwatch']->stop('initDoctrine');
                 return $em;
             } catch (NoConfigurationFoundException $e) {
@@ -276,7 +282,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          *
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            if (null !== $c['em']) {
+            if (null !== $c['em'] && $c['kernel']->getEnvironment() != 'test') {
                 // clone existing cache to be able to vary namespace
                 $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
                 if ($cache instanceof CacheProvider) {

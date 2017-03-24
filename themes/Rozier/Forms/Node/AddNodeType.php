@@ -59,7 +59,7 @@ class AddNodeType extends AbstractType
         ]);
 
         if ($options['showNodeType'] === true) {
-            $builder->add('nodeType', new NodeTypesType(), [
+            $builder->add('nodeType', new NodeTypesType($options['em']), [
                 'label' => 'nodeType',
                 'constraints' => [
                     new NotBlank(),
@@ -72,7 +72,10 @@ class AddNodeType extends AbstractType
         $builder->add('dynamicNodeName', 'checkbox', [
             'label' => 'node.dynamicNodeName',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
+            'attr' => [
+                'class' => 'rz-boolean-checkbox',
+                'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation',
+            ],
         ])
         ->add('visible', 'checkbox', [
             'label' => 'visible',

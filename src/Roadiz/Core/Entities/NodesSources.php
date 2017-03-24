@@ -40,6 +40,8 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
  * @ORM\Table(name="nodes_sources", uniqueConstraints={
  *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
+ * }, indexes={
+ *     @ORM\Index(columns={"published_at"})
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -184,6 +186,30 @@ class NodesSources extends AbstractEntity
     {
         $this->title = trim($title);
 
+        return $this;
+    }
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
+     */
+    protected $publishedAt;
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * @param \DateTime|null $publishedAt
+     * @return NodesSources
+     */
+    public function setPublishedAt(\DateTime $publishedAt = null)
+    {
+        $this->publishedAt = $publishedAt;
         return $this;
     }
 

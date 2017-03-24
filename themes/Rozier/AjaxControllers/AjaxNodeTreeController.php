@@ -112,7 +112,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
                 if (true === (boolean) $request->get('stackTree')) {
                     $nodeTree->setStackTree(true);
                 }
-
                 break;
             /*
              * Main panel tree nodeTree
@@ -130,7 +129,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $translation
                 );
                 $this->assignation['mainNodeTree'] = true;
-
                 break;
         }
 

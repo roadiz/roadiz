@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
@@ -45,7 +46,12 @@ class UsersCreationCommand extends UsersCommand
     protected function configure()
     {
         $this->setName('users:create')
-            ->setDescription('Create a user')
+            ->setDescription('Create a user. Without <info>--password</info> a random password will be generated and sent by email. <info>Check if "email_sender" setting is valid.</info>')
+            ->addOption('email', 'm', InputOption::VALUE_REQUIRED, 'Set user email.')
+            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'Set user password (typing plain password in command-line is insecure).')
+            ->addOption('back-end', 'b', InputOption::VALUE_NONE, 'Add ROLE_BACKEND_USER to user.')
+            ->addOption('super-admin', 's', InputOption::VALUE_NONE, 'Add ROLE_SUPERADMIN to user.')
+            ->addUsage('--email=test@test.com --password=secret --back-end --super-admin test')
             ->addArgument(
                 'username',
                 InputArgument::REQUIRED,
@@ -68,7 +74,7 @@ class UsersCreationCommand extends UsersCommand
             if (null === $user) {
                 $this->executeUserCreation($name, $input, $output);
             } else {
-                $text = '<error>User “' . $name . '” already exists.</error>' . PHP_EOL;
+                throw new \InvalidArgumentException('User “' . $name . '” already exists.');
             }
         }
 
@@ -88,50 +94,85 @@ class UsersCreationCommand extends UsersCommand
         OutputInterface $output
     ) {
         $user = new User();
+        if (!$input->hasOption('password')) {
+            $user->sendCreationConfirmationEmail(true);
+        }
         $user->setUsername($username);
 
-        do {
-            $questionEmail = new Question(
-                '<question>Email</question> : ',
-                ''
+        if ($input->isInteractive() && !$input->getOption('email')) {
+            /*
+             * Interactive
+             */
+            do {
+                $questionEmail = new Question(
+                    '<question>Email</question> : ',
+                    ''
+                );
+                $email = $this->questionHelper->ask(
+                    $input,
+                    $output,
+                    $questionEmail
+                );
+            } while (
+                !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+                $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
             );
-            $email = $this->questionHelper->ask(
-                $input,
-                $output,
-                $questionEmail
-            );
-        } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
-            $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
-        );
+        } else {
+            /*
+             * From CLI
+             */
+            $email = $input->getOption('email');
+            if ($this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)) {
+                throw new \InvalidArgumentException('Email already exists.');
+            }
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL) ) {
+                throw new \InvalidArgumentException('Email is not valid.');
+            }
+        }
 
         $user->setEmail($email);
 
-        $questionBack = new ConfirmationQuestion(
-            '<question>Is user a backend user?</question> [y/N]: ',
-            false
-        );
-        if ($this->questionHelper->ask(
-            $input,
-            $output,
-            $questionBack
-        )) {
+        if ($input->isInteractive() && !$input->getOption('back-end')) {
+            $questionBack = new ConfirmationQuestion(
+                '<question>Is user a backend user?</question> [y/N]: ',
+                false
+            );
+            if ($this->questionHelper->ask(
+                $input,
+                $output,
+                $questionBack
+            )) {
+                $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
+            }
+        } elseif ($input->getOption('back-end') === true) {
             $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
         }
 
-        $questionAdmin = new ConfirmationQuestion(
-            '<question>Is user a super-admin user?</question> [y/N]: ',
-            false
-        );
-        if ($this->questionHelper->ask(
-            $input,
-            $output,
-            $questionAdmin
-        )) {
+        if ($input->isInteractive() && !$input->getOption('super-admin')) {
+            $questionAdmin = new ConfirmationQuestion(
+                '<question>Is user a super-admin user?</question> [y/N]: ',
+                false
+            );
+            if ($this->questionHelper->ask(
+                $input,
+                $output,
+                $questionAdmin
+            )) {
+                $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
+            }
+        } elseif ($input->getOption('super-admin') === true) {
             $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
         }
 
+        if ($input->getOption('password')) {
+            if (strlen($input->getOption('password')) < 5) {
+                throw new \InvalidArgumentException('Password is too short.');
+            }
+
+            $user->setPlainPassword($input->getOption('password'));
+        }
+
         $this->entityManager->persist($user);
-        $user->getViewer()->sendSignInConfirmation();
         $this->entityManager->flush();
 
         $text = '<info>User “' . $username . '”<' . $email . '> created…</info>' . PHP_EOL;

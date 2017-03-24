@@ -17,6 +17,8 @@ for your desktop website and another one for your mobile, using the same node hi
 Roadiz is released under MIT license, so you can reuse
 and distribute its code for personal and commercial projects.
 
+**This is Roadiz *Source* repository. To create a new project, use [Roadiz Standard Edition](https://github.com/roadiz/standard-edition).**
+
 ## Documentation
 
 * *Roadiz* website: http://www.roadiz.io
@@ -25,7 +27,7 @@ and distribute its code for personal and commercial projects.
 
 ## Installation
 
-* [*Getting started* section](http://docs.roadiz.io/en/latest/developer/first-steps/getting_started.html).
+* [*Getting started* section](http://docs.roadiz.io/en/latest/developer/first-steps/installation.html).
 * Developing on a local machine: [use *Vagrant*](http://docs.roadiz.io/en/latest/developer/first-steps/vagrant.html)
 * [Troubleshooting](http://docs.roadiz.io/en/latest/developer/troubleshooting.html)
 

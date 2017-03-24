@@ -404,7 +404,11 @@ class NodeRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('n.' . $key, $value);
+                if (strpos($key, 'ns.') === 0) {
+                    $qb->addOrderBy($key, $value);
+                } else {
+                    $qb->addOrderBy('n.' . $key, $value);
+                }
             }
         }
         if (null !== $offset) {

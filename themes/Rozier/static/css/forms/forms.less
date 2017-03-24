@@ -122,9 +122,11 @@
     .rz-select {
         position: relative;
         display: inline-block;
-        width: auto; min-width:60px; height:36px;
+        width: auto;
+        min-width:60px;
+        height:36px;
         margin: 0;
-        padding: 0 20px 0 0;
+        padding: 0;
         font-size:12px;
         color: @grey-form-text;
         background-color: white;
@@ -145,22 +147,17 @@
             pointer-events: none;
         }
 
-        select{
-            width: 110%;
-            max-width: 110%;
-
-            height:36px;
-            padding:8px 15px;
+        select {
+            height: 36px;
+            padding: 8px 30px 8px 15px;
             background-color: transparent;
             background-image: none;
             font-family: @main-font;
             border: none;
             box-shadow: none;
-            background: transparent;
-            background-image: none;
             -webkit-appearance: none;
-            -moz-appearance:none;
-            appearance:none;
+            -moz-appearance: none;
+            appearance: none;
 
             &:focus, &:active{
                 outline:none;
@@ -241,25 +238,41 @@
     .form-col-datetime{
         display: inline-block;
 
+        .rz-datetime-field {
+            display: flex;
+            div {
+                display: inline-flex;
+            }
+        }
+
         .form-help{
             display: none;
         }
 
-        &> div > div{
-            display:inline-block;
-            vertical-align: top;
+        input {
+            border-right: 0 none;
         }
 
-        &> div:last-child > div:last-child{
-            margin-left:10px;
+        .rz-select {
+            font-size: 11px;
+            border-right: 0 none;
+
+            &:last-child {
+                border-right: 1px solid #ddd;
+            }
         }
     }
 
+    .form-row-desc {
+        max-width: 400px;
+        font-size: 11px;
+        line-height: 17px;
+        color: #b0b0b0;
+        margin: 5px 0 10px;
+    }
+
     .datetime-separator{
-        display: inline-block;
-        vertical-align: top;
-        height: 38px;
-        line-height: 38px;
+        display: none;
     }
 
     // Default input
@@ -335,6 +348,12 @@
     }
 }
 
+.form-col-checkbox {
+    .form-row-desc {
+        max-width: 250px;
+    }
+}
+
 .uk-form-row{
     position: relative;
 
@@ -380,6 +399,43 @@
     display: inline-block;
 }
 
+.form-col-nodesourcebase {
+    background: #EFEFEF;
+    margin: -30px -15px 0;
+    padding: 30px 15px 0;
+
+    & > .data-uk-margin {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .uk-form-row {
+        margin: 0 0 20px 0;
+
+        &:first-child {
+            flex-grow: 2;
+            margin: 0 30px 20px 0;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+@media (min-width: @screen-sm-min) {
+    .form-col-nodesourcebase {
+        margin: -30px -80px 0 -30px;
+        padding: 30px 80px 0 30px;
+    }
+}
+@media (min-width: @screen-lg-min) {
+    .form-col-nodesourcebase {
+        margin: -40px -100px 0 -50px;
+        padding: 40px 100px 0 50px;
+    }
+}
 
 .required-mention {
     font-size: 13px;

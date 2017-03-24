@@ -29,6 +29,9 @@
  */
 namespace RZ\Roadiz\Tests;
 
+use Pimple\Container;
+use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 
@@ -37,8 +40,16 @@ use RZ\Roadiz\Core\Kernel;
  *
  * @package RZ\Roadiz\Tests
  */
-abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
+abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implements ContainerAwareInterface
 {
+    /**
+     * @return Request
+     */
+    public static function getMockRequest()
+    {
+        return Request::createFromGlobals();
+    }
+
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
@@ -47,12 +58,54 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase
         $kernel = Kernel::getInstance('test', true, false);
         $kernel->boot();
 
-        $kernel->container['request'] = Request::createFromGlobals();
-        $kernel->container['requestStack']->push($kernel->container['request']);
+        $request = static::getMockRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestStack')->push($request);
     }
 
     public static function tearDownAfterClass()
     {
+        SettingsBag::clear();
         Kernel::getInstance()->shutdown();
+        Kernel::destroy();
+    }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        Kernel::getInstance()->getContainer();
+    }
+
+    /**
+     * @param Container $container
+     * @return ContainerAwareInterface
+     */
+    public function setContainer(Container $container)
+    {
+        Kernel::getInstance()->setContainer($container);
+    }
+
+    /**
+     * Return a service from container.
+     *
+     * @param string $serviceName
+     * @return mixed
+     */
+    public function get($serviceName)
+    {
+        Kernel::getInstance()->getContainer()->offsetGet($serviceName);
+    }
+
+    /**
+     * Returns true if the service is defined.
+     *
+     * @param string $serviceName
+     * @return bool true if the service is defined, false otherwise
+     */
+    public function has($serviceName)
+    {
+        Kernel::getInstance()->getContainer()->offsetExists($serviceName);
     }
 }

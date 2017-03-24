@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
+use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -206,7 +207,7 @@ class UsersRolesController extends RozierApp
                         )
                         ->add(
                             'roleId',
-                            new \RZ\Roadiz\CMS\Forms\RolesType($user->getRolesEntities()),
+                            new RolesType($this->get('em'), $user->getRolesEntities()),
                             ['label' => 'Role']
                         );
 

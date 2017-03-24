@@ -28,15 +28,12 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Tests;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Events;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\StringInput;
 
@@ -53,11 +50,6 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
      * @var RoadizApplication
      */
     static $application;
-
-    /**
-     * @var EntityManager
-     */
-    static $entityManager;
 
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException
@@ -130,30 +122,5 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         $tag->getTranslatedTags()->add($tt);
 
         return $tag;
-    }
-
-    /**
-     * @return EntityManager
-     */
-    public static function getManager()
-    {
-        if (static::$entityManager === null) {
-            $config = Kernel::getService('config');
-            $emConfig = Kernel::getService('em.config');
-            static::$entityManager = EntityManager::create($config["doctrine"], $emConfig);
-            $evm = static::$entityManager->getEventManager();
-
-            $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
-
-            /*
-             * Create dynamic discriminator map for our Node system
-             */
-            $evm->addEventListener(
-                Events::loadClassMetadata,
-                new DataInheritanceEvent($prefix)
-            );
-        }
-
-        return static::$entityManager;
     }
 }

@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\EmailManager;
-use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * UserViewer
@@ -74,6 +74,7 @@ class UserViewer implements ViewableInterface
      * Send an email with credentials details to user.
      *
      * @return boolean
+     * @deprecated Sign in confirmation is already sent by user lifecycle events.
      */
     public function sendSignInConfirmation()
     {
@@ -114,11 +115,11 @@ class UserViewer implements ViewableInterface
     /**
      * Send an email to reset user password.
      *
-     * @param  UrlGenerator $urlGenerator
+     * @param UrlGeneratorInterface $urlGenerator
      *
      * @return boolean
      */
-    public function sendPasswordResetLink(UrlGenerator $urlGenerator)
+    public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator)
     {
         $emailContact = SettingsBag::get('email_sender');
         if (empty($emailContact)) {
@@ -139,7 +140,7 @@ class UserViewer implements ViewableInterface
         $emailManager->setAssignation([
             'resetLink' => $urlGenerator->generate('loginResetPage', [
                 'token' => $this->user->getConfirmationToken(),
-            ], true),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
             'user' => $this->user,
             'site' => $siteName,
             'mailContact' => $emailContact,

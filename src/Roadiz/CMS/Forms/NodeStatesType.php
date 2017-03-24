@@ -45,14 +45,15 @@ class NodeStatesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $choices = [];
-        $choices[Node::DRAFT] = Node::getStatusLabel(Node::DRAFT);
-        $choices[Node::PENDING] = Node::getStatusLabel(Node::PENDING);
-        $choices[Node::PUBLISHED] = Node::getStatusLabel(Node::PUBLISHED);
-        $choices[Node::ARCHIVED] = Node::getStatusLabel(Node::ARCHIVED);
-        $choices[Node::DELETED] = Node::getStatusLabel(Node::DELETED);
+        $choices[Node::getStatusLabel(Node::DRAFT)] = Node::DRAFT;
+        $choices[Node::getStatusLabel(Node::PENDING)] = Node::PENDING;
+        $choices[Node::getStatusLabel(Node::PUBLISHED)] = Node::PUBLISHED;
+        $choices[Node::getStatusLabel(Node::ARCHIVED)] = Node::ARCHIVED;
+        $choices[Node::getStatusLabel(Node::DELETED)] = Node::DELETED;
 
         $resolver->setDefaults([
             'choices' => $choices,
+            'choices_as_values' => true,
             'placeholder' => 'ignore',
         ]);
     }

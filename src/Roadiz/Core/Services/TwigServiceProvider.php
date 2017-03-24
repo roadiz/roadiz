@@ -211,7 +211,7 @@ class TwigServiceProvider implements ServiceProviderInterface
          */
         $container['twig.routingExtension'] = function ($c) {
 
-            return new RoutingExtension($c['urlGenerator']);
+            return new RoutingExtension($c['router']);
         };
 
         /*

@@ -69,30 +69,24 @@ class TagType extends AbstractType
                 'label' => 'locked',
                 'required' => false,
             ])
-            ->add(
-                'childrenOrder',
-                'choice',
-                [
-                    'label' => 'tag.childrenOrder',
-                    'choices' => [
-                        'position' => 'position',
-                        'tagName' => 'tagName',
-                        'createdAt' => 'createdAt',
-                        'updatedAt' => 'updatedAt',
-                    ],
-                ]
-            )
-            ->add(
-                'childrenOrderDirection',
-                'choice',
-                [
-                    'label' => 'tag.childrenOrderDirection',
-                    'choices' => [
-                        'ASC' => 'ascendant',
-                        'DESC' => 'descendant',
-                    ],
-                ]
-            );
+            ->add('childrenOrder', 'choice', [
+                'label' => 'tag.childrenOrder',
+                'choices_as_values' => true,
+                'choices' => [
+                    'position' => 'position',
+                    'tagName' => 'tagName',
+                    'createdAt' => 'createdAt',
+                    'updatedAt' => 'updatedAt',
+                ],
+            ])
+            ->add('childrenOrderDirection', 'choice', [
+                'label' => 'tag.childrenOrderDirection',
+                'choices_as_values' => true,
+                'choices' => [
+                     'ascendant' => 'ASC',
+                     'descendant' => 'DESC',
+                ],
+            ]);
     }
 
     public function getName()

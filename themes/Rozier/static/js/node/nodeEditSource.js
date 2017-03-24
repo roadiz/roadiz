@@ -6,7 +6,7 @@ NodeEditSource = function(){
     var _this = this;
 
     // Selectors
-    _this.$content = $($('.content-node-edit-source')[0]);
+    _this.$content = $('.content-node-edit-source').eq(0);
     _this.$form = $('#edit-node-source-form');
     _this.$formRow = null;
     _this.$dropdown = null;
@@ -23,7 +23,6 @@ NodeEditSource = function(){
 
 NodeEditSource.prototype.wrapInTabs = function() {
     var _this = this;
-    // console.log('--- wrapInTabs');
     var fieldGroups = {};
     var $fields = _this.$content.find('.uk-form-row[data-field-group]');
     var fieldsLength = $fields.length;
@@ -41,7 +40,7 @@ NodeEditSource.prototype.wrapInTabs = function() {
         }
 
         if (fieldsGroupsLength > 1) {
-            _this.$form.prepend('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', swiping:false}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
+            _this.$form.append('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', swiping:false}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
             var $formSwitcher = _this.$form.find('.uk-switcher');
             var $formSwitcherNav = _this.$form.find('#node-source-form-switcher-nav');
 
@@ -90,13 +89,13 @@ NodeEditSource.prototype.init = function(){
     _this.$input = _this.$content.find('input, select');
     _this.$devNames = _this.$content.find('[data-dev-name]');
 
-    for (var i = _this.$input.length - 1; i >= 0; i--) {
+    /*for (var i = _this.$input.length - 1; i >= 0; i--) {
         if(_this.$input[i].getAttribute('data-desc') &&
             null !== _this.$input[i].getAttribute('data-desc') &&
             _this.$input[i].getAttribute('data-desc') !== ''){
             $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
         }
-    }
+    }*/
 
     for (var j = _this.$devNames.length - 1; j >= 0; j--) {
         var input = _this.$devNames[j];
@@ -209,20 +208,34 @@ NodeEditSource.prototype.cleanErrors = function() {
 };
 
 
-NodeEditSource.prototype.displayErrors = function(errors) {
+/**
+ *
+ * @param errors
+ * @param keepExisting Keep existing errors.
+ */
+NodeEditSource.prototype.displayErrors = function(errors, keepExisting) {
     var _this = this;
 
     /*
      * First clean fields
      */
-    _this.cleanErrors();
+    if (!keepExisting || false === keepExisting) {
+        _this.cleanErrors();
+    }
 
     for (var key in errors) {
-        var classKey = key.replace('_', '-');
-        $field = $('.form-col-' + classKey);
-        if ($field.length) {
-            $field.addClass('form-errored');
-            $field.append('<p class="error-message uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> ' + errors[key][0] + '</p>');
+        var classKey = null;
+        var errorMessage = null;
+        if (toType(errors[key]) === 'object') {
+            _this.displayErrors(errors[key], true);
+        } else {
+            classKey = key.replace('_', '-');
+            errorMessage = errors[key][0];
+            $field = $('.form-col-' + classKey);
+            if ($field.length) {
+                $field.addClass('form-errored');
+                $field.append('<p class="error-message uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> ' + errorMessage + '</p>');
+            }
         }
     }
 };
@@ -268,7 +281,6 @@ NodeEditSource.prototype.inputFocus = function(e){
     var _this = this;
 
     $(e.currentTarget).parent().addClass('form-col-focus');
-
 };
 
 
@@ -279,9 +291,7 @@ NodeEditSource.prototype.inputFocus = function(e){
 NodeEditSource.prototype.inputFocusOut = function(e){
     var _this = this;
 
-
     $(e.currentTarget).parent().removeClass('form-col-focus');
-
 };
 
 

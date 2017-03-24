@@ -223,7 +223,4 @@ cssMainColor:
 aboutPage:
     path: /rz-admin/about
     defaults: { _controller: Themes\Rozier\Controllers\AboutController::indexAction }
-aboutRoutes:
-    resource: "routing/about.yml"
-    prefix: /rz-admin/about
 
