@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\UrlAlias;
@@ -388,7 +389,7 @@ class UrlAliasesController extends RozierApp
                         ->add('alias', 'text', [
                             'label' => 'urlAlias',
                         ])
-                        ->add('translationId', new \RZ\Roadiz\CMS\Forms\TranslationsType(), [
+                        ->add('translationId', new TranslationsType($this->get('em')), [
                             'label' => 'translation',
                         ]);
 

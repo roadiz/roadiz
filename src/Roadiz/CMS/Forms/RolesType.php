@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,23 +40,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class RolesType extends AbstractType
 {
     protected $roles;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
-     * {@inheritdoc}
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles Existing roles name array (used to display only available roles to parent entity)
+     * @param EntityManager $entityManager
+     * @param array $roles Existing roles name array (used to display only available roles to parent entity)
      */
-    public function __construct($roles = null)
+    public function __construct(EntityManager $entityManager, $roles = null)
     {
         $this->roles = $roles;
+        $this->entityManager = $entityManager;
     }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $roles = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Role')
-            ->findAll();
+        $roles = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role')->findAll();
 
         $choices = [];
 

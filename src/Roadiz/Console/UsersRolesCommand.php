@@ -117,7 +117,7 @@ class UsersRolesCommand extends UsersCommand
                     $text = '<info>' . $user . '</info>' . PHP_EOL;
                 }
             } else {
-                $text = PHP_EOL . '<error>User “' . $name . '” does not exist.</error>' . PHP_EOL;
+                throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
 

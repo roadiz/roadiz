@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,15 +40,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SettingGroupType extends AbstractType
 {
     protected $themes;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * SettingGroupType constructor.
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $groups = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-            ->findAll();
+        $groups = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')->findAll();
 
         $choices = [];
 

@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,14 +42,20 @@ class TagsType extends AbstractType
 {
     /** @var null|ArrayCollection  */
     protected $tags;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
      * TagsType constructor.
+     * @param EntityManager $entityManager
      * @param ArrayCollection|null $tags
      */
-    public function __construct($tags = null)
+    public function __construct(EntityManager $entityManager, $tags = null)
     {
         $this->tags = $tags;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -59,9 +65,9 @@ class TagsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $tags = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-            ->findAllWithDefaultTranslation();
+        $tags = $this->entityManager
+                     ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                     ->findAllWithDefaultTranslation();
 
         $choices = [];
         /** @var Tag $tag */

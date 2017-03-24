@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Finder\Finder;
@@ -43,12 +44,18 @@ class ThemesType extends AbstractType
 {
     protected $themes;
     private $choices;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
-    public function __construct()
+    /**
+     * ThemesType constructor.
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
     {
-        $themes = Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
-            ->findAll();
+        $themes = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAll();
 
         $existingThemes = [Kernel::INSTALL_CLASSNAME];
         /** @var Theme $theme */
@@ -82,6 +89,7 @@ class ThemesType extends AbstractType
             }
         }
         $this->choices = $choices;
+        $this->entityManager = $entityManager;
     }
 
     public function getSize()
