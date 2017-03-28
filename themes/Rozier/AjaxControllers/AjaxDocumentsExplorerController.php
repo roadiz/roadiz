@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Themes\Rozier\Models\DocumentModel;
 
 /**
  * {@inheritdoc}
@@ -139,13 +140,17 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        $cleanDocumentIds = array_filter($request->query->get('ids'));
+
         /** @var EntityManager $em */
         $em = $this->get('em');
         $documents = $em->getRepository('RZ\Roadiz\Core\Entities\Document')->findBy([
-            'id' => array_filter($request->query->get('ids')),
+            'id' => $cleanDocumentIds,
             'raw' => false,
         ]);
 
+        // Sort array by ids given in request
+        $documents = $this->sort_ish($documents, $cleanDocumentIds);
         $documentsArray = $this->normalizeDocuments($documents);
 
         $responseArray = [
@@ -161,6 +166,30 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         );
     }
 
+    private function sort_ish(array &$arr, array $map)
+    {
+        $return = [];
+
+        while($element = array_shift($map))
+        {
+            /**
+             * @var int $key
+             * @var Document $value
+             */
+            foreach($arr as $key => $value)
+            {
+                if($element == $value->getId())
+                {
+                    $return[] = $value;
+                    unset($arr[$key]);
+                    break 1;
+                }
+            }
+        }
+
+        return $return;
+    }
+
     /**
      * Normalize response Document list result.
      *
@@ -173,29 +202,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         /** @var Document $doc */
         foreach ($documents as $doc) {
-            $editRouteParams = [
-                'documentId' => $doc->getId()
-            ];
-
-            $documentsArray[] = [
-                'id' => $doc->getId(),
-                'filename' => $doc->getFilename(),
-                'isImage' => $doc->isImage(),
-                'isSvg' => $doc->isSvg(),
-                'isPrivate' => $doc->isPrivate(),
-                'shortType' => $doc->getShortType(),
-                'editUrl' => $this->generateUrl('documentsEditPage', $editRouteParams),
-                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                'isEmbed' => $doc->isEmbed(),
-                'embedPlatform' => $doc->getEmbedPlatform(),
-                'shortMimeType' => $doc->getShortMimeType(),
-                'thumbnail_80' => $doc->getViewer()->getDocumentUrlByArray([
-                    "fit" => "80x80",
-                    "quality" => 50,
-                    "inline" => false,
-                ]),
-                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $doc]),
-            ];
+            $documentModel = new DocumentModel($doc, $this->getContainer());
+            $documentsArray[] = $documentModel->toArray();
         }
 
         return $documentsArray;

@@ -69,7 +69,7 @@
     import AjaxLink from '../components/AjaxLink.vue'
 
     export default {
-        props: ['document', 'trans', 'isDocumentExplorer', 'widgetName', 'index'],
+        props: ['document', 'trans', 'isDocumentExplorer', 'widgetName', 'index', 'removeDocument'],
         filters: filters,
         methods: {
 
@@ -80,8 +80,8 @@
                 }
             },
             onRemoveDocumentButtonClick: function () {
-                // Call parent funciton to remove the document from widget
-                this.$parent.removeDocument(this.document)
+                // Call parent function to remove the document from widget
+                this.removeDocument(this.document)
             }
         },
         components: {

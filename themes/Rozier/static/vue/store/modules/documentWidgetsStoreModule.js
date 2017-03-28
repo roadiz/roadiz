@@ -5,6 +5,9 @@ import {
     DOCUMENT_WIDGET_ADD_DOCUMENT,
     DOCUMENT_WIDGET_REMOVE_DOCUMENT,
     DOCUMENT_WIDGET_EDIT_INSTANCE,
+    DOCUMENT_WIDGET_UPDATE_LIST,
+    DOCUMENT_WIDGET_ENABLE_DROPZONE,
+    DOCUMENT_WIDGET_DISABLE_DROPZONE,
 
     KEYBOARD_EVENT_ESCAPE,
 
@@ -52,6 +55,10 @@ const actions = {
     documentWidgetsInitData ({ commit }, { documentWidget, ids }) {
         commit(DOCUMENT_EXPLORER_INIT_DATA_REQUEST, { documentWidget })
 
+        if (!ids || ids.length === 0) {
+            return
+        }
+
         api.getDocumentsByIds(ids)
             .then((result) => {
                 commit(DOCUMENT_EXPLORER_INIT_DATA_REQUEST_SUCCESS, { documentWidget, result })
@@ -60,8 +67,17 @@ const actions = {
                 commit(DOCUMENT_EXPLORER_INIT_DATA_REQUEST_FAILED, { documentWidget, error })
             })
     },
-    documentWidgetsAddDocument ({ commit }, document) {
-        commit(DOCUMENT_WIDGET_ADD_DOCUMENT, { document })
+    documentWidgetsAddDocument ({ commit, state }, { documentWidget, document, newIndex }) {
+        let widgetToChange = state.selectedWidget
+
+        if (documentWidget) {
+            widgetToChange = documentWidget
+        }
+
+        commit(DOCUMENT_WIDGET_ADD_DOCUMENT, { documentWidget: widgetToChange, document, newIndex })
+    },
+    documentWidgetMoveDocument ({ commit }, { documentWidget, document }) {
+
     },
     documentWidgetRemoveDocument ({ commit }, { documentWidget, document }) {
         commit(DOCUMENT_WIDGET_REMOVE_DOCUMENT, { documentWidget, document })
@@ -74,6 +90,19 @@ const actions = {
         } else {
             dispatch('documentExplorerOpen')
         }
+    },
+    documentWidgetsDropzoneButtonClick ({ state, dispatch }, documentWidget) {
+        if (documentWidget.isDropzoneEnable) {
+            dispatch('documentWidgetDisableDropzone', { documentWidget })
+        } else {
+            dispatch('documentWidgetEnableDropzone', { documentWidget })
+        }
+    },
+    documentWidgetEnableDropzone ({ commit }, { documentWidget }) {
+        commit(DOCUMENT_WIDGET_ENABLE_DROPZONE, { documentWidget })
+    },
+    documentWidgetDisableDropzone ({ commit }, { documentWidget }) {
+        commit(DOCUMENT_WIDGET_DISABLE_DROPZONE, { documentWidget })
     }
 }
 
@@ -87,7 +116,8 @@ const mutations = {
             isActive: false,
             documents: [],
             errorMessage: null,
-            isLoading: false
+            isLoading: false,
+            isDropzoneEnable: false
         })
     },
     [DOCUMENT_WIDGET_REMOVE_INSTANCE] (state, { documentWidgetToRemove }) {
@@ -109,10 +139,11 @@ const mutations = {
         // Define the document widget as current selected widget
         state.selectedWidget = documentWidget
     },
-    [DOCUMENT_WIDGET_ADD_DOCUMENT] (state, { document }) {
-        if (state.selectedWidget) {
-            state.selectedWidget.documents.push(document)
-        }
+    [DOCUMENT_WIDGET_ADD_DOCUMENT] (state, { documentWidget, document, newIndex = 0 }) {
+        documentWidget.documents.push(document)
+    },
+    [DOCUMENT_WIDGET_UPDATE_LIST] (state, { documentWidget, newList }) {
+        documentWidget.documents = newList
     },
     [DOCUMENT_WIDGET_REMOVE_DOCUMENT] (state, { documentWidget, document }) {
         let indexOf = documentWidget.documents.indexOf(document)
@@ -137,12 +168,24 @@ const mutations = {
     },
     [KEYBOARD_EVENT_ESCAPE] (state) {
         state = disableActiveDocumentWidget(state)
-    }
+    },
+    [DOCUMENT_WIDGET_ENABLE_DROPZONE] (state, { documentWidget }) {
+        // Disable other dropzone
+        state.widgets.forEach((widget) => {
+            widget.isDropzoneEnable = false
+        })
+
+        documentWidget.isDropzoneEnable = true
+    },
+    [DOCUMENT_WIDGET_DISABLE_DROPZONE] (state, { documentWidget }) {
+        documentWidget.isDropzoneEnable = false
+    },
 }
 
 function disableActiveDocumentWidget (state) {
     state.widgets.forEach((item) => {
         item.isActive = false
+        item.isDropzoneEnable = false
     })
 
     state.selectedWidget = null

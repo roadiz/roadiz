@@ -11,7 +11,6 @@ import DocumentExplorerContainer from './containers/DocumentExplorerContainer.vu
 import DocumentWidgetContainer from './containers/DocumentWidgetContainer.vue'
 
 // Components
-import DocumentExplorerButton from './components/DocumentExplorerButton.vue'
 import Overlay from './components/Overlay.vue'
 
 import {
@@ -34,7 +33,6 @@ class AppVue {
         }
 
         this.registeredComponents = {
-            DocumentExplorerButton,
             Overlay
         }
 

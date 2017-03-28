@@ -94,7 +94,10 @@
              * @param document
              */
             addDocument: function (document) {
-                this.documentWidgetsAddDocument(document)
+                this.documentWidgetsAddDocument({
+                    documentWidget: null,
+                    document
+                })
             }
         },
         watch: {

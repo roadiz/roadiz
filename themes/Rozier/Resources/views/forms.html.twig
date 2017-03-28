@@ -169,13 +169,20 @@
 {% endblock tags_widget %}
 
 {% block documents_widget %}
+
+
+    {% set docIds = [] %}
+    {% for doc in data %}
+        {% set docIds = docIds|merge([doc.id]) %}
+    {% endfor %}
+
     {% spaceless %}
         <document-widget-container data-vuejs inline-template>
             <div class="uk-form-row documents-widget"
                  :class="{ 'uk-active' : isActive, 'uk-alert-danger': widget.errorMessage }"
                  v-if="widget"
                  ref="widget"
-                 data-initial-documents="{% for doc in data %}{{ doc.id }},{% endfor %}"
+                 data-initial-documents="{{ docIds|json_encode }}"
                  data-document-widget {{ block('widget_attributes') }}>
                 {% if label is empty -%}
                     {% set label = name|humanize %}
@@ -188,10 +195,15 @@
                     </ul>
                     <div class="uk-navbar-content uk-navbar-flip">
                         <div class="documents-widget-quick-creation uk-button-group">
-                            <document-explorer-button :is-active="widget.isActive">
+                            <rz-button :is-active="widget.isActive" :callback="onDocumentExplorerButtonClick">
+                                <i class="uk-icon-rz-explore"></i>
                                 {% trans %}documents.toggle-explorer{% endtrans %}
-                            </document-explorer-button>
-                            <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
+                            </rz-button>
+
+                            <rz-button :is-active="widget.isDropzoneEnable" :callback="onDropzoneButtonClick">
+                                <i class="uk-icon-rz-upload"></i>
+                                {% trans %}documents.toggle-uploader{% endtrans %}
+                            </rz-button>
                         </div>
                     </div>
                 </nav>
@@ -208,20 +220,23 @@
                         <div class="spinner"></div>
                     </transition>
 
-                    <ul class="uk-sortable documents-widget-sortable"
-                        data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}"
+                    <ul class="documents-widget-sortable"
                         data-input-name="{{ name }}">
-                        <document-preview-list-item
-                            v-for="(document, index) in widget.documents"
-                            :key="document.id"
-                            :trans="trans"
-                            :widget-name="widgetName"
-                            :is-document-explorer="false"
-                            :index="index"
-                            :document="document">
-                        </document-preview-list-item>
+                        <draggable v-model="documents" :options="{ group: 'document' }">
+                            <document-preview-list-item
+                                v-for="(document, index) in widget.documents"
+                                :key="document.id"
+                                :trans="trans"
+                                :widget-name="widgetName"
+                                :is-document-explorer="false"
+                                :remove-document="removeDocument"
+                                :index="index"
+                                :document="document">
+                            </document-preview-list-item>
+                        </draggable>
                     </ul>
                 </div>
+                <dropzone v-if="widget.isDropzoneEnable" id="dropzone{{ random() }}" :language="dropzoneLanguage" url="{{ path('documentsUploadPage', {_format: 'json'}) }}" v-on:vdropzone-success="showSuccess"></dropzone>
             </div>
         </document-widget-container>
     {% endspaceless %}
