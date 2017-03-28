@@ -170,8 +170,13 @@
 
 {% block documents_widget %}
     {% spaceless %}
-        <div class="uk-form-row documents-widget" data-document-widget {{ block('widget_attributes') }}>
-            <document-widget-container data-vuejs>
+        <document-widget-container data-vuejs inline-template>
+            <div class="uk-form-row documents-widget"
+                 :class="{ 'uk-active' : isActive, 'uk-alert-danger': widget.errorMessage }"
+                 v-if="widget"
+                 ref="widget"
+                 data-initial-documents="{% for doc in data %}{{ doc.id }},{% endfor %}"
+                 data-document-widget {{ block('widget_attributes') }}>
                 {% if label is empty -%}
                     {% set label = name|humanize %}
                 {%- endif -%}
@@ -183,29 +188,42 @@
                     </ul>
                     <div class="uk-navbar-content uk-navbar-flip">
                         <div class="documents-widget-quick-creation uk-button-group">
-                            <document-explorer-button>
+                            <document-explorer-button :is-active="widget.isActive">
                                 {% trans %}documents.toggle-explorer{% endtrans %}
                             </document-explorer-button>
                             <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
                         </div>
                     </div>
                 </nav>
-                <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
-                    {% for doc in data %}
-                        {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
-                        'document': doc,
-                        'name': name,
-                        'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
-                        'read_only': read_only,
-                        'disabled': disabled,
-                        'required': required,
-                        'nodeSource': nodeSource,
-                        'attr': attr
-                        } only %}
-                    {% endfor %}
-                </ul>
-            </document-widget-container>
-        </div>
+
+                <template v-if="widget.errorMessage">
+                    <p class="uk-text-danger">
+                        ${ widget.errorMessage }
+                    </p>
+                </template>
+
+                <div class="documents-widget-sortable-container">
+
+                    <transition name="fade" v-if="widget.isLoading">
+                        <div class="spinner"></div>
+                    </transition>
+
+                    <ul class="uk-sortable documents-widget-sortable"
+                        data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}"
+                        data-input-name="{{ name }}">
+                        <document-preview-list-item
+                            v-for="(document, index) in widget.documents"
+                            :key="document.id"
+                            :trans="trans"
+                            :widget-name="widgetName"
+                            :is-document-explorer="false"
+                            :index="index"
+                            :document="document">
+                        </document-preview-list-item>
+                    </ul>
+                </div>
+            </div>
+        </document-widget-container>
     {% endspaceless %}
 {% endblock documents_widget %}
 

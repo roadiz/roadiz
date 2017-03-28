@@ -1,17 +1,21 @@
 <template>
-    <a class="uk-button uk-button-small" href="#" @click.prevent="toggleExplorer" data-document-widget-toggle-explorer>
+    <a class="uk-button uk-button-small"
+       :class="{ 'uk-active' : isActive }"
+       href="#" @click.prevent="onClick"
+       data-document-widget-toggle-explorer>
         <i class="uk-icon-rz-explore"></i>
         <slot></slot>
     </a>
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
-
     export default {
         name: 'document-explorer-button',
+        props: ['isActive'],
         methods: {
-            ...mapActions('documentExplorer', ['toggleExplorer']),
+            onClick: function () {
+                this.$parent.onDocumentExplorerButtonClick()
+            }
         }
     }
 </script>

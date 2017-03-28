@@ -1,14 +1,22 @@
 import Vuex from 'vuex'
+import {
+    KEYBOARD_EVENT_SAVE
+} from './mutationTypes'
 
-// modules
-import counter from './modules/counter'
+// Modules
 import nodesSourceSearch from './modules/nodesSourceSearchStoreModule'
 import documentExplorer from './modules/documentExplorerStoreModule'
+import documentWidgets from './modules/documentWidgetsStoreModule'
 
 export default new Vuex.Store({
     modules: {
-        counter,
         nodesSourceSearch,
-        documentExplorer
+        documentExplorer,
+        documentWidgets
+    },
+    mutations: {
+        [KEYBOARD_EVENT_SAVE] () {
+            // TODO
+        }
     }
 })

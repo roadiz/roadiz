@@ -71,6 +71,9 @@
                 <section id="main-content" class="main-container-section" data-uk-observe>
                     <div id="main-content-overlay"></div>
                     <div id="main-content-scrollable">
+                        {% block permanentComponents %}
+                            <overlay data-vuejs></overlay>
+                        {% endblock %}
                         {% block content %}
                             <h1>{% trans %}Welcome{% endtrans %}</h1>
                         {% endblock %}
@@ -162,6 +165,7 @@
                     'documentsBulkDeletePage' :   '{{ path('documentsBulkDeletePage') }}',
                     'documentsBulkDownloadPage' : '{{ path('documentsBulkDownloadPage') }}',
                     'documentsAjaxExplorer' :     '{{ path('documentsAjaxExplorerPage') }}',
+                    'documentsAjaxByArray' :      '{{ path('documentsAjaxByArray') }}',
                     'foldersAjaxExplorer' :       '{{ path('foldersAjaxExplorerPage') }}',
                     'nodesAjaxExplorer' :         '{{ path('nodesAjaxExplorerPage') }}',
                     'customFormsAjaxExplorer' :   '{{ path('customFormsAjaxExplorerPage') }}',

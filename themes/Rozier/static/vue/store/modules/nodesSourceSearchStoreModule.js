@@ -4,7 +4,11 @@ import {
     NODES_SEARCH_SUCCESS,
     NODES_SEARCH_RESET,
     NODES_SEARCH_FAILED,
-    DOCUMENT_EXPLORER_REQUEST
+
+    KEYBOARD_EVENT_ESCAPE,
+
+    NODES_SEARCH_ENABLE_FOCUS,
+    NODES_SEARCH_DISABLE_FOCUS
 } from '../mutationTypes'
 
 /**
@@ -12,22 +16,29 @@ import {
  */
 const state = {
     searchTerms: null,
-    items: []
+    items: [],
+    isFocus: false,
+    isOpen: false
 }
 
 /**
  * Getters
  */
 const getters = {
-    getSearchTerms: state => state.searchTerms,
-    getItems: state => state.items
+
 }
 
 /**
  * Actions
  */
 const actions =  {
-    updateSearch ({ commit }, searchTerms = '') {
+    nodeSourceSearchEnableFocus ({ commit }) {
+        commit(NODES_SEARCH_ENABLE_FOCUS)
+    },
+    nodeSourceSearchDisableFocus ({ commit }) {
+        commit(NODES_SEARCH_DISABLE_FOCUS)
+    },
+    nodesSourceSearchUpdate ({ commit }, searchTerms = '') {
         // If search terms is not correct
         if (!searchTerms || searchTerms.length <= 1) {
             // Reset items list
@@ -51,6 +62,12 @@ const actions =  {
  * Mutations
  */
 const mutations = {
+    [NODES_SEARCH_ENABLE_FOCUS] (state) {
+        state.isFocus = true
+    },
+    [NODES_SEARCH_DISABLE_FOCUS] (state) {
+        state.isFocus = false
+    },
     [NODES_SEARCH_REQUEST] (state, { searchTerms }) {
         state.searchTerms = searchTerms
     },
@@ -62,11 +79,13 @@ const mutations = {
     },
     [NODES_SEARCH_RESET] (state) {
         state.items = []
+    },
+    [KEYBOARD_EVENT_ESCAPE] (state) {
+        state.isFocus = false
     }
 }
 
 export default {
-    namespaced: true,
     state,
     getters,
     actions,

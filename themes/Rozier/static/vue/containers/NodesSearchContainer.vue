@@ -11,22 +11,37 @@
         data: function () {
             return {
                 searchTerms: null,
-                isFocus: false,
             }
         },
         computed: {
-            ...mapState('nodesSourceSearch', ['searchTerms', 'items']),
+            ...mapState({
+                items: state => state.nodesSourceSearch.items,
+                isFocus: state => state.nodesSourceSearch.isFocus,
+                isOpen: state => state.nodesSourceSearch.isOpen,
+            })
         },
         methods: {
-            ...mapActions('nodesSourceSearch', ['updateSearch']),
-            toggleFocus: _.debounce(function () {
-                this.isFocus = !this.isFocus
+            ...mapActions([
+                'nodesSourceSearchUpdate',
+                'nodeSourceSearchEnableFocus',
+                'nodeSourceSearchDisableFocus'
+            ]),
+            enableFocus: _.debounce(function () {
+                this.nodeSourceSearchEnableFocus()
+            }, 50),
+            disableFocus: _.debounce(function () {
+                this.nodeSourceSearchDisableFocus()
             }, 50)
         },
         watch: {
             searchTerms: _.debounce(function (newValue, oldValue) {
-                this.updateSearch(newValue, oldValue)
-            }, 350)
+                this.nodesSourceSearchUpdate(newValue, oldValue)
+            }, 350),
+            isFocus: function () {
+                if (!this.isFocus) {
+                    this.$refs.searchTermsInput.blur()
+                }
+            }
         },
         components: {
             AjaxLink

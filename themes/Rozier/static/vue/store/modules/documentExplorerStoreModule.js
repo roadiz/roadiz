@@ -5,7 +5,12 @@ import {
     DOCUMENT_EXPLORER_RESET,
     DOCUMENT_EXPLORER_FAILED,
     DOCUMENT_EXPLORER_OPEN,
-    DOCUMENT_EXPLORER_CLOSE
+    DOCUMENT_EXPLORER_CLOSE,
+    DOCUMENT_EXPLORER_LOAD_MORE,
+    DOCUMENT_EXPLORER_LOAD_MORE_SUCCESS,
+    DOCUMENT_EXPLORER_IS_LOADED,
+
+    KEYBOARD_EVENT_ESCAPE
 } from '../mutationTypes'
 
 /**
@@ -13,9 +18,13 @@ import {
  */
 const state = {
     isOpen: false,
+    isLoading: false,
+    isLoadingMore: false,
+    documentWidget: null,
     searchTerms: null,
     documents: [],
     trans: null,
+    filters: null,
     error: null,
 }
 
@@ -23,44 +32,71 @@ const state = {
  * Getters
  */
 const getters = {
-    getSearchTerm: state => state.searchTerms,
-    getDocuments: state => state.documents
+
 }
 
 /**
  * Actions
  */
 const actions =  {
-    openExplorer ({ commit, dispatch }) {
-        // Make the search
-        dispatch('makeSearch')
+    documentExplorerButtonClick ({ commit }) {
+        this.documentWidget()
+    },
+    async documentExplorerOpen ({ commit, dispatch, state }) {
+        // Prevent if panel is already open
+        if (state.isOpen) return
+
+        // Open panel explorer
+        commit(DOCUMENT_EXPLORER_RESET)
 
         // Open panel explorer
         commit(DOCUMENT_EXPLORER_OPEN)
+
+        // Make the search
+        await dispatch('documentExplorerMakeSearch')
+
+        // Open panel explorer
+        commit(DOCUMENT_EXPLORER_IS_LOADED)
     },
-    closeExplorer ({ commit }) {
+    documentExplorerClose ({ commit }) {
         commit(DOCUMENT_EXPLORER_CLOSE)
     },
-    toggleExplorer ({ commit, dispatch, state }) {
+    documentExplorerToggle ({ dispatch, state }) {
         if (state.isOpen) {
-            dispatch('closeExplorer')
+            dispatch('documentExplorerClose')
         } else {
-            dispatch('openExplorer')
+            dispatch('documentExplorerOpen')
         }
     },
-    updateSearch ({ commit, dispatch }, searchTerms = '') {
+    documentExplorerUpdateSearch ({ commit, dispatch }, searchTerms = '') {
         commit(DOCUMENT_EXPLORER_REQUEST, { searchTerms })
 
         // Make the search
-        dispatch('makeSearch', searchTerms)
+        dispatch('documentExplorerMakeSearch', searchTerms)
     },
-    makeSearch ({ commit }, searchTerms = '') {
-        api.getDocumentsFromSearchTerms(searchTerms)
+    documentExplorerMakeSearch ({ commit }, searchTerms = '') {
+        return api.getDocuments(searchTerms)
             .then((result) => {
                 if (!result) {
                     commit(DOCUMENT_EXPLORER_FAILED)
                 } else {
                     commit(DOCUMENT_EXPLORER_SUCCESS, { result })
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                commit(DOCUMENT_EXPLORER_FAILED, { error })
+            })
+    },
+    documentExplorerLoadMore ({ commit }) {
+        commit(DOCUMENT_EXPLORER_LOAD_MORE)
+
+        api.getDocuments(state.searchTerms, state.filters)
+            .then((result) => {
+                if (!result) {
+                    commit(DOCUMENT_EXPLORER_FAILED)
+                } else {
+                    commit(DOCUMENT_EXPLORER_LOAD_MORE_SUCCESS, { result })
                 }
             })
             .catch((error) => {
@@ -78,30 +114,48 @@ const mutations = {
         state.searchTerms = searchTerms
     },
     [DOCUMENT_EXPLORER_SUCCESS] (state, { result }) {
-        console.log(result)
         state.documents = result.documents
         state.documentsCount = result.documentsCount
         state.trans = result.trans
+        state.filters = result.filters
+    },
+    [DOCUMENT_EXPLORER_LOAD_MORE] (state) {
+        state.isLoadingMore = true
+    },
+    [DOCUMENT_EXPLORER_LOAD_MORE_SUCCESS] (state, { result }) {
+        state.isLoadingMore = false
+        state.documents =  [...state.documents, ...result.documents]
+        state.documentsCount = result.documentsCount
+        state.trans = result.trans
+        state.filters = result.filters
     },
     [DOCUMENT_EXPLORER_RESET] (state) {
         state.items = []
-        state.searchTerms = ''
+        state.searchTerms = null
+        state.filters = null
     },
     [DOCUMENT_EXPLORER_FAILED] (state, { error }) {
-        state.items = []
+        state.isLoading = false
+        state.isLoadingMore = false
         state.error = 'Request failed'
     },
     [DOCUMENT_EXPLORER_OPEN] (state) {
         state.isOpen = true
+        state.isLoading = true
+    },
+    [DOCUMENT_EXPLORER_IS_LOADED] (state) {
+        state.isLoading = false
     },
     [DOCUMENT_EXPLORER_CLOSE] (state) {
+        state.isOpen = false
+    },
+    [KEYBOARD_EVENT_ESCAPE] () {
         state.isOpen = false
         state.searchTerms = null
     }
 }
 
 export default {
-    namespaced: true,
     state,
     getters,
     actions,

@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "mousetrap": "^1.6.0"
   }
 }

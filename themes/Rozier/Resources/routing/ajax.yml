@@ -51,6 +51,11 @@ documentsAjaxExplorerPage:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction
         _format: json
+documentsAjaxByArray:
+    path:     /documents/list
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::listAction
+        _format: json
 foldersAjaxExplorerPage:
     path:     /folders/explore
     defaults:
