@@ -94,6 +94,11 @@
             },
             showSuccess: function (file, response) {
                 this.addDocument(response.document)
+            },
+            showError: function (file, error, xhr) {
+                console.log(file)
+                console.log(error)
+                console.log(xhr)
             }
         },
         components: {

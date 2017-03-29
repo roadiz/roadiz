@@ -123,7 +123,27 @@ export default {
                 dictMaxFilesExceeded: this.language.dictMaxFilesExceeded,
                 dictRemoveFile: this.language.dictRemoveFile,
                 dictRemoveFileConfirmation: this.language.dictRemoveFileConfirmation,
-                dictResponseError: this.language.dictResponseError
+                dictResponseError: this.language.dictResponseError,
+                error: (file, response) => {
+                    let errorMessage
+
+                    if (response.error) {
+                        errorMessage = response.error
+                    } else {
+                        errorMessage = 'Error'
+                    }
+
+                    file.previewElement.classList.add("dz-error");
+                    let ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                    let results = [];
+
+                    for (let i = 0, len = ref.length; i < len; i++) {
+                        let node = ref[i];
+                        results.push(node.textContent = errorMessage);
+                    }
+
+                    return results;
+                }
             })
 
             let $dzMessage = $(element).find('.dz-message');

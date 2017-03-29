@@ -236,7 +236,13 @@
                         </draggable>
                     </ul>
                 </div>
-                <dropzone v-if="widget.isDropzoneEnable" id="dropzone{{ random() }}" :language="dropzoneLanguage" url="{{ path('documentsUploadPage', {_format: 'json'}) }}" v-on:vdropzone-success="showSuccess"></dropzone>
+                <dropzone v-if="widget.isDropzoneEnable"
+                          id="dropzone{{ random() }}"
+                          :language="dropzoneLanguage"
+                          url="{{ path('documentsUploadPage', {_format: 'json'}) }}"
+                          v-on:vdropzone-error="showError"
+                          v-on:vdropzone-success="showSuccess">
+                </dropzone>
             </div>
         </document-widget-container>
     {% endspaceless %}

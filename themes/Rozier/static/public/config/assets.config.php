@@ -4,7 +4,7 @@ return array(
         'global' => array(
             'css' => array(
                 '/vendor.ce132d7a.css',
-                '/style.92894b00.css',
+                '/style.9bdfd530.css',
             ),
             'js' => array(
                 '/auto-update.f46be045.min.js',
@@ -85,7 +85,7 @@ return array(
         'custom-forms' => array(
             'css' => array(
                 '/vendor.ce132d7a.css',
-                '/custom-forms-front.68120ae7.css',
+                '/custom-forms-front.176c7ebe.css',
             ),
             'js' => array(
                 '/rozier-backend-theme-cforms.b116bc6e.min.js',

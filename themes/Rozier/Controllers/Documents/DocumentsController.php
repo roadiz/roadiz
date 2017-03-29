@@ -28,6 +28,7 @@
  */
 namespace Themes\Rozier\Controllers\Documents;
 
+use Intervention\Image\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
