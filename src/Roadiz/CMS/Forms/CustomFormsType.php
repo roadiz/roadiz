@@ -29,11 +29,13 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -57,7 +59,7 @@ class CustomFormsType extends AbstractType
 
     /**
      * @param  FormBuilderInterface $builder
-     * @param  array                $options
+     * @param  array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -69,6 +71,7 @@ class CustomFormsType extends AbstractType
                 "label" => $field->getLabel(),
                 'attr' => [
                     'data-description' => $field->getDescription(),
+                    'data-desc' => $field->getDescription(),
                 ],
             ];
 
@@ -128,6 +131,50 @@ class CustomFormsType extends AbstractType
 
             $builder->add($field->getName(), $type, $option);
         }
+
+        /*
+         * Add Google Recaptcha if setting optionnal options.
+         */
+        if (!empty($options['recaptcha_public_key']) &&
+            !empty($options['recaptcha_private_key']) &&
+            !empty($options['request'])) {
+
+            $verifyUrl = !empty($options['recaptcha_verifyurl']) ?
+                $options['recaptcha_verifyurl'] :
+                'https://www.google.com/recaptcha/api/siteverify';
+
+            $builder->add('recaptcha', new RecaptchaType(), [
+                'label' => false,
+                'configs' => [
+                    'publicKey' => $options['recaptcha_public_key'],
+                ],
+                'constraints' => [
+                    new Recaptcha($options['request'], [
+                        'privateKey' => $options['recaptcha_private_key'],
+                        'verifyUrl' => $verifyUrl,
+                    ]),
+                ],
+            ]);
+
+        }
+    }
+
+    /**
+     * @param OptionsResolver $optionsResolver
+     */
+    public function configureOptions(OptionsResolver $optionsResolver)
+    {
+        $optionsResolver->setDefaults([
+            'recaptcha_public_key' => null,
+            'recaptcha_private_key' => null,
+            'recaptcha_verifyurl' => null,
+            'request' => null,
+        ]);
+
+        $optionsResolver->setAllowedTypes('request', ['Symfony\Component\HttpFoundation\Request', 'null']);
+        $optionsResolver->setAllowedTypes('recaptcha_public_key', ['string', 'null', 'boolean']);
+        $optionsResolver->setAllowedTypes('recaptcha_private_key', ['string', 'null', 'boolean']);
+        $optionsResolver->setAllowedTypes('recaptcha_verifyurl', ['string', 'null', 'boolean']);
     }
 
     /**

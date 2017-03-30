@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class CustomFormHelper
@@ -69,12 +70,12 @@ class CustomFormHelper
      * Create or update custom-form answer and its attributes from
      * a submitted form data.
      *
-     * @param Form $form
+     * @param FormInterface $form
      * @param CustomFormAnswer|null $answer
      * @param string $ipAddress
      * @return CustomFormAnswer
      */
-    public function parseAnswerFormData(Form $form, CustomFormAnswer $answer = null, $ipAddress = "")
+    public function parseAnswerFormData(FormInterface $form, CustomFormAnswer $answer = null, $ipAddress = "")
     {
         if ($form->isValid()) {
             /*
@@ -122,13 +123,13 @@ class CustomFormHelper
      * @param FormFactory $formFactory
      * @param CustomFormAnswer $answer
      * @param bool $forceExpanded
-     * @param array $options
+     * @param array $options Options passed to final form
      * @return \Symfony\Component\Form\FormInterface
      */
     public function getFormFromAnswer(FormFactory $formFactory, CustomFormAnswer $answer = null, $forceExpanded = false, array $options = [])
     {
         $data = null;
-        
+
         if (null !== $answer) {
             $data = [];
             /** @var CustomFormFieldAttribute $attribute */

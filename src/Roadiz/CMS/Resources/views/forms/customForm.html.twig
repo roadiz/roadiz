@@ -11,22 +11,8 @@
 
     <article class="content">
         {% form_theme form 'customForms.html.twig' %}
-        <form id="add-custom-form-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-
-            {% for form_field in form %}
-            <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
-                <div class="uk-form-row form-col form-col-{{ form_field.vars.block_prefixes[1] }} form-col-{{ form_field.vars.name }}{% if fields[loop.index0].required  %} required{% endif %}">
-                    {{ form_label(form_field) }}
-                    <div class="uk-form-description">
-                        {{ fields[loop.index0].description|markdown }}
-                    </div>
-                    {{ form_errors(form_field) }}
-                    {{ form_widget(form_field) }}
-                </div>
-            </div>
-            {% endfor %}
-            {{ form_rest(form) }}
-
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#add-custom-form-form" class="uk-button uk-button-primary rz-action-save" type="submit">
@@ -35,7 +21,8 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </section>
 {% endblock %}
