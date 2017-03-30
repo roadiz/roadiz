@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -331,6 +332,16 @@ abstract class Controller implements ContainerAwareInterface
                 throw $e;
             }
         }
+    }
+
+    /**
+     * @param array $data
+     * @param int $httpStatus
+     * @return JsonResponse
+     */
+    public function renderJson(array $data = [], $httpStatus = JsonResponse::HTTP_OK)
+    {
+        return new JsonResponse($data, $httpStatus);
     }
 
     /**
