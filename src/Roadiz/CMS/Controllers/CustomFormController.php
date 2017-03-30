@@ -225,7 +225,7 @@ class CustomFormController extends CmsController
      * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param boolean $forceExpanded
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     public static function buildForm(
         Request $request,
@@ -234,7 +234,11 @@ class CustomFormController extends CmsController
         $forceExpanded = false
     ) {
         $defaults = $request->query->all();
-        return $formFactory->create(new CustomFormsType($customForm, $forceExpanded), $defaults);
+        return $formFactory->create(new CustomFormsType($customForm, $forceExpanded), $defaults, [
+            'recaptcha_public_key' => SettingsBag::get('recaptcha_public_key'),
+            'recaptcha_private_key' => SettingsBag::get('recaptcha_private_key'),
+            'request' => $request,
+        ]);
     }
 
     /**
