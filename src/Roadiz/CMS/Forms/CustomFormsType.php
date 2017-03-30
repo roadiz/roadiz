@@ -138,7 +138,6 @@ class CustomFormsType extends AbstractType
         if (!empty($options['recaptcha_public_key']) &&
             !empty($options['recaptcha_private_key']) &&
             !empty($options['request'])) {
-
             $verifyUrl = !empty($options['recaptcha_verifyurl']) ?
                 $options['recaptcha_verifyurl'] :
                 'https://www.google.com/recaptcha/api/siteverify';
@@ -155,7 +154,6 @@ class CustomFormsType extends AbstractType
                     ]),
                 ],
             ]);
-
         }
     }
 
