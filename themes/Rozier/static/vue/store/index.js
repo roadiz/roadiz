@@ -16,6 +16,9 @@ export default new Vuex.Store({
         folderExplorer,
         documentWidgets
     },
+    state: {
+        translations: RozierRoot.messages
+    },
     mutations: {
         [KEYBOARD_EVENT_SAVE] () {
             // TODO

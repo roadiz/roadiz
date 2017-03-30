@@ -26,7 +26,7 @@ const state = {
     trans: null,
     filters: null,
     error: null,
-    currentFolderId: null
+    currentFolder: null
 }
 
 /**
@@ -59,8 +59,9 @@ const actions =  {
         // Open panel explorer
         commit(DOCUMENT_EXPLORER_IS_LOADED)
     },
-    documentExplorerClose ({ commit }) {
+    documentExplorerClose ({ commit, dispatch }) {
         commit(DOCUMENT_EXPLORER_CLOSE)
+        dispatch('folderExplorerClose')
     },
     documentExplorerToggle ({ dispatch, state }) {
         if (state.isOpen) {
@@ -69,14 +70,14 @@ const actions =  {
             dispatch('documentExplorerOpen')
         }
     },
-    documentExplorerUpdateSearch ({ commit, dispatch }, { searchTerms, folderId }) {
-        commit(DOCUMENT_EXPLORER_REQUEST, { searchTerms, folderId })
+    documentExplorerUpdateSearch ({ commit, dispatch }, { searchTerms, folder }) {
+        commit(DOCUMENT_EXPLORER_REQUEST, { searchTerms, folder })
 
         // Make the search
-        dispatch('documentExplorerMakeSearch', { searchTerms, folderId })
+        dispatch('documentExplorerMakeSearch', { searchTerms, folder })
     },
-    documentExplorerMakeSearch ({ commit }, { searchTerms, folderId }) {
-        return api.getDocuments({ searchTerms, folderId })
+    documentExplorerMakeSearch ({ commit }, { searchTerms, folder }) {
+        return api.getDocuments({ searchTerms, folder })
             .then((result) => {
                 if (!result) {
                     commit(DOCUMENT_EXPLORER_FAILED)
@@ -89,12 +90,12 @@ const actions =  {
                 commit(DOCUMENT_EXPLORER_FAILED, { error })
             })
     },
-    documentExplorerLoadMore ({ commit, state }, { searchTerms }) {
+    documentExplorerLoadMore ({ commit, state }, { searchTerms, folder }) {
         commit(DOCUMENT_EXPLORER_LOAD_MORE)
 
         const filters = state.filters
 
-        api.getDocuments({ searchTerms, filters, folderId })
+        api.getDocuments({ searchTerms, filters, folder })
             .then((result) => {
                 if (!result) {
                     commit(DOCUMENT_EXPLORER_FAILED)
@@ -113,11 +114,13 @@ const actions =  {
  * Mutations
  */
 const mutations = {
-    [DOCUMENT_EXPLORER_REQUEST] (state, { searchTerms, folderId }) {
-        state.currentFolderId = folderId
+    [DOCUMENT_EXPLORER_REQUEST] (state, { searchTerms, folder }) {
+        state.isLoading = true
+        state.currentFolder = folder
         state.searchTerms = searchTerms
     },
     [DOCUMENT_EXPLORER_SUCCESS] (state, { result }) {
+        state.isLoading = false
         state.documents = result.documents
         state.documentsCount = result.documentsCount
         state.trans = result.trans
@@ -127,6 +130,7 @@ const mutations = {
         state.isLoadingMore = true
     },
     [DOCUMENT_EXPLORER_LOAD_MORE_SUCCESS] (state, { result }) {
+        state.isLoading = false
         state.isLoadingMore = false
         state.documents =  [...state.documents, ...result.documents]
         state.documentsCount = result.documentsCount
@@ -152,6 +156,8 @@ const mutations = {
     },
     [DOCUMENT_EXPLORER_CLOSE] (state) {
         state.isOpen = false
+        state.isLoading = false
+        state.currentFolder = null
     },
     [KEYBOARD_EVENT_ESCAPE] () {
         state.isOpen = false

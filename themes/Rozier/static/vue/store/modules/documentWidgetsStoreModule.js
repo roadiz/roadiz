@@ -14,6 +14,7 @@ import {
     DOCUMENT_EXPLORER_INIT_DATA_REQUEST,
     DOCUMENT_EXPLORER_INIT_DATA_REQUEST_SUCCESS,
     DOCUMENT_EXPLORER_INIT_DATA_REQUEST_FAILED,
+    DOCUMENT_EXPLORER_INIT_DATA_REQUEST_EMPTY,
     DOCUMENT_EXPLORER_CLOSE
 } from '../mutationTypes'
 import api from '../../api'
@@ -56,6 +57,7 @@ const actions = {
         commit(DOCUMENT_EXPLORER_INIT_DATA_REQUEST, { documentWidget })
 
         if (!ids || ids.length === 0) {
+            commit(DOCUMENT_EXPLORER_INIT_DATA_REQUEST_EMPTY, { documentWidget })
             return
         }
 
@@ -165,6 +167,9 @@ const mutations = {
     [DOCUMENT_EXPLORER_INIT_DATA_REQUEST_FAILED] (state, { documentWidget, error }) {
         documentWidget.isLoading = false
         documentWidget.errorMessage = error.message
+    },
+    [DOCUMENT_EXPLORER_INIT_DATA_REQUEST_EMPTY] (state, { documentWidget }) {
+        documentWidget.isLoading = false
     },
     [KEYBOARD_EVENT_ESCAPE] (state) {
         state = disableActiveDocumentWidget(state)

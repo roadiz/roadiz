@@ -29,6 +29,10 @@
         color: darken(#D5D5D5, 10);
         transition: color 0.3s linear;
 
+        .icon {
+            font-size: 14px;
+        }
+
         &:hover {
             text-decoration: none;
             color: white;
@@ -43,7 +47,7 @@
         }
     }
 
-    .folder-close {
+    .folder-infos {
         height: 60px;
         margin-left: 0px;
         margin-top: 35px;
@@ -52,17 +56,23 @@
         border-bottom: 1px solid #444444;
         padding: 0px;
 
-        a {
-            font-size: 26px;
+        .infos-content {
+            font-size: 12px;
             border-bottom: 1px solid #d5d5d5;
             padding: 5px 5px 0;
             margin: 0 20px;
             display: inline-block;
             color: #747474;
-            height: 60px;
+            height: 41px;
             .box-sizing();
-            bottom: -1px;
+            bottom: -20px;
             position: relative;
+            width: calc(~'100% - 40px');
+
+            .number {
+                display: inline-block;
+                width: 35px;
+            }
 
             i {
                 font-size: 22px;

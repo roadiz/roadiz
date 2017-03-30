@@ -13,7 +13,7 @@
                         <i class="uk-icon-rz-folder-tree-mini"></i>
                     </a>
                     <div class="document-widget-explorer-search">
-                        <form action="#" method="POST" class="explorer-search uk-form">
+                        <form action="#" method="POST" class="explorer-search uk-form" v-on:submit.prevent>
                             <div class="uk-form-icon">
                                 <i class="uk-icon-search"></i>
                                 <input id="documents-search-input"
@@ -21,6 +21,7 @@
                                        name="searchTerms"
                                        value=""
                                        v-model="searchTerms"
+                                       @keyup.enter.stop.prevent="manualUpdate"
                                        :placeholder="searchDocumentsPlaceHolder" />
                                 </div>
                             </form>
@@ -28,35 +29,37 @@
                     <div class="document-widget-explorer-close" @click.prevent="closeExplorer"><i class="uk-icon-rz-close-explorer"></i></div>
                 </div>
 
-                <ul class="uk-sortable" v-if="!isLoading">
-                    <document-preview-list-item
-                        :isDocumentExplorer="true"
-                        v-for="document in documents"
-                        :key="document.id"
-                        :trans="trans"
-                        :document="document">
-                    </document-preview-list-item>
+                <transition name="fade">
+                    <ul class="uk-sortable" v-if="!isLoading">
+                        <document-preview-list-item
+                            :isDocumentExplorer="true"
+                            v-for="document in documents"
+                            :key="document.id"
+                            :trans="trans"
+                            :document="document">
+                        </document-preview-list-item>
 
-                    <transition name="fade">
-                        <li class="document-widget-explorer-nextpage" v-if="filters && filters.nextPage > 1" @click.prevent="loadMoreDocuments">
-                            <template v-if="!isLoadingMore">
-                                <i class="uk-icon-plus"></i>
-                                <span class="label">{{ trans.moreDocuments }}</span>
-                            </template>
-                            <template v-else>
-                                <transition name="fade">
-                                    <div class="spinner light"></div>
-                                </transition>
-                            </template>
-                        </li>
-                    </transition>
+                        <transition name="fade">
+                            <li class="document-widget-explorer-nextpage" v-if="filters && filters.nextPage > 1" @click.prevent="loadMoreDocuments">
+                                <template v-if="!isLoadingMore">
+                                    <i class="uk-icon-plus"></i>
+                                    <span class="label">{{ trans.moreDocuments }}</span>
+                                </template>
+                                <template v-else>
+                                    <transition name="fade">
+                                        <div class="spinner light"></div>
+                                    </transition>
+                                </template>
+                            </li>
+                        </transition>
 
-                    <transition name="fade">
-                        <li class="document-widget-explorer-infos" v-if="filters && filters.itemCount">
-                            {{ documents.length }} / {{ filters.itemCount }}
-                        </li>
-                    </transition>
-                </ul>
+                        <transition name="fade">
+                            <li class="document-widget-explorer-infos" v-if="filters && filters.itemCount">
+                                {{ documents.length }} / {{ filters.itemCount }}
+                            </li>
+                        </transition>
+                    </ul>
+                </transition>
             </div>
         </div>
     </transition>
@@ -108,6 +111,9 @@
                     documentWidget: null,
                     document
                 })
+            },
+            manualUpdate: function () {
+                this.updateSearch({ searchTerms: this.searchTerms })
             }
         },
         watch: {

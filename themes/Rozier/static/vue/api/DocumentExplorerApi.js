@@ -7,7 +7,7 @@ import request from 'axios'
  * @param {Object} filters
  * @return Promise
  */
-export function getDocuments ({ searchTerms, filters, folderId }) {
+export function getDocuments ({ searchTerms, filters, folder }) {
     const postData = {
         _token: RozierRoot.ajaxToken,
         _action: 'toggleExplorer',
@@ -15,8 +15,8 @@ export function getDocuments ({ searchTerms, filters, folderId }) {
         page: filters ? filters.nextPage : null
     }
 
-    if (folderId) {
-        postData.folderId = folderId
+    if (folder && folder.id) {
+        postData.folderId = folder.id
     }
 
     return request({

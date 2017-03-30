@@ -2,14 +2,23 @@
     <transition name="slide-left-no-opacity">
         <div class="folder-widget-explorer" v-if="isOpen">
             <ul class="folders">
-                <li class="folder-close">
-                    <a href="#" class="folder-item-link" data-folder-id="0" @click.prevent="onResetClick">
-                        <i class="uk-icon-rz-reset"></i>
+                <li class="folder-infos">
+                    <div class="infos-content">
+                        <span class="number">{{ itemCount }}</span>
+                        {{ itemCount > 1 ? translations.documents : translations.document }}
+                    </div>
+                </li>
+                <li class="folder-item">
+                    <a href="#"
+                       class="folder-item-link"
+                       :class="[ currentFolder ? '' : 'active' ]"
+                       @click.prevent="onResetClick">
+                        <i class="uk-icon-rz-unordered-list"></i> {{ translations.see_all }}
                     </a>
                 </li>
                 <folder-explorer-item
                     v-for="(folder, index) in folders"
-                    :current-folder-id="currentFolderId"
+                    :current-folder="currentFolder"
                     :key="index"
                     :on-folder-item-click="onFolderItemClick"
                     :folder="folder">
@@ -29,7 +38,9 @@
                 isLoading: state => state.folderExplorer.isLoading,
                 isOpen: state => state.folderExplorer.isOpen,
                 folders: state => state.folderExplorer.folders,
-                currentFolderId: state => state.documentExplorer.currentFolderId
+                itemCount: state => state.documentExplorer.filters.itemCount,
+                currentFolder: state => state.documentExplorer.currentFolder,
+                translations: state => state.translations
             })
         },
         methods: {
@@ -38,12 +49,12 @@
             ]),
             onFolderItemClick: function (folder) {
                 this.documentExplorerUpdateSearch({
-                    folderId: folder.id
+                    folder: folder
                 })
             },
             onResetClick: function () {
                 this.documentExplorerUpdateSearch({
-                    folderId: null
+                    folder: null
                 })
             }
         },
