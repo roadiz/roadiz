@@ -85,7 +85,10 @@
             </div>
         </div>
 
-        <document-explorer-container id="document-explorer"></document-explorer-container>
+        <div id="vue-containers">
+            <folder-explorer-container></folder-explorer-container>
+            <document-explorer-container></document-explorer-container>
+        </div>
 
         <!-- ##debug_panel## -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -178,6 +181,8 @@
                     'ajaxSessionMessages':        '{{ path('ajaxSessionMessages') }}'
                 }
             };
+
+            var RozierRoot = temp
         </script>
         <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
 

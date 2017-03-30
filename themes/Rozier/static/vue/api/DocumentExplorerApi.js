@@ -7,17 +7,21 @@ import request from 'axios'
  * @param {Object} filters
  * @return Promise
  */
-export function getDocuments (searchTerms, filters) {
+export function getDocuments ({ searchTerms, filters, folderId }) {
     const postData = {
-        _token: Rozier.ajaxToken,
+        _token: RozierRoot.ajaxToken,
         _action: 'toggleExplorer',
         search: searchTerms,
         page: filters ? filters.nextPage : null
     }
 
+    if (folderId) {
+        postData.folderId = folderId
+    }
+
     return request({
         method: 'GET',
-        url: Rozier.routes.documentsAjaxExplorer,
+        url: RozierRoot.routes.documentsAjaxExplorer,
         params: postData
     })
         .then((response) => {
@@ -42,14 +46,14 @@ export function getDocuments (searchTerms, filters) {
  */
 export function getDocumentsByIds (ids = []) {
     const postData = {
-        _token: Rozier.ajaxToken,
+        _token: RozierRoot.ajaxToken,
         _action: 'documentsByIds',
         ids: ids
     }
 
     return request({
         method: 'GET',
-        url: Rozier.routes.documentsAjaxByArray,
+        url: RozierRoot.routes.documentsAjaxByArray,
         params: postData
     })
         .then((response) => {

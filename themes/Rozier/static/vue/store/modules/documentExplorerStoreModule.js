@@ -26,6 +26,7 @@ const state = {
     trans: null,
     filters: null,
     error: null,
+    currentFolderId: null
 }
 
 /**
@@ -53,7 +54,7 @@ const actions =  {
         commit(DOCUMENT_EXPLORER_OPEN)
 
         // Make the search
-        await dispatch('documentExplorerMakeSearch')
+        await dispatch('documentExplorerMakeSearch', {})
 
         // Open panel explorer
         commit(DOCUMENT_EXPLORER_IS_LOADED)
@@ -68,14 +69,14 @@ const actions =  {
             dispatch('documentExplorerOpen')
         }
     },
-    documentExplorerUpdateSearch ({ commit, dispatch }, searchTerms = '') {
-        commit(DOCUMENT_EXPLORER_REQUEST, { searchTerms })
+    documentExplorerUpdateSearch ({ commit, dispatch }, { searchTerms, folderId }) {
+        commit(DOCUMENT_EXPLORER_REQUEST, { searchTerms, folderId })
 
         // Make the search
-        dispatch('documentExplorerMakeSearch', searchTerms)
+        dispatch('documentExplorerMakeSearch', { searchTerms, folderId })
     },
-    documentExplorerMakeSearch ({ commit }, searchTerms = '') {
-        return api.getDocuments(searchTerms)
+    documentExplorerMakeSearch ({ commit }, { searchTerms, folderId }) {
+        return api.getDocuments({ searchTerms, folderId })
             .then((result) => {
                 if (!result) {
                     commit(DOCUMENT_EXPLORER_FAILED)
@@ -88,10 +89,12 @@ const actions =  {
                 commit(DOCUMENT_EXPLORER_FAILED, { error })
             })
     },
-    documentExplorerLoadMore ({ commit }) {
+    documentExplorerLoadMore ({ commit, state }, { searchTerms }) {
         commit(DOCUMENT_EXPLORER_LOAD_MORE)
 
-        api.getDocuments(state.searchTerms, state.filters)
+        const filters = state.filters
+
+        api.getDocuments({ searchTerms, filters, folderId })
             .then((result) => {
                 if (!result) {
                     commit(DOCUMENT_EXPLORER_FAILED)
@@ -110,7 +113,8 @@ const actions =  {
  * Mutations
  */
 const mutations = {
-    [DOCUMENT_EXPLORER_REQUEST] (state, { searchTerms }) {
+    [DOCUMENT_EXPLORER_REQUEST] (state, { searchTerms, folderId }) {
+        state.currentFolderId = folderId
         state.searchTerms = searchTerms
     },
     [DOCUMENT_EXPLORER_SUCCESS] (state, { result }) {

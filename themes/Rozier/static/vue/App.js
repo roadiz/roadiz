@@ -8,6 +8,7 @@ import KeyboardEventService from './services/KeyboardEventService'
 import NodeTypeFieldFormContainer from './containers/NodeTypeFieldFormContainer.vue'
 import NodesSearchContainer from './containers/NodesSearchContainer.vue'
 import DocumentExplorerContainer from './containers/DocumentExplorerContainer.vue'
+import FolderExplorerContainer from './containers/FolderExplorerContainer.vue'
 import DocumentWidgetContainer from './containers/DocumentWidgetContainer.vue'
 
 // Components
@@ -23,13 +24,15 @@ import {
 class AppVue {
     constructor () {
         this.navTrees = null
+        this.containers = null
         this.documentExplorer = null
         this.mainContentComponents = []
         this.registeredContainers = {
             NodeTypeFieldFormContainer,
             NodesSearchContainer,
             DocumentExplorerContainer,
-            DocumentWidgetContainer
+            DocumentWidgetContainer,
+            FolderExplorerContainer
         }
 
         this.registeredComponents = {
@@ -47,7 +50,7 @@ class AppVue {
 
     init () {
         this.buildNavTrees()
-        this.buildDocumentExplorer()
+        this.buildOtherContainers()
         this.buildMainContentComponents()
         this.initServices()
     }
@@ -78,6 +81,12 @@ class AppVue {
     buildDocumentExplorer () {
         if (document.getElementById('document-explorer')) {
             this.documentExplorer = this.buildComponent('#document-explorer')
+        }
+    }
+
+    buildOtherContainers () {
+        if (document.getElementById('vue-containers')) {
+            this.containers = this.buildComponent('#vue-containers')
         }
     }
 
