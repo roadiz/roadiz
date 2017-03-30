@@ -26,7 +26,7 @@
 
     .folder-item-link {
         font-size: 10px;
-        color: #D5D5D5;
+        color: darken(#D5D5D5, 10);
         transition: color 0.3s linear;
 
         &:hover {
@@ -36,6 +36,10 @@
 
         .text {
             padding-left: 4px;
+        }
+
+        &.active {
+            color: #fff;
         }
     }
 

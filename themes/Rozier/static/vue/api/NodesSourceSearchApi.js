@@ -8,14 +8,14 @@ import request from 'axios'
  */
 export function getNodesSourceFromSearch (searchTerms) {
     const postData = {
-        _token: Rozier.ajaxToken,
+        _token: RozierRoot.ajaxToken,
         _action: 'searchNodesSources',
         searchTerms: searchTerms
     }
 
     return request({
         method: 'POST',
-        url: Rozier.routes.searchNodesSourcesAjax,
+        url: RozierRoot.routes.searchNodesSourcesAjax,
         params: postData
     })
         .then((response) => {
