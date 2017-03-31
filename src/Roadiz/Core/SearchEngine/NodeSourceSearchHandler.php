@@ -63,6 +63,16 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
 
             $singleWord = strpos($q, ' ') === false ? true : false;
 
+            $titleField = 'title';
+            /*
+             * Use title_txt_LOCALE when search
+             * is filtered by translation.
+             */
+            if (isset($args['translation']) &&
+                $args['translation'] instanceof Translation) {
+                $titleField = '_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+            }
+
             /*
              * Search in node-sources tags name…
              */
@@ -71,15 +81,15 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                  * @see http://www.solrtutorial.com/solr-query-syntax.html
                  */
                 if ($singleWord) {
-                    $queryTxt = sprintf('(title:%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
+                    $queryTxt = sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
                 } else {
-                    $queryTxt = sprintf('(title:"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+                    $queryTxt = sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
                 }
             } else {
                 if ($singleWord) {
-                    $queryTxt = sprintf('(title:%s*)^5 (collection_txt:%s*)', $q, $q);
+                    $queryTxt = sprintf('(' . $titleField . ':%s*)^5 (collection_txt:%s*)', $q, $q);
                 } else {
-                    $queryTxt = sprintf('(title:"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
+                    $queryTxt = sprintf('(' . $titleField . ':"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
                 }
             }
 

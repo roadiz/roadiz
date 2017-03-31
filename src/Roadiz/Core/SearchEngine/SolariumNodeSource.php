@@ -66,7 +66,7 @@ class SolariumNodeSource extends AbstractSolarium
     }
 
     /**
-     * Get document fron Solr index.
+     * Get document from Solr index.
      *
      * @return boolean *FALSE* if no document found linked to current node-source.
      */
@@ -128,6 +128,7 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['tags_txt'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();
+        $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
         $collection[] = $this->nodeSource->getTitle();
 
         $searchableFields = $node->getNodeType()->getSearchableFields();
