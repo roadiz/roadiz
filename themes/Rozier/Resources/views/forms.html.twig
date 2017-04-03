@@ -177,12 +177,15 @@
     {% endfor %}
 
     {% spaceless %}
-        <document-widget-container data-vuejs inline-template>
+        <drawer-container data-vuejs inline-template>
             <div class="uk-form-row documents-widget"
-                 :class="{ 'uk-active' : isActive, 'uk-alert-danger': widget.errorMessage }"
-                 v-if="widget"
-                 ref="widget"
-                 data-initial-documents="{{ docIds|json_encode }}"
+                 :class="{ 'uk-active' : isActive, 'uk-alert-danger': drawer.errorMessage }"
+                 v-if="drawer"
+                 ref="drawer"
+                 data-accept-entity="document"
+                 data-accept-limit="0"
+                 data-entity-types="[]"
+                 data-initial-items="{{ docIds|json_encode }}"
                  data-document-widget {{ block('widget_attributes') }}>
                 {% if label is empty -%}
                     {% set label = name|humanize %}
@@ -195,12 +198,12 @@
                     </ul>
                     <div class="uk-navbar-content uk-navbar-flip">
                         <div class="documents-widget-quick-creation uk-button-group">
-                            <rz-button :is-active="widget.isActive" :callback="onDocumentExplorerButtonClick">
+                            <rz-button :is-active="drawer.isActive" :callback="onExplorerButtonClick">
                                 <i class="uk-icon-rz-explore"></i>
                                 {% trans %}documents.toggle-explorer{% endtrans %}
                             </rz-button>
 
-                            <rz-button :is-active="widget.isDropzoneEnable" :callback="onDropzoneButtonClick">
+                            <rz-button :is-active="drawer.isDropzoneEnable" :callback="onDropzoneButtonClick">
                                 <i class="uk-icon-rz-upload"></i>
                                 {% trans %}documents.toggle-uploader{% endtrans %}
                             </rz-button>
@@ -208,35 +211,35 @@
                     </div>
                 </nav>
 
-                <template v-if="widget.errorMessage">
+                <template v-if="drawer.errorMessage">
                     <p class="uk-text-danger">
-                        ${ widget.errorMessage }
+                        ${ drawer.errorMessage }
                     </p>
                 </template>
 
                 <div class="documents-widget-sortable-container">
 
-                    <transition name="fade" v-if="widget.isLoading">
+                    <transition name="fade" v-if="drawer.isLoading">
                         <div class="spinner"></div>
                     </transition>
 
                     <ul class="documents-widget-sortable"
                         data-input-name="{{ name }}">
-                        <draggable v-model="documents" :options="{ group: 'document' }">
+                        <draggable v-model="items" :options="{ group: 'item' }">
                             <document-preview-list-item
-                                v-for="(document, index) in widget.documents"
-                                :key="document.id"
+                                v-for="(item, index) in drawer.items"
+                                :key="item.id"
                                 :trans="trans"
-                                :widget-name="widgetName"
-                                :is-document-explorer="false"
-                                :remove-document="removeDocument"
+                                :drawer-name="drawerName"
+                                :is-item-explorer="false"
+                                :remove-item="removeItem"
                                 :index="index"
-                                :document="document">
+                                :item="item">
                             </document-preview-list-item>
                         </draggable>
                     </ul>
                 </div>
-                <dropzone v-if="widget.isDropzoneEnable"
+                <dropzone v-if="drawer.isDropzoneEnable"
                           id="dropzone{{ random() }}"
                           :language="dropzoneLanguage"
                           url="{{ path('documentsUploadPage', {_format: 'json'}) }}"
@@ -244,7 +247,7 @@
                           v-on:vdropzone-success="showSuccess">
                 </dropzone>
             </div>
-        </document-widget-container>
+        </drawer-container>
     {% endspaceless %}
 {% endblock documents_widget %}
 

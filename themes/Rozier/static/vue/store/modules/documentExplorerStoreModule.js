@@ -11,7 +11,7 @@ import {
     DOCUMENT_EXPLORER_IS_LOADED,
 
     KEYBOARD_EVENT_ESCAPE
-} from '../mutationTypes'
+} from '../../types/mutationTypes'
 
 /**
  * Module state

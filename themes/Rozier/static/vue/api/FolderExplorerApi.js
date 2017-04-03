@@ -18,7 +18,9 @@ export function getFolders () {
     })
         .then((response) => {
             if (typeof response.data != 'undefined' && response.data.folders) {
-                return response.data
+                return {
+                    items: response.data.folders
+                }
             } else {
                 return null
             }

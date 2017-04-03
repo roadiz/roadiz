@@ -1,11 +1,11 @@
 import * as NodesSourceSearchApi from './NodesSourceSearchApi'
-import * as DocumentExplorerApi from './DocumentExplorerApi'
-import * as FolderExplorerApi from './FolderExplorerApi'
+import * as ExplorerApi from './ExplorerApi'
+import * as FilterExplorerApi from './FilterExplorerApi'
 
 const api = {
     ...NodesSourceSearchApi,
-    ...DocumentExplorerApi,
-    ...FolderExplorerApi
+    ...ExplorerApi,
+    ...FilterExplorerApi
 }
 
 export default api

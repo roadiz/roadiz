@@ -8,7 +8,7 @@ import {
     FOLDER_EXPLORER_REFRESH,
 
     KEYBOARD_EVENT_ESCAPE
-} from '../mutationTypes'
+} from '../../types/mutationTypes'
 
 const state = {
     isOpen: false,

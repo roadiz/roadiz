@@ -1,20 +1,20 @@
 import Vuex from 'vuex'
 import {
     KEYBOARD_EVENT_SAVE
-} from './mutationTypes'
+} from '../types/mutationTypes'
 
 // Modules
-import nodesSourceSearch from './modules/nodesSourceSearchStoreModule'
-import documentExplorer from './modules/documentExplorerStoreModule'
-import folderExplorer from './modules/folderExplorerStoreModule'
-import documentWidgets from './modules/documentWidgetsStoreModule'
+import nodesSourceSearch from './modules/NodesSourceSearchStoreModule'
+import explorer from './modules/ExplorerStoreModule'
+import drawers from './modules/DrawersStoreModule'
+import filterExplorer from './modules/FilterExplorerStoreModule'
 
 export default new Vuex.Store({
     modules: {
         nodesSourceSearch,
-        documentExplorer,
-        folderExplorer,
-        documentWidgets
+        explorer,
+        filterExplorer,
+        drawers
     },
     state: {
         translations: RozierRoot.messages

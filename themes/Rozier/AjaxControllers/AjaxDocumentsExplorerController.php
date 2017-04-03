@@ -220,7 +220,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'editDocument' => $this->getTranslator()->trans('edit.document'),
             'unlinkDocument' => $this->getTranslator()->trans('unlink.document'),
             'linkDocument' => $this->getTranslator()->trans('link.document'),
-            'moreDocuments' => $this->getTranslator()->trans('more.documents')
+            'moreItems' => $this->getTranslator()->trans('more.documents')
         ];
     }
 }

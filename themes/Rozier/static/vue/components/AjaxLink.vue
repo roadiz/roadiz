@@ -7,7 +7,7 @@
 <script>
     import {
         KEYBOARD_EVENT_ESCAPE
-    } from '../store/mutationTypes'
+    } from '../types/mutationTypes'
 
     export default {
         props: ['title', 'href', 'typeColor'],

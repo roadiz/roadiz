@@ -1,9 +1,10 @@
 <template>
     <transition name="fade">
         <li class="image-document uk-sortable-list-item documents-widget-sortable-list-item"
+            v-if="document"
             data-uk-tooltip="{animation:true, pos:'bottom'}"
             :title="document.filename"
-            @click.prevent="onAddDocumentButtonClick">
+            @click.prevent="onAddItemButtonClick">
 
             <div class="uk-sortable-handle"></div>
             <div class="document-border"></div>
@@ -20,8 +21,8 @@
             <template v-else>
                 <div class="document-platform-icon"><i :class="'uk-icon-file-' + document.shortType +'-o'"></i></div>
             </template>
-            <template v-if="widgetName">
-                <input type="hidden" :name="widgetName + '[' + index +']'" :value="document.id" />
+            <template v-if="drawerName">
+                <input type="hidden" :name="drawerName + '[' + index +']'" :value="document.id" />
             </template>
             <div class="document-overflow">
                 <div class="document-links">
@@ -33,7 +34,7 @@
                     </ajax-link><a
                         data-document-widget-unlink-document
                         href="#"
-                        @click.prevent="onRemoveDocumentButtonClick()"
+                        @click.prevent="onRemoveItemButtonClick()"
                         class="uk-button uk-button-mini document-link uk-button-danger rz-no-ajax-link">
                         <i class="uk-icon-rz-minus"></i>
                         <span class="label">{{ trans.unlinkDocument }}</span>
@@ -69,19 +70,23 @@
     import AjaxLink from '../components/AjaxLink.vue'
 
     export default {
-        props: ['document', 'trans', 'isDocumentExplorer', 'widgetName', 'index', 'removeDocument'],
+        props: ['item', 'trans', 'isItemExplorer', 'drawerName', 'index', 'removeItem'],
+        data: function () {
+            return {
+                document: this.item
+            }
+        },
         filters: filters,
         methods: {
-
-            onAddDocumentButtonClick: function () {
+            onAddItemButtonClick: function () {
                 // If document is in the explorer panel
-                if (this.isDocumentExplorer) {
-                    this.$parent.addDocument(this.document)
+                if (this.isItemExplorer) {
+                    this.$parent.addItem(this.item)
                 }
             },
-            onRemoveDocumentButtonClick: function () {
+            onRemoveItemButtonClick: function () {
                 // Call parent function to remove the document from widget
-                this.removeDocument(this.document)
+                this.removeItem(this.item)
             }
         },
         components: {

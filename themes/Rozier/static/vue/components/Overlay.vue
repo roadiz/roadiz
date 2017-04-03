@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div id="overlay" :class="{ 'is-active': isDocumentExplorerOpen }" v-if="isDocumentExplorerOpen">{{ isDocumentExplorerOpen }}</div>
+        <div id="overlay" :class="{ 'is-active': isExplorerOpen }" v-if="isExplorerOpen"></div>
     </transition>
 </template>
 <script>
@@ -9,7 +9,7 @@
     export default {
         computed: {
             ...mapState({
-                isDocumentExplorerOpen: state => state.documentExplorer.isOpen
+                isExplorerOpen: state => state.explorer.isOpen
             })
         }
     }

@@ -7,16 +7,16 @@ import KeyboardEventService from './services/KeyboardEventService'
 // Containers
 import NodeTypeFieldFormContainer from './containers/NodeTypeFieldFormContainer.vue'
 import NodesSearchContainer from './containers/NodesSearchContainer.vue'
-import DocumentExplorerContainer from './containers/DocumentExplorerContainer.vue'
-import FolderExplorerContainer from './containers/FolderExplorerContainer.vue'
-import DocumentWidgetContainer from './containers/DocumentWidgetContainer.vue'
+import DrawerContainer from './containers/DrawerContainer.vue'
+import ExplorerContainer from './containers/ExplorerContainer.vue'
+import FilterExplorerContainer from './containers/FilterExplorerContainer.vue'
 
 // Components
 import Overlay from './components/Overlay.vue'
 
 import {
     KEYBOARD_EVENT_ESCAPE
-} from './store/mutationTypes'
+} from './types/mutationTypes'
 
 /**
  * Root entry for VueJS App.
@@ -30,9 +30,9 @@ class AppVue {
         this.registeredContainers = {
             NodeTypeFieldFormContainer,
             NodesSearchContainer,
-            DocumentExplorerContainer,
-            DocumentWidgetContainer,
-            FolderExplorerContainer
+            DrawerContainer,
+            ExplorerContainer,
+            FilterExplorerContainer
         }
 
         this.registeredComponents = {
