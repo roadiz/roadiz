@@ -43,6 +43,56 @@ use Solarium\Core\Query\Helper;
 class NodeSourceSearchHandler extends AbstractSearchHandler
 {
     /**
+     * Default Solr query builder.
+     *
+     * Extends this method to customize your Solr queries. Eg. to boost custom fields.
+     *
+     * @param string $q
+     * @param array $args
+     * @param bool $searchTags
+     * @param int $proximity
+     * @return string
+     */
+    protected function buildQuery($q, array &$args, $searchTags, $proximity)
+    {
+        $q = trim($q);
+        $qHelper = new Helper();
+        $q = $qHelper->escapeTerm($q);
+
+        $singleWord = strpos($q, ' ') === false ? true : false;
+
+        $titleField = 'title';
+        /*
+         * Use title_txt_LOCALE when search
+         * is filtered by translation.
+         */
+        if (isset($args['translation']) &&
+            $args['translation'] instanceof Translation) {
+            $titleField = '_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+
+        /*
+         * Search in node-sources tags name…
+         */
+        if ($searchTags) {
+            /*
+             * @see http://www.solrtutorial.com/solr-query-syntax.html
+             */
+            if ($singleWord) {
+                return sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
+            } else {
+                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+            }
+        } else {
+            if ($singleWord) {
+                return sprintf('(' . $titleField . ':%s*)^5 (collection_txt:%s*)', $q, $q);
+            } else {
+                return sprintf('(' . $titleField . ':"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
+            }
+        }
+    }
+
+    /**
      * @param string  $q
      * @param array   $args
      * @param integer $rows
@@ -56,43 +106,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
     {
         if (!empty($q)) {
             $query = $this->client->createSelect();
-
-            $q = trim($q);
-            $qHelper = new Helper();
-            $q = $qHelper->escapeTerm($q);
-
-            $singleWord = strpos($q, ' ') === false ? true : false;
-
-            $titleField = 'title';
-            /*
-             * Use title_txt_LOCALE when search
-             * is filtered by translation.
-             */
-            if (isset($args['translation']) &&
-                $args['translation'] instanceof Translation) {
-                $titleField = '_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
-            }
-
-            /*
-             * Search in node-sources tags name…
-             */
-            if ($searchTags) {
-                /*
-                 * @see http://www.solrtutorial.com/solr-query-syntax.html
-                 */
-                if ($singleWord) {
-                    $queryTxt = sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
-                } else {
-                    $queryTxt = sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
-                }
-            } else {
-                if ($singleWord) {
-                    $queryTxt = sprintf('(' . $titleField . ':%s*)^5 (collection_txt:%s*)', $q, $q);
-                } else {
-                    $queryTxt = sprintf('(' . $titleField . ':"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-                }
-            }
-
+            $queryTxt = $this->buildQuery($q, $args, $searchTags, $proximity);
 
             $filterQueries = [];
             $query->setQuery($queryTxt);

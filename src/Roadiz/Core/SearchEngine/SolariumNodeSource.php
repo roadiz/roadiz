@@ -29,9 +29,12 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\Common\Collections\Criteria;
 use Monolog\Logger;
 use Parsedown;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
@@ -131,15 +134,24 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
         $collection[] = $this->nodeSource->getTitle();
 
-        $searchableFields = $node->getNodeType()->getSearchableFields();
 
-        /*
-         * Only one content fields to search in.
-         */
+        $criteria = new Criteria();
+        $criteria->andWhere(Criteria::expr()->eq("type", AbstractField::BOOLEAN_T));
+        $booleanFields = $node->getNodeType()->getFields()->matching($criteria);
+
+        /** @var NodeTypeField $booleanField */
+        foreach ($booleanFields as $booleanField) {
+            $name = $booleanField->getName();
+            $name .= '_b';
+            $getter = $booleanField->getGetterName();
+            $assoc[$name] = $this->nodeSource->$getter();
+        }
+
+        $searchableFields = $node->getNodeType()->getSearchableFields();
+        /** @var NodeTypeField $field */
         foreach ($searchableFields as $field) {
             $name = $field->getName();
             $getter = $field->getGetterName();
-
             $content = $this->nodeSource->$getter();
             /*
              * Strip markdown syntax
@@ -162,7 +174,6 @@ class SolariumNodeSource extends AbstractSolarium
             }
 
             $assoc[$name] = $content;
-
             $collection[] = $content;
         }
 

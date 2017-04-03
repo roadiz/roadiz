@@ -396,6 +396,7 @@ class NodeType extends AbstractEntity
     public function getSearchableFields()
     {
         $searchable = new ArrayCollection();
+        /** @var NodeTypeField $field */
         foreach ($this->getFields() as $field) {
             if ($field->isSearchable()) {
                 $searchable->add($field);
