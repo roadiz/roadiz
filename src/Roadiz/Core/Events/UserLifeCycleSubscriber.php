@@ -77,14 +77,14 @@ class UserLifeCycleSubscriber implements EventSubscriber
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
-            if ($event->hasChangedField('enabled') && true === $event->getNewValue('enabled')) {
-                $this->container->offsetGet('logger')->info('User was enabled.', ['username' => $user->getUsername()]);
+            if ($event->hasChangedField('enabled') &&
+                true === $event->getNewValue('enabled')) {
                 $userEvent = new FilterUserEvent($user);
                 $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_ENABLED, $userEvent);
             }
 
-            if ($event->hasChangedField('enabled') && false === $event->getNewValue('enabled')) {
-                $this->container->offsetGet('logger')->info('User was disabled.', ['username' => $user->getUsername()]);
+            if ($event->hasChangedField('enabled') &&
+                false === $event->getNewValue('enabled')) {
                 $userEvent = new FilterUserEvent($user);
                 $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_DISABLED, $userEvent);
             }

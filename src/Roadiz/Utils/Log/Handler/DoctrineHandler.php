@@ -138,7 +138,7 @@ class DoctrineHandler extends AbstractProcessingHandler
                 if (null !== $this->getTokenStorage() &&
                     null !== $this->getTokenStorage()->getToken() &&
                     is_object($this->getTokenStorage()->getToken()->getUser()) &&
-                    null !== $this->getTokenStorage()->getToken()->getUser()->getId()) {
+                    $this->getTokenStorage()->getToken()->getUser() instanceof User) {
                     $log->setUser($this->getTokenStorage()->getToken()->getUser());
                 }
                 /*
@@ -165,7 +165,7 @@ class DoctrineHandler extends AbstractProcessingHandler
                 }
 
                 $this->em->persist($log);
-                $this->em->flush();
+                $this->em->flush($log);
             }
         } catch (\Exception $e) {
             /*
