@@ -24,6 +24,7 @@
                 <filter-explorer-item
                     v-for="(item, index) in items"
                     :current-item="selectedItem"
+                    :icons="icons"
                     :key="index"
                     :entity="entity"
                     :on-item-click="onItemClick"
@@ -57,7 +58,8 @@
                 entity: state => state.explorer.entity,
                 itemCount: state => state.explorer.filters.itemCount,
                 selectedItem: state => state.filterExplorer.selectedItem,
-                translations: state => state.translations
+                translations: state => state.translations,
+                icons: state => state.filterExplorer.icons
             })
         },
         methods: {
@@ -65,14 +67,10 @@
                 'filterExplorerUpdate'
             ]),
             onItemClick: function (item) {
-                this.filterExplorerUpdate({
-                    item: item
-                })
+                this.filterExplorerUpdate({ item: item })
             },
             onResetClick: function () {
-                this.filterExplorerUpdate({
-                    item: null
-                })
+                this.filterExplorerUpdate({ item: null })
             }
         },
         components: {

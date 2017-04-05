@@ -9,6 +9,7 @@
                     <filter-explorer-button
                         v-if="isFilterEnable"
                         :entity="entity"
+                        :icon="filterExplorerIcon"
                         :is-filter-explorer-open="isFilterExplorerOpen"
                         :on-click="filterExplorerToggle">
                     </filter-explorer-button>
@@ -66,7 +67,7 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+    import { mapState, mapActions, mapGetters } from 'vuex'
     import _ from 'lodash'
     import {
         DOCUMENT_ENTITY
@@ -76,7 +77,6 @@
     import LoadMoreButton from '../components/LoadMoreButton.vue'
     import ExplorerItemsInfos from '../components/ExplorerItemsInfos.vue'
     import FilterExplorerButton from '../components/FilterExplorerButton.vue'
-    import DocumentPreviewListItem from '../components/DocumentPreviewListItem.vue'
 
     export default {
         data: () => {
@@ -84,8 +84,6 @@
                 searchTerms: '',
                 searchPlaceHolder: '',
                 moreItems: 'More items',
-                currentListingView: null,
-                isFilterEnable: false
             }
         },
         computed: {
@@ -98,7 +96,10 @@
                 filters: state => state.explorer.filters,
                 trans: state => state.explorer.trans,
                 entity: state => state.explorer.entity,
-                isFilterExplorerOpen: state => state.filterExplorer.isOpen
+                isFilterExplorerOpen: state => state.filterExplorer.isOpen,
+                currentListingView: state => state.explorer.currentListingView,
+                isFilterEnable: state => state.explorer.isFilterEnable,
+                filterExplorerIcon: state => state.explorer.filterExplorerIcon
             })
         },
         methods: {
@@ -107,7 +108,7 @@
                 'explorerClose',
                 'explorerUpdateSearch',
                 'explorerLoadMore',
-                'drawersAddItem'
+                'drawersAddItem',
             ]),
             manualUpdate: function () {
                 this.explorerUpdateSearch({ searchTerms: this.searchTerms })
@@ -119,20 +120,9 @@
         watch: {
             searchTerms:_.debounce(function (newValue) {
                  this.explorerUpdateSearch({ searchTerms: newValue })
-            }, 350),
-            entity: function () {
-                switch (this.entity) {
-                    case DOCUMENT_ENTITY:
-                        this.currentListingView = DocumentPreviewListItem
-                        this.isFilterEnable = true
-                        break;
-                    default:
-                        this.currentListingView = null
-                }
-            }
+            }, 350)
         },
         components: {
-            DocumentPreviewListItem,
             LoadMoreButton,
             ExplorerItemsInfos,
             FilterExplorerButton

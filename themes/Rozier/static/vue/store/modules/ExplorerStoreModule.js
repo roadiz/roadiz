@@ -17,6 +17,12 @@ import {
     KEYBOARD_EVENT_ESCAPE
 } from '../../types/mutationTypes'
 
+import {
+    DOCUMENT_ENTITY
+} from '../../types/entityTypes'
+
+import DocumentPreviewListItem from '../../components/DocumentPreviewListItem.vue'
+
 /**
  * Module state
  */
@@ -29,14 +35,19 @@ const state = {
     trans: null,
     filters: {},
     entity: null,
-    error: ''
+    error: '',
+    currentListingView: null,
+    isFilterEnable: null,
+    filterExplorerIcon: 'uk-icon-cog'
 }
+
+const initialState = { ...state }
 
 /**
  * Getters
  */
 const getters = {
-    getExplorerEntity: state => state.entity
+    getExplorerEntity: state => state.entity,
 }
 
 /**
@@ -47,7 +58,7 @@ const actions =  {
         // Prevent if panel is already open
         if (state.isOpen) return
 
-        // Open panel explorer
+        // Reset explorer
         commit(EXPLORER_RESET)
 
         // Open panel explorer
@@ -56,7 +67,6 @@ const actions =  {
         // Make the search
         await dispatch('explorerMakeSearch')
 
-        // Open panel explorer
         commit(EXPLORER_IS_LOADED)
     },
     explorerClose ({ commit, dispatch }) {
@@ -139,6 +149,7 @@ const mutations = {
         state.error = ''
         state.filters = {}
         state.isLoadingMore = false
+        state.filterExplorer = initialState.filterExplorer
     },
     [EXPLORER_FAILED] (state) {
         state.isLoading = false
@@ -149,6 +160,15 @@ const mutations = {
         state.isOpen = true
         state.isLoading = true
         state.entity = entity
+
+        // Define specific config for each entity type
+        switch (entity) {
+            case DOCUMENT_ENTITY:
+                state.currentListingView = DocumentPreviewListItem
+                state.filterExplorerIcon = 'uk-icon-rz-folder-tree-mini'
+                state.isFilterEnable = true
+                break;
+        }
     },
     [EXPLORER_IS_LOADED] (state) {
         state.isLoading = false

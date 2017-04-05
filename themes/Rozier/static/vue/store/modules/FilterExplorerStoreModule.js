@@ -10,20 +10,33 @@ import {
     KEYBOARD_EVENT_ESCAPE
 } from '../../types/mutationTypes'
 
-const state = {
+import {
+    DOCUMENT_ENTITY
+} from '../../types/entityTypes'
+
+const initialState = {
     isOpen: false,
     isLoading: false,
     items: [],
+    entity: null,
+    icons: {
+        normal: 'uk-icon-circle-o',
+        active: 'uk-icon-circle'
+    },
     selectedItem: null
 }
+
+const state = { ...initialState }
 
 const getters = {
     getFilterExplorerSelectedItem: state => state.selectedItem
 }
 
 const actions = {
-    filterExplorerOpen ({ commit, dispatch }) {
-        commit(FILTER_EXPLORER_OPEN)
+    filterExplorerOpen ({ commit, dispatch, getters }) {
+        const entity = getters.getExplorerEntity
+
+        commit(FILTER_EXPLORER_OPEN, { entity })
 
         dispatch('filterExplorerMakeSearch')
     },
@@ -42,10 +55,10 @@ const actions = {
             dispatch('filterExplorerOpen')
         }
     },
-    filterExplorerMakeSearch ({ commit, getters }) {
+    filterExplorerMakeSearch ({ commit, state }) {
         commit(FILTER_EXPLORER_REQUEST)
 
-        const entity = getters.getExplorerEntity
+        const entity = state.entity
 
         return api.getFilters({ entity })
             .then((result) => {
@@ -72,8 +85,16 @@ const mutations = {
         state.items = result.items
         state.isLoading = false
     },
-    [FILTER_EXPLORER_OPEN] (state) {
+    [FILTER_EXPLORER_OPEN] (state, { entity }) {
         state.isOpen = true
+        state.entity = entity
+
+        switch (entity) {
+            case DOCUMENT_ENTITY:
+                state.icons.normal = 'uk-icon-folder'
+                state.icons.active = 'uk-icon-folder-open'
+                break;
+        }
     },
     [FILTER_EXPLORER_CLOSE] (state) {
         state.isOpen = false

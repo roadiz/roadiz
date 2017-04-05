@@ -22,30 +22,10 @@
             },
             entity: {
                 required: true
-            }
-        },
-        data: () => {
-            return {
-                icon: ''
-            }
-        },
-        mounted: function () {
-            this.setIcon()
-        },
-        methods: {
-            setIcon: function () {
-                switch (this.entity) {
-                    case DOCUMENT_ENTITY:
-                        this.icon = 'uk-icon-rz-folder-tree-mini'
-                        break;
-                    default:
-                        this.icon = 'uk-icon-cog'
-                }
-            }
-        },
-        watch: {
-            isFilterExplorerOpen: function () {
-                this.setIcon()
+            },
+            icon: {
+                required: true,
+                type: String
             }
         }
     }

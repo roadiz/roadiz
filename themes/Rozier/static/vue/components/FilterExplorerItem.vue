@@ -4,13 +4,14 @@
            class="filter-item-link"
            :class="[isCurrentItem ? 'active' : '']"
            @click.prevent="onItemClick(item)">
-            <i class="icon" :class="icon"></i>
+            <i class="icon" :class="isCurrentItem ? icons.active : icons.normal"></i>
             <span class="text">{{ item.name }}</span>
         </a>
         <ul class="sub-filters">
             <filter-explorer-item
                 v-for="(children, index) in item.children"
                 :key="children.id"
+                :icons="icons"
                 :current-item="currentItem"
                 :entity="entity"
                 :on-item-click="onItemClick"
@@ -41,15 +42,11 @@
             },
             entity: {
                 required: true
+            },
+            icons: {
+                required: true,
+                type: Object
             }
-        },
-        data: () => {
-            return {
-                icon: ''
-            }
-        },
-        mounted: function () {
-            this.setIcon()
         },
         computed: {
             isCurrentItem: function () {
@@ -58,22 +55,6 @@
                 }
 
                 return this.currentItem.id === this.item.id
-            }
-        },
-        methods: {
-            setIcon: function () {
-                switch (this.entity) {
-                    case DOCUMENT_ENTITY:
-                        this.icon = this.isCurrentItem ? 'uk-icon-folder-open' : 'uk-icon-folder'
-                        break;
-                    default:
-                        this.icon = this.isCurrentItem ? 'uk-icon-circle' : 'uk-icon-circle-o'
-                }
-            }
-        },
-        watch: {
-            currentItem: function () {
-                this.setIcon()
             }
         }
     }
