@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,60 +23,34 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeTypeFieldHandler.php
- * @author Ambroise Maupate
+ * @file CustomFormsFieldGenerator.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
 /**
- * Handle operations with node-type fields entities.
+ * Class CustomFormsFieldGenerator
+ * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
-class NodeTypeFieldHandler
+class CustomFormsFieldGenerator extends AbstractFieldGenerator
 {
-
-    private $nodeTypeField = null;
     /**
-     * @return NodeTypeField
+     * @inheritDoc
      */
-    public function getNodeTypeField()
+    public function getFieldGetter()
     {
-        return $this->nodeTypeField;
-    }
+        return '
     /**
-     * @param NodeTypeField $nodeTypeField
-     *
-     * @return $this
+     * @return array CustomForm array
      */
-    public function setNodeTypeField($nodeTypeField)
+    public function '.$this->field->getGetterName().'()
     {
-        $this->nodeTypeField = $nodeTypeField;
-
-        return $this;
-    }
-
-    /**
-     * Create a new node-type-field handler with node-type-field to handle.
-     *
-     * @param NodeTypeField $field
-     */
-    public function __construct(NodeTypeField $field)
-    {
-        $this->nodeTypeField = $field;
-    }
-
-    /**
-     * Clean position for current node siblings.
-     *
-     * @return int Return the next position after the **last** node
-     */
-    public function cleanPositions()
-    {
-        if ($this->nodeTypeField->getNodeType() !== null) {
-            return $this->nodeTypeField->getNodeType()->getHandler()->cleanFieldsPositions();
+        if (null === $this->' . $this->field->getName() . ') {
+            $this->' . $this->field->getName() . ' = $this->getNode()->getHandler()->getCustomFormsFromFieldName("'.$this->field->getName().'");
         }
-
-        return 1;
+        return $this->' . $this->field->getName() . ';
+    }'.PHP_EOL;
     }
+
 }

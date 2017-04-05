@@ -239,6 +239,36 @@
     {% endspaceless %}
 {% endblock nodes_widget %}
 
+{% block join_widget %}
+    {% spaceless %}
+        <div class="uk-form-row join-widget" data-join-widget {{ block('widget_attributes') }}>
+            {% if label is empty -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+            <nav class="join-widget-nav uk-navbar">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-navbar-brand"><i class="uk-icon-rz-global-join"></i></li>
+                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
+                </ul>
+                <div class="uk-navbar-content uk-navbar-flip">
+                    <div class="join-widget-quick-creation uk-button-group">
+                        <a class="uk-button uk-button-small" href="#" data-node-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}join.toggle-explorer{% endtrans %}</a>
+                    </div>
+                </div>
+            </nav>
+            <ul class="join-widget-sortable" data-input-name="{{ name }}">
+                {% for entity in data %}
+                    <li class="entity">
+                        <p class="entity-class">{{ entity.classname }}</p>
+                        <p class="entity-name">{{ entity.name }}</p>
+                        <input type="hidden" name="{{ full_name ~ '[' ~ loop.index0 ~ ']' }}" value="{{ entity.id }}">
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endspaceless %}
+{% endblock join_widget %}
+
 {% block custom_forms_widget %}
     {% spaceless %}
         <div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>

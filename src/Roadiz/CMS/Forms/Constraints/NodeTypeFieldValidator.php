@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
 use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Validator\Constraint;
@@ -70,6 +71,22 @@ class NodeTypeFieldValidator extends ConstraintValidator
                 if (!class_exists($configuration['classname'])) {
                     $this->context->buildViolation('classname_%classname%_does_not_exist')
                         ->setParameter('%classname%', $configuration['classname'])
+                        ->atPath('defaultValues')
+                        ->addViolation();
+                }
+
+                $reflection = new \ReflectionClass($configuration['classname']);
+                if (!$reflection->isSubclassOf('\RZ\Roadiz\Core\AbstractEntities\AbstractEntity')) {
+                    $this->context->buildViolation('classname_%classname%_must_extend_abstract_entity_class')
+                        ->setParameter('%classname%', $configuration['classname'])
+                        ->atPath('defaultValues')
+                        ->addViolation();
+                }
+
+                if (!$reflection->hasMethod($configuration['displayable'])) {
+                    $this->context->buildViolation('classname_%classname%_does_not_declare_%method%_method')
+                        ->setParameter('%classname%', $configuration['classname'])
+                        ->setParameter('%method%', $configuration['displayable'])
                         ->atPath('defaultValues')
                         ->addViolation();
                 }

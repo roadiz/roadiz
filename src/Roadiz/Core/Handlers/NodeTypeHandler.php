@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\Generators\EntityGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
@@ -114,44 +115,9 @@ class NodeTypeHandler
         }
 
         if (!file_exists($file)) {
-            $fields = $this->nodeType->getFields();
-            $fieldsArray = [];
-            $indexes = [];
-            foreach ($fields as $field) {
-                $fieldsArray[] = $field->getHandler()->generateSourceField();
-                if ($field->isIndexed()) {
-                    $indexes[] = $field->getHandler()->generateSourceFieldIndex();
-                }
-            }
+            $classGenerator = new EntityGenerator($this->nodeType);
+            $content = $classGenerator->getClassContent();
 
-            $content = '<?php
-/*
- * THIS IS A GENERATED FILE, DO NOT EDIT IT
- * IT WILL BE RECREATED AT EACH NODE-TYPE UPDATE
- */
-namespace '.NodeType::getGeneratedEntitiesNamespace().';
-
-use RZ\Roadiz\Core\Entities\NodesSources;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * Generated custom node-source type from RZ-CMS backoffice.
- *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
- * @ORM\Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
- */
-class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
-{
-    '.implode('', $fieldsArray).'
-
-    public function __toString()
-    {
-        return \''.$this->nodeType->getSourceEntityClassName().' #\' . $this->getId() .
-        \' <\' . $this->getTitle() . \'>[\' . $this->getTranslation()->getLocale() .
-        \']\';
-    }
-}
-';
             if (false === @file_put_contents($file, $content)) {
                 throw new IOException("Impossible to write entity class file (".$file.").", 1);
             }
