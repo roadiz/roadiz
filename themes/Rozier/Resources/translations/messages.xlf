@@ -6607,6 +6607,54 @@
         <target></target>
         <note>Help message to explain node-type-field default values.</note>
       </trans-unit>
+
+          <!-- New Join node-type-field type -->
+        <trans-unit xml:space="preserve" id="join.toggle-explorer">
+            <source>join.toggle-explorer</source>
+            <target></target>
+            <note>Button label for join type explorer</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="many-to-many.type">
+            <source>many-to-many.type</source>
+            <target></target>
+            <note>Node-type field type for Doctrine Many-to-many relationship</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="many-to-one.type">
+            <source>many-to-one.type</source>
+            <target></target>
+            <note>Node-type field type for Doctrine Many-to-one relationship</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
+            <source>default_values_do_not_match_field_type</source>
+            <target></target>
+            <note>Validator message: when default value is not correct for choosen type</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
+            <source>default_values_should_not_be_empty_for_this_type</source>
+            <target></target>
+            <note>Validator message: when default value is empty and it should not</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
+            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
+            <target></target>
+            <note>Validator message: when default value is not a valid YAML text</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_does_not_exist">
+            <source>classname_%classname%_does_not_exist</source>
+            <target></target>
+            <note>Validator message: when provided classname does not exist.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
+            <source>classname_%classname%_must_extend_abstract_entity_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
+            <source>classname_%classname%_does_not_declare_%method%_method</source>
+            <target></target>
+            <note>Validator message: when provided classname does not declare provided method.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
