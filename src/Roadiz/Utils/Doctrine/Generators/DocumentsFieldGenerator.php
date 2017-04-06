@@ -52,5 +52,4 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
         return $this->' . $this->field->getName() . ';
     }'.PHP_EOL;
     }
-
 }

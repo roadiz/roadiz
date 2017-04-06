@@ -52,5 +52,4 @@ class CustomFormsFieldGenerator extends AbstractFieldGenerator
         return $this->' . $this->field->getName() . ';
     }'.PHP_EOL;
     }
-
 }

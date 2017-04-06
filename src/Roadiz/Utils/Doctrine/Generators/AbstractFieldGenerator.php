@@ -99,7 +99,7 @@ abstract class AbstractFieldGenerator
      *
      * @return string
      */
-    protected abstract function getFieldGetter();
+    abstract protected function getFieldGetter();
 
     /**
      * Generate PHP alternative getter method block.

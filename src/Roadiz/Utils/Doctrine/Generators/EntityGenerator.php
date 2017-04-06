@@ -28,6 +28,7 @@
  */
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
+
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
