@@ -593,7 +593,7 @@ class NodesSourcesHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return ArrayCollection Collection of nodes
+     * @return array Collection of nodes
      */
     public function getNodesFromFieldName($fieldName)
     {
@@ -613,7 +613,7 @@ class NodesSourcesHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return ArrayCollection Collection of nodes
+     * @return array Collection of nodes
      */
     public function getReverseNodesFromFieldName($fieldName)
     {

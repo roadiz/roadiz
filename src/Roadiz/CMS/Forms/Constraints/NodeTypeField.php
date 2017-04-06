@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,40 +23,15 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- *
- * @file AjaxSessionMessages.php
- * @author Ambroise Maupate
+ * @file NodeTypeField.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\AjaxControllers;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-/**
- * AjaxSessionMessages.
- */
-class AjaxSessionMessages extends AbstractAjaxController
+use Symfony\Component\Validator\Constraint;
+
+class NodeTypeField extends Constraint
 {
-    /**
-     * @param Request $request
-     *
-     * @return Response JSON response
-     */
-    public function getMessagesAction(Request $request)
-    {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
-
-        $responseArray = [
-            'statusCode' => Response::HTTP_OK,
-            'status'    => 'success',
-            'messages' => $request->getSession()->getFlashBag()->all()
-        ];
-
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
-    }
+    public $message = 'default_values_do_not_match_field_type';
 }

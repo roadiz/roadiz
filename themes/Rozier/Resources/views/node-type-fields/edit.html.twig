@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = 'node-type-fields/editBase.html.twig' %}{% else %}{% set baseTemplate = 'node-type-fields/ajaxEditBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% set baseTemplate = 'node-type-fields/editBase.html.twig' %}{% extends baseTemplate %}
 
 {% block subcontent %}
     <article class="content content-node-type-field-edit">
