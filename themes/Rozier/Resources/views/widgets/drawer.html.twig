@@ -1,6 +1,6 @@
-{% set docIds = [] %}
-{% for doc in data %}
-    {% set docIds = docIds|merge([doc.id]) %}
+{% set entityIds = [] %}
+{% for entity in data %}
+    {% set entityIds = entityIds|merge([entity.id]) %}
 {% endfor %}
 
 {% spaceless %}
@@ -13,7 +13,7 @@
              data-accept-entity="{{ entity }}"
              data-accept-limit="0"
              data-entity-types="[]"
-             data-initial-items="{{ docIds|json_encode }}">
+             data-initial-items="{{ entityIds|json_encode }}">
             {% if label is empty -%}
                 {% set label = name|humanize %}
             {%- endif -%}

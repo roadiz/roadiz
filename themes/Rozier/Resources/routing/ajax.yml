@@ -61,6 +61,12 @@ entitiesAjaxExplorerPage:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxEntitiesExplorerController::indexAction
         _format: json
+entitiesAjaxByArray:
+    path:     /entities/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxEntitiesExplorerController::listAction
+        _format: json
 # Documents
 documentsAjaxExplorerPage:
     path:     /documents/explore

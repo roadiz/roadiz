@@ -20,11 +20,13 @@ import {
 
 import {
     DOCUMENT_ENTITY,
-    NODE_ENTITY
+    NODE_ENTITY,
+    JOIN_ENTITY
 } from '../../types/entityTypes'
 
 import DocumentPreviewListItem from '../../components/DocumentPreviewListItem.vue'
 import NodePreviewItem from '../../components/NodePreviewItem.vue'
+import JoinPreviewItem from '../../components/JoinPreviewItem.vue'
 
 /**
  * Module state
@@ -189,6 +191,11 @@ const mutations = {
                 state.filterExplorerIcon = 'uk-icon-tags'
                 state.trans.moreItems = 'moreNodes'
                 state.isFilterEnable = true
+                break;
+            case JOIN_ENTITY:
+                state.currentListingView = JoinPreviewItem
+                state.trans.moreItems = 'moreEntities'
+                state.isFilterEnable = false
                 break;
         }
     },

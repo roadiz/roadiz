@@ -21,11 +21,13 @@ import api from '../../api'
 
 import {
     DOCUMENT_ENTITY,
-    NODE_ENTITY
+    NODE_ENTITY,
+    JOIN_ENTITY
 } from '../../types/entityTypes'
 
 import DocumentPreviewListItem from '../../components/DocumentPreviewListItem.vue'
 import NodePreviewItem from '../../components/NodePreviewItem.vue'
+import JoinPreviewItem from '../../components/JoinPreviewItem.vue'
 
 /**
  * State
@@ -67,14 +69,16 @@ const actions = {
     drawersInitData ({ commit }, { drawer, entity, ids, filters }) {
         commit(DRAWERS_INIT_DATA_REQUEST, { drawer, entity, ids, filters })
 
+        console.log(entity);
         // If no initial ids provided no need to use the api
         if (!ids || ids.length === 0 || !entity) {
             commit(DRAWERS_INIT_DATA_REQUEST_EMPTY, { drawer })
             return
         }
 
+        console.log(entity);
         // If ids provided, fetch data and fill the Drawer
-        api.getItemsByIds(entity, ids)
+        api.getItemsByIds(entity, ids, filters)
             .then((result) => {
                 commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result })
             })
@@ -181,7 +185,7 @@ const mutations = {
     [DRAWERS_INIT_DATA_REQUEST] (state, { drawer, entity, filters }) {
         drawer.isLoading = true
         drawer.entity = entity
-        drawer.filters.nodeTypes = filters.nodeTypes
+        drawer.filters = filters
 
         // Define specific config for each entity type
         switch (entity) {
@@ -190,6 +194,9 @@ const mutations = {
                 break;
             case NODE_ENTITY:
                 drawer.currentListingView = NodePreviewItem
+                break;
+            case JOIN_ENTITY:
+                drawer.currentListingView = JoinPreviewItem
                 break;
         }
     },

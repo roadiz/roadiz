@@ -268,6 +268,14 @@ class NodeSourceType extends AbstractType
         $options = $this->getDefaultOptions($field);
 
         switch ($field->getType()) {
+            case NodeTypeField::MANY_TO_ONE_T:
+            case NodeTypeField::MANY_TO_MANY_T:
+                $options = array_merge_recursive($options, [
+                    'attr' => [
+                        'data-nodetypefield' => $field->getId(),
+                    ],
+                ]);
+                break;
             case NodeTypeField::NODES_T:
                 $options = array_merge_recursive($options, [
                     'attr' => [

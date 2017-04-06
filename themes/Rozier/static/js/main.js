@@ -371,7 +371,6 @@ Rozier.toggleUserPanel = function (event) {
     return false;
 };
 
-
 /**
  * Handle ajax search node source.
  * @param event

@@ -6677,6 +6677,15 @@
             <target></target>
             <note>Validator message: when provided classname does not declare provided method.</note>
         </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target></target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+
+
     </body>
   </file>
 </xliff>

@@ -113,6 +113,7 @@
                     'searchCustomForms': '{{ 'search.custom_forms'|trans() }}',
                     'moreDocuments':     '{{ 'more.documents'|trans() }}',
                     'moreNodes':         '{{ 'more.nodes'|trans() }}',
+                    'moreEntities':      '{{ 'more.entities'|trans() }}',
                     'moreCustomForms':   '{{ 'more.custom_forms'|trans() }}',
                     'dropzone' : {
                         'maxFilesize':                 {{ themeServices.maxFilesize }},
@@ -164,10 +165,12 @@
                     'documentsBulkDownloadPage' : '{{ path('documentsBulkDownloadPage') }}',
                     'documentsAjaxExplorer' :     '{{ path('documentsAjaxExplorerPage') }}',
                     'documentsAjaxByArray' :      '{{ path('documentsAjaxByArray') }}',
+                    'joinsAjaxByArray' :          '{{ path('entitiesAjaxByArray') }}',
                     'nodesAjaxByArray' :          '{{ path('nodesAjaxByArray') }}',
                     'tagsAjaxExplorer' :          '{{ path('tagsAjaxExplorer') }}',
                     'foldersAjaxExplorer' :       '{{ path('foldersAjaxExplorerPage') }}',
                     'nodesAjaxExplorer' :         '{{ path('nodesAjaxExplorerPage') }}',
+                    'joinsAjaxExplorer' :         '{{ path('entitiesAjaxExplorerPage') }}',
                     'customFormsAjaxExplorer' :   '{{ path('customFormsAjaxExplorerPage') }}',
                     'searchNodesSourcesAjax':     '{{ path('searchNodesSourcesAjax') }}',
                     'nodesStatusesAjax' :         '{{ path('nodesStatusesAjax') }}',
@@ -188,6 +191,7 @@
         {% if head.devMode %}
             <script src="https://unpkg.com/vue"></script>
             <script src="https://unpkg.com/vuex"></script>
+            <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
         {% else %}
             <script src="https://unpkg.com/vue@2.2.6/dist/vue.min.js"></script>
             <script src="https://unpkg.com/vuex@2.2.1/dist/vuex.min.js"></script>
