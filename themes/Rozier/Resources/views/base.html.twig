@@ -90,17 +90,6 @@
             <explorer-container></explorer-container>
         </div>
 
-        <!-- ##debug_panel## -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script src="https://unpkg.com/vue"></script>
-        <script src="https://unpkg.com/vuex"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
-        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.custom.js"></script>
-
-        {% for jsMin in themeServices.grunt.staticAssets.global.js %}
-        <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
-        {% endfor %}
-
         <script type="text/javascript">
             var temp = {
                 'baseUrl':        '{{ head.baseUrl }}',
@@ -190,9 +179,26 @@
                 }
             };
 
-            var RozierRoot = temp
+            var RozierRoot = temp;
         </script>
-        <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
+
+        <!-- ##debug_panel## -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+        {% if head.devMode %}
+            <script src="https://unpkg.com/vue"></script>
+            <script src="https://unpkg.com/vuex"></script>
+        {% else %}
+            <script src="https://unpkg.com/vue@2.2.6/dist/vue.min.js"></script>
+            <script src="https://unpkg.com/vuex@2.2.1/dist/vuex.min.js"></script>
+        {% endif %}
+
+        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
+        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.custom.js"></script>
+
+        {% for jsMin in themeServices.grunt.staticAssets.global.js %}
+        <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
+        {% endfor %}
 
         {% block customScripts %}{% endblock %}
     </body>

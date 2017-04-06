@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "build": "NODE_ENV=production grunt",
+    "build": "npm run vue-build && NODE_ENV=production grunt",
     "vue-dev": "NODE_ENV=development ./node_modules/webpack/bin/webpack.js",
+    "vue-build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
     "dev": "grunt watch"
   },
   "devDependencies": {
