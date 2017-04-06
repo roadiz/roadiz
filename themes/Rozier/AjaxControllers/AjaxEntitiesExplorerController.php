@@ -126,7 +126,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
      * @param Request $request
      * @return JsonResponse
      */
-    public function listAction (Request $request)
+    public function listAction(Request $request)
     {
         if (!$request->query->has('nodeTypeFieldId')) {
             throw new InvalidParameterException('nodeTypeFieldId parameter is missing.');

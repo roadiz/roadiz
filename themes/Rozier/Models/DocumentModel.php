@@ -8,7 +8,6 @@
 
 namespace Themes\Rozier\Models;
 
-
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 

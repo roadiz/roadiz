@@ -60,8 +60,7 @@ class AjaxTagsController extends AbstractAjaxController
                     'parent' => null,
                 ], [
                     'position' => 'ASC',
-                ]
-            );
+                ]);
 
         $responseArray = [
             'status' => 'confirm',

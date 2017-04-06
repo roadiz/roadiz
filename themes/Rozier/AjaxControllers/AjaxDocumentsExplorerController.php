@@ -123,7 +123,8 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      * @param Request $request
      * @return JsonResponse
      */
-    public function listAction (Request $request) {
+    public function listAction(Request $request)
+    {
         /*
          * Validate
          */
@@ -172,7 +173,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      * @param $documents
      * @return array
      */
-    private function normalizeDocuments ($documents)
+    private function normalizeDocuments($documents)
     {
         $documentsArray = [];
 
@@ -190,7 +191,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      *
      * @return array
      */
-    private function getTrans ()
+    private function getTrans()
     {
         return [
             'editDocument' => $this->getTranslator()->trans('edit.document'),

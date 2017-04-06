@@ -116,7 +116,8 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      * @param Request $request
      * @return JsonResponse
      */
-    public function listAction (Request $request) {
+    public function listAction(Request $request)
+    {
         /*
          * Validate
          */
@@ -163,7 +164,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      * @param $nodes
      * @return array
      */
-    private function normalizeNodes ($nodes)
+    private function normalizeNodes($nodes)
     {
         $nodesArray = [];
 
