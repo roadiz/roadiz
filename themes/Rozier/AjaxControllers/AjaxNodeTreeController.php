@@ -47,16 +47,6 @@ class AjaxNodeTreeController extends AbstractAjaxController
      */
     public function getTreeAction(Request $request, $translationId = null)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, "GET")) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if (null === $translationId) {

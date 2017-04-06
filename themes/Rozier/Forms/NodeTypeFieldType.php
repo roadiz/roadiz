@@ -32,6 +32,7 @@ namespace Themes\Rozier\Forms;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
+use RZ\Roadiz\CMS\Forms\YamlType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +40,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- *
+ * Class NodeTypeFieldType
+ * @package Themes\Rozier\Forms
  */
 class NodeTypeFieldType extends AbstractType
 {
@@ -108,7 +110,7 @@ class NodeTypeFieldType extends AbstractType
                 'data-desc' => 'universal_fields_will_be_only_editable_from_default_translation'
             ],
         ])
-        ->add('defaultValues', 'text', [
+        ->add('defaultValues', new YamlType(), [
             'label' => 'defaultValues',
             'required' => false,
             'attr' => [
@@ -149,6 +151,9 @@ class NodeTypeFieldType extends AbstractType
             'attr' => [
                 'class' => 'uk-form node-type-field-form',
             ],
+            'constraints' => [
+                new \RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField(),
+            ]
         ]);
 
         $resolver->setRequired([

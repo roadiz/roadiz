@@ -14,7 +14,7 @@ export function getNodesSourceFromSearch (searchTerms) {
     }
 
     return request({
-        method: 'POST',
+        method: 'GET',
         url: RozierRoot.routes.searchNodesSourcesAjax,
         params: postData
     })

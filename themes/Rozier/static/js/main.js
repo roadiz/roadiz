@@ -394,7 +394,7 @@ Rozier.onSearchNodesSources = function (event) {
             console.log(postData);
             $.ajax({
                 url: Rozier.routes.searchNodesSourcesAjax,
-                type: 'POST',
+                type: 'GET',
                 dataType: 'json',
                 data: postData
             })
