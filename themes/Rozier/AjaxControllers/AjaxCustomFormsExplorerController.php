@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,6 +63,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
         $customForms = $listManager->getEntities();
 
         $customFormsArray = [];
+        /** @var CustomForm $customForm */
         foreach ($customForms as $customForm) {
             $customFormsArray[] = [
                 'id' => $customForm->getId(),
