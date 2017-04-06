@@ -46,16 +46,6 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $arrayFilter = [];
