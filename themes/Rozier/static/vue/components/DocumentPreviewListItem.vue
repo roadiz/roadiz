@@ -30,14 +30,11 @@
                         :href="document.editUrl"
                         class="uk-button document-link uk-button-mini">
                         <i class="uk-icon-rz-pencil"></i>
-                        <span class="label">{{ trans.editDocument }}</span>
                     </ajax-link><a
-                        data-document-widget-unlink-document
                         href="#"
                         @click.prevent="onRemoveItemButtonClick()"
                         class="uk-button uk-button-mini document-link uk-button-danger rz-no-ajax-link">
                         <i class="uk-icon-rz-minus"></i>
-                        <span class="label">{{ trans.unlinkDocument }}</span>
                     </a>
                 </div>
                 <template v-if="document.isEmbed">
@@ -51,7 +48,6 @@
                 <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">
                     <div class="link-button-inner">
                         <i class="uk-icon-rz-plus"></i>
-                        <span class="label">{{ trans.linkDocument }}</span>
                     </div>
                 </a>
             </div>
@@ -73,7 +69,8 @@
         props: ['item', 'trans', 'isItemExplorer', 'drawerName', 'index', 'removeItem'],
         data: function () {
             return {
-                document: this.item
+                document: this.item,
+                node: this.item
             }
         },
         filters: filters,

@@ -21,7 +21,6 @@
         outline: none;
     }
 
-
     &.explorer-open .widget-explorer-wrapper {
         position: absolute;
         top: 0;
@@ -291,6 +290,16 @@
             background:darken(#323232, 10%);
             border-color:darken(#4f4f4f, 10%);
             color:#a0a0a0;
+        }
+    }
+
+    &.entity-node {
+        .uk-sortable {
+            padding-top: 32px;
+        }
+
+        .nodes-widget-sortable-list-item {
+            width: 205px;
         }
     }
 }

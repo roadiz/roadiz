@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import api from '../../api'
 import {
     EXPLORER_REQUEST,
@@ -18,21 +19,25 @@ import {
 } from '../../types/mutationTypes'
 
 import {
-    DOCUMENT_ENTITY
+    DOCUMENT_ENTITY,
+    NODE_ENTITY
 } from '../../types/entityTypes'
 
 import DocumentPreviewListItem from '../../components/DocumentPreviewListItem.vue'
+import NodePreviewItem from '../../components/NodePreviewItem.vue'
 
 /**
  * Module state
  */
-const state = {
+const initialState = {
     searchTerms: '',
     isOpen: false,
     isLoading: false,
     isLoadingMore: false,
     items: [],
-    trans: null,
+    trans: {
+        moreItems: ''
+    },
     filters: {},
     entity: null,
     error: '',
@@ -41,7 +46,7 @@ const state = {
     filterExplorerIcon: 'uk-icon-cog'
 }
 
-const initialState = { ...state }
+const state = { ...initialState }
 
 /**
  * Getters
@@ -88,12 +93,21 @@ const actions =  {
     explorerMakeSearch ({ commit, state, getters }) {
         const entity = state.entity
         const searchTerms = state.searchTerms
+        const preFilters = getters.getDrawerFilters
         const filters = state.filters
         const filterExplorerSelection = getters.getFilterExplorerSelectedItem
+        const moreData = state.isLoadingMore
 
         commit(EXPLORER_REQUEST)
 
-        return api.getExplorerItems({ entity, searchTerms, filters, filterExplorerSelection })
+        return api.getExplorerItems({
+            entity,
+            searchTerms,
+            preFilters,
+            filters,
+            filterExplorerSelection,
+            moreData
+        })
             .then((result) => {
                 commit(EXPLORER_SUCCESS, { result })
             })
@@ -133,7 +147,6 @@ const mutations = {
         }
 
         state.filters = result.filters
-        state.trans = result.trans
     },
     [EXPLORER_LOAD_MORE] (state) {
         state.isLoadingMore = true
@@ -145,11 +158,12 @@ const mutations = {
         state.filters = {}
     },
     [EXPLORER_RESET] (state) {
-        state.searchTerms = ''
-        state.error = ''
-        state.filters = {}
-        state.isLoadingMore = false
-        state.filterExplorer = initialState.filterExplorer
+        // Reset state
+        for (let f in state) {
+            if (state.hasOwnProperty(f)) {
+                Vue.set(state, f, initialState[f]);
+            }
+        }
     },
     [EXPLORER_FAILED] (state) {
         state.isLoading = false
@@ -160,12 +174,20 @@ const mutations = {
         state.isOpen = true
         state.isLoading = true
         state.entity = entity
+        state.trans.moreItems = ''
 
         // Define specific config for each entity type
         switch (entity) {
             case DOCUMENT_ENTITY:
                 state.currentListingView = DocumentPreviewListItem
                 state.filterExplorerIcon = 'uk-icon-rz-folder-tree-mini'
+                state.trans.moreItems = 'moreDocuments'
+                state.isFilterEnable = true
+                break;
+            case NODE_ENTITY:
+                state.currentListingView = NodePreviewItem
+                state.filterExplorerIcon = 'uk-icon-tags'
+                state.trans.moreItems = 'moreNodes'
                 state.isFilterEnable = true
                 break;
         }
@@ -176,7 +198,6 @@ const mutations = {
     [EXPLORER_CLOSE] (state) {
         state.isOpen = false
         state.isLoading = false
-        state.drawer = null
     },
     [KEYBOARD_EVENT_ESCAPE] () {
         state.isOpen = false

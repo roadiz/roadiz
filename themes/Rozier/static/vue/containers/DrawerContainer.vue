@@ -6,7 +6,6 @@
 
     // Components
     import RzButton from '../components/RZButton.vue'
-    import DocumentPreviewListItem from '../components/DocumentPreviewListItem.vue'
     import draggable from 'vuedraggable'
     import Dropzone from '../components/Dropzone.vue'
 
@@ -18,17 +17,29 @@
             }
         },
         mounted: function () {
+            // Add the instance to the drawer store
             this.drawersAddInstance(this)
 
-            setTimeout(() => {
+            // Import
+            window.setTimeout(() => {
                 this.drawerName = this.$refs.drawer.getAttribute('name')
+
+                // Get initial needed data
                 const ids = JSON.parse(this.$refs.drawer.getAttribute('data-initial-items'))
                 const entity = this.$refs.drawer.getAttribute('data-accept-entity')
 
+                // Get specific filter
+                const nodeTypes = this.$refs.drawer.getAttribute('data-nodetypes')
+
+                // Merge specific filter in one object
+                const filters = { nodeTypes }
+
+                // Init data
                 this.drawersInitData({
                     drawer: this.drawer,
+                    entity,
                     ids,
-                    entity
+                    filters
                 })
             }, 0)
         },
@@ -41,12 +52,14 @@
                     let drawer = this.$store.getters.drawersGetById(this._uid)
                     return drawer ? drawer.isActive : false
                 },
-                trans: function (state) {
-                    return state.drawers.trans
-                }
+                trans: state => state.drawers.trans,
+                currentListingView: state => state.explorer.currentListingView
             }),
             drawer () {
                 return this.$store.getters.drawersGetById(this._uid)
+            },
+            trans: function () {
+                return this.drawer.trans
             },
             items: {
                 get () {
@@ -101,7 +114,6 @@
         },
         components: {
             RzButton,
-            DocumentPreviewListItem,
             draggable,
             Dropzone
         }

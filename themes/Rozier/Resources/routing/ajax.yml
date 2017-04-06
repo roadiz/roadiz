@@ -44,7 +44,11 @@ nodeTypesFieldAjaxEdit:
         _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction
         _format: json
     requirements: { nodeTypeFieldId : "[0-9]+" }
-
+nodesAjaxByArray:
+    path:     /nodes/list
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxNodesExplorerController::listAction
+        _format: json
 # Documents
 documentsAjaxExplorerPage:
     path:     /documents/explore
@@ -73,6 +77,12 @@ tagAjaxSearch:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::searchAction
         _format: json
+tagsAjaxExplorer:
+    path:     /tag/explore
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::indexAction
+        _format: json
+    methods: [GET]
 ## Ajax
 foldersAjaxEdit:
     path:     /folder/edit/{folderId}

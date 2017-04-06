@@ -44,6 +44,55 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AjaxTagsController extends AbstractAjaxController
 {
+
+    /**
+     * @param Request $request
+     *
+     * @return Response JSON response
+     */
+    public function indexAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $tags = $this->get('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->findBy([
+                    'parent' => null,
+                ], [
+                    'position' => 'ASC',
+                ]
+            );
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'tags' => $this->recurseTags($tags),
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    protected function recurseTags($tags = null)
+    {
+        $tagsArray = [];
+        if ($tags !== null) {
+            /** @var Tag $tag */
+            foreach ($tags as $tag) {
+                $children = $this->recurseTags($tag->getChildren());
+                $tagsArray[] = [
+                    'id' => $tag->getId(),
+                    'name' => $tag->getTagName(),
+                    'children' => $children,
+                ];
+            }
+        }
+
+        return $tagsArray;
+    }
+
     /**
      * Handle AJAX edition requests for Tag
      * such as comming from tagtree widgets.

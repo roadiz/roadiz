@@ -11,7 +11,8 @@ import {
 } from '../../types/mutationTypes'
 
 import {
-    DOCUMENT_ENTITY
+    DOCUMENT_ENTITY,
+    NODE_ENTITY
 } from '../../types/entityTypes'
 
 const initialState = {
@@ -93,6 +94,10 @@ const mutations = {
             case DOCUMENT_ENTITY:
                 state.icons.normal = 'uk-icon-folder'
                 state.icons.active = 'uk-icon-folder-open'
+                break;
+            case NODE_ENTITY:
+                state.icons.normal = 'uk-icon-tag'
+                state.icons.active = 'uk-icon-tag'
                 break;
         }
     },

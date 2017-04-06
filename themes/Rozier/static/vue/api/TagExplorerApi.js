@@ -5,21 +5,21 @@ import request from 'axios'
  *
  * @return Promise
  */
-export function getFolders () {
+export function getTags () {
     const postData = {
         _token: RozierRoot.ajaxToken,
-        _action: 'foldersExplorer',
+        _action: 'tagsExplorer',
     }
 
     return request({
         method: 'GET',
-        url: RozierRoot.routes.foldersAjaxExplorer,
+        url: RozierRoot.routes.tagsAjaxExplorer,
         params: postData
     })
         .then((response) => {
-            if (typeof response.data !== 'undefined' && response.data.folders) {
+            if (typeof response.data !== 'undefined' && response.data.tags) {
                 return {
-                    items: response.data.folders
+                    items: response.data.tags
                 }
             } else {
                 return {}

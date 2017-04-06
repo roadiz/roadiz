@@ -1,7 +1,10 @@
 <template>
     <transition name="slide-left">
         <div class="widget-explorer"
-             :class="{ 'filter-explorer-open': isFilterExplorerOpen, 'explorer-open': isOpen }"
+             :class="[{
+                'filter-explorer-open': isFilterExplorerOpen,
+                'explorer-open': isOpen
+             }, entityClass]"
              v-if="isOpen">
             <div class="widget-explorer-wrapper">
                 <div class="widget-explorer-header">
@@ -41,7 +44,6 @@
                             v-bind:is="currentListingView"
                             v-for="(item, index) in items"
                             :key="item.id"
-                            :trans="trans"
                             :is-item-explorer="true"
                             :add-item="addItem"
                             :index="index"
@@ -52,10 +54,11 @@
                             :next-page="filters.nextPage"
                             :load-more-items="explorerLoadMore"
                             :is-loading-more="isLoadingMore"
-                            :more-items-text="trans.moreItems">
+                            :more-items-text="translations[moreItems]">
                         </load-more-button>
 
                         <explorer-items-infos
+                            v-if="filters && filters.itemCount"
                             :length="items.length"
                             :item-count="filters.itemCount">
                         </explorer-items-infos>
@@ -82,8 +85,7 @@
         data: () => {
             return {
                 searchTerms: '',
-                searchPlaceHolder: '',
-                moreItems: 'More items',
+                searchPlaceHolder: ''
             }
         },
         computed: {
@@ -94,12 +96,14 @@
                 searchTerms: state => state.explorer.searchTerms,
                 items: state => state.explorer.items,
                 filters: state => state.explorer.filters,
-                trans: state => state.explorer.trans,
+                moreItems: state => state.explorer.trans.moreItems,
+                translations: state => state.translations,
                 entity: state => state.explorer.entity,
                 isFilterExplorerOpen: state => state.filterExplorer.isOpen,
                 currentListingView: state => state.explorer.currentListingView,
                 isFilterEnable: state => state.explorer.isFilterEnable,
-                filterExplorerIcon: state => state.explorer.filterExplorerIcon
+                filterExplorerIcon: state => state.explorer.filterExplorerIcon,
+                entityClass: state => 'entity-' + state.explorer.entity
             })
         },
         methods: {

@@ -19,6 +19,14 @@ import {
 } from '../../types/mutationTypes'
 import api from '../../api'
 
+import {
+    DOCUMENT_ENTITY,
+    NODE_ENTITY
+} from '../../types/entityTypes'
+
+import DocumentPreviewListItem from '../../components/DocumentPreviewListItem.vue'
+import NodePreviewItem from '../../components/NodePreviewItem.vue'
+
 /**
  * State
  *
@@ -40,6 +48,9 @@ const state = {
 const getters = {
     drawersGetById: (state, getters) => (id) => {
         return state.list.find(drawer => drawer.id === id)
+    },
+    getDrawerFilters: (state) => {
+        return state.selectedDrawer ? state.selectedDrawer.filters : null
     }
 }
 
@@ -53,14 +64,16 @@ const actions = {
     drawersRemoveInstance ({ commit }, drawerToRemove) {
         commit(DRAWERS_REMOVE_INSTANCE, { drawerToRemove })
     },
-    drawersInitData ({ commit }, { drawer, ids, entity }) {
-        commit(DRAWERS_INIT_DATA_REQUEST, { drawer, entity })
+    drawersInitData ({ commit }, { drawer, entity, ids, filters }) {
+        commit(DRAWERS_INIT_DATA_REQUEST, { drawer, entity, ids, filters })
 
+        // If no initial ids provided no need to use the api
         if (!ids || ids.length === 0 || !entity) {
             commit(DRAWERS_INIT_DATA_REQUEST_EMPTY, { drawer })
             return
         }
 
+        // If ids provided, fetch data and fill the Drawer
         api.getItemsByIds(entity, ids)
             .then((result) => {
                 commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result })
@@ -114,11 +127,15 @@ const actions = {
 const mutations = {
     [DRAWERS_ADD_INSTANCE] (state, { drawer }) {
         state.list.push({
+            entity: null,
             id: drawer._uid,
             isActive: false,
             items: [],
             errorMessage: null,
             isLoading: false,
+            filters: {
+                nodeTypes: null
+            },
             isDropzoneEnable: false
         })
     },
@@ -159,11 +176,22 @@ const mutations = {
     [DRAWERS_INIT_DATA_REQUEST_SUCCESS] (state, { drawer, result }) {
         drawer.isLoading = false
         drawer.items = result.items
-        state.trans = result.trans
+        drawer.trans = result.trans
     },
-    [DRAWERS_INIT_DATA_REQUEST] (state, { drawer, entity }) {
+    [DRAWERS_INIT_DATA_REQUEST] (state, { drawer, entity, filters }) {
         drawer.isLoading = true
         drawer.entity = entity
+        drawer.filters.nodeTypes = filters.nodeTypes
+
+        // Define specific config for each entity type
+        switch (entity) {
+            case DOCUMENT_ENTITY:
+                drawer.currentListingView = DocumentPreviewListItem
+                break;
+            case NODE_ENTITY:
+                drawer.currentListingView = NodePreviewItem
+                break;
+        }
     },
     [DRAWERS_INIT_DATA_REQUEST_FAILED] (state, { drawer, error }) {
         drawer.isLoading = false
