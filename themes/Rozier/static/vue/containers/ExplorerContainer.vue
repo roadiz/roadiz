@@ -26,6 +26,7 @@
                                        name="searchTerms"
                                        value=""
                                        v-model="searchTerms"
+                                       autocomplete="off"
                                        @keyup.enter.stop.prevent="manualUpdate"
                                        :placeholder="searchPlaceHolder" />
                             </div>
