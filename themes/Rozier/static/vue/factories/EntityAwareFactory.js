@@ -1,12 +1,14 @@
 import {
     DOCUMENT_ENTITY,
     NODE_ENTITY,
-    JOIN_ENTITY
+    JOIN_ENTITY,
+    CUSTOM_FORM_ENTITY
 } from '../types/entityTypes'
 
 import DocumentPreviewListItem from '../components/DocumentPreviewListItem.vue'
 import NodePreviewItem from '../components/NodePreviewItem.vue'
 import JoinPreviewItem from '../components/JoinPreviewItem.vue'
+import CustomFormPreviewItem from '../components/CustomFormPreviewItem.vue'
 
 export default class EntityAwareFactory {
     static getState (entity) {
@@ -22,18 +24,22 @@ export default class EntityAwareFactory {
                 result.filterExplorerIcon = 'uk-icon-rz-folder-tree-mini'
                 result.trans.moreItems = 'moreDocuments'
                 result.isFilterEnable = true
-                break;
+                break
             case NODE_ENTITY:
                 result.currentListingView = NodePreviewItem
                 result.filterExplorerIcon = 'uk-icon-tags'
                 result.trans.moreItems = 'moreNodes'
                 result.isFilterEnable = true
-                break;
+                break
             case JOIN_ENTITY:
                 result.currentListingView = JoinPreviewItem
                 result.trans.moreItems = 'moreEntities'
                 result.isFilterEnable = false
-                break;
+                break
+            case CUSTOM_FORM_ENTITY:
+                result.currentListingView = CustomFormPreviewItem
+                result.isFilterEnable = false
+                break
         }
 
         return result
@@ -47,6 +53,8 @@ export default class EntityAwareFactory {
                 return NodePreviewItem
             case JOIN_ENTITY:
                 return JoinPreviewItem
+            case CUSTOM_FORM_ENTITY:
+                return CustomFormPreviewItem
         }
     }
 }

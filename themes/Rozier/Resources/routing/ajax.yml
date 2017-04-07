@@ -94,6 +94,12 @@ customFormsAjaxExplorerPage:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::indexAction
         _format: json
+customFormsAjaxByArray:
+    path:     /custom-forms/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::listAction
+        _format: json
 ## Ajax
 tagAjaxEdit:
     path:     /tag/edit/{tagId}

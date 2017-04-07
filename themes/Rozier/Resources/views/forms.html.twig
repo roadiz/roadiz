@@ -196,37 +196,44 @@
 {% endblock join_widget %}
 
 {% block custom_forms_widget %}
-    {% spaceless %}
-        <div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-            <nav class="custom-forms-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="custom-forms-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-custom-form-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}custom-forms.toggle-explorer{% endtrans %}</a>
-                    </div>
-                </div>
-            </nav>
-            <ul class="uk-sortable custom-forms-widget-sortable" data-uk-sortable="{group:'custom-forms-widget', dragCustomClass:'custom-forms-widget-dragging'}" data-input-name="{{ name }}">
-                {% for customForm in data %}
-                    {% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {
-                    'customForm':customForm,
-                    'name': name,
-                    'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
-                    'read_only': read_only,
-                    'disabled':disabled,
-                    'required':required,
-                    'attr': attr
-                    } only %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endspaceless %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'custom-form',
+        icon: 'uk-icon-rz-surveys-big'
+    } %}
+
+    {#{% spaceless %}#}
+        {#<div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>#}
+            {#{% if label is empty -%}#}
+                {#{% set label = name|humanize %}#}
+            {#{%- endif -%}#}
+            {#<nav class="custom-forms-widget-nav uk-navbar">#}
+                {#<ul class="uk-navbar-nav">#}
+                    {#<li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>#}
+                    {#<li class="uk-navbar-brand label">{{ label|trans }}</li>#}
+                {#</ul>#}
+                {#<div class="uk-navbar-content uk-navbar-flip">#}
+                    {#<div class="custom-forms-widget-quick-creation uk-button-group">#}
+                        {#<a class="uk-button uk-button-small" href="#" data-custom-form-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}custom-forms.toggle-explorer{% endtrans %}</a>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</nav>#}
+            {#<ul class="uk-sortable custom-forms-widget-sortable" data-uk-sortable="{group:'custom-forms-widget', dragCustomClass:'custom-forms-widget-dragging'}" data-input-name="{{ name }}">#}
+                {#{% for customForm in data %}#}
+                    {#{% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {#}
+                    {#'customForm':customForm,#}
+                    {#'name': name,#}
+                    {#'full_name': full_name ~ '[' ~ loop.index0 ~ ']',#}
+                    {#'read_only': read_only,#}
+                    {#'disabled':disabled,#}
+                    {#'required':required,#}
+                    {#'attr': attr#}
+                    {#} only %}#}
+                {#{% endfor %}#}
+            {#</ul>#}
+        {#</div>#}
+    {#{% endspaceless %}#}
 {% endblock custom_forms_widget %}
 
 {% block checkbox_widget -%}
