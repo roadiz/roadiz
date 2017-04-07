@@ -16,16 +16,7 @@ import {
 
     KEYBOARD_EVENT_ESCAPE
 } from '../../types/mutationTypes'
-
-import {
-    DOCUMENT_ENTITY,
-    NODE_ENTITY,
-    JOIN_ENTITY
-} from '../../types/entityTypes'
-
-import DocumentPreviewListItem from '../../components/DocumentPreviewListItem.vue'
-import NodePreviewItem from '../../components/NodePreviewItem.vue'
-import JoinPreviewItem from '../../components/JoinPreviewItem.vue'
+import EntityAwareFactory from '../../factories/EntityAwareFactory'
 
 /**
  * Module state
@@ -185,25 +176,13 @@ const mutations = {
         state.entity = entity
         state.trans.moreItems = ''
 
-        // Define specific config for each entity type
-        switch (entity) {
-            case DOCUMENT_ENTITY:
-                state.currentListingView = DocumentPreviewListItem
-                state.filterExplorerIcon = 'uk-icon-rz-folder-tree-mini'
-                state.trans.moreItems = 'moreDocuments'
-                state.isFilterEnable = true
-                break;
-            case NODE_ENTITY:
-                state.currentListingView = NodePreviewItem
-                state.filterExplorerIcon = 'uk-icon-tags'
-                state.trans.moreItems = 'moreNodes'
-                state.isFilterEnable = true
-                break;
-            case JOIN_ENTITY:
-                state.currentListingView = JoinPreviewItem
-                state.trans.moreItems = 'moreEntities'
-                state.isFilterEnable = false
-                break;
+        const previewState = EntityAwareFactory.getState(entity)
+
+        // Set previewState value to the state
+        for (let f in previewState) {
+            if (state.hasOwnProperty(f)) {
+                Vue.set(state, f, previewState[f]);
+            }
         }
     },
     [EXPLORER_IS_LOADED] (state) {

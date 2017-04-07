@@ -55,7 +55,7 @@
                             :next-page="filters.nextPage"
                             :load-more-items="explorerLoadMore"
                             :is-loading-more="isLoadingMore"
-                            :more-items-text="translations[moreItems]">
+                            :more-items-text="moreItems ? translations[moreItems] : ''">
                         </load-more-button>
 
                         <explorer-items-infos
