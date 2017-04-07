@@ -27,7 +27,7 @@
             <div class="document-overflow">
                 <div class="document-links">
                     <ajax-link
-                        :href="document.editUrl"
+                        :href="document.editUrl + getReferer()"
                         class="uk-button document-link uk-button-mini">
                         <i class="uk-icon-rz-pencil"></i>
                     </ajax-link><a
@@ -83,6 +83,9 @@
             onRemoveItemButtonClick: function () {
                 // Call parent function to remove the document from widget
                 this.removeItem(this.item)
+            },
+            getReferer: function () {
+                return '?referer=' + window.location.pathname
             }
         },
         components: {

@@ -21,7 +21,7 @@
             <span class="name">{{ name }}</span>
             <input type="hidden" :name="drawerName + '[' + index +']'" :value="item.id" />
             <div class="links" :class="editItem ? '' : 'no-edit'">
-                <ajax-link :href="editItem" class="uk-button link uk-button-mini" v-if="editItem">
+                <ajax-link :href="editItem + getReferer()" class="uk-button link uk-button-mini" v-if="editItem">
                     <i class="uk-icon-rz-pencil"></i>
                 </ajax-link><a href="#"
                                class="uk-button uk-button-mini link uk-button-danger rz-no-ajax-link"
@@ -95,6 +95,9 @@
                 }
 
                 return null
+            },
+            getReferer: function () {
+                return '?referer=' + window.location.pathname
             }
         },
         components: {
