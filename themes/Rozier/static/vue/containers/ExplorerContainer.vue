@@ -41,17 +41,22 @@
 
                 <transition name="fade">
                     <ul class="uk-sortable" v-if="!isLoading">
-                        <component
-                            v-bind:is="currentListingView"
-                            v-for="(item, index) in items"
-                            :key="item.id"
-                            :is-item-explorer="true"
-                            :add-item="addItem"
-                            :index="index"
-                            :item="item">
-                        </component>
+                        <draggable v-model="items" :options="{ group: entity }">
+                            <transition-group style="display:block; min-height: 80px;">
+                                <component
+                                    v-bind:is="currentListingView"
+                                    v-for="(item, index) in items"
+                                    :key="item.id"
+                                    :is-item-explorer="true"
+                                    :add-item="addItem"
+                                    :index="index"
+                                    :item="item">
+                                </component>
+                            </transition-group>
+                        </draggable>
 
                         <load-more-button
+                            v-if="filters"
                             :next-page="filters.nextPage"
                             :load-more-items="explorerLoadMore"
                             :is-loading-more="isLoadingMore"
@@ -81,6 +86,7 @@
     import LoadMoreButton from '../components/LoadMoreButton.vue'
     import ExplorerItemsInfos from '../components/ExplorerItemsInfos.vue'
     import FilterExplorerButton from '../components/FilterExplorerButton.vue'
+    import draggable from 'vuedraggable'
 
     export default {
         data: () => {
@@ -130,7 +136,8 @@
         components: {
             LoadMoreButton,
             ExplorerItemsInfos,
-            FilterExplorerButton
+            FilterExplorerButton,
+            draggable,
         }
     }
 </script>
