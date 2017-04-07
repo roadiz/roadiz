@@ -148,7 +148,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
         $indexes = array_filter($indexes);
         return '
 /**
- * Generated custom node-source type from RZ-CMS backoffice.
+ * Generated custom node-source type from Roadiz backoffice.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
  * @ORM\Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
