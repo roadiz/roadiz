@@ -10,7 +10,6 @@ import {
     EXPLORER_LOAD_MORE,
     EXPLORER_LOAD_MORE_SUCCESS,
     EXPLORER_IS_LOADED,
-    EXPLORER_UPDATE_FILTERS,
     EXPLORER_UPDATE_SEARCH_TERMS,
 
     FILTER_EXPLORER_UPDATE,
@@ -62,8 +61,7 @@ const getters = {
  */
 const actions =  {
     async explorerOpen ({ commit, dispatch, state }, { entity }) {
-        // Prevent if panel is already open
-        if (state.isOpen) return
+        dispatch('filterExplorerClose')
 
         // Reset explorer
         commit(EXPLORER_RESET)
@@ -86,6 +84,15 @@ const actions =  {
             dispatch('explorerClose')
         } else {
             dispatch('explorerOpen')
+        }
+    },
+    explorerResetSearchTerms ({ commit, state, dispatch }) {
+        const searchTerms = ''
+
+        if (state.searchTerms === searchTerms) {
+            commit(EXPLORER_UPDATE_SEARCH_TERMS, { searchTerms })
+        } else {
+            dispatch('explorerUpdateSearch', { searchTerms })
         }
     },
     explorerUpdateSearch ({ commit, dispatch }, { searchTerms }) {

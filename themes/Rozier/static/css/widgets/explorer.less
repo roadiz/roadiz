@@ -143,14 +143,14 @@
 
     .documents-widget-sortable-list-item{
         cursor: default;
-        margin-top: 32px;
         overflow: initial;
         background: #4f4f4f;
         list-style-type: none;
+        margin-bottom: 22px;
 
         &:hover{
             .link-button-inner{
-                bottom: 0px;
+                bottom: 0;
             }
             &.not-image {
                 .document-name {
@@ -283,7 +283,6 @@
         &:hover{
             background:darken(#323232, 5%);
             border-color:darken(#4f4f4f, 5%);
-            //color:lighten(#ccc, 10%);
         }
 
         &:active, &:focus{
@@ -293,14 +292,10 @@
         }
     }
 
-    &.entity-join,
-    &.entity-node {
-        .uk-sortable {
-            padding-top: 32px;
-        }
+    .uk-sortable {
+        padding-top: 32px;
 
-        .joins-widget-sortable-list-item,
-        .nodes-widget-sortable-list-item {
+        .drawer-item.type-label {
             width: 205px;
         }
     }

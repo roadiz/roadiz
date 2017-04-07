@@ -39,6 +39,7 @@ const actions = {
 
         commit(FILTER_EXPLORER_OPEN, { entity })
 
+        dispatch('explorerResetSearchTerms')
         dispatch('filterExplorerMakeSearch')
     },
     filterExplorerUpdate ({ commit, dispatch }, { item }) {
@@ -104,6 +105,7 @@ const mutations = {
     [FILTER_EXPLORER_CLOSE] (state) {
         state.isOpen = false
         state.selectedItem = null
+        state.items = []
     },
     [FILTER_EXPLORER_FAILED] (state, { error }) {
         state.isLoading = false

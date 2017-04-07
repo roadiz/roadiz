@@ -66,11 +66,10 @@
     import AjaxLink from '../components/AjaxLink.vue'
 
     export default {
-        props: ['item', 'trans', 'isItemExplorer', 'drawerName', 'index', 'removeItem'],
+        props: ['item', 'isItemExplorer', 'drawerName', 'index', 'removeItem', 'addItem'],
         data: function () {
             return {
-                document: this.item,
-                node: this.item
+                document: this.item
             }
         },
         filters: filters,
@@ -78,7 +77,7 @@
             onAddItemButtonClick: function () {
                 // If document is in the explorer panel
                 if (this.isItemExplorer) {
-                    this.$parent.addItem(this.item)
+                    this.addItem(this.item)
                 }
             },
             onRemoveItemButtonClick: function () {

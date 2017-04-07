@@ -77,7 +77,7 @@ export function getJoins ({ searchTerms, preFilters, filters, filterExplorerSele
     const postData = {
         _token: RozierRoot.ajaxToken,
         _action: 'toggleExplorer',
-        nodeTypeFieldId: preFilters.nodeTypeField,
+        nodeTypeFieldId: preFilters ? preFilters.nodeTypeField : null,
         search: searchTerms,
         page: 1
     }

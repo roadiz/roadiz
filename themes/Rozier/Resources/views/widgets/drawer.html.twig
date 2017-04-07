@@ -65,9 +65,9 @@
                             v-bind:is="drawer.currentListingView"
                             v-for="(item, index) in items"
                             :key="item.id"
-                            :trans="trans"
                             :drawer-name="drawerName"
                             :is-item-explorer="false"
+                            :add-item="addItem"
                             :remove-item="removeItem"
                             :index="index"
                             :item="item">

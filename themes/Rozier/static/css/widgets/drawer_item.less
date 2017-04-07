@@ -1,7 +1,13 @@
-/*
-* List item variant inside explorer
-*/
-.widget-explorer .nodes-widget-sortable-list-item {
+/* -------- VARS -------- */
+
+@drawer-item-border :         #cbcbcb;
+@drawer-item-btn-bg :         #ededed;
+@drawer-item-btn-border :     #bfbfbf;
+@drawer-item-btn-color :      #2d2d2d;
+@drawer-item-height : 40px;
+
+/* -------- STYLES -------- */
+.widget-explorer .drawer-item.type-label {
     cursor: pointer;
     background: #4C4C4C;
     color:#888;
@@ -13,32 +19,37 @@
         }
     }
 
-    .node-links {
+    .links {
         display: none;
     }
 
     .link-button {
         position: absolute;
         display: block;
-        top:0; right:0; bottom:0; left:0;
-        width:100%; height:100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background:none;
 
         &-inner{
             position: absolute;
-            width:@nodes-widget-height;
-            height:@nodes-widget-height;
-            top:0; right:-@nodes-widget-height;
-            background:#BBBBBB;
+            width: @drawer-item-height;
+            height: @drawer-item-height;
+            top: 0;
+            right: -@drawer-item-height;
+            background: #BBBBBB;
             text-align: center;
             .transition(0.4s right @easeOutExpo);
             .transition-timing-function(@easeOutExpo);
             .opacity(0.95);
 
             i {
-                color:#333;
-                margin:0;
-                line-height:@nodes-widget-height;
+                color: #333;
+                margin: 0;
+                line-height: @drawer-item-height;
             }
             .label{
                 display: none;
@@ -46,8 +57,7 @@
         }
     }
 
-
-    .parent-node-name {
+    .parent-name {
         color: rgba(255, 255, 255, 0.25);
     }
 
@@ -56,55 +66,64 @@
     }
 }
 
-
-.nodes-widget-sortable-list-item,
-.nodes-widget-dragging {
+.drawer-item.type-label {
     position: relative;
     display: inline-block;
     width: 240px - 15;
-    height: @nodes-widget-height - 7 - 6;
-    margin:0 10px 0 0;
+    height: @drawer-item-height - 7 - 6;
+    margin: 0 10px 0 0;
     padding: 7px 0 6px 15px;
     background: #E5E5E5;
-    color:#666;
-    font-size:12px; line-height:@nodes-widget-height;
+    color: #666;
+    font-size: 12px;
+    line-height: @drawer-item-height;
     font-weight: 600;
     overflow: hidden;
     cursor: default;
     .border-radius(3px, 3px, 0, 0);
-    .transition(0.4s background @easeOutExpo);
+    .transition(0.4s background @easeOutExpo, 0.4s opacity @easeOutExpo);
 
     &:hover{
         background: darken(#DDD, 3%);
-        .node-links{
+
+        .links {
             right: 0;
         }
     }
 
-    .node-border{
+    .border{
         position: absolute;
-        top:0; bottom:0; left:0;
-        width:4px;
-        background:@contrast-color;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        background: @contrast-color;
     }
 
-    .node-links {
+    .links {
         position:absolute;
-        width:@nodes-widget-height*2; height:@nodes-widget-height;
-        top:0; right:-@nodes-widget-height*2;
+        width: @drawer-item-height * 2;
+        height: @drawer-item-height;
+        top:0;
+        right: -@drawer-item-height * 2;
         overflow: hidden;
         .transition(0.4s right @easeOutExpo);
 
-        .node-link{ // a
+        &.no-edit {
+            width: @drawer-item-height;
+        }
+
+        .link {
             display: inline-block;
-            width:@nodes-widget-height; height:@nodes-widget-height;
+            width: @drawer-item-height;
+            height: @drawer-item-height;
             .rounded(0);
-            color:#333;
+            color: #333;
             .opacity(0.95);
             vertical-align: top;
 
             &:hover{
-                color:darken(#333, 10%);
+                color: darken(#333, 10%);
             }
             &:first-child{
                 background: #aaa;
@@ -115,8 +134,8 @@
             }
 
             i{
-                margin:0;
-                line-height:@nodes-widget-height;
+                margin: 0;
+                line-height: @drawer-item-height;
             }
 
             .label{
@@ -124,7 +143,9 @@
             }
         }
     }
-    .parent-node-name {
+
+    .parent-name {
+        height: 12px;
         font-size: 8px;
         text-transform: uppercase;
         display: block;
@@ -143,13 +164,13 @@
                 &:after {
                     content: '/';
                     display: inline-block;
-                    margin: 0px 3px;
+                    margin: 0 3px;
                 }
             }
         }
     }
 
-    .node-name {
+    .name {
         line-height: 16px;
         display: block;
         padding-right: 10px;
@@ -161,7 +182,8 @@
 
     &.not-published {
         opacity: 0.5;
-        .node-name {
+
+        .name {
             font-style: italic;
         }
     }
