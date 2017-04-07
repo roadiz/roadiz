@@ -56,6 +56,7 @@ class CustomFormModel
             'id' => $this->customForm->getId(),
             'name' => $this->customForm->getDisplayName(),
             'countFields' => $countFields,
+            'color' => $this->customForm->getColor(),
             'customFormsEditPage' => $urlGenerator->generate('customFormsEditPage', [
                 'customFormId' => $this->customForm->getId()
             ]),

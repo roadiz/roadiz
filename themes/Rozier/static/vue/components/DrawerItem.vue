@@ -90,6 +90,8 @@
             getColor: function () {
                 if (this.item.nodeType && this.item.nodeType.color) {
                     return this.item.nodeType.color
+                } else if (this.item.color) {
+                    return this.item.color
                 }
 
                 return null
