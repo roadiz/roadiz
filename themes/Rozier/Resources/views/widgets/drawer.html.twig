@@ -61,17 +61,19 @@
                 <ul class="drawer-widget-sortable"
                     data-input-name="{{ name }}">
                     <draggable v-model="items" :options="{ group: '{{ entity }}' }">
-                        <component
-                            v-bind:is="drawer.currentListingView"
-                            v-for="(item, index) in items"
-                            :key="item.id"
-                            :drawer-name="drawerName"
-                            :is-item-explorer="false"
-                            :add-item="addItem"
-                            :remove-item="removeItem"
-                            :index="index"
-                            :item="item">
-                        </component>
+                        <transition-group style="display:block; min-height: 80px;">
+                            <component
+                                v-bind:is="drawer.currentListingView"
+                                v-for="(item, index) in items"
+                                :key="item.id"
+                                :drawer-name="drawerName"
+                                :is-item-explorer="false"
+                                :add-item="addItem"
+                                :remove-item="removeItem"
+                                :index="index"
+                                :item="item">
+                            </component>
+                        </transition-group>
                     </draggable>
                 </ul>
             </div>
