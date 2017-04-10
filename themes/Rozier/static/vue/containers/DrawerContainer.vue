@@ -1,4 +1,6 @@
+<!-- Inline template 'views/widgets/drawer.html.twig' -->
 <script>
+    import Vue from 'Vue'
     import { mapActions, mapState, mapGetters } from 'vuex'
     import {
         DRAWERS_UPDATE_LIST
@@ -10,6 +12,7 @@
     import Dropzone from '../components/Dropzone.vue'
 
     export default {
+        props: ['entity'],
         data: () => {
             return {
                 drawerName: null,
@@ -21,7 +24,7 @@
             this.drawersAddInstance(this)
 
             // Import
-            window.setTimeout(() => {
+            Vue.nextTick(() => {
                 this.drawerName = this.$refs.drawer.getAttribute('name')
 
                 // Get initial needed data
@@ -42,7 +45,7 @@
                     ids,
                     filters
                 })
-            }, 0)
+            })
         },
         beforeDestroy: function () {
             this.drawersRemoveInstance(this)

@@ -1,14 +1,23 @@
-<!-- Inline template in 'node-type-fields/add.html.twig' -->
+<!-- Inline template in 'node-type-fields/add.html.twig' and 'node-type-fields/edit.html.twig' -->
 <script>
+    import Vue from 'Vue'
+    import { mapActions } from 'vuex'
+
+    // Containers and Components
+    import RzTextarea from '../components/RzTextarea.vue'
+    import CodeMirror from '../components/CodeMirror.vue'
+    import NodeTypesDrawerContainer from './NodeTypesDrawerContainer.vue'
+
     export default {
         data: function () {
             return {
-                selected: ''
+                selected: '',
+                currentView: null,
+                entity: '',
+                mode: ''
             }
         },
         mounted: function () {
-            // Trigger first value
-            this.selected = 0
 
             // Get elements
             this.$formColIndexed = $(this.$el.getElementsByClassName('form-col-indexed')[0])
@@ -17,6 +26,17 @@
             this.$formColMaxLength = $(this.$el.getElementsByClassName('form-col-maxLength')[0])
             this.$formColDefaultValues = $(this.$el.getElementsByClassName('form-col-defaultValues')[0])
 
+            // Select element
+            this.$formSelectOption = $(this.$el).find('#nodetypefield_type option')
+
+            // Trigger selected value
+            for (let el of this.$formSelectOption) {
+                if ($(el).attr('selected')) {
+                    this.selected = $(el).val()
+                }
+            }
+
+            // Merge elements into a single array
             this.$formElements = {
                 indexed: this.$formColIndexed,
                 universal: this.$formColUniversal,
@@ -38,22 +58,57 @@
                 universal: true,
                 minLength: false,
                 maxLength: false,
-                defaultValues: false
+                defaultValues: true
             }
+
+            // Set default view
+            this.currentView = RzTextarea
 
             // Define specific config for each select value
             this.config = {
                 1: {
-                    defaultValues: true
+                    minLength: true,
+                    maxLength: true,
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
+                    }
+                },
+                13: { // Référence de noeuds
+                    defaultValues: {
+                        view: NodeTypesDrawerContainer,
+                        entity: 'node-type'
+                    }
+                },
+                16: { // Noeuds enfants
+                    defaultValues: {
+                        view: NodeTypesDrawerContainer,
+                        entity: 'node-type'
+                    }
                 }
             }
         },
         watch: {
             selected: function (newValue) {
-                this.setConfig(newValue)
+                this.escape()
+
+                // Reset data
+                this.currentView = null
+                this.entity = null
+
+                console.log(newValue)
+
+                Vue.nextTick(() => {
+                    this.setConfig(newValue)
+                })
             }
         },
         methods: {
+            ...mapActions([
+                'escape',
+                'explorerClose',
+                'filterExplorerClose'
+            ]),
             setConfig: function (value) {
                 let config = this.defaultConfig
 
@@ -61,19 +116,26 @@
                     config = { ...config, ...this.config[value] }
                 }
 
+                // For each elements
                 for (let key in this.$formElements) {
+                    // Check the config
                     if (this.$formElements.hasOwnProperty(key) && config.hasOwnProperty(key)) {
-                        if (config[key]) {
+                        if (config[key] === true) {
                             this.$formElements[key].removeClass('hidden')
+                            this.currentView = RzTextarea
+                        } else if (typeof(config[key]) === 'object') {
+                            this.$formElements[key].removeClass('hidden')
+
+                            this.entity = config[key].entity
+                            this.mode = config[key].mode
+                            this.currentView = config[key].view
                         } else {
                             this.$formElements[key].addClass('hidden')
+                            this.currentView = RzTextarea
                         }
                     }
                 }
             }
-        },
-        components: {
-
         }
     }
 </script>

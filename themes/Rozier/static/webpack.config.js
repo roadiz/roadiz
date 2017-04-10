@@ -67,6 +67,10 @@ var config = {
                 query: {
                     presets: ['env']
                 }
+            },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
             }
         ]
     },

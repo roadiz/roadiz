@@ -100,6 +100,7 @@
                 'googleClientId': '{{ head.googleClientId }}',
                 'defaultMapLocation': {{ head.mapsLocation|default('null')|raw }},
                 'messages': {
+                    'explorer':          '{{ 'documents.toggle-explorer'|trans() }}',
                     'forbiddenPage':     '{{ 'forbidden.page'|trans() }}',
                     'document':          '{{ 'document'|trans() }}',
                     'documents':         '{{ 'documents'|trans() }}',
@@ -113,6 +114,7 @@
                     'searchCustomForms': '{{ 'search.custom_forms'|trans() }}',
                     'moreDocuments':     '{{ 'more.documents'|trans() }}',
                     'moreNodes':         '{{ 'more.nodes'|trans() }}',
+                    'moreNodeTypes':     '{{ 'more.nodes'|trans() }}',
                     'moreEntities':      '{{ 'more.entities'|trans() }}',
                     'moreCustomForms':   '{{ 'more.custom_forms'|trans() }}',
                     'dropzone' : {
@@ -166,6 +168,8 @@
                     'documentsAjaxExplorer' :     '{{ path('documentsAjaxExplorerPage') }}',
                     'documentsAjaxByArray' :      '{{ path('documentsAjaxByArray') }}',
                     'customFormsAjaxByArray' :    '{{ path('customFormsAjaxByArray') }}',
+                    'nodeTypesAjaxByArray' :      '{{ path('nodeTypesAjaxByArray') }}',
+                    'nodeTypesAjaxExplorer' :     '{{ path('nodeTypesAjaxExplorer') }}',
                     'joinsAjaxByArray' :          '{{ path('entitiesAjaxByArray') }}',
                     'nodesAjaxByArray' :          '{{ path('nodesAjaxByArray') }}',
                     'tagsAjaxExplorer' :          '{{ path('tagsAjaxExplorer') }}',

@@ -48,6 +48,18 @@ nodeTypesFieldAjaxEdit:
         _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction
         _format: json
     requirements: { nodeTypeFieldId : "[0-9]+" }
+nodeTypesAjaxByArray:
+    path:     /node-types/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypesController::listAction
+        _format: json
+nodeTypesAjaxExplorer:
+    path:     /node-types/explorer
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypesController::indexAction
+        _format: json
 nodesAjaxByArray:
     path:     /nodes/list
     methods: [GET]

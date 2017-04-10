@@ -133,6 +133,19 @@
     {% endspaceless %}
 {% endblock yaml_widget %}
 
+{% block dynamic_widget %}
+    {% spaceless %}
+        {# just let the textarea widget render the select tag #}
+        <component
+            :is="currentView"
+            :entity="entity"
+            :mode="mode"
+            {{ block('widget_attributes') }}
+            initial-value="{{ value }}">
+        </component>
+    {% endspaceless %}
+{% endblock dynamic_widget %}
+
 {% block tags_widget %}
     {% spaceless %}
         <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>

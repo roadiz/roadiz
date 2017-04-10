@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import {
-    KEYBOARD_EVENT_SAVE
+    KEYBOARD_EVENT_SAVE,
+    KEYBOARD_EVENT_ESCAPE
 } from '../types/mutationTypes'
 
 // Modules
@@ -18,6 +19,11 @@ export default new Vuex.Store({
     },
     state: {
         translations: RozierRoot.messages
+    },
+    actions: {
+        escape ({ commit }) {
+            commit(KEYBOARD_EVENT_ESCAPE)
+        }
     },
     mutations: {
         [KEYBOARD_EVENT_SAVE] () {

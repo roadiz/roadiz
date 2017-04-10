@@ -110,7 +110,7 @@ class NodeTypeFieldType extends AbstractType
                 'data-desc' => 'universal_fields_will_be_only_editable_from_default_translation'
             ],
         ])
-        ->add('defaultValues', new YamlType(), [
+        ->add('defaultValues', new DynamicType(), [
             'label' => 'defaultValues',
             'required' => false,
             'attr' => [

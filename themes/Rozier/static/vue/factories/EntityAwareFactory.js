@@ -1,6 +1,7 @@
 import {
     DOCUMENT_ENTITY,
     NODE_ENTITY,
+    NODE_TYPE_ENTITY,
     JOIN_ENTITY,
     CUSTOM_FORM_ENTITY
 } from '../types/entityTypes'
@@ -9,6 +10,7 @@ import DocumentPreviewListItem from '../components/DocumentPreviewListItem.vue'
 import NodePreviewItem from '../components/NodePreviewItem.vue'
 import JoinPreviewItem from '../components/JoinPreviewItem.vue'
 import CustomFormPreviewItem from '../components/CustomFormPreviewItem.vue'
+import NodeTypePreviewItem from '../components/NodeTypePreviewItem.vue'
 
 export default class EntityAwareFactory {
     static getState (entity) {
@@ -40,6 +42,11 @@ export default class EntityAwareFactory {
                 result.currentListingView = CustomFormPreviewItem
                 result.isFilterEnable = false
                 break
+            case NODE_TYPE_ENTITY:
+                result.currentListingView = NodeTypePreviewItem
+                result.trans.moreItems = 'moreNodeTypes'
+                result.isFilterEnable = false
+                break
         }
 
         return result
@@ -55,6 +62,8 @@ export default class EntityAwareFactory {
                 return JoinPreviewItem
             case CUSTOM_FORM_ENTITY:
                 return CustomFormPreviewItem
+            case NODE_TYPE_ENTITY:
+                return NodeTypePreviewItem
         }
     }
 }

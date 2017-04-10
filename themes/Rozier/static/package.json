@@ -17,6 +17,7 @@
     "babel-preset-stage-0": "^6.22.0",
     "babel-preset-stage-2": "^6.22.0",
     "babel-preset-stage-3": "^6.22.0",
+    "css-loader": "^0.28.0",
     "csswring": "^3.0.5",
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "~0.6.0",
@@ -30,6 +31,7 @@
     "grunt-postcss": "^0.4.0",
     "grunt-static-versioning": "~0.2.2",
     "jit-grunt": "~0.9.1",
+    "style-loader": "^0.16.1",
     "time-grunt": "^1.2.1",
     "vue-loader": "^11.1.4",
     "vue-template-compiler": "^2.2.2",
@@ -37,6 +39,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "codemirror": "^5.25.0",
     "lodash": "^4.17.4",
     "mousetrap": "^1.6.0",
     "vue2-dropzone": "^2.2.4",
