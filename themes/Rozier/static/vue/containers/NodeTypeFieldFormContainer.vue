@@ -58,7 +58,7 @@
                 universal: true,
                 minLength: false,
                 maxLength: false,
-                defaultValues: true
+                defaultValues: false
             }
 
             // Set default view
@@ -84,6 +84,18 @@
                     defaultValues: {
                         view: NodeTypesDrawerContainer,
                         entity: 'node-type'
+                    }
+                },
+                27: { // many-to-many.type
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
+                    }
+                },
+                28: { // many-to-one.type
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
                     }
                 }
             }
