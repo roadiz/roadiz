@@ -7,6 +7,9 @@ import request from 'axios'
  * @returns {Promise<R>|Promise.<T>}
  */
 export function getNodeTypesByIds ({ ids = [] }) {
+    // Trim ids
+    ids = ids.map((item) => item.trim())
+
     const postData = {
         _token: RozierRoot.ajaxToken,
         _action: 'nodeTypesByIds',

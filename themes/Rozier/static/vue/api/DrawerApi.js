@@ -20,9 +20,6 @@ import * as CustomFormApi from './CustomFormApi'
  * @returns {Promise<R>|Promise.<T>}
  */
 export function getItemsByIds (entity, ids = [], filters) {
-    // Trim ids
-    ids = ids.map((item) => item.trim())
-
     switch (entity) {
         case DOCUMENT_ENTITY:
             return DocumentApi.getDocumentsByIds({ ids, filters })
