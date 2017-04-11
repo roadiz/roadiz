@@ -21,6 +21,15 @@
         {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
+
+            {#{% include '@Rozier/widgets/drawer.html.twig' with {#}
+                {#enableDropzone: false,#}
+                {#entity: 'tag',#}
+                {#name: 'tags' | trans,#}
+                {#data: node.tags,#}
+                {#icon: 'uk-icon-tag'#}
+            {#} %}#}
+
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#edit-node-tags-form" class="uk-button uk-button-primary rz-action-save" type="submit">

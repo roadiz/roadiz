@@ -3,7 +3,8 @@ import {
     NODE_ENTITY,
     NODE_TYPE_ENTITY,
     JOIN_ENTITY,
-    CUSTOM_FORM_ENTITY
+    CUSTOM_FORM_ENTITY,
+    TAG_ENTITY
 } from '../types/entityTypes'
 
 import DocumentPreviewListItem from '../components/DocumentPreviewListItem.vue'
@@ -11,6 +12,7 @@ import NodePreviewItem from '../components/NodePreviewItem.vue'
 import JoinPreviewItem from '../components/JoinPreviewItem.vue'
 import CustomFormPreviewItem from '../components/CustomFormPreviewItem.vue'
 import NodeTypePreviewItem from '../components/NodeTypePreviewItem.vue'
+import TagPreviewItem from '../components/TagPreviewItem.vue'
 
 export default class EntityAwareFactory {
     static getState (entity) {
@@ -19,6 +21,9 @@ export default class EntityAwareFactory {
                 moreItems: ''
             }
         }
+
+        // Default
+        result.isFilterEnable = false
 
         switch (entity) {
             case DOCUMENT_ENTITY:
@@ -36,16 +41,17 @@ export default class EntityAwareFactory {
             case JOIN_ENTITY:
                 result.currentListingView = JoinPreviewItem
                 result.trans.moreItems = 'moreEntities'
-                result.isFilterEnable = false
                 break
             case CUSTOM_FORM_ENTITY:
                 result.currentListingView = CustomFormPreviewItem
-                result.isFilterEnable = false
                 break
             case NODE_TYPE_ENTITY:
                 result.currentListingView = NodeTypePreviewItem
                 result.trans.moreItems = 'moreNodeTypes'
-                result.isFilterEnable = false
+                break
+            case TAG_ENTITY:
+                result.currentListingView = TagPreviewItem
+                result.trans.moreItems = 'moreTags'
                 break
         }
 
@@ -64,6 +70,8 @@ export default class EntityAwareFactory {
                 return CustomFormPreviewItem
             case NODE_TYPE_ENTITY:
                 return NodeTypePreviewItem
+            case TAG_ENTITY:
+                return TagPreviewItem
         }
     }
 }

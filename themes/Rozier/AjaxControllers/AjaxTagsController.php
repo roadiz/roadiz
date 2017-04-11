@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
@@ -38,6 +39,8 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Themes\Rozier\Models\TagModel;
 
 /**
  * {@inheritdoc}
@@ -72,6 +75,99 @@ class AjaxTagsController extends AbstractAjaxController
             $responseArray,
             Response::HTTP_OK
         );
+    }
+
+    /**
+     * Get a Tag list from an array of node id.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listArrayAction(Request $request)
+    {
+        if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
+            throw new InvalidParameterException('Ids should be provided within an array');
+        }
+
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $cleanTagIds = array_filter($request->query->get('ids'));
+
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        $tags = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+            'id' => $cleanTagIds,
+        ]);
+
+        // Sort array by ids given in request
+        $tags = $this->sort_ish($tags, $cleanTagIds);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'tags' => $this->normalizeTags($tags)
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response JSON response
+     */
+    public function explorerListAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = $this->createEntityListManager(
+            'RZ\Roadiz\Core\Entities\Tag',
+            [],
+            [
+                'createdAt' => 'DESC'
+            ]
+        );
+
+        $listManager->setItemPerPage(30);
+        $listManager->handle();
+
+        $tags = $listManager->getEntities();
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'tags' => $this->normalizeTags($tags),
+            'filters' => $listManager->getAssignation(),
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param null $tags
+     * @return array
+     */
+    protected function normalizeTags($tags = null)
+    {
+        $tagsArray = [];
+        if ($tags !== null) {
+            /** @var Tag $tag */
+            foreach ($tags as $tag) {
+                $tagModel = new TagModel($tag, $this->container);
+                $tagsArray[] = $tagModel->toArray();
+            }
+        }
+
+        return $tagsArray;
     }
 
     protected function recurseTags($tags = null)

@@ -9,13 +9,15 @@ import nodesSourceSearch from './modules/NodesSourceSearchStoreModule'
 import explorer from './modules/ExplorerStoreModule'
 import drawers from './modules/DrawersStoreModule'
 import filterExplorer from './modules/FilterExplorerStoreModule'
+import tags from './modules/TagsStoreModule'
 
 export default new Vuex.Store({
     modules: {
         nodesSourceSearch,
         explorer,
         filterExplorer,
-        drawers
+        drawers,
+        tags
     },
     state: {
         translations: RozierRoot.messages

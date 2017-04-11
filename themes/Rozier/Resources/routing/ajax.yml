@@ -131,6 +131,18 @@ tagsAjaxExplorer:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::indexAction
         _format: json
+tagsAjaxExplorerList:
+    path:     /tag/explore/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::explorerListAction
+        _format: json
+tagsAjaxByArray:
+    path:     /tag/explore/array
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::listArrayAction
+        _format: json
 ## Ajax
 foldersAjaxEdit:
     path:     /folder/edit/{folderId}

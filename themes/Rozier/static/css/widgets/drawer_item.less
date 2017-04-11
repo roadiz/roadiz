@@ -8,12 +8,15 @@
 
 /* -------- STYLES -------- */
 .widget-explorer .drawer-item.type-label {
+    border: none;
     cursor: pointer;
     background: #4C4C4C;
     color:#888;
 
     &:hover{
+        border: none;
         background: darken(#4C4C4C, 3%);
+
         .link-button-inner{
             right: 0;
         }
@@ -67,6 +70,7 @@
 }
 
 .drawer-item.type-label {
+    border: 1px dashed transparent;
     position: relative;
     display: inline-block;
     width: 240px - 15;
@@ -85,6 +89,7 @@
 
     &:hover{
         background: darken(#DDD, 3%);
+        border: 1px solid #fff;
 
         .links {
             right: 0;

@@ -1,4 +1,5 @@
 {% set entityIds = [] %}
+{% set isSortable = isSortable|default('true') %}
 {% for entity in data %}
     {% set entityIds = entityIds|merge([entity.id]) %}
 {% endfor %}
@@ -20,7 +21,9 @@
 
             <nav class="drawer-widget-nav uk-navbar">
                 <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="{{ icon }}"></i></li>
+                    <li class="uk-navbar-brand">
+                        <i class="{{ icon }}"></i>
+                    </li>
                     <li class="uk-navbar-brand label">
                         {{ label|trans }}
                         {% if attr['data-universal'] %}
@@ -29,6 +32,11 @@
                            class="uk-icon uk-icon-flag universal-indicator"></i>
                         {% endif %}
                     </li>
+                    {% if isSortable == 'false' %}
+                        <li class="uk-navbar-brand uk-text-muted">
+                            {% trans %}drawer.sortable-not-enable{% endtrans %}
+                        </li>
+                    {% endif %}
                 </ul>
                 <div class="uk-navbar-content uk-navbar-flip">
                     <div class="drawer-widget-quick-creation uk-button-group">
@@ -60,7 +68,9 @@
 
                 <ul class="drawer-widget-sortable"
                     data-input-name="{{ name }}">
-                    <draggable v-model="items" :options="{ group: '{{ entity }}' }">
+                    <draggable
+                        v-model="items"
+                        :options="{ group: '{{ entity }}', sort: {{ isSortable }} }">
                         <transition-group style="display:block; min-height: 80px;">
                             <component
                                 v-bind:is="drawer.currentListingView"

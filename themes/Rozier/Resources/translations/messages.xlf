@@ -6684,6 +6684,11 @@
             <target></target>
             <note>Explorer more button label for entities.</note>
         </trans-unit>
+        <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target></target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
 
 
     </body>

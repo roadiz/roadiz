@@ -4,7 +4,7 @@ return array(
         'global' => array(
             'css' => array(
                 '/vendor.ce132d7a.css',
-                '/style.3ed498a9.css',
+                '/style.e9adf4fe.css',
             ),
             'js' => array(
                 '/auto-update.f46be045.min.js',
