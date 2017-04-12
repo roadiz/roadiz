@@ -54,6 +54,8 @@
                             </transition-group>
                         </draggable>
 
+                        <span class="clearfix"></span>
+
                         <load-more-button
                             v-if="filters"
                             :next-page="filters.nextPage"
