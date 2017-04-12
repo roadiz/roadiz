@@ -1,5 +1,7 @@
 # Roadiz CMS
 
+[![Join the chat at https://gitter.im/roadiz/roadiz](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/roadiz/roadiz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
 [![Coverage Status](https://coveralls.io/repos/github/roadiz/roadiz/badge.svg?branch=master)](https://coveralls.io/github/roadiz/roadiz?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
