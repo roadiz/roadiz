@@ -151,7 +151,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         ]);
 
         // Sort array by ids given in request
-        $entities = $this->sort_ish($entities, $cleanNodeIds);
+        $entities = $this->sortIsh($entities, $cleanNodeIds);
         $entitiesArray = $this->normalizeEntities($entities, $configuration);
 
         $responseArray = [

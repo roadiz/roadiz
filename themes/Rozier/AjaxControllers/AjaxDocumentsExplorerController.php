@@ -151,7 +151,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         ]);
 
         // Sort array by ids given in request
-        $documents = $this->sort_ish($documents, $cleanDocumentIds);
+        $documents = $this->sortIsh($documents, $cleanDocumentIds);
         $documentsArray = $this->normalizeDocuments($documents);
 
         $responseArray = [

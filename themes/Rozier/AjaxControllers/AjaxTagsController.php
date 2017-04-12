@@ -100,7 +100,7 @@ class AjaxTagsController extends AbstractAjaxController
         ]);
 
         // Sort array by ids given in request
-        $tags = $this->sort_ish($tags, $cleanTagIds);
+        $tags = $this->sortIsh($tags, $cleanTagIds);
 
         $responseArray = [
             'status' => 'confirm',

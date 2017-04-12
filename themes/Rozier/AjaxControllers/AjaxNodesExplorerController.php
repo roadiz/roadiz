@@ -143,7 +143,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         ]);
 
         // Sort array by ids given in request
-        $nodes = $this->sort_ish($nodes, $cleanNodeIds);
+        $nodes = $this->sortIsh($nodes, $cleanNodeIds);
         $nodesArray = $this->normalizeNodes($nodes);
 
         $responseArray = [

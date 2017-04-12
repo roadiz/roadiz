@@ -80,7 +80,7 @@ abstract class AbstractAjaxController extends RozierApp
         return true;
     }
 
-    protected function sort_ish(array &$arr, array $map)
+    protected function sortIsh(array &$arr, array $map)
     {
         $return = [];
 

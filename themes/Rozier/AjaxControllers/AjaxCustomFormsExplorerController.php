@@ -103,7 +103,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
         ]);
 
         // Sort array by ids given in request
-        $customForms = $this->sort_ish($customForms, $cleanCustomFormsIds);
+        $customForms = $this->sortIsh($customForms, $cleanCustomFormsIds);
         $customFormsArray = $this->normalizeCustomForms($customForms);
 
         $responseArray = [
