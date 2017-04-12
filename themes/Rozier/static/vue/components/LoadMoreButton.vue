@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <li class="widget-explorer-nextpage" v-if="nextPage && nextPage > 1" @click.prevent="loadMoreItems">
+        <div class="widget-explorer-nextpage" v-if="nextPage && nextPage > 1" @click.prevent="loadMoreItems">
             <template v-if="!isLoadingMore">
                 <i class="uk-icon-plus"></i>
                 <span class="label">{{ moreItemsText }}</span>
@@ -10,7 +10,7 @@
                     <div class="spinner light"></div>
                 </transition>
             </template>
-        </li>
+        </div>
     </transition>
 </template>
 <script>

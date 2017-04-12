@@ -1,8 +1,8 @@
 <template>
     <transition name="fade">
-        <li class="widget-explorer-infos" v-if="length && itemCount">
+        <div class="widget-explorer-infos" v-if="length && itemCount">
             {{ length }} / {{ itemCount }}
-        </li>
+        </div>
     </transition>
 </template>
 <script>

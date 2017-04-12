@@ -53,24 +53,22 @@
                                 </component>
                             </transition-group>
                         </draggable>
-
-                        <span class="clearfix"></span>
-
-                        <load-more-button
-                            v-if="filters"
-                            :next-page="filters.nextPage"
-                            :load-more-items="explorerLoadMore"
-                            :is-loading-more="isLoadingMore"
-                            :more-items-text="moreItems ? translations[moreItems] : ''">
-                        </load-more-button>
-
-                        <explorer-items-infos
-                            v-if="filters"
-                            :length="items.length"
-                            :item-count="filters.itemCount">
-                        </explorer-items-infos>
                     </ul>
                 </transition>
+
+                <load-more-button
+                    v-if="filters"
+                    :next-page="filters.nextPage"
+                    :load-more-items="explorerLoadMore"
+                    :is-loading-more="isLoadingMore"
+                    :more-items-text="moreItems ? translations[moreItems] : ''">
+                </load-more-button>
+
+                <explorer-items-infos
+                    v-if="filters"
+                    :length="items.length"
+                    :item-count="filters.itemCount">
+                </explorer-items-infos>
 
                 <component :is="widgetView"></component>
             </div>
