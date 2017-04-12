@@ -24,7 +24,6 @@
                                 <input id="search-input"
                                        type="search"
                                        name="searchTerms"
-                                       value=""
                                        v-model="searchTerms"
                                        autocomplete="off"
                                        @keyup.enter.stop.prevent="manualUpdate"
@@ -64,12 +63,14 @@
                         </load-more-button>
 
                         <explorer-items-infos
-                            v-if="filters && filters.itemCount"
+                            v-if="filters"
                             :length="items.length"
                             :item-count="filters.itemCount">
                         </explorer-items-infos>
                     </ul>
                 </transition>
+
+                <component :is="widgetView"></component>
             </div>
         </div>
     </transition>
@@ -91,7 +92,6 @@
     export default {
         data: () => {
             return {
-                searchTerms: '',
                 searchPlaceHolder: ''
             }
         },
@@ -100,7 +100,6 @@
                 isLoadingMore: state => state.explorer.isLoadingMore,
                 isLoading: state => state.explorer.isLoading,
                 isOpen: state => state.explorer.isOpen,
-                searchTerms: state => state.explorer.searchTerms,
                 items: state => state.explorer.items,
                 filters: state => state.explorer.filters,
                 moreItems: state => state.explorer.trans.moreItems,
@@ -108,10 +107,19 @@
                 entity: state => state.explorer.entity,
                 isFilterExplorerOpen: state => state.filterExplorer.isOpen,
                 currentListingView: state => state.explorer.currentListingView,
+                widgetView: state => state.explorer.widgetView,
                 isFilterEnable: state => state.explorer.isFilterEnable,
                 filterExplorerIcon: state => state.explorer.filterExplorerIcon,
                 entityClass: state => 'entity-' + state.explorer.entity
-            })
+            }),
+            searchTerms: {
+                get () {
+                    return this.$store.getters.getExplorerSearchTerms
+                },
+                set: _.debounce(function (searchTerms) {
+                    this.$store.dispatch('explorerUpdateSearch', { searchTerms })
+                }, 450)
+            },
         },
         methods: {
             ...mapActions([
@@ -121,17 +129,12 @@
                 'explorerLoadMore',
                 'drawersAddItem',
             ]),
-            manualUpdate: function () {
+            manualUpdate () {
                 this.explorerUpdateSearch({ searchTerms: this.searchTerms })
             },
-            addItem: function (item) {
+            addItem (item) {
                 this.drawersAddItem({ item })
             }
-        },
-        watch: {
-            searchTerms:_.debounce(function (newValue) {
-                 this.explorerUpdateSearch({ searchTerms: newValue })
-            }, 350)
         },
         components: {
             LoadMoreButton,

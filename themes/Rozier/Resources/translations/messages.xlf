@@ -6689,6 +6689,11 @@
             <target></target>
             <note>Message info when the sortable drawer option is disable.</note>
         </trans-unit>
+        <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target></target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
 
 
     </body>

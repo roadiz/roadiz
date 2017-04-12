@@ -7,12 +7,16 @@ import {
     TAG_ENTITY
 } from '../types/entityTypes'
 
+// Components
 import DocumentPreviewListItem from '../components/DocumentPreviewListItem.vue'
 import NodePreviewItem from '../components/NodePreviewItem.vue'
 import JoinPreviewItem from '../components/JoinPreviewItem.vue'
 import CustomFormPreviewItem from '../components/CustomFormPreviewItem.vue'
 import NodeTypePreviewItem from '../components/NodeTypePreviewItem.vue'
 import TagPreviewItem from '../components/TagPreviewItem.vue'
+
+// Containers
+import TagCreatorContainer from '../containers/TagCreatorContainer.vue'
 
 export default class EntityAwareFactory {
     static getState (entity) {
@@ -72,6 +76,15 @@ export default class EntityAwareFactory {
                 return NodeTypePreviewItem
             case TAG_ENTITY:
                 return TagPreviewItem
+        }
+    }
+
+    static getWidgetView (entity) {
+        switch (entity) {
+            case TAG_ENTITY:
+                return TagCreatorContainer
+            default:
+                return null
         }
     }
 }

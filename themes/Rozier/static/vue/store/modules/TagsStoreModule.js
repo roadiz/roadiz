@@ -1,37 +1,55 @@
 import {
-    TAGS_UPDATE_VALUE,
-    TAGS_REQUEST,
-    TAGS_REQUEST_SUCCESS,
-    TAGS_REQUEST_ERROR
+    TAG_CREATOR_READY,
+    TAG_CREATE_NEW_REQUEST,
+    TAG_CREATE_NEW_REQUEST_SUCCESS,
+    TAG_CREATE_NEW_REQUEST_ERROR,
+
+    EXPLORER_SUCCESS,
+    EXPLORER_UPDATE_SEARCH_TERMS
 } from '../../types/mutationTypes'
-import api from '../../api'
+import * as TagApi from '../../api/TagApi'
 
 /**
  * State
  */
 const state = {
-    options: [],
-    value: [],
+    isReady: false,
+    isTagExisting: false,
     isLoading: false,
+    searchTerms: '',
     error: ''
+}
+
+const getters = {
+    tagsSearchExisting: state => (searchTerms, tags) => {
+        console.log(tags)
+
+        return state.isTagExisting
+    }
 }
 
 /**
  * Actions
  */
 const actions = {
-    tagsUpdateValue ({ commit }, value) {
-        commit(TAGS_UPDATE_VALUE, value)
+    tagCreatorReady ({ commit }) {
+        commit(TAG_CREATOR_READY)
     },
-    tagsInitData ({ commit }) {
-        commit(TAGS_REQUEST)
+    tagsCreate ({ commit, dispatch }, { tagName }) {
+        commit(TAG_CREATE_NEW_REQUEST,{ tagName })
 
-        return api.getTags()
-            .then((tags) => {
-                commit(TAGS_REQUEST_SUCCESS, tags)
+        TagApi.createTag({ tagName })
+            .then((tag) => {
+                commit(TAG_CREATE_NEW_REQUEST_SUCCESS, tag)
+
+                // Add item to selected drawer
+                dispatch('drawersAddItem', { item: tag })
+
+                // Reset explorer
+                dispatch('explorerResetSearchTerms')
             })
             .catch((error) => {
-                commit(TAGS_REQUEST_ERROR, error)
+                commit(TAG_CREATE_NEW_REQUEST_ERROR, error)
             })
     }
 }
@@ -40,24 +58,39 @@ const actions = {
  * Mutations
  */
 const mutations = {
-    [TAGS_UPDATE_VALUE] (state, value) {
-        state.value = value
+    [TAG_CREATOR_READY] (state) {
+        state.isReady = true
     },
-    [TAGS_REQUEST] (state) {
+    [EXPLORER_UPDATE_SEARCH_TERMS] (state, {  searchTerms }) {
+        state.searchTerms = searchTerms
+    },
+    [EXPLORER_SUCCESS] (state, { result }) {
+        state.isTagExisting = false
+
+        // Check if tag already exist
+        if (state.isReady && state.searchTerms !== '') {
+            for (let item of result.items) {
+                if (item.name.toLowerCase() === state.searchTerms.toLowerCase()) {
+                    state.isTagExisting = true
+                }
+            }
+        }
+    },
+    [TAG_CREATE_NEW_REQUEST] (state) {
         state.isLoading = true
     },
-    [TAGS_REQUEST_SUCCESS] (state, tags) {
+    [TAG_CREATE_NEW_REQUEST_SUCCESS] (state, tag) {
         state.isLoading = false
-        state.options = tags
     },
-    [TAGS_REQUEST_ERROR] (state, error) {
+    [TAG_CREATE_NEW_REQUEST_ERROR] (state, error) {
         state.isLoading = false
-        state.error = error
+        state.error = error.message
     }
 }
 
 export default {
     state,
+    getters,
     actions,
     mutations
 }

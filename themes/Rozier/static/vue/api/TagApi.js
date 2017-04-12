@@ -3,9 +3,12 @@ import request from 'axios'
 /**
  * Fetch all Tags.
  *
+ * @param {String} searchTerms
+ * @param {Object} filters
+ * @param {Boolean} moreData
  * @returns {Promise<R>|Promise.<T>}
  */
-export function getTags ({ searchTerms, preFilters, filters, filterExplorerSelection, moreData }) {
+export function getTags ({ searchTerms, filters, moreData }) {
     const postData = {
         _token: RozierRoot.ajaxToken,
         _action: 'getTags',
@@ -72,5 +75,39 @@ export function getTagsByIds ({ ids = [] }) {
             // TODO
             // Log request error or display a message
             throw new Error(error.response.data.humanMessage)
+        })
+}
+
+/**
+ * Create a new tag.
+ *
+ * @param {String} tagName
+ * @returns {Promise<R>|Promise.<T>}
+ */
+export function createTag({ tagName }) {
+    const postData = {
+        _token: RozierRoot.ajaxToken,
+        _action: 'documentsByIds',
+        tagName: tagName
+    }
+
+    return request({
+        method: 'POST',
+        url: RozierRoot.routes.tagsAjaxCreate,
+        params: postData
+    })
+        .then((response) => {
+            if (typeof response.data !== 'undefined' && response.data.tag) {
+                return response.data.tag
+            }
+
+            throw new Error('Tag creation error')
+        })
+        .catch((error) => {
+            if (error.response && error.response.data) {
+                throw new Error(error.response.data.humanMessage)
+            } else {
+                throw new Error(error.message)
+            }
         })
 }

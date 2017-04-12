@@ -143,6 +143,12 @@ tagsAjaxByArray:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::listArrayAction
         _format: json
+tagsAjaxCreate:
+    path:     /tag/create
+    methods: [POST]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::createAction
+        _format: json
 ## Ajax
 foldersAjaxEdit:
     path:     /folder/edit/{folderId}

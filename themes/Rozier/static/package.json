@@ -31,9 +31,13 @@
     "grunt-postcss": "^0.4.0",
     "grunt-static-versioning": "~0.2.2",
     "jit-grunt": "~0.9.1",
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.3",
+    "scss-loader": "^0.0.1",
     "style-loader": "^0.16.1",
     "time-grunt": "^1.2.1",
     "vue-loader": "^11.1.4",
+    "vue-style-loader": "^2.0.5",
     "vue-template-compiler": "^2.2.2",
     "webpack": "^2.2.1"
   },

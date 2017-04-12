@@ -56,7 +56,10 @@ var config = {
                 loader: 'vue-loader',
                 options: {
                     postLoaders: {
-                        html: 'babel-loader'
+                        html: 'babel-loader',
+                    },
+                    loaders: {
+                        scss: 'vue-style-loader!css-loader!sass-loader'
                     }
                 }
             },

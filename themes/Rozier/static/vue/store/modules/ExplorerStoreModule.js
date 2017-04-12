@@ -35,7 +35,8 @@ const initialState = {
     error: '',
     currentListingView: null,
     isFilterEnable: null,
-    filterExplorerIcon: 'uk-icon-cog'
+    filterExplorerIcon: 'uk-icon-cog',
+    widgetView: null
 }
 
 const state = { ...initialState }
@@ -45,13 +46,14 @@ const state = { ...initialState }
  */
 const getters = {
     getExplorerEntity: state => state.entity,
+    getExplorerSearchTerms: state => state.searchTerms
 }
 
 /**
  * Actions
  */
 const actions =  {
-    async explorerOpen ({ commit, dispatch, state }, { entity }) {
+    async explorerOpen ({ commit, dispatch }, { entity }) {
         dispatch('filterExplorerClose')
 
         // Reset explorer
@@ -176,6 +178,10 @@ const mutations = {
         state.entity = entity
         state.trans.moreItems = ''
 
+        // Change widget view
+        state.widgetView = EntityAwareFactory.getWidgetView(entity)
+
+        // Get the new specific entity state
         const previewState = EntityAwareFactory.getState(entity)
 
         // Set previewState value to the state

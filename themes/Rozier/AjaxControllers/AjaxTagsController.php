@@ -358,4 +358,34 @@ class AjaxTagsController extends AbstractAjaxController
         $event = new FilterTagEvent($tag);
         $this->get('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
     }
+
+    /**
+     * Create a new Tag.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        if (!$request->get('tagName')) {
+            throw new InvalidParameterException('tagName should be provided to create a new Tag');
+        }
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('em');
+        $tagRepository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag');
+
+        /** @var Tag $tag */
+        $tag = $tagRepository->findOrCreateByPath($request->get('tagName'));
+        $tagModel = new TagModel($tag, $this->getContainer());
+
+        return new JsonResponse(
+            [
+                'tag' => $tagModel->toArray()
+            ],
+            Response::HTTP_OK
+        );
+    }
 }
