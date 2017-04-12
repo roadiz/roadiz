@@ -2,7 +2,6 @@
 
 namespace Themes\Rozier\Forms;
 
-
 use RZ\Roadiz\CMS\Forms\TagsType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

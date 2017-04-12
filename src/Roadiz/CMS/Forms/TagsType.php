@@ -58,7 +58,7 @@ class TagsType extends AbstractType
                 'data-desc' => 'use.new_or_existing.tags_with_hierarchy',
                 'placeholder' => 'use.new_or_existing.tags_with_hierarchy',
             ],
-        ]);
+         ]);
     }
 
     /**

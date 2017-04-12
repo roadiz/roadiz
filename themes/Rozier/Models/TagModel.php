@@ -68,7 +68,7 @@ class TagModel
      * @param bool $slash
      * @return string
      */
-    private function getTagParents ($tag, $slash = false)
+    private function getTagParents($tag, $slash = false)
     {
         $result = '';
         $parent = $tag->getParent();
