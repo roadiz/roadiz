@@ -10,6 +10,7 @@ namespace Themes\Rozier\Models;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Tag;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class TagModel
 {
@@ -45,17 +46,18 @@ class TagModel
 
         $parent = null;
 
-//        if ($this->tag->getParent()) {
-//            $parent = new TagModel($this->tag->getParent(), $this->container);
-//            $parent = $parent->toArray();
-//        }
+        /** @var UrlGenerator $urlGenerator */
+        $urlGenerator = $this->container->offsetGet('urlGenerator');
 
         $result = [
             'id' => $this->tag->getId(),
             'name' => $name,
             'tagName' => $this->tag->getTagName(),
             'color' => $this->tag->getColor(),
-            'parent' => $this->getTagParents($this->tag)
+            'parent' => $this->getTagParents($this->tag),
+            'editUrl' => $urlGenerator->generate('tagsEditPage', [
+                'tagId' => $this->tag->getId()
+            ]),
         ];
 
         return $result;

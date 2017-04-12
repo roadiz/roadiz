@@ -6,6 +6,7 @@
         :is-item-explorer="isItemExplorer"
         :parent-name="item.parent ? item.parent : ''"
         :name="item.name ? item.name : ''"
+        :edit-item="item.editUrl"
         :add-item="addItem"
         :remove-item="removeItem">
     </drawer-item>
