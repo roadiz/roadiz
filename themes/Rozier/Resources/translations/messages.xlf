@@ -6608,6 +6608,28 @@
         <note>Help message to explain node-type-field default values.</note>
       </trans-unit>
 
+      <!-- Explorer and Widget translation -->
+      <trans-unit xml:space="preserve" id="document">
+        <source>document</source>
+        <target></target>
+        <note>Document label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folders">
+        <source>folders</source>
+        <target></target>
+        <note>Folders label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item">
+        <source>item</source>
+        <target></target>
+        <note>Item label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="items">
+        <source>items</source>
+        <target></target>
+        <note>Items label in explorer panel.</note>
+      </trans-unit>
+
           <!-- New Join node-type-field type -->
         <trans-unit xml:space="preserve" id="join.toggle-explorer">
             <source>join.toggle-explorer</source>
@@ -6655,6 +6677,25 @@
             <target></target>
             <note>Validator message: when provided classname does not declare provided method.</note>
         </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target></target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target></target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target></target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
+
+
     </body>
   </file>
 </xliff>

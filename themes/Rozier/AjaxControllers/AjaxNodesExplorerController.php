@@ -30,10 +30,13 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Themes\Rozier\Models\NodeModel;
 
 /**
  * {@inheritdoc}
@@ -52,6 +55,16 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $arrayFilter = [
             'status' => ['<', Node::DELETED],
         ];
+
+        if ($request->get('tagId') > 0) {
+            $tag = $this->get('em')
+                ->find(
+                    'RZ\Roadiz\Core\Entities\Tag',
+                    $request->get('tagId')
+                );
+
+            $arrayFilter['tags'] = [$tag];
+        }
 
         if (count($request->get('nodeTypes')) > 0) {
             $nodeTypeNames = array_map('trim', $request->get('nodeTypes'));
@@ -75,20 +88,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $listManager->handle();
 
         $nodes = $listManager->getEntities();
-        $nodesArray = [];
-
-        if (null !== $nodes) {
-            foreach ($nodes as $node) {
-                $nodesArray[] = [
-                    'id' => $node->getId(),
-                    'filename' => $node->getNodeName(),
-                    'html' => $this->getTwig()->render('widgets/nodeSmallThumbnail.html.twig', [
-                        'nodeSource' => $node->getNodeSources()->first(),
-                        'node' => $node,
-                    ]),
-                ];
-            }
-        }
+        $nodesArray = $this->normalizeNodes($nodes);
 
         $responseArray = [
             'status' => 'confirm',
@@ -98,9 +98,72 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'filters' => $listManager->getAssignation(),
         ];
 
+        if ($request->get('tagId') > 0) {
+            $responseArray['filters'] = array_merge($responseArray['filters'], [
+                'tagId' => $request->get('tagId')
+            ]);
+        }
+
         return new JsonResponse(
             $responseArray,
             Response::HTTP_OK
         );
+    }
+
+    /**
+     * Get a Node list from an array of id.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
+            throw new InvalidParameterException('Ids should be provided within an array');
+        }
+
+        $cleanNodeIds = array_filter($request->query->get('ids'));
+
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        $nodes = $em->getRepository('RZ\Roadiz\Core\Entities\Node')->findBy([
+            'id' => $cleanNodeIds,
+        ]);
+
+        // Sort array by ids given in request
+        $nodes = $this->sortIsh($nodes, $cleanNodeIds);
+        $nodesArray = $this->normalizeNodes($nodes);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'items' => $nodesArray
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Normalize response Node list result.
+     *
+     * @param $nodes
+     * @return array
+     */
+    private function normalizeNodes($nodes)
+    {
+        $nodesArray = [];
+
+        /** @var Node $doc */
+        foreach ($nodes as $node) {
+            $nodeModel = new NodeModel($node, $this->getContainer());
+            $nodesArray[] = $nodeModel->toArray();
+        }
+
+        return $nodesArray;
     }
 }

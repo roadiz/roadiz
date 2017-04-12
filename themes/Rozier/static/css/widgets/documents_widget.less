@@ -12,9 +12,26 @@
 
 /* -------- STYLES -------- */
 
+#overlay {
+    position: fixed !important;
+    content: ' ';
+    background: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 11000;
+    pointer-events: none;
+}
+
 .documents-widget{
     position: relative;
     border:1px solid @documents-widget-border;
+
+    &.uk-active {
+        z-index: 11100;
+        background: @maincontent-bg;
+    }
 
     .documents-widget-uploader.dropzone {
         height: 200px;
@@ -83,10 +100,24 @@
     }
 }
 
+.documents-widget-sortable-container {
+    background: #fff;
+    position: relative;
+    min-height: 121px;
+}
+
 .documents-widget-sortable{
     margin:0;
     padding:13px 25px 20px;
     background:#fff;
+}
+
+.sortable-ghost {
+    border:1px dashed @documents-widget-border;
+
+    & * {
+        display: none;
+    }
 }
 
 .documents-widget-sortable-list-item,

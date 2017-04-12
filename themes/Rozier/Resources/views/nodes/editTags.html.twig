@@ -12,7 +12,6 @@
             {{ "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
         {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
     </header>
 
@@ -21,6 +20,7 @@
         {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
+
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#edit-node-tags-form" class="uk-button uk-button-primary rz-action-save" type="submit">

@@ -623,9 +623,8 @@ class TagRepository extends EntityRepository
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->add('select', 'count(t)')
-            ->innerJoin('t.translatedTags', 'obj');
+        $qb = $this->createQueryBuilder('obj');
+        $qb->add('select', 'count(obj)');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 

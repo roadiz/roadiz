@@ -30,9 +30,14 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Themes\Rozier\Models\DocumentModel;
 
 /**
  * {@inheritdoc}
@@ -47,16 +52,6 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         /*
@@ -89,16 +84,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         $listManager->handle();
 
         $documents = $listManager->getEntities();
-
-        $documentsArray = [];
-        foreach ($documents as $doc) {
-            $documentsArray[] = [
-                'id' => $doc->getId(),
-                'filename' => $doc->getFilename(),
-                'thumbnail' => $doc->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $doc]),
-            ];
-        }
+        $documentsArray = $this->normalizeDocuments($documents);
 
         $responseArray = [
             'status' => 'confirm',
@@ -106,6 +92,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'documents' => $documentsArray,
             'documentsCount' => count($documents),
             'filters' => $listManager->getAssignation(),
+            'trans' => $this->getTrans(),
         ];
 
         if ($request->get('folderId') > 0) {
@@ -119,7 +106,82 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             Response::HTTP_OK
         );
     }
+
+    /**
+     * Get a Document list from an array of id.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
+            throw new InvalidParameterException('Ids should be provided within an array');
+        }
+
+        $cleanDocumentIds = array_filter($request->query->get('ids'));
+
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        $documents = $em->getRepository('RZ\Roadiz\Core\Entities\Document')->findBy([
+            'id' => $cleanDocumentIds,
+            'raw' => false,
+        ]);
+
+        // Sort array by ids given in request
+        $documents = $this->sortIsh($documents, $cleanDocumentIds);
+        $documentsArray = $this->normalizeDocuments($documents);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'documents' => $documentsArray,
+            'trans' => $this->getTrans()
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Normalize response Document list result.
+     *
+     * @param $documents
+     * @return array
+     */
+    private function normalizeDocuments($documents)
+    {
+        $documentsArray = [];
+
+        /** @var Document $doc */
+        foreach ($documents as $doc) {
+            $documentModel = new DocumentModel($doc, $this->getContainer());
+            $documentsArray[] = $documentModel->toArray();
+        }
+
+        return $documentsArray;
+    }
+
+    /**
+     * Get an array of translations.
+     *
+     * @return array
+     */
+    private function getTrans()
+    {
+        return [
+            'editDocument' => $this->getTranslator()->trans('edit.document'),
+            'unlinkDocument' => $this->getTranslator()->trans('unlink.document'),
+            'linkDocument' => $this->getTranslator()->trans('link.document'),
+            'moreItems' => $this->getTranslator()->trans('more.documents')
+        ];
+    }
 }
+
 AjaxDocumentsExplorerController::$thumbnailArray = [
     "fit" => "40x40",
     "quality" => 50,

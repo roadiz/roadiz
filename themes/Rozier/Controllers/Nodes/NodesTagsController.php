@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\NodeTagsType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
 
@@ -80,12 +81,15 @@ class NodesTagsController extends RozierApp
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
 
-                $form = $this->buildEditTagsForm($node);
+                $form = $this->createForm(new NodeTagsType(), $node, [
+                    'entityManager' => $this->get('em'),
+                ]);
 
                 $form->handleRequest($request);
 
                 if ($form->isValid()) {
-                    $this->repopulateNodeTags($form->getData(), $node);
+                    $this->get('em')->flush();
+
                     /*
                      * Dispatch event
                      */
@@ -210,39 +214,6 @@ class NodesTagsController extends RozierApp
         }
 
         return $tag;
-    }
-
-    /**
-     * @param Node $node
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditTagsForm(Node $node)
-    {
-        $defaults = [
-            'nodeId' => $node->getId(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('nodeId', 'hidden', [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('tagPaths', 'text', [
-                            'label' => 'list.tags.to_link',
-                            'attr' => [
-                                'class' => 'rz-tag-autocomplete',
-                                'placeholder' => 'use.new_or_existing.tags_with_hierarchy',
-                                'data-get-url' => $this->generateUrl('nodeAjaxTags', ['nodeId' => $node->getId()])
-                            ],
-                        ])
-                        ->add('separator_1', new SeparatorType(), [
-                            'label' => 'use.new_or_existing.tags_with_hierarchy',
-                            'attr' => ['class' => 'form-help-static uk-alert uk-alert-large'],
-                        ]);
-
-        return $builder->getForm();
     }
 
     /**

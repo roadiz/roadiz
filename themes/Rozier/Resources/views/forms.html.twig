@@ -133,174 +133,63 @@
     {% endspaceless %}
 {% endblock yaml_widget %}
 
-{% block tags_widget %}
+{% block dynamic_widget %}
     {% spaceless %}
-        <div class="uk-form-row tags-widget" data-tag-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-
-            <nav class="tags-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-tags"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="tags-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-tag-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}tags.toggle-explorer{% endtrans %}</a>
-                    </div>
-                </div>
-            </nav>
-            <ul class="uk-sortable tags-widget-sortable" data-uk-sortable="{group:'tags-widget', dragCustomClass:'tags-widget-dragging'}" data-input-name="{{ name }}">
-                {% for doc in data %}
-                    {% include '@Rozier/widgets/tagSmallThumbnail.html.twig' with {
-                    'tag':doc,
-                    'name': name,
-                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
-                    'read_only': read_only,
-                    'disabled':disabled,
-                    'required':required,
-                    'attr': attr
-                    } only %}
-                {% endfor %}
-            </ul>
-        </div>
+        {# just let the textarea widget render the select tag #}
+        <component
+            :is="currentView"
+            :entity="entity"
+            :mode="mode"
+            {{ block('widget_attributes') }}
+            initial-value="{{ value }}">
+        </component>
     {% endspaceless %}
+{% endblock dynamic_widget %}
+
+{% block tags_widget %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'tag',
+        isSortable: 'false',
+        icon: 'uk-icon-tags'
+    } %}
 {% endblock tags_widget %}
 
 {% block documents_widget %}
-    {% spaceless %}
-        <div class="uk-form-row documents-widget" data-document-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-
-            <nav class="documents-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-documents"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="documents-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}documents.toggle-explorer{% endtrans %}</a>
-                        <a class="uk-button uk-button-small" href="#" data-document-widget-toggle-uploader><i class="uk-icon-rz-upload"></i> {% trans %}documents.toggle-uploader{% endtrans %}</a>
-                    </div>
-                </div>
-            </nav>
-            <ul class="uk-sortable documents-widget-sortable" data-uk-sortable="{group:'documents-widget', dragCustomClass:'documents-widget-dragging'}" data-input-name="{{ name }}">
-                {% for doc in data %}
-                    {% include '@Rozier/widgets/documentSmallThumbnail.html.twig' with {
-                    'document': doc,
-                    'name': name,
-                    'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
-                    'read_only': read_only,
-                    'disabled': disabled,
-                    'required': required,
-                    'nodeSource': nodeSource,
-                    'attr': attr
-                    } only %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endspaceless %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: true,
+        entity: 'document',
+        icon: 'uk-icon-rz-documents'
+    } %}
 {% endblock documents_widget %}
 
 {% block nodes_widget %}
-    {% spaceless %}
-        <div class="uk-form-row nodes-widget" data-node-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-            <nav class="nodes-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-global-nodes"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="nodes-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-node-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}nodes.toggle-explorer{% endtrans %}</a>
-                    </div>
-                </div>
-            </nav>
-            <ul class="uk-sortable nodes-widget-sortable" data-uk-sortable="{group:'nodes-widget', dragCustomClass:'nodes-widget-dragging'}" data-input-name="{{ name }}">
-                {% for node in data %}
-                    {% include '@Rozier/widgets/nodeSmallThumbnail.html.twig' with {
-                    'node':node,
-                    'name': name,
-                    'full_name':full_name ~ '[' ~ loop.index0 ~ ']',
-                    'read_only': read_only,
-                    'disabled':disabled,
-                    'required':required,
-                    'attr': attr
-                    } only %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endspaceless %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'node',
+        icon: 'uk-icon-rz-global-nodes'
+    } %}
 {% endblock nodes_widget %}
 
 {% block join_widget %}
-    {% spaceless %}
-        <div class="uk-form-row join-widget" data-join-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-            <nav class="join-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-global-join"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="join-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-node-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}join.toggle-explorer{% endtrans %}</a>
-                    </div>
-                </div>
-            </nav>
-            <ul class="join-widget-sortable" data-input-name="{{ name }}">
-                {% for entity in data %}
-                    <li class="entity">
-                        <p class="entity-class">{{ entity.classname }}</p>
-                        <p class="entity-name">{{ entity.name }}</p>
-                        <input type="hidden" name="{{ full_name ~ '[' ~ loop.index0 ~ ']' }}" value="{{ entity.id }}">
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endspaceless %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'join',
+        icon: 'uk-icon-chain'
+    } %}
 {% endblock join_widget %}
 
 {% block custom_forms_widget %}
-    {% spaceless %}
-        <div class="uk-form-row custom-forms-widget" data-custom-form-widget {{ block('widget_attributes') }}>
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-            <nav class="custom-forms-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand"><i class="uk-icon-rz-surveys-big"></i></li>
-                    <li class="uk-navbar-brand label">{{ label|trans }}</li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="custom-forms-widget-quick-creation uk-button-group">
-                        <a class="uk-button uk-button-small" href="#" data-custom-form-widget-toggle-explorer><i class="uk-icon-rz-explore"></i> {% trans %}custom-forms.toggle-explorer{% endtrans %}</a>
-                    </div>
-                </div>
-            </nav>
-            <ul class="uk-sortable custom-forms-widget-sortable" data-uk-sortable="{group:'custom-forms-widget', dragCustomClass:'custom-forms-widget-dragging'}" data-input-name="{{ name }}">
-                {% for customForm in data %}
-                    {% include '@Rozier/widgets/customFormSmallThumbnail.html.twig' with {
-                    'customForm':customForm,
-                    'name': name,
-                    'full_name': full_name ~ '[' ~ loop.index0 ~ ']',
-                    'read_only': read_only,
-                    'disabled':disabled,
-                    'required':required,
-                    'attr': attr
-                    } only %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endspaceless %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'custom-form',
+        icon: 'uk-icon-rz-surveys-big'
+    } %}
 {% endblock custom_forms_widget %}
 
 {% block checkbox_widget -%}
@@ -419,6 +308,7 @@
 {%- endblock form_label %}
 
 {% block form_widget_compound -%}
+
     {% set attr = attr|merge({
         'class': attr.class ~ ' data-uk-margin'
     }) %}
@@ -453,8 +343,9 @@
             {{- block('choice_widget_options') -}}
         </select>
     {% else %}
+        <h1>{{ selected }}</h1>
         <div class="rz-select">
-            <select {{ block('widget_attributes') }}>
+            <select v-model="selected" {{ block('widget_attributes') }}>
                 {% if placeholder is not none -%}
                     <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain) }}</option>
                 {%- endif %}

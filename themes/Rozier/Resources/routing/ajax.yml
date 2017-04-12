@@ -48,7 +48,24 @@ nodeTypesFieldAjaxEdit:
         _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypeFieldsController::editAction
         _format: json
     requirements: { nodeTypeFieldId : "[0-9]+" }
-
+nodeTypesAjaxByArray:
+    path:     /node-types/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypesController::listAction
+        _format: json
+nodeTypesAjaxExplorer:
+    path:     /node-types/explorer
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxNodeTypesController::indexAction
+        _format: json
+nodesAjaxByArray:
+    path:     /nodes/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxNodesExplorerController::listAction
+        _format: json
 # Entities
 entitiesAjaxExplorerPage:
     path:     /entities/explore
@@ -56,12 +73,24 @@ entitiesAjaxExplorerPage:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxEntitiesExplorerController::indexAction
         _format: json
+entitiesAjaxByArray:
+    path:     /entities/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxEntitiesExplorerController::listAction
+        _format: json
 # Documents
 documentsAjaxExplorerPage:
     path:     /documents/explore
     methods: [GET]
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::indexAction
+        _format: json
+documentsAjaxByArray:
+    path:     /documents/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController::listAction
         _format: json
 foldersAjaxExplorerPage:
     path:     /folders/explore
@@ -77,6 +106,12 @@ customFormsAjaxExplorerPage:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::indexAction
         _format: json
+customFormsAjaxByArray:
+    path:     /custom-forms/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::listAction
+        _format: json
 ## Ajax
 tagAjaxEdit:
     path:     /tag/edit/{tagId}
@@ -90,6 +125,30 @@ tagAjaxSearch:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::searchAction
         _format: json
+tagsAjaxExplorer:
+    path:     /tag/explore
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::indexAction
+        _format: json
+tagsAjaxExplorerList:
+    path:     /tag/explore/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::explorerListAction
+        _format: json
+tagsAjaxByArray:
+    path:     /tag/explore/array
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::listArrayAction
+        _format: json
+tagsAjaxCreate:
+    path:     /tag/create
+    methods: [POST]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagsController::createAction
+        _format: json
 ## Ajax
 foldersAjaxEdit:
     path:     /folder/edit/{folderId}
@@ -99,6 +158,7 @@ foldersAjaxEdit:
     requirements: { tagId : "[0-9]+" }
 foldersAjaxSearch:
     path:     /folder/search
+    methods: [GET]
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxFoldersController::searchAction
         _format: json

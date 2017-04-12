@@ -28,6 +28,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -43,6 +45,27 @@ use Symfony\Component\Yaml\Yaml;
  */
 class AjaxEntitiesExplorerController extends AbstractAjaxController
 {
+    /**
+     * @param NodeTypeField $nodeTypeField
+     * @return array
+     */
+    protected function getFieldConfiguration(NodeTypeField $nodeTypeField)
+    {
+        if (null === $nodeTypeField ||
+            ($nodeTypeField->getType() !== NodeTypeField::MANY_TO_MANY_T &&
+                $nodeTypeField->getType() !== NodeTypeField::MANY_TO_ONE_T)) {
+            throw new InvalidParameterException('nodeTypeField is not a valid entity join.');
+        }
+
+        $configs = [
+            Yaml::parse($nodeTypeField->getDefaultValues()),
+        ];
+        $processor = new Processor();
+        $joinConfig = new JoinNodeTypeFieldConfiguration();
+
+        return $processor->processConfiguration($joinConfig, $configs);
+    }
+
     /**
      * @param Request $request
      *
@@ -53,24 +76,12 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
         if (!$request->query->has('nodeTypeFieldId')) {
-            throw new BadRequestHttpException('nodeTypeFieldId parameter is missing.');
+            throw new InvalidParameterException('nodeTypeFieldId parameter is missing.');
         }
 
         /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $this->get('em')->find('RZ\Roadiz\Core\Entities\NodeTypeField', $request->query->get('nodeTypeFieldId'));
-
-        if (null === $nodeTypeField ||
-            ($nodeTypeField->getType() !== NodeTypeField::MANY_TO_MANY_T &&
-            $nodeTypeField->getType() !== NodeTypeField::MANY_TO_ONE_T)) {
-            throw new BadRequestHttpException('nodeTypeField is not a valid entity join.');
-        }
-
-        $configs = [
-            Yaml::parse($nodeTypeField->getDefaultValues()),
-        ];
-        $processor = new Processor();
-        $joinConfig = new JoinNodeTypeFieldConfiguration();
-        $configuration = $processor->processConfiguration($joinConfig, $configs);
+        $configuration = $this->getFieldConfiguration($nodeTypeField);
 
         $orderBy = [];
         foreach ($configuration['orderBy'] as $order) {
@@ -94,15 +105,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         $listManager->handle();
         $entities = $listManager->getEntities();
 
-        $entitiesArray = [];
-        /** @var AbstractEntity $entity */
-        foreach ($entities as $entity) {
-            $entitiesArray[] = [
-                'id' => $entity->getId(),
-                'classname' => $configuration['classname'],
-                'displayable' => call_user_func([$entity, $configuration['displayable']]),
-            ];
-        }
+        $entitiesArray = $this->normalizeEntities($entities, $configuration);
 
         $responseArray = [
             'status' => 'confirm',
@@ -115,5 +118,74 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             $responseArray,
             Response::HTTP_OK
         );
+    }
+
+    /**
+     * Get a Node list from an array of id.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listAction(Request $request)
+    {
+        if (!$request->query->has('nodeTypeFieldId')) {
+            throw new InvalidParameterException('nodeTypeFieldId parameter is missing.');
+        }
+
+        if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
+            throw new InvalidParameterException('Ids should be provided within an array');
+        }
+
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+
+        /** @var NodeTypeField $nodeTypeField */
+        $nodeTypeField = $this->get('em')->find('RZ\Roadiz\Core\Entities\NodeTypeField', $request->query->get('nodeTypeFieldId'));
+        $configuration = $this->getFieldConfiguration($nodeTypeField);
+        $cleanNodeIds = array_filter($request->query->get('ids'));
+
+        $entities = $em->getRepository($configuration['classname'])->findBy([
+            'id' => $cleanNodeIds,
+        ]);
+
+        // Sort array by ids given in request
+        $entities = $this->sortIsh($entities, $cleanNodeIds);
+        $entitiesArray = $this->normalizeEntities($entities, $configuration);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'items' => $entitiesArray
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Normalize response Node list result.
+     *
+     * @param $entities
+     * @param array $configuration
+     * @return array
+     */
+    private function normalizeEntities($entities, array &$configuration)
+    {
+        $entitiesArray = [];
+
+        /** @var AbstractEntity $entity */
+        foreach ($entities as $entity) {
+            $entitiesArray[] = [
+                'id' => $entity->getId(),
+                'classname' => $configuration['classname'],
+                'displayable' => call_user_func([$entity, $configuration['displayable']]),
+            ];
+        }
+
+        return $entitiesArray;
     }
 }

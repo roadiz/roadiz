@@ -17,7 +17,6 @@ module.exports = function(grunt) {
     }
 
     var vendorFiles = [
-        //'bower_components/jquery/dist/jquery.js',
         'bower_components/uikit/js/uikit.js',
         'bower_components/uikit/js/components/sortable.js',
         'bower_components/uikit/js/components/datepicker.js',
@@ -25,11 +24,6 @@ module.exports = function(grunt) {
         'bower_components/uikit/js/components/pagination.js',
         'bower_components/uikit/js/components/notify.js',
         'bower_components/uikit/js/components/tooltip.js',
-        //'bower_components/jquery-ui/ui/core.js',
-        //'bower_components/jquery-ui/ui/widget.js',
-        //'bower_components/jquery-ui/ui/position.js',
-        //'bower_components/jquery-ui/ui/widgets/menu.js',
-        //'bower_components/jquery-ui/ui/widgets/autocomplete.js',
         'bower_components/gsap/src/uncompressed/TweenMax.js',
         'bower_components/gsap/src/minified/plugins/ScrollToPlugin.min.js',
         'bower_components/bootstrap-switch/dist/js/bootstrap-switch.js',
@@ -60,14 +54,8 @@ module.exports = function(grunt) {
         'js/bulk-edits/nodesBulk.js',
         'js/bulk-edits/tagsBulk.js',
         'js/documents/documentsList.js',
-        'js/documents/documentWidget.js',
         'js/documents/documentUploader.js',
-        'js/documents/documentExplorer.js',
-        'js/documents/folderExplorer.js',
-        'js/node/nodeWidget.js',
-        'js/node/nodeExplorer.js',
         'js/node/nodeEditSource.js',
-        'js/widgets/customFormWidget.js',
         'js/widgets/saveButtons.js',
         'js/widgets/settingsSaveButtons.js',
         'js/widgets/nodeTree.js',
@@ -407,6 +395,16 @@ module.exports = function(grunt) {
                         dest: 'dist/<%= name %>-cforms.min.js'
                     }],
                     key: 'custom-forms',
+                    dest: '',
+                    type: 'js',
+                    ext: '.min.js'
+                },
+                {
+                    assets: [{
+                        src: [ 'dist/vue-bundle.js' ],
+                        dest: 'dist/vue-bundle.js'
+                    }],
+                    key: 'global',
                     dest: '',
                     type: 'js',
                     ext: '.min.js'

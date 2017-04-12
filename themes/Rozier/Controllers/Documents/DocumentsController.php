@@ -28,6 +28,7 @@
  */
 namespace Themes\Rozier\Controllers\Documents;
 
+use Intervention\Image\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
@@ -53,6 +54,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
+use Themes\Rozier\Models\DocumentModel;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
@@ -569,9 +571,11 @@ class DocumentsController extends RozierApp
                     );
 
                     if ($_format === 'json' || $request->isXmlHttpRequest()) {
+                        $documentModel = new DocumentModel($document, $this->getContainer());
                         return new JsonResponse([
                             'success' => true,
                             'documentId' => $document->getId(),
+                            'document' => $documentModel->toArray(),
                             'thumbnail' => [
                                 'id' => $document->getId(),
                                 'filename' => $document->getFilename(),
