@@ -14,7 +14,8 @@
             },
             itemCount: {
                 required: true,
-                type: Number
+                type: Number,
+                default: 0
             }
         }
     }
