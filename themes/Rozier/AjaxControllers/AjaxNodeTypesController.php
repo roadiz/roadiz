@@ -89,11 +89,11 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
      */
     public function listAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
         if (!$request->query->has('names') || !is_array($request->query->get('names'))) {
             throw new InvalidParameterException('Names array should be provided within an array');
         }
-
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $cleanNodeTypesName = array_filter($request->query->get('names'));
 

@@ -85,11 +85,11 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function listArrayAction(Request $request)
     {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
         if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
             throw new InvalidParameterException('Ids should be provided within an array');
         }
-
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $cleanTagIds = array_filter($request->query->get('ids'));
 
@@ -199,16 +199,6 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function editAction(Request $request, $tagId)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->get('em')
@@ -254,16 +244,6 @@ class AjaxTagsController extends AbstractAjaxController
 
     public function searchAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $responseArray = [

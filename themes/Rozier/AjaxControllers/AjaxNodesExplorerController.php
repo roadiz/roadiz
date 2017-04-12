@@ -118,21 +118,11 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      */
     public function listAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
             throw new InvalidParameterException('Ids should be provided within an array');
         }
-
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $cleanNodeIds = array_filter($request->query->get('ids'));
 
