@@ -37,6 +37,7 @@ use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
@@ -250,20 +251,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     Events::loadClassMetadata,
                     new DataInheritanceEvent($prefix)
                 );
-                /*
-                 * Fonts life cycle manager.
-                 */
-                $evm->addEventSubscriber(new FontLifeCycleSubscriber($c));
 
                 /*
-                 * Documents life cycle manager.
+                 * Inject doctrine event subscribers for
+                 * a service to be able to add new ones from themes.
                  */
-                $evm->addEventSubscriber(new DocumentLifeCycleSubscriber($c));
-
-                /*
-                 * Users life cycle manager.
-                 */
-                $evm->addEventSubscriber(new UserLifeCycleSubscriber($c));
+                foreach ($c['em.eventSubscribers'] as $eventSubscriber) {
+                    $evm->addEventSubscriber($eventSubscriber);
+                }
 
                 $c['stopwatch']->stop('initDoctrine');
                 return $em;
@@ -276,6 +271,18 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 $c['session']->getFlashBag()->add('error', $e->getMessage());
                 return null;
             }
+        };
+
+        /**
+         * @param Container $c
+         * @return EventSubscriber[] Event subscribers for Entity manager.
+         */
+        $container['em.eventSubscribers'] = function ($c) {
+            return [
+                new FontLifeCycleSubscriber($c),
+                new DocumentLifeCycleSubscriber($c),
+                new UserLifeCycleSubscriber($c),
+            ];
         };
 
         /*
