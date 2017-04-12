@@ -23,52 +23,23 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeTypeModel.php
+ * @file ModelInterface.php
  * @author Adrien Scholaert <adrien@rezo-zero.com>
  */
 
 namespace Themes\Rozier\Models;
 
-use Pimple\Container;
-use RZ\Roadiz\Core\Entities\NodeType;
-
 /**
- * Class NodeTypeModel.
+ * Interface ModelInterface.
  *
  * @package Themes\Rozier\Models
  */
-class NodeTypeModel implements ModelInterface
+interface ModelInterface
 {
-    public static $thumbnailArray;
     /**
-     * @var NodeType
+     * Return a structured array of data.
+     *
+     * @return array
      */
-    private $nodeType;
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * NodeModel constructor.
-     * @param NodeType $nodeType
-     * @param Container $container
-     */
-    public function __construct(NodeType $nodeType, Container $container)
-    {
-        $this->nodeType = $nodeType;
-        $this->container = $container;
-    }
-
-    public function toArray()
-    {
-        $result = [
-            'id' => $this->nodeType->getId(),
-            'nodeName' => $this->nodeType->getName(),
-            'name' => $this->nodeType->getDisplayName(),
-            'color' => $this->nodeType->getColor(),
-        ];
-
-        return $result;
-    }
+    public function toArray();
 }

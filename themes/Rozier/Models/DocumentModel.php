@@ -32,7 +32,12 @@ namespace Themes\Rozier\Models;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 
-class DocumentModel
+/**
+ * Class DocumentModel.
+ *
+ * @package Themes\Rozier\Models
+ */
+class DocumentModel implements ModelInterface
 {
     public static $thumbnailArray;
     /**

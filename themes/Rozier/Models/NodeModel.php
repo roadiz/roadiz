@@ -33,7 +33,12 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
-class NodeModel
+/**
+ * Class NodeModel.
+ *
+ * @package Themes\Rozier\Models
+ */
+class NodeModel implements ModelInterface
 {
     public static $thumbnailArray;
     /**

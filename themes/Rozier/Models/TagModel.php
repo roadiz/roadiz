@@ -33,7 +33,12 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
-class TagModel
+/**
+ * Class TagModel.
+ *
+ * @package Themes\Rozier\Models
+ */
+class TagModel implements ModelInterface
 {
     public static $thumbnailArray;
     /**

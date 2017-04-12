@@ -34,7 +34,12 @@ use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\Translator;
 
-class CustomFormModel
+/**
+ * Class CustomFormModel.
+ *
+ * @package Themes\Rozier\Models
+ */
+class CustomFormModel implements ModelInterface
 {
     public static $thumbnailArray;
     /**
