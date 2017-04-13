@@ -11,6 +11,7 @@ import DrawerContainer from './containers/DrawerContainer.vue'
 import ExplorerContainer from './containers/ExplorerContainer.vue'
 import FilterExplorerContainer from './containers/FilterExplorerContainer.vue'
 import TagsEditorContainer from './containers/TagsEditorContainer.vue'
+import DocumentPreviewContainer from './containers/DocumentPreviewContainer.vue'
 
 // Components
 import Overlay from './components/Overlay.vue'
@@ -34,7 +35,8 @@ class AppVue {
             DrawerContainer,
             ExplorerContainer,
             FilterExplorerContainer,
-            TagsEditorContainer
+            TagsEditorContainer,
+            DocumentPreviewContainer
         }
 
         this.registeredComponents = {
