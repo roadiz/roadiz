@@ -84,7 +84,6 @@ Rozier.onDocumentReady = function(event) {
     Rozier.bindMainNodeTreeLangs();
 };
 
-
 /**
  * init nestable for ajax
  * @return {[type]} [description]
