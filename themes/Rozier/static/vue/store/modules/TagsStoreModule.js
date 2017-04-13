@@ -70,7 +70,7 @@ const mutations = {
         // Check if tag already exist
         if (state.isReady && state.searchTerms !== '') {
             for (let item of result.items) {
-                if (item.name.toLowerCase() === state.searchTerms.toLowerCase()) {
+                if (item.name && state.searchTerms && item.name.toLowerCase() === state.searchTerms.toLowerCase()) {
                     state.isTagExisting = true
                 }
             }
