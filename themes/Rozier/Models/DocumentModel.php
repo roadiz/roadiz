@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Entities\Document;
 class DocumentModel implements ModelInterface
 {
     public static $thumbnailArray;
+    public static $previewArray;
     /**
      * @var Document
      */
@@ -64,22 +65,40 @@ class DocumentModel implements ModelInterface
             "quality" => 50,
             "inline" => false,
         ];
+
+        static::$previewArray = [
+            "width" => 1440,
+            "quality" => 80,
+            "inline" => false,
+            "embed" => true,
+        ];
     }
 
     public function toArray()
     {
+        $name = $this->document->getFilename();
+
+        if ($this->document->getDocumentTranslations()->first() && $this->document->getDocumentTranslations()->first()->getName()) {
+            $name = $this->document->getDocumentTranslations()->first()->getName();
+        }
+
         return [
             'id' => $this->document->getId(),
             'filename' => $this->document->getFilename(),
+            'name' => $name,
             'isImage' => $this->document->isImage(),
+            'isVideo' => $this->document->isVideo(),
             'isSvg' => $this->document->isSvg(),
+            'isEmbed' => $this->document->isEmbed(),
+            'isPdf' => $this->document->isPdf(),
             'isPrivate' => $this->document->isPrivate(),
             'shortType' => $this->document->getShortType(),
             'editUrl' => $this->container->offsetGet('urlGenerator')->generate('documentsEditPage', [
                 'documentId' => $this->document->getId()
             ]),
             'thumbnail' => $this->document->getViewer()->getDocumentUrlByArray(static::$thumbnailArray),
-            'isEmbed' => $this->document->isEmbed(),
+            'preview' => $this->document->getViewer()->getDocumentUrlByArray(static::$previewArray),
+            'preview_html' => $this->document->getViewer()->getDocumentByArray(static::$previewArray),
             'embedPlatform' => $this->document->getEmbedPlatform(),
             'shortMimeType' => $this->document->getShortMimeType(),
             'thumbnail_80' => $this->document->getViewer()->getDocumentUrlByArray([
