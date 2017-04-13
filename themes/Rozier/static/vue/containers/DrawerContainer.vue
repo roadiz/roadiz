@@ -18,8 +18,7 @@
                 drawerName: null,
                 dropzoneLanguage: RozierRoot.messages.dropzone,
                 groupName: null,
-                isSortable: null,
-                drawerLimit: -1,
+                isSortable: null
             }
         },
         mounted () {
@@ -34,8 +33,10 @@
                 const ids = JSON.parse(this.$refs.drawer.getAttribute('data-initial-items'))
                 const entity = this.$refs.drawer.getAttribute('data-accept-entity')
                 const isSortable = this.$refs.drawer.getAttribute('data-is-sortable')
-                const limitEl = this.$refs.drawer.getAttribute('data-max-length')
-                const limit = limitEl ? parseInt(limitEl, 10) : 9999
+                const minLengthEl = this.$refs.drawer.getAttribute('data-min-length')
+                const maxLengthEl = this.$refs.drawer.getAttribute('data-max-length')
+                const maxLength = maxLengthEl ? parseInt(maxLengthEl, 10) : 9999
+                const minLength = minLengthEl ? parseInt(minLengthEl, 10) : 0
 
                 // Change draggable config
                 this.groupName = entity
@@ -54,7 +55,8 @@
                     entity,
                     ids,
                     filters,
-                    limit
+                    maxLength,
+                    minLength
                 })
             })
         },

@@ -38,8 +38,15 @@
                         </li>
                     {% endif %}
 
-                    <li class="uk-navbar-brand uk-text-muted" v-if="this.drawer.limit < 9999">
-                        ${ items.length } / ${ this.drawer.limit }
+                    <li
+                        class="uk-navbar-brand uk-text-muted"
+                        :class="{ 'uk-text-danger': items.length < this.drawer.minLength }">
+                        <template v-if="this.drawer.maxLength < 9999">
+                            ${ items.length } / ${ this.drawer.maxLength }
+                        </template>
+                        <template v-if="this.drawer.minLength > 0">
+                            ({% trans %}min{% endtrans %}: ${ this.drawer.minLength })
+                        </template>
                     </li>
                 </ul>
                 <div class="uk-navbar-content uk-navbar-flip">

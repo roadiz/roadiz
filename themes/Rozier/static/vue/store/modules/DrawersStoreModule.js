@@ -57,7 +57,7 @@ const actions = {
     drawersRemoveInstance ({ commit }, drawerToRemove) {
         commit(DRAWERS_REMOVE_INSTANCE, { drawerToRemove })
     },
-    drawersInitData ({ commit }, { drawer, entity, ids, filters, limit }) {
+    drawersInitData ({ commit }, { drawer, entity, ids, filters, maxLength, minLength }) {
         commit(DRAWERS_INIT_DATA_REQUEST, { drawer, entity, ids, filters })
 
         // If no initial ids provided no need to use the api
@@ -69,7 +69,7 @@ const actions = {
         // If ids provided, fetch data and fill the Drawer
         api.getItemsByIds(entity, ids, filters)
             .then((result) => {
-                commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result, limit })
+                commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result, maxLength, minLength })
             })
             .catch((error) => {
                 commit(DRAWERS_INIT_DATA_REQUEST_FAILED, { drawer, error })
@@ -80,6 +80,10 @@ const actions = {
 
         if (drawer) {
             drawerToChange = drawer
+        }
+
+        if (!drawerToChange.acceptMore) {
+            return
         }
 
         commit(DRAWERS_ADD_ITEM, { drawer: drawerToChange, item, newIndex })
@@ -130,7 +134,8 @@ const mutations = {
                 nodeTypes: null
             },
             isDropzoneEnable: false,
-            limit: 999999,
+            minLength: 0,
+            maxLength: 999999,
             acceptMore: false
         })
     },
@@ -155,11 +160,11 @@ const mutations = {
     },
     [DRAWERS_ADD_ITEM] (state, { drawer, item, newIndex = 0 }) {
         drawer.items.push(item)
-        drawer.acceptMore = drawer.items.length < drawer.limit
+        drawer.acceptMore = drawer.items.length < drawer.maxLength
     },
     [DRAWERS_UPDATE_LIST] (state, { drawer, newList }) {
         drawer.items = newList
-        drawer.acceptMore = drawer.items.length < drawer.limit
+        drawer.acceptMore = drawer.items.length < drawer.maxLength
     },
     [DRAWERS_REMOVE_ITEM] (state, { drawer, item }) {
         let indexOf = drawer.items.indexOf(item)
@@ -167,17 +172,18 @@ const mutations = {
             drawer.items.splice(indexOf, 1)
         }
 
-        drawer.acceptMore = drawer.items.length < drawer.limit
+        drawer.acceptMore = drawer.items.length < drawer.maxLength
     },
     [EXPLORER_CLOSE] (state) {
         state = disableActiveDrawer(state)
     },
-    [DRAWERS_INIT_DATA_REQUEST_SUCCESS] (state, { drawer, result, limit }) {
+    [DRAWERS_INIT_DATA_REQUEST_SUCCESS] (state, { drawer, result, maxLength, minLength }) {
         drawer.isLoading = false
         drawer.items = result.items
         drawer.trans = result.trans
-        drawer.limit = limit
-        drawer.acceptMore = result.items.length < limit
+        drawer.maxLength = maxLength
+        drawer.minLength = minLength
+        drawer.acceptMore = result.items.length < maxLength
     },
     [DRAWERS_INIT_DATA_REQUEST] (state, { drawer, entity, filters }) {
         drawer.isLoading = true
