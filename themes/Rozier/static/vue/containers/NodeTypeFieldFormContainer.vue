@@ -56,9 +56,9 @@
             this.defaultConfig = {
                 indexed: true,
                 universal: true,
-                minLength: false,
-                maxLength: false,
-                defaultValues: false
+                minLength: true,
+                maxLength: true,
+                defaultValues: true
             }
 
             // Set default view

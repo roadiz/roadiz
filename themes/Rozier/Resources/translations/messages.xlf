@@ -6695,6 +6695,12 @@
             <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
         </trans-unit>
 
+        <trans-unit xml:space="preserve" id="min">
+            <source>min</source>
+            <target></target>
+            <note>Drawer message: when a minimum length is provided.</note>
+        </trans-unit>
+
 
     </body>
   </file>

@@ -16,10 +16,12 @@
         data: () => {
             return {
                 drawerName: null,
-                dropzoneLanguage: RozierRoot.messages.dropzone
+                dropzoneLanguage: RozierRoot.messages.dropzone,
+                groupName: null,
+                isSortable: null
             }
         },
-        mounted: function () {
+        mounted () {
             // Add the instance to the drawer store
             this.drawersAddInstance(this)
 
@@ -30,6 +32,15 @@
                 // Get initial needed data
                 const ids = JSON.parse(this.$refs.drawer.getAttribute('data-initial-items'))
                 const entity = this.$refs.drawer.getAttribute('data-accept-entity')
+                const isSortable = this.$refs.drawer.getAttribute('data-is-sortable')
+                const minLengthEl = this.$refs.drawer.getAttribute('data-min-length')
+                const maxLengthEl = this.$refs.drawer.getAttribute('data-max-length')
+                const maxLength = maxLengthEl ? parseInt(maxLengthEl, 10) : 9999
+                const minLength = minLengthEl ? parseInt(minLengthEl, 10) : 0
+
+                // Change draggable config
+                this.groupName = entity
+                this.isSortable = (isSortable === 'true')
 
                 // Get specific filter
                 const nodeTypes = this.$refs.drawer.getAttribute('data-nodetypes')
@@ -43,7 +54,9 @@
                     drawer: this.drawer,
                     entity,
                     ids,
-                    filters
+                    filters,
+                    maxLength,
+                    minLength
                 })
             })
         },
@@ -88,6 +101,15 @@
                 'drawersExplorerButtonClick',
                 'drawersDropzoneButtonClick'
             ]),
+            getOptions () {
+                return {
+                    group: {
+                        name: this.groupName,
+                        put: this.drawer.acceptMore
+                    },
+                    sort: this.isSortable,
+                }
+            },
             onExplorerButtonClick: function () {
                 this.drawersExplorerButtonClick(this.drawer)
             },
