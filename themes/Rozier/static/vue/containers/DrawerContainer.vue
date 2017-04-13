@@ -16,10 +16,13 @@
         data: () => {
             return {
                 drawerName: null,
-                dropzoneLanguage: RozierRoot.messages.dropzone
+                dropzoneLanguage: RozierRoot.messages.dropzone,
+                groupName: null,
+                isSortable: null,
+                drawerLimit: -1,
             }
         },
-        mounted: function () {
+        mounted () {
             // Add the instance to the drawer store
             this.drawersAddInstance(this)
 
@@ -30,6 +33,13 @@
                 // Get initial needed data
                 const ids = JSON.parse(this.$refs.drawer.getAttribute('data-initial-items'))
                 const entity = this.$refs.drawer.getAttribute('data-accept-entity')
+                const isSortable = this.$refs.drawer.getAttribute('data-is-sortable')
+                const limitEl = this.$refs.drawer.getAttribute('data-max-length')
+                const limit = limitEl ? parseInt(limitEl, 10) : 9999
+
+                // Change draggable config
+                this.groupName = entity
+                this.isSortable = (isSortable === 'true')
 
                 // Get specific filter
                 const nodeTypes = this.$refs.drawer.getAttribute('data-nodetypes')
@@ -43,7 +53,8 @@
                     drawer: this.drawer,
                     entity,
                     ids,
-                    filters
+                    filters,
+                    limit
                 })
             })
         },
@@ -88,6 +99,15 @@
                 'drawersExplorerButtonClick',
                 'drawersDropzoneButtonClick'
             ]),
+            getOptions () {
+                return {
+                    group: {
+                        name: this.groupName,
+                        put: this.drawer.acceptMore
+                    },
+                    sort: this.isSortable,
+                }
+            },
             onExplorerButtonClick: function () {
                 this.drawersExplorerButtonClick(this.drawer)
             },

@@ -57,7 +57,7 @@ const actions = {
     drawersRemoveInstance ({ commit }, drawerToRemove) {
         commit(DRAWERS_REMOVE_INSTANCE, { drawerToRemove })
     },
-    drawersInitData ({ commit }, { drawer, entity, ids, filters }) {
+    drawersInitData ({ commit }, { drawer, entity, ids, filters, limit }) {
         commit(DRAWERS_INIT_DATA_REQUEST, { drawer, entity, ids, filters })
 
         // If no initial ids provided no need to use the api
@@ -69,7 +69,7 @@ const actions = {
         // If ids provided, fetch data and fill the Drawer
         api.getItemsByIds(entity, ids, filters)
             .then((result) => {
-                commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result })
+                commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result, limit })
             })
             .catch((error) => {
                 commit(DRAWERS_INIT_DATA_REQUEST_FAILED, { drawer, error })
@@ -129,7 +129,9 @@ const mutations = {
             filters: {
                 nodeTypes: null
             },
-            isDropzoneEnable: false
+            isDropzoneEnable: false,
+            limit: 999999,
+            acceptMore: false
         })
     },
     [DRAWERS_REMOVE_INSTANCE] (state, { drawerToRemove }) {
@@ -153,23 +155,29 @@ const mutations = {
     },
     [DRAWERS_ADD_ITEM] (state, { drawer, item, newIndex = 0 }) {
         drawer.items.push(item)
+        drawer.acceptMore = drawer.items.length < drawer.limit
     },
     [DRAWERS_UPDATE_LIST] (state, { drawer, newList }) {
         drawer.items = newList
+        drawer.acceptMore = drawer.items.length < drawer.limit
     },
     [DRAWERS_REMOVE_ITEM] (state, { drawer, item }) {
         let indexOf = drawer.items.indexOf(item)
         if (indexOf >= 0) {
             drawer.items.splice(indexOf, 1)
         }
+
+        drawer.acceptMore = drawer.items.length < drawer.limit
     },
     [EXPLORER_CLOSE] (state) {
         state = disableActiveDrawer(state)
     },
-    [DRAWERS_INIT_DATA_REQUEST_SUCCESS] (state, { drawer, result }) {
+    [DRAWERS_INIT_DATA_REQUEST_SUCCESS] (state, { drawer, result, limit }) {
         drawer.isLoading = false
         drawer.items = result.items
         drawer.trans = result.trans
+        drawer.limit = limit
+        drawer.acceptMore = result.items.length < limit
     },
     [DRAWERS_INIT_DATA_REQUEST] (state, { drawer, entity, filters }) {
         drawer.isLoading = true

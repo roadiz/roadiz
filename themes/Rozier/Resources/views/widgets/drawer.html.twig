@@ -12,8 +12,8 @@
              ref="drawer"
              {{ widget_attributes|raw }}
              data-accept-entity="{{ entity }}"
-             data-accept-limit="0"
              data-entity-types="[]"
+             data-is-sortable="{{ isSortable }}"
              data-initial-items="{{ entityIds|json_encode }}">
             {% if label is empty -%}
                 {% set label = name|humanize %}
@@ -37,6 +37,10 @@
                             {% trans %}drawer.sortable-not-enable{% endtrans %}
                         </li>
                     {% endif %}
+
+                    <li class="uk-navbar-brand uk-text-muted" v-if="this.drawer.limit < 9999">
+                        ${ items.length } / ${ this.drawer.limit }
+                    </li>
                 </ul>
                 <div class="uk-navbar-content uk-navbar-flip">
                     <div class="drawer-widget-quick-creation uk-button-group">
@@ -68,9 +72,12 @@
 
                 <ul class="drawer-widget-sortable"
                     data-input-name="{{ name }}">
+
                     <draggable
                         v-model="items"
-                        :options="{ group: '{{ entity }}', sort: {{ isSortable }} }">
+                        {#:options="{ group: { name: '{{ entity }}' }, sort: {{ isSortable }} }"#}
+                        :options="getOptions()"
+                        >
                         <transition-group style="display:block; min-height: 80px;">
                             <component
                                 v-bind:is="drawer.currentListingView"
