@@ -18,10 +18,7 @@
                 </div>
                 <div class="document-preview-widget__container"
                      :class="containerClass">
-                    <div class="document-preview-widget__preview" v-html="document.preview_html"></div>
-                    <template v-if="document.isImage">
-                        <img :src="document.preview" class="document-preview-widget__shadow">
-                    </template>
+                    <div v-html="document.preview_html"></div>
                 </div>
             </div>
         </div>
@@ -78,16 +75,14 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            height: 30px;
+            height: 31px;
             line-height: 30px;
             font-size: 12px;
             text-align: left;
-            padding: 0 10px;
-            border-radius: 4px;
+            padding: 0 15px;
+            border-radius: 16px;
             color: #7d7d7d;
-            background: linear-gradient(#272727, #191919);
-            border-bottom: 1px solid #000;
-            border-top: 1px inset #9a9a9a;
+            background: #000;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.31);
 
             .info,
@@ -120,7 +115,7 @@
                 }
 
                 &:hover i {
-                    color: lighten(#7d7d7d, 10);
+                    color: lighten(#7d7d7d, 20);
                 }
             }
         }
@@ -136,6 +131,11 @@
             display: inline-block;
             transform: translateX(-50%) translateY(-50%);
             text-align: center;
+            box-shadow: 0 0 320px rgba(0, 0, 0, 0.7);
+
+            & > div {
+                height: 100%;
+            }
 
             &.hasNoPreview.isVideo {
                 position: relative;
@@ -160,9 +160,20 @@
                 }
             }
 
+            &.isSvg object,
+            &.isPdf object {
+                width: 100%;
+                height: 100%;
+            }
+
+            &.isSvg {
+                background: #dadada;
+            }
+
             &.isPdf {
                 width: 80vw;
                 height: 80vh;
+                background: #000;
             }
         }
 
@@ -170,25 +181,15 @@
         iframe,
         video,
         img {
-            width: 100%;
-            height: 100%;
+            width: auto;
+            height: auto;
+            max-width: 80vw;
+            max-height: 80vh;
         }
 
-        &__preview {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            z-index: 2;
-        }
-
-        &__shadow {
-            position: relative;
-            z-index: 1;
-            filter: blur(25px);
-            transform: translateY(6%);
-            opacity: 0.5;
+        iframe {
+            min-width: 640px;
+            min-height: 360px;
         }
 
         &__message {
