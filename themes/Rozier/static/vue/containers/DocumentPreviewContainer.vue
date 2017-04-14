@@ -132,6 +132,7 @@
             transform: translateX(-50%) translateY(-50%);
             text-align: center;
             box-shadow: 0 0 320px rgba(0, 0, 0, 0.7);
+            background: #dadada;
 
             & > div {
                 height: 100%;
@@ -164,10 +165,6 @@
             &.isPdf object {
                 width: 100%;
                 height: 100%;
-            }
-
-            &.isSvg {
-                background: #dadada;
             }
 
             &.isPdf {
