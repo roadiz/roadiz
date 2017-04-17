@@ -64,6 +64,4 @@ class RolesBagHelper extends Helper
     {
         return 'rolesBag';
     }
-
-
 }

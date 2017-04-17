@@ -35,15 +35,15 @@ use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
+use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
-use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
@@ -51,7 +51,6 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use RZ\Roadiz\CMS\Controllers\CmsController;
 
 /**
  * Register Twig services for dependency injection container.

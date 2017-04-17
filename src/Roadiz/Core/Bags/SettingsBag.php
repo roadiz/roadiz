@@ -44,7 +44,6 @@ class SettingsBag
      */
     protected static $settings = [];
 
-
     /**
      * Get a setting value from its name.
      *

@@ -48,7 +48,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Base controller.
@@ -453,7 +456,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Get a user from the tokenStorage.
      *
-     * @return User|null
+     * @return UserInterface|null
      *
      * @throws \LogicException If tokenStorage is not available
      *
@@ -464,14 +467,19 @@ abstract class Controller implements ContainerAwareInterface
         if (!$this->has('securityTokenStorage')) {
             throw new \LogicException('No TokenStorage has been registered in your application.');
         }
-        if (null === $token = $this->get('securityTokenStorage')->getToken()) {
+
+        /** @var TokenInterface $token */
+        $token = $this->get('securityTokenStorage')->getToken();
+
+        if (null === $token) {
             return null;
         }
-        if (!is_object($user = $token->getUser())) {
-            // e.g. anonymous authentication
+
+        if (is_string($token->getUser())) {
             return null;
         }
-        return $user;
+
+        return $token->getUser();
     }
 
     /**

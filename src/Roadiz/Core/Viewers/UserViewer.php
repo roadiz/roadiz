@@ -32,7 +32,6 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\EmailManager;
@@ -78,12 +77,12 @@ class UserViewer implements ViewableInterface
      */
     public function sendSignInConfirmation()
     {
-        $emailContact = SettingsBag::get('email_sender');
+        $emailContact = Kernel::getService('settingsBag')->get('email_sender');
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
 
-        $siteName = SettingsBag::get('site_name');
+        $siteName = Kernel::getService('settingsBag')->get('site_name');
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }
@@ -117,12 +116,12 @@ class UserViewer implements ViewableInterface
      */
     public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator)
     {
-        $emailContact = SettingsBag::get('email_sender');
+        $emailContact = Kernel::getService('settingsBag')->get('email_sender');
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
 
-        $siteName = SettingsBag::get('site_name');
+        $siteName = Kernel::getService('settingsBag')->get('site_name');
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }

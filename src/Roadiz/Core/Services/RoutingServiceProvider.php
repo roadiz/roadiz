@@ -110,6 +110,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             $router = new NodeRouter(
                 $c['em'],
                 $c['themeResolver'],
+                $c['settingsBag'],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
@@ -180,6 +181,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                  */
                 $collection = new RoadizRouteCollection(
                     $c['themeResolver'],
+                    $c['settingsBag'],
                     $c['stopwatch'],
                     $kernel->isPreview()
                 );

@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Utils;
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
@@ -88,6 +87,10 @@ class ContactFormManager extends EmailManager
 
     /**
      * ContactFormManager constructor.
+     *
+     * DO NOT DIRECTLY USE THIS CONSTRUCTOR
+     * USE 'contactFormManager' Factory Service
+     *
      * @param Request $request
      * @param FormFactoryInterface $formFactory
      * @param TranslatorInterface $translator

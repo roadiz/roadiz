@@ -105,6 +105,10 @@ class EmailManager
 
     /**
      * EmailManager constructor.
+     *
+     * DO NOT DIRECTLY USE THIS CONSTRUCTOR
+     * USE 'emailManager' Factory Service
+     *
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param \Twig_Environment $templating
