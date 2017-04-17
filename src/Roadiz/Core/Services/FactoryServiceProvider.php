@@ -41,7 +41,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['emailManager'] = $container->factory(function($c) {
+        $container['emailManager'] = $container->factory(function ($c) {
             return new EmailManager(
                 $c['request'],
                 $c['translator'],
@@ -51,7 +51,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
 
-        $container['contactFormManager'] = $container->factory(function($c) {
+        $container['contactFormManager'] = $container->factory(function ($c) {
             return new ContactFormManager(
                 $c['request'],
                 $c['formFactory'],

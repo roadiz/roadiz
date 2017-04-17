@@ -219,9 +219,7 @@ class RoadizApplication extends Application
                 $helperSet->set(new SolrHelper($this->kernel->container['solr']));
                 $helperSet->set(new RolesBagHelper($this->kernel->container['rolesBag']));
             } catch (ConnectionException $exception) {
-
             } catch (\PDOException $exception) {
-
             }
         }
 

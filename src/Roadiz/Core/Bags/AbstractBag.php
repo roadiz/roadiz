@@ -29,11 +29,10 @@
 
 namespace RZ\Roadiz\Core\Bags;
 
-
 abstract class AbstractBag
 {
     /**
      * @param string $name
      */
-    public abstract function get($name);
+    abstract public function get($name);
 }
