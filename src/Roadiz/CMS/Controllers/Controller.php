@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -451,6 +452,16 @@ abstract class Controller implements ContainerAwareInterface
     public function createContactFormManager()
     {
         return $this->get('contactFormManager');
+    }
+
+    /**
+     * Create and return a EmailManager to build and send emails.
+     *
+     * @return EmailManager
+     */
+    public function createEmailManager()
+    {
+        return $this->get('emailManager');
     }
 
     /**
