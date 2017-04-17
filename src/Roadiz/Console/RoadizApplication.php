@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
+use RZ\Roadiz\Utils\Console\Helper\RolesBagHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -211,6 +212,7 @@ class RoadizApplication extends Application
             // We need to set «em» alias as Doctrine misnamed its Helper :-(
             $helperSet->set(new EntityManagerHelper($this->kernel->container['em']), 'em');
             $helperSet->set(new SolrHelper($this->kernel->container['solr']));
+            $helperSet->set(new RolesBagHelper($this->kernel->container['rolesBag']));
         }
 
         return $helperSet;
