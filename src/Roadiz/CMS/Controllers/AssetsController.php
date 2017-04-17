@@ -222,7 +222,7 @@ class AssetsController extends CmsController
             $variantHash = $font->getHash() . $font->getVariant();
             $assignation['fonts'][] = [
                 'font' => $font,
-                'site' => SettingsBag::get('site_name'),
+                'site' => $this->get('settingsBag')->get('site_name'),
                 'fontFolder' => $this->get('kernel')->getFontsFilesBasePath(),
                 'variantHash' => $variantHash,
             ];

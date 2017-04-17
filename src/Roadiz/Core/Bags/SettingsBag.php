@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Kernel;
 
 /**
  * Settings bag used to get quickly a setting value.
+ * @deprecated Use settingsBag service
  */
 class SettingsBag
 {
@@ -43,12 +44,13 @@ class SettingsBag
      */
     protected static $settings = [];
 
+
     /**
      * Get a setting value from its name.
      *
      * @param string $settingName
-     *
      * @return string|boolean
+     * @deprecated Use settingsBag service
      */
     public static function get($settingName)
     {
@@ -71,8 +73,8 @@ class SettingsBag
      * Get a document from its setting name.
      *
      * @param string $settingName
-     *
      * @return \RZ\Roadiz\Core\Entities\Document|bool
+     * @deprecated Use settingsBag service
      */
     public static function getDocument($settingName)
     {
@@ -95,6 +97,7 @@ class SettingsBag
 
     /**
      * Clear static cache.
+     * @deprecated Use settingsBag service
      */
     public static function clear()
     {

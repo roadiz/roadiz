@@ -159,7 +159,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
                     $this->addCollection($feBackendCollection);
                 }
             } else {
-                throw new \RuntimeException("Object of type “" . get_class($theme) . "” does not extend RZ\Roadiz\Core\Entities\Theme class.", 1);
+                throw new \RuntimeException("Object of type “" . get_class($theme) . "” does not extend RZ\\Roadiz\\Core\\Entities\\Theme class.", 1);
             }
         }
     }

@@ -31,7 +31,6 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\SettingGroupType;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -142,7 +141,7 @@ class SettingsController extends RozierApp
 
             $document = null;
             if ($setting->getType() == NodeTypeField::DOCUMENTS_T) {
-                $document = SettingsBag::getDocument($setting->getName());
+                $document = $this->get('settingsBag')->getDocument($setting->getName());
             }
 
             $this->assignation['settings'][] = [
@@ -167,8 +166,7 @@ class SettingsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $setting = $this->get('em')
-                        ->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
+        $setting = $this->get('em')->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
 
         if ($setting !== null) {
             $this->assignation['setting'] = $setting;

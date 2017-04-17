@@ -447,13 +447,7 @@ abstract class Controller implements ContainerAwareInterface
      */
     public function createContactFormManager()
     {
-        return new ContactFormManager(
-            $this->get('request'),
-            $this->get('formFactory'),
-            $this->get('translator'),
-            $this->get('twig.environment'),
-            $this->get('mailer')
-        );
+        return $this->get('contactFormManager');
     }
 
     /**

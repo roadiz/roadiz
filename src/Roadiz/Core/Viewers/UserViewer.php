@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -88,12 +88,8 @@ class UserViewer implements ViewableInterface
             $siteName = "Unnamed site";
         }
 
-        $emailManager = new EmailManager(
-            Kernel::getService('request'),
-            Kernel::getService('translator'),
-            Kernel::getService('twig.environment'),
-            Kernel::getService('mailer')
-        );
+        /** @var EmailManager $emailManager */
+        $emailManager = Kernel::getService('emailManager');
         $emailManager->setAssignation([
             'user' => $this->user,
             'site' => $siteName,
@@ -131,12 +127,8 @@ class UserViewer implements ViewableInterface
             $siteName = "Unnamed site";
         }
 
-        $emailManager = new EmailManager(
-            Kernel::getService('request'),
-            Kernel::getService('translator'),
-            Kernel::getService('twig.environment'),
-            Kernel::getService('mailer')
-        );
+        /** @var EmailManager $emailManager */
+        $emailManager = Kernel::getService('emailManager');
         $emailManager->setAssignation([
             'resetLink' => $urlGenerator->generate('loginResetPage', [
                 'token' => $this->user->getConfirmationToken(),

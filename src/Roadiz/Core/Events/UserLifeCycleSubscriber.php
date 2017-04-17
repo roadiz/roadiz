@@ -34,7 +34,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Pimple\Container;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
@@ -177,22 +176,18 @@ class UserLifeCycleSubscriber implements EventSubscriber
      */
     private function sendSignInConfirmation(User $user)
     {
-        $emailContact = SettingsBag::get('email_sender');
+        $emailContact = $this->container['settingsBag']->get('email_sender');
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
 
-        $siteName = SettingsBag::get('site_name');
+        $siteName = $this->container['settingsBag']->get('site_name');
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }
 
-        $emailManager = new EmailManager(
-            $this->container->offsetGet('request'),
-            $this->container->offsetGet('translator'),
-            $this->container->offsetGet('twig.environment'),
-            $this->container->offsetGet('mailer')
-        );
+        /** @var EmailManager $emailManager */
+        $emailManager = $this->container['emailManager'];
         $emailManager->setAssignation([
             'user' => $user,
             'site' => $siteName,

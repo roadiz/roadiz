@@ -17,7 +17,7 @@
         {#
          # Display contact form
          #}
-        {% form_theme contactForm 'bootstrap_3_layout.html.twig' %}
+        {% form_theme contactForm '@DefaultTheme/forms.html.twig' %}
         {{ form(contactForm) }}
     </div>
     <script src='https://www.google.com/recaptcha/api.js'></script>

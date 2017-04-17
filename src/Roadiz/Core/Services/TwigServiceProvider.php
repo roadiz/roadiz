@@ -168,7 +168,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new UrlExtension(
                 $c['request'],
                 $c['nodesSourcesUrlCacheProvider'],
-                (boolean) SettingsBag::get('force_locale')
+                (boolean) $c['settingsBag']->get('force_locale')
             ));
             $extensions->add(new RoadizTranslationExtension($c['request']));
 

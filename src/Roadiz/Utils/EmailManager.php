@@ -30,12 +30,12 @@
 namespace RZ\Roadiz\Utils;
 
 use InlineStyle\InlineStyle;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\CMS\Controllers\CmsController;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
-use RZ\Roadiz\CMS\Controllers\CmsController;
 
 /**
  * Class EmailManager
@@ -97,6 +97,11 @@ class EmailManager
      */
     protected $message;
 
+    /**
+     * @var null|Settings
+     */
+    protected $settingsBag;
+
 
     /**
      * EmailManager constructor.
@@ -104,12 +109,14 @@ class EmailManager
      * @param TranslatorInterface $translator
      * @param \Twig_Environment $templating
      * @param \Swift_Mailer $mailer
+     * @param Settings|null $settingsBag
      */
     public function __construct(
         Request $request,
         TranslatorInterface $translator,
         \Twig_Environment $templating,
-        \Swift_Mailer $mailer
+        \Swift_Mailer $mailer,
+        Settings $settingsBag = null
     ) {
         $this->request = $request;
         $this->translator = $translator;
@@ -122,6 +129,7 @@ class EmailManager
          * Sets a default CSS for emails.
          */
         $this->emailStylesheet = CmsController::getResourcesFolder() . '/css/transactionalStyles.css';
+        $this->settingsBag = $settingsBag;
     }
 
     /**
@@ -166,11 +174,11 @@ class EmailManager
     public function appendWebsiteIcon()
     {
         if (empty($this->assignation['mainColor'])) {
-            $this->assignation['mainColor'] = SettingsBag::get('main_color');
+            $this->assignation['mainColor'] = $this->settingsBag->get('main_color');
         }
 
         if (empty($this->assignation['headerImageSrc'])) {
-            $adminImage = SettingsBag::getDocument('admin_image');
+            $adminImage = $this->settingsBag->getDocument('admin_image');
             if (null !== $adminImage &&
                 $adminImage instanceof Document) {
                 $documentViewer = new DocumentViewer($adminImage);
@@ -549,7 +557,7 @@ class EmailManager
     {
         return (null !== $this->origin && $this->origin != "") ?
             ($this->origin) :
-            (SettingsBag::get('email_sender'));
+            ($this->settingsBag->get('email_sender'));
     }
 
     /**
