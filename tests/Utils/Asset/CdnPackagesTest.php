@@ -28,7 +28,6 @@
  * @author Ambroise Maupate
  */
 
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Kernel;
@@ -65,7 +64,6 @@ class CdnPackagesTest extends DefaultThemeDependentCase
 
     public function setUp()
     {
-        SettingsBag::clear();
         /** @var Setting $setting */
         $setting = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')

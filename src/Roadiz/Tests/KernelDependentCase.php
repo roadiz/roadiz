@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Tests;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -65,7 +64,6 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
 
     public static function tearDownAfterClass()
     {
-        SettingsBag::clear();
         Kernel::getInstance()->shutdown();
         Kernel::destroy();
     }

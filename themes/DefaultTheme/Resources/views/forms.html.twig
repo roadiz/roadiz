@@ -1,0 +1,16 @@
+{% extends "bootstrap_3_layout.html.twig" %}
+
+{% block recaptcha_widget -%}
+    <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>
+{%- endblock recaptcha_widget %}
+
+{# Override default error block #}
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+        <div class="errors">
+            {%- for error in errors -%}
+                <p class="alert alert-danger"><i class="fa-warning"></i> {{ error.message|trans }}</p>
+            {%- endfor -%}
+        </div>
+    {%- endif %}
+{%- endblock form_errors %}

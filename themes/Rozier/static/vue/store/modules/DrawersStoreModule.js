@@ -152,6 +152,9 @@ const mutations = {
             }
         })
 
+        // Set accept more
+        drawer.acceptMore = drawer.items.length < drawer.maxLength
+
         // Toggle current drawer
         drawer.isActive = !drawer.isActive
 

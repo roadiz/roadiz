@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,7 +32,6 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\EmailManager;
@@ -78,22 +77,18 @@ class UserViewer implements ViewableInterface
      */
     public function sendSignInConfirmation()
     {
-        $emailContact = SettingsBag::get('email_sender');
+        $emailContact = Kernel::getService('settingsBag')->get('email_sender');
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
 
-        $siteName = SettingsBag::get('site_name');
+        $siteName = Kernel::getService('settingsBag')->get('site_name');
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }
 
-        $emailManager = new EmailManager(
-            Kernel::getService('request'),
-            Kernel::getService('translator'),
-            Kernel::getService('twig.environment'),
-            Kernel::getService('mailer')
-        );
+        /** @var EmailManager $emailManager */
+        $emailManager = Kernel::getService('emailManager');
         $emailManager->setAssignation([
             'user' => $this->user,
             'site' => $siteName,
@@ -121,22 +116,18 @@ class UserViewer implements ViewableInterface
      */
     public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator)
     {
-        $emailContact = SettingsBag::get('email_sender');
+        $emailContact = Kernel::getService('settingsBag')->get('email_sender');
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
 
-        $siteName = SettingsBag::get('site_name');
+        $siteName = Kernel::getService('settingsBag')->get('site_name');
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }
 
-        $emailManager = new EmailManager(
-            Kernel::getService('request'),
-            Kernel::getService('translator'),
-            Kernel::getService('twig.environment'),
-            Kernel::getService('mailer')
-        );
+        /** @var EmailManager $emailManager */
+        $emailManager = Kernel::getService('emailManager');
         $emailManager->setAssignation([
             'resetLink' => $urlGenerator->generate('loginResetPage', [
                 'token' => $this->user->getConfirmationToken(),

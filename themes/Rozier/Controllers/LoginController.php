@@ -31,7 +31,6 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -94,7 +93,7 @@ class LoginController extends RozierApp
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse();
 
-            if (false !== $document = SettingsBag::getDocument('login_image')) {
+            if (false !== $document = $this->get('settingsBag')->getDocument('login_image')) {
                 $documentViewer = new DocumentViewer($document);
 
                 $response->setData([

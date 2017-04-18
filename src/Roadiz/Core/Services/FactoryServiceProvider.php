@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,53 +23,45 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RolesBag.php
- * @author Ambroise Maupate
+ * @file FactoryServiceProvider.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Bags;
 
-use RZ\Roadiz\core\Entities\Role;
-use RZ\Roadiz\Core\Kernel;
+namespace RZ\Roadiz\Core\Services;
 
-/**
- * Roles bag used to get quickly a role entity
- * and to create it automatically if it does not exist.
- *
- * @deprecated Use rolesBag service
- */
-class RolesBag
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Utils\EmailManager;
+
+class FactoryServiceProvider implements ServiceProviderInterface
 {
     /**
-     * Cached roles values.
-     *
-     * @var \RZ\Roadiz\Core\Entities\Role[string]
+     * @inheritDoc
      */
-    protected static $roles = [];
-
-    /**
-     * Get role by name or create it if non-existant.
-     *
-     * @param string $roleName
-     * @return Role
-     * @deprecated Use rolesBag service
-     */
-    public static function get($roleName)
+    public function register(Container $container)
     {
-        if (!isset(static::$roles[$roleName])) {
-            static::$roles[$roleName] =
-                    Kernel::getService('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Role')
-                    ->findOneBy(['name'=>$roleName]);
+        $container['emailManager'] = $container->factory(function ($c) {
+            return new EmailManager(
+                $c['request'],
+                $c['translator'],
+                $c['twig.environment'],
+                $c['mailer'],
+                $c['settingsBag']
+            );
+        });
 
-            if (null === static::$roles[$roleName]) {
-                static::$roles[$roleName] = new Role();
+        $container['contactFormManager'] = $container->factory(function ($c) {
+            return new ContactFormManager(
+                $c['request'],
+                $c['formFactory'],
+                $c['translator'],
+                $c['twig.environment'],
+                $c['mailer'],
+                $c['settingsBag']
+            );
+        });
 
-                static::$roles[$roleName]->setName($roleName);
-                Kernel::getService('em')->persist(static::$roles[$roleName]);
-                Kernel::getService('em')->flush();
-            }
-        }
-
-        return static::$roles[$roleName];
+        return $container;
     }
 }
