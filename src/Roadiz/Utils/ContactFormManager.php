@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Utils;
 
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
@@ -87,20 +87,26 @@ class ContactFormManager extends EmailManager
 
     /**
      * ContactFormManager constructor.
+     *
+     * DO NOT DIRECTLY USE THIS CONSTRUCTOR
+     * USE 'contactFormManager' Factory Service
+     *
      * @param Request $request
      * @param FormFactoryInterface $formFactory
      * @param TranslatorInterface $translator
      * @param \Twig_Environment $templating
      * @param \Swift_Mailer $mailer
+     * @param Settings|null $settingsBag
      */
     public function __construct(
         Request $request,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
         \Twig_Environment $templating,
-        \Swift_Mailer $mailer
+        \Swift_Mailer $mailer,
+        Settings $settingsBag
     ) {
-        parent::__construct($request, $translator, $templating, $mailer);
+        parent::__construct($request, $translator, $templating, $mailer, $settingsBag);
 
         $this->formBuilder = $formFactory->createBuilder('form', null, [
                  'attr' => [
@@ -116,12 +122,12 @@ class ContactFormManager extends EmailManager
 
         $this->setSubject($this->translator->trans(
             'new.contact.form.%site%',
-            ['%site%' => SettingsBag::get('site_name')]
+            ['%site%' => $this->settingsBag->get('site_name')]
         ));
 
         $this->setEmailTitle($this->translator->trans(
             'new.contact.form.%site%',
-            ['%site%' => SettingsBag::get('site_name')]
+            ['%site%' => $this->settingsBag->get('site_name')]
         ));
     }
 
@@ -190,8 +196,8 @@ class ContactFormManager extends EmailManager
      */
     public function withGoogleRecaptcha()
     {
-        $publicKey = SettingsBag::get('recaptcha_public_key');
-        $privateKey = SettingsBag::get('recaptcha_private_key');
+        $publicKey = $this->settingsBag->get('recaptcha_public_key');
+        $privateKey = $this->settingsBag->get('recaptcha_private_key');
         $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
 
         if (!empty($publicKey) &&
@@ -350,7 +356,7 @@ class ContactFormManager extends EmailManager
         ];
 
         $this->assignation = [
-            'mailContact' => SettingsBag::get('email_sender'),
+            'mailContact' => $this->settingsBag->get('email_sender'),
             'title' => $this->getEmailTitle(),
             'email' => $this->getSender(),
             'fields' => $fields,
@@ -499,6 +505,6 @@ class ContactFormManager extends EmailManager
     {
         return (null !== parent::getReceiver() && parent::getReceiver() != "") ?
             (parent::getReceiver()) :
-            (SettingsBag::get('email_sender'));
+            ($this->settingsBag->get('email_sender'));
     }
 }

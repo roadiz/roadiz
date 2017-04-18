@@ -30,21 +30,16 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
-use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Utils\CustomForm\CustomFormHelper;
 use RZ\Roadiz\Utils\EmailManager;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\TranslatorInterface;
 use Themes\Rozier\RozierApp;
 
 class CustomFormController extends CmsController
@@ -71,21 +66,15 @@ class CustomFormController extends CmsController
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
-            $mixed = static::prepareAndHandleCustomFormAssignation(
+            $mixed = $this->prepareAndHandleCustomFormAssignation(
                 $request,
                 $customForm,
-                $this->get('formFactory'),
-                $this->get('em'),
-                $this->get('twig.environment'),
-                $this->get('mailer'),
-                $this->get('translator'),
                 new RedirectResponse(
                     $this->generateUrl(
                         'customFormSentAction',
                         ["customFormId" => $customFormId]
                     )
-                ),
-                $this->get('logger')
+                )
             );
 
             if ($mixed instanceof RedirectResponse) {
@@ -128,30 +117,23 @@ class CustomFormController extends CmsController
      *
      * @param array $assignation
      * @param string $receiver
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param \Twig_Environment $twigEnv
-     * @param \Swift_Mailer $mailer
      * @return bool
      */
-    public static function sendAnswer(
+    public function sendAnswer(
         $assignation,
-        $receiver,
-        Request $request,
-        TranslatorInterface $translator,
-        \Twig_Environment $twigEnv,
-        \Swift_Mailer $mailer
+        $receiver
     ) {
-        $emailManager = new EmailManager($request, $translator, $twigEnv, $mailer);
+        /** @var EmailManager $emailManager */
+        $emailManager = $this->get('emailManager');
         $emailManager->setAssignation($assignation);
         $emailManager->setEmailTemplate('forms/answerForm.html.twig');
         $emailManager->setEmailPlainTextTemplate('forms/answerForm.txt.twig');
         $emailManager->setSubject($assignation['title']);
         $emailManager->setEmailTitle($assignation['title']);
-        $emailManager->setSender(SettingsBag::get('email_sender'));
+        $emailManager->setSender($this->get('settingsBag')->get('email_sender'));
 
         if (empty($receiver)) {
-            $emailManager->setReceiver(SettingsBag::get('email_sender'));
+            $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
         }
@@ -171,7 +153,7 @@ class CustomFormController extends CmsController
      *
      * @return array $fieldsData
      */
-    public static function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManager $em)
+    public function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManager $em)
     {
         $now = new \DateTime('NOW');
         $answer = new CustomFormAnswer();
@@ -222,21 +204,19 @@ class CustomFormController extends CmsController
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param boolean $forceExpanded
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    public static function buildForm(
+    public function buildForm(
         Request $request,
         CustomForm $customForm,
-        FormFactoryInterface $formFactory,
         $forceExpanded = false
     ) {
         $defaults = $request->query->all();
-        return $formFactory->create(new CustomFormsType($customForm, $forceExpanded), $defaults, [
-            'recaptcha_public_key' => SettingsBag::get('recaptcha_public_key'),
-            'recaptcha_private_key' => SettingsBag::get('recaptcha_private_key'),
+        return $this->createForm(new CustomFormsType($customForm, $forceExpanded), $defaults, [
+            'recaptcha_public_key' => $this->get('settingsBag')->get('recaptcha_public_key'),
+            'recaptcha_private_key' => $this->get('settingsBag')->get('recaptcha_private_key'),
             'request' => $request,
         ]);
     }
@@ -252,28 +232,16 @@ class CustomFormController extends CmsController
      *
      * @param \Symfony\Component\HttpFoundation\Request          $request
      * @param \RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
-     * @param \Symfony\Component\Form\FormFactoryInterface       $formFactory
-     * @param \Doctrine\ORM\EntityManager                        $em
-     * @param \Twig_Environment                                  $twigEnv
-     * @param \Swift_Mailer                                      $mailer
-     * @param \Symfony\Component\Translation\Translator          $translator
      * @param \Symfony\Component\HttpFoundation\RedirectResponse $redirection
-     * @param \Psr\Log\LoggerInterface|null                      $logger
      * @param boolean                                            $forceExpanded
      * @param string|null                                        $emailSender
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public static function prepareAndHandleCustomFormAssignation(
+    public function prepareAndHandleCustomFormAssignation(
         Request $request,
         CustomForm $customFormsEntity,
-        FormFactoryInterface $formFactory,
-        EntityManager $em,
-        \Twig_Environment $twigEnv,
-        \Swift_Mailer $mailer,
-        Translator $translator,
         RedirectResponse $redirection,
-        LoggerInterface $logger = null,
         $forceExpanded = false,
         $emailSender = null
     ) {
@@ -281,10 +249,9 @@ class CustomFormController extends CmsController
         $assignation['customForm'] = $customFormsEntity;
         $assignation['fields'] = $customFormsEntity->getFields();
 
-        $form = static::buildForm(
+        $form = $this->buildForm(
             $request,
             $customFormsEntity,
-            $formFactory,
             $forceExpanded
         );
 
@@ -292,7 +259,7 @@ class CustomFormController extends CmsController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $helper = new CustomFormHelper($em, $customFormsEntity);
+                $helper = new CustomFormHelper($this->get('em'), $customFormsEntity);
                 /*
                  * Parse form data and create answer.
                  */
@@ -307,18 +274,16 @@ class CustomFormController extends CmsController
                 ];
                 $assignation["emailFields"] = array_merge($assignation["emailFields"], $answer->toArray(false));
 
-                $msg = $translator->trans(
+                $msg = $this->get('translator')->trans(
                     'customForm.%name%.send',
                     ['%name%' => $customFormsEntity->getDisplayName()]
                 );
 
                 $request->getSession()->getFlashBag()->add('confirm', $msg);
 
-                if (null !== $logger) {
-                    $logger->info($msg);
-                }
+                $this->get('logger')->info($msg);
 
-                $assignation['title'] = $translator->trans(
+                $assignation['title'] = $this->get('translator')->trans(
                     'new.answer.form.%site%',
                     ['%site%' => $customFormsEntity->getDisplayName()]
                 );
@@ -327,36 +292,29 @@ class CustomFormController extends CmsController
                     false !== filter_var($emailSender, FILTER_VALIDATE_EMAIL)) {
                     $assignation['mailContact'] = $emailSender;
                 } else {
-                    $assignation['mailContact'] = SettingsBag::get('email_sender');
+                    $assignation['mailContact'] = $this->get('settingsBag')->get('email_sender');
                 }
 
                 /*
                  * Send answer notification
                  */
-                static::sendAnswer(
+                $this->sendAnswer(
                     [
                         'mailContact' => $assignation['mailContact'],
                         'fields' => $assignation["emailFields"],
                         'customForm' => $customFormsEntity,
-                        'title' => $translator->trans(
+                        'title' => $this->get('translator')->trans(
                             'new.answer.form.%site%',
                             ['%site%' => $customFormsEntity->getDisplayName()]
                         ),
                     ],
-                    $customFormsEntity->getEmail(),
-                    $request,
-                    $translator,
-                    $twigEnv,
-                    $mailer
+                    $customFormsEntity->getEmail()
                 );
 
                 return $redirection;
             } catch (EntityAlreadyExistsException $e) {
                 $request->getSession()->getFlashBag()->add('error', $e->getMessage());
-                if (null !== $logger) {
-                    $logger->warning($e->getMessage());
-                }
-
+                $this->get('logger')->warning($e->getMessage());
                 return $redirection;
             }
         }
