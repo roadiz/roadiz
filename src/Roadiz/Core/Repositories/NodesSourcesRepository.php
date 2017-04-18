@@ -59,7 +59,7 @@ class NodesSourcesRepository extends EntityRepository
             if (!$joinedNode) {
                 $qb->innerJoin(
                     'ns.node',
-                    'n'
+                    static::NODE_ALIAS
                 );
                 $joinedNode = true;
             }
@@ -108,7 +108,7 @@ class NodesSourcesRepository extends EntityRepository
              * compute prefix for
              * filtering node relation fields
              */
-            $prefix = 'ns.';
+            $prefix = static::NODESSOURCES_ALIAS . '.';
 
             // Dots are forbidden in field definitions
             $baseKey = str_replace('.', '_', $key);
@@ -117,7 +117,7 @@ class NodesSourcesRepository extends EntityRepository
                 if (!$joinedNode) {
                     $qb->innerJoin(
                         'ns.node',
-                        'n'
+                        static::NODE_ALIAS
                     );
                     $joinedNode = true;
                 }
@@ -137,12 +137,12 @@ class NodesSourcesRepository extends EntityRepository
                 if (!$joinedNode) {
                     $qb->innerJoin(
                         'ns.node',
-                        'n'
+                        static::NODE_ALIAS
                     );
                     $joinedNode = true;
                 }
 
-                $prefix = 'n.';
+                $prefix = static::NODE_ALIAS . '.';
                 $key = str_replace('node.', '', $key);
             }
 
@@ -164,10 +164,10 @@ class NodesSourcesRepository extends EntityRepository
     {
         if (false !== strpos($key, 'node.')) {
             if (!$this->hasJoinedNode($qb, $alias)) {
-                $qb->innerJoin($alias . '.node', 'n');
+                $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
             }
 
-            $prefix = 'n';
+            $prefix = static::NODE_ALIAS;
             $prefixedkey = str_replace('node.', '', $key);
             return parent::singleDirectComparison($prefixedkey, $value, $qb, $prefix);
         } else {
@@ -218,13 +218,13 @@ class NodesSourcesRepository extends EntityRepository
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
-            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->lte('n.status', Node::PUBLISHED));
+            $qb->innerJoin('ns.node', static::NODE_ALIAS, 'WITH', $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED));
             return true;
         } elseif (null !== $authorizationChecker) {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
-            $qb->innerJoin('ns.node', 'n', 'WITH', $qb->expr()->eq('n.status', Node::PUBLISHED));
+            $qb->innerJoin('ns.node', static::NODE_ALIAS, 'WITH', $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED));
             return true;
         }
 
@@ -252,7 +252,7 @@ class NodesSourcesRepository extends EntityRepository
         $preview = false
     ) {
         $joinedNodeType = false;
-        $qb = $this->createQueryBuilder('ns');
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
@@ -267,13 +267,13 @@ class NodesSourcesRepository extends EntityRepository
             foreach ($orderBy as $key => $value) {
                 if (false !== strpos($key, 'node.')) {
                     if (!$joinedNode) {
-                        $qb->innerJoin('ns.node', 'n');
+                        $qb->innerJoin('ns.node', static::NODE_ALIAS);
                     }
                     $simpleKey = str_replace('node.', '', $key);
 
-                    $qb->addOrderBy('n.' . $simpleKey, $value);
+                    $qb->addOrderBy(static::NODE_ALIAS . '.' . $simpleKey, $value);
                 } else {
-                    $qb->addOrderBy('ns.' . $key, $value);
+                    $qb->addOrderBy(static::NODESSOURCES_ALIAS . '.' . $key, $value);
                 }
             }
         }
@@ -305,7 +305,7 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('ns');
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->select($qb->expr()->countDistinct('ns.id'));
 
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
@@ -532,9 +532,8 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker &$authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('ns');
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->select('ns, n')
-            //->innerJoin('ns.node', 'n')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->like('ns.title', ':query'),
                 $qb->expr()->like('ns.metaTitle', ':query'),
@@ -551,7 +550,7 @@ class NodesSourcesRepository extends EntityRepository
         $criteria = [];
 
         if (false === $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview)) {
-            $qb->innerJoin('ns.node', 'n');
+            $qb->innerJoin('ns.node', static::NODE_ALIAS);
         }
 
         if (count($nodeTypes) > 0) {
@@ -587,7 +586,7 @@ class NodesSourcesRepository extends EntityRepository
                  ->andWhere($subQuery->expr()->isNotNull('slog.nodeSource'))
                  ->orderBy('slog.datetime', 'DESC');
 
-        $query = $this->createQueryBuilder('ns');
+        $query = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $query->andWhere($query->expr()->in('ns.id', $subQuery->getQuery()->getDQL()));
         $query->setMaxResults($maxResult);
 
@@ -602,9 +601,9 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findParent(NodesSources $nodeSource)
     {
-        $qb = $this->createQueryBuilder('ns');
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->select('ns, n')
-            ->innerJoin('ns.node', 'n')
+            ->innerJoin('ns.node', static::NODE_ALIAS)
             ->innerJoin('n.children', 'cn')
             ->andWhere($qb->expr()->eq('cn.id', ':childNodeId'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
@@ -627,9 +626,9 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findOneByNodeAndTranslation(Node $node, Translation $translation)
     {
-        $qb = $this->createQueryBuilder('ns');
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
 
-        $qb->select('ns')
+        $qb->select(static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('ns.node', ':node'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
@@ -641,5 +640,30 @@ class NodesSourcesRepository extends EntityRepository
         } catch (NoResultException $e) {
             return null;
         }
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * Extends EntityRepository to make join possible with «node.» prefix.
+     * Required if making search with EntityListManager and filtering by node criteria.
+     */
+    protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
+    {
+        foreach ($criteria as $key => $value) {
+            $baseKey = str_replace('.', '_', $key);
+
+            if (false !== strpos($key, 'node.')) {
+                if (!$this->hasJoinedNode($qb, $alias)) {
+                    $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+                }
+                $simpleKey = str_replace('node.', '', $key);
+                $qb->andWhere($this->buildComparison($value, static::NODE_ALIAS . '.', $simpleKey, $baseKey, $qb));
+            } else {
+                $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $baseKey, $qb));
+            }
+        }
+
+        return $qb;
     }
 }

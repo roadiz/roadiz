@@ -44,6 +44,26 @@ use RZ\Roadiz\Core\Entities\Tag;
 class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
+     * Alias for DQL and Query builder representing Node relation.
+     */
+    const NODE_ALIAS = 'n';
+
+    /**
+     * Alias for DQL and Query builder representing NodesSources relation.
+     */
+    const NODESSOURCES_ALIAS = 'ns';
+
+    /**
+     * Alias for DQL and Query builder representing Translation relation.
+     */
+    const TRANSLATION_ALIAS = 't';
+
+    /**
+     * Alias for DQL and Query builder representing Tag relation.
+     */
+    const TAG_ALIAS = 'tg';
+
+    /**
      * Doctrine column types that can be search
      * with LIKE feature.
      *
@@ -531,7 +551,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                     // and to inner join with a different alias for each tag
                     // with AND operator
                     foreach ($criteria['tags'] as $index => $tag) {
-                        $alias = 'tg' . $index;
+                        $alias = static::TAG_ALIAS . $index;
                         $qb->innerJoin($nodeAlias . '.tags', $alias);
                         $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
                     }
@@ -540,7 +560,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
                 } else {
                     $qb->innerJoin(
                         $nodeAlias . '.tags',
-                        'tg',
+                        static::TAG_ALIAS,
                         'WITH',
                         'tg.id IN (:tags)'
                     );
@@ -548,7 +568,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             } else {
                 $qb->innerJoin(
                     $nodeAlias . '.tags',
-                    'tg',
+                    static::TAG_ALIAS,
                     'WITH',
                     'tg.id = :tags'
                 );
@@ -589,7 +609,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     {
         if (isset($qb->getDQLPart('join')[$alias])) {
             foreach ($qb->getDQLPart('join')[$alias] as $join) {
-                if (null !== $join && $join->getAlias() == "n") {
+                if (null !== $join && $join->getAlias() == static::NODE_ALIAS) {
                     return true;
                 }
             }
@@ -609,7 +629,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     {
         if (isset($qb->getDQLPart('join')[$alias])) {
             foreach ($qb->getDQLPart('join')[$alias] as $join) {
-                if (null !== $join && $join->getAlias() == "ns") {
+                if (null !== $join && $join->getAlias() == static::NODESSOURCES_ALIAS) {
                     return true;
                 }
             }
