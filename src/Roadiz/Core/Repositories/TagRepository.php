@@ -59,14 +59,14 @@ class TagRepository extends EntityRepository
                     $criteria['nodes'] instanceof Collection)) {
                 $qb->innerJoin(
                     'tg.nodes',
-                    'n',
+                    static::NODE_ALIAS,
                     'WITH',
                     'n.id IN (:nodes)'
                 );
             } else {
                 $qb->innerJoin(
                     'tg.nodes',
-                    'n',
+                    static::NODE_ALIAS,
                     'WITH',
                     'n.id = :nodes'
                 );
@@ -132,7 +132,7 @@ class TagRepository extends EntityRepository
              * compute prefix for
              * filtering node, and sources relation fields
              */
-            $prefix = 'tg.';
+            $prefix = static::TAG_ALIAS . '.';
 
             // Dots are forbidden in field definitions
             $baseKey = str_replace('.', '_', $key);
@@ -140,7 +140,7 @@ class TagRepository extends EntityRepository
              * Search in translation fields
              */
             if (false !== strpos($key, 'translation.')) {
-                $prefix = 't.';
+                $prefix = static::TRANSLATION_ALIAS . '.';
                 $key = str_replace('translation.', '', $key);
             }
 
@@ -148,7 +148,7 @@ class TagRepository extends EntityRepository
              * Search in node fields
              */
             if (false !== strpos($key, 'nodes.')) {
-                $prefix = 'n.';
+                $prefix = static::NODE_ALIAS . '.';
                 $key = str_replace('nodes.', '', $key);
             }
 
@@ -199,7 +199,7 @@ class TagRepository extends EntityRepository
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
             $qb->innerJoin('tg.translatedTags', 'tt');
-            $qb->innerJoin('tt.translation', 't');
+            $qb->innerJoin('tt.translation', static::TRANSLATION_ALIAS);
         } else {
             if (null !== $translation) {
                 /*
@@ -218,7 +218,7 @@ class TagRepository extends EntityRepository
                 $qb->innerJoin('tg.translatedTags', 'tt');
                 $qb->innerJoin(
                     'tt.translation',
-                    't',
+                    static::TRANSLATION_ALIAS,
                     'WITH',
                     't.defaultTranslation = true'
                 );
@@ -272,7 +272,7 @@ class TagRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy('tg.' . $key, $value);
+                $qb->addOrderBy(static::TAG_ALIAS . '.' . $key, $value);
             }
         }
 
@@ -614,27 +614,6 @@ class TagRepository extends EntityRepository
         $qb = $this->prepareComparisons($criteria, $qb, $alias);
 
         return $qb;
-    }
-
-    /**
-     * @param string $pattern  Search pattern
-     * @param array $criteria Additional criteria
-     * @return int
-     */
-    public function countSearchBy($pattern, array $criteria = [])
-    {
-        $qb = $this->createQueryBuilder('obj');
-        $qb->add('select', 'count(obj)');
-
-        $qb = $this->createSearchBy($pattern, $qb, $criteria);
-
-        try {
-            return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (Query\QueryException $e) {
-            return 0;
-        } catch (NoResultException $e) {
-            return 0;
-        }
     }
 
     /**

@@ -99,7 +99,7 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select($qb->expr()->countDistinct('n.id'));
 
         $this->filterByTranslation($criteria, $qb, $translation);
@@ -126,8 +126,8 @@ class NodeRepository extends EntityRepository
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id']) ||
             isset($criteria['translation.available'])) {
-            $qb->innerJoin('n.nodeSources', 'ns');
-            $qb->innerJoin('ns.translation', 't');
+            $qb->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS);
+            $qb->innerJoin('ns.translation', static::TRANSLATION_ALIAS);
         } else {
             if (null !== $translation) {
                 /*
@@ -135,7 +135,7 @@ class NodeRepository extends EntityRepository
                  */
                 $qb->innerJoin(
                     'n.nodeSources',
-                    'ns',
+                    static::NODESSOURCES_ALIAS,
                     'WITH',
                     'ns.translation = :translation'
                 );
@@ -144,7 +144,7 @@ class NodeRepository extends EntityRepository
                  * With a null translation, not filter by translation to enable
                  * nodes with only one translation which is not the default one.
                  */
-                $qb->innerJoin('n.nodeSources', 'ns');
+                $qb->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS);
             }
         }
     }
@@ -196,7 +196,7 @@ class NodeRepository extends EntityRepository
              * compute prefix for
              * filtering node, and sources relation fields
              */
-            $prefix = 'n.';
+            $prefix = static::NODE_ALIAS . '.';
 
             // Dots are forbidden in field definitions
             $baseKey = str_replace('.', '_', $key);
@@ -204,14 +204,14 @@ class NodeRepository extends EntityRepository
              * Search in translation fields
              */
             if (false !== strpos($key, 'translation.')) {
-                $prefix = 't.';
+                $prefix = static::TRANSLATION_ALIAS . '.';
                 $key = str_replace('translation.', '', $key);
             }
             /*
              * Search in nodeSource fields
              */
             if ($key == 'translation') {
-                $prefix = 'ns.';
+                $prefix = static::NODESSOURCES_ALIAS . '.';
             }
 
             $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
@@ -389,7 +389,7 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
 
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns');
 
         $this->filterByTranslation($criteria, $qb, $translation);
@@ -404,10 +404,10 @@ class NodeRepository extends EntityRepository
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                if (strpos($key, 'ns.') === 0) {
+                if (strpos($key, static::NODESSOURCES_ALIAS . '.') === 0) {
                     $qb->addOrderBy($key, $value);
                 } else {
-                    $qb->addOrderBy('n.' . $key, $value);
+                    $qb->addOrderBy(static::NODE_ALIAS . '.' . $key, $value);
                 }
             }
         }
@@ -506,9 +506,9 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
@@ -570,10 +570,10 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
-            ->innerJoin('ns.translation', 't')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
             ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
             ->setMaxResults(1)
@@ -606,9 +606,9 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
@@ -638,10 +638,10 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
-            ->innerJoin('ns.translation', 't')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
             ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
             ->setMaxResults(1)
@@ -675,9 +675,9 @@ class NodeRepository extends EntityRepository
             return $this->findHomeWithDefaultTranslation($authorizationChecker);
         }
 
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('n.home', ':home'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
@@ -705,10 +705,10 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
-            ->innerJoin('ns.translation', 't')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->eq('n.home', ':home'))
             ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
             ->setMaxResults(1)
@@ -754,9 +754,9 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setParameter('translation', $translation)
             ->addOrderBy('n.position', 'ASC');
@@ -788,10 +788,10 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
-            ->innerJoin('ns.translation', 't')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->eq('t.defaultTranslation', true))
             ->addOrderBy('n.position', 'ASC');
 
@@ -823,9 +823,9 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('ns.urlAliases', ':urlAlias'))
             ->setParameter('urlAlias', $urlAlias)
             ->setMaxResults(1);
@@ -851,11 +851,11 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns, t')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.urlAliases', 'uas')
-            ->innerJoin('ns.translation', 't')
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->eq('uas.alias', ':alias'))
             ->andWhere($qb->expr()->eq('t.available', ':available'))
             ->setParameter('alias', $urlAliasAlias)
@@ -905,7 +905,7 @@ class NodeRepository extends EntityRepository
      */
     public function exists($nodeName)
     {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select($qb->expr()->countDistinct('n.nodeName'))
             ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
             ->setParameter('nodeName', $nodeName);
@@ -951,8 +951,8 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
-        $qb->select('n')
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select(static::NODE_ALIAS)
             ->innerJoin('n.aNodes', 'ntn')
             ->innerJoin('ntn.field', 'f')
             ->andWhere($qb->expr()->eq('f.name', ':name'))
@@ -1010,10 +1010,10 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
             ->innerJoin('n.aNodes', 'ntn')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ntn.field', 'f')
             ->andWhere($qb->expr()->eq('f.name', ':name'))
             ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
@@ -1067,8 +1067,8 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
-        $qb->select('n')
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select(static::NODE_ALIAS)
             ->innerJoin('n.bNodes', 'ntn')
             ->innerJoin('ntn.field', 'f')
             ->andWhere($qb->expr()->eq('f.name', ':name'))
@@ -1126,10 +1126,10 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $qb = $this->createQueryBuilder('n');
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
             ->innerJoin('n.bNodes', 'ntn')
-            ->innerJoin('n.nodeSources', 'ns')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ntn.field', 'f')
             ->andWhere($qb->expr()->eq('f.name', ':name'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
@@ -1242,10 +1242,10 @@ class NodeRepository extends EntityRepository
     public function findAvailableTranslationForNode(Node $node)
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('t')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
-            ->innerJoin('t.nodeSources', 'ns')
-            ->innerJoin('ns.node', 'n')
+        $qb->select(static::TRANSLATION_ALIAS)
+            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
             ->setParameter('nodeId', $node->getId());
 
@@ -1263,8 +1263,8 @@ class NodeRepository extends EntityRepository
     public function findUnavailableTranslationForNode(Node $node)
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('t')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+        $qb->select(static::TRANSLATION_ALIAS)
+            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
 
@@ -1283,9 +1283,9 @@ class NodeRepository extends EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
-            ->innerJoin('t.nodeSources', 'ns')
-            ->innerJoin('ns.node', 'n')
+            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
             ->setParameter('nodeId', $node->getId());
 
@@ -1305,7 +1305,7 @@ class NodeRepository extends EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', 't')
+            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
 
@@ -1339,7 +1339,7 @@ class NodeRepository extends EntityRepository
         /*
          * Search in translations
          */
-        $qb->innerJoin($alias . '.nodeSources', 'ns');
+        $qb->innerJoin($alias . '.nodeSources', static::NODESSOURCES_ALIAS);
         $criteriaFields = [];
         $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
         $cols = $metadatas->getColumnNames();
@@ -1351,7 +1351,7 @@ class NodeRepository extends EntityRepository
             }
         }
         foreach ($criteriaFields as $key => $value) {
-            $fullKey = sprintf('LOWER(%s)', 'ns.' . $key);
+            $fullKey = sprintf('LOWER(%s)', static::NODESSOURCES_ALIAS . '.' . $key);
             $qb->orWhere($qb->expr()->like($fullKey, $qb->expr()->literal($value)));
         }
 
@@ -1360,11 +1360,11 @@ class NodeRepository extends EntityRepository
          */
         if (isset($criteria['tags'])) {
             if (is_object($criteria['tags'])) {
-                $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId()));
+                $qb->innerJoin($alias . '.tags', static::TAG_ALIAS, Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId()));
             } elseif (is_array($criteria['tags'])) {
-                $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->in('tg.id', $criteria['tags']));
+                $qb->innerJoin($alias . '.tags', static::TAG_ALIAS, Expr\Join::WITH, $qb->expr()->in('tg.id', $criteria['tags']));
             } elseif (is_integer($criteria['tags'])) {
-                $qb->innerJoin($alias . '.tags', 'tg', Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
+                $qb->innerJoin($alias . '.tags', static::TAG_ALIAS, Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
             }
             unset($criteria['tags']);
         }
@@ -1387,9 +1387,9 @@ class NodeRepository extends EntityRepository
         foreach ($criteria as $key => $value) {
             if ($key == 'translation') {
                 if (!$this->hasJoinedNodesSources($qb, $alias)) {
-                    $qb->innerJoin($alias . '.nodeSources', 'ns');
+                    $qb->innerJoin($alias . '.nodeSources', static::NODESSOURCES_ALIAS);
                 }
-                $qb->andWhere($this->buildComparison($value, 'ns.', $key, $key, $qb));
+                $qb->andWhere($this->buildComparison($value, static::NODESSOURCES_ALIAS . '.', $key, $key, $qb));
             } else {
                 $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $key, $qb));
             }
