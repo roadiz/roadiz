@@ -82,3 +82,9 @@ export function getDocuments ({ searchTerms, filters, filterExplorerSelection, m
             throw new Error(error)
         })
 }
+
+export function setDocument (formData) {
+    return request.post(window.location.href, formData, {
+        headers: {'Accept': 'application/json'}
+    })
+}
