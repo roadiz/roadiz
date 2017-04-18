@@ -31,7 +31,6 @@ namespace Themes\Rozier;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,11 +80,11 @@ class RozierApp extends BackendController
          */
         $this->assignation['head']['backDevMode'] = false;
         //Settings
-        $this->assignation['head']['siteTitle'] = SettingsBag::get('site_name') . ' backstage';
-        $this->assignation['head']['mapsStyle'] = SettingsBag::get('maps_style');
-        $this->assignation['head']['mapsLocation'] = SettingsBag::get('maps_default_location') ? SettingsBag::get('maps_default_location') : null;
-        $this->assignation['head']['mainColor'] = SettingsBag::get('main_color');
-        $this->assignation['head']['googleClientId'] = SettingsBag::get('google_client_id') ? SettingsBag::get('google_client_id') : "";
+        $this->assignation['head']['siteTitle'] = $this->get('settingsBag')->get('site_name') . ' backstage';
+        $this->assignation['head']['mapsStyle'] = $this->get('settingsBag')->get('maps_style');
+        $this->assignation['head']['mapsLocation'] = $this->get('settingsBag')->get('maps_default_location') ? $this->get('settingsBag')->get('maps_default_location') : null;
+        $this->assignation['head']['mainColor'] = $this->get('settingsBag')->get('main_color');
+        $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id') ? $this->get('settingsBag')->get('google_client_id') : "";
         $this->assignation['head']['themeName'] = static::$themeName;
 
         $this->themeContainer['nodeTree'] = function () {
@@ -122,7 +121,7 @@ class RozierApp extends BackendController
             /*
              * Get admin image
              */
-            return SettingsBag::getDocument('admin_image');
+            return $this->get('settingsBag')->getDocument('admin_image');
         };
 
         $this->assignation['nodeStatuses'] = [
@@ -153,7 +152,7 @@ class RozierApp extends BackendController
      */
     public function cssAction(Request $request)
     {
-        $this->assignation['mainColor'] = SettingsBag::get('main_color');
+        $this->assignation['mainColor'] = $this->get('settingsBag')->get('main_color');
         $this->assignation['nodeTypes'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
         $this->assignation['tags'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
                 'color' => ['!=', '#000000'],

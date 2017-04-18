@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\CMS\Controllers\EntryPointsController;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Routing\RouteCollection;
@@ -50,20 +50,27 @@ class RoadizRouteCollection extends DeferredRouteCollection
      * @var bool
      */
     private $isPreview;
+    /**
+     * @var Settings
+     */
+    private $settingsBag;
 
     /**
      * @param ThemeResolver $themeResolver
+     * @param Settings $settingsBag
      * @param Stopwatch $stopwatch
      * @param bool $isPreview
      */
     public function __construct(
         ThemeResolver $themeResolver,
+        Settings $settingsBag,
         Stopwatch $stopwatch = null,
         $isPreview = false
     ) {
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
         $this->isPreview = $isPreview;
+        $this->settingsBag = $settingsBag;
     }
 
     /**
@@ -87,12 +94,12 @@ class RoadizRouteCollection extends DeferredRouteCollection
              */
             $assets = AssetsController::getRoutes();
             if (false === $this->isPreview &&
-                '' != SettingsBag::get('static_domain_name')) {
+                '' != $this->settingsBag->get('static_domain_name')) {
                 /*
                  * Only use CDN if no preview mode and CDN domain
                  * is well set
                  */
-                $assets->setHost(SettingsBag::get('static_domain_name'));
+                $assets->setHost($this->settingsBag->get('static_domain_name'));
             }
             $this->addCollection($assets);
 
@@ -159,7 +166,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
                     $this->addCollection($feBackendCollection);
                 }
             } else {
-                throw new \RuntimeException("Object of type “" . get_class($theme) . "” does not extend RZ\Roadiz\Core\Entities\Theme class.", 1);
+                throw new \RuntimeException("Object of type “" . get_class($theme) . "” does not extend RZ\\Roadiz\\Core\\Entities\\Theme class.", 1);
             }
         }
     }

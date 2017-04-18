@@ -30,7 +30,6 @@ namespace Themes\Rozier\Controllers\Documents;
 
 use Intervention\Image\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -1023,10 +1022,10 @@ class DocumentsController extends RozierApp
             $finder = new $class($data['embedId']);
 
             if ($finder instanceof YoutubeEmbedFinder) {
-                $finder->setKey(SettingsBag::get('google_server_id'));
+                $finder->setKey($this->get('settingsBag')->get('google_server_id'));
             }
             if ($finder instanceof SoundcloudEmbedFinder) {
-                $finder->setKey(SettingsBag::get('soundcloud_client_id'));
+                $finder->setKey($this->get('settingsBag')->get('soundcloud_client_id'));
             }
 
             if ($finder->exists()) {

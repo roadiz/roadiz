@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Bags\RolesBag;
+use RZ\Roadiz\Utils\Console\Helper\RolesBagHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -67,6 +67,8 @@ class UsersRolesCommand extends UsersCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->questionHelper = $this->getHelper('question');
+        /** @var RolesBagHelper $rolesBag */
+        $rolesBag = $this->getHelper('rolesBag');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
         $name = $input->getArgument('username');
@@ -90,8 +92,8 @@ class UsersRolesCommand extends UsersCommand
 
                     do {
                         $role = $this->questionHelper->ask($input, $output, $question);
-                        if (in_array($role, $roles)) {
-                            $user->addRole(RolesBag::get($role));
+                        if ($role != "") {
+                            $user->addRole($rolesBag->get($role));
                             $text .= '<info>— Role: ' . $role . ' added.</info>' . PHP_EOL;
                         }
                     } while ($role != "");
@@ -108,7 +110,7 @@ class UsersRolesCommand extends UsersCommand
 
                         $role = $this->questionHelper->ask($input, $output, $question);
                         if (in_array($role, $roles)) {
-                            $user->removeRole(RolesBag::get($role));
+                            $user->removeRole($rolesBag->get($role));
                             $text .= '<info>— Role: ' . $role . ' removed.</info>' . PHP_EOL;
                         }
                     } while ($role != "");

@@ -45,11 +45,12 @@ class SettingRepository extends EntityRepository
      */
     public function getValue($name)
     {
-        $query = $this->_em->createQuery('
-            SELECT s.value FROM RZ\Roadiz\Core\Entities\Setting s
-            WHERE s.name = :name')
-                        ->setParameter('name', $name);
+        $builder = $this->createQueryBuilder('s');
+        $builder->select('s.value')
+                ->andWhere($builder->expr()->eq('s.name', ':name'))
+                ->setParameter(':name', $name);
 
+        $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZSettingValue_'.$name);
 
         try {
@@ -66,11 +67,12 @@ class SettingRepository extends EntityRepository
      */
     public function exists($name)
     {
-        $query = $this->_em->createQuery('
-            SELECT COUNT(s.value) FROM RZ\Roadiz\Core\Entities\Setting s
-            WHERE s.name = :name')
-                        ->setParameter('name', $name);
+        $builder = $this->createQueryBuilder('s');
+        $builder->select($builder->expr()->count('s.value'))
+            ->andWhere($builder->expr()->eq('s.name', ':name'))
+            ->setParameter(':name', $name);
 
+        $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZSettingExists_'.$name);
 
         try {
@@ -81,22 +83,23 @@ class SettingRepository extends EntityRepository
     }
 
     /**
-     * @return array|bool
+     * Get every Setting names
+     *
+     * @return array
      */
     public function findAllNames()
     {
-        $query = $this->_em->createQuery('SELECT s.name FROM RZ\Roadiz\Core\Entities\Setting s');
+        $builder = $this->createQueryBuilder('s');
+        $builder->select('s.name');
+
+        $query = $builder->getQuery();
+        $query->useResultCache(true, 3600, 'RZSettingAll');
+
         try {
-            $result = $query->getScalarResult();
-
-            $ids = [];
-            foreach ($result as $item) {
-                $ids[] = $item['name'];
-            }
-
-            return $ids;
+            $rolesNames = $query->getScalarResult();
+            return array_map('current', $rolesNames);
         } catch (NoResultException $e) {
-            return false;
+            return [];
         }
     }
 }

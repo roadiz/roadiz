@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Bags\SettingsBag;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
@@ -61,12 +61,17 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
     /** @var CacheProvider */
     private $nodeSourceUrlCacheProvider;
+    /**
+     * @var Settings
+     */
+    private $settingsBag;
 
     /**
      * NodeRouter constructor.
      *
      * @param EntityManager $em
      * @param ThemeResolver $themeResolver
+     * @param Settings $settingsBag
      * @param array $options
      * @param RequestContext|null $context
      * @param LoggerInterface|null $logger
@@ -76,6 +81,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     public function __construct(
         EntityManager $em,
         ThemeResolver $themeResolver,
+        Settings $settingsBag,
         array $options = [],
         RequestContext $context = null,
         LoggerInterface $logger = null,
@@ -89,6 +95,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         $this->setOptions($options);
         $this->preview = $preview;
         $this->themeResolver = $themeResolver;
+        $this->settingsBag = $settingsBag;
     }
 
     /**
@@ -220,7 +227,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         $cacheKey = $source->getId();
         if (null !== $this->nodeSourceUrlCacheProvider) {
             if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
-                $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) SettingsBag::get('force_locale'));
+                $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
                     $urlGenerator->getNonContextualUrl($this->themeResolver->findTheme($this->getContext()->getHost()))
@@ -228,7 +235,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             }
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         } else {
-            $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) SettingsBag::get('force_locale'));
+            $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
             return $urlGenerator->getNonContextualUrl($this->themeResolver->findTheme($this->getContext()->getHost()));
         }
     }
