@@ -136,11 +136,13 @@
                 }).then(() => this.restore())
             },
             load () {
-                if (!this.image) {
-                    this.image = this.$refs.image
-                    this.start()
-                    this.blanchetteEditorLoaded()
-                }
+                window.setTimeout(() => {
+                    if (!this.image) {
+                        this.image = this.$refs.image
+                        this.start()
+                        this.blanchetteEditorLoaded()
+                    }
+                }, 1000)
             },
             setAspectRatio (e) {
                 const ratio = e.target.value
