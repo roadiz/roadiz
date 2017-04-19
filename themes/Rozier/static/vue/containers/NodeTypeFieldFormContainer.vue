@@ -108,8 +108,6 @@
                 this.currentView = null
                 this.entity = null
 
-                console.log(newValue)
-
                 Vue.nextTick(() => {
                     this.setConfig(newValue)
                 })

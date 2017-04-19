@@ -103,26 +103,7 @@
             }
         },
         mounted () {
-            Vue.nextTick(() => {
-                // Get initial needed data
-                const ids = this.initialValue.split(',')
-                const entity = this.entity
-
-                // Get specific filter
-                const nodeTypes = this.$refs.drawer.getAttribute('data-nodetypes')
-                const nodeTypeField = this.$refs.drawer.getAttribute('data-nodetypefield')
-
-                // Merge specific filter in one object
-                const filters = { nodeTypes, nodeTypeField }
-
-                // Init data
-                this.drawersInitData({
-                    drawer: this.drawer,
-                    entity,
-                    ids,
-                    filters
-                })
-            })
+            this.ids = this.initialValue.split(',')
         },
         computed: {
             ...mapState({

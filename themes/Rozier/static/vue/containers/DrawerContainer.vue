@@ -29,9 +29,18 @@
             Vue.nextTick(() => {
                 this.drawerName = this.$refs.drawer.getAttribute('name')
 
+                let ids = this.ids
+                let entity = this.entity
+
                 // Get initial needed data
-                const ids = JSON.parse(this.$refs.drawer.getAttribute('data-initial-items'))
-                const entity = this.$refs.drawer.getAttribute('data-accept-entity')
+                if (!ids) {
+                    ids = JSON.parse(this.$refs.drawer.getAttribute('data-initial-items'))
+                }
+
+                if (!entity) {
+                    entity = this.$refs.drawer.getAttribute('data-accept-entity')
+                }
+
                 const isSortable = this.$refs.drawer.getAttribute('data-is-sortable')
                 const minLengthEl = this.$refs.drawer.getAttribute('data-min-length')
                 const maxLengthEl = this.$refs.drawer.getAttribute('data-max-length')

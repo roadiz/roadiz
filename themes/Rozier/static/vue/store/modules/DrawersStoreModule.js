@@ -62,18 +62,18 @@ const actions = {
 
         // If no initial ids provided no need to use the api
         if (!ids || ids.length === 0 || !entity) {
-            commit(DRAWERS_INIT_DATA_REQUEST_EMPTY, { drawer })
-            return
+            commit(DRAWERS_INIT_DATA_REQUEST_EMPTY, { drawer, maxLength, minLength })
+        } else {
+            // If ids provided, fetch data and fill the Drawer
+            api.getItemsByIds(entity, ids, filters)
+                .then((result) => {
+                    commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result, maxLength, minLength })
+                })
+                .catch((error) => {
+                    commit(DRAWERS_INIT_DATA_REQUEST_FAILED, { drawer, error })
+                })
         }
 
-        // If ids provided, fetch data and fill the Drawer
-        api.getItemsByIds(entity, ids, filters)
-            .then((result) => {
-                commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result, maxLength, minLength })
-            })
-            .catch((error) => {
-                commit(DRAWERS_INIT_DATA_REQUEST_FAILED, { drawer, error })
-            })
     },
     drawersAddItem ({ commit, state }, { drawer, item, newIndex }) {
         let drawerToChange = state.selectedDrawer
@@ -136,7 +136,7 @@ const mutations = {
             isDropzoneEnable: false,
             minLength: 0,
             maxLength: 999999,
-            acceptMore: false
+            acceptMore: true
         })
     },
     [DRAWERS_REMOVE_INSTANCE] (state, { drawerToRemove }) {
@@ -198,8 +198,11 @@ const mutations = {
         drawer.isLoading = false
         drawer.errorMessage = error.message
     },
-    [DRAWERS_INIT_DATA_REQUEST_EMPTY] (state, { drawer }) {
+    [DRAWERS_INIT_DATA_REQUEST_EMPTY] (state, { drawer, maxLength, minLength }) {
         drawer.isLoading = false
+        drawer.acceptMore = true
+        drawer.maxLength = maxLength
+        drawer.minLength = minLength
     },
     [KEYBOARD_EVENT_ESCAPE] (state) {
         state = disableActiveDrawer(state)
