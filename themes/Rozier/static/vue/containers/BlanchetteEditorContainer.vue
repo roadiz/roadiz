@@ -24,6 +24,7 @@
                 :undo="restore"
                 :aspect-ratio="setAspectRatio"
                 :overwrite="overwrite"
+                :translations="translations.blanchetteEditor"
                 :set-drag-mode="setDragMode">
             </blanchette-toolbar>
 
@@ -118,7 +119,8 @@
         computed: {
             ...mapState({
                 originalUrl: state => state.blanchetteEditor.originalUrl,
-                isLoading: state => state.blanchetteEditor.isLoading
+                isLoading: state => state.blanchetteEditor.isLoading,
+                translations: state => state.translations
             })
         },
         methods: {

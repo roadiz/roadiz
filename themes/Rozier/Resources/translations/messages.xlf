@@ -6707,6 +6707,72 @@
             <note>Document navbar link text for document retouch page.</note>
         </trans-unit>
 
+        <trans-unit xml:space="preserve" id="blanchetteEditor.free">
+            <source>blanchetteEditor.free</source>
+            <target></target>
+            <note>Blanchette Editor message button label: free aspect ratio</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.move">
+            <source>blanchetteEditor.move</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
+            <source>blanchetteEditor.crop</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
+            <source>blanchetteEditor.zoomIn</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
+            <source>blanchetteEditor.zoomOut</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
+            <source>blanchetteEditor.rotateLeft</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
+            <source>blanchetteEditor.rotateRight</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
+            <source>blanchetteEditor.flipHorizontal</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
+            <source>blanchetteEditor.flipVertical</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
+            <source>blanchetteEditor.applyChange</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
+            <source>blanchetteEditor.undo</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
+            <source>blanchetteEditor.aspectRatio</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
+            <source>blanchetteEditor.saveAndOverwrite</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+
     </body>
   </file>
 </xliff>

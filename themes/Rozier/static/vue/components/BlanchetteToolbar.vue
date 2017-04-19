@@ -1,35 +1,35 @@
 <template>
     <div class="toolbar" ref="toolbar">
         <template v-if="!cropped">
-            <button class="toolbar__button uk-button" data-uk-tooltip title="Move (M)" v-if="setDragMode" @click="setDragMode('move')">
+            <button class="toolbar__button uk-button" data-uk-tooltip :title="translations.move" v-if="setDragMode" @click="setDragMode('move')">
                 <i class="uk-icon-arrows"></i>
             </button>
-            <button class="toolbar__button uk-button" data-uk-tooltip title="Crop (C)" v-if="setDragMode" @click="setDragMode('crop')">
+            <button class="toolbar__button uk-button" data-uk-tooltip :title="translations.crop" v-if="setDragMode" @click="setDragMode('crop')">
                 <i class="uk-icon-crop"></i>
             </button>
-            <button class="toolbar_button uk-button" data-uk-tooltip title="Zoom In (I)" v-if="zoomIn" @click="zoomIn">
+            <button class="toolbar_button uk-button" data-uk-tooltip :title="translations.zoomIn" v-if="zoomIn" @click="zoomIn">
                 <i class="uk-icon-search-plus"></i>
             </button>
-            <button class="toolbar_button uk-button" data-uk-tooltip title="Zoom Out (O)" v-if="zoomOut" @click="zoomOut">
+            <button class="toolbar_button uk-button" data-uk-tooltip :title="translations.zoomOut" v-if="zoomOut" @click="zoomOut">
                 <i class="uk-icon-search-minus"></i>
             </button>
-            <button class="toolbar_button uk-button" data-uk-tooltip title="Rotate Left (L)" v-if="rotateLeft" @click="rotateLeft">
+            <button class="toolbar_button uk-button" data-uk-tooltip :title="translations.rotateLeft" v-if="rotateLeft" @click="rotateLeft">
                 <i class="uk-icon-rotate-left"></i>
             </button>
-            <button class="toolbar_button uk-button" data-uk-tooltip title="Rotate Right (R)" v-if="rotateRight" @click="rotateRight">
+            <button class="toolbar_button uk-button" data-uk-tooltip :title="translations.rotateRight" v-if="rotateRight" @click="rotateRight">
                 <i class="uk-icon-rotate-right"></i>
             </button>
-            <button class="toolbar_button uk-button" data-uk-tooltip title="Flip Horizontal (H)" v-if="flipHorizontal" @click="flipHorizontal">
+            <button class="toolbar_button uk-button" data-uk-tooltip :title="translations.flipHorizontal" v-if="flipHorizontal" @click="flipHorizontal">
                 <i class="uk-icon-arrows-h"></i>
             </button>
-            <button class="toolbar_button uk-button" data-uk-tooltip title="Flip Vertical (V)" v-if="flipVertical" @click="flipVertical">
+            <button class="toolbar_button uk-button" data-uk-tooltip :title="translations.flipVertical" v-if="flipVertical" @click="flipVertical">
                 <i class="uk-icon-arrows-v"></i>
             </button>
 
-            <div class="toolbar__select_wraper" data-uk-tooltip title="Aspect ratio">
+            <div class="toolbar__select_wraper" data-uk-tooltip :title="translations.aspectRatio">
                 <select class="toolbar__select uk-button" v-model="ratio" @change="aspectRatio">
                     <optgroup label="Other">
-                        <option value="free">Free</option>
+                        <option value="free">{{ translations.free }}</option>
                         <option value="1:1">1:1</option>
                         <option value="4:3">4:3</option>
                     </optgroup>
@@ -45,16 +45,16 @@
                 <i class="uk-icon-arrow-down"></i>
             </div>
 
-            <button class="toolbar_button uk-button uk-button-primary" data-uk-tooltip title="Apply change (Enter)" v-if="cropping && !cropped" @click="crop">
+            <button class="toolbar_button uk-button uk-button-primary" data-uk-tooltip :title="translations.applyChange" v-if="cropping && !cropped" @click="crop">
                 <i class="uk-icon-check"></i>
             </button>
         </template>
 
-        <button class="toolbar_button uk-button uk-button-secondary" data-uk-tooltip title="Undo (Ctrl + Z)" v-if="cropped" @click="undo">
+        <button class="toolbar_button uk-button uk-button-secondary" data-uk-tooltip :title="translations.undo" v-if="cropped" @click="undo">
             <i class="uk-icon-undo"></i>
         </button>
-        <button class="toolbar_button uk-button uk-button-primary" data-uk-tooltip title="Save and overwrite" v-if="cropped" @click="overwrite">
-            <i class="uk-icon-floppy-o"></i> Save and overwrite
+        <button class="toolbar_button uk-button uk-button-primary" data-uk-tooltip :title="translations.saveAndOverwrite" v-if="cropped" @click="overwrite">
+            <i class="uk-icon-floppy-o"></i> {{ translations.saveAndOverwrite }}
         </button>
     </div>
 </template>
@@ -82,6 +82,10 @@
 <script>
     export default {
         props : {
+            translations: {
+                type: Object,
+                required: true
+            },
             aspectRatio: {
                 type: Function
             },
