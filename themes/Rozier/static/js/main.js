@@ -6,6 +6,7 @@
 
 var Rozier = {};
 
+
 Rozier.$window = null;
 Rozier.$body = null;
 
