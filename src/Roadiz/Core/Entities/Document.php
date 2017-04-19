@@ -702,4 +702,15 @@ class Document extends AbstractDateTimed
 
         return null;
     }
+
+    /**
+     * Clone current document.
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $this->rawDocument = null;
+        }
+    }
 }

@@ -28,6 +28,7 @@
  */
 namespace Themes\Rozier\Controllers\Documents;
 
+use Doctrine\ORM\EntityManager;
 use Intervention\Image\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Entities\Document;
@@ -49,6 +50,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -148,6 +150,98 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
+     * @param $documentId
+     * @return JsonResponse|Response
+     */
+    public function adjustAction(Request $request, $documentId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        /** @var Document $document */
+        $document = $this->get('em')
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+
+        if ($document !== null) {
+            // Assign document
+            $this->assignation['document'] = $document;
+
+            // Build form and handle it
+            $fileForm = $this->buildFileForm();
+            $fileForm->handleRequest($request);
+
+            // Check if form is valid
+            if ($fileForm->isValid()) {
+                /** @var EntityManager $em */
+                $em = $this->get('em');
+
+                if (null !== $document->getRawDocument()) {
+                    /** @var Document $cloneDocument */
+                    $cloneDocument = clone $document;
+
+                    // need to remove raw document BEFORE
+                    // setting it to cloned document
+                    $rawDocument = $document->getRawDocument();
+                    $document->setRawDocument(null);
+                    $em->flush();
+
+                    $cloneDocument->setRawDocument($rawDocument);
+
+                    /** @var Packages $packages */
+                    $packages = $this->get('assetPackages');
+                    $oldPath = $packages->getDocumentFilePath($cloneDocument);
+                    $fs = new Filesystem();
+
+                    /*
+                     * Prefix document filename
+                     */
+                    $cloneDocument->setFilename('original_' . $cloneDocument->getFilename());
+                    $newPath = $packages->getDocumentFilePath($cloneDocument);
+                    $fs->rename(
+                        $oldPath,
+                        $newPath
+                    );
+
+                    $em->persist($cloneDocument);
+                    $em->flush();
+                }
+
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $fileForm->get('editDocument')->getData();
+                $documentFactory = new DocumentFactory(
+                    $uploadedFile,
+                    $em,
+                    $this->get('dispatcher'),
+                    $this->get('assetPackages'),
+                    null,
+                    $this->get('logger')
+                );
+
+                $documentFactory->updateDocument($document);
+                $em->flush();
+
+                /** @var Translator $translator */
+                $translator = $this->get('translator');
+                $msg = $translator->trans('document.%name%.updated', [
+                    '%name%' => $document->getFilename(),
+                ]);
+
+                return new JsonResponse([
+                    'message' => $msg,
+                    'path' => $this->get('assetPackages')->getUrl($document->getRelativeUrl(), Packages::DOCUMENTS) . '?' . random_int(10, 999)
+                ]);
+            }
+
+            // Create form view and assign it
+            $this->assignation['file_form'] = $fileForm->createView();
+
+            return $this->render('documents/adjust.html.twig', $this->assignation);
+        }
+
+        throw new ResourceNotFoundException();
+    }
+
+    /**
+     * @param Request $request
      * @param int     $documentId
      *
      * @return Response
@@ -156,6 +250,7 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var Document $document */
         $document = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
@@ -705,6 +800,27 @@ class DocumentsController extends RozierApp
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
+                ],
+            ]);
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @return Form
+     */
+    private function buildFileForm()
+    {
+        $defaults = [
+            'editDocument' => null,
+        ];
+
+        $builder = $this->createFormBuilder($defaults)
+            ->add('editDocument', 'file', [
+                'label' => 'overwrite.document',
+                'required' => false,
+                'constraints' => [
+                    new File()
                 ],
             ]);
 
