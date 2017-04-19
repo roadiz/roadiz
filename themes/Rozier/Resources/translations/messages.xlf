@@ -6701,10 +6701,10 @@
             <note>Drawer message: when a minimum length is provided.</note>
         </trans-unit>
 
-        <trans-unit xml:space="preserve" id="document.retouch">
-            <source>document.retouch</source>
+        <trans-unit xml:space="preserve" id="document.adjust">
+            <source>document.adjust</source>
             <target></target>
-            <note>Document navbar link text for document retouch page.</note>
+            <note>Document navbar link text for document adjust page.</note>
         </trans-unit>
 
         <trans-unit xml:space="preserve" id="blanchetteEditor.free">

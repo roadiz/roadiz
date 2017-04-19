@@ -19,8 +19,8 @@
             <a href="{{ path('documentsUsagePage', editRouteParams) }}">{% trans %}document.usage{% endtrans %}</a>
         </li>
         {% if document and document.image %}
-            <li class="{% if current == 'retouch' %}uk-active{% endif %}">
-                <a href="{{ path('documentsRetouchPage', editRouteParams) }}">{% trans %}document.retouch{% endtrans %}</a>
+            <li class="{% if current == 'adjust' %}uk-active{% endif %}">
+                <a href="{{ path('documentsAdjustPage', editRouteParams) }}">{% trans %}document.adjust{% endtrans %}</a>
             </li>
         {% endif %}
     </ul>

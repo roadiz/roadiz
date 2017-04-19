@@ -263,7 +263,6 @@
                     this.url = this.originalUrl
                     this.originalUrl = ''
                     this.cropped = false
-                    console.log('ici')
                 }
             }
         },

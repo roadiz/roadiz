@@ -153,7 +153,7 @@ class DocumentsController extends RozierApp
      * @param $documentId
      * @return JsonResponse|Response
      */
-    public function retouchAction(Request $request, $documentId)
+    public function adjustAction(Request $request, $documentId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
@@ -234,7 +234,7 @@ class DocumentsController extends RozierApp
             // Create form view and assign it
             $this->assignation['file_form'] = $fileForm->createView();
 
-            return $this->render('documents/retouch.html.twig', $this->assignation);
+            return $this->render('documents/adjust.html.twig', $this->assignation);
         }
 
         throw new ResourceNotFoundException();
