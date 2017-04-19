@@ -52,7 +52,17 @@ class Roles extends AbstractBag
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role');
+    }
+
+    /**
+     * @return RoleRepository
+     */
+    public function getRepository()
+    {
+        if (null === $this->repository) {
+            $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role');
+        }
+        return $this->repository;
     }
 
     /**
@@ -63,7 +73,7 @@ class Roles extends AbstractBag
      */
     public function get($roleName)
     {
-        $role = $this->repository->findOneBy(['name'=>$roleName]);
+        $role = $this->getRepository()->findOneByName($roleName);
 
         if (null === $role) {
             $role = new Role();

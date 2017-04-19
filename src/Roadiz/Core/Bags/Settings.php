@@ -55,7 +55,17 @@ class Settings extends AbstractBag
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Setting');
+    }
+
+    /**
+     * @return SettingRepository
+     */
+    public function getRepository()
+    {
+        if (null === $this->repository) {
+            $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Setting');
+        }
+        return $this->repository;
     }
 
     /**
@@ -66,7 +76,7 @@ class Settings extends AbstractBag
     {
         if (null !== $this->entityManager) {
             try {
-                return $this->repository->getValue($settingName);
+                return $this->getRepository()->getValue($settingName);
             } catch (\Exception $e) {
                 return false;
             }
@@ -85,7 +95,7 @@ class Settings extends AbstractBag
     {
         if (null !== $this->entityManager) {
             try {
-                $id = $this->repository->getValue($settingName);
+                $id = $this->getRepository()->getValue($settingName);
                 return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', (int) $id);
             } catch (\Exception $e) {
                 return false;
