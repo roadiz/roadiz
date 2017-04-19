@@ -50,6 +50,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -218,7 +219,14 @@ class DocumentsController extends RozierApp
                 $documentFactory->updateDocument($document);
                 $em->flush();
 
+                /** @var Translator $translator */
+                $translator = $this->get('translator');
+                $msg = $translator->trans('document.%name%.updated', [
+                    '%name%' => $document->getFilename(),
+                ]);
+
                 return new JsonResponse([
+                    'message' => $msg,
                     'path' => $this->get('assetPackages')->getUrl($document->getRelativeUrl(), Packages::DOCUMENTS) . '?' . random_int(10, 999)
                 ]);
             }

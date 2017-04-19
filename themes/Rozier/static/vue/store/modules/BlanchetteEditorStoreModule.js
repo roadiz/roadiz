@@ -73,6 +73,13 @@ const actions = {
             .then((res) => {
                 commit(BLANCHETTE_EDITOR_LOADED)
                 if (res.data && res.data.path) {
+                    UIkit.notify({
+                        message : res.data.message,
+                        status  : 'success',
+                        timeout : 2000,
+                        pos     : 'top-center'
+                    });
+
                     commit(BLANCHETTE_EDITOR_SAVE_SUCCESS, { path: res.data.path })
                 } else {
                     throw new Error('No path found')
