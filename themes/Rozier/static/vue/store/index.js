@@ -11,6 +11,7 @@ import drawers from './modules/DrawersStoreModule'
 import filterExplorer from './modules/FilterExplorerStoreModule'
 import tags from './modules/TagsStoreModule'
 import documentPreview from './modules/DocumentPreviewStoreModule'
+import blanchetteEditor from './modules/BlanchetteEditorStoreModule'
 
 export default new Vuex.Store({
     modules: {
@@ -19,7 +20,8 @@ export default new Vuex.Store({
         filterExplorer,
         drawers,
         tags,
-        documentPreview
+        documentPreview,
+        blanchetteEditor
     },
     state: {
         translations: RozierRoot.messages

@@ -11,15 +11,6 @@
     </header>
 
     <article class="content content-document-edit">
-
-        {% if document and document.image %}
-            <blanchette-editor-container data-vuejs src-url="{{ document|url({ 'noProcess': true }) }}" filename="{{ document.filename }}">
-                <div class="hidden">
-                    {{ form(file_form) }}
-                </div>
-            </blanchette-editor-container>
-        {% endif %}
-
         {% form_theme form '@Rozier/forms.html.twig' %}
         <form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}

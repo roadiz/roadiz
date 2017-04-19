@@ -6701,6 +6701,11 @@
             <note>Drawer message: when a minimum length is provided.</note>
         </trans-unit>
 
+        <trans-unit xml:space="preserve" id="document.retouch">
+            <source>document.retouch</source>
+            <target></target>
+            <note>Document navbar link text for document retouch page.</note>
+        </trans-unit>
 
     </body>
   </file>

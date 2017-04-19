@@ -149,11 +149,10 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int     $documentId
-     *
-     * @return Response
+     * @param $documentId
+     * @return JsonResponse|Response
      */
-    public function editAction(Request $request, $documentId)
+    public function retouchAction(Request $request, $documentId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
@@ -162,18 +161,14 @@ class DocumentsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
         if ($document !== null) {
+            // Assign document
             $this->assignation['document'] = $document;
-            $this->assignation['rawDocument'] = $document->getRawDocument();
 
-            /*
-             * Handle main form
-             */
-            $form = $this->buildEditForm($document);
-            $form->handleRequest($request);
-
+            // Build form and handle it
             $fileForm = $this->buildFileForm();
             $fileForm->handleRequest($request);
 
+            // Check if form is valid
             if ($fileForm->isValid()) {
                 /** @var EntityManager $em */
                 $em = $this->get('em');
@@ -194,6 +189,7 @@ class DocumentsController extends RozierApp
                     $packages = $this->get('assetPackages');
                     $oldPath = $packages->getDocumentFilePath($cloneDocument);
                     $fs = new Filesystem();
+
                     /*
                      * Prefix document filename
                      */
@@ -222,8 +218,43 @@ class DocumentsController extends RozierApp
                 $documentFactory->updateDocument($document);
                 $em->flush();
 
-                return new JsonResponse();
+                return new JsonResponse([
+                    'path' => $this->get('assetPackages')->getUrl($document->getRelativeUrl(), Packages::DOCUMENTS)
+                ]);
             }
+
+            // Create form view and assign it
+            $this->assignation['file_form'] = $fileForm->createView();
+
+            return $this->render('documents/retouch.html.twig', $this->assignation);
+        }
+
+        throw new ResourceNotFoundException();
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $documentId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $documentId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+
+        /** @var Document $document */
+        $document = $this->get('em')
+            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+
+        if ($document !== null) {
+            $this->assignation['document'] = $document;
+            $this->assignation['rawDocument'] = $document->getRawDocument();
+
+            /*
+             * Handle main form
+             */
+            $form = $this->buildEditForm($document);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -275,7 +306,6 @@ class DocumentsController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
-            $this->assignation['file_form'] = $fileForm->createView();
 
             return $this->render('documents/edit.html.twig', $this->assignation);
         }

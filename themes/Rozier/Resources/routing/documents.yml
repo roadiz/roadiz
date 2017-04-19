@@ -1,3 +1,7 @@
+documentsRetouchPage:
+    path:     /retouch/{documentId}
+    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::retouchAction }
+    requirements: { documentId : "[0-9]+" }
 documentsEditPage:
     path:     /edit/{documentId}
     defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::editAction }

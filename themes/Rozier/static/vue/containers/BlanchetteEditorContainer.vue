@@ -3,6 +3,12 @@
         <h3>Blanchette Editor</h3>
 
         <div class="canvas">
+            <transition name="fade" v-if="isLoading">
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            </transition>
+
             <blanchette-toolbar
                 :flip-horizontal="flipHorizontal"
                 :flip-vertical="flipVertical"
@@ -23,7 +29,7 @@
 
             <div class="editor">
                 <template v-if="url">
-                    <img :src="url" :alt="name" @load="load">
+                    <img :src="url" :alt="name" @load="load" ref="image">
                 </template>
             </div>
         </div>
@@ -37,8 +43,19 @@
     }
 
     .canvas {
+        position: relative;
         width: 100%;
         height: 100%;
+    }
+
+    .spinner-container {
+        position: absolute;
+        z-index: 5;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(#fff, 0.5);
     }
 
     .editor {
@@ -57,6 +74,7 @@
 </style>
 <script>
     import VueCropper from 'vue-cropperjs'
+    import { mapState, mapActions } from 'vuex'
 
     // Components
     import BlanchetteToolbar from '../components/BlanchetteToolbar.vue'
@@ -86,39 +104,40 @@
                 image: null,
                 type: '',
                 name: '',
-                originalUrl: '',
                 url: this.srcUrl,
                 cropped: false,
                 aspectRatio: null
             }
         },
+        mounted () {
+            this.blanchetteEditorInit({
+                url: this.url,
+                editor: this.$refs.blanchetteEditor
+            })
+        },
+        computed: {
+            ...mapState({
+                originalUrl: state => state.blanchetteEditor.originalUrl,
+                isLoading: state => state.blanchetteEditor.isLoading
+            })
+        },
         methods: {
+            ...mapActions([
+                'blanchetteEditorInit',
+                'blanchetteEditorLoaded',
+                'blanchetteEditorSave'
+            ]),
             overwrite () {
-                const blob = this.dataURItoBlob(this.url)
-                const form = this.$refs.blanchetteEditor.getElementsByTagName('form')[0]
-
-                let formData = new FormData(form)
-                formData.append('form[editDocument]', blob, this.filename)
-
-                DocumentApi.setDocument(formData)
+                this.blanchetteEditorSave({
+                    url: this.url,
+                    filename: this.filename
+                }).then(() => this.restore())
             },
-            dataURItoBlob (dataURI) {
-                let binary = atob(dataURI.split(',')[1])
-                let array = []
-
-                for(let i = 0; i < binary.length; i++) {
-                    array.push(binary.charCodeAt(i))
-                }
-
-                // separate out the mime component
-                const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-                return new Blob([new Uint8Array(array)], { type: mimeString })
-            },
-            load (e) {
+            load () {
                 if (!this.image) {
-                    this.image = e.target
+                    this.image = this.$refs.image
                     this.start()
+                    this.blanchetteEditorLoaded()
                 }
             },
             setAspectRatio (e) {
@@ -221,7 +240,6 @@
                     this.data = cropper.getData()
                     this.canvasData = cropper.getCanvasData()
                     this.cropBoxData = cropper.getCropBoxData()
-
                     this.url = cropper.getCroppedCanvas(type === 'image/png' ? null : {
                         fillColor: '#fff'
                     }).toDataURL(type)
@@ -233,7 +251,6 @@
             clear () {
                 if (this.cropping) {
                     this.cropper.clear()
-                    this.cropping = false
                 }
             },
             restore () {
@@ -242,6 +259,7 @@
                     this.url = this.originalUrl
                     this.originalUrl = ''
                     this.cropped = false
+                    console.log('ici')
                 }
             }
         },
