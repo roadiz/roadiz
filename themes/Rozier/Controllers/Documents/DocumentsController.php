@@ -219,7 +219,7 @@ class DocumentsController extends RozierApp
                 $em->flush();
 
                 return new JsonResponse([
-                    'path' => $this->get('assetPackages')->getUrl($document->getRelativeUrl(), Packages::DOCUMENTS)
+                    'path' => $this->get('assetPackages')->getUrl($document->getRelativeUrl(), Packages::DOCUMENTS) . '?' . random_int(10, 999)
                 ]);
             }
 
