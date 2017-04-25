@@ -33,6 +33,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -63,73 +64,27 @@ class CustomFormsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fields = $this->customForm->getFields();
+        $fieldsArray = $this->getFieldsByGroups();
 
-        /** @var CustomFormField $field */
-        foreach ($fields as $field) {
-            $option = [
-                "label" => $field->getLabel(),
-                'attr' => [
-                    'data-description' => $field->getDescription(),
-                    'data-desc' => $field->getDescription(),
-                ],
-            ];
-
-            if ($field->isRequired()) {
-                $option['required'] = true;
-                $option['constraints'] = [
-                    new NotBlank([
-                        'message' => 'you.need.to.fill.this.required.field'
-                    ])
-                ];
-            } else {
-                $option['required'] = false;
+        /** @var CustomFormField|array $field */
+        foreach ($fieldsArray as $group => $field) {
+            if ($field instanceof CustomFormField) {
+                $this->addSingleField($builder, $field);
+            } elseif (is_array($field)) {
+                $groupCanonical = StringHandler::slugify($group);
+                $subBuilder = $builder->create($groupCanonical, 'form', [
+                    'label' => $group,
+                    'virtual' => true,
+                    'attr' => [
+                        'data-group-wrapper' => $groupCanonical,
+                    ]
+                ]);
+                /** @var CustomFormField $subfield */
+                foreach ($field as $subfield) {
+                    $this->addSingleField($subBuilder, $subfield);
+                }
+                $builder->add($subBuilder);
             }
-
-            $type = 'text';
-
-            if ($field->getType() == AbstractField::ENUM_T) {
-                $choices = explode(',', $field->getDefaultValues());
-                $choices = array_map('trim', $choices);
-                $choices = array_combine(array_values($choices), array_values($choices));
-                $type = "choice";
-                $option["expanded"] = false;
-                if (count($choices) < 4 || $this->forceExpanded) {
-                    $option["expanded"] = true;
-                }
-                if ($field->isRequired() === false) {
-                    $option['placeholder'] = 'none';
-                }
-                $option["choices"] = $choices;
-            } elseif ($field->getType() == AbstractField::MULTIPLE_T) {
-                $choices = explode(',', $field->getDefaultValues());
-                $choices = array_map('trim', $choices);
-                $choices = array_combine(array_values($choices), array_values($choices));
-                $type = "choice";
-                $option["choices"] = $choices;
-                $option["multiple"] = true;
-
-                $option["expanded"] = false;
-                if (count($choices) < 4 || $this->forceExpanded) {
-                    $option["expanded"] = true;
-                }
-
-                if ($field->isRequired() === false) {
-                    $option['placeholder'] = 'none';
-                }
-            } elseif ($field->getType() == AbstractField::DOCUMENTS_T) {
-                $option['required'] = false;
-            } else {
-                $type = CustomFormField::$typeToForm[$field->getType()];
-            }
-
-            if ($field->getType() === CustomFormField::MARKDOWN_T) {
-                $type = new MarkdownType();
-            } elseif ($field->getType() === CustomFormField::DOCUMENTS_T) {
-                $type = "file";
-            }
-
-            $builder->add($field->getName(), $type, $option);
         }
 
         /*
@@ -155,6 +110,139 @@ class CustomFormsType extends AbstractType
                 ],
             ]);
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFieldsByGroups()
+    {
+        $fieldsArray = [];
+        $fields = $this->customForm->getFields();
+
+        /** @var CustomFormField $field */
+        foreach ($fields as $field) {
+            if ($field->getGroupName() != '') {
+                if (!isset($fieldsArray[$field->getGroupName()])) {
+                    $fieldsArray[$field->getGroupName()] = [];
+                }
+                $fieldsArray[$field->getGroupName()][] = $field;
+            } else {
+                $fieldsArray[] = $field;
+            }
+        }
+
+        return $fieldsArray;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param CustomFormField $field
+     * @return $this
+     */
+    protected function addSingleField(FormBuilderInterface $builder, CustomFormField $field)
+    {
+        $builder->add($field->getName(), $this->getTypeForField($field), $this->getOptionsForField($field));
+        return $this;
+    }
+
+    /**
+     * @param CustomFormField $field
+     * @return MarkdownType|string
+     */
+    protected function getTypeForField(CustomFormField $field)
+    {
+        switch ($field->getType()) {
+            case AbstractField::ENUM_T :
+            case AbstractField::MULTIPLE_T :
+                $type = "choice";
+                break;
+            case AbstractField::DOCUMENTS_T :
+                $type = "file";
+                break;
+            case AbstractField::MARKDOWN_T :
+                $type = new MarkdownType();
+                break;
+            default:
+                $type = CustomFormField::$typeToForm[$field->getType()];
+                break;
+        }
+
+        return $type;
+    }
+
+    /**
+     * @param CustomFormField $field
+     * @return array
+     */
+    protected function getOptionsForField(CustomFormField $field)
+    {
+        $option = [
+            "label" => $field->getLabel(),
+            'attr' => [
+                'data-description' => $field->getDescription(),
+                'data-desc' => $field->getDescription(),
+                'data-group' => $field->getGroupName(),
+            ],
+        ];
+
+        if ($field->isRequired()) {
+            $option['required'] = true;
+            $option['constraints'] = [
+                new NotBlank([
+                    'message' => 'you.need.to.fill.this.required.field'
+                ])
+            ];
+        } else {
+            $option['required'] = false;
+        }
+
+        switch ($field->getType()) {
+            case AbstractField::ENUM_T:
+                $option["choices"] = $this->getChoices($field);
+                $option["expanded"] = false;
+                $option["choices_as_values"] = true;
+                if (count($option["choices"]) < 4 || $this->forceExpanded) {
+                    $option["expanded"] = true;
+                }
+                if ($field->isRequired() === false) {
+                    $option['placeholder'] = 'none';
+                }
+                break;
+            case AbstractField::MULTIPLE_T:
+                $option["choices"] = $this->getChoices($field);
+                $option["multiple"] = true;
+                $option["choices_as_values"] = true;
+                $option["expanded"] = false;
+
+                if (count($option["choices"]) < 4 || $this->forceExpanded) {
+                    $option["expanded"] = true;
+                }
+                if ($field->isRequired() === false) {
+                    $option['placeholder'] = 'none';
+                }
+                break;
+            case AbstractField::DOCUMENTS_T:
+                $option['required'] = false;
+                break;
+            default:
+                break;
+        }
+
+        return $option;
+    }
+
+    /**
+     * @param CustomFormField $field
+     * @return array
+     */
+    protected function getChoices(CustomFormField $field)
+    {
+        $choices = explode(',', $field->getDefaultValues());
+        $choices = array_map('trim', $choices);
+        $choices = array_combine(array_values($choices), array_values($choices));
+
+        return $choices;
     }
 
     /**

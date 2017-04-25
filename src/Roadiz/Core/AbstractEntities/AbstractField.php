@@ -35,7 +35,8 @@ use RZ\Roadiz\Utils\StringHandler;
 /**
  * @ORM\MappedSuperclass
  * @ORM\Table(indexes={
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"group_name"})
  * })
  */
 abstract class AbstractField extends AbstractEntity
@@ -434,5 +435,32 @@ abstract class AbstractField extends AbstractEntity
     public function isVirtual()
     {
         return static::$typeToDoctrine[$this->getType()] === null ? true : false;
+    }
+
+    /**
+     * @ORM\Column(name="group_name", type="string", nullable=true)
+     */
+    protected $groupName;
+
+    /**
+     * Gets the value of groupName.
+     *
+     * @return string
+     */
+    public function getGroupName()
+    {
+        return $this->groupName;
+    }
+
+    /**
+     * Sets the value of groupName.
+     *
+     * @param string $groupName the group name
+     * @return self
+     */
+    public function setGroupName($groupName)
+    {
+        $this->groupName = trim(strip_tags($groupName));
+        return $this;
     }
 }

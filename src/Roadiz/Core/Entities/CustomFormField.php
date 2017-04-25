@@ -41,7 +41,11 @@ use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="custom_form_fields", uniqueConstraints={
  *      @ORM\UniqueConstraint(columns={"name", "custom_form_id"})
- * })
+ * }, indexes={
+*      @ORM\Index(columns={"position"}),
+*      @ORM\Index(columns={"group_name"}),
+*      @ORM\Index(columns={"type"})
+*  })
  * @ORM\HasLifecycleCallbacks
  */
 class CustomFormField extends AbstractField
