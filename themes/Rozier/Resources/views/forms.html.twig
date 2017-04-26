@@ -343,7 +343,6 @@
             {{- block('choice_widget_options') -}}
         </select>
     {% else %}
-        <h1>{{ selected }}</h1>
         <div class="rz-select">
             <select v-model="selected" {{ block('widget_attributes') }}>
                 {% if placeholder is not none -%}
