@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -580,10 +579,10 @@ class NodesSourcesHandler
         return [
             'title' => ($this->nodeSource->getMetaTitle() != "") ?
             $this->nodeSource->getMetaTitle() :
-            $this->nodeSource->getTitle() . ' – ' . SettingsBag::get('site_name'),
+            $this->nodeSource->getTitle() . ' – ' . Kernel::getService('settingsBag')->get('site_name'),
             'description' => ($this->nodeSource->getMetaDescription() != "") ?
             $this->nodeSource->getMetaDescription() :
-            $this->nodeSource->getTitle() . ', ' . SettingsBag::get('seo_description'),
+            $this->nodeSource->getTitle() . ', ' . Kernel::getService('settingsBag')->get('seo_description'),
             'keywords' => $this->nodeSource->getMetaKeywords(),
         ];
     }
@@ -593,7 +592,7 @@ class NodesSourcesHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return ArrayCollection Collection of nodes
+     * @return array Collection of nodes
      */
     public function getNodesFromFieldName($fieldName)
     {
@@ -613,7 +612,7 @@ class NodesSourcesHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return ArrayCollection Collection of nodes
+     * @return array Collection of nodes
      */
     public function getReverseNodesFromFieldName($fieldName)
     {

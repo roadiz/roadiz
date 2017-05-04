@@ -30,9 +30,12 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\Rozier\Models\CustomFormModel;
 
 /**
  * {@inheritdoc}
@@ -46,16 +49,6 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $arrayFilter = [];
@@ -71,14 +64,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
 
         $customForms = $listManager->getEntities();
 
-        $customFormsArray = [];
-        foreach ($customForms as $customForm) {
-            $customFormsArray[] = [
-                'id' => $customForm->getId(),
-                'filename' => $customForm->getName(),
-                'html' => $this->getTwig()->render('widgets/customFormSmallThumbnail.html.twig', ['customForm' => $customForm]),
-            ];
-        }
+        $customFormsArray = $this->normalizeCustomForms($customForms);
 
         $responseArray = [
             'status' => 'confirm',
@@ -92,5 +78,62 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
             $responseArray,
             Response::HTTP_OK
         );
+    }
+
+    /**
+     * Get a CustomForm list from an array of id.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listAction(Request $request)
+    {
+        if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
+            throw new InvalidParameterException('Ids should be provided within an array');
+        }
+
+        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+
+        $cleanCustomFormsIds = array_filter($request->query->get('ids'));
+
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        $customForms = $em->getRepository('RZ\Roadiz\Core\Entities\CustomForm')->findBy([
+            'id' => $cleanCustomFormsIds,
+        ]);
+
+        // Sort array by ids given in request
+        $customForms = $this->sortIsh($customForms, $cleanCustomFormsIds);
+        $customFormsArray = $this->normalizeCustomForms($customForms);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'forms' => $customFormsArray
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Normalize response CustomForm list result.
+     *
+     * @param $customForms
+     * @return array
+     */
+    private function normalizeCustomForms($customForms)
+    {
+        $customFormsArray = [];
+
+        /** @var CustomForm $customForm */
+        foreach ($customForms as $customForm) {
+            $customFormModel = new CustomFormModel($customForm, $this->getContainer());
+            $customFormsArray[] = $customFormModel->toArray();
+        }
+
+        return $customFormsArray;
     }
 }

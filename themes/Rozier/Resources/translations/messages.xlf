@@ -6607,6 +6607,172 @@
         <target></target>
         <note>Help message to explain node-type-field default values.</note>
       </trans-unit>
+
+      <!-- Explorer and Widget translation -->
+      <trans-unit xml:space="preserve" id="document">
+        <source>document</source>
+        <target></target>
+        <note>Document label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folders">
+        <source>folders</source>
+        <target></target>
+        <note>Folders label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item">
+        <source>item</source>
+        <target></target>
+        <note>Item label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="items">
+        <source>items</source>
+        <target></target>
+        <note>Items label in explorer panel.</note>
+      </trans-unit>
+
+          <!-- New Join node-type-field type -->
+        <trans-unit xml:space="preserve" id="join.toggle-explorer">
+            <source>join.toggle-explorer</source>
+            <target></target>
+            <note>Button label for join type explorer</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="many-to-many.type">
+            <source>many-to-many.type</source>
+            <target></target>
+            <note>Node-type field type for Doctrine Many-to-many relationship</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="many-to-one.type">
+            <source>many-to-one.type</source>
+            <target></target>
+            <note>Node-type field type for Doctrine Many-to-one relationship</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
+            <source>default_values_do_not_match_field_type</source>
+            <target></target>
+            <note>Validator message: when default value is not correct for choosen type</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
+            <source>default_values_should_not_be_empty_for_this_type</source>
+            <target></target>
+            <note>Validator message: when default value is empty and it should not</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
+            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
+            <target></target>
+            <note>Validator message: when default value is not a valid YAML text</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_does_not_exist">
+            <source>classname_%classname%_does_not_exist</source>
+            <target></target>
+            <note>Validator message: when provided classname does not exist.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
+            <source>classname_%classname%_must_extend_abstract_entity_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
+            <source>classname_%classname%_does_not_declare_%method%_method</source>
+            <target></target>
+            <note>Validator message: when provided classname does not declare provided method.</note>
+        </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target></target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target></target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target></target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="min">
+            <source>min</source>
+            <target></target>
+            <note>Drawer message: when a minimum length is provided.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="document.adjust">
+            <source>document.adjust</source>
+            <target></target>
+            <note>Document navbar link text for document adjust page.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="blanchetteEditor.free">
+            <source>blanchetteEditor.free</source>
+            <target></target>
+            <note>Blanchette Editor message button label: free aspect ratio</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.move">
+            <source>blanchetteEditor.move</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
+            <source>blanchetteEditor.crop</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
+            <source>blanchetteEditor.zoomIn</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
+            <source>blanchetteEditor.zoomOut</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
+            <source>blanchetteEditor.rotateLeft</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
+            <source>blanchetteEditor.rotateRight</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
+            <source>blanchetteEditor.flipHorizontal</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
+            <source>blanchetteEditor.flipVertical</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
+            <source>blanchetteEditor.applyChange</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
+            <source>blanchetteEditor.undo</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
+            <source>blanchetteEditor.aspectRatio</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
+            <source>blanchetteEditor.saveAndOverwrite</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+
     </body>
   </file>
 </xliff>

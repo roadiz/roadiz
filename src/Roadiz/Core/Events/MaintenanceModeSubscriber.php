@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -90,7 +89,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     {
         if ($event->isMasterRequest()) {
             if (!in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes()) &&
-                (boolean) SettingsBag::get('maintenance_mode') === true) {
+                (boolean) $this->container['settingsBag']->get('maintenance_mode') === true) {
                 if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
                     $matchedCtrl = $event->getController()[0];
                     if ($matchedCtrl instanceof AppController) {

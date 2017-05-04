@@ -312,9 +312,12 @@ class NodesSources extends AbstractEntity
         $this->logs = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return '[NodesSources] #' . $this->getId() .
+        return '#' . $this->getId() .
         ' <' . $this->getTitle() . '>[' . $this->getTranslation()->getLocale() .
         '], type="' . $this->getNode()->getNodeType()->getName() . '"';
     }

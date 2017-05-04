@@ -1,13 +1,32 @@
-<div id="nodes-sources-search">
-    <form id="nodes-sources-search-form" action="{{ path('searchNodesSourcesAjax') }}" method="POST" class="uk-form">
-        <div class="uk-form-icon">
-            <i class="uk-icon-search"></i>
-            <input id="nodes-sources-search-input" type="search"
-                        name="searchTerms"
-                        value=""
-                        placeholder="{% trans %}search.node{% endtrans %}"/>
+<nodes-search-container inline-template>
+    {{isActive}}
+    <div id="nodes-sources-search" v-bind:class="{ 'focus-on': isFocus }">
+        <form id="nodes-sources-search-form" action="{{ path('searchNodesSourcesAjax') }}" method="GET" class="uk-form">
+            <div class="uk-form-icon">
+                <i class="uk-icon-search"></i>
+                <input id="nodes-sources-search-input"
+                       type="search"
+                       name="searchTerms"
+                       value=""
+                       ref="searchTermsInput"
+                       autocomplete="off"
+                       v-model="searchTerms"
+                       @focus="enableFocus"
+                       @blur="disableFocus"
+                       placeholder="{% trans %}search.node{% endtrans %}"/>
 
-        </div>
-    </form>
-    <ul id="nodes-sources-search-results"></ul>
-</div>
+            </div>
+        </form>
+
+        <transition name="fade">
+            <ul id="nodes-sources-search-results" v-if="isFocus">
+                <li v-for="item in items">
+                    <ajax-link :href="item.url" :title="item.title" :type-color="item.typeColor">
+                        <span class="title"> ${item.title}</span>
+                        <span class="type">${item.typeName}</span>
+                    </ajax-link>
+                </li>
+            </ul>
+        </transition>
+    </div>
+</nodes-search-container>

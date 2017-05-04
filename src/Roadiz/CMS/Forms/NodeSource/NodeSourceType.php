@@ -178,6 +178,9 @@ class NodeSourceType extends AbstractType
     public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array $options)
     {
         switch ($field->getType()) {
+            case NodeTypeField::MANY_TO_ONE_T:
+            case NodeTypeField::MANY_TO_MANY_T:
+                return new NodeSourceJoinType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::DOCUMENTS_T:
                 return new NodeSourceDocumentType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::NODES_T:
@@ -243,7 +246,9 @@ class NodeSourceType extends AbstractType
         if ($field->getMaxLength() > 0) {
             $options['attr']['data-max-length'] = $field->getMaxLength();
         }
-        if ($field->isVirtual()) {
+        if ($field->isVirtual() &&
+            $field->getType() !== NodeTypeField::MANY_TO_ONE_T &&
+            $field->getType() !== NodeTypeField::MANY_TO_MANY_T) {
             $options['mapped'] = false;
         }
 
@@ -263,6 +268,14 @@ class NodeSourceType extends AbstractType
         $options = $this->getDefaultOptions($field);
 
         switch ($field->getType()) {
+            case NodeTypeField::MANY_TO_ONE_T:
+            case NodeTypeField::MANY_TO_MANY_T:
+                $options = array_merge_recursive($options, [
+                    'attr' => [
+                        'data-nodetypefield' => $field->getId(),
+                    ],
+                ]);
+                break;
             case NodeTypeField::NODES_T:
                 $options = array_merge_recursive($options, [
                     'attr' => [

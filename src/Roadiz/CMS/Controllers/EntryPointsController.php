@@ -29,10 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -114,10 +112,10 @@ class EntryPointsController extends CmsController
             $receiver = $this->getReceiver($request);
 
             $assignation = [
-                'mailContact' => SettingsBag::get('email_sender'),
+                'mailContact' => $this->get('settingsBag')->get('email_sender'),
                 'title' => $this->getTranslator()->trans(
                     'new.contact.form.%site%',
-                    ['%site%' => SettingsBag::get('site_name')]
+                    ['%site%' => $this->get('settingsBag')->get('site_name')]
                 ),
                 'email' => $request->get('form')['email'],
                 'fields' => $this->prepareFieldsAssignation($request, $uploadedFiles),
@@ -297,7 +295,7 @@ class EntryPointsController extends CmsController
             }
         }
 
-        return SettingsBag::get('email_sender');
+        return $this->get('settingsBag')->get('email_sender');
     }
 
     /**
@@ -488,12 +486,7 @@ class EntryPointsController extends CmsController
      */
     protected function sendContactForm($assignation, $receiver, $subject = null, $files = null)
     {
-        $emailManager = new EmailManager(
-            $this->get('request'),
-            $this->get('translator'),
-            $this->get('twig.environment'),
-            $this->get('mailer')
-        );
+        $emailManager = $this->get('emailManager');
         $emailManager->setAssignation($assignation);
         $emailManager->setEmailTemplate('forms/contactForm.html.twig');
         $emailManager->setEmailPlainTextTemplate('forms/contactForm.txt.twig');
@@ -503,14 +496,14 @@ class EntryPointsController extends CmsController
         } else {
             $emailManager->setSubject($this->getTranslator()->trans(
                 'new.contact.form.%site%',
-                ['%site%' => SettingsBag::get('site_name')]
+                ['%site%' => $this->get('settingsBag')->get('site_name')]
             ));
         }
 
         $emailManager->setEmailTitle($assignation['title']);
 
         if (empty($receiver)) {
-            $emailManager->setReceiver(SettingsBag::get('email_sender'));
+            $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
         }

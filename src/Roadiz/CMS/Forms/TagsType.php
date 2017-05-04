@@ -33,6 +33,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -40,24 +42,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TagsType extends AbstractType
 {
-    /** @var null|ArrayCollection  */
-    protected $tags;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * TagsType constructor.
-     * @param EntityManager $entityManager
-     * @param ArrayCollection|null $tags
-     */
-    public function __construct(EntityManager $entityManager, $tags = null)
-    {
-        $this->tags = $tags;
-        $this->entityManager = $entityManager;
-    }
-
     /**
      * Set every tags s default choices values.
      *
@@ -65,22 +49,33 @@ class TagsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $tags = $this->entityManager
-                     ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                     ->findAllWithDefaultTranslation();
+         $resolver->setDefaults([
+            'allow_add' => true,
+            'allow_delete' => true,
+            'entry_type' => 'hidden',
+            'label' => 'list.tags.to_link',
+            'attr' => [
+                'data-desc' => 'use.new_or_existing.tags_with_hierarchy',
+                'placeholder' => 'use.new_or_existing.tags_with_hierarchy',
+            ],
+         ]);
+    }
 
-        $choices = [];
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            if (!$this->tags->contains($tag)) {
-                $choices[$tag->getTranslatedTags()->first()->getName()] = $tag->getId();
-            }
-        }
+    /**
+     * {@inheritdoc}
+     *
+     * @param FormView      $view
+     * @param FormInterface $form
+     * @param array         $options
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::finishView($view, $form, $options);
 
-        $resolver->setDefaults([
-            'choices' => $choices,
-            'choices_as_values' => true,
-        ]);
+        /*
+         * Inject data as plain documents entities
+         */
+        $view->vars['data'] = $form->getData();
     }
 
     /**
@@ -88,7 +83,7 @@ class TagsType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return 'collection';
     }
 
     /**

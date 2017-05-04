@@ -617,28 +617,6 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param string $pattern  Search pattern
-     * @param array $criteria Additional criteria
-     * @return int
-     */
-    public function countSearchBy($pattern, array $criteria = [])
-    {
-        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
-        $qb->add('select', 'count(t)')
-            ->innerJoin('t.translatedTags', 'obj');
-
-        $qb = $this->createSearchBy($pattern, $qb, $criteria);
-
-        try {
-            return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (Query\QueryException $e) {
-            return 0;
-        } catch (NoResultException $e) {
-            return 0;
-        }
-    }
-
-    /**
      * Find a tag according to the given path or create it.
      *
      * @param string $tagPath

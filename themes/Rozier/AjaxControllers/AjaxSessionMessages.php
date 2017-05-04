@@ -47,16 +47,6 @@ class AjaxSessionMessages extends AbstractAjaxController
      */
     public function getMessagesAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_BACKEND_USER');
 
         $responseArray = [

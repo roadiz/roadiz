@@ -35,6 +35,8 @@ use RZ\Roadiz\Core\Kernel;
 /**
  * Roles bag used to get quickly a role entity
  * and to create it automatically if it does not exist.
+ *
+ * @deprecated Use rolesBag service
  */
 class RolesBag
 {
@@ -49,8 +51,8 @@ class RolesBag
      * Get role by name or create it if non-existant.
      *
      * @param string $roleName
-     *
      * @return Role
+     * @deprecated Use rolesBag service
      */
     public static function get($roleName)
     {

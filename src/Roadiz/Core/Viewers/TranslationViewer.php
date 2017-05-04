@@ -30,7 +30,6 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\RouteHandler;
@@ -91,7 +90,7 @@ class TranslationViewer implements ViewableInterface
         $attr = $request->attributes->all();
         $query = $request->query->all();
         $name = "";
-        $forceLocale = (boolean) SettingsBag::get('force_locale');
+        $forceLocale = (boolean) Kernel::getService('settingsBag')->get('force_locale');
 
         /*
          * Fix absolute boolean to Int constant.

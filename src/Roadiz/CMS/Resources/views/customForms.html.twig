@@ -110,7 +110,7 @@
 {%- endblock form_label %}
 
 {% block form_widget_compound -%}
-    <div class="data-uk-margin" {{ block('widget_container_attributes') }}>
+    <div class="data-uk-margin{% if form.parent is not empty %} custom-form-group{% endif %}" {{ block('widget_container_attributes') }}>
         {%- if form.parent is empty -%}
             {{ form_errors(form) }}
         {%- endif -%}

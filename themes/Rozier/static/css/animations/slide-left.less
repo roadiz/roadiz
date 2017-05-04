@@ -1,0 +1,20 @@
+.slide-left-leave-active,
+.slide-left-enter-active {
+    transition: transform 0.5s @easeOutExpo, opacity 0.5s;
+}
+
+.slide-left-leave-to,
+.slide-left-enter {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.slide-left-no-opacity-leave-active,
+.slide-left-no-opacity-enter-active {
+    transition: transform 0.5s @easeOutExpo;
+}
+
+.slide-left-no-opacity-leave-to,
+.slide-left-no-opacity-enter {
+    transform: translateX(-100%);
+}

@@ -33,7 +33,6 @@ use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Repositories\FontRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -222,7 +221,7 @@ class AssetsController extends CmsController
             $variantHash = $font->getHash() . $font->getVariant();
             $assignation['fonts'][] = [
                 'font' => $font,
-                'site' => SettingsBag::get('site_name'),
+                'site' => $this->get('settingsBag')->get('site_name'),
                 'fontFolder' => $this->get('kernel')->getFontsFilesBasePath(),
                 'variantHash' => $variantHash,
             ];

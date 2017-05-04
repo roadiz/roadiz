@@ -1,10 +1,23 @@
 {
   "scripts": {
-    "build": "NODE_ENV=production grunt",
+    "build": "npm run vue-build && NODE_ENV=production grunt",
+    "vue-dev": "NODE_ENV=development ./node_modules/webpack/bin/webpack.js",
+    "vue-build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
     "dev": "grunt watch"
   },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.4.0",
+    "babel-plugin-transform-class-properties": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.2.1",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-preset-stage-2": "^6.22.0",
+    "babel-preset-stage-3": "^6.22.0",
+    "css-loader": "^0.28.0",
     "csswring": "^3.0.5",
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "~0.6.0",
@@ -18,6 +31,24 @@
     "grunt-postcss": "^0.4.0",
     "grunt-static-versioning": "~0.2.2",
     "jit-grunt": "~0.9.1",
-    "time-grunt": "^1.2.1"
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.3",
+    "scss-loader": "^0.0.1",
+    "style-loader": "^0.16.1",
+    "time-grunt": "^1.2.1",
+    "vue-loader": "^11.1.4",
+    "vue-style-loader": "^2.0.5",
+    "vue-template-compiler": "^2.2.2",
+    "webpack": "^2.2.1"
+  },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "codemirror": "^5.25.0",
+    "lodash": "^4.17.4",
+    "mousetrap": "^1.6.0",
+    "vue-cropperjs": "^2.1.0",
+    "vue-multiselect": "2.0.0-beta.15",
+    "vue2-dropzone": "^2.2.4",
+    "vuedraggable": "^2.9.0"
   }
 }

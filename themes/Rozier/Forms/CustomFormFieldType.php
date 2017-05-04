@@ -79,7 +79,14 @@ class CustomFormFieldType extends AbstractType
                         'placeholder' => 'enter_values_comma_separated',
                     ],
                 ]
-            );
+            )
+            ->add('groupName', 'text', [
+                'label' => 'groupName',
+                'required' => false,
+                'attr' => [
+                    'data-desc' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs'
+                ],
+            ]);
     }
 
     public function getName()

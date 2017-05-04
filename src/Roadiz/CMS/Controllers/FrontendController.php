@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -315,9 +314,9 @@ abstract class FrontendController extends AppController
 
         $this->assignation['_default_locale'] = $translation->getLocale();
         $this->assignation['meta'] = [
-            'siteName' => SettingsBag::get('site_name'),
-            'siteCopyright' => SettingsBag::get('site_copyright'),
-            'siteDescription' => SettingsBag::get('seo_description'),
+            'siteName' => $this->get('settingsBag')->get('site_name'),
+            'siteCopyright' => $this->get('settingsBag')->get('site_copyright'),
+            'siteDescription' => $this->get('settingsBag')->get('seo_description'),
         ];
 
         return $this;

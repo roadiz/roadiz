@@ -35,7 +35,6 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -367,10 +366,10 @@ class InstallApp extends AppController
      */
     protected function buildInformationsForm(Request $request)
     {
-        $siteName = SettingsBag::get('site_name');
-        $metaDescription = SettingsBag::get('seo_description');
-        $emailSender = SettingsBag::get('email_sender');
-        $emailSenderName = SettingsBag::get('email_sender_name');
+        $siteName = $this->get('settingsBag')->get('site_name');
+        $metaDescription = $this->get('settingsBag')->get('seo_description');
+        $emailSender = $this->get('settingsBag')->get('email_sender');
+        $emailSenderName = $this->get('settingsBag')->get('email_sender_name');
         $timeZone = $this->get('config')['timezone'];
 
         $timeZoneList = include dirname(__FILE__) . '/Resources/import/timezones.php';
