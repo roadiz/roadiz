@@ -133,7 +133,7 @@ class FolderRepository extends EntityRepository
 
             if (null !== $translation) {
                 $qb->addSelect('tf')
-                    ->innerJoin('f.translatedFolders', 'tf')
+                    ->leftJoin('f.translatedFolders', 'tf')
                     ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
                     ->setParameter(':translation', $translation);
             }
@@ -163,7 +163,7 @@ class FolderRepository extends EntityRepository
 
         if (null !== $translation) {
             $qb->addSelect('tf')
-                ->innerJoin('f.translatedFolders', 'tf')
+                ->leftJoin('f.translatedFolders', 'tf')
                 ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
                 ->setParameter(':translation', $translation);
         }
@@ -261,7 +261,7 @@ class FolderRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('f');
         $qb->add('select', 'count(f)')
-            ->innerJoin('f.translatedFolders', 'obj');
+            ->leftJoin('f.translatedFolders', 'obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
@@ -288,7 +288,7 @@ class FolderRepository extends EntityRepository
 
         if (null !== $translation) {
             $qb->addSelect('tf')
-                ->innerJoin(
+                ->leftJoin(
                     'f.translatedFolders',
                     'tf',
                     Join::WITH,
@@ -323,7 +323,7 @@ class FolderRepository extends EntityRepository
 
         if (null !== $translation) {
             $qb->addSelect('tf')
-                ->innerJoin(
+                ->leftJoin(
                     'f.translatedFolders',
                     'tf',
                     Join::WITH,
