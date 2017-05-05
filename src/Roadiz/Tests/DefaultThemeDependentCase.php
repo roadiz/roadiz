@@ -66,6 +66,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         static::runCommand('themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"');
         static::runCommand('generate:nsentities');
         static::runCommand('orm:schema-tool:update --dump-sql --force');
+        static::runCommand('cache:clear -e test');
     }
 
     /**

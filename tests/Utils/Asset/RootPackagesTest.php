@@ -78,7 +78,31 @@ class RootPackagesTest extends DefaultThemeDependentCase
     {
         $this->assertEquals(
             '/files/some-custom-file',
+            Kernel::getService('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            '/files/folder/some-custom-file',
+            Kernel::getService('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
+        );
+    }
+
+    /**
+     * Symfony Assets component broke BC on version 2.8.20
+     * with path starting with a slash.
+     *
+     * This test is meant to check if they revert this change.
+     */
+    public function testGetUrlWithSlash()
+    {
+        $this->assertNotEquals(
+            '/files/some-custom-file',
             Kernel::getService('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
+        );
+
+        $this->assertNotEquals(
+            '/files/folder/some-custom-file',
+            Kernel::getService('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
         );
     }
 
