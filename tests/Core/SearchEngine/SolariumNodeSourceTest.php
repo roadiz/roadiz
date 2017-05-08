@@ -44,6 +44,11 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
     public function testIndex()
     {
+        if (Kernel::getService('solr') === null) {
+            $this->markTestSkipped('Solr is not available.');
+            return;
+        }
+
         $testTitle = "Ipsum Lorem Vehicula";
 
         $nodeSource = static::getManager()
@@ -89,6 +94,11 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
     public function testGetDocumentFromIndex()
     {
+        if (Kernel::getService('solr') === null) {
+            $this->markTestSkipped('Solr is not available.');
+            return;
+        }
+
         $testTitle = "Ipsum Lorem Vehicula";
         /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
         $nodeSource = static::getManager()
@@ -117,6 +127,11 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
     public function testCleanAndCommit()
     {
+        if (Kernel::getService('solr') === null) {
+            $this->markTestSkipped('Solr is not available.');
+            return;
+        }
+
         $testTitle = "Ipsum Lorem Vehicula";
         /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
         $nodeSource = static::getManager()
@@ -186,7 +201,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $update->addCommit();
 
                 // this executes the query and returns the result
-                $result = $solr->update($update);
+                $solr->update($update);
             }
         } catch (SolrServerNotConfiguredException $e) {
 

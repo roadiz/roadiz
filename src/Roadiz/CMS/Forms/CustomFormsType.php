@@ -153,14 +153,14 @@ class CustomFormsType extends AbstractType
     protected function getTypeForField(CustomFormField $field)
     {
         switch ($field->getType()) {
-            case AbstractField::ENUM_T :
-            case AbstractField::MULTIPLE_T :
+            case AbstractField::ENUM_T:
+            case AbstractField::MULTIPLE_T:
                 $type = "choice";
                 break;
-            case AbstractField::DOCUMENTS_T :
+            case AbstractField::DOCUMENTS_T:
                 $type = "file";
                 break;
-            case AbstractField::MARKDOWN_T :
+            case AbstractField::MARKDOWN_T:
                 $type = new MarkdownType();
                 break;
             default:
