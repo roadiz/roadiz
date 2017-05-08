@@ -31,7 +31,10 @@ namespace Themes\DefaultTheme;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
+use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\Services\AssetsServiceProvider;
@@ -181,6 +184,17 @@ class DefaultThemeApp extends FrontendController
             ];
 
             return $entries;
+        });
+
+        /*
+         * Alter Solr indexing with custom data.
+         */
+        /** @var EventDispatcher $dispatcher */
+        $dispatcher = $container['dispatcher'];
+        $dispatcher->addListener(NodesSourcesEvents::NODE_SOURCE_INDEXING, function (FilterSolariumNodeSourceEvent $event) {
+            $assoc = $event->getAssociations();
+            $assoc['defaulttheme_txt'] = 'This is injected by Default theme during indexing.';
+            $event->setAssociations($assoc);
         });
     }
 }

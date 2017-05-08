@@ -33,6 +33,7 @@ use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -76,9 +77,33 @@ class RoadizApplication extends Application
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
-        $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
-        $this->getDefinition()->addOption(new InputOption('--preview', null, InputOption::VALUE_NONE, 'Preview mode.'));
-        $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
+        /*
+         * Use the same dispatcher as Kernel
+         * to dispatch ThemeResolver event
+         */
+        $dispatcher = $this->kernel->container['dispatcher'];
+        $dispatcher->addSubscriber(new ThemesSubscriber($this->kernel, $this->kernel->container['stopwatch']));
+        $this->setDispatcher($dispatcher);
+
+        $this->getDefinition()->addOption(new InputOption(
+            '--env',
+            '-e',
+            InputOption::VALUE_REQUIRED,
+            'The Environment name.',
+            $kernel->getEnvironment()
+        ));
+        $this->getDefinition()->addOption(new InputOption(
+            '--preview',
+            null,
+            InputOption::VALUE_NONE,
+            'Preview mode.'
+        ));
+        $this->getDefinition()->addOption(new InputOption(
+            '--no-debug',
+            null,
+            InputOption::VALUE_NONE,
+            'Switches off debug mode.'
+        ));
 
         $this->addDoctrineCommands();
 

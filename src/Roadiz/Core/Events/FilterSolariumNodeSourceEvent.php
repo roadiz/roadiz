@@ -23,47 +23,56 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FactoryServiceProvider.php
+ * @file FilterSolariumNodeSourceEvent.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Core\Events;
 
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\ContactFormManager;
-use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use Symfony\Component\EventDispatcher\Event;
 
-class FactoryServiceProvider implements ServiceProviderInterface
+class FilterSolariumNodeSourceEvent extends Event
 {
+    protected $nodeSource;
+
+    protected $associations;
+
     /**
-     * @inheritDoc
+     * FilterSolariumNodeSourceEvent constructor.
+     * @param NodesSources $nodeSource
+     * @param array $associations
      */
-    public function register(Container $container)
+    public function __construct(NodesSources $nodeSource, array $associations)
     {
-        $container['emailManager'] = $container->factory(function ($c) {
-            return new EmailManager(
-                $c['request'],
-                $c['translator'],
-                $c['twig.environment'],
-                $c['mailer'],
-                $c['settingsBag']
-            );
-        });
+        $this->nodeSource = $nodeSource;
+        $this->associations = $associations;
+    }
 
-        $container['contactFormManager'] = $container->factory(function ($c) {
-            return new ContactFormManager(
-                $c['request'],
-                $c['formFactory'],
-                $c['translator'],
-                $c['twig.environment'],
-                $c['mailer'],
-                $c['settingsBag']
-            );
-        });
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
 
+    /**
+     * Get Solr document data to index.
+     *
+     * @return array
+     */
+    public function getAssociations()
+    {
+        return $this->associations;
+    }
 
-
-        return $container;
+    /**
+     * Set Solr document data to index.
+     *
+     * @param array $associations
+     * @return FilterSolariumNodeSourceEvent
+     */
+    public function setAssociations($associations)
+    {
+        $this->associations = $associations;
+        return $this;
     }
 }

@@ -29,8 +29,11 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Console\SolrReindexCommand;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -60,11 +63,26 @@ class ThemesSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            ConsoleEvents::COMMAND => 'onCommand',
             KernelEvents::REQUEST => [
                 'onKernelRequest',
                 60,
             ],
         ];
+    }
+
+    /**
+     * @param ConsoleCommandEvent $event
+     */
+    public function onCommand(ConsoleCommandEvent $event)
+    {
+        if ($event->getCommand() instanceof SolrReindexCommand) {
+            /** @var Theme $theme */
+            foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
+                $feClass = $theme->getClassName();
+                call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+            }
+        }
     }
 
     /**

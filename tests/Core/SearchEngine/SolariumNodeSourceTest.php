@@ -54,7 +54,8 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             try {
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
-                    Kernel::getService('solr')
+                    Kernel::getService('solr'),
+                    Kernel::getService('dispatcher')
                 );
 
                 $solrDoc->indexAndCommit();
@@ -98,7 +99,8 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             try {
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
-                    Kernel::getService('solr')
+                    Kernel::getService('solr'),
+                    Kernel::getService('dispatcher')
                 );
 
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
@@ -125,7 +127,8 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             try {
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
-                    Kernel::getService('solr')
+                    Kernel::getService('solr'),
+                    Kernel::getService('dispatcher')
                 );
 
                 $solrDoc->cleanAndCommit();

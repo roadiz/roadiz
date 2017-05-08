@@ -44,6 +44,7 @@ use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Client;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -54,16 +55,22 @@ class SolariumSubscriber implements EventSubscriberInterface
 {
     protected $solr;
     protected $logger;
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
 
     /**
      * SolariumSubscriber constructor.
      * @param Client $solr
+     * @param EventDispatcher $dispatcher
      * @param LoggerInterface $logger
      */
-    public function __construct(Client $solr, LoggerInterface $logger)
+    public function __construct(Client $solr, EventDispatcher $dispatcher, LoggerInterface $logger)
     {
         $this->solr = $solr;
         $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
     }
 
     public static function getSubscribedEvents()
@@ -100,6 +107,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             $solrSource = new SolariumNodeSource(
                 $event->getNodeSource(),
                 $this->solr,
+                $this->dispatcher,
                 $this->logger
             );
             $solrSource->getDocumentFromIndex();
@@ -119,6 +127,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             $solrSource = new SolariumNodeSource(
                 $event->getNodeSource(),
                 $this->solr,
+                $this->dispatcher,
                 $this->logger
             );
             $solrSource->getDocumentFromIndex();
@@ -138,6 +147,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $solrSource = new SolariumNodeSource(
                     $nodeSource,
                     $this->solr,
+                    $this->dispatcher,
                     $this->logger
                 );
                 $solrSource->getDocumentFromIndex();
@@ -158,6 +168,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $solrSource = new SolariumNodeSource(
                     $nodeSource,
                     $this->solr,
+                    $this->dispatcher,
                     $this->logger
                 );
                 $solrSource->getDocumentFromIndex();
@@ -179,6 +190,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $solarium = new SolariumDocumentTranslation(
                     $documentTranslation,
                     $this->solr,
+                    $this->dispatcher,
                     $this->logger
                 );
                 $solarium->getDocumentFromIndex();
@@ -199,6 +211,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $solarium = new SolariumDocumentTranslation(
                     $documentTranslation,
                     $this->solr,
+                    $this->dispatcher,
                     $this->logger
                 );
                 $solarium->getDocumentFromIndex();
@@ -223,6 +236,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                     $solrSource = new SolariumNodeSource(
                         $nodeSource,
                         $this->solr,
+                        $this->dispatcher,
                         $this->logger
                     );
                     $solrSource->getDocumentFromIndex();

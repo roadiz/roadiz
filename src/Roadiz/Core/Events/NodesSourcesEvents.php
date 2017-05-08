@@ -38,7 +38,7 @@ final class NodesSourcesEvents
      * Event nodeSource.created is triggered each time a node-source
      * is created.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
@@ -49,7 +49,7 @@ final class NodesSourcesEvents
      * Event nodeSource.updated is triggered each time a node-source
      * is updated.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
@@ -60,10 +60,21 @@ final class NodesSourcesEvents
      * Event nodeSource.deleted is triggered each time a node-source
      * is deleted.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
      */
     const NODE_SOURCE_DELETED = 'nodeSource.deleted';
+
+    /**
+     * Event nodeSource.indexing is triggered each time a node-source
+     * is being indexed in a Solr server.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
+     *
+     * @var string
+     */
+    const NODE_SOURCE_INDEXING = 'nodeSource.indexing';
 }
