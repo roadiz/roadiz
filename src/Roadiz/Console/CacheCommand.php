@@ -199,9 +199,9 @@ class CacheCommand extends Command
                 $output->writeln('<info>All caches have been been purged…</info>');
             }
         } catch (\PDOException $e) {
-            $output->writeln('<error>Can’t connect to database to empty Doctrine caches.</error>');
+            $output->writeln('<error>[PDOException] Can’t connect to database to empty Doctrine caches.</error>');
         } catch (ConnectionException $e) {
-            $output->writeln('<error>Can’t connect to database to empty Doctrine caches.</error>');
+            $output->writeln('<error>[ConnectionException] Can’t connect to database to empty Doctrine caches.</error>');
         }
     }
 }

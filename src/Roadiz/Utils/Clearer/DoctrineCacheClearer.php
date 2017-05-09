@@ -59,15 +59,32 @@ class DoctrineCacheClearer extends Clearer
         $this->kernel = $kernel;
     }
 
+    /**
+     * Test if database is configured and reachable.
+     *
+     * Useful if cache is being cleared outside of a VM or a docker env.
+     *
+     * @return bool
+     */
+    public function databaseAvailable()
+    {
+        return null !== $this->entityManager &&
+            ($this->entityManager->getConnection()->isConnected() || $this->entityManager->getConnection()->connect());
+    }
+
+    /**
+     * @return bool
+     */
     public function clear()
     {
-        $conf = $this->entityManager->getConfiguration();
-        $this->clearCacheDriver($conf->getResultCacheImpl(), 'result');
-        $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
-        $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
-        $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
-
-        $this->recreateProxies();
+        if ($this->databaseAvailable()) {
+            $conf = $this->entityManager->getConfiguration();
+            $this->clearCacheDriver($conf->getResultCacheImpl(), 'result');
+            $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
+            $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
+            $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
+            $this->recreateProxies();
+        }
 
         return true;
     }
@@ -80,11 +97,11 @@ class DoctrineCacheClearer extends Clearer
         }
     }
 
+    /**
+     * Recreate proxies files
+     */
     protected function recreateProxies()
     {
-        /*
-         * Recreate proxies files
-         */
         $fs = new Filesystem();
         $finder = new Finder();
         $proxyFolder = $this->kernel->getRootDir() . '/gen-src/Proxies';
