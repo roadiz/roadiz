@@ -89,6 +89,16 @@ class NodeTypeFieldValidator extends ConstraintValidator
                         ->atPath('defaultValues')
                         ->addViolation();
                 }
+
+                if (!empty($configuration['alt_displayable'])) {
+                    if (!$reflection->hasMethod($configuration['alt_displayable'])) {
+                        $this->context->buildViolation('classname_%classname%_does_not_declare_%method%_method')
+                            ->setParameter('%classname%', $configuration['classname'])
+                            ->setParameter('%method%', $configuration['alt_displayable'])
+                            ->atPath('defaultValues')
+                            ->addViolation();
+                    }
+                }
             }
         } catch (ParseException $e) {
             $this->context->buildViolation($e->getMessage())->atPath('defaultValues')->addViolation();

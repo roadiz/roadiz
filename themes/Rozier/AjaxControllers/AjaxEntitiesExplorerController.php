@@ -36,7 +36,6 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -179,10 +178,14 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
 
         /** @var AbstractEntity $entity */
         foreach ($entities as $entity) {
+            $alt = $configuration['classname'];
+            if (!empty($configuration['alt_displayable'])) {
+                $alt = call_user_func([$entity, $configuration['alt_displayable']]);
+            }
             $entitiesArray[] = [
                 'id' => $entity->getId(),
-                'classname' => $configuration['classname'],
-                'displayable' => call_user_func([$entity, $configuration['displayable']]),
+                'classname' => utf8_encode($alt),
+                'displayable' => utf8_encode(call_user_func([$entity, $configuration['displayable']])),
             ];
         }
 
