@@ -190,7 +190,6 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $solarium = new SolariumDocumentTranslation(
                     $documentTranslation,
                     $this->solr,
-                    $this->dispatcher,
                     $this->logger
                 );
                 $solarium->getDocumentFromIndex();
@@ -211,7 +210,6 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $solarium = new SolariumDocumentTranslation(
                     $documentTranslation,
                     $this->solr,
-                    $this->dispatcher,
                     $this->logger
                 );
                 $solarium->getDocumentFromIndex();
