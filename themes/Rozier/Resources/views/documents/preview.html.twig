@@ -20,9 +20,7 @@
                         {% if document.pdf %}
                             {% set thumbnailFormat = thumbnailFormat|merge({'height': 700}) %}
                         {% endif %}
-
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
-
                         {% if document.mimeType == 'image/gif' %}
                             <hr />
                             <figure class="uk-thumbnail">{{ document|display({noProcess:true}) }}</figure>
@@ -33,8 +31,9 @@
                         <hr />
                         <h3>{% trans %}embed.preview{% endtrans %}</h3>
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({
-                                embed:true,
-                                autoplay:false,
+                                embed: true,
+                                autoplay: false,
+                                controls: true,
                                 fullscreen: true
                             })) }}</figure>
                     {% endif %}

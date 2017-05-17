@@ -345,11 +345,13 @@ class DocumentViewer implements ViewableInterface
 
         /** @var Document $source */
         foreach ($sourcesDocs as $source) {
-            $sources[] = [
+            $sources[$source->getMimeType()] = [
                 'mime' => $source->getMimeType(),
                 'url' => Kernel::getService('assetPackages')->getUrl($source->getRelativeUrl(), Packages::DOCUMENTS),
             ];
         }
+
+        krsort($sources);
 
         return $sources;
     }
