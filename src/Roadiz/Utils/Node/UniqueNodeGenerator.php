@@ -57,6 +57,8 @@ class UniqueNodeGenerator
     /**
      * Generate a node with a unique name.
      *
+     * This method flush entity-manager.
+     *
      * @param  NodeType    $nodeType
      * @param  Translation $translation
      * @param  Node|null   $parent
@@ -74,19 +76,20 @@ class UniqueNodeGenerator
     ) {
         $name = $nodeType->getDisplayName() . " " . uniqid();
         $node = new Node($nodeType);
-        $node->setParent($parent);
         $node->setNodeName($name);
 
         if (null !== $tag) {
             $node->addTag($tag);
         }
-
-        $this->entityManager->persist($node);
+        if (null !== $parent) {
+            $parent->addChild($node);
+        }
 
         if ($pushToTop) {
+            /*
+             * Force position before first item
+             */
             $node->setPosition(0.5);
-        } else {
-            $node->setPosition(999999);
         }
 
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
@@ -94,6 +97,8 @@ class UniqueNodeGenerator
         /** @var \RZ\Roadiz\Core\Entities\NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
+
+        $this->entityManager->persist($node);
         $this->entityManager->persist($source);
         $this->entityManager->flush();
 
@@ -138,6 +143,7 @@ class UniqueNodeGenerator
         }
 
         if ($request->get('nodeTypeId') > 0) {
+            /** @var NodeType|null $nodeType */
             $nodeType = $this->entityManager->find(
                 'RZ\Roadiz\Core\Entities\NodeType',
                 (int) $request->get('nodeTypeId')
@@ -147,11 +153,13 @@ class UniqueNodeGenerator
                 $translation = null;
 
                 if ($request->get('translationId') > 0) {
+                    /** @var Translation $translation */
                     $translation = $this->entityManager->find(
                         'RZ\Roadiz\Core\Entities\Translation',
                         (int) $request->get('translationId')
                     );
                 } else {
+                    /** @var Translation $translation */
                     $translation = $this->entityManager
                                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                         ->findDefault();

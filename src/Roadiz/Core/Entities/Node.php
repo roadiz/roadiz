@@ -506,7 +506,7 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
-     * @param Node $parent
+     * @param Node|null $parent
      *
      * @return $this
      */
@@ -539,8 +539,9 @@ class Node extends AbstractDateTimedPositioned
      */
     public function addChild(Node $child)
     {
-        if (!$this->getChildren()->contains($child)) {
-            $this->getChildren()->add($child);
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
         }
 
         return $this;
@@ -553,8 +554,9 @@ class Node extends AbstractDateTimedPositioned
      */
     public function removeChild(Node $child)
     {
-        if ($this->getChildren()->contains($child)) {
-            $this->getChildren()->removeElement($child);
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+            $child->setParent(null);
         }
 
         return $this;
@@ -794,7 +796,7 @@ class Node extends AbstractDateTimedPositioned
     {
         $text = "Source " . $this->getNodeSources()->first()->getId() . PHP_EOL;
 
-        foreach ($this->getNodeType()->getFields() as $key => $field) {
+        foreach ($this->getNodeType()->getFields() as $field) {
             $getterName = $field->getGetterName();
             $text .= '[' . $field->getLabel() . ']: ' . $this->getNodeSources()->first()->$getterName() . PHP_EOL;
         }
@@ -811,11 +813,23 @@ class Node extends AbstractDateTimedPositioned
     {
         parent::prePersist();
 
-        if ($this->getPosition() < 0) {
+        /*
+         * Automatically set position only if not manually set before.
+         */
+        if ($this->getPosition() === 0.0) {
             /*
              * Get the last index after last node in parent
              */
-            $this->setPosition($this->getHandler()->cleanPositions());
+            $lastPosition = $this->getHandler()->cleanPositions(false);
+            if ($lastPosition > 1) {
+                /*
+                 * Need to decrement position because current node is already
+                 * in parent's children collection count.
+                 */
+                $this->setPosition($lastPosition - 1);
+            } else {
+                $this->setPosition($lastPosition);
+            }
         }
     }
 
@@ -843,16 +857,15 @@ class Node extends AbstractDateTimedPositioned
                 $this->children = new ArrayCollection();
                 foreach ($children as $child) {
                     $cloneChild = clone $child;
-                    $this->children->add($cloneChild);
-                    $cloneChild->setParent($this);
+                    $this->addChild($cloneChild);
                 }
             }
             $nodeSources = $this->getNodeSources();
             if ($nodeSources !== null) {
                 $this->nodeSources = new ArrayCollection();
+                /** @var NodesSources $nodeSource */
                 foreach ($nodeSources as $nodeSource) {
                     $cloneNodeSource = clone $nodeSource;
-                    $this->nodeSources->add($cloneNodeSource);
                     $cloneNodeSource->setNode($this);
                 }
             }

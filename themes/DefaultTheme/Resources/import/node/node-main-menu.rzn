@@ -12,6 +12,7 @@
         "sterile": false,
         "children_order": "position",
         "children_order_direction": "ASC",
+        "position": 1,
         "children": [
             {
                 "node_name": "home",
@@ -26,6 +27,7 @@
                 "sterile": false,
                 "children_order": "order",
                 "children_order_direction": "ASC",
+                "position": 1,
                 "children": [
                     {
                         "node_name": "ullamcorper-quam-purus-57dda7570caf4",
@@ -40,6 +42,7 @@
                         "sterile": false,
                         "children_order": "order",
                         "children_order_direction": "ASC",
+                        "position": 1,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -61,7 +64,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "ru",
+                                "translation": "tr",
                                 "title": "Ullamcorper Quam Purus",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -70,7 +73,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "tr",
+                                "translation": "ru",
                                 "title": "Ullamcorper Quam Purus",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -94,6 +97,7 @@
                         "sterile": false,
                         "children_order": "order",
                         "children_order_direction": "ASC",
+                        "position": 2,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -115,7 +119,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "ru",
+                                "translation": "tr",
                                 "title": "Sem Elit Lorem",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -124,7 +128,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "tr",
+                                "translation": "ru",
                                 "title": "Sem Elit Lorem",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -148,6 +152,7 @@
                         "sterile": false,
                         "children_order": "order",
                         "children_order_direction": "ASC",
+                        "position": 3,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -169,7 +174,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "ru",
+                                "translation": "tr",
                                 "title": "Fermentum Porta Fusce",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -178,7 +183,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "tr",
+                                "translation": "ru",
                                 "title": "Fermentum Porta Fusce",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -210,21 +215,21 @@
                         "url_aliases": []
                     },
                     {
-                        "translation": "ru",
-                        "title": "Привет Roadiz !",
-                        "meta_title": "Привет Roadiz !",
-                        "meta_keywords": "",
-                        "meta_description": "",
-                        "content": "Добро пожаловать в тему Roadiz по умолчанию. Это сделано для Вас, чтобы создать свою собственную тему с простым базы.\r\n\r\nЧтобы отредактировать эту страницу , подключение к бэк-офиса на **/rz-admin**",
-                        "url_aliases": []
-                    },
-                    {
                         "translation": "tr",
                         "title": "Hello Roadiz!",
                         "meta_title": "Hello Roadiz!",
                         "meta_keywords": "",
                         "meta_description": "",
                         "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
+                        "url_aliases": []
+                    },
+                    {
+                        "translation": "ru",
+                        "title": "Привет Roadiz !",
+                        "meta_title": "Привет Roadiz !",
+                        "meta_keywords": "",
+                        "meta_description": "",
+                        "content": "Добро пожаловать в тему Roadiz по умолчанию. Это сделано для Вас, чтобы создать свою собственную тему с простым базы.\r\n\r\nЧтобы отредактировать эту страницу , подключение к бэк-офиса на **/rz-admin**",
                         "url_aliases": []
                     }
                 ],
@@ -243,6 +248,7 @@
                 "sterile": false,
                 "children_order": "order",
                 "children_order_direction": "ASC",
+                "position": 2,
                 "children": [
                     {
                         "node_name": "ullamcorper-quam-purus",
@@ -257,6 +263,7 @@
                         "sterile": false,
                         "children_order": "order",
                         "children_order_direction": "ASC",
+                        "position": 1,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -278,7 +285,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "ru",
+                                "translation": "tr",
                                 "title": "Ullamcorper Quam Purus",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -287,7 +294,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "tr",
+                                "translation": "ru",
                                 "title": "Ullamcorper Quam Purus",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -311,6 +318,7 @@
                         "sterile": false,
                         "children_order": "order",
                         "children_order_direction": "ASC",
+                        "position": 2,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -332,7 +340,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "ru",
+                                "translation": "tr",
                                 "title": "Sem Elit Lorem",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -341,7 +349,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "tr",
+                                "translation": "ru",
                                 "title": "Sem Elit Lorem",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -365,6 +373,7 @@
                         "sterile": false,
                         "children_order": "order",
                         "children_order_direction": "ASC",
+                        "position": 3,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -386,7 +395,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "ru",
+                                "translation": "tr",
                                 "title": "Fermentum Porta Fusce",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -395,7 +404,7 @@
                                 "url_aliases": []
                             },
                             {
-                                "translation": "tr",
+                                "translation": "ru",
                                 "title": "Fermentum Porta Fusce",
                                 "meta_title": "",
                                 "meta_keywords": "",
@@ -427,21 +436,21 @@
                         "url_aliases": []
                     },
                     {
-                        "translation": "ru",
-                        "title": "Кстати",
-                        "meta_title": "",
-                        "meta_keywords": "",
-                        "meta_description": "",
-                        "content": "Это пример страницы. \r\n\r\nЧтобы отредактировать эту страницу , подключиться к бэк-офиса в **/rz-admin**",
-                        "url_aliases": []
-                    },
-                    {
                         "translation": "tr",
                         "title": "About",
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
                         "content": "This is a about example page.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
+                        "url_aliases": []
+                    },
+                    {
+                        "translation": "ru",
+                        "title": "Кстати",
+                        "meta_title": "",
+                        "meta_keywords": "",
+                        "meta_description": "",
+                        "content": "Это пример страницы. \r\n\r\nЧтобы отредактировать эту страницу , подключиться к бэк-офиса в **/rz-admin**",
                         "url_aliases": []
                     }
                 ],
@@ -466,7 +475,7 @@
                 "url_aliases": []
             },
             {
-                "translation": "ru",
+                "translation": "tr",
                 "title": "main-menu",
                 "meta_title": "",
                 "meta_keywords": "",
@@ -474,7 +483,7 @@
                 "url_aliases": []
             },
             {
-                "translation": "tr",
+                "translation": "ru",
                 "title": "main-menu",
                 "meta_title": "",
                 "meta_keywords": "",
