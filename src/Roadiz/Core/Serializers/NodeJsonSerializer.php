@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Serializers;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -56,8 +57,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a Node.
      *
-     * @param \RZ\Roadiz\Core\Entities\Node[] $nodes
-     *
+     * @param Node[] $nodes
      * @return array
      */
     public function toArray($nodes)
@@ -80,6 +80,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $data['sterile'] = $node->isSterile();
             $data['children_order'] = $node->getChildrenOrder();
             $data['children_order_direction'] = $node->getChildrenOrderDirection();
+            $data['position'] = $node->getPosition();
 
             $data['children'] = [];
             $data['nodes_sources'] = [];
@@ -108,8 +109,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     protected function hasHome()
     {
-        if (null !== $this->em->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findHomeWithDefaultTranslation()) {
+        if (null !== $this->em
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->findHomeWithDefaultTranslation()) {
             return true;
         }
 
@@ -124,6 +126,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     protected function makeNodeRec($data)
     {
+        /** @var NodeType $nodetype */
         $nodetype = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                          ->findOneByName($data["node_type"]);
 
@@ -152,6 +155,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $node->setSterile($data['sterile']);
         $node->setChildrenOrder($data['children_order']);
         $node->setChildrenOrderDirection($data['children_order_direction']);
+        if (isset($data['position'])) {
+            $node->setPosition($data['position']);
+        }
 
         foreach ($data["nodes_sources"] as $source) {
             $trans = new Translation();
@@ -162,6 +168,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $classname = $nodetype->getSourceEntityClassName();
             $class = $namespace . "\\" . $classname;
 
+            /** @var NodesSources $nodeSource */
             $nodeSource = new $class($node, $trans);
             $nodeSource->setTitle($source["title"]);
             $nodeSource->setMetaTitle($source["meta_title"]);
@@ -170,6 +177,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
             $fields = $nodetype->getFields();
 
+            /** @var NodeTypeField $field */
             foreach ($fields as $field) {
                 if (!$field->isVirtual() && isset($source[$field->getName()])) {
                     if ($field->getType() == NodeTypeField::DATETIME_T
@@ -193,7 +201,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
                     $nodeSource->addUrlAlias($alias);
                 }
             }
-            $node->getNodeSources()->add($nodeSource);
+            $node->addNodeSources($nodeSource);
         }
         if (!empty($data['tags'])) {
             foreach ($data["tags"] as $tag) {
@@ -221,7 +229,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $string
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node[]
      */
     public function deserialize($string)
     {

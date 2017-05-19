@@ -82,11 +82,14 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     }
 
     /**
+     * No need to persist
+     *
      * @param $title
      * @param Translation $translation
+     * @param Node|null $parent
      * @return Node
      */
-    protected static function createPageNode($title, Translation $translation)
+    protected static function createPageNode($title, Translation $translation, Node $parent = null)
     {
         $nodeType = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
@@ -94,13 +97,16 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
 
         $node = new Node($nodeType);
         $node->setNodeName($title);
-        static::getManager()->persist($node);
+
+        if (null !== $parent) {
+            $parent->addChild($node);
+        }
 
         $ns = new NSPage($node, $translation);
         $ns->setTitle($title);
-        static::getManager()->persist($ns);
 
-        $node->addNodeSources($ns);
+        static::getManager()->persist($node);
+        static::getManager()->persist($ns);
 
         return $node;
     }

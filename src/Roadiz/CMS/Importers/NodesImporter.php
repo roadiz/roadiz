@@ -43,6 +43,8 @@ use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
  */
 class NodesImporter implements ImporterInterface
 {
+    protected static $usedTranslations;
+
     /**
      * Import a Json file (.rzt) containing node and node source.
      *
@@ -55,11 +57,18 @@ class NodesImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData, EntityManager $em)
     {
+        static::$usedTranslations = [];
         $serializer = new NodeJsonSerializer($em);
         $nodes = $serializer->deserialize($serializedData);
 
-        foreach ($nodes as $node) {
-            static::browseTree($node, $em);
+        try {
+            foreach ($nodes as $node) {
+                static::browseTree($node, $em);
+            }
+
+            $em->flush();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new EntityAlreadyExistsException($e->getMessage());
         }
 
         return true;
@@ -73,58 +82,48 @@ class NodesImporter implements ImporterInterface
      */
     protected static function browseTree(Node $node, EntityManager $em)
     {
-        try {
-            /*
-             * Test if node already exists against its nodeName
-             */
-            $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
-                           ->findOneByNodeName($node->getNodeName());
-            if (null !== $existing) {
-                throw new EntityAlreadyExistsException('"' . $node->getNodeName() . '" already exists.');
-            }
-
-            /** @var Node[] $childObj */
-            $childObj = [];
-
-            /** @var NodesSources[] $sourceObj */
-            $sourceObj = [];
-            /** @var Node $child */
-            foreach ($node->getChildren() as $child) {
-                $childObj[] = static::browseTree($child, $em);
-            }
-            $node->getChildren()->clear();
-            /** @var NodesSources $nodeSource */
-            foreach ($node->getNodeSources() as $nodeSource) {
-                $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                            ->findOneByLocale($nodeSource->getTranslation()->getLocale());
-
-                if (empty($trans)) {
-                    $trans = new Translation();
-                    $trans->setLocale($nodeSource->getTranslation()->getLocale());
-                    $trans->setName(Translation::$availableLocales[$nodeSource->getTranslation()->getLocale()]);
-                    $em->persist($trans);
-                }
-                $nodeSource->setTranslation($trans);
-                foreach ($nodeSource->getUrlAliases() as $alias) {
-                    $em->persist($alias);
-                }
-                $nodeSource->setNode(null);
-                $em->persist($nodeSource);
-                $sourceObj[] = $nodeSource;
-            }
-
-            $em->persist($node);
-            foreach ($childObj as $child) {
-                $child->setParent($node);
-            }
-            foreach ($sourceObj as $nodeSource) {
-                $nodeSource->setNode($node);
-            }
-            $em->flush();
-
-            return $node;
-        } catch (UniqueConstraintViolationException $e) {
-            throw new EntityAlreadyExistsException($e->getMessage());
+        /*
+         * Test if node already exists against its nodeName
+         */
+        $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+                       ->findOneByNodeName($node->getNodeName());
+        if (null !== $existing) {
+            throw new EntityAlreadyExistsException('"' . $node->getNodeName() . '" already exists.');
         }
+
+        /** @var Node $child */
+        foreach ($node->getChildren() as $child) {
+            static::browseTree($child, $em);
+        }
+        $em->persist($node);
+
+        /** @var NodesSources $nodeSource */
+        foreach ($node->getNodeSources() as $nodeSource) {
+            /** @var Translation|null $trans */
+            $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                        ->findOneByLocale($nodeSource->getTranslation()->getLocale());
+
+            if (null === $trans &&
+                !empty(static::$usedTranslations[$nodeSource->getTranslation()->getLocale()])) {
+                $trans = static::$usedTranslations[$nodeSource->getTranslation()->getLocale()];
+            }
+
+            if (null === $trans) {
+                $trans = new Translation();
+                $trans->setLocale($nodeSource->getTranslation()->getLocale());
+                $trans->setName(Translation::$availableLocales[$nodeSource->getTranslation()->getLocale()]);
+                $em->persist($trans);
+
+                static::$usedTranslations[$nodeSource->getTranslation()->getLocale()] = $trans;
+            }
+            $nodeSource->setTranslation($trans);
+            foreach ($nodeSource->getUrlAliases() as $alias) {
+                $em->persist($alias);
+            }
+
+            $em->persist($nodeSource);
+        }
+
+        return $node;
     }
 }
