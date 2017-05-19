@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -490,14 +491,15 @@ class NodeHandler
      *
      * Warning, this method does not flush.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** node
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            return $this->node->getParent()->getHandler()->cleanChildrenPositions();
+            return $this->node->getParent()->getHandler()->cleanChildrenPositions($setPositions);
         } else {
-            return static::cleanRootNodesPositions();
+            return static::cleanRootNodesPositions($setPositions);
         }
     }
 
@@ -506,14 +508,25 @@ class NodeHandler
      *
      * Warning, this method does not flush.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** node
      */
-    public function cleanChildrenPositions()
+    public function cleanChildrenPositions($setPositions = true)
     {
-        $children = $this->node->getChildren();
+        /*
+         * Force collection to sort on position
+         */
+        $sort = Criteria::create();
+        $sort->orderBy([
+            'position' => Criteria::ASC
+        ]);
+
+        $children = $this->node->getChildren()->matching($sort);
         $i = 1;
         foreach ($children as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
 
@@ -525,9 +538,10 @@ class NodeHandler
      *
      * Warning, this method does not flush.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** node
      */
-    public static function cleanRootNodesPositions()
+    public static function cleanRootNodesPositions($setPositions = true)
     {
         $nodes = Kernel::getService('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
@@ -536,7 +550,9 @@ class NodeHandler
         $i = 1;
         /** @var Node $child */
         foreach ($nodes as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
 

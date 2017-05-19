@@ -49,7 +49,6 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
  */
 class NodesSources extends AbstractEntity
 {
-
     private $handler = null;
 
     /**
@@ -67,13 +66,16 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @param Node $node
+     * @param Node|null $node
      *
      * @return $this
      */
-    public function setNode($node)
+    public function setNode(Node $node = null)
     {
         $this->node = $node;
+        if (null !== $node) {
+            $node->addNodeSources($this);
+        }
 
         return $this;
     }
@@ -122,6 +124,20 @@ class NodesSources extends AbstractEntity
     public function getUrlAliases()
     {
         return $this->urlAliases;
+    }
+
+    /**
+     * @param UrlAlias $urlAlias
+     * @return $this
+     */
+    public function addUrlAlias(UrlAlias $urlAlias)
+    {
+        if (!$this->urlAliases->contains($urlAlias)) {
+            $this->urlAliases->add($urlAlias);
+            $urlAlias->setNodeSource($this);
+        }
+
+        return $this;
     }
 
     /**
@@ -305,7 +321,7 @@ class NodesSources extends AbstractEntity
      */
     public function __construct(Node $node, Translation $translation)
     {
-        $this->node = $node;
+        $this->setNode($node);
         $this->translation = $translation;
         $this->urlAliases = new ArrayCollection();
         $this->documentsByFields = new ArrayCollection();

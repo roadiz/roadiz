@@ -83,6 +83,21 @@ class CdnPackagesTest extends DefaultThemeDependentCase
             'https://static.localhost/files/some-custom-file',
             Kernel::getService('assetPackages')->getUrl('/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
+
+        $this->assertEquals(
+            'https://static.localhost/files/some-custom-file',
+            Kernel::getService('assetPackages')->getUrl('some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            'https://static.localhost/files/folder/some-custom-file',
+            Kernel::getService('assetPackages')->getUrl('/folder/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            'https://static.localhost/files/folder/some-custom-file',
+            Kernel::getService('assetPackages')->getUrl('folder/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
+        );
     }
 
     /**

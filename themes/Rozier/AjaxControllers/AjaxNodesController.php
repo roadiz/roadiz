@@ -179,7 +179,7 @@ class AjaxNodesController extends AbstractAjaxController
                 ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
 
             if ($parent !== null) {
-                $node->setParent($parent);
+                $parent->addChild($node);
             }
         } else {
             // if no parent or null we place node at root level

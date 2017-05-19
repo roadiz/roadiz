@@ -28,8 +28,6 @@
  * @author Ambroise Maupate
  */
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**

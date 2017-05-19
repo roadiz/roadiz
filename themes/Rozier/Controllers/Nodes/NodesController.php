@@ -385,7 +385,9 @@ class NodesController extends RozierApp
 
         if (null !== $translation) {
             $node = new Node();
-            $node->setParent($parentNode);
+            if (null !== $parentNode) {
+                $parentNode->addChild($node);
+            }
 
             /** @var Form $form */
             $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [

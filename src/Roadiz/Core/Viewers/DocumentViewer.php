@@ -87,7 +87,7 @@ class DocumentViewer implements ViewableInterface
     {
         if (count($options['srcset']) > 0) {
             $srcset = [];
-            foreach ($options['srcset'] as $key => $set) {
+            foreach ($options['srcset'] as $set) {
                 if (isset($set['format']) && isset($set['rule'])) {
                     $srcset[] = $this->getDocumentUrlByArray($set['format'], $options['absolute']) . ' ' . $set['rule'];
                 }
@@ -497,9 +497,38 @@ class DocumentViewer implements ViewableInterface
         /*
          * Need to remove base-path from url as AssetPackages will prepend it.
          */
+        $path = $this->removeBasePath($path);
+
+        return $this->removeStartingSlash($path);
+    }
+
+    /**
+     * Need to remove base-path from url as AssetPackages will prepend it.
+     *
+     * @param string $path
+     * @return bool|string
+     */
+    protected function removeBasePath($path)
+    {
         $basePath = Kernel::getService('request')->getBasePath();
         if ($basePath != '') {
             $path = substr($path, strlen($basePath));
+        }
+
+        return $path;
+    }
+
+    /**
+     * Remove root-slash not to disable Assets Packages resolving
+     * real server root.
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function removeStartingSlash($path)
+    {
+        if (substr($path, 0, 1) === '/') {
+            $path = substr($path, 1);
         }
 
         return $path;
