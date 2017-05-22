@@ -36,7 +36,8 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\MappedSuperclass
  * @ORM\Table(indexes={
  *     @ORM\Index(columns={"position"}),
- *     @ORM\Index(columns={"group_name"})
+ *     @ORM\Index(columns={"group_name"}),
+ *     @ORM\Index(columns={"group_name_canonical"})
  * })
  */
 abstract class AbstractField extends AbstractEntity
@@ -443,6 +444,11 @@ abstract class AbstractField extends AbstractEntity
     protected $groupName;
 
     /**
+     * @ORM\Column(name="group_name_canonical", type="string", nullable=true)
+     */
+    protected $groupNameCanonical;
+
+    /**
      * Gets the value of groupName.
      *
      * @return string
@@ -450,6 +456,14 @@ abstract class AbstractField extends AbstractEntity
     public function getGroupName()
     {
         return $this->groupName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroupNameCanonical()
+    {
+        return $this->groupNameCanonical;
     }
 
     /**
@@ -461,6 +475,33 @@ abstract class AbstractField extends AbstractEntity
     public function setGroupName($groupName)
     {
         $this->groupName = trim(strip_tags($groupName));
+        $this->groupNameCanonical = StringHandler::slugify($this->getGroupName());
+        return $this;
+    }
+
+    /**
+     * If current field data should be expanded (for choices and country types).
+     *
+     * @var bool
+     * @ORM\Column(name="expanded", type="boolean", nullable=false, options={"default" = false})
+     */
+    private $expanded = false;
+
+    /**
+     * @return bool
+     */
+    public function isExpanded()
+    {
+        return $this->expanded;
+    }
+
+    /**
+     * @param bool $expanded
+     * @return AbstractField
+     */
+    public function setExpanded($expanded)
+    {
+        $this->expanded = $expanded;
         return $this;
     }
 }

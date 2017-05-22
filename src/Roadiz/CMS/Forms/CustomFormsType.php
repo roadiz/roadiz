@@ -200,9 +200,10 @@ class CustomFormsType extends AbstractType
         switch ($field->getType()) {
             case AbstractField::ENUM_T:
                 $option["choices"] = $this->getChoices($field);
-                $option["expanded"] = false;
+                $option["expanded"] = $field->isExpanded();
                 $option["choices_as_values"] = true;
-                if (count($option["choices"]) < 4 || $this->forceExpanded) {
+
+                if ($this->forceExpanded) {
                     $option["expanded"] = true;
                 }
                 if ($field->isRequired() === false) {
@@ -213,9 +214,9 @@ class CustomFormsType extends AbstractType
                 $option["choices"] = $this->getChoices($field);
                 $option["multiple"] = true;
                 $option["choices_as_values"] = true;
-                $option["expanded"] = false;
+                $option["expanded"] = $field->isExpanded();
 
-                if (count($option["choices"]) < 4 || $this->forceExpanded) {
+                if ($this->forceExpanded) {
                     $option["expanded"] = true;
                 }
                 if ($field->isRequired() === false) {
@@ -226,6 +227,7 @@ class CustomFormsType extends AbstractType
                 $option['required'] = false;
                 break;
             case AbstractField::COUNTRY_T:
+                $option["expanded"] = $field->isExpanded();
                 if ($field->getDefaultValues() !== '') {
                     $countries = explode(',', $field->getDefaultValues());
                     $countries = array_map('trim', $countries);

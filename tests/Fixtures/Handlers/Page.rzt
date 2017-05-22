@@ -16,7 +16,9 @@
             "type": 4,
             "indexed": false,
             "virtual": false,
-            "default_values": null
+            "default_values": null,
+            "group_name": null,
+            "expanded": false
         },
         {
             "name": "header_image",
@@ -26,7 +28,9 @@
             "type": 9,
             "indexed": false,
             "virtual": true,
-            "default_values": null
+            "default_values": null,
+            "group_name": null,
+            "expanded": false
         }
     ]
 }

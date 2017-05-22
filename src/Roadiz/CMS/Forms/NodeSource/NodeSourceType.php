@@ -283,11 +283,6 @@ class NodeSourceType extends AbstractType
                     ],
                 ]);
                 break;
-            case NodeTypeField::ENUM_T:
-                $options = array_merge_recursive($options, [
-                    'placeholder' => 'choose.value',
-                ]);
-                break;
             case NodeTypeField::DATETIME_T:
                 $options = array_merge_recursive($options, [
                     'date_widget' => 'single_text',
@@ -361,6 +356,9 @@ class NodeSourceType extends AbstractType
                 ]);
                 break;
             case NodeTypeField::COUNTRY_T:
+                $options = array_merge_recursive($options, [
+                    'expanded' => $field->isExpanded(),
+                ]);
                 if ($field->getDefaultValues() !== '') {
                     $countries = explode(',', $field->getDefaultValues());
                     $countries = array_map('trim', $countries);

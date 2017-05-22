@@ -19,7 +19,8 @@
             "virtual": false,
             "universal": false,
             "default_values": "value1, value2",
-            "group_name": null
+            "group_name": null,
+            "expanded": false
         }
     ]
 }

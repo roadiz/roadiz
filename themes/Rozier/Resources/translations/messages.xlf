@@ -6773,6 +6773,22 @@
             <note>Blanchette Editor message button label</note>
         </trans-unit>
 
+
+        <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
+            <source>make_this_field_mandatory_for_users</source>
+            <target></target>
+            <note>Form field description for Required switch</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="expanded">
+            <source>expanded</source>
+            <target></target>
+            <note>Form field label for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="use_checkboxes_or_radio_buttons_instead_of_select_box">
+            <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
+            <target></target>
+            <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

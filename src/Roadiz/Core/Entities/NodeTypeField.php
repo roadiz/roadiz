@@ -43,6 +43,7 @@ use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
  *         @ORM\Index(columns={"indexed"}),
  *         @ORM\Index(columns={"position"}),
  *         @ORM\Index(columns={"group_name"}),
+ *         @ORM\Index(columns={"group_name_canonical"}),
  *         @ORM\Index(columns={"type"}),
  *         @ORM\Index(columns={"universal"})
  *     },
