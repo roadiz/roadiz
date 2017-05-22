@@ -84,6 +84,11 @@ class AssetsController extends CmsController
                 $request,
                 $log
             );
+
+            foreach ($this->get('interventionRequestSubscribers') as $subscriber) {
+                $iRequest->addSubscriber($subscriber);
+            }
+
             $iRequest->handle();
             return $iRequest->getResponse();
         } catch (\Exception $e) {

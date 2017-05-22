@@ -108,7 +108,15 @@ class AssetsServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['interventionRequestSubscribers'] = function (Container $c) {
-            return [];
+            $subscribersConfig = $c['config']['assetsProcessing']['subscribers'];
+            $subscribers = [];
+            foreach ($subscribersConfig as $subscriberConfig) {
+                $class = $subscriberConfig['class'];
+                $constructArgs = $subscriberConfig['args'];
+                $refClass = new \ReflectionClass($class);
+                $subscribers[] = $refClass->newInstanceArgs($constructArgs);
+            }
+            return $subscribers;
         };
 
         return $container;
