@@ -93,13 +93,13 @@ class RoadizRouteCollection extends DeferredRouteCollection
              * Add Assets controller routes
              */
             $assets = AssetsController::getRoutes();
-            if (false === $this->isPreview &&
-                '' != $this->settingsBag->get('static_domain_name')) {
+            $staticDomain = $this->settingsBag->get('static_domain_name');
+            if (false === $this->isPreview && false !== $staticDomain && '' != $staticDomain) {
                 /*
                  * Only use CDN if no preview mode and CDN domain
                  * is well set
                  */
-                $assets->setHost($this->settingsBag->get('static_domain_name'));
+                $assets->setHost($staticDomain);
             }
             $this->addCollection($assets);
 

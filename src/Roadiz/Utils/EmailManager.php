@@ -560,7 +560,7 @@ class EmailManager
     public function getOrigin()
     {
         $defaultSender = 'origin@roadiz.io';
-        if (null !== $this->settingsBag) {
+        if (null !== $this->settingsBag && $this->settingsBag->get('email_sender')) {
             $defaultSender = $this->settingsBag->get('email_sender');
         }
         return (null !== $this->origin && $this->origin != "") ? ($this->origin) : ($defaultSender);
