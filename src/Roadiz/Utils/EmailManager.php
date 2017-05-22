@@ -177,11 +177,11 @@ class EmailManager
      */
     public function appendWebsiteIcon()
     {
-        if (empty($this->assignation['mainColor'])) {
+        if (empty($this->assignation['mainColor']) && null !== $this->settingsBag) {
             $this->assignation['mainColor'] = $this->settingsBag->get('main_color');
         }
 
-        if (empty($this->assignation['headerImageSrc'])) {
+        if (empty($this->assignation['headerImageSrc']) && null !== $this->settingsBag) {
             $adminImage = $this->settingsBag->getDocument('admin_image');
             if (null !== $adminImage &&
                 $adminImage instanceof Document) {
@@ -559,9 +559,11 @@ class EmailManager
      */
     public function getOrigin()
     {
-        return (null !== $this->origin && $this->origin != "") ?
-            ($this->origin) :
-            ($this->settingsBag->get('email_sender'));
+        $defaultSender = 'origin@roadiz.io';
+        if (null !== $this->settingsBag) {
+            $defaultSender = $this->settingsBag->get('email_sender');
+        }
+        return (null !== $this->origin && $this->origin != "") ? ($this->origin) : ($defaultSender);
     }
 
     /**
