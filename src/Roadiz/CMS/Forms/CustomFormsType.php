@@ -225,6 +225,13 @@ class CustomFormsType extends AbstractType
             case AbstractField::DOCUMENTS_T:
                 $option['required'] = false;
                 break;
+            case AbstractField::COUNTRY_T:
+                if ($field->getDefaultValues() !== '') {
+                    $countries = explode(',', $field->getDefaultValues());
+                    $countries = array_map('trim', $countries);
+                    $option['preferred_choices'] = $countries;
+                }
+                break;
             default:
                 break;
         }

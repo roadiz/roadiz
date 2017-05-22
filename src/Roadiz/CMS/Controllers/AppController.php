@@ -38,8 +38,8 @@ use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
@@ -612,10 +612,10 @@ abstract class AppController extends Controller
     /**
      * Return all Form errors as an array.
      *
-     * @param Form $form
+     * @param FormInterface $form
      * @return array
      */
-    protected function getErrorsAsArray(Form $form)
+    protected function getErrorsAsArray(FormInterface $form)
     {
         $errors = [];
         /** @var FormError $error */

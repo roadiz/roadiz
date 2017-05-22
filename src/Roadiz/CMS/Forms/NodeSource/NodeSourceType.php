@@ -360,6 +360,15 @@ class NodeSourceType extends AbstractType
                     ],
                 ]);
                 break;
+            case NodeTypeField::COUNTRY_T:
+                if ($field->getDefaultValues() !== '') {
+                    $countries = explode(',', $field->getDefaultValues());
+                    $countries = array_map('trim', $countries);
+                    $options = array_merge_recursive($options, [
+                        'preferred_choices' => $countries,
+                    ]);
+                }
+                break;
         }
 
         return $options;

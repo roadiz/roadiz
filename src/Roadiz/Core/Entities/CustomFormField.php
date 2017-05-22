@@ -69,6 +69,7 @@ class CustomFormField extends AbstractField
         AbstractField::EMAIL_T => 'email.type',
         AbstractField::ENUM_T => 'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
+        AbstractField::COUNTRY_T => 'country.type',
     ];
 
     /**
@@ -91,7 +92,7 @@ class CustomFormField extends AbstractField
     private $customForm = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\CustomForm
+     * @return CustomForm|null
      */
     public function getCustomForm()
     {
@@ -99,11 +100,11 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
+     * @param CustomForm|null $customForm
      *
      * @return $this
      */
-    public function setCustomForm($customForm)
+    public function setCustomForm(CustomForm $customForm = null)
     {
         $this->customForm = $customForm;
 
