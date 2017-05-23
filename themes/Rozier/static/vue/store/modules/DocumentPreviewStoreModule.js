@@ -98,6 +98,7 @@ const mutations = {
     },
     [DOCUMENT_PREVIEW_CLOSE] (state) {
         state.isVisible = false
+        state.document = null
     }
 }
 

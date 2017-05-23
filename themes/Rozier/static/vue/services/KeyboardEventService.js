@@ -1,5 +1,3 @@
-import Mousetrap from 'mousetrap'
-import 'mousetrap/plugins/global-bind/mousetrap-global-bind'
 import {
     KEYBOARD_EVENT_ESCAPE,
     KEYBOARD_EVENT_SPACE
@@ -22,11 +20,11 @@ export default class KeyboardEventService {
     }
 
     bindEscape () {
-        Mousetrap.bindGlobal('esc', () => this.store.commit(KEYBOARD_EVENT_ESCAPE))
+        Mousetrap.bind('esc', () => this.store.commit(KEYBOARD_EVENT_ESCAPE))
     }
 
     bindSpace () {
-        Mousetrap.bindGlobal('space', (e) => {
+        Mousetrap.bind('space', (e) => {
             if (e.preventDefault && this.store.getters.documentPreviewGetDocument) {
                 e.preventDefault();
             } else if (this.store.getters.documentPreviewGetDocument) {
