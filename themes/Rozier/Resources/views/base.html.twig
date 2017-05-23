@@ -231,9 +231,5 @@
         {% endfor %}
 
         {% block customScripts %}{% endblock %}
-
-        {% if head.devMode %}
-            <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
-        {% endif %}
     </body>
 </html>

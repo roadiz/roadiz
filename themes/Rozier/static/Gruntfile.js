@@ -309,6 +309,16 @@ module.exports = function(grunt) {
                     dest: '',
                     type: 'js',
                     ext: '.min.js'
+                },
+                {
+                    assets: [{
+                        src: [ 'dist/vue-bundle.js' ],
+                        dest: 'dist/vue-bundle.js'
+                    }],
+                    key: 'global',
+                    dest: '',
+                    type: 'js',
+                    ext: '.min.js'
                 }]
             },
             production: {
