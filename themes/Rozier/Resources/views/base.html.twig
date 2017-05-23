@@ -218,7 +218,6 @@
         {% if head.devMode %}
             <script src="https://unpkg.com/vue"></script>
             <script src="https://unpkg.com/vuex"></script>
-            <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
         {% else %}
             <script src="https://unpkg.com/vue@2.2.6/dist/vue.min.js"></script>
             <script src="https://unpkg.com/vuex@2.2.1/dist/vuex.min.js"></script>
@@ -232,5 +231,9 @@
         {% endfor %}
 
         {% block customScripts %}{% endblock %}
+
+        {% if head.devMode %}
+            <script src="{{ head.resourcesUrl }}dist/vue-bundle.js"></script>
+        {% endif %}
     </body>
 </html>

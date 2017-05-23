@@ -1,6 +1,6 @@
 <template>
     <div ref="blanchetteEditor" class="blanchette-editor">
-        <h3>Blanchette Editor</h3>
+        <h3>{{ translations.blanchetteEditor.blanchetteEditor }}</h3>
 
         <div class="canvas">
             <transition name="fade" v-if="isLoading">
