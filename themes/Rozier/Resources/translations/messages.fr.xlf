@@ -3126,6 +3126,11 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
+          <source>maintenance_mode.activated</source>
+          <target xml:lang="fr" state="translated">Mode maintenance activé</target>
+          <note>Message to notify that site is under maintenance.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="300" approved="yes">
         <source>help</source>
         <target xml:lang="fr">Aide</target>
@@ -6631,6 +6636,21 @@
             <source>blanchetteEditor.saveAndOverwrite</source>
             <target xml:lang="fr" state="translated">Appliquer et écraser le fichier</target>
             <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.other">
+            <source>blanchetteEditor.other</source>
+            <target xml:lang="fr" state="translated">Autres</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
+            <source>blanchetteEditor.portrait</source>
+            <target xml:lang="fr" state="translated">Portrait</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
+            <source>blanchetteEditor.landscape</source>
+            <target xml:lang="fr" state="translated">Paysage</target>
+            <note>Blanchette Editor aspect ratio group name</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
             <source>make_this_field_mandatory_for_users</source>

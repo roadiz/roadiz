@@ -3126,6 +3126,12 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
+          <source>maintenance_mode.activated</source>
+          <target></target>
+          <note>Message to notify that site is under maintenance.</note>
+      </trans-unit>
+
       <trans-unit xml:space="preserve" id="300">
         <source>help</source>
         <target></target>
