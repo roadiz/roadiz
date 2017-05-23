@@ -91,6 +91,16 @@ class AssetsController extends CmsController
 
             $iRequest->handle();
             return $iRequest->getResponse();
+        } catch (\ReflectionException $e) {
+            $message = '[Configuration] ' . $e->getMessage();
+            if (null !== $log) {
+                $log->error($message);
+            }
+            return new Response(
+                $message,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                ['content-type' => 'text/plain']
+            );
         } catch (\Exception $e) {
             if (null !== $log) {
                 $log->error($e->getMessage());
