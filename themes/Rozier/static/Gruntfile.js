@@ -173,6 +173,7 @@ module.exports = function(grunt) {
                     '!js/<%= name %>.min.js',
                     '!dist/<%= name %>.js',
                     '!dist/<%= name %>.min.js',
+                    'dist/vue-bundle.js',
                     'css/**/*.less',
                     'src-img/*.{png,jpg,gif}'
                 ],
