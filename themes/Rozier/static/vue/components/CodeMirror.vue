@@ -19,7 +19,7 @@
             },
             options: {
                 type: Object,
-                default: function () {
+                default() {
                     return {
                         mode: 'yaml',
                         lineNumbers: true,
@@ -31,25 +31,11 @@
                 }
             },
         },
-        ready: function () {
-            this.editor = CodeMirror.fromTextArea(this.$el, this.options)
-            this.editor.setValue(this.initialValue)
-            this.editor.on('change', (cm) => {
-                this.value = cm.getValue()
-                if (!!this.$emit) {
-                    this.$emit('change', cm.getValue())
-                }
-            })
+        ready() {
+            this.build()
         },
-        mounted: function () {
-            this.editor = CodeMirror.fromTextArea(this.$el, this.options)
-            this.editor.setValue(this.initialValue)
-            this.editor.on('change', (cm) => {
-                if (!!this.$emit) {
-                    this.$emit('change', cm.getValue())
-                    this.$emit('input', cm.getValue())
-                }
-            })
+        mounted() {
+            this.build()
         },
         watch: {
             'value': function (newVal, oldVal) {
@@ -73,6 +59,20 @@
         beforeDestroy: function () {
             if (this.editor) {
                 this.editor.doc.cm.getWrapperElement().remove()
+            }
+        },
+        methods: {
+            build () {
+                this.editor = CodeMirror.fromTextArea(this.$el, this.options)
+                this.editor.on('change', (cm) => {
+                    this.value = cm.getValue()
+                    if (!!this.$emit) {
+                        this.$emit('change', cm.getValue())
+                        this.$emit('input', cm.getValue())
+                    }
+                })
+                this.editor.setValue(this.initialValue)
+                this.editor.refresh()
             }
         }
     }

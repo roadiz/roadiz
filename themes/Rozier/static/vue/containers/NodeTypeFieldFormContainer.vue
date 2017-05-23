@@ -109,7 +109,9 @@
                 this.entity = null
 
                 Vue.nextTick(() => {
-                    this.setConfig(newValue)
+                    window.setTimeout(() => {
+                        this.setConfig(newValue)
+                    }, 100)
                 })
             }
         },
