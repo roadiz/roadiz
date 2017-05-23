@@ -358,6 +358,7 @@ abstract class AppController extends Controller
                 'cmsVersionNumber' => Kernel::$cmsVersion,
                 'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => $kernel->isDevMode(),
+                'maintenanceMode' => (boolean) $this->get('settingsBag')->get('maintenance_mode'),
                 'useCdn' => (boolean) $this->get('settingsBag')->get('use_cdn'),
                 'universalAnalyticsId' => $this->get('settingsBag')->get('universal_analytics_id'),
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
