@@ -1,7 +1,7 @@
 <nodes-search-container inline-template>
     {{isActive}}
     <div id="nodes-sources-search" v-bind:class="{ 'focus-on': isFocus }">
-        <form id="nodes-sources-search-form" action="{{ path('searchNodesSourcesAjax') }}" method="GET" class="uk-form">
+        <form id="nodes-sources-search-form" v-on:submit.prevent action="{{ path('searchNodesSourcesAjax') }}" method="GET" class="uk-form">
             <div class="uk-form-icon">
                 <i class="uk-icon-search"></i>
                 <input id="nodes-sources-search-input"
