@@ -28,16 +28,16 @@
 
             <div class="toolbar__select_wraper" data-uk-tooltip :title="translations.aspectRatio">
                 <select class="toolbar__select uk-button" v-model="ratio" @change="aspectRatio">
-                    <optgroup label="Other">
+                    <optgroup :label="translations.other">
                         <option value="free">{{ translations.free }}</option>
                         <option value="1:1">1:1</option>
                         <option value="4:3">4:3</option>
                     </optgroup>
-                    <optgroup label="Landscape">
+                    <optgroup :label="translations.landscape">
                         <option value="16:9">16:9</option>
                         <option value="21:9">21:9</option>
                     </optgroup>
-                    <optgroup label="Portrait">
+                    <optgroup :label="translations.portrait">
                         <option value="9:16">9:16</option>
                         <option value="9:21">9:21</option>
                     </optgroup>
