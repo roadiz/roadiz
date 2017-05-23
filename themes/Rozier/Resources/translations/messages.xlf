@@ -6773,6 +6773,22 @@
             <note>Blanchette Editor message button label</note>
         </trans-unit>
 
+        <trans-unit xml:space="preserve" id="blanchetteEditor.other">
+            <source>blanchetteEditor.other</source>
+            <target></target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
+            <source>blanchetteEditor.portrait</source>
+            <target></target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
+            <source>blanchetteEditor.landscape</source>
+            <target></target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+
 
         <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
             <source>make_this_field_mandatory_for_users</source>
