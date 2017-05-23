@@ -6707,6 +6707,11 @@
             <note>Document navbar link text for document adjust page.</note>
         </trans-unit>
 
+        <trans-unit xml:space="preserve" id="blanchetteEditor">
+            <source>blanchetteEditor</source>
+            <target></target>
+            <note>Blanchette Editorpage title</note>
+        </trans-unit>
         <trans-unit xml:space="preserve" id="blanchetteEditor.free">
             <source>blanchetteEditor.free</source>
             <target></target>
