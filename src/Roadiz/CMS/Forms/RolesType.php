@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Form\AbstractType;
@@ -39,6 +40,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class RolesType extends AbstractType
 {
+    /**
+     * @var ArrayCollection|null
+     */
     protected $roles;
     /**
      * @var EntityManager
@@ -47,9 +51,9 @@ class RolesType extends AbstractType
 
     /**
      * @param EntityManager $entityManager
-     * @param array $roles Existing roles name array (used to display only available roles to parent entity)
+     * @param ArrayCollection|null $roles Existing roles name array (used to display only available roles to parent entity)
      */
-    public function __construct(EntityManager $entityManager, $roles = null)
+    public function __construct(EntityManager $entityManager, ArrayCollection $roles = null)
     {
         $this->roles = $roles;
         $this->entityManager = $entityManager;

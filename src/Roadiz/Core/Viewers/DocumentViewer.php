@@ -294,7 +294,7 @@ class DocumentViewer implements ViewableInterface
      *
      * @param array|null $options
      *
-     * @return string
+     * @return string|boolean
      * @see \RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
     protected function getEmbedByArray(array $options = [])

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -317,7 +316,7 @@ class TagRepository extends EntityRepository
      * @param integer|null                            $offset
      * @param Translation|null $translation
      *
-     * @return ArrayCollection|Paginator
+     * @return array|Paginator
      */
     public function findBy(
         array $criteria,
@@ -351,7 +350,7 @@ class TagRepository extends EntityRepository
             try {
                 return $finalQuery->getResult();
             } catch (NoResultException $e) {
-                return new ArrayCollection();
+                return [];
             }
         }
     }
@@ -362,7 +361,7 @@ class TagRepository extends EntityRepository
      * @param array|null                              $orderBy
      * @param Translation|null $translation
      *
-     * @return ArrayCollection
+     * @return Tag|null
      */
     public function findOneBy(
         array $criteria,
@@ -423,7 +422,7 @@ class TagRepository extends EntityRepository
      * @param integer     $tagId
      * @param Translation $translation
      *
-     * @return Tag
+     * @return Tag|null
      */
     public function findWithTranslation($tagId, Translation $translation)
     {
@@ -446,7 +445,7 @@ class TagRepository extends EntityRepository
     /**
      * @param Translation $translation
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function findAllWithTranslation(Translation $translation)
     {
@@ -459,14 +458,14 @@ class TagRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
      * @param integer $tagId
      *
-     * @return Tag
+     * @return Tag|null
      */
     public function findWithDefaultTranslation($tagId)
     {
@@ -487,7 +486,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @return ArrayCollection
+     * @return array
      */
     public function findAllWithDefaultTranslation()
     {
@@ -499,7 +498,7 @@ class TagRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -507,7 +506,7 @@ class TagRepository extends EntityRepository
      * @param Translation $translation
      * @param Tag         $parent
      *
-     * @return array Doctrine result array
+     * @return array
      */
     public function findByParentWithTranslation(Translation $translation, Tag $parent = null)
     {
@@ -536,14 +535,14 @@ class TagRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
     /**
      * @param \RZ\Roadiz\Core\Entities\Tag $parent
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function findByParentWithDefaultTranslation(Tag $parent = null)
     {
@@ -569,7 +568,7 @@ class TagRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 

@@ -126,6 +126,7 @@ class NodeSourceJoinType extends AbstractType
                         'id' => $formToEntities,
                     ]);
                 }
+                return null;
             }
         ));
     }

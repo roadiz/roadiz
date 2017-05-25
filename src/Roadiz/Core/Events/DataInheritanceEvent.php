@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
@@ -53,6 +54,7 @@ class DataInheritanceEvent
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         // the $metadata is all the mapping info for this class
+        /** @var ClassMetadataInfo $metadata */
         $metadata = $eventArgs->getClassMetadata();
 
         /*
@@ -79,6 +81,7 @@ class DataInheritanceEvent
         if ($class->getName() === 'RZ\Roadiz\Core\Entities\NodesSources') {
             try {
                 // List node types
+                /** @var NodeType[] $nodeTypes */
                 $nodeTypes = $eventArgs->getEntityManager()->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findAll();
                 $map = [];
                 foreach ($nodeTypes as $type) {

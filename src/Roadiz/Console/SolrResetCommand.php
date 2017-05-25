@@ -38,7 +38,6 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  */
 class SolrResetCommand extends SolrCommand
 {
-
     protected function configure()
     {
         $this->setName('solr:reset')
@@ -47,7 +46,7 @@ class SolrResetCommand extends SolrCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
 
@@ -59,7 +58,7 @@ class SolrResetCommand extends SolrCommand
                     '<question>Are you sure to reset Solr index?</question> [y/N]: ',
                     false
                 );
-                if ($this->questionHelper->ask(
+                if ($questionHelper->ask(
                     $input,
                     $output,
                     $confirmation

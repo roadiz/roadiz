@@ -51,7 +51,7 @@ class TimedRouteListener extends RouterListener
         RequestStack $requestStack = null,
         Stopwatch $stopwatch = null
     ) {
-        parent::__construct($router, $context, $logger, $requestStack);
+        parent::__construct($router, $requestStack, $context, $logger);
 
         $this->stopwatch = $stopwatch;
     }

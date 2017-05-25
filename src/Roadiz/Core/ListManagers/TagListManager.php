@@ -49,9 +49,7 @@ class TagListManager extends EntityListManager
     }
 
     /**
-     * Return filtered entities.
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array|\Doctrine\ORM\Tools\Pagination\Paginator|null
      */
     public function getEntities()
     {
