@@ -39,7 +39,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- *
+ * Class NodeTypeFieldType
+ * @package Themes\Rozier\Forms
  */
 class NodeTypeFieldType extends AbstractType
 {
@@ -108,7 +109,14 @@ class NodeTypeFieldType extends AbstractType
                 'data-desc' => 'universal_fields_will_be_only_editable_from_default_translation'
             ],
         ])
-        ->add('defaultValues', 'text', [
+        ->add('expanded', 'checkbox', [
+            'label' => 'expanded',
+            'attr' => [
+                'data-desc' => 'use_checkboxes_or_radio_buttons_instead_of_select_box'
+            ],
+            'required' => false,
+        ])
+        ->add('defaultValues', new DynamicType(), [
             'label' => 'defaultValues',
             'required' => false,
             'attr' => [
@@ -149,6 +157,9 @@ class NodeTypeFieldType extends AbstractType
             'attr' => [
                 'class' => 'uk-form node-type-field-form',
             ],
+            'constraints' => [
+                new \RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField(),
+            ]
         ]);
 
         $resolver->setRequired([

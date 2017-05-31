@@ -404,7 +404,7 @@ class EntityListManager
     /**
      * Return filtered entities.
      *
-     * @return array
+     * @return array|\Doctrine\ORM\Tools\Pagination\Paginator
      */
     public function getEntities()
     {

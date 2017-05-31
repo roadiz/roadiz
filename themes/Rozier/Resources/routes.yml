@@ -18,7 +18,9 @@ loginRoutes:
 
 ajaxSessionMessages:
     path:     /rz-admin/session/messages
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxSessionMessages::getMessagesAction }
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxSessionMessages::getMessagesAction
 
 # CACHES
 deleteDoctrineCache:
@@ -180,16 +182,10 @@ customFormsRoutes:
     resource: "routing/custom-forms.yml"
     prefix: /rz-admin/custom-forms
 
-# Ajax
-customFormsAjaxExplorerPage:
-    path:     /rz-admin/ajax/custom-forms/explore
-    defaults: { _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormsExplorerController::indexAction }
-
 # Custom Form Answer
 customFormAnswersRoutes:
     resource: "routing/custom-form-answers.yml"
     prefix: /rz-admin/custom-form-answers
-
 
 # Custom Form FIELDS
 customFormFieldsRoutes:

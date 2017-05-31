@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
@@ -89,16 +90,32 @@ class CustomFormHelper
             $answer->setSubmittedAt(new \DateTime());
             $answer->setIp($ipAddress);
 
-            /** @var Form $formField */
-            foreach ($form as $formField) {
-                $customFormField = $this->getField($formField->getName());
+            /** @var CustomFormField $customFormField */
+            foreach ($this->customForm->getFields() as $customFormField) {
+                $formField = null;
+                $fieldAttr = null;
 
-                if (null !== $customFormField) {
-                    $fieldAttr = $this->getAttribute($answer, $customFormField);
+                /*
+                 * Get data in form groups
+                 */
+                if ($customFormField->getGroupName() != '') {
+                    $groupCanonical = StringHandler::slugify($customFormField->getGroupName());
+                    $formGroup = $form->get($groupCanonical);
+                    if ($formGroup->has($customFormField->getName())) {
+                        $formField = $formGroup->get($customFormField->getName());
+                        $fieldAttr = $this->getAttribute($answer, $customFormField);
+                    }
+                } else {
+                    if ($form->has($customFormField->getName())) {
+                        $formField = $form->get($customFormField->getName());
+                        $fieldAttr = $this->getAttribute($answer, $customFormField);
+                    }
+                }
 
+                if (null !== $formField) {
                     /*
-                     * Create attribute if null.
-                     */
+                    * Create attribute if null.
+                    */
                     if (null === $fieldAttr) {
                         $fieldAttr = new CustomFormFieldAttribute();
                         $fieldAttr->setCustomFormAnswer($answer);

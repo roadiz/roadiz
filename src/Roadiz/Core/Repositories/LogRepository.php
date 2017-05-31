@@ -41,13 +41,11 @@ class LogRepository extends EntityRepository
     public function findLatestByNodesSources($maxResult = 5)
     {
         $query = $this->createQueryBuilder('log');
-        $query->addSelect('ns')
-            ->innerJoin('log.nodeSource', 'ns')
-            ->andWhere($query->expr()->isNotNull('log.nodeSource'))
-            ->groupBy('log.nodeSource')
+        $query->innerJoin('log.nodeSource', 'ns')
+            ->addGroupBy('log')
             ->orderBy('log.datetime', 'DESC')
             ->setMaxResults($maxResult);
 
-        return new Paginator($query->getQuery());
+        return new Paginator($query->getQuery(), true);
     }
 }

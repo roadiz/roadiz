@@ -633,7 +633,7 @@ class DocumentRepository extends EntityRepository
         $qb->select('d')
             ->leftJoin('d.nodesSourcesByFields', 'ns')
             ->having('COUNT(ns.id) = 0')
-            ->groupBy('d.id')
+            ->groupBy('d')
             ->where($qb->expr()->eq('d.raw', ':raw'))
             ->setParameter('raw', false);
 

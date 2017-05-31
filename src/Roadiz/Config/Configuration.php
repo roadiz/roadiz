@@ -168,6 +168,15 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('jpegoptimPath')->end()
                 ->scalarNode('pngquantPath')->end()
+            ->arrayNode('subscribers')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('class')->isRequired()->cannotBeEmpty()->end()
+                        ->arrayNode('args')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $node;

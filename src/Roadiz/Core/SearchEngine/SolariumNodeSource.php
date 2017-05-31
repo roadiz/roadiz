@@ -29,13 +29,19 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use Doctrine\Common\Collections\Criteria;
 use Monolog\Logger;
 use Parsedown;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
@@ -48,13 +54,19 @@ class SolariumNodeSource extends AbstractSolarium
     protected $nodeSource = null;
 
     /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
      * Create a new SolariumNodeSource.
      *
      * @param NodesSources $nodeSource
      * @param Client $client
+     * @param EventDispatcher $dispatcher
      * @param Logger $logger
      */
-    public function __construct(NodesSources $nodeSource, Client $client = null, Logger $logger = null)
+    public function __construct(NodesSources $nodeSource, Client $client, EventDispatcher $dispatcher, Logger $logger = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
@@ -63,10 +75,11 @@ class SolariumNodeSource extends AbstractSolarium
         $this->client = $client;
         $this->nodeSource = $nodeSource;
         $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
-     * Get document fron Solr index.
+     * Get document from Solr index.
      *
      * @return boolean *FALSE* if no document found linked to current node-source.
      */
@@ -128,17 +141,27 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['tags_txt'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();
+        $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
         $collection[] = $this->nodeSource->getTitle();
 
-        $searchableFields = $node->getNodeType()->getSearchableFields();
 
-        /*
-         * Only one content fields to search in.
-         */
+        $criteria = new Criteria();
+        $criteria->andWhere(Criteria::expr()->eq("type", AbstractField::BOOLEAN_T));
+        $booleanFields = $node->getNodeType()->getFields()->matching($criteria);
+
+        /** @var NodeTypeField $booleanField */
+        foreach ($booleanFields as $booleanField) {
+            $name = $booleanField->getName();
+            $name .= '_b';
+            $getter = $booleanField->getGetterName();
+            $assoc[$name] = $this->nodeSource->$getter();
+        }
+
+        $searchableFields = $node->getNodeType()->getSearchableFields();
+        /** @var NodeTypeField $field */
         foreach ($searchableFields as $field) {
             $name = $field->getName();
             $getter = $field->getGetterName();
-
             $content = $this->nodeSource->$getter();
             /*
              * Strip markdown syntax
@@ -161,7 +184,6 @@ class SolariumNodeSource extends AbstractSolarium
             }
 
             $assoc[$name] = $content;
-
             $collection[] = $content;
         }
 
@@ -170,6 +192,13 @@ class SolariumNodeSource extends AbstractSolarium
          * for global search
          */
         $assoc['collection_txt'] = $collection;
+
+        $event = new FilterSolariumNodeSourceEvent($this->nodeSource, $assoc);
+        $this->dispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_INDEXING, $event);
+        /*
+         * Override associations
+         */
+        $assoc = $event->getAssociations();
 
         return $assoc;
     }

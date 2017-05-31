@@ -32,9 +32,9 @@ NodeTypeFieldEdit.prototype.init = function(){
     var _this = this;
 
     // Events
-    var proxy = $.proxy(_this.btnClick, _this);
-    _this.$btn.off('click');
-    _this.$btn.on('click', proxy);
+    //var proxy = $.proxy(_this.btnClick, _this);
+    //_this.$btn.off('click');
+    //_this.$btn.on('click', proxy);
 };
 
 

@@ -35,7 +35,9 @@ use RZ\Roadiz\Utils\StringHandler;
 /**
  * @ORM\MappedSuperclass
  * @ORM\Table(indexes={
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"group_name"}),
+ *     @ORM\Index(columns={"group_name_canonical"})
  * })
  */
 abstract class AbstractField extends AbstractEntity
@@ -143,7 +145,6 @@ abstract class AbstractField extends AbstractEntity
      */
     const MULTI_GEOTAG_T = 21;
     /**
-     *
      * @see \DateTime
      */
     const DATE_T = 22;
@@ -163,6 +164,14 @@ abstract class AbstractField extends AbstractEntity
      * Textarea to write YAML syntaxed text
      */
     const YAML_T = 26;
+    /**
+     * «Many to many» join to a custom doctrine entity class.
+     */
+    const MANY_TO_MANY_T = 27;
+    /**
+     * «Many to one» join to a custom doctrine entity class.
+     */
+    const MANY_TO_ONE_T = 28;
 
     /**
      * Associates abstract field type to a readable string.
@@ -194,6 +203,8 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::CSS_T => 'css.type',
         AbstractField::COUNTRY_T => 'country.type',
         AbstractField::YAML_T => 'yaml.type',
+        AbstractField::MANY_TO_MANY_T => 'many-to-many.type',
+        AbstractField::MANY_TO_ONE_T => 'many-to-one.type',
     ];
     /**
      * Associates abstract field type to a Doctrine type.
@@ -224,6 +235,8 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::CSS_T => 'text',
         AbstractField::COUNTRY_T => 'string',
         AbstractField::YAML_T => 'text',
+        AbstractField::MANY_TO_MANY_T => null,
+        AbstractField::MANY_TO_ONE_T => null,
     ];
     /**
      * Associates abstract field type to a Symfony Form type.
@@ -254,6 +267,8 @@ abstract class AbstractField extends AbstractEntity
         AbstractField::CSS_T => 'css_text',
         AbstractField::COUNTRY_T => 'country',
         AbstractField::YAML_T => 'yaml_text',
+        AbstractField::MANY_TO_MANY_T => 'referenced_entity',
+        AbstractField::MANY_TO_ONE_T => 'referenced_entity',
     ];
 
     /**
@@ -421,5 +436,72 @@ abstract class AbstractField extends AbstractEntity
     public function isVirtual()
     {
         return static::$typeToDoctrine[$this->getType()] === null ? true : false;
+    }
+
+    /**
+     * @ORM\Column(name="group_name", type="string", nullable=true)
+     */
+    protected $groupName;
+
+    /**
+     * @ORM\Column(name="group_name_canonical", type="string", nullable=true)
+     */
+    protected $groupNameCanonical;
+
+    /**
+     * Gets the value of groupName.
+     *
+     * @return string
+     */
+    public function getGroupName()
+    {
+        return $this->groupName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroupNameCanonical()
+    {
+        return $this->groupNameCanonical;
+    }
+
+    /**
+     * Sets the value of groupName.
+     *
+     * @param string $groupName the group name
+     * @return self
+     */
+    public function setGroupName($groupName)
+    {
+        $this->groupName = trim(strip_tags($groupName));
+        $this->groupNameCanonical = StringHandler::slugify($this->getGroupName());
+        return $this;
+    }
+
+    /**
+     * If current field data should be expanded (for choices and country types).
+     *
+     * @var bool
+     * @ORM\Column(name="expanded", type="boolean", nullable=false, options={"default" = false})
+     */
+    private $expanded = false;
+
+    /**
+     * @return bool
+     */
+    public function isExpanded()
+    {
+        return $this->expanded;
+    }
+
+    /**
+     * @param bool $expanded
+     * @return AbstractField
+     */
+    public function setExpanded($expanded)
+    {
+        $this->expanded = $expanded;
+        return $this;
     }
 }

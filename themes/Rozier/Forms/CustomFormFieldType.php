@@ -68,6 +68,16 @@ class CustomFormFieldType extends AbstractType
             ->add('required', 'checkbox', [
                 'label' => 'required',
                 'required' => false,
+                'attr' => [
+                    'data-desc' => 'make_this_field_mandatory_for_users'
+                ],
+            ])
+            ->add('expanded', 'checkbox', [
+                'label' => 'expanded',
+                'attr' => [
+                    'data-desc' => 'use_checkboxes_or_radio_buttons_instead_of_select_box'
+                ],
+                'required' => false,
             ])
             ->add(
                 'defaultValues',
@@ -79,7 +89,14 @@ class CustomFormFieldType extends AbstractType
                         'placeholder' => 'enter_values_comma_separated',
                     ],
                 ]
-            );
+            )
+            ->add('groupName', 'text', [
+                'label' => 'groupName',
+                'required' => false,
+                'attr' => [
+                    'data-desc' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs'
+                ],
+            ]);
     }
 
     public function getName()

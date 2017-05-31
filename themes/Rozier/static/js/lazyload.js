@@ -144,6 +144,8 @@ Lazyload.prototype.loadContent = function(state, location) {
             .done(function(data) {
                 _this.applyContent(data);
                 _this.canvasLoader.hide();
+                var pageLoadEvent = new CustomEvent('pageload', { 'detail': data });
+                window.dispatchEvent(pageLoadEvent);
             })
             .fail(function(data) {
                 console.log(data);
@@ -225,9 +227,6 @@ Lazyload.prototype.generalBind = function() {
     new AutoUpdate();
     new NodesBulk();
     new TagsBulk();
-    new DocumentWidget();
-    new NodeWidget();
-    new CustomFormWidget();
     new InputLengthWatcher();
     new DocumentUploader(Rozier.messages.dropzone);
     _this.childrenNodesFields = new ChildrenNodesField();

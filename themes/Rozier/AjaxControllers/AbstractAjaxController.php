@@ -79,4 +79,21 @@ abstract class AbstractAjaxController extends RozierApp
 
         return true;
     }
+
+    protected function sortIsh(array &$arr, array $map)
+    {
+        $return = [];
+
+        while ($element = array_shift($map)) {
+            foreach ($arr as $key => $value) {
+                if ($element == $value->getId()) {
+                    $return[] = $value;
+                    unset($arr[$key]);
+                    break 1;
+                }
+            }
+        }
+
+        return $return;
+    }
 }

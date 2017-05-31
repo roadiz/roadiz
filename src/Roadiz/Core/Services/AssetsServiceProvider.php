@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 use AM\InterventionRequest\Configuration;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
@@ -70,7 +69,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $c['versionStrategy'],
                 $c['requestStack'],
                 $c['kernel'],
-                SettingsBag::get('static_domain_name'),
+                $c['settingsBag']->get('static_domain_name'),
                 $kernel->isPreview()
             );
         };
@@ -109,7 +108,15 @@ class AssetsServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['interventionRequestSubscribers'] = function (Container $c) {
-            return [];
+            $subscribersConfig = $c['config']['assetsProcessing']['subscribers'];
+            $subscribers = [];
+            foreach ($subscribersConfig as $subscriberConfig) {
+                $class = $subscriberConfig['class'];
+                $constructArgs = $subscriberConfig['args'];
+                $refClass = new \ReflectionClass($class);
+                $subscribers[] = $refClass->newInstanceArgs($constructArgs);
+            }
+            return $subscribers;
         };
 
         return $container;

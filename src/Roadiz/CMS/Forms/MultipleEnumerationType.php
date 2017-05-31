@@ -64,6 +64,7 @@ class MultipleEnumerationType extends AbstractType
             'strict' => true,
             'multiple' => true,
             'choices_as_values' => true,
+            'expanded' => $this->field->isExpanded(),
         ]);
     }
     /**

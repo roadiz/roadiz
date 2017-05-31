@@ -31,8 +31,9 @@
                         <hr />
                         <h3>{% trans %}embed.preview{% endtrans %}</h3>
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({
-                                embed:true,
-                                autoplay:false,
+                                embed: true,
+                                autoplay: false,
+                                controls: true,
                                 fullscreen: true
                             })) }}</figure>
                     {% endif %}

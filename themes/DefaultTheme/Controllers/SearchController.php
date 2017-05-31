@@ -53,17 +53,32 @@ class SearchController extends DefaultThemeApp
             throw new ResourceNotFoundException();
         }
 
-        /*
-         * Use simple search over title and meta fields.
-         */
-        /** @var NodesSources[] $nodeSources */
-        $nodeSources = $this->get('nodeSourceApi')->searchBy(
-            $request->query->get('query'),
-            10,
-            [
-                $this->themeContainer['typePage']
-            ]
-        );
+        if (null !== $this->get('solr.search.nodeSource')) {
+            /*
+             * Use Apache Solr when available
+             */
+            $nodeSources = $this->get('solr.search.nodeSource')
+                ->search(
+                    $request->query->get('query'), # Use ?query query parameter to search with
+                    [
+                        'translation' => $translation,
+                    ], # a simple criteria array to filter search results
+                    10, # result count
+                    true # Search in tags too
+                );
+        } else {
+            /*
+             * Use simple search over title and meta fields.
+             */
+            /** @var NodesSources[] $nodeSources */
+            $nodeSources = $this->get('nodeSourceApi')->searchBy(
+                $request->query->get('query'),
+                10,
+                [
+                    $this->themeContainer['typePage']
+                ]
+            );
+        }
 
         $this->assignation['nodeSources'] = $nodeSources;
         $this->assignation['query'] = $request->query->get('query');

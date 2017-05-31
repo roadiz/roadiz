@@ -60,8 +60,10 @@ class NodeTest extends DefaultThemeDependentCase
             array("Ligula  $* _--Egestas Mattis Nullam", "ligula-egestas-mattis-nullam"),
             array("Véèsti_buœlum Rïsus", "veesti-buoelum-risus"),
             array("J'aime les sushis", "j-aime-les-sushis"),
+            array("J’aime les sushis", "j-aime-les-sushis"),
             array("Éditeur", "editeur"),
             array("À propos", "a-propos"),
+            array("Ébène", "ebene"),
         );
     }
 

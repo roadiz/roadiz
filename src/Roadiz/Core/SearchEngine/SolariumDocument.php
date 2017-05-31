@@ -131,6 +131,9 @@ class SolariumDocument extends AbstractSolarium
         return [];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function clean(Query $update)
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
@@ -141,16 +144,21 @@ class SolariumDocument extends AbstractSolarium
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function indexAndCommit()
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
         foreach ($this->documentTranslationItems as $documentTranslationItem) {
             $documentTranslationItem->indexAndCommit();
         }
-
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function updateAndCommit()
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
@@ -161,6 +169,9 @@ class SolariumDocument extends AbstractSolarium
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function update(Query $update)
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
@@ -169,6 +180,9 @@ class SolariumDocument extends AbstractSolarium
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function remove(Query $update)
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
@@ -178,6 +192,9 @@ class SolariumDocument extends AbstractSolarium
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function removeAndCommit()
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
@@ -186,6 +203,9 @@ class SolariumDocument extends AbstractSolarium
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function cleanAndCommit()
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */
@@ -194,6 +214,9 @@ class SolariumDocument extends AbstractSolarium
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function index()
     {
         /** @var SolariumDocumentTranslation $documentTranslationItem */

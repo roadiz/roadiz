@@ -30,6 +30,7 @@ namespace RZ\Roadiz\Core\SearchEngine;
 
 use Monolog\Logger;
 use Solarium\Client;
+use Solarium\Core\Query\Result\Result;
 use Solarium\QueryType\Update\Query\Document\DocumentInterface;
 use Solarium\QueryType\Update\Query\Query;
 
@@ -91,7 +92,7 @@ abstract class AbstractSolarium
      *
      * Use this method only when you need to index single NodeSources.
      *
-     * @return boolean
+     * @return boolean|Result
      */
     public function indexAndCommit()
     {
@@ -114,7 +115,7 @@ abstract class AbstractSolarium
      *
      * Use this method **only** when you need to re-index a single NodeSources.
      *
-     * @return \Solarium\QueryType\Update\Result
+     * @return Result
      */
     public function updateAndCommit()
     {

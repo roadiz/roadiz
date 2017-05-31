@@ -3126,6 +3126,11 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
+          <source>maintenance_mode.activated</source>
+          <target xml:lang="en" state="translated">Maintenance mode On</target>
+          <note>Message to notify that site is under maintenance.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="300" approved="yes">
         <source>help</source>
         <target xml:lang="en">Help</target>
@@ -6475,6 +6480,193 @@
         <target xml:lang="en" state="translated">For “children node” and “node references” types, you can enter node-type names comma separated.</target>
         <note>Help message to explain node-type-field default values.</note>
       </trans-unit>
+      <!-- Explorer and Widget translation -->
+      <trans-unit xml:space="preserve" id="document">
+        <source>document</source>
+        <target xml:lang="en" state="translated">Document</target>
+        <note>Document label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item">
+        <source>item</source>
+        <target xml:lang="en" state="translated">Item</target>
+        <note>Item label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="items">
+        <source>items</source>
+        <target xml:lang="en" state="translated">Items</target>
+        <note>Items label in explorer panel.</note>
+      </trans-unit>
+      <!-- New Join node-type-field type -->
+      <trans-unit xml:space="preserve" id="join.toggle-explorer">
+            <source>join.toggle-explorer</source>
+            <target xml:lang="en" state="translated">Explorer</target>
+            <note>Button label for join type explorer</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="many-to-many.type">
+            <source>many-to-many.type</source>
+            <target xml:lang="en" state="translated">Multiple join (many to many)</target>
+            <note>Node-type field type for Doctrine Many-to-many relationship</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="many-to-one.type">
+            <source>many-to-one.type</source>
+            <target xml:lang="en" state="translated">Simple join (many to one)</target>
+            <note>Node-type field type for Doctrine Many-to-one relationship</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
+            <source>default_values_do_not_match_field_type</source>
+            <target xml:lang="en" state="translated">Default values do not match field type requirements.</target>
+            <note>Validator message: when default value is not correct for choosen type</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
+            <source>default_values_should_not_be_empty_for_this_type</source>
+            <target xml:lang="en" state="translated">Default values should not be empty for this field type.</target>
+            <note>Validator message: when default value is empty and it should not</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
+            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
+            <target xml:lang="en" state="translated">Default values should be formatted as YAML for this field type.</target>
+            <note>Validator message: when default value is not a valid YAML text</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_does_not_exist">
+            <source>classname_%classname%_does_not_exist</source>
+            <target xml:lang="en" state="translated">PHP Class "%classname%" does not exist.</target>
+            <note>Validator message: when provided classname does not exist.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
+            <source>classname_%classname%_must_extend_abstract_entity_class</source>
+            <target xml:lang="en" state="translated">PHP Class "%classname%" must extend AbstractEntity class.</target>
+            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
+            <source>classname_%classname%_does_not_declare_%method%_method</source>
+            <target xml:lang="en" state="translated">PHP Class "%classname%" does not implement "%method%" method.</target>
+            <note>Validator message: when provided classname does not declare provided method.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target xml:lang="en" state="translated">More items</target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target xml:lang="en" state="translated">Items position do not matter.</target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target xml:lang="en" state="translated">Create a tag</target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="min">
+            <source>min</source>
+            <target xml:lang="en" state="translated">min.</target>
+            <note>Drawer message: when a minimum length is provided.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.adjust">
+            <source>document.adjust</source>
+            <target xml:lang="en" state="translated">Adjust</target>
+            <note>Document navbar link text for document adjust page.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor">
+            <source>blanchetteEditor</source>
+            <target xml:lang="en" state="translated">Blanchet’ Editor</target>
+            <note>Blanchette Editorpage title</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.free">
+            <source>blanchetteEditor.free</source>
+            <target xml:lang="en" state="translated">Free aspect ratio</target>
+            <note>Blanchette Editor message button label: free aspect ratio</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.move">
+            <source>blanchetteEditor.move</source>
+            <target xml:lang="en" state="translated">Move</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
+            <source>blanchetteEditor.crop</source>
+            <target xml:lang="en" state="translated">Crop</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
+            <source>blanchetteEditor.zoomIn</source>
+            <target xml:lang="en" state="translated">Zoom in</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
+            <source>blanchetteEditor.zoomOut</source>
+            <target xml:lang="en" state="translated">Zoom out</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
+            <source>blanchetteEditor.rotateLeft</source>
+            <target xml:lang="en" state="translated">Rotate left</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
+            <source>blanchetteEditor.rotateRight</source>
+            <target xml:lang="en" state="translated">Rotate right</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
+            <source>blanchetteEditor.flipHorizontal</source>
+            <target xml:lang="en" state="translated">Flip horizontally</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
+            <source>blanchetteEditor.flipVertical</source>
+            <target xml:lang="en" state="translated">Flip vertically</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
+            <source>blanchetteEditor.applyChange</source>
+            <target xml:lang="en" state="translated">Apply changes</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
+            <source>blanchetteEditor.undo</source>
+            <target xml:lang="en" state="translated">Undo</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
+            <source>blanchetteEditor.aspectRatio</source>
+            <target xml:lang="en" state="translated">Aspect ratio</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
+            <source>blanchetteEditor.saveAndOverwrite</source>
+            <target xml:lang="en" state="translated">Save and override file</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.other">
+            <source>blanchetteEditor.other</source>
+            <target xml:lang="en" state="translated">Others</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
+            <source>blanchetteEditor.portrait</source>
+            <target xml:lang="en" state="translated">Portrait</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
+            <source>blanchetteEditor.landscape</source>
+            <target xml:lang="en" state="translated">Landscape</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
+            <source>make_this_field_mandatory_for_users</source>
+            <target xml:lang="en" state="translated">Make this field mandatory for users.</target>
+            <note>Form field description for Required switch</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="expanded">
+            <source>expanded</source>
+            <target xml:lang="en" state="translated">Expanded</target>
+            <note>Form field label for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use_checkboxes_or_radio_buttons_instead_of_select_box">
+            <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
+            <target xml:lang="en" state="translated">Use checkboxes or radio buttons instead of select boxes.</target>
+            <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

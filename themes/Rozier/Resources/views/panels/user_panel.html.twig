@@ -31,8 +31,13 @@
             {% else %}
                 <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"><span class="user-action-label">{% trans %}logout{% endtrans %}</span></a>
             {% endif %}
+
+
             {% if head.devMode %}
-            <p class="dev-mode"><i class="uk-icon-rz-devmode"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
+                <p class="dev-mode"><i class="uk-icon-rz-devmode"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
+            {% endif %}
+            {% if head.maintenanceMode %}
+                <p class="dev-mode"><i class="uk-icon-exclamation-triangle"></i> {% trans %}maintenance_mode.activated{% endtrans %}</p>
             {% endif %}
         </nav>
 

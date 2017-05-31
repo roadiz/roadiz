@@ -32,6 +32,7 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use ZipArchive;
@@ -67,6 +68,8 @@ class FilesExportCommand extends Command
         $kernel = $this->getHelper('kernel')->getKernel();
         $configuration = $this->getHelper('configuration')->getConfiguration();
 
+        $fs = new Filesystem();
+
         $publicFileFolder = $kernel->getPublicFilesPath();
         $privateFileFolder = $kernel->getPrivateFilesPath();
         $fontFileFolder = $kernel->getFontsFilesPath();
@@ -76,9 +79,15 @@ class FilesExportCommand extends Command
         $zip = new ZipArchive();
         $zip->open($kernel->getRootDir() . '/' . $archiveName, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-        $this->zipFolder($zip, $publicFileFolder, $this->getPublicFolderName());
-        $this->zipFolder($zip, $privateFileFolder, $this->getPrivateFolderName());
-        $this->zipFolder($zip, $fontFileFolder, $this->getFontsFolderName());
+        if ($fs->exists($publicFileFolder)) {
+            $this->zipFolder($zip, $publicFileFolder, $this->getPublicFolderName());
+        }
+        if ($fs->exists($privateFileFolder)) {
+            $this->zipFolder($zip, $privateFileFolder, $this->getPrivateFolderName());
+        }
+        if ($fs->exists($fontFileFolder)) {
+            $this->zipFolder($zip, $fontFileFolder, $this->getFontsFolderName());
+        }
 
         // Zip archive will be created only after closing object
         $zip->close();

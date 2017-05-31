@@ -29,8 +29,11 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -40,6 +43,7 @@ use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
+use RZ\Roadiz\Utils\Console\Helper\RolesBagHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -73,9 +77,33 @@ class RoadizApplication extends Application
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
 
-        $this->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', $kernel->getEnvironment()));
-        $this->getDefinition()->addOption(new InputOption('--preview', null, InputOption::VALUE_NONE, 'Preview mode.'));
-        $this->getDefinition()->addOption(new InputOption('--no-debug', null, InputOption::VALUE_NONE, 'Switches off debug mode.'));
+        /*
+         * Use the same dispatcher as Kernel
+         * to dispatch ThemeResolver event
+         */
+        $dispatcher = $this->kernel->container['dispatcher'];
+        $dispatcher->addSubscriber(new ThemesSubscriber($this->kernel, $this->kernel->container['stopwatch']));
+        $this->setDispatcher($dispatcher);
+
+        $this->getDefinition()->addOption(new InputOption(
+            '--env',
+            '-e',
+            InputOption::VALUE_REQUIRED,
+            'The Environment name.',
+            $kernel->getEnvironment()
+        ));
+        $this->getDefinition()->addOption(new InputOption(
+            '--preview',
+            null,
+            InputOption::VALUE_NONE,
+            'Preview mode.'
+        ));
+        $this->getDefinition()->addOption(new InputOption(
+            '--no-debug',
+            null,
+            InputOption::VALUE_NONE,
+            'Switches off debug mode.'
+        ));
 
         $this->addDoctrineCommands();
 
@@ -206,11 +234,18 @@ class RoadizApplication extends Application
         /*
          * Entity manager dependent helpers.
          */
-        if (null !== $this->kernel->container['em']) {
-            $helperSet->set(new ConnectionHelper($this->kernel->container['em']->getConnection()));
-            // We need to set «em» alias as Doctrine misnamed its Helper :-(
-            $helperSet->set(new EntityManagerHelper($this->kernel->container['em']), 'em');
-            $helperSet->set(new SolrHelper($this->kernel->container['solr']));
+        /** @var EntityManager $em */
+        $em = $this->kernel->container['em'];
+        if (null !== $em) {
+            try {
+                $helperSet->set(new ConnectionHelper($em->getConnection()));
+                // We need to set «em» alias as Doctrine misnamed its Helper :-(
+                $helperSet->set(new EntityManagerHelper($em), 'em');
+                $helperSet->set(new SolrHelper($this->kernel->container['solr']));
+                $helperSet->set(new RolesBagHelper($this->kernel->container['rolesBag']));
+            } catch (ConnectionException $exception) {
+            } catch (\PDOException $exception) {
+            }
         }
 
         return $helperSet;

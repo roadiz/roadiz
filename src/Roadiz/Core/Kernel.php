@@ -42,9 +42,11 @@ use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
+use RZ\Roadiz\Core\Services\BagsServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\FactoryServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
 use RZ\Roadiz\Core\Services\LoggerServiceProvider;
 use RZ\Roadiz\Core\Services\MailerServiceProvider;
@@ -81,7 +83,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.18.6";
+    public static $cmsVersion = "0.19.0";
     protected static $instance = null;
 
     /**
@@ -175,6 +177,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new TranslationServiceProvider());
         $container->register(new TwigServiceProvider());
         $container->register(new LoggerServiceProvider());
+        $container->register(new BagsServiceProvider());
+        $container->register(new FactoryServiceProvider());
 
         try {
             /*

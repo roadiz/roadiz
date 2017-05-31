@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Class AjaxSearchNodesSourcesController
@@ -45,7 +46,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
 
     /**
      * Handle AJAX edition requests for Node
-     * such as comming from nodetree widgets.
+     * such as coming from nodetree widgets.
      *
      * @param Request $request
      *
@@ -53,68 +54,58 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
      */
     public function searchAction(Request $request)
     {
-        /*
-         * Validate without csrf and for all methods
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'POST', false)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
-        if ("" != $request->get('searchTerms')) {
-            $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
-            /** @var array $nodesSources */
-            $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
-                $request->get('searchTerms'),
-                static::RESULT_COUNT,
-                $this->get('defaultTranslation')
-            );
-
-            if (null !== $nodesSources &&
-                count($nodesSources) > 0) {
-                $responseArray = [
-                    'statusCode' => '200',
-                    'status' => 'success',
-                    'data' => [],
-                    'responseText' => count($nodesSources) . ' results found.',
-                ];
-
-                foreach ($nodesSources as $source) {
-                    $responseArray['data'][] = [
-                        'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
-                        'nodeId' => $source->getNode()->getId(),
-                        'translationId' => $source->getTranslation()->getId(),
-                        'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
-                        'typeColor' => $source->getNode()->getNodeType()->getColor(),
-                        'url' => $this->generateUrl(
-                            'nodesEditSourcePage',
-                            [
-                                'nodeId' => $source->getNode()->getId(),
-                                'translationId' => $source->getTranslation()->getId(),
-                            ]
-                        ),
-                    ];
-                }
-
-                return new JsonResponse(
-                    $responseArray,
-                    Response::HTTP_OK
-                );
-            }
+        if (!$request->query->has('searchTerms') || $request->query->get('searchTerms') == '') {
+            throw new BadRequestHttpException('searchTerms parameter is missing.');
         }
 
-        $responseArray = [
-            'statusCode' => '403',
-            'status' => 'danger',
-            'responseText' => 'No results found.',
-        ];
+        $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
+        /** @var array $nodesSources */
+        $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
+            $request->get('searchTerms'),
+            static::RESULT_COUNT,
+            $this->get('defaultTranslation')
+        );
+
+        if (null !== $nodesSources &&
+            count($nodesSources) > 0) {
+            $responseArray = [
+                'statusCode' => '200',
+                'status' => 'success',
+                'data' => [],
+                'responseText' => count($nodesSources) . ' results found.',
+            ];
+
+            foreach ($nodesSources as $source) {
+                $responseArray['data'][] = [
+                    'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
+                    'nodeId' => $source->getNode()->getId(),
+                    'translationId' => $source->getTranslation()->getId(),
+                    'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
+                    'typeColor' => $source->getNode()->getNodeType()->getColor(),
+                    'url' => $this->generateUrl(
+                        'nodesEditSourcePage',
+                        [
+                            'nodeId' => $source->getNode()->getId(),
+                            'translationId' => $source->getTranslation()->getId(),
+                        ]
+                    ),
+                ];
+            }
+
+            return new JsonResponse(
+                $responseArray,
+                Response::HTTP_OK
+            );
+        }
 
         return new JsonResponse(
-            $responseArray,
+            [
+                'statusCode' => '403',
+                'status' => 'danger',
+                'responseText' => 'No results found.',
+            ],
             Response::HTTP_NOT_FOUND
         );
     }

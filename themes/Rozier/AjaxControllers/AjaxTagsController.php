@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
@@ -38,12 +39,155 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Themes\Rozier\Models\TagModel;
 
 /**
  * {@inheritdoc}
  */
 class AjaxTagsController extends AbstractAjaxController
 {
+
+    /**
+     * @param Request $request
+     *
+     * @return Response JSON response
+     */
+    public function indexAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        $tags = $this->get('em')
+            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->findBy([
+                    'parent' => null,
+                ], [
+                    'position' => 'ASC',
+                ]);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'tags' => $this->recurseTags($tags),
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Get a Tag list from an array of node id.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listArrayAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
+            throw new InvalidParameterException('Ids should be provided within an array');
+        }
+
+        $cleanTagIds = array_filter($request->query->get('ids'));
+
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        $tags = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+            'id' => $cleanTagIds,
+        ]);
+
+        // Sort array by ids given in request
+        $tags = $this->sortIsh($tags, $cleanTagIds);
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'tags' => $this->normalizeTags($tags)
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response JSON response
+     */
+    public function explorerListAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        /*
+         * Manage get request to filter list
+         */
+        $listManager = $this->createEntityListManager(
+            'RZ\Roadiz\Core\Entities\Tag',
+            [],
+            [
+                'createdAt' => 'DESC'
+            ]
+        );
+
+        $listManager->setItemPerPage(30);
+        $listManager->handle();
+
+        $tags = $listManager->getEntities();
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'tags' => $this->normalizeTags($tags),
+            'filters' => $listManager->getAssignation(),
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * @param null $tags
+     * @return array
+     */
+    protected function normalizeTags($tags = null)
+    {
+        $tagsArray = [];
+        if ($tags !== null) {
+            /** @var Tag $tag */
+            foreach ($tags as $tag) {
+                $tagModel = new TagModel($tag, $this->container);
+                $tagsArray[] = $tagModel->toArray();
+            }
+        }
+
+        return $tagsArray;
+    }
+
+    protected function recurseTags($tags = null)
+    {
+        $tagsArray = [];
+        if ($tags !== null) {
+            /** @var Tag $tag */
+            foreach ($tags as $tag) {
+                $children = $this->recurseTags($tag->getChildren());
+                $tagsArray[] = [
+                    'id' => $tag->getId(),
+                    'name' => $tag->getTagName(),
+                    'children' => $children,
+                ];
+            }
+        }
+
+        return $tagsArray;
+    }
+
     /**
      * Handle AJAX edition requests for Tag
      * such as comming from tagtree widgets.
@@ -55,16 +199,6 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function editAction(Request $request, $tagId)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->get('em')
@@ -110,16 +244,6 @@ class AjaxTagsController extends AbstractAjaxController
 
     public function searchAction(Request $request)
     {
-        /*
-         * Validate
-         */
-        if (true !== $notValid = $this->validateRequest($request, 'GET')) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $responseArray = [
@@ -213,5 +337,35 @@ class AjaxTagsController extends AbstractAjaxController
          */
         $event = new FilterTagEvent($tag);
         $this->get('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
+    }
+
+    /**
+     * Create a new Tag.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+
+        if (!$request->get('tagName')) {
+            throw new InvalidParameterException('tagName should be provided to create a new Tag');
+        }
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('em');
+        $tagRepository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag');
+
+        /** @var Tag $tag */
+        $tag = $tagRepository->findOrCreateByPath($request->get('tagName'));
+        $tagModel = new TagModel($tag, $this->getContainer());
+
+        return new JsonResponse(
+            [
+                'tag' => $tagModel->toArray()
+            ],
+            Response::HTTP_OK
+        );
     }
 }

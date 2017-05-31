@@ -104,7 +104,7 @@ class NodesController extends RozierApp
                 break;
         }
 
-        if ($user->getChroot() !== null) {
+        if (null !== $user && $user->getChroot() !== null) {
             $arrayFilter["chroot"] = $user->getChroot();
         }
 

@@ -294,7 +294,7 @@ class DocumentViewer implements ViewableInterface
      *
      * @param array|null $options
      *
-     * @return string
+     * @return string|boolean
      * @see \RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder::getIFrame
      */
     protected function getEmbedByArray(array $options = [])
@@ -345,11 +345,13 @@ class DocumentViewer implements ViewableInterface
 
         /** @var Document $source */
         foreach ($sourcesDocs as $source) {
-            $sources[] = [
+            $sources[$source->getMimeType()] = [
                 'mime' => $source->getMimeType(),
                 'url' => Kernel::getService('assetPackages')->getUrl($source->getRelativeUrl(), Packages::DOCUMENTS),
             ];
         }
+
+        krsort($sources);
 
         return $sources;
     }

@@ -136,6 +136,7 @@ class SolrReindexCommand extends SolrCommand
             $solarium = new SolariumNodeSource(
                 $ns,
                 $this->solr,
+                $this->getHelper('kernel')->getKernel()->get('dispatcher'),
                 $this->getHelper('logger')->getLogger()
             );
             $solarium->createEmptyDocument($update);

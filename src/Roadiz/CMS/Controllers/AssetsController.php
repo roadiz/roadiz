@@ -33,7 +33,6 @@ use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use RZ\Roadiz\Core\Bags\SettingsBag;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Repositories\FontRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -85,8 +84,23 @@ class AssetsController extends CmsController
                 $request,
                 $log
             );
+
+            foreach ($this->get('interventionRequestSubscribers') as $subscriber) {
+                $iRequest->addSubscriber($subscriber);
+            }
+
             $iRequest->handle();
             return $iRequest->getResponse();
+        } catch (\ReflectionException $e) {
+            $message = '[Configuration] ' . $e->getMessage();
+            if (null !== $log) {
+                $log->error($message);
+            }
+            return new Response(
+                $message,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                ['content-type' => 'text/plain']
+            );
         } catch (\Exception $e) {
             if (null !== $log) {
                 $log->error($e->getMessage());
@@ -222,7 +236,7 @@ class AssetsController extends CmsController
             $variantHash = $font->getHash() . $font->getVariant();
             $assignation['fonts'][] = [
                 'font' => $font,
-                'site' => SettingsBag::get('site_name'),
+                'site' => $this->get('settingsBag')->get('site_name'),
                 'fontFolder' => $this->get('kernel')->getFontsFilesBasePath(),
                 'variantHash' => $variantHash,
             ];

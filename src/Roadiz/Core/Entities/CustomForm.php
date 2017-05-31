@@ -281,13 +281,13 @@ class CustomForm extends AbstractDateTimed
 
     /**
      * @param CustomFormField $field
-     *
-     * @return CustomFormField
+     * @return CustomForm
      */
     public function addField(CustomFormField $field)
     {
         if (!$this->getFields()->contains($field)) {
             $this->getFields()->add($field);
+            $field->setCustomForm($this);
         }
 
         return $this;
@@ -295,13 +295,13 @@ class CustomForm extends AbstractDateTimed
 
     /**
      * @param CustomFormField $field
-     *
-     * @return CustomFormField
+     * @return CustomForm
      */
     public function removeField(CustomFormField $field)
     {
         if ($this->getFields()->contains($field)) {
             $this->getFields()->removeElement($field);
+            $field->setCustomForm(null);
         }
 
         return $this;
