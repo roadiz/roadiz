@@ -19,7 +19,7 @@
         </form>
 
         <transition name="fade">
-            <ul id="nodes-sources-search-results" v-if="isFocus">
+            <ul id="nodes-sources-search-results" v-if="isFocus" v-cloak>
                 <li v-for="item in items">
                     <ajax-link :href="item.url" :title="item.title" :type-color="item.typeColor">
                         <span class="title"> ${item.title}</span>
