@@ -61,6 +61,11 @@ class NodesOrphansCommand extends Command
             );
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
@@ -70,7 +75,7 @@ class NodesOrphansCommand extends Command
             ->from('RZ\Roadiz\Core\Entities\Node', 'n')
             ->leftJoin('n.nodeSources', 'ns')
             ->having('COUNT(ns.id) = 0')
-            ->groupBy('n.id');
+            ->groupBy('n');
 
         $orphans = [];
         try {
