@@ -445,13 +445,13 @@ class NodeHandler
      */
     public function isRelatedToNode(Node $relative)
     {
-        if ($this->node == $relative) {
+        if ($this->node->getId() === $relative->getId()) {
             return true;
         }
 
         $parents = $this->getParents();
         foreach ($parents as $parent) {
-            if ($parent == $relative) {
+            if ($parent->getId() === $relative->getId()) {
                 return true;
             }
         }

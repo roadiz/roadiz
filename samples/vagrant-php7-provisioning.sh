@@ -47,7 +47,7 @@ sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password 
 sudo debconf-set-selections <<< "mariadb-server-10.0 mysql-server/root_password_again password $DBPASSWD"
 
 echo -e "\n--- Install base servers and packages ---\n"
-sudo apt-get -qq -f -y install git nano zip nginx mariadb-server mariadb-client php7.0-fpm curl > /dev/null 2>&1;
+sudo apt-get -qq -f -y install git nano zip nginx mariadb-server mariadb-client curl > /dev/null 2>&1;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
@@ -56,11 +56,11 @@ else
    exit 1;
 fi
 
-echo -e "\n--- Install all php7.0 extensions ---\n"
-sudo apt-get -qq -f -y install php7.0-opcache php7.0-cli php7.0-mysql php7.0-curl \
-                                php7.0-gd php7.0-intl php7.0-imap php7.0-mcrypt php7.0-pspell \
-                                php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc \
-                                php7.0-xsl php7.0-apcu php7.0-gd php7.0-apcu-bc php7.0-xdebug php7.0-mbstring php7.0-zip > /dev/null 2>&1;
+echo -e "\n--- Install php7.1 and all extensions ---\n"
+sudo apt-get -qq -f -y install php7.1 php7.1-cli php7.1-fpm php7.1-common php7.1-opcache php7.1-cli php7.1-mysql  \
+                               php7.1-xml php7.1-gd php7.1-intl php7.1-imap php7.1-mcrypt php7.1-pspell \
+                               php7.1-curl php7.1-recode php7.1-sqlite3 php7.1-mbstring php7.1-tidy \
+                               php7.1-xsl php7.1-apcu php7.1-gd php7.1-apcu-bc php7.1-xdebug  php7.1-zip > /dev/null 2>&1;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
@@ -85,13 +85,13 @@ else
 fi
 
 echo -e "\n--- We definitly need to see the PHP errors, turning them on ---\n"
-sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini
-sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/fpm/php.ini
-sudo sed -i "s/;realpath_cache_size = .*/realpath_cache_size = 4096k/" /etc/php/7.0/fpm/php.ini
-sudo sed -i "s/;realpath_cache_ttl = .*/realpath_cache_ttl = 600/" /etc/php/7.0/fpm/php.ini
+sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.1/fpm/php.ini
+sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.1/fpm/php.ini
+sudo sed -i "s/;realpath_cache_size = .*/realpath_cache_size = 4096k/" /etc/php/7.1/fpm/php.ini
+sudo sed -i "s/;realpath_cache_ttl = .*/realpath_cache_ttl = 600/" /etc/php/7.1/fpm/php.ini
 
 echo -e "\n--- Fix php-fpm startup PID path ---\n"
-sudo sed -i "s/\/run\/php\/php7.0-fpm.pid/\/run\/php7.0-fpm.pid/" /etc/php/7.0/fpm/php-fpm.conf
+sudo sed -i "s/\/run\/php\/php7.1-fpm.pid/\/run\/php7.1-fpm.pid/" /etc/php/7.1/fpm/php-fpm.conf
 
 echo -e "\n--- We definitly need to upload large files ---\n"
 sed -i "s/server_tokens off;/server_tokens off;\\n\\tclient_max_body_size 256M;/" /etc/nginx/nginx.conf
@@ -120,18 +120,18 @@ sudo cp /var/www/samples/vagrant/roadiz-nginx-include.conf /etc/nginx/snippets/r
 #            -out /etc/nginx/certs/default.crt > /dev/null 2>&1;
 
 echo -e "\n--- Configure PHP-FPM default pool ---\n"
-sudo rm /etc/php/7.0/fpm/pool.d/www.conf;
-sudo cp /var/www/samples/vagrant/php-pool.conf /etc/php/7.0/fpm/pool.d/www.conf;
-sudo cp /var/www/samples/vagrant/xdebug.ini /etc/php/7.0/mods-available/xdebug.ini;
-sudo cp /var/www/samples/vagrant/logs.ini /etc/php/7.0/mods-available/logs.ini;
-sudo cp /var/www/samples/vagrant/opcache-recommended.ini /etc/php/7.0/mods-available/opcache-recommended.ini;
+sudo rm /etc/php/7.1/fpm/pool.d/www.conf;
+sudo cp /var/www/samples/vagrant/php-pool.conf /etc/php/7.1/fpm/pool.d/www.conf;
+sudo cp /var/www/samples/vagrant/xdebug.ini /etc/php/7.1/mods-available/xdebug.ini;
+sudo cp /var/www/samples/vagrant/logs.ini /etc/php/7.1/mods-available/logs.ini;
+sudo cp /var/www/samples/vagrant/opcache-recommended.ini /etc/php/7.1/mods-available/opcache-recommended.ini;
 sudo phpenmod -v ALL -s ALL opcache-recommended;
 sudo phpenmod -v ALL -s ALL logs;
 sudo phpenmod -v ALL -s ALL xdebug;
 
 echo -e "\n--- Restarting Nginx and PHP servers ---\n"
 sudo service nginx restart > /dev/null 2>&1;
-sudo service php7.0-fpm restart > /dev/null 2>&1;
+sudo service php7.1-fpm restart > /dev/null 2>&1;
 
 ##### CLEAN UP #####
 sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesn't run well (e.g. loss of connection) this may resolve quite a few issues
