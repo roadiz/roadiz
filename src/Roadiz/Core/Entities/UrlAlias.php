@@ -65,10 +65,11 @@ class UrlAlias extends AbstractEntity
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases")
      * @ORM\JoinColumn(name="ns_id", referencedColumnName="id")
      */
     private $nodeSource;
+
     /**
      * @return \RZ\Roadiz\Core\Entities\NodesSources
      */
