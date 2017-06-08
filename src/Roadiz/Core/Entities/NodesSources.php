@@ -341,9 +341,8 @@ class NodesSources extends AbstractEntity
     /**
      * Before clone method.
      *
-     * Be carful not to persist nor flush current entity after
+     * Be careful not to persist nor flush current entity after
      * calling clone as it empties its relations.
-     *
      */
     public function __clone()
     {

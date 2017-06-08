@@ -78,6 +78,9 @@ class NodeDuplicator
                 $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
                 $node->setParent($parent);
             }
+            // Demote cloned node to draft
+            $node->setStatus(Node::DRAFT);
+
             $node = $this->doDuplicate($node);
             $this->em->flush();
             $this->em->refresh($node);
