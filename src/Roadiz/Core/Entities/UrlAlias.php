@@ -61,13 +61,12 @@ class UrlAlias extends AbstractEntity
     public function setAlias($alias)
     {
         $this->alias = StringHandler::slugify($alias);
-
         return $this;
     }
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases", fetch="EAGER")
-     * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="ns_id", referencedColumnName="id")
      */
     private $nodeSource;
     /**

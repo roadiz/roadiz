@@ -845,6 +845,8 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     }
 
     /**
+     * After clone method.
+     *
      * Clone current node and ist relations.
      */
     public function __clone()
