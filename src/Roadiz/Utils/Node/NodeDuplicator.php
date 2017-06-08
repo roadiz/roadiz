@@ -31,9 +31,12 @@ namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
  * Handle node duplication.
@@ -78,6 +81,9 @@ class NodeDuplicator
                 $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
                 $node->setParent($parent);
             }
+            // Demote cloned node to draft
+            $node->setStatus(Node::DRAFT);
+
             $node = $this->doDuplicate($node);
             $this->em->flush();
             $this->em->refresh($node);
@@ -89,13 +95,14 @@ class NodeDuplicator
     }
 
     /**
-     * Warning, do not do any FLUSH here to preserve transactionnal integrity.
+     * Warning, do not do any FLUSH here to preserve transactional integrity.
      *
      * @param  Node $node
      * @return Node
      */
-    private function doDuplicate(Node $node)
+    private function doDuplicate(Node &$node)
     {
+        /** @var Node $child */
         foreach ($node->getChildren() as $child) {
             $child->setParent($node);
             $this->doDuplicate($child);
@@ -105,10 +112,13 @@ class NodeDuplicator
         foreach ($node->getNodeSources() as $nodeSource) {
             $this->em->persist($nodeSource);
 
+            /** @var NodesSourcesDocuments $nsDoc */
             foreach ($nodeSource->getDocumentsByFields() as $nsDoc) {
                 $nsDoc->setNodeSource($nodeSource);
+                /** @var Document $doc */
                 $doc = $this->em->merge($nsDoc->getDocument());
                 $nsDoc->setDocument($doc);
+                /** @var NodeTypeField $f */
                 $f = $this->em->merge($nsDoc->getField());
                 $nsDoc->setField($f);
                 $this->em->persist($nsDoc);
@@ -131,12 +141,12 @@ class NodeDuplicator
     /**
      * Duplicate Node to Node relationship.
      *
-     * Warning, do not do any FLUSH here to preserve transactionnal integrity.
+     * Warning, do not do any FLUSH here to preserve transactional integrity.
      *
-     * @param Node   $node
+     * @param Node $node
      * @return Node
      */
-    private function doDuplicateNodeRelations(Node $node)
+    private function doDuplicateNodeRelations(Node &$node)
     {
         $nodeRelations = new ArrayCollection($node->getBNodes()->toArray());
         foreach ($nodeRelations as $position => $nodeRelation) {

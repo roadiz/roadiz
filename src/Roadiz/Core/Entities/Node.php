@@ -55,7 +55,7 @@ use RZ\Roadiz\Utils\StringHandler;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Node extends AbstractDateTimedPositioned
+class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \Countable
 {
     const DRAFT = 10;
     const PENDING = 20;
@@ -81,7 +81,7 @@ class Node extends AbstractDateTimedPositioned
             return $nodeStatuses[$status];
         }
 
-        throw new \RuntimeException('Status does not exist.');
+        throw new \InvalidArgumentException('Status does not exist.');
     }
 
     protected $handler;
@@ -127,11 +127,7 @@ class Node extends AbstractDateTimedPositioned
      */
     public function isDynamicNodeName()
     {
-        if (null === $this->dynamicNodeName) {
-            return true;
-        } else {
-            return $this->dynamicNodeName;
-        }
+        return $this->dynamicNodeName;
     }
 
     /**
@@ -512,6 +508,10 @@ class Node extends AbstractDateTimedPositioned
      */
     public function setParent(Node $parent = null)
     {
+        if ($parent === $this) {
+            throw new \InvalidArgumentException('A node cannot have itself as a parent');
+        }
+
         $this->parent = $parent;
 
         return $this;
@@ -845,6 +845,8 @@ class Node extends AbstractDateTimedPositioned
     }
 
     /**
+     * After clone method.
+     *
      * Clone current node and ist relations.
      */
     public function __clone()
@@ -883,5 +885,34 @@ class Node extends AbstractDateTimedPositioned
     public function __toString()
     {
         return '[Node]' . $this->getId() . " — " . $this->getNodeName() . " <" . $this->getNodeType()->getName() . '>';
+    }
+
+    /**
+     * Gets the nodes depth.
+     *
+     * @return int
+     */
+    public function getDepth()
+    {
+        if ($this->getParent() === null) {
+            return 0;
+        }
+        return $this->getParent()->getDepth() + 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return $this->getChildren()->getIterator();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return $this->getChildren()->count();
     }
 }

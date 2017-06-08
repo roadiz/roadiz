@@ -81,12 +81,11 @@ class Log extends AbstractEntity
     /**
      * @param User $user
      *
-     * @return User
+     * @return Log
      */
     public function setUser(User $user)
     {
         $this->user = $user;
-
         return $this;
     }
 

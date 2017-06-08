@@ -421,7 +421,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     public function getRoles()
     {
-
         $this->rolesNames = [];
         foreach ($this->getRolesEntities() as $role) {
             if (null !== $role) {

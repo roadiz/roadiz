@@ -29,9 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;

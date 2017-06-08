@@ -5,7 +5,7 @@ NC='\033[0m' # No Color
 export DEBIAN_FRONTEND=noninteractive
 
 # Apache Solr
-SOLR_VERSION="6.4.2"
+SOLR_VERSION="6.5.1"
 SOLR_MIRROR="http://archive.apache.org/dist"
 
 echo -e "\n--- Installing Oracle JDK 8 ---\n"
