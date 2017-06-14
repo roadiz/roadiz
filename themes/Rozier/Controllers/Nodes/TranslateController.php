@@ -30,6 +30,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
@@ -124,7 +125,7 @@ class TranslateController extends RozierApp
                          ->findOneByNodeAndTranslation($node, $translation);
         if (null === $existing) {
             $baseSource = $node->getNodeSources()->first();
-            if (null !== $baseSource) {
+            if (null !== $baseSource && $baseSource instanceof NodesSources) {
                 $source = clone $baseSource;
 
                 foreach ($source->getDocumentsByFields() as $document) {
