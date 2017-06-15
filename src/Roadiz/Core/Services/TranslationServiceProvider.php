@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Themes\Install\InstallApp;
 
@@ -96,6 +97,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
             );
 
             $translator->addLoader('xlf', new XliffFileLoader());
+            $translator->addLoader('yml', new YamlFileLoader());
             $classes = [$c['backendTheme']];
             $classes = array_merge($classes, $c['frontendThemes']);
 
@@ -155,6 +157,12 @@ class TranslationServiceProvider implements ServiceProviderInterface
                     $translator,
                     $resourcesFolder . '/translations',
                     'xlf',
+                    $locale
+                );
+                $this->addTranslatorResource(
+                    $translator,
+                    $resourcesFolder . '/translations',
+                    'yml',
                     $locale
                 );
             }
