@@ -83,6 +83,44 @@ abstract class AbstractSearchHandler
     abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
 
     /**
+     * Create Solr Select query. Override it to add DisMax fields and rules.
+     *
+     * @param array $args
+     * @param int $rows
+     * @param int $page
+     * @return \Solarium\QueryType\Select\Query\Query
+     */
+    protected function createSolrQuery(array &$args = [], $rows, $page)
+    {
+        $filterQueries = [];
+        $query = $this->client->createSelect();
+
+        foreach ($args as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $k => $v) {
+                    $filterQueries["fq" . $k] = $v;
+                    $query->addFilterQuery([
+                        "key" => "fq" . $k,
+                        "query" => $v,
+                    ]);
+                }
+            } else {
+                $query->addParam($key, $value);
+            }
+        }
+        /**
+         * Add start if not first page.
+         */
+        if ($page > 1) {
+            $query->setStart(($page - 1) * $rows);
+        }
+        $query->addSort('score', $query::SORT_DESC);
+        $query->setRows($rows);
+
+        return $query;
+    }
+
+    /**
      * @param array $response
      * @return int
      */
