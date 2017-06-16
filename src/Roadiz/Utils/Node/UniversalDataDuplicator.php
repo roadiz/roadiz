@@ -86,8 +86,14 @@ class UniversalDataDuplicator
                         if (!$universalField->isVirtual()) {
                             $this->duplicateNonVirtualField($source, $otherSource, $universalField);
                         } else {
-                            if ($universalField->getType() == NodeTypeField::DOCUMENTS_T) {
-                                $this->duplicateDocumentsField($source, $otherSource, $universalField);
+                            switch ($universalField->getType()) {
+                                case NodeTypeField::DOCUMENTS_T:
+                                    $this->duplicateDocumentsField($source, $otherSource, $universalField);
+                                    break;
+                                case NodeTypeField::MANY_TO_ONE_T:
+                                case NodeTypeField::MANY_TO_MANY_T:
+                                    $this->duplicateNonVirtualField($source, $otherSource, $universalField);
+                                    break;
                             }
                         }
                     }
