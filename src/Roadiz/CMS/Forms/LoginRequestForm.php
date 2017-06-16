@@ -45,7 +45,6 @@ class LoginRequestForm extends AbstractType
             'constraints' => [
                 new Email([
                     'message' => 'email.invalid',
-                    'checkMX' => true,
                 ]),
                 new ValidAccountEmail([
                     'entityManager' => $options['entityManager'],
