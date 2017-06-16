@@ -53,6 +53,7 @@ class TranslationExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('menu', [$this, 'getMenuAssignation']),
+            new \Twig_SimpleFilter('country_iso', [$this, 'getCountryName']),
         ];
     }
 
@@ -68,5 +69,15 @@ class TranslationExtension extends \Twig_Extension
         } else {
             return [];
         }
+    }
+
+    /**
+     * @param string $iso
+     * @param string $locale
+     * @return string
+     */
+    public function getCountryName($iso, $locale = 'en')
+    {
+        return \Locale::getDisplayRegion('-'.$iso, $locale);
     }
 }
