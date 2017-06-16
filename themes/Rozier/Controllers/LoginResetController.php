@@ -29,12 +29,16 @@
  */
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
+use RZ\Roadiz\CMS\Forms\LoginResetForm;
+use RZ\Roadiz\CMS\Traits\LoginResetTrait;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
 class LoginResetController extends RozierApp
 {
+    use LoginResetTrait;
+
     /**
      * @param Request $request
      * @param string  $token
@@ -44,25 +48,24 @@ class LoginResetController extends RozierApp
      */
     public function resetAction(Request $request, $token)
     {
-        $user = $this->get('em')
-                     ->getRepository('RZ\Roadiz\Core\Entities\User')
-                     ->findOneByConfirmationToken($token);
+        /** @var User $user */
+        $user = $this->getUserByToken($this->get('em'), $token);
 
         if (null !== $user) {
-            $form = $this->buildLoginResetForm($token);
+            $form = $this->createForm(new LoginResetForm(), null, [
+                'token' => $token,
+                'confirmationTtl' => User::CONFIRMATION_TTL,
+                'entityManager' => $this->get('em'),
+            ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $user->setConfirmationToken(null);
-                $user->setPlainPassword($form->getData()['plainPassword']);
-
-                $this->get('em')->flush();
-
-                return $this->redirect($this->generateUrl(
-                    'loginResetConfirmPage'
-                ));
+                if ($this->updateUserPassword($form, $user, $this->get('em'))) {
+                    return $this->redirect($this->generateUrl(
+                        'loginResetConfirmPage'
+                    ));
+                }
             }
-
             $this->assignation['form'] = $form->createView();
         } else {
             $this->assignation['error'] = $this->getTranslator()->trans('confirmation.token.is.invalid');
@@ -72,48 +75,10 @@ class LoginResetController extends RozierApp
     }
 
     /**
-     * @param  Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmAction(Request $request)
+    public function confirmAction()
     {
         return $this->render('login/resetConfirm.html.twig', $this->assignation);
-    }
-
-    /**
-     * @param string $token
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildLoginResetForm($token)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('token', 'hidden', [
-                            'required' => true,
-                            'data' => $token,
-                            'label' => false,
-                            'constraints' => [
-                                new ValidAccountConfirmationToken([
-                                    'entityManager' => $this->get('em'),
-                                    'ttl' => LoginRequestController::CONFIRMATION_TTL,
-                                    'message' => 'confirmation.token.is.invalid',
-                                    'expiredMessage' => 'confirmation.token.has.expired',
-                                ]),
-                            ],
-                        ])
-                        ->add('plainPassword', 'repeated', [
-                            'type' => 'password',
-                            'invalid_message' => 'password.must.match',
-                            'first_options' => [
-                                'label' => 'choose.a.new.password',
-                            ],
-                            'second_options' => [
-                                'label' => 'passwordVerify',
-                            ],
-                            'required' => true,
-                        ]);
-
-        return $builder->getForm();
     }
 }

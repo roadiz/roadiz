@@ -44,16 +44,19 @@ class FormServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['formValidator'] = function () {
-            return Validation::createValidator();
+        $container['formValidator'] = function ($c) {
+            return Validation::createValidatorBuilder()
+                        ->setTranslationDomain(null)
+                        ->setTranslator($c['translator'])
+                        ->getValidator();
         };
 
         $container['formFactory'] = function ($c) {
             return Forms::createFormFactoryBuilder()
-            ->addExtension(new HttpFoundationExtension())
-            ->addExtension(new CsrfExtension($c['csrfTokenManager']))
-            ->addExtension(new ValidatorExtension($c['formValidator']))
-            ->getFormFactory();
+                        ->addExtension(new HttpFoundationExtension())
+                        ->addExtension(new CsrfExtension($c['csrfTokenManager']))
+                        ->addExtension(new ValidatorExtension($c['formValidator']))
+                        ->getFormFactory();
         };
 
         return $container;

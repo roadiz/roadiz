@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,31 +23,51 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ValidAccountEmailValidator.php
- * @author Ambroise Maupate
+ * @file LoginRequestForm.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
+namespace RZ\Roadiz\CMS\Forms;
 
-class ValidAccountEmailValidator extends ConstraintValidator
+use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountEmail;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
+
+class LoginRequestForm extends AbstractType
 {
-    public function validate($value, Constraint $constraint)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (null !== $constraint->entityManager) {
-            $user = $constraint->entityManager
-                               ->getRepository('RZ\Roadiz\Core\Entities\User')
-                               ->findOneByEmail($value);
+        $builder->add('email', 'email', [
+            'required' => true,
+            'label' => 'your.account.email',
+            'constraints' => [
+                new Email([
+                    'message' => 'email.invalid',
+                    'checkMX' => true,
+                ]),
+                new ValidAccountEmail([
+                    'entityManager' => $options['entityManager'],
+                ]),
+            ],
+        ]);
+    }
 
-            if (null === $user) {
-                $this->context->buildViolation($constraint->message)
-                    ->setParameter('%email%', $this->formatValue($value))
-                    ->setInvalidValue($value)
-                    ->addViolation();
-            }
-        } else {
-            $this->context->addViolation('“ValidAccountEmail” constraint requires a valid EntityManager');
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'login_request';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired([
+            'entityManager'
+        ]);
+
+        $resolver->setAllowedTypes('entityManager', ['Doctrine\ORM\EntityManager']);
     }
 }

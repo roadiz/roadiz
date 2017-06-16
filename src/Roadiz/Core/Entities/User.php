@@ -51,6 +51,14 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 class User extends AbstractHuman implements AdvancedUserInterface
 {
     /**
+     * Email confirmation link TTL (in seconds) to change
+     * password.
+     *
+     * @var int
+     */
+    const CONFIRMATION_TTL = 300;
+
+    /**
      * @var bool
      */
     protected $sendCreationConfirmationEmail;
