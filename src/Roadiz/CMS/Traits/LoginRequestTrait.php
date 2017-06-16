@@ -43,13 +43,15 @@ trait LoginRequestTrait
      * @param EntityManager $entityManager
      * @param LoggerInterface $logger
      * @param UrlGeneratorInterface $urlGenerator
+     * @param string $resetRoute
      * @return bool TRUE if confirmation has been sent. FALSE if errors
      */
     public function sendConfirmationEmail(
         FormInterface $form,
         EntityManager $entityManager,
         LoggerInterface $logger,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        $resetRoute = 'loginResetPage'
     ) {
         $email = $form->get('email')->getData();
         /** @var User $user */
@@ -62,7 +64,7 @@ trait LoginRequestTrait
                     $user->setPasswordRequestedAt(new \DateTime());
                     $user->setConfirmationToken($tokenGenerator->generateToken());
                     $entityManager->flush();
-                    $user->getViewer()->sendPasswordResetLink($urlGenerator);
+                    $user->getViewer()->sendPasswordResetLink($urlGenerator, $resetRoute);
                     return true;
                 } catch (\Exception $e) {
                     $user->setPasswordRequestedAt(null);

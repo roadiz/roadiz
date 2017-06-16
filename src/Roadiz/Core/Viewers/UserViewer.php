@@ -111,10 +111,10 @@ class UserViewer implements ViewableInterface
      * Send an email to reset user password.
      *
      * @param UrlGeneratorInterface $urlGenerator
-     *
-     * @return boolean
+     * @param string $route
+     * @return bool
      */
-    public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator)
+    public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator, $route = 'loginResetPage')
     {
         $emailContact = Kernel::getService('settingsBag')->get('email_sender');
         if (empty($emailContact)) {
@@ -129,7 +129,7 @@ class UserViewer implements ViewableInterface
         /** @var EmailManager $emailManager */
         $emailManager = Kernel::getService('emailManager');
         $emailManager->setAssignation([
-            'resetLink' => $urlGenerator->generate('loginResetPage', [
+            'resetLink' => $urlGenerator->generate($route, [
                 'token' => $this->user->getConfirmationToken(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
             'user' => $this->user,
