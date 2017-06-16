@@ -67,7 +67,7 @@ class DebugPanel implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($event->isMasterRequest()) {
+        if ($event->isMasterRequest() && $this->container['settingsBag']->get('display_debug_panel') == true) {
             if ($this->container['stopwatch']->isStarted('controllerHandling')) {
                 $this->container['stopwatch']->stop('controllerHandling');
             }
