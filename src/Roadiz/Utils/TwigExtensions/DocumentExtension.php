@@ -30,8 +30,8 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Intervention\Image\ImageManager;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
@@ -41,17 +41,17 @@ use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 class DocumentExtension extends \Twig_Extension
 {
     /**
-     * @var Packages
+     * @var Container
      */
-    private $packages;
+    private $container;
 
     /**
      * DocumentExtension constructor.
-     * @param Packages $packages
+     * @param Container $container
      */
-    public function __construct(Packages $packages)
+    public function __construct(Container $container)
     {
-        $this->packages = $packages;
+        $this->container = $container;
     }
 
     /**
@@ -123,7 +123,7 @@ class DocumentExtension extends \Twig_Extension
     {
         if (null !== $document && $document->isImage()) {
             $manager = new ImageManager();
-            $documentPath = $this->packages->getDocumentFilePath($document);
+            $documentPath = $this->container['assetPackages']->getDocumentFilePath($document);
             $imageProcess = $manager->make($documentPath);
             return [
                 'width' => $imageProcess->width(),
@@ -155,7 +155,7 @@ class DocumentExtension extends \Twig_Extension
     public function getPath(Document $document = null)
     {
         if (null !== $document) {
-            return $this->packages->getDocumentFilePath($document);
+            return $this->container['assetPackages']->getDocumentFilePath($document);
         }
 
         return null;
@@ -169,7 +169,7 @@ class DocumentExtension extends \Twig_Extension
     {
         if (null !== $document) {
             $fs = new Filesystem();
-            return $fs->exists($this->packages->getDocumentFilePath($document));
+            return $fs->exists($this->container['assetPackages']->getDocumentFilePath($document));
         }
 
         return false;

@@ -30,18 +30,25 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Extension that allow render document images
  */
 class TranslationExtension extends \Twig_Extension
 {
-    protected $request;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
-    public function __construct(Request $request)
+    /**
+     * TranslationExtension constructor.
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
     public function getName()
@@ -65,7 +72,7 @@ class TranslationExtension extends \Twig_Extension
     public function getMenuAssignation(Translation $translation = null, $absolute = false)
     {
         if (null !== $translation) {
-            return $translation->getViewer()->getTranslationMenuAssignation($this->request, $absolute);
+            return $translation->getViewer()->getTranslationMenuAssignation($this->requestStack->getCurrentRequest(), $absolute);
         } else {
             return [];
         }
