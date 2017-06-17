@@ -260,6 +260,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     $evm->addEventSubscriber($eventSubscriber);
                 }
 
+                if ($c['kernel']->isDebug()) {
+                    $em->getConnection()->getConfiguration()->setSQLLogger($c['doctrine.debugstack']);
+                }
+
                 $c['stopwatch']->stop('initDoctrine');
                 return $em;
             } catch (NoConfigurationFoundException $e) {
