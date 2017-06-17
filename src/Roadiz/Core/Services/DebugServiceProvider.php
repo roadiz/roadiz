@@ -47,19 +47,19 @@ class DebugServiceProvider implements ServiceProviderInterface
             return new TraceableEventDispatcher($dispatcher, $c['stopwatch']);
         });
 
-        $container['messagescollector'] = function() {
+        $container['messagescollector'] = function () {
             return new MessagesCollector();
         };
 
-        $container['doctrine.debugstack'] = function() {
+        $container['doctrine.debugstack'] = function () {
             return new DebugStack();
         };
 
-        $container['debugbar'] = function($c) {
+        $container['debugbar'] = function ($c) {
             return new RoadizDebugBar($c);
         };
 
-        $container['debugbar.renderer'] = function($c) {
+        $container['debugbar.renderer'] = function ($c) {
             return $c['debugbar']->getJavascriptRenderer();
         };
     }

@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-
 use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\Mapping\Entity;
 use Pimple\Container;
@@ -54,7 +53,7 @@ class DumpExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('dump', function(\Twig_Environment $env) {
+            new \Twig_SimpleFunction('dump', function (\Twig_Environment $env) {
                 if (!$env->isDebug()) {
                     return;
                 }
@@ -63,7 +62,6 @@ class DumpExtension extends \Twig_Extension
                     $var = Debug::export(func_get_arg($i), 2);
                     $this->container['messagescollector']->debug($var);
                 }
-
             }, ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
         );
     }

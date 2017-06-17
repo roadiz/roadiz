@@ -467,23 +467,23 @@ abstract class AppController extends Controller
                 if ($home !== null) {
                     if ($translation !== null) {
                         $this->homeNode = $nodeRepository->findWithTranslation(
-                                $home->getId(),
-                                $translation,
-                                $this->get('securityAuthorizationChecker')
-                            );
+                            $home->getId(),
+                            $translation,
+                            $this->get('securityAuthorizationChecker')
+                        );
                     } else {
                         $this->homeNode = $nodeRepository->findWithDefaultTranslation(
-                                $home->getId(),
-                                $this->get('securityAuthorizationChecker')
-                            );
+                            $home->getId(),
+                            $this->get('securityAuthorizationChecker')
+                        );
                     }
                 }
             }
             if ($translation !== null) {
                 $this->homeNode = $nodeRepository->findHomeWithTranslation(
-                        $translation,
-                        $this->get('securityAuthorizationChecker')
-                    );
+                    $translation,
+                    $this->get('securityAuthorizationChecker')
+                );
             } else {
                 $this->homeNode = $nodeRepository->findHomeWithDefaultTranslation($this->get('securityAuthorizationChecker'));
             }

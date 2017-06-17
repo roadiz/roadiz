@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Utils\DebugBar;
 
-
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBarException;
 use Symfony\Component\Stopwatch\Stopwatch;

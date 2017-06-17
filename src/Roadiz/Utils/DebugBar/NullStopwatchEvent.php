@@ -43,7 +43,6 @@ class NullStopwatchEvent extends StopwatchEvent
      */
     public function __construct($origin, $category = null)
     {
-
     }
 
     public function start()

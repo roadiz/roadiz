@@ -114,5 +114,4 @@ class DebugBarSubscriber implements EventSubscriberInterface
         $this->container['stopwatch']->stop('requestHandling');
         $this->container['stopwatch']->start('controllerHandling');
     }
-
 }
