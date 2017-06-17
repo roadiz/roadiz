@@ -23,44 +23,51 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DebugServiceProvider.php
+ * @file NullStopwatchEvent.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Utils\DebugBar;
 
-use DebugBar\DataCollector\MessagesCollector;
-use Doctrine\DBAL\Logging\DebugStack;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
-use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
+use Symfony\Component\Stopwatch\StopwatchEvent;
 
-class DebugServiceProvider implements ServiceProviderInterface
+class NullStopwatchEvent extends StopwatchEvent
 {
     /**
-     * @param Container $container
+     * Constructor.
+     *
+     * @param float       $origin   The origin time in milliseconds
+     * @param string|null $category The event category or null to use the default
+     *
+     * @throws \InvalidArgumentException When the raw time is not valid
      */
-    public function register(Container $container)
+    public function __construct($origin, $category = null)
     {
-        $container->extend('dispatcher', function ($dispatcher, $c) {
-            return new TraceableEventDispatcher($dispatcher, $c['stopwatch']);
-        });
 
-        $container['messagescollector'] = function() {
-            return new MessagesCollector();
-        };
+    }
 
-        $container['doctrine.debugstack'] = function() {
-            return new DebugStack();
-        };
+    public function start()
+    {
+        return $this;
+    }
 
-        $container['debugbar'] = function($c) {
-            return new RoadizDebugBar($c);
-        };
+    public function stop()
+    {
+        return $this;
+    }
 
-        $container['debugbar.renderer'] = function($c) {
-            return $c['debugbar']->getJavascriptRenderer();
-        };
+    protected function getNow()
+    {
+        return 0.0;
+    }
+
+    public function getPeriods()
+    {
+        return [];
+    }
+
+    public function getDuration()
+    {
+        return 0.0;
     }
 }

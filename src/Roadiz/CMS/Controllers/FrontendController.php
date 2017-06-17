@@ -332,6 +332,7 @@ abstract class FrontendController extends AppController
      */
     protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
     {
+        $this->container['stopwatch']->start('prepareThemeAssignation');
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
@@ -339,7 +340,10 @@ abstract class FrontendController extends AppController
          */
         $this->themeContainer = new Container();
 
+        $this->container['stopwatch']->start('extendAssignation');
         $this->extendAssignation();
+        $this->container['stopwatch']->stop('extendAssignation');
+        $this->container['stopwatch']->stop('prepareThemeAssignation');
     }
 
     /**

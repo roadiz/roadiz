@@ -60,6 +60,7 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -148,7 +149,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function register(Container $container)
     {
         $container['stopwatch'] = function () {
-            return new Stopwatch();
+            if ($this->isDebug()) {
+                return new Stopwatch();
+            }
+            return new NullStopwatch();
         };
 
         $container['dispatcher'] = function () {
@@ -176,7 +180,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new LoggerServiceProvider());
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
-        $container->register(new DebugServiceProvider());
+        if ($this->isDebug()) {
+            $container->register(new DebugServiceProvider());
+        }
 
         try {
             /*

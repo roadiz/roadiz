@@ -40,15 +40,21 @@ class StopwatchDataCollector extends TimeDataCollector
      * @var Stopwatch
      */
     private $stopwatch;
+    /**
+     * @var \Twig_Profiler_Profile
+     */
+    private $twigProfile;
 
     /**
      * @param Stopwatch $stopwatch
+     * @param \Twig_Profiler_Profile|null $twigProfile
      * @internal param float $requestStartTime
      */
-    public function __construct(Stopwatch $stopwatch)
+    public function __construct(Stopwatch $stopwatch, \Twig_Profiler_Profile $twigProfile = null)
     {
         parent::__construct();
         $this->stopwatch = $stopwatch;
+        $this->twigProfile = $twigProfile;
     }
 
     /**
@@ -71,6 +77,32 @@ class StopwatchDataCollector extends TimeDataCollector
             }
         }
 
+        if (null !== $this->twigProfile) {
+            $this->doAddTwigMeasure($this->twigProfile->serialize());
+        }
+
         return parent::collect();
+    }
+
+    /**
+     * @param string $profile Serialized profile
+     */
+    protected function doAddTwigMeasure($profile)
+    {
+        list($template, $name, $type, $starts, $ends, $profiles) = unserialize($profile);
+
+        if ($type !== 'ROOT' && $type !== 'block') {
+            $this->addMeasure(
+                $template . ' <' . $type . '>',
+                $starts['wt'],
+                $ends['wt'],
+                [],
+                null
+            );
+        }
+
+        foreach ($profiles as $subProfile) {
+            $this->doAddTwigMeasure($subProfile->serialize());
+        }
     }
 }

@@ -23,44 +23,28 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DebugServiceProvider.php
+ * @file NullStopwatch.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Utils\DebugBar;
 
-use DebugBar\DataCollector\MessagesCollector;
-use Doctrine\DBAL\Logging\DebugStack;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
-use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
+use Symfony\Component\Stopwatch\Stopwatch;
 
-class DebugServiceProvider implements ServiceProviderInterface
+class NullStopwatch extends Stopwatch
 {
-    /**
-     * @param Container $container
-     */
-    public function register(Container $container)
+    public function start($name, $category = null)
     {
-        $container->extend('dispatcher', function ($dispatcher, $c) {
-            return new TraceableEventDispatcher($dispatcher, $c['stopwatch']);
-        });
+        return new NullStopwatchEvent(0, 'null');
+    }
 
-        $container['messagescollector'] = function() {
-            return new MessagesCollector();
-        };
+    public function isStarted($name)
+    {
+        return true;
+    }
 
-        $container['doctrine.debugstack'] = function() {
-            return new DebugStack();
-        };
-
-        $container['debugbar'] = function($c) {
-            return new RoadizDebugBar($c);
-        };
-
-        $container['debugbar.renderer'] = function($c) {
-            return $c['debugbar']->getJavascriptRenderer();
-        };
+    public function stop($name)
+    {
+        return new NullStopwatchEvent(0, 'null');
     }
 }

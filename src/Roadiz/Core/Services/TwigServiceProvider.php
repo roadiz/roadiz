@@ -169,8 +169,6 @@ class TwigServiceProvider implements ServiceProviderInterface
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
             $extensions->add(new RoadizTranslationExtension($c['requestStack']));
-            $extensions->add(new DumpExtension($c));
-
 
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
@@ -186,9 +184,18 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $c['securityAuthorizationChecker'],
                     $kernel->isPreview()
                 ));
+
+                $extensions->add(new DumpExtension($c));
+                if ($kernel->isDebug()) {
+                    $extensions->add(new \Twig_Extension_Profiler($c['twig.profile']));
+                }
             }
 
             return $extensions;
+        };
+
+        $container['twig.profile'] = function () {
+            return new \Twig_Profiler_Profile();
         };
 
         /**
