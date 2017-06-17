@@ -23,39 +23,54 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DebugServiceProvider.php
+ * @file StopwatchDataCollector.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Utils\DebugBar;
 
-use DebugBar\DataCollector\MessagesCollector;
-use Doctrine\DBAL\Logging\DebugStack;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
 
-class DebugServiceProvider implements ServiceProviderInterface
+use DebugBar\DataCollector\TimeDataCollector;
+use DebugBar\DebugBarException;
+use Symfony\Component\Stopwatch\Stopwatch;
+
+class StopwatchDataCollector extends TimeDataCollector
 {
     /**
-     * @param Container $container
+     * @var Stopwatch
      */
-    public function register(Container $container)
+    private $stopwatch;
+
+    /**
+     * @param Stopwatch $stopwatch
+     * @internal param float $requestStartTime
+     */
+    public function __construct(Stopwatch $stopwatch)
     {
-        $container['messagescollector'] = function() {
-            return new MessagesCollector();
-        };
+        parent::__construct();
+        $this->stopwatch = $stopwatch;
+    }
 
-        $container['doctrine.debugstack'] = function() {
-            return new DebugStack();
-        };
+    /**
+     * @return array
+     * @throws DebugBarException
+     */
+    public function collect()
+    {
+        foreach ($this->stopwatch->getSections() as $section) {
+            foreach ($section->getEvents() as $name => $event) {
+                foreach ($event->getPeriods() as $period) {
+                    $this->addMeasure(
+                        $name,
+                        $this->getRequestStartTime() + ($period->getStartTime() / 1000.0),
+                        $this->getRequestStartTime() + ($period->getEndTime() / 1000.0),
+                        [],
+                        null
+                    );
+                }
+            }
+        }
 
-        $container['debugbar'] = function($c) {
-            return new RoadizDebugBar($c);
-        };
-
-        $container['debugbar.renderer'] = function($c) {
-            return $c['debugbar']->getJavascriptRenderer();
-        };
+        return parent::collect();
     }
 }

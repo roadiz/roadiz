@@ -23,39 +23,43 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DebugServiceProvider.php
+ * @file RoadizDebugBar.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Utils\DebugBar;
 
+use DebugBar\Bridge\DoctrineCollector;
+use DebugBar\DataCollector\ConfigCollector;
+use DebugBar\DataCollector\ExceptionsCollector;
+use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
-use Doctrine\DBAL\Logging\DebugStack;
+use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DataCollector\RequestDataCollector;
+use DebugBar\DebugBar;
 use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
 
-class DebugServiceProvider implements ServiceProviderInterface
+class RoadizDebugBar extends DebugBar
 {
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * RoadizDebugBar constructor.
      * @param Container $container
      */
-    public function register(Container $container)
+    public function __construct(Container $container)
     {
-        $container['messagescollector'] = function() {
-            return new MessagesCollector();
-        };
-
-        $container['doctrine.debugstack'] = function() {
-            return new DebugStack();
-        };
-
-        $container['debugbar'] = function($c) {
-            return new RoadizDebugBar($c);
-        };
-
-        $container['debugbar.renderer'] = function($c) {
-            return $c['debugbar']->getJavascriptRenderer();
-        };
+        $this->container = $container;
+        $this->addCollector(new PhpInfoCollector());
+        $this->addCollector($this->container['messagescollector']);
+        $this->addCollector(new RequestDataCollector());
+        $this->addCollector(new StopwatchDataCollector($this->container['stopwatch']));
+        $this->addCollector(new MemoryCollector());
+        $this->addCollector(new ExceptionsCollector());
+        $this->addCollector(new DoctrineCollector($this->container['doctrine.debugstack']));
+        $this->addCollector(new ConfigCollector($this->container['config']));
     }
 }

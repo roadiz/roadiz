@@ -23,39 +23,53 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DebugServiceProvider.php
+ * @file DumpExtension.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Utils\TwigExtensions;
 
-use DebugBar\DataCollector\MessagesCollector;
-use Doctrine\DBAL\Logging\DebugStack;
+
+use Doctrine\Common\Util\Debug;
+use Doctrine\ORM\Mapping\Entity;
 use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
-class DebugServiceProvider implements ServiceProviderInterface
+class DumpExtension extends \Twig_Extension
 {
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * DumpExtension constructor.
      * @param Container $container
      */
-    public function register(Container $container)
+    public function __construct(Container $container)
     {
-        $container['messagescollector'] = function() {
-            return new MessagesCollector();
-        };
+        $this->container = $container;
+    }
 
-        $container['doctrine.debugstack'] = function() {
-            return new DebugStack();
-        };
+    public function getFunctions()
+    {
+        return array(
+            new \Twig_SimpleFunction('dump', function(\Twig_Environment $env) {
+                if (!$env->isDebug()) {
+                    return;
+                }
+                $count = func_num_args();
+                for ($i = 2; $i < $count; ++$i) {
+                    $var = Debug::export(func_get_arg($i), 2);
+                    $this->container['messagescollector']->debug($var);
+                }
 
-        $container['debugbar'] = function($c) {
-            return new RoadizDebugBar($c);
-        };
+            }, ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
+        );
+    }
 
-        $container['debugbar.renderer'] = function($c) {
-            return $c['debugbar']->getJavascriptRenderer();
-        };
+    public function getName()
+    {
+        return 'dump';
     }
 }

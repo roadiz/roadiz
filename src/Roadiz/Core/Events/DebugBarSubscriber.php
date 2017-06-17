@@ -54,6 +54,8 @@ class DebugBarSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::RESPONSE => ['onKernelResponse', -128],
+            KernelEvents::REQUEST => 'onKernelRequest',
+            KernelEvents::CONTROLLER => 'onControllerMatched',
         ];
     }
 
@@ -64,6 +66,17 @@ class DebugBarSubscriber implements EventSubscriberInterface
     {
         if ($event->isMasterRequest() && $this->container['settingsBag']->get('display_debug_panel') == true) {
             $response = $event->getResponse();
+
+            if ($this->container['stopwatch']->isStarted('controllerHandling')) {
+                $this->container['stopwatch']->stop('controllerHandling');
+            }
+
+            if ($this->container['stopwatch']->isStarted('twigRender')) {
+                $this->container['stopwatch']->stop('twigRender');
+            }
+
+            $this->container['stopwatch']->stopSection('runtime');
+
 
             if (false !== strpos($response->getContent(), '</body>') &&
                 false !== strpos($response->getContent(), '</head>')) {
@@ -82,4 +95,24 @@ class DebugBarSubscriber implements EventSubscriberInterface
             }
         }
     }
+
+    /**
+     * Start a stopwatch event when a kernel start handling.
+     */
+    public function onKernelRequest()
+    {
+        $this->container['stopwatch']->start('requestHandling');
+        $this->container['stopwatch']->start('matchingRoute');
+    }
+    /**
+     * Stop request-handling stopwatch event and
+     * start a new stopwatch event when a controller is instanciated.
+     */
+    public function onControllerMatched()
+    {
+        $this->container['stopwatch']->stop('matchingRoute');
+        $this->container['stopwatch']->stop('requestHandling');
+        $this->container['stopwatch']->start('controllerHandling');
+    }
+
 }

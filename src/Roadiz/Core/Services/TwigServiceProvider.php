@@ -39,6 +39,7 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
+use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
@@ -168,6 +169,8 @@ class TwigServiceProvider implements ServiceProviderInterface
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
             $extensions->add(new RoadizTranslationExtension($c['requestStack']));
+            $extensions->add(new DumpExtension($c));
+
 
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
@@ -183,9 +186,6 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $c['securityAuthorizationChecker'],
                     $kernel->isPreview()
                 ));
-            }
-            if (true === $kernel->isDebug()) {
-                $extensions->add(new \Twig_Extension_Debug());
             }
 
             return $extensions;
