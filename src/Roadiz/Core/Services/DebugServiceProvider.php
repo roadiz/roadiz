@@ -60,7 +60,7 @@ class DebugServiceProvider implements ServiceProviderInterface
         };
 
         $container['debugbar.renderer'] = function ($c) {
-            return $c['debugbar']->getJavascriptRenderer();
+            return $c['debugbar']->getJavascriptRenderer('/themes/Debug/static');
         };
     }
 }

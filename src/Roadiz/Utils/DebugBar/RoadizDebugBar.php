@@ -31,12 +31,12 @@ namespace RZ\Roadiz\Utils\DebugBar;
 
 use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
-use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DebugBar;
 use Pimple\Container;
+use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
 
 class RoadizDebugBar extends DebugBar
 {
@@ -57,8 +57,8 @@ class RoadizDebugBar extends DebugBar
         $this->addCollector(new RequestDataCollector());
         $this->addCollector(new StopwatchDataCollector($this->container['stopwatch'], $this->container['twig.profile']));
         $this->addCollector(new MemoryCollector());
-        $this->addCollector(new ExceptionsCollector());
         $this->addCollector(new DoctrineCollector($this->container['doctrine.debugstack']));
         $this->addCollector(new ConfigCollector($this->container['config']));
+        $this->addCollector(new AuthCollector($this->container['securityTokenStorage']));
     }
 }
