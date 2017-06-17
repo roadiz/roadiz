@@ -1,0 +1,3 @@
+# Exceptionally add dist folder
+# for Debug bar jquery dependency
+!dist/
