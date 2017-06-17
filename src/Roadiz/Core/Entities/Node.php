@@ -750,7 +750,7 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", mappedBy="node")
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", mappedBy="node", fetch="EXTRA_LAZY")
      */
     protected $newsletter;
 

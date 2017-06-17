@@ -130,22 +130,26 @@ class TranslationServiceProvider implements ServiceProviderInterface
      */
     protected function addResourcesForLocale($locale, Translator $translator, array &$classes, Kernel $kernel)
     {
+        /*
+         * Add existing Symfony validator translations
+         */
         $vendorDir = $kernel->getVendorDir();
         $vendorFormDir = $vendorDir.'/symfony/form';
         $vendorValidatorDir = $vendorDir.'/symfony/validator';
-
-        if (file_exists($vendorFormDir)) {
+        $validatorFromVendorFormDir = $vendorFormDir.'/Resources/translations/validators.'.$locale.'.xlf';
+        $validatorFromVendorValidatorDir = $vendorValidatorDir.'/Resources/translations/validators.'.$locale.'.xlf';
+        if (file_exists($validatorFromVendorFormDir)) {
             // there are built-in translations for the core error messages
             $translator->addResource(
                 'xlf',
-                $vendorFormDir.'/Resources/translations/validators.'.$locale.'.xlf',
+                $validatorFromVendorFormDir,
                 $locale
             );
         }
-        if (file_exists($vendorValidatorDir)) {
+        if (file_exists($validatorFromVendorValidatorDir)) {
             $translator->addResource(
                 'xlf',
-                $vendorValidatorDir.'/Resources/translations/validators.'.$locale.'.xlf',
+                $validatorFromVendorValidatorDir,
                 $locale
             );
         }

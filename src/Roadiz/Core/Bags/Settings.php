@@ -30,13 +30,15 @@
 namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Settings
  * @package RZ\Roadiz\Core\Bags
  */
-class Settings extends AbstractBag
+class Settings extends ParameterBag
 {
     /**
      * @var EntityManager
@@ -68,35 +70,43 @@ class Settings extends AbstractBag
         return $this->repository;
     }
 
+    protected function populateParameters()
+    {
+        $settings = $this->getRepository()->findAll();
+        $this->parameters = [];
+        /** @var Setting $setting */
+        foreach ($settings as $setting) {
+            $this->parameters[$setting->getName()] = $setting->getValue();
+        }
+    }
+
     /**
-     * @param $settingName
+     * @param string $key
+     * @param null $default
+     * @param bool $deep
      * @return bool|mixed
      */
-    public function get($settingName)
+    public function get($key, $default = null, $deep = false)
     {
-        if (null !== $this->entityManager) {
-            try {
-                return $this->getRepository()->getValue($settingName);
-            } catch (\Exception $e) {
-                return false;
-            }
+        if (!is_array($this->parameters)) {
+            $this->populateParameters();
         }
 
-        return false;
+        return parent::get($key, false, false);
     }
 
     /**
      * Get a document from its setting name.
      *
-     * @param string $settingName
+     * @param string $key
      * @return \RZ\Roadiz\Core\Entities\Document|object|bool
      */
-    public function getDocument($settingName)
+    public function getDocument($key)
     {
         if (null !== $this->entityManager) {
             try {
-                $id = $this->getRepository()->getValue($settingName);
-                return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', (int) $id);
+                $id = $this->getInt($key);
+                return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', $id);
             } catch (\Exception $e) {
                 return false;
             }

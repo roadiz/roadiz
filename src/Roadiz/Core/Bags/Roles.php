@@ -32,8 +32,9 @@ namespace RZ\Roadiz\Core\Bags;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Repositories\RoleRepository;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Roles extends AbstractBag
+class Roles extends ParameterBag
 {
     /**
      * @var EntityManager
@@ -65,19 +66,34 @@ class Roles extends AbstractBag
         return $this->repository;
     }
 
+    protected function populateParameters()
+    {
+        $roles = $this->getRepository()->findAll();
+        $this->parameters = [];
+        /** @var Role $role */
+        foreach ($roles as $role) {
+            $this->parameters[$role->getName()] = $role;
+        }
+    }
+
     /**
      * Get role by name or create it if non-existant.
      *
-     * @param string $roleName
+     * @param string $key
+     * @param null $default
+     * @param bool $deep
      * @return Role
      */
-    public function get($roleName)
+    public function get($key, $default = null, $deep = false)
     {
-        $role = $this->getRepository()->findOneByName($roleName);
+        if (!is_array($this->parameters)) {
+            $this->populateParameters();
+        }
+        $role = parent::get($key, null, false);
 
         if (null === $role) {
             $role = new Role();
-            $role->setName($roleName);
+            $role->setName($key);
             $this->entityManager->persist($role);
             $this->entityManager->flush($role);
         }

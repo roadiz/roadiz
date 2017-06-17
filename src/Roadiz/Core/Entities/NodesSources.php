@@ -118,6 +118,7 @@ class NodesSources extends AbstractEntity
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource")
      */
     private $urlAliases = null;
+
     /**
      * @return ArrayCollection
      */
