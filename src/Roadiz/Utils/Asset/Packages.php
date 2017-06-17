@@ -101,13 +101,13 @@ class Packages extends BasePackages
      */
     private $versionStrategy;
     /**
-     * @var Request
-     */
-    private $request;
-    /**
      * @var RequestStackContext
      */
     private $requestStackContext;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * Build a new asset packages for Roadiz root and documents.
@@ -126,7 +126,7 @@ class Packages extends BasePackages
         $isPreview = false
     ) {
         $this->requestStackContext = new RequestStackContext($requestStack);
-        $this->request = $requestStack->getCurrentRequest();
+        $this->requestStack = $requestStack;
         $this->fileAware = $fileAware;
         $this->staticDomain = $staticDomain;
         $this->isPreview = $isPreview;
@@ -159,9 +159,9 @@ class Packages extends BasePackages
          * Add non-default port to static domain.
          */
         $staticDomainAndPort = $this->staticDomain;
-        if (($this->request->isSecure() && $this->request->getPort() != 443) ||
-            (!$this->request->isSecure() && $this->request->getPort() != 80)) {
-            $staticDomainAndPort .= ':' . $this->request->getPort();
+        if (($this->getRequest()->isSecure() && $this->getRequest()->getPort() != 443) ||
+            (!$this->getRequest()->isSecure() && $this->getRequest()->getPort() != 80)) {
+            $staticDomainAndPort .= ':' . $this->getRequest()->getPort();
         }
 
         /*
@@ -203,7 +203,7 @@ class Packages extends BasePackages
         }
 
         return new UrlPackage(
-            $this->request->getSchemeAndHttpHost() . $this->request->getBasePath(),
+            $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
             $this->versionStrategy
         );
     }
@@ -237,7 +237,7 @@ class Packages extends BasePackages
         }
 
         return new UrlPackage(
-            $this->request->getSchemeAndHttpHost() . $this->request->getBasePath() . $this->fileAware->getPublicFilesBasePath(),
+            $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->fileAware->getPublicFilesBasePath(),
             $this->versionStrategy
         );
     }
@@ -348,5 +348,13 @@ class Packages extends BasePackages
     {
         $this->staticDomain = $staticDomain;
         return $this;
+    }
+
+    /**
+     * @return null|Request
+     */
+    protected function getRequest()
+    {
+        return $this->requestStack->getCurrentRequest();
     }
 }

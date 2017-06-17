@@ -77,15 +77,13 @@ class TwigServiceProvider implements ServiceProviderInterface
             $kernel = $c['kernel'];
             $vendorDir = realpath($kernel->getVendorDir());
 
-            // le chemin vers TwigBridge pour que Twig puisse localiser
-            // le fichier form_div_layout.html.twig
-            $vendorTwigBridgeDir = $vendorDir . '/symfony/twig-bridge';
-
-            return new \Twig_Loader_Filesystem([
+            $loader = new \Twig_Loader_Filesystem([
                 // Default Form extension templates
-                $vendorTwigBridgeDir . '/Resources/views/Form',
+                $vendorDir . '/symfony/twig-bridge/Resources/views/Form',
                 CmsController::getViewsFolder(),
             ]);
+
+            return $loader;
         };
 
         /**
@@ -165,11 +163,11 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new \Twig_Extensions_Extension_Text());
             $extensions->add(new BlockRenderExtension($c));
             $extensions->add(new UrlExtension(
-                $c['request'],
+                $c['requestStack'],
                 $c['nodesSourcesUrlCacheProvider'],
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
-            $extensions->add(new RoadizTranslationExtension($c['request']));
+            $extensions->add(new RoadizTranslationExtension($c['requestStack']));
 
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
@@ -179,8 +177,8 @@ class TwigServiceProvider implements ServiceProviderInterface
              * with EntityManager not null.
              */
             if (true !== $kernel->isInstallMode()) {
-                $extensions->add(new DocumentExtension($c['assetPackages']));
-                $extensions->add(new FontExtension($c['assetPackages']));
+                $extensions->add(new DocumentExtension($c));
+                $extensions->add(new FontExtension($c));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
                     $kernel->isPreview()
@@ -199,7 +197,6 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @return TwigRendererEngine
          */
         $container['twig.formRenderer'] = function () {
-
             return new TwigRendererEngine([
                 'form_div_layout.html.twig',
             ]);

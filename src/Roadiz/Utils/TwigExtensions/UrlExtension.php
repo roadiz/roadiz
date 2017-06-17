@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
 /**
@@ -43,21 +43,24 @@ use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
  */
 class UrlExtension extends \Twig_Extension
 {
-    protected $request;
     protected $forceLocale;
     protected $cacheProvider;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * UrlExtension constructor.
-     * @param Request $request
+     * @param RequestStack $requestStack
      * @param CacheProvider|null $cacheProvider
      * @param bool $forceLocale
      */
-    public function __construct(Request $request, CacheProvider $cacheProvider = null, $forceLocale = false)
+    public function __construct(RequestStack $requestStack, CacheProvider $cacheProvider = null, $forceLocale = false)
     {
-        $this->request = $request;
         $this->forceLocale = $forceLocale;
         $this->cacheProvider = $cacheProvider;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -152,7 +155,7 @@ class UrlExtension extends \Twig_Extension
             return $this->cacheProvider->fetch($cacheKey);
         } else {
             $urlGenerator = new NodesSourcesUrlGenerator(
-                $this->request,
+                $this->requestStack->getCurrentRequest(),
                 $ns,
                 $this->forceLocale
             );

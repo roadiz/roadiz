@@ -41,7 +41,7 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
@@ -54,7 +54,7 @@ class SolariumNodeSource extends AbstractSolarium
     protected $nodeSource = null;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
 
@@ -63,10 +63,10 @@ class SolariumNodeSource extends AbstractSolarium
      *
      * @param NodesSources $nodeSource
      * @param Client $client
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      * @param Logger $logger
      */
-    public function __construct(NodesSources $nodeSource, Client $client, EventDispatcher $dispatcher, Logger $logger = null)
+    public function __construct(NodesSources $nodeSource, Client $client, EventDispatcherInterface $dispatcher, Logger $logger = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
