@@ -750,19 +750,6 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", mappedBy="node", fetch="EXTRA_LAZY")
-     */
-    protected $newsletter;
-
-    /**
-     * @return \RZ\Roadiz\Core\Entities\Newsletter
-     */
-    public function getNewsletter()
-    {
-        return $this->newsletter;
-    }
-
-    /**
      * Create a new empty Node according to given node-type.
      *
      * @param NodeType $nodeType
