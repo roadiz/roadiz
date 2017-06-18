@@ -30,14 +30,13 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with folders entities.
  */
-class FolderHandler
+class FolderHandler extends AbstractHandler
 {
-    private $folder = null;
+    protected $folder = null;
 
     /**
      * @return \RZ\Roadiz\Core\Entities\Folder
@@ -65,6 +64,7 @@ class FolderHandler
      */
     public function __construct(Folder $folder)
     {
+        parent::__construct();
         $this->folder = $folder;
     }
 
@@ -92,12 +92,12 @@ class FolderHandler
     {
         $this->removeChildren();
 
-        Kernel::getService('em')->remove($this->folder);
+        $this->entityManager->remove($this->folder);
 
         /*
          * Final flush
          */
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $this;
     }
@@ -153,7 +153,7 @@ class FolderHandler
         if ($this->folder->getParent() !== null) {
             return $this->folder->getParent()->getHandler()->cleanChildrenPositions();
         } else {
-            return static::cleanRootFoldersPositions();
+            return $this->cleanRootFoldersPositions();
         }
     }
 
@@ -171,7 +171,7 @@ class FolderHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $i;
     }
@@ -181,10 +181,10 @@ class FolderHandler
      *
      * @return int Return the next position after the **last** folder
      */
-    public static function cleanRootFoldersPositions()
+    public function cleanRootFoldersPositions()
     {
         /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
-        $folders = Kernel::getService('em')
+        $folders = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
@@ -194,7 +194,7 @@ class FolderHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $i;
     }

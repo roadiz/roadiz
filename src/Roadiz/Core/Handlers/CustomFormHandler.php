@@ -30,14 +30,13 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with node-type entities.
  */
-class CustomFormHandler
+class CustomFormHandler extends AbstractHandler
 {
-    private $customForm = null;
+    protected $customForm = null;
 
     /**
      * @return \RZ\Roadiz\Core\Entities\CustomForm
@@ -66,6 +65,7 @@ class CustomFormHandler
      */
     public function __construct(CustomForm $customForm)
     {
+        parent::__construct();
         $this->customForm = $customForm;
     }
 
@@ -83,7 +83,7 @@ class CustomFormHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $i;
     }

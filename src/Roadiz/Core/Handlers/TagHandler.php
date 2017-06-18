@@ -31,12 +31,11 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with tags entities.
  */
-class TagHandler
+class TagHandler extends AbstractHandler
 {
     private $tag = null;
 
@@ -66,6 +65,7 @@ class TagHandler
      */
     public function __construct(Tag $tag)
     {
+        parent::__construct();
         $this->tag = $tag;
     }
 
@@ -90,7 +90,7 @@ class TagHandler
     public function removeAssociations()
     {
         foreach ($this->tag->getTranslatedTags() as $tt) {
-            Kernel::getService('em')->remove($tt);
+            $this->entityManager->remove($tt);
         }
 
         return $this;
@@ -106,12 +106,12 @@ class TagHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getService('em')->remove($this->tag);
+        $this->entityManager->remove($this->tag);
 
         /*
          * Final flush
          */
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $this;
     }
@@ -121,7 +121,7 @@ class TagHandler
      */
     public function getAvailableTranslations()
     {
-        $query = Kernel::getService('em')
+        $query = $this->entityManager
                         ->createQuery('
             SELECT tr
             FROM RZ\Roadiz\Core\Entities\Translation tr
@@ -141,7 +141,7 @@ class TagHandler
      */
     public function getAvailableTranslationsId()
     {
-        $query = Kernel::getService('em')
+        $query = $this->entityManager
                         ->createQuery('
             SELECT tr.id FROM RZ\Roadiz\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
@@ -167,7 +167,7 @@ class TagHandler
      */
     public function getUnavailableTranslations()
     {
-        $query = Kernel::getService('em')
+        $query = $this->entityManager
                         ->createQuery('
             SELECT tr FROM RZ\Roadiz\Core\Entities\Translation tr
             WHERE tr.id NOT IN (:translations_id)')
@@ -185,7 +185,7 @@ class TagHandler
      */
     public function getUnavailableTranslationsId()
     {
-        $query = Kernel::getService('em')
+        $query = $this->entityManager
                         ->createQuery('
             SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
             WHERE t.id NOT IN (:translations_id)')
@@ -255,7 +255,7 @@ class TagHandler
         if ($this->tag->getParent() !== null) {
             return $this->tag->getParent()->getHandler()->cleanChildrenPositions();
         } else {
-            return static::cleanRootTagsPositions();
+            return $this->cleanRootTagsPositions();
         }
     }
 
@@ -273,7 +273,7 @@ class TagHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $i;
     }
@@ -283,9 +283,9 @@ class TagHandler
      *
      * @return int Return the next position after the **last** tag
      */
-    public static function cleanRootTagsPositions()
+    public function cleanRootTagsPositions()
     {
-        $tags = Kernel::getService('em')
+        $tags = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
@@ -295,7 +295,7 @@ class TagHandler
             $i++;
         }
 
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $i;
     }

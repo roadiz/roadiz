@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,69 +23,46 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NewsletterHandler.php
- * @author Ambroise Maupate
+ * @file AbstractHandler.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
+
 namespace RZ\Roadiz\Core\Handlers;
 
-use RZ\Roadiz\Core\Entities\Newsletter;
-use RZ\Roadiz\Utils\Node\NodeDuplicator;
 
-/**
- * Handle operations with newsletters entities.
- */
-class NewsletterHandler extends AbstractHandler
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Kernel;
+
+abstract class AbstractHandler
 {
-    private $newsletter = null;
+    /** @var EntityManager */
+    protected $entityManager;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\newsletter
+     * @return EntityManager
      */
-    public function getNewsletter()
+    public function getEntityManager()
     {
-        return $this->newsletter;
+        return $this->entityManager;
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\newsletter $newsletter
-     *
-     * @return $this
+     * @param EntityManager $entityManager
+     * @return AbstractHandler
      */
-    public function setNewsletter($newsletter)
+    public function setEntityManager($entityManager)
     {
-        $this->newsletter = $newsletter;
-
+        $this->entityManager = $entityManager;
         return $this;
     }
 
     /**
-     * Create a new newsletter handler with newsletter to handle.
+     * AbstractHandler constructor.
      *
-     * @param newsletter $newsletter
+     * Need to get rid of Kernel singleton.
      */
-    public function __construct(Newsletter $newsletter)
+    public function __construct()
     {
-        parent::__construct();
-        $this->newsletter = $newsletter;
-    }
-
-    /**
-     * Duplicate newsletter
-     */
-    public function duplicate()
-    {
-        $duplicator = new NodeDuplicator($this->newsletter->getNode(), $this->entityManager);
-        $newNode = $duplicator->duplicate();
-        $this->entityManager->persist($newNode);
-
-        $this->entityManager->refresh($this->newsletter);
-        $newsletter = clone $this->newsletter;
-        $this->entityManager->persist($newsletter);
-
-        $newsletter->setNode($newNode);
-
-        $this->entityManager->flush();
-
-        return $newsletter;
+        $this->entityManager = Kernel::getService('em');
     }
 }

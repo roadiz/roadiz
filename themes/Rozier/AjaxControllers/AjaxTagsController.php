@@ -329,7 +329,7 @@ class AjaxTagsController extends AbstractAjaxController
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();
         } else {
-            TagHandler::cleanRootTagsPositions();
+            $tag->getHandler()->cleanRootTagsPositions();
         }
 
         /*

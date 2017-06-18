@@ -34,8 +34,10 @@ use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -44,9 +46,15 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 /**
  * Handle operations with nodes entities.
  */
-class NodeHandler
+class NodeHandler extends AbstractHandler
 {
     private $node = null;
+
+    /** @var AuthorizationChecker */
+    protected $authorizationChecker;
+
+    /** @var bool  */
+    protected $isPreview = false;
 
     /**
      * @return Node
@@ -75,7 +83,10 @@ class NodeHandler
      */
     public function __construct(Node $node)
     {
+        parent::__construct();
         $this->node = $node;
+        $this->authorizationChecker = Kernel::getService('securityAuthorizationChecker');
+        $this->isPreview = Kernel::getInstance()->isPreview();
     }
 
     /**
@@ -87,16 +98,16 @@ class NodeHandler
      */
     public function cleanCustomFormsFromField(NodeTypeField $field, $flush = true)
     {
-        $nodesCustomForms = Kernel::getService('em')
+        $nodesCustomForms = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
             ->findBy(['node' => $this->node, 'field' => $field]);
 
         foreach ($nodesCustomForms as $ncf) {
-            Kernel::getService('em')->remove($ncf);
+            $this->entityManager->remove($ncf);
         }
 
         if (true === $flush) {
-            Kernel::getService('em')->flush();
+            $this->entityManager->flush();
         }
 
         return $this;
@@ -116,7 +127,7 @@ class NodeHandler
         $ncf = new NodesCustomForms($this->node, $customForm, $field);
 
         if (null === $position) {
-            $latestPosition = Kernel::getService('em')
+            $latestPosition = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
                 ->getLatestPosition($this->node, $field);
             $ncf->setPosition($latestPosition + 1);
@@ -124,10 +135,10 @@ class NodeHandler
             $ncf->setPosition($position);
         }
 
-        Kernel::getService('em')->persist($ncf);
+        $this->entityManager->persist($ncf);
 
         if (true === $flush) {
-            Kernel::getService('em')->flush();
+            $this->entityManager->flush();
         }
 
         return $this;
@@ -141,7 +152,7 @@ class NodeHandler
      */
     public function getCustomFormsFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
             ->findByNodeAndFieldName($this->node, $fieldName);
     }
@@ -156,16 +167,16 @@ class NodeHandler
      */
     public function cleanNodesFromField(NodeTypeField $field, $flush = true)
     {
-        $nodesToNodes = Kernel::getService('em')
+        $nodesToNodes = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
             ->findBy(['nodeA' => $this->node, 'field' => $field]);
 
         foreach ($nodesToNodes as $ntn) {
-            Kernel::getService('em')->remove($ntn);
+            $this->entityManager->remove($ntn);
         }
 
         if (true === $flush) {
-            Kernel::getService('em')->flush();
+            $this->entityManager->flush();
         }
 
         return $this;
@@ -185,7 +196,7 @@ class NodeHandler
         $ntn = new NodesToNodes($this->node, $node, $field);
 
         if (null === $position) {
-            $latestPosition = Kernel::getService('em')
+            $latestPosition = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
                 ->getLatestPosition($this->node, $field);
             $ntn->setPosition($latestPosition + 1);
@@ -193,9 +204,9 @@ class NodeHandler
             $ntn->setPosition($position);
         }
 
-        Kernel::getService('em')->persist($ntn);
+        $this->entityManager->persist($ntn);
         if (true === $flush) {
-            Kernel::getService('em')->flush();
+            $this->entityManager->flush();
         }
 
         return $this;
@@ -210,13 +221,13 @@ class NodeHandler
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByNodeAndFieldName(
                 $this->node,
                 $fieldName,
-                Kernel::getService('securityAuthorizationChecker'),
-                Kernel::getInstance()->isPreview()
+                $this->authorizationChecker,
+                $this->isPreview
             );
     }
 
@@ -228,26 +239,26 @@ class NodeHandler
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByReverseNodeAndFieldName(
                 $this->node,
                 $fieldName,
-                Kernel::getService('securityAuthorizationChecker'),
-                Kernel::getInstance()->isPreview()
+                $this->authorizationChecker,
+                $this->isPreview
             );
     }
 
     /**
      * Get node source by translation.
      *
-     * @param \RZ\Roadiz\Core\Entities\Translation $translation
+     * @param Translation $translation
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
      */
     public function getNodeSourceByTranslation($translation)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(["node" => $this->node, "translation" => $translation]);
     }
@@ -273,7 +284,7 @@ class NodeHandler
     public function removeAssociations()
     {
         foreach ($this->node->getNodeSources() as $ns) {
-            Kernel::getService('em')->remove($ns);
+            $this->entityManager->remove($ns);
         }
 
         return $this;
@@ -291,7 +302,7 @@ class NodeHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getService('em')->remove($this->node);
+        $this->entityManager->remove($this->node);
 
         return $this;
     }
@@ -376,11 +387,11 @@ class NodeHandler
     /**
      * Alias for NodeRepository::findAvailableTranslationForNode.
      *
-     * @return \RZ\Roadiz\Core\Entities\Translation[]
+     * @return Translation[]
      */
     public function getAvailableTranslations()
     {
-        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findAvailableTranslationForNode($this->node);
     }
     /**
@@ -390,7 +401,7 @@ class NodeHandler
      */
     public function getAvailableTranslationsId()
     {
-        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
                                        ->findAvailableTranslationIdForNode($this->node);
     }
 
@@ -401,7 +412,7 @@ class NodeHandler
      */
     public function getUnavailableTranslations()
     {
-        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findUnavailableTranslationForNode($this->node);
     }
 
@@ -412,7 +423,7 @@ class NodeHandler
      */
     public function findUnavailableTranslationIdForNode()
     {
-        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findUnavailableTranslationIdForNode($this->node);
     }
 
@@ -499,7 +510,7 @@ class NodeHandler
         if ($this->node->getParent() !== null) {
             return $this->node->getParent()->getHandler()->cleanChildrenPositions($setPositions);
         } else {
-            return static::cleanRootNodesPositions($setPositions);
+            return $this->cleanRootNodesPositions($setPositions);
         }
     }
 
@@ -541,9 +552,9 @@ class NodeHandler
      * @param bool $setPositions
      * @return int Return the next position after the **last** node
      */
-    public static function cleanRootNodesPositions($setPositions = true)
+    public function cleanRootNodesPositions($setPositions = true)
     {
-        $nodes = Kernel::getService('em')
+        $nodes = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findBy(['parent' => null], ['position' => 'ASC']);
 
@@ -565,7 +576,7 @@ class NodeHandler
      */
     public function getAllOffspringId()
     {
-        return Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findAllOffspringIdByNode($this->node);
     }
 
@@ -576,7 +587,7 @@ class NodeHandler
      */
     public function makeHome()
     {
-        $defaults = Kernel::getService('em')
+        $defaults = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findBy(['home' => true]);
 
@@ -585,7 +596,7 @@ class NodeHandler
             $default->setHome(false);
         }
         $this->node->setHome(true);
-        Kernel::getService('em')->flush();
+        $this->entityManager->flush();
 
         return $this;
     }
@@ -598,7 +609,7 @@ class NodeHandler
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->node, Kernel::getService('em'));
+        $duplicator = new NodeDuplicator($this->node, $this->entityManager);
         return $duplicator->duplicate();
     }
 
@@ -641,7 +652,7 @@ class NodeHandler
 
         $order['position'] = 'DESC';
 
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findOneBy(
                 $criteria,
@@ -686,7 +697,7 @@ class NodeHandler
         ];
         $order['position'] = 'ASC';
 
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findOneBy(
                 $criteria,

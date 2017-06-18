@@ -40,9 +40,14 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Handle operations with documents entities.
  */
-class DocumentHandler
+class DocumentHandler extends AbstractHandler
 {
     protected $document;
+
+    /**
+     * @var Packages
+     */
+    protected $packages;
 
     /**
      * Create a new document handler with document to handle.
@@ -51,7 +56,9 @@ class DocumentHandler
      */
     public function __construct(Document $document)
     {
+        parent::__construct();
         $this->document = $document;
+        $this->packages = Kernel::getService('assetPackages');
     }
 
     /**
@@ -62,10 +69,8 @@ class DocumentHandler
      */
     public function makePrivate()
     {
-        /** @var Packages $packages */
-        $packages = Kernel::getService('assetPackages');
-        $documentPublicPath = $packages->getPublicFilesPath($this->document->getRelativeUrl());
-        $documentPrivatePath = $packages->getPrivateFilesPath($this->document->getRelativeUrl());
+        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativeUrl());
+        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativeUrl());
 
         if (!$this->document->isPrivate()) {
             $fs = new Filesystem();
@@ -107,10 +112,8 @@ class DocumentHandler
      */
     public function makePublic()
     {
-        /** @var Packages $packages */
-        $packages = Kernel::getService('assetPackages');
-        $documentPublicPath = $packages->getPublicFilesPath($this->document->getRelativeUrl());
-        $documentPrivatePath = $packages->getPrivateFilesPath($this->document->getRelativeUrl());
+        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativeUrl());
+        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativeUrl());
 
         if ($this->document->isPrivate()) {
             $fs = new Filesystem();
@@ -158,9 +161,7 @@ class DocumentHandler
     {
         $fs = new Filesystem();
 
-        /** @var Packages $packages */
-        $packages = Kernel::getService('assetPackages');
-        $documentPath = $packages->getDocumentFilePath($this->document);
+        $documentPath = $this->packages->getDocumentFilePath($this->document);
 
         if ($fs->exists($documentPath)) {
             $response = new Response();
@@ -190,21 +191,18 @@ class DocumentHandler
     public function getFolders(Translation $translation = null)
     {
         if (null !== $translation) {
-            return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
                 ->findByDocumentAndTranslation($this->document, $translation);
         }
 
         $docTranslation = $this->document->getDocumentTranslations()->first();
         if (null !== $docTranslation &&
             $docTranslation instanceof DocumentTranslation) {
-            return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
                 ->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());
         }
 
-        return Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findByDocumentAndTranslation($this->document);
     }
 }
