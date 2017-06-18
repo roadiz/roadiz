@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Utils\DebugBar\DataCollector;
 
-
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use RZ\Roadiz\Core\Entities\User;

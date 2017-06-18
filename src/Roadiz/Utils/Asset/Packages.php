@@ -159,8 +159,8 @@ class Packages extends BasePackages
          * Add non-default port to static domain.
          */
         $staticDomainAndPort = $this->staticDomain;
-        if (($this->getRequest()->isSecure() && $this->getRequest()->getPort() != 443) ||
-            (!$this->getRequest()->isSecure() && $this->getRequest()->getPort() != 80)) {
+        if (($this->requestStackContext->isSecure() && $this->getRequest()->getPort() != 443) ||
+            (!$this->requestStackContext->isSecure() && $this->getRequest()->getPort() != 80)) {
             $staticDomainAndPort .= ':' . $this->getRequest()->getPort();
         }
 
@@ -203,7 +203,7 @@ class Packages extends BasePackages
         }
 
         return new UrlPackage(
-            $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
+            $this->getRequest()->getSchemeAndHttpHost() . $this->requestStackContext->getBasePath(),
             $this->versionStrategy
         );
     }
@@ -237,7 +237,7 @@ class Packages extends BasePackages
         }
 
         return new UrlPackage(
-            $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->fileAware->getPublicFilesBasePath(),
+            $this->getRequest()->getSchemeAndHttpHost() . $this->requestStackContext->getBasePath() . $this->fileAware->getPublicFilesBasePath(),
             $this->versionStrategy
         );
     }
@@ -355,6 +355,6 @@ class Packages extends BasePackages
      */
     protected function getRequest()
     {
-        return $this->requestStack->getCurrentRequest();
+        return $this->requestStack->getMasterRequest();
     }
 }
