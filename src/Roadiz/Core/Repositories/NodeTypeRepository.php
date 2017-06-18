@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * {@inheritdoc}
@@ -37,19 +38,21 @@ use Doctrine\ORM\NoResultException;
 class NodeTypeRepository extends EntityRepository
 {
     /**
-     * Get all node-types names from PARTIAL objects.
-     *
      * @return array
      */
-    public function findAllNames()
+    public function findAll()
     {
-        $query = $this->_em->createQuery('
-            SELECT partial nt.{id,name} FROM RZ\Roadiz\Core\Entities\NodeType nt');
+        $qb = $this->createQueryBuilder('nt');
+        $qb->leftJoin('nt.fields', 'ntf')
+            ->addOrderBy('nt.name', 'ASC')
+            ->setCacheable(true);
+
+        $query = $qb->getQuery();
 
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -67,7 +70,7 @@ class NodeTypeRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 }

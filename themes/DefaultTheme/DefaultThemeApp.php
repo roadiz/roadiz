@@ -88,7 +88,6 @@ class DefaultThemeApp extends FrontendController
          * Register services
          */
         $this->themeContainer->register(new NodeServiceProvider($this->getContainer(), $this->translation));
-        $this->themeContainer->register(new NodeTypeServiceProvider($this->get('nodeTypeApi')));
         $this->themeContainer->register(new AssetsServiceProvider());
 
         $this->assignation['themeServices'] = $this->themeContainer;

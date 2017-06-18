@@ -343,6 +343,10 @@ abstract class AppController extends Controller
      *     - messages
      *     - id
      *     - user
+     * - bags
+     *     - nodeTypes (ParametersBag)
+     *     - settings (ParametersBag)
+     *     - roles (ParametersBag)
      * - securityAuthorizationChecker
      *
      * @return $this
@@ -373,6 +377,11 @@ abstract class AppController extends Controller
                 'id' => $this->getRequest()->getSession()->getId(),
                 'user' => $this->getUser(),
             ],
+            'bags' => [
+                'settings' => $this->get('settingsBag'),
+                'roles' => $this->get('rolesBag'),
+                'nodeTypes' => $this->get('nodeTypesBag'),
+            ]
         ];
 
         if ('' != $this->get('settingsBag')->getDocument('static_domain_name')) {

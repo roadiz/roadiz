@@ -11,18 +11,19 @@
          # Here is the real power of Roadiz!
          #}
         {% set blocks = nodeSource|children({
-        'node.nodeType' : ['!=', themeServices.typePage]
+        'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
         }) %}
         {% for singleBlock in blocks %}
             {% include '@DefaultTheme/blocks/' ~ singleBlock.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
-            'nodeSource': singleBlock,
-            'parentNodeSource': nodeSource,
-            'themeServices': themeServices,
-            'head': head,
-            'node': singleBlock.node,
-            'nodeType': singleBlock.node.nodeType,
-            'loop': loop,
-            'blocksLength':blocks|length
+                'nodeSource': singleBlock,
+                'parentNodeSource': nodeSource,
+                'themeServices': themeServices,
+                'head': head,
+                'node': singleBlock.node,
+                'nodeType': singleBlock.node.nodeType,
+                'loop': loop,
+                'blocksLength':blocks|length,
+                'bags': bags
             } only %}
         {% endfor %}
     </div>
