@@ -402,6 +402,7 @@ class NodesSourcesRepository extends EntityRepository
             $preview
         );
 
+        $qb->setCacheable(true);
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -450,6 +451,7 @@ class NodesSourcesRepository extends EntityRepository
             $preview
         );
 
+        $qb->setCacheable(true);
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -609,7 +611,8 @@ class NodesSourcesRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setParameter('childNodeId', $nodeSource->getNode()->getId())
             ->setParameter('translation', $nodeSource->getTranslation())
-            ->setMaxResults(1);
+            ->setMaxResults(1)
+            ->setCacheable(true);
 
         try {
             return $qb->getQuery()->getSingleResult();
@@ -633,7 +636,8 @@ class NodesSourcesRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
             ->setParameter('node', $node)
-            ->setParameter('translation', $translation);
+            ->setParameter('translation', $translation)
+            ->setCacheable(true);
 
         try {
             return $qb->getQuery()->getSingleResult();

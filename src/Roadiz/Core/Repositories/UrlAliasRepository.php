@@ -60,28 +60,6 @@ class UrlAliasRepository extends EntityRepository
     }
 
     /**
-     * Get all url aliases linked to given node.
-     *
-     * @param $alias
-     *
-     * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function findOnePartialByAlias($alias)
-    {
-        $query = $this->_em->createQuery('
-            SELECT partial ua.{id} FROM RZ\Roadiz\Core\Entities\UrlAlias ua
-            WHERE ua.alias = :alias')
-                        ->setParameter('alias', $alias);
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
      * @param string $alias
      *
      * @return boolean
