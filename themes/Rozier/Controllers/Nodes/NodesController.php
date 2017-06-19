@@ -531,7 +531,7 @@ class NodesController extends RozierApp
             /*
              * Final flush
              */
-            Kernel::getService('em')->flush();
+            $this->get('em')->flush();
 
             $msg = $this->getTranslator()->trans('node.trash.emptied');
             $this->publishConfirmMessage($request, $msg);

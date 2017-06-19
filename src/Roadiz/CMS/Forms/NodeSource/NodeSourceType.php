@@ -240,6 +240,9 @@ class NodeSourceType extends AbstractType
         if ('' !== $field->getDescription()) {
             $options['attr']['data-desc'] = $field->getDescription();
         }
+        if ('' !== $field->getPlaceholder()) {
+            $options['attr']['placeholder'] = $field->getPlaceholder();
+        }
         if ($field->getMinLength() > 0) {
             $options['attr']['data-min-length'] = $field->getMinLength();
         }
@@ -359,6 +362,9 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'expanded' => $field->isExpanded(),
                 ]);
+                if ('' !== $field->getPlaceholder()) {
+                    $options['placeholder'] = $field->getPlaceholder();
+                }
                 if ($field->getDefaultValues() !== '') {
                     $countries = explode(',', $field->getDefaultValues());
                     $countries = array_map('trim', $countries);

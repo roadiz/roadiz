@@ -43,8 +43,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class DocumentViewer implements ViewableInterface
 {
-    private $document;
-    private $embedFinder;
+    protected $document;
+    protected $embedFinder;
+    /** @var Packages  */
+    protected $packages;
 
     /**
      * @return \RZ\Roadiz\Core\Entities\Document
@@ -60,6 +62,25 @@ class DocumentViewer implements ViewableInterface
     public function __construct(Document $document)
     {
         $this->document = $document;
+        $this->packages = Kernel::getService('assetPackages');
+    }
+
+    /**
+     * @return Packages
+     */
+    public function getPackages()
+    {
+        return $this->packages;
+    }
+
+    /**
+     * @param Packages $packages
+     * @return DocumentViewer
+     */
+    public function setPackages(Packages $packages)
+    {
+        $this->packages = $packages;
+        return $this;
     }
 
     /**
@@ -213,7 +234,7 @@ class DocumentViewer implements ViewableInterface
         } elseif ($this->document->isSvg()) {
             try {
                 /** @var Packages $packages */
-                $packages = Kernel::getService('assetPackages');
+                $packages = $this->getPackages();
                 $asObject = !$options['inline'];
                 $viewer = new SvgDocumentViewer(
                     $packages->getDocumentFilePath($this->document),
@@ -347,7 +368,7 @@ class DocumentViewer implements ViewableInterface
         foreach ($sourcesDocs as $source) {
             $sources[$source->getMimeType()] = [
                 'mime' => $source->getMimeType(),
-                'url' => Kernel::getService('assetPackages')->getUrl($source->getRelativeUrl(), Packages::DOCUMENTS),
+                'url' => $this->getPackages()->getUrl($source->getRelativeUrl(), Packages::DOCUMENTS),
             ];
         }
 
@@ -425,14 +446,14 @@ class DocumentViewer implements ViewableInterface
 
         if ($options['noProcess'] === true || !$this->document->isImage()) {
             $documentPackageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
-            return Kernel::getService('assetPackages')->getUrl(
+            return $this->getPackages()->getUrl(
                 $this->document->getRelativeUrl(),
                 $documentPackageName
             );
         }
 
         $defaultPackageName = $absolute ? Packages::ABSOLUTE : null;
-        return Kernel::getService('assetPackages')->getUrl(
+        return $this->getPackages()->getUrl(
             $this->getProcessedDocumentUrlByArray($options),
             $defaultPackageName
         );

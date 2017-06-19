@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormError;
@@ -342,6 +343,10 @@ abstract class AppController extends Controller
      *     - messages
      *     - id
      *     - user
+     * - bags
+     *     - nodeTypes (ParametersBag)
+     *     - settings (ParametersBag)
+     *     - roles (ParametersBag)
      * - securityAuthorizationChecker
      *
      * @return $this
@@ -372,6 +377,11 @@ abstract class AppController extends Controller
                 'id' => $this->getRequest()->getSession()->getId(),
                 'user' => $this->getUser(),
             ],
+            'bags' => [
+                'settings' => $this->get('settingsBag'),
+                'roles' => $this->get('rolesBag'),
+                'nodeTypes' => $this->get('nodeTypesBag'),
+            ]
         ];
 
         if ('' != $this->get('settingsBag')->getDocument('static_domain_name')) {
@@ -412,6 +422,7 @@ abstract class AppController extends Controller
      */
     public function getTheme()
     {
+        $this->container['stopwatch']->start('getTheme');
         if (null === $this->theme) {
             $className = static::getCalledClass();
             while (!StringHandler::endsWith($className, "App")) {
@@ -428,6 +439,7 @@ abstract class AppController extends Controller
                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                 ->findOneByClassName($className);
         }
+        $this->container['stopwatch']->stop('getTheme');
         return $this->theme;
     }
 
@@ -453,39 +465,39 @@ abstract class AppController extends Controller
      */
     protected function getHome(Translation $translation = null)
     {
+        $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
             $theme = $this->getTheme();
+            /** @var NodeRepository $nodeRepository */
+            $nodeRepository = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node');
 
             if ($theme !== null) {
                 $home = $theme->getHomeNode();
                 if ($home !== null) {
                     if ($translation !== null) {
-                        $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findWithTranslation(
-                                $home->getId(),
-                                $translation,
-                                $this->get('securityAuthorizationChecker')
-                            );
+                        $this->homeNode = $nodeRepository->findWithTranslation(
+                            $home->getId(),
+                            $translation,
+                            $this->get('securityAuthorizationChecker')
+                        );
                     } else {
-                        $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findWithDefaultTranslation(
-                                $home->getId(),
-                                $this->get('securityAuthorizationChecker')
-                            );
+                        $this->homeNode = $nodeRepository->findWithDefaultTranslation(
+                            $home->getId(),
+                            $this->get('securityAuthorizationChecker')
+                        );
                     }
                 }
             }
             if ($translation !== null) {
-                $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findHomeWithTranslation(
-                        $translation,
-                        $this->get('securityAuthorizationChecker')
-                    );
+                $this->homeNode = $nodeRepository->findHomeWithTranslation(
+                    $translation,
+                    $this->get('securityAuthorizationChecker')
+                );
             } else {
-                $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findHomeWithDefaultTranslation($this->get('securityAuthorizationChecker'));
+                $this->homeNode = $nodeRepository->findHomeWithDefaultTranslation($this->get('securityAuthorizationChecker'));
             }
         }
+        $this->container['stopwatch']->stop('getHome');
 
         return $this->homeNode;
     }

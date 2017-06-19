@@ -39,6 +39,7 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
+use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
@@ -183,12 +184,18 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $c['securityAuthorizationChecker'],
                     $kernel->isPreview()
                 ));
-            }
-            if (true === $kernel->isDebug()) {
-                $extensions->add(new \Twig_Extension_Debug());
+
+                $extensions->add(new DumpExtension($c));
+                if ($kernel->isDebug()) {
+                    $extensions->add(new \Twig_Extension_Profiler($c['twig.profile']));
+                }
             }
 
             return $extensions;
+        };
+
+        $container['twig.profile'] = function () {
+            return new \Twig_Profiler_Profile();
         };
 
         /**

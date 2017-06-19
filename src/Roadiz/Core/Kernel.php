@@ -33,6 +33,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
+use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
@@ -43,6 +44,7 @@ use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
+use RZ\Roadiz\Core\Services\DebugServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
@@ -58,7 +60,7 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
-use RZ\Roadiz\Utils\DebugPanel;
+use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -147,11 +149,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function register(Container $container)
     {
         $container['stopwatch'] = function () {
-            return new Stopwatch();
-        };
-
-        $container['debugPanel'] = function ($c) {
-            return new DebugPanel($c);
+            if ($this->isDebug()) {
+                return new Stopwatch();
+            }
+            return new NullStopwatch();
         };
 
         $container['dispatcher'] = function () {
@@ -179,6 +180,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new LoggerServiceProvider());
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
+        if ($this->isDebug()) {
+            $container->register(new DebugServiceProvider());
+        }
 
         try {
             /*
@@ -276,7 +280,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
          * If debug, alter HTML responses to append Debug panel to view
          */
         if ($this->isDebug()) {
-            $dispatcher->addSubscriber($this->container['debugPanel']);
+            $dispatcher->addSubscriber(new DebugBarSubscriber($this->container));
         }
     }
 

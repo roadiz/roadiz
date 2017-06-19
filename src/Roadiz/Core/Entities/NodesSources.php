@@ -52,7 +52,7 @@ class NodesSources extends AbstractEntity
     private $handler = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;

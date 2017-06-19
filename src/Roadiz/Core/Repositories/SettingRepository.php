@@ -91,7 +91,6 @@ class SettingRepository extends EntityRepository
     {
         $builder = $this->createQueryBuilder('s');
         $builder->select('s.name');
-
         $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZSettingAll');
 

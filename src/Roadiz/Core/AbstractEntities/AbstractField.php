@@ -348,6 +348,31 @@ abstract class AbstractField extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    private $placeholder;
+
+    /**
+     * @return mixed
+     */
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
+    }
+
+    /**
+     * @param mixed $placeholder
+     * @return AbstractField
+     */
+    public function setPlaceholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
+    }
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */

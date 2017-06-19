@@ -341,6 +341,7 @@ class NodeRepository extends EntityRepository
             $preview
         );
 
+        $query->setCacheable(true);
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByTag($criteria, $finalQuery);
@@ -476,6 +477,7 @@ class NodeRepository extends EntityRepository
             $preview
         );
 
+        $query->setCacheable(true);
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByTag($criteria, $finalQuery);
@@ -513,7 +515,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId)
-            ->setParameter('translation', $translation);
+            ->setParameter('translation', $translation)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -578,7 +581,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
             ->setMaxResults(1)
             ->setParameter('nodeId', (int) $nodeId)
-            ->setParameter('defaultTranslation', true);
+            ->setParameter('defaultTranslation', true)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -613,7 +617,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
             ->setParameter('nodeName', $nodeName)
-            ->setParameter('translation', $translation);
+            ->setParameter('translation', $translation)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -646,7 +651,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
             ->setMaxResults(1)
             ->setParameter('nodeName', $nodeName)
-            ->setParameter('defaultTranslation', true);
+            ->setParameter('defaultTranslation', true)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -682,7 +688,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setMaxResults(1)
             ->setParameter('home', true)
-            ->setParameter('translation', $translation);
+            ->setParameter('translation', $translation)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -713,7 +720,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
             ->setMaxResults(1)
             ->setParameter('home', true)
-            ->setParameter('defaultTranslation', true);
+            ->setParameter('defaultTranslation', true)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -759,7 +767,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setParameter('translation', $translation)
-            ->addOrderBy('n.position', 'ASC');
+            ->addOrderBy('n.position', 'ASC')
+            ->setCacheable(true);
 
         if ($parent === null) {
             $qb->andWhere($qb->expr()->isNull('n.parent'));
@@ -793,7 +802,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->eq('t.defaultTranslation', true))
-            ->addOrderBy('n.position', 'ASC');
+            ->addOrderBy('n.position', 'ASC')
+            ->setCacheable(true);
 
         if ($parent === null) {
             $qb->andWhere($qb->expr()->isNull('n.parent'));
@@ -828,7 +838,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq('ns.urlAliases', ':urlAlias'))
             ->setParameter('urlAlias', $urlAlias)
-            ->setMaxResults(1);
+            ->setMaxResults(1)
+            ->setCacheable(true);
 
         $this->alterQueryWithAuthorizationChecker($txtQuery, $authorizationChecker, $preview);
 
@@ -860,7 +871,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('t.available', ':available'))
             ->setParameter('alias', $urlAliasAlias)
             ->setParameter('available', true)
-            ->setMaxResults(1);
+            ->setMaxResults(1)
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -957,7 +969,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('ntn.field', 'f')
             ->andWhere($qb->expr()->eq('f.name', ':name'))
             ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
-            ->addOrderBy('ntn.position', 'ASC');
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -1018,7 +1031,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('f.name', ':name'))
             ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
-            ->addOrderBy('ntn.position', 'ASC');
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -1073,7 +1087,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('ntn.field', 'f')
             ->andWhere($qb->expr()->eq('f.name', ':name'))
             ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
-            ->addOrderBy('ntn.position', 'ASC');
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -1134,7 +1149,8 @@ class NodeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('f.name', ':name'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
-            ->addOrderBy('ntn.position', 'ASC');
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $authorizationChecker, $preview);
 
@@ -1247,7 +1263,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
-            ->setParameter('nodeId', $node->getId());
+            ->setParameter('nodeId', $node->getId())
+            ->setCacheable(true);
 
         try {
             return $qb->getQuery()->getResult();
@@ -1266,7 +1283,8 @@ class NodeRepository extends EntityRepository
         $qb->select(static::TRANSLATION_ALIAS)
             ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
-            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
+            ->setCacheable(true);
 
         try {
             return $qb->getQuery()->getResult();
@@ -1287,7 +1305,8 @@ class NodeRepository extends EntityRepository
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
-            ->setParameter('nodeId', $node->getId());
+            ->setParameter('nodeId', $node->getId())
+            ->setCacheable(true);
 
         try {
             $complexArray = $qb->getQuery()->getScalarResult();
@@ -1307,7 +1326,8 @@ class NodeRepository extends EntityRepository
         $qb->select('t.id')
             ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
-            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node));
+            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
+            ->setCacheable(true);
 
         try {
             $complexArray = $qb->getQuery()->getScalarResult();

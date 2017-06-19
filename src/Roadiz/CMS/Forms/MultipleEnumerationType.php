@@ -66,6 +66,10 @@ class MultipleEnumerationType extends AbstractType
             'choices_as_values' => true,
             'expanded' => $this->field->isExpanded(),
         ]);
+
+        if ('' !== $this->field->getPlaceholder()) {
+            $resolver->setDefault('placeholder', $this->field->getPlaceholder());
+        }
     }
     /**
      * {@inheritdoc}

@@ -29,7 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use RZ\Roadiz\CMS\Utils\TagApi;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -42,11 +43,23 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 /**
  * Handle operations with node-sources entities.
  */
-class NodesSourcesHandler
+class NodesSourcesHandler extends AbstractHandler
 {
     protected $nodeSource;
     protected $parentNodeSource = null;
     protected $parentsNodeSources = null;
+
+    /** @var AuthorizationChecker */
+    protected $authorizationChecker;
+
+    /** @var bool  */
+    protected $isPreview = false;
+
+    /** @var Settings  */
+    protected $settingsBag;
+
+    /** @var TagApi */
+    protected $tagApi;
 
     /**
      * Create a new node-source handler with node-source to handle.
@@ -55,7 +68,13 @@ class NodesSourcesHandler
      */
     public function __construct($nodeSource)
     {
+        parent::__construct();
         $this->nodeSource = $nodeSource;
+
+        $this->authorizationChecker = Kernel::getService('securityAuthorizationChecker');
+        $this->isPreview = Kernel::getInstance()->isPreview();
+        $this->settingsBag = Kernel::getService('settingsBag');
+        $this->tagApi = Kernel::getService('tagApi');
     }
 
     /**
@@ -86,17 +105,17 @@ class NodesSourcesHandler
      */
     public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
     {
-        $nsDocuments = Kernel::getService('em')
+        $nsDocuments = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
             ->findBy(['nodeSource' => $this->nodeSource, 'field' => $field]);
 
         if (count($nsDocuments) > 0) {
             foreach ($nsDocuments as $nsDoc) {
-                Kernel::getService('em')->remove($nsDoc);
+                $this->entityManager->remove($nsDoc);
             }
 
             if (true === $flush) {
-                Kernel::getService('em')->flush();
+                $this->entityManager->flush();
             }
         }
 
@@ -117,7 +136,7 @@ class NodesSourcesHandler
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
         if (null === $position) {
-            $latestPosition = Kernel::getService('em')
+            $latestPosition = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
                 ->getLatestPosition($this->nodeSource, $field);
 
@@ -126,9 +145,9 @@ class NodesSourcesHandler
             $nsDoc->setPosition($position);
         }
 
-        Kernel::getService('em')->persist($nsDoc);
+        $this->entityManager->persist($nsDoc);
         if (true === $flush) {
-            Kernel::getService('em')->flush();
+            $this->entityManager->flush();
         }
 
         return $this;
@@ -142,7 +161,7 @@ class NodesSourcesHandler
      */
     public function getDocumentsFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
     }
@@ -175,7 +194,7 @@ class NodesSourcesHandler
     public function getParent()
     {
         if (null === $this->parentNodeSource) {
-            $this->parentNodeSource = Kernel::getService('em')
+            $this->parentNodeSource = $this->entityManager
                  ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                  ->findParent($this->nodeSource);
         }
@@ -189,7 +208,6 @@ class NodesSourcesHandler
      * @param  array                $criteria
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param  boolean $preview
-     *
      * @return array
      */
     public function getParents(
@@ -214,7 +232,7 @@ class NodesSourcesHandler
                         'translation' => $this->nodeSource->getTranslation(),
                     ]
                 );
-                $currentParent = Kernel::getService('em')
+                $currentParent = $this->entityManager
                     ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                     ->findOneBy(
                         $criteria,
@@ -242,7 +260,7 @@ class NodesSourcesHandler
      * @param AuthorizationChecker|null   $authorizationChecker
      * @param boolean                     $preview
      *
-     * @return ArrayCollection NodesSources collection
+     * @return array NodesSources collection
      */
     public function getChildren(
         array $criteria = null,
@@ -270,10 +288,10 @@ class NodesSourcesHandler
         }
 
         if (null === $authorizationChecker) {
-            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
+            $authorizationChecker = $this->authorizationChecker;
         }
 
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBy(
                 $defaultCrit,
@@ -295,7 +313,7 @@ class NodesSourcesHandler
      * @param AuthorizationChecker|null $authorizationChecker
      * @param boolean                   $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
      */
     public function getFirstChild(
         array $criteria = null,
@@ -323,10 +341,10 @@ class NodesSourcesHandler
         }
 
         if (null === $authorizationChecker) {
-            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
+            $authorizationChecker = $this->authorizationChecker;
         }
 
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
@@ -345,7 +363,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param  boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
      */
     public function getLastChild(
         array $criteria = null,
@@ -373,10 +391,10 @@ class NodesSourcesHandler
         }
 
         if (null === $authorizationChecker) {
-            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
+            $authorizationChecker = $this->authorizationChecker;
         }
 
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
@@ -446,7 +464,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
      */
     public function getPrevious(
         array $criteria = null,
@@ -484,7 +502,7 @@ class NodesSourcesHandler
         $order['node.position'] = 'DESC';
 
         /** @var NodesSourcesRepository $repo */
-        $repo = Kernel::getService('em')
+        $repo = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
 
         return $repo->findOneBy(
@@ -505,7 +523,7 @@ class NodesSourcesHandler
      * @param  AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
      */
     public function getNext(
         array $criteria = null,
@@ -538,7 +556,7 @@ class NodesSourcesHandler
 
         $order['node.position'] = 'ASC';
 
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
@@ -555,7 +573,7 @@ class NodesSourcesHandler
      */
     public function getTags()
     {
-        $tags = Kernel::getService('tagApi')->getBy([
+        $tags = $this->tagApi->getBy([
             "nodes" => $this->nodeSource->getNode(),
             "translation" => $this->nodeSource->getTranslation(),
         ]);
@@ -579,10 +597,10 @@ class NodesSourcesHandler
         return [
             'title' => ($this->nodeSource->getMetaTitle() != "") ?
             $this->nodeSource->getMetaTitle() :
-            $this->nodeSource->getTitle() . ' – ' . Kernel::getService('settingsBag')->get('site_name'),
+            $this->nodeSource->getTitle() . ' – ' . $this->settingsBag->get('site_name'),
             'description' => ($this->nodeSource->getMetaDescription() != "") ?
             $this->nodeSource->getMetaDescription() :
-            $this->nodeSource->getTitle() . ', ' . Kernel::getService('settingsBag')->get('seo_description'),
+            $this->nodeSource->getTitle() . ', ' . $this->settingsBag->get('seo_description'),
             'keywords' => $this->nodeSource->getMetaKeywords(),
         ];
     }
@@ -596,14 +614,14 @@ class NodesSourcesHandler
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
                 $this->nodeSource->getTranslation(),
-                Kernel::getService('securityAuthorizationChecker'),
-                Kernel::getInstance()->isPreview()
+                $this->authorizationChecker,
+                $this->isPreview
             );
     }
 
@@ -616,14 +634,14 @@ class NodesSourcesHandler
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByReverseNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
                 $this->nodeSource->getTranslation(),
-                Kernel::getService('securityAuthorizationChecker'),
-                Kernel::getInstance()->isPreview()
+                $this->authorizationChecker,
+                $this->isPreview
             );
     }
 }

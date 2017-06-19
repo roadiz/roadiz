@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 /**
  * Handle operations with users entities.
  */
-class UserHandler
+class UserHandler extends AbstractHandler
 {
     private $user;
 
@@ -58,6 +58,7 @@ class UserHandler
      */
     public function __construct(User $user)
     {
+        parent::__construct();
         $this->user = $user;
         $this->encoderFactory = Kernel::getService('userEncoderFactory');
     }

@@ -30,12 +30,11 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with Group entities.
  */
-class GroupHandler
+class GroupHandler extends AbstractHandler
 {
     private $group = null;
 
@@ -46,6 +45,7 @@ class GroupHandler
      */
     public function __construct(Group $group)
     {
+        parent::__construct();
         $this->group = $group;
     }
 
@@ -87,8 +87,7 @@ class GroupHandler
 
             foreach ($newGroup->getRolesEntities() as $newRole) {
                 if (false === in_array($newRole->getName(), $existingRolesNames)) {
-                    $role = Kernel::getService('em')
-                                                 ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                    $role = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role')
                                                  ->findOneByName($newRole->getName());
                     $this->group->addRole($role);
                 }

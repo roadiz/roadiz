@@ -220,7 +220,7 @@ class AjaxNodesController extends AbstractAjaxController
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();
         } else {
-            NodeHandler::cleanRootNodesPositions();
+            $node->getHandler()->cleanRootNodesPositions();
         }
 
         $this->get('em')->flush();

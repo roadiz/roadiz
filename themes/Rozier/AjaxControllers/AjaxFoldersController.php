@@ -196,7 +196,7 @@ class AjaxFoldersController extends AbstractAjaxController
         if ($parent !== null) {
             $parent->getHandler()->cleanChildrenPositions();
         } else {
-            FolderHandler::cleanRootFoldersPositions();
+            $folder->getHandler()->cleanRootFoldersPositions();
         }
     }
 }

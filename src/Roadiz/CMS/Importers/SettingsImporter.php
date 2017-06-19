@@ -54,15 +54,12 @@ class SettingsImporter implements ImporterInterface
         /** @var \RZ\Roadiz\Core\Entities\SettingGroup[] $settingGroups */
         $settingGroups = $serializer->deserialize($serializedData);
 
-        $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-            ->findAllNames();
-
-        $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
-            ->findAllNames();
+        $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')->findAllNames();
+        $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')->findAllNames();
 
         $newSettings = [];
 
-        foreach ($settingGroups as $index => $settingGroup) {
+        foreach ($settingGroups as $settingGroup) {
             /*
              * Loop over settings to set their group
              * and move them to a temp collection
