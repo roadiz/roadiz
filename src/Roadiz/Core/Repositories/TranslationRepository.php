@@ -40,7 +40,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get single default translation.
      *
-     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation|null
      */
     public function findDefault()
     {
@@ -148,7 +148,7 @@ class TranslationRepository extends EntityRepository
      *
      * @param $locale
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function findByLocaleAndAvailable($locale)
     {
@@ -171,8 +171,7 @@ class TranslationRepository extends EntityRepository
      * Get all available translations by overrideLocale.
      *
      * @param $overrideLocale
-     *
-     * @return ArrayCollection
+     * @return array
      */
     public function findByOverrideLocaleAndAvailable($overrideLocale)
     {
@@ -187,7 +186,7 @@ class TranslationRepository extends EntityRepository
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -196,7 +195,7 @@ class TranslationRepository extends EntityRepository
      *
      * @param $locale
      *
-     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByLocaleAndAvailable($locale)
@@ -222,7 +221,7 @@ class TranslationRepository extends EntityRepository
      *
      * @param $overrideLocale
      *
-     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @return \RZ\Roadiz\Core\Entities\Translation|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByOverrideLocaleAndAvailable($overrideLocale)

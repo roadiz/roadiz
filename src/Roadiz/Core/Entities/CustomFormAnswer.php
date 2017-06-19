@@ -97,7 +97,6 @@ class CustomFormAnswer extends AbstractEntity
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
-     *            fetch="EXTRA_LAZY",
      *            cascade={"ALL"})
      * @var ArrayCollection
      */
