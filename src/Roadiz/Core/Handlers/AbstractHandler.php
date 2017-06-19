@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Core\Handlers;
 
-
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Kernel;
 
