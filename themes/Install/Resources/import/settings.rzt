@@ -5,7 +5,7 @@
         "settings": [
             {
                 "name": "display_debug_panel",
-                "value": false,
+                "value": true,
                 "type": 5,
                 "visible": true
             },

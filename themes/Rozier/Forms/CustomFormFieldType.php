@@ -59,6 +59,10 @@ class CustomFormFieldType extends AbstractType
                 'label' => 'description',
                 'required' => false,
             ])
+            ->add('placeholder', 'text', [
+                'label' => 'placeholder',
+                'required' => false,
+            ])
             ->add('type', 'choice', [
                 'label' => 'type',
                 'required' => true,
