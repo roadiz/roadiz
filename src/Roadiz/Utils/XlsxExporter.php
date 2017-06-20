@@ -51,7 +51,7 @@ class XlsxExporter
     /**
      * Export an array of data to XLSX format.
      *
-     * @param  array  $data
+     * @param  \IteratorAggregate|array $data
      * @param  array  $keys
      * @return string
      */
@@ -112,7 +112,7 @@ class XlsxExporter
                 foreach ($headerkeys as $key => $value) {
                     $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
                     $activeSheet->getStyle($columnAlpha . $activeRow)->applyFromArray($headerStyles);
-                    $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $value);
+                    $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
                 }
                 $activeRow++;
             }
@@ -139,7 +139,7 @@ class XlsxExporter
                  * Set value into cell
                  */
                 $activeSheet->getStyle($columnAlpha . $activeRow)->getAlignment()->setWrapText(true);
-                $activeSheet->setCellValueByColumnAndRow($k, $activeRow, $value);
+                $activeSheet->setCellValueByColumnAndRow($k, $activeRow, $this->translator->trans($value));
             }
 
             $activeRow++;
