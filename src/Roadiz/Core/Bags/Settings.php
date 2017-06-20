@@ -114,4 +114,16 @@ class Settings extends ParameterBag
 
         return false;
     }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        if (!is_array($this->parameters)) {
+            $this->populateParameters();
+        }
+
+        return parent::all();
+    }
 }

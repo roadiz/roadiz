@@ -64,6 +64,7 @@ class StopwatchDataCollector extends TimeDataCollector
     {
         foreach ($this->stopwatch->getSections() as $section) {
             foreach ($section->getEvents() as $name => $event) {
+                $event->ensureStopped();
                 foreach ($event->getPeriods() as $period) {
                     $this->addMeasure(
                         $name,
@@ -90,7 +91,7 @@ class StopwatchDataCollector extends TimeDataCollector
     {
         list($template, $name, $type, $starts, $ends, $profiles) = unserialize($profile);
 
-        if ($type !== 'ROOT' && $type !== 'block') {
+        if ($type !== 'ROOT' && $type !== 'block' && isset($starts['wt']) && isset($ends['wt'])) {
             $this->addMeasure(
                 $template . ' <' . $type . '>',
                 $starts['wt'],

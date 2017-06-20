@@ -100,4 +100,16 @@ class Roles extends ParameterBag
 
         return $role;
     }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        if (!is_array($this->parameters)) {
+            $this->populateParameters();
+        }
+
+        return parent::all();
+    }
 }

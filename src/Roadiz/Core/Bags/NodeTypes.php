@@ -90,4 +90,16 @@ class NodeTypes extends ParameterBag
 
         return parent::get($key, null, false);
     }
+
+    /**
+     * @return array
+     */
+    public function all()
+    {
+        if (!is_array($this->parameters)) {
+            $this->populateParameters();
+        }
+
+        return parent::all();
+    }
 }

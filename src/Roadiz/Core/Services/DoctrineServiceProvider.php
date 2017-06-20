@@ -249,7 +249,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  */
                 $evm->addEventListener(
                     Events::loadClassMetadata,
-                    new DataInheritanceEvent($prefix)
+                    new DataInheritanceEvent($c, $prefix)
                 );
 
                 /*

@@ -43,7 +43,8 @@ class NodeTypeRepository extends EntityRepository
     public function findAll()
     {
         $qb = $this->createQueryBuilder('nt');
-        $qb->leftJoin('nt.fields', 'ntf')
+        $qb->addSelect('ntf')
+            ->leftJoin('nt.fields', 'ntf')
             ->addOrderBy('nt.name', 'ASC')
             ->setCacheable(true);
 
@@ -63,12 +64,14 @@ class NodeTypeRepository extends EntityRepository
      */
     public function findAllNewsletterType()
     {
-        $query = $this->_em->createQuery('
-            SELECT nt FROM RZ\Roadiz\Core\Entities\NodeType nt
-            WHERE nt.newsletterType == true');
+        $qb = $this->createQueryBuilder('nt');
+        $qb->addSelect('ntf')
+            ->innerJoin('nt.fields', 'ntf')
+            ->andWhere($qb->expr()->eq('nt.newsletterType', true))
+            ->setCacheable(true);
 
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }
