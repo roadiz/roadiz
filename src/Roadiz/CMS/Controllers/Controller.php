@@ -478,17 +478,14 @@ abstract class Controller implements ContainerAwareInterface
         }
 
         /** @var TokenInterface $token */
-        $token = $this->get('securityTokenStorage')->getToken();
-
-        if (null === $token) {
+        if (null === $token = $this->container->offsetGet('securityTokenStorage')->getToken()) {
             return null;
         }
-
-        if (is_string($token->getUser())) {
+        if (!is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
             return null;
         }
-
-        return $token->getUser();
+        return $user;
     }
 
     /**
