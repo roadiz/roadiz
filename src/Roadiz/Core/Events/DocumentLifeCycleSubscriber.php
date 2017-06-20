@@ -113,10 +113,12 @@ class DocumentLifeCycleSubscriber implements EventSubscriber
         $documentFolderPath = $packages->getDocumentFolderPath($document);
         $fileSystem = new Filesystem();
 
-        $isDirEmpty = !(new \FilesystemIterator($documentFolderPath))->valid();
-        if ($isDirEmpty) {
-            $fileSystem->remove($documentFolderPath);
-            $logger->debug('Document folder is empty, deleting…', ['folder' => $documentFolderPath]);
+        if ($fileSystem->exists($documentFolderPath)) {
+            $isDirEmpty = !(new \FilesystemIterator($documentFolderPath))->valid();
+            if ($isDirEmpty) {
+                $fileSystem->remove($documentFolderPath);
+                $logger->debug('Document folder is empty, deleting…', ['folder' => $documentFolderPath]);
+            }
         }
 
         return false;

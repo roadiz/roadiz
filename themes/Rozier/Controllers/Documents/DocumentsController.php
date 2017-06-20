@@ -29,7 +29,6 @@
 namespace Themes\Rozier\Controllers\Documents;
 
 use Doctrine\ORM\EntityManager;
-use Intervention\Image\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
@@ -718,7 +717,7 @@ class DocumentsController extends RozierApp
             }
         }
         $this->assignation['form'] = $form->createView();
-        $this->assignation['maxUploadSize'] = \Symfony\Component\HttpFoundation\File\UploadedFile::getMaxFilesize() / 1024 / 1024;
+        $this->assignation['maxUploadSize'] = UploadedFile::getMaxFilesize() / 1024 / 1024;
 
         return $this->render('documents/upload.html.twig', $this->assignation);
     }

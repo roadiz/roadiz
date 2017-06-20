@@ -84,7 +84,7 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
             if ($document->getDocumentTranslations()->count() === 0 &&
                 ($document->getMimeType() == 'image/jpeg' || $document->getMimeType() == 'image/tiff')) {
                 $filePath = $this->packages->getDocumentFilePath($document);
-                $exif = exif_read_data($filePath, 0, false);
+                $exif = exif_read_data($filePath, null, false);
 
                 if (false !== $exif) {
                     $copyright = $this->getCopyright($exif);
@@ -137,7 +137,9 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
     protected function getDescription(array $exif)
     {
         foreach ($exif as $key => $section) {
-            if (is_array($section)) {
+            if (is_string($section) && strtolower($key) == 'imagedescription') {
+                return $section;
+            } elseif (is_array($section)) {
                 if (strtolower($key) == 'comment') {
                     $comment = '';
                     foreach ($section as $value) {
@@ -151,8 +153,6 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
                         }
                     }
                 }
-            } elseif (is_string($section) && strtolower($key) == 'imagedescription') {
-                return $section;
             }
         }
 
