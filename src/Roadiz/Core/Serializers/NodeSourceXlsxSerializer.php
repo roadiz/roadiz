@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\Translator;
 
 /**
  * XLSX Serialization handler for NodeSource.
@@ -55,9 +56,11 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     /**
      *
      * @param EntityManager $em
+     * @param Translator $translator
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Translator $translator)
     {
+        parent::__construct($translator);
         $this->em = $em;
     }
 

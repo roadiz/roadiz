@@ -444,7 +444,8 @@ class SearchController extends RozierApp
             $answers[$idx] = $array;
         }
 
-        return XlsxExporter::exportXlsx($answers, $keys);
+        $exporter = new XlsxExporter($this->get('translator'));
+        return $exporter->exportXlsx($answers, $keys);
     }
 
     /**

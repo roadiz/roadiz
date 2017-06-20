@@ -68,11 +68,13 @@ class CustomFormsUtilsController extends RozierApp
             $answers[$key] = $array;
         }
 
-        $keys = ["ip", "submittedDate"];
+        $keys = ["ip", "submitted.date"];
 
         $fields = $customForm->getFieldsLabels();
         $keys = array_merge($keys, $fields);
-        $xlsx = XlsxExporter::exportXlsx($answers, $keys);
+
+        $exporter = new XlsxExporter($this->get('translator'));
+        $xlsx = $exporter->exportXlsx($answers, $keys);
 
         $response = new Response(
             $xlsx,
