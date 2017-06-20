@@ -14,7 +14,11 @@
             "type": 4,
             "indexed": false,
             "virtual": false,
-            "default_values": null
+            "default_values": null,
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "children",
@@ -24,7 +28,11 @@
             "type": 16,
             "indexed": false,
             "virtual": true,
-            "default_values": "Page, BasicBlock"
+            "default_values": "Page, BasicBlock",
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "header_image",
@@ -34,7 +42,11 @@
             "type": 9,
             "indexed": false,
             "virtual": true,
-            "default_values": null
+            "default_values": null,
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "pictures",
@@ -44,7 +56,11 @@
             "type": 9,
             "indexed": false,
             "virtual": true,
-            "default_values": null
+            "default_values": null,
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         }
     ]
 }

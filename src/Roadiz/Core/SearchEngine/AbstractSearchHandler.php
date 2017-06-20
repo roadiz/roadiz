@@ -90,7 +90,7 @@ abstract class AbstractSearchHandler
      * @param int $page
      * @return \Solarium\QueryType\Select\Query\Query
      */
-    protected function createSolrQuery(array &$args = [], $rows, $page)
+    protected function createSolrQuery(array &$args = [], $rows = 20, $page = 1)
     {
         $filterQueries = [];
         $query = $this->client->createSelect();

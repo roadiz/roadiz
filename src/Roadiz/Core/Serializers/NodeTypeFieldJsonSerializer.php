@@ -62,7 +62,11 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
         $data['universal'] = $nodeTypeField->isUniversal();
         $data['default_values'] = $nodeTypeField->getDefaultValues();
         $data['group_name'] = $nodeTypeField->getGroupName();
+        $data['group_name_canonical'] = $nodeTypeField->getGroupNameCanonical();
         $data['expanded'] = $nodeTypeField->isExpanded();
+        $data['placeholder'] = $nodeTypeField->getPlaceholder();
+        $data['min_length'] = $nodeTypeField->getMinLength();
+        $data['max_length'] = $nodeTypeField->getMaxLength();
 
         return $data;
     }
@@ -89,7 +93,11 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
             'universal',
             'defaultValues',
             'groupName',
-            'expanded'
+            'groupNameCanonical',
+            'expanded',
+            'placeholder',
+            'minLength',
+            'maxLength'
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
         $serializer = new Serializer([$normalizer], [$encoder]);
