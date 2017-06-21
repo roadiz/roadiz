@@ -279,7 +279,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
-        if ($this->isDebug()) {
+        if (!$this->isInstallMode() && $this->isDebug()) {
             $dispatcher->addSubscriber(new DebugBarSubscriber($this->container));
         }
     }

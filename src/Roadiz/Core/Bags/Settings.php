@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Bags;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
@@ -72,11 +73,15 @@ class Settings extends ParameterBag
 
     protected function populateParameters()
     {
-        $settings = $this->getRepository()->findAll();
-        $this->parameters = [];
-        /** @var Setting $setting */
-        foreach ($settings as $setting) {
-            $this->parameters[$setting->getName()] = $setting->getValue();
+        try {
+            $settings = $this->getRepository()->findAll();
+            $this->parameters = [];
+            /** @var Setting $setting */
+            foreach ($settings as $setting) {
+                $this->parameters[$setting->getName()] = $setting->getValue();
+            }
+        } catch (DBALException $e) {
+            $this->parameters = [];
         }
     }
 

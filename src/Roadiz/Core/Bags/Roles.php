@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Bags;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Repositories\RoleRepository;
@@ -68,11 +69,15 @@ class Roles extends ParameterBag
 
     protected function populateParameters()
     {
-        $roles = $this->getRepository()->findAll();
-        $this->parameters = [];
-        /** @var Role $role */
-        foreach ($roles as $role) {
-            $this->parameters[$role->getName()] = $role;
+        try {
+            $roles = $this->getRepository()->findAll();
+            $this->parameters = [];
+            /** @var Role $role */
+            foreach ($roles as $role) {
+                $this->parameters[$role->getName()] = $role;
+            }
+        } catch (DBALException $e) {
+            $this->parameters = [];
         }
     }
 

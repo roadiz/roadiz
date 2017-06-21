@@ -260,7 +260,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     $evm->addEventSubscriber($eventSubscriber);
                 }
 
-                if ($c['kernel']->isDebug()) {
+                if (!$c['kernel']->isInstallMode() && $c['kernel']->isDebug()) {
                     $em->getConnection()->getConfiguration()->setSQLLogger($c['doctrine.debugstack']);
                 }
 

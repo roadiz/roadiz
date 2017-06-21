@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Bags;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
@@ -68,11 +69,15 @@ class NodeTypes extends ParameterBag
 
     protected function populateParameters()
     {
-        $nodeTypes = $this->getRepository()->findAll();
-        $this->parameters = [];
-        /** @var NodeType $nodeType */
-        foreach ($nodeTypes as $nodeType) {
-            $this->parameters[$nodeType->getName()] = $nodeType;
+        try {
+            $nodeTypes = $this->getRepository()->findAll();
+            $this->parameters = [];
+            /** @var NodeType $nodeType */
+            foreach ($nodeTypes as $nodeType) {
+                $this->parameters[$nodeType->getName()] = $nodeType;
+            }
+        } catch (DBALException $e) {
+            $this->parameters = [];
         }
     }
 
