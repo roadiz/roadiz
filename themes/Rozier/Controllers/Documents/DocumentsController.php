@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
@@ -555,6 +556,8 @@ class DocumentsController extends RozierApp
             } catch (\RuntimeException $e) {
                 $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
             } catch (\InvalidArgumentException $e) {
+                $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
+            } catch (APINeedsAuthentificationException $e) {
                 $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
             }
         }
