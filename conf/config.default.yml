@@ -7,6 +7,9 @@ doctrine:
     user: ""
     password: ""
     dbname: ""
+    charset: 'utf8'
+    options:
+        1002: "SET NAMES 'UTF8'"
 # http://symfony.com/doc/current/reference/configuration/doctrine.html#caching-drivers
 # If null or empty, Roadiz will try to detect best cache driver available
 cacheDriver:

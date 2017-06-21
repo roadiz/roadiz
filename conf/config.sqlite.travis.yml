@@ -6,6 +6,9 @@ doctrine:
     user: "root"
     password: ""
     path: "conf/travis.db"
+    charset: 'utf8'
+    options:
+        1002: "SET NAMES 'UTF8'"
 security:
     secret: "change#this#secret#very#important"
 cacheDriver:

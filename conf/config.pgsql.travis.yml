@@ -7,6 +7,9 @@ doctrine:
     user: "postgres"
     password: ""
     dbname: "roadiz_tests"
+    charset: 'utf8'
+    options:
+        1002: "SET NAMES 'UTF8'"
 security:
     secret: "change#this#secret#very#important"
 cacheDriver:
