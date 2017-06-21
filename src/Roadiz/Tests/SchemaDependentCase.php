@@ -127,7 +127,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
              */
             $evm->addEventListener(
                 Events::loadClassMetadata,
-                new DataInheritanceEvent($c, $prefix)
+                new DataInheritanceEvent(Kernel::getInstance()->getContainer(), $prefix)
             );
 
             /*
