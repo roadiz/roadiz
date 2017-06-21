@@ -122,6 +122,7 @@ class NodesSourcesRepository extends EntityRepository
                     $joinedNode = true;
                 }
                 if (!$joinedNodeType) {
+                    $qb->addSelect('nt');
                     $qb->innerJoin(
                         'n.nodeType',
                         'nt'
@@ -253,8 +254,13 @@ class NodesSourcesRepository extends EntityRepository
     ) {
         $joinedNodeType = false;
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
+
+        if (!$joinedNode) {
+            $qb->innerJoin('ns.node', static::NODE_ALIAS);
+            $joinedNode = true;
+        }
+        $qb->addSelect(static::NODE_ALIAS);
 
         /*
          * Filtering by tag
@@ -266,11 +272,7 @@ class NodesSourcesRepository extends EntityRepository
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
                 if (false !== strpos($key, 'node.')) {
-                    if (!$joinedNode) {
-                        $qb->innerJoin('ns.node', static::NODE_ALIAS);
-                    }
                     $simpleKey = str_replace('node.', '', $key);
-
                     $qb->addOrderBy(static::NODE_ALIAS . '.' . $simpleKey, $value);
                 } else {
                     $qb->addOrderBy(static::NODESSOURCES_ALIAS . '.' . $key, $value);
@@ -307,7 +309,6 @@ class NodesSourcesRepository extends EntityRepository
     ) {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->select($qb->expr()->countDistinct('ns.id'));
-
         $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
         /*
@@ -322,8 +323,8 @@ class NodesSourcesRepository extends EntityRepository
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param AuthorizationChecker|null                    $authorizationChecker
+     * @param array $criteria
+     * @param AuthorizationChecker|null $authorizationChecker
      * @param boolean $preview
      *
      * @return int
@@ -402,6 +403,14 @@ class NodesSourcesRepository extends EntityRepository
             $preview
         );
 
+        /*
+         * Eagerly fetch UrlAliases
+         * to limit SQL query count
+         */
+        $qb->leftJoin('ns.urlAliases', 'ua')
+            ->addSelect('ua')
+        ;
+
         $qb->setCacheable(true);
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
@@ -441,7 +450,6 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-
         $qb = $this->getContextualQuery(
             $criteria,
             $orderBy,
@@ -450,6 +458,14 @@ class NodesSourcesRepository extends EntityRepository
             $authorizationChecker,
             $preview
         );
+
+        /*
+         * Eagerly fetch UrlAliases
+         * to limit SQL query count
+         */
+        $qb->leftJoin('ns.urlAliases', 'ua')
+            ->addSelect('ua')
+        ;
 
         $qb->setCacheable(true);
         $finalQuery = $qb->getQuery();
@@ -535,7 +551,8 @@ class NodesSourcesRepository extends EntityRepository
         $preview = false
     ) {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select('ns, n')
+        $qb->select('ns, n, ua')
+            ->leftJoin('ns.urlAliases', 'ua')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->like('ns.title', ':query'),
                 $qb->expr()->like('ns.metaTitle', ':query'),
@@ -604,9 +621,10 @@ class NodesSourcesRepository extends EntityRepository
     public function findParent(NodesSources $nodeSource)
     {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select('ns, n')
+        $qb->select('ns, n, ua')
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->innerJoin('n.children', 'cn')
+            ->leftJoin('ns.urlAliases', 'ua')
             ->andWhere($qb->expr()->eq('cn.id', ':childNodeId'))
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setParameter('childNodeId', $nodeSource->getNode()->getId())

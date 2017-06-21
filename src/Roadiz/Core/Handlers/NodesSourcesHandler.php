@@ -175,12 +175,9 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getIdentifier()
     {
-        if (count($this->nodeSource->getUrlAliases()) > 0) {
-            $urlalias = $this->nodeSource->getUrlAliases()->first();
-
-            if ($urlalias !== null) {
-                return $urlalias->getAlias();
-            }
+        $urlalias = $this->nodeSource->getUrlAliases()->first();
+        if (is_object($urlalias)) {
+            return $urlalias->getAlias();
         }
 
         return $this->nodeSource->getNode()->getNodeName();

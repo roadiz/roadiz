@@ -597,7 +597,8 @@ abstract class AppController extends Controller
                 throw new AccessDeniedException("You don't have access to this page");
             }
 
-            if ($user->getChroot() !== null &&
+            if (null !== $user &&
+                $user->getChroot() !== null &&
                 !in_array($user->getChroot(), $parents, true)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }

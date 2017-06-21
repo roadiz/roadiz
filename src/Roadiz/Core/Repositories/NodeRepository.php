@@ -763,8 +763,9 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select('n, ns')
+        $qb->select('n, ns, ua')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->leftJoin(static::NODESSOURCES_ALIAS.'.urlAliases', 'ua')
             ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
             ->setParameter('translation', $translation)
             ->addOrderBy('n.position', 'ASC')
@@ -863,7 +864,7 @@ class NodeRepository extends EntityRepository
         $preview = false
     ) {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select('n, ns, t')
+        $qb->select('n, ns, t, uas')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.urlAliases', 'uas')
             ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)

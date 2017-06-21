@@ -11,7 +11,7 @@
          # Here is the real power of Roadiz!
          #}
         {% set blocks = nodeSource|children({
-        'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
+            'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
         }) %}
         {% for singleBlock in blocks %}
             {% include '@DefaultTheme/blocks/' ~ singleBlock.node.nodeType.name|lower ~ '.html.twig' ignore missing with {

@@ -73,7 +73,7 @@ class NodesSourcesExtension extends \Twig_Extension
      * @param NodesSources|null $ns
      * @param array|null $criteria
      * @param array|null $order
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      * @throws \Twig_Error_Runtime
      */
     public function getChildren(NodesSources $ns = null, array $criteria = null, array $order = null)

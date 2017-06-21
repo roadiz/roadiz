@@ -87,6 +87,26 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
+     * @param NodesSources $nodeSource
+     * @param Theme|null $theme
+     * @return bool
+     */
+    protected function isNodeSourceHome(NodesSources $nodeSource, Theme $theme = null)
+    {
+        if (null !== $theme &&
+            null !== $theme->getHomeNode() &&
+            $theme->getHomeNode()->getId() === $nodeSource->getNode()->getId()) {
+            return true;
+        }
+
+        if ($nodeSource->getNode()->isHome()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Return a NodesSources url without hostname and without
      * root folder.
      *
@@ -98,8 +118,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
     public function getNonContextualUrl(Theme $theme = null)
     {
         if (null !== $this->nodeSource) {
-            if ($this->nodeSource->getNode()->isHome()
-                || (null !== $theme && $theme->getHomeNode() == $this->nodeSource->getNode())) {
+            if ($this->isNodeSourceHome($this->nodeSource, $theme)) {
                 if ($this->nodeSource->getTranslation()->isDefaultTranslation() &&
                     false === $this->forceLocale) {
                     return '';
@@ -112,12 +131,10 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             $urlTokens[] = $this->nodeSource->getHandler()->getIdentifier();
 
             $parent = $this->nodeSource->getHandler()->getParent();
-            if ($parent !== null &&
-                !$parent->getNode()->isHome()) {
+            if ($parent !== null && !$parent->getNode()->isHome()) {
                 do {
                     if ($parent->getNode()->isVisible()) {
-                        $handler = $parent->getHandler();
-                        $urlTokens[] = $handler->getIdentifier();
+                        $urlTokens[] = $parent->getHandler()->getIdentifier();
                     }
                     $parent = $parent->getHandler()->getParent();
                 } while ($parent !== null && !$parent->getNode()->isHome());
@@ -127,7 +144,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
              * If using node-name, we must use shortLocale when current
              * translation is not the default one.
              */
-            if (($urlTokens[0] == $this->nodeSource->getNode()->getNodeName() &&
+            if (($urlTokens[0] === $this->nodeSource->getNode()->getNodeName() &&
                  !$this->nodeSource->getTranslation()->isDefaultTranslation()) ||
                   true === $this->forceLocale) {
                 $urlTokens[] = $this->nodeSource->getTranslation()->getPreferredLocale();
