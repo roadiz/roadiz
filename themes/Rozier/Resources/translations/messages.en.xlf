@@ -2464,7 +2464,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="229" approved="yes">
         <source>user.edit</source>
-        <target xml:lang="en">Informations</target>
+        <target xml:lang="en">Information</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/c5/b4/7f47aae97677b34984c549a4f887fee075a59184824c766e5bffe8be2ffc.php</context>
           <context context-type="linenumber">31</context>
@@ -4570,6 +4570,10 @@
         <source>embed.document.already_exists</source>
         <target xml:lang="en">Document to embed already exists.</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+        <source>embedId.is_not_valid</source>
+        <target xml:lang="en" state="translated">Media identifier is not valid.</target>
+      <alt-trans><target xml:lang="en">L’identifiant du média n’est pas valide.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
         <target xml:lang="en">Metas</target>
@@ -6667,6 +6671,16 @@
             <target xml:lang="en" state="translated">Use checkboxes or radio buttons instead of select boxes.</target>
             <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="placeholder">
+            <source>placeholder</source>
+            <target xml:lang="en" state="translated">Placeholder</target>
+            <note>Label for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
+            <source>label_for_field_with_empty_data</source>
+            <target xml:lang="en" state="translated">Placeholder is displayed inside a field with no data in.</target>
+            <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        <alt-trans><target xml:lang="en">Le placeholder s’affiche dans un champ ne contenant aucune donnée.</target></alt-trans></trans-unit>
     </body>
   </file>
 </xliff>

@@ -4570,6 +4570,10 @@
         <source>embed.document.already_exists</source>
         <target xml:lang="fr">Le document à intégrer existe déjà.</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+        <source>embedId.is_not_valid</source>
+        <target xml:lang="fr" state="translated">L’identifiant du média n’est pas valide.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
         <target xml:lang="fr">Méta-données</target>
@@ -6666,6 +6670,16 @@
             <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
             <target xml:lang="fr" state="translated">Utilise des boîtes à cocher ou boutons radio à la place de la liste déroulante.</target>
             <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="placeholder">
+            <source>placeholder</source>
+            <target xml:lang="fr" state="translated">Placeholder</target>
+            <note>Label for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
+            <source>label_for_field_with_empty_data</source>
+            <target xml:lang="fr" state="translated">Le placeholder s’affiche dans un champ ne contenant aucune donnée.</target>
+            <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
         </trans-unit>
     </body>
   </file>
