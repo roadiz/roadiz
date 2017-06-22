@@ -184,8 +184,8 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             }
             $entitiesArray[] = [
                 'id' => $entity->getId(),
-                'classname' => utf8_encode($alt),
-                'displayable' => utf8_encode(call_user_func([$entity, $configuration['displayable']])),
+                'classname' => $alt,
+                'displayable' => call_user_func([$entity, $configuration['displayable']]),
             ];
         }
 
