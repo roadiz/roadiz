@@ -223,7 +223,7 @@ class TranstypeController extends RozierApp
 
         $translation = new Translation();
         $translation->setAvailable(true);
-        $translation->setLocale('test' . $uniqueId);
+        $translation->setLocale(substr($uniqueId, 0, 10));
         $translation->setName('test' . $uniqueId);
         $this->get('em')->persist($translation);
 
