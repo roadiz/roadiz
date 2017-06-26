@@ -36,7 +36,10 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * EntityRepository that implements a simple countBy method.
@@ -70,6 +73,22 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
      * @var array
      */
     protected $searchableTypes = ['string', 'text'];
+
+    /**
+     * @param AuthorizationChecker|null $authorizationChecker
+     * @param bool $preview
+     * @return bool
+     */
+    protected function isBackendUser(AuthorizationChecker &$authorizationChecker = null, $preview = false)
+    {
+        try {
+            return $preview === true &&
+                null !== $authorizationChecker &&
+                $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            return false;
+        }
+    }
 
     /**
      * Build a query comparison.

@@ -545,9 +545,7 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $backendUser = $preview === true &&
-        null !== $authorizationChecker &&
-        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+        $backendUser = $this->isBackendUser($authorizationChecker, $preview);
 
         if ($backendUser) {
             $txtQuery .= ' AND n.status <= :status';
@@ -897,16 +895,12 @@ class NodeRepository extends EntityRepository
         $preview = false,
         $prefix = 'n'
     ) {
-        if (null !== $authorizationChecker) {
-            $backendUser = $preview === true &&
-                null !== $authorizationChecker &&
-                $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+        $backendUser = $this->isBackendUser($authorizationChecker, $preview);
 
-            if ($backendUser) {
-                $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
-            } else {
-                $qb->andWhere($qb->expr()->eq($prefix . '.status', Node::PUBLISHED));
-            }
+        if ($backendUser) {
+            $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
+        } elseif (null !== $authorizationChecker) {
+            $qb->andWhere($qb->expr()->eq($prefix . '.status', Node::PUBLISHED));
         }
 
         return $qb;

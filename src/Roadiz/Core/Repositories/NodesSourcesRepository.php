@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -211,9 +212,7 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker &$authorizationChecker = null,
         $preview = false
     ) {
-        $backendUser = $preview === true &&
-        null !== $authorizationChecker &&
-        $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+        $backendUser = $this->isBackendUser($authorizationChecker, $preview);
 
         if ($backendUser) {
             /*

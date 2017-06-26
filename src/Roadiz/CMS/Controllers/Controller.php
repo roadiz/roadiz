@@ -502,6 +502,25 @@ abstract class Controller implements ContainerAwareInterface
         if (!$this->has('securityAuthorizationChecker')) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
+
         return $this->get('securityAuthorizationChecker')->isGranted($attributes, $object);
+    }
+
+    /**
+     * Throws an exception unless the attributes are granted against the current authentication token and optionally
+     * supplied object.
+     *
+     * @param mixed  $attributes The attributes
+     * @param mixed  $object     The object
+     * @param string $message    The message passed to the exception
+     *
+     * @throws AccessDeniedException
+     */
+    protected function denyAccessUnlessGranted($attributes, $object = null, $message = 'Access Denied.')
+    {
+        if (!$this->isGranted($attributes, $object)) {
+            $exception = $this->createAccessDeniedException($message);
+            throw $exception;
+        }
     }
 }
