@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,6 +31,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +52,10 @@ class LoginController extends RozierApp
      */
     public function indexAction(Request $request)
     {
+        if ($this->isGranted(Role::ROLE_BACKEND_USER)) {
+            return $this->redirect($this->generateUrl('adminHomePage'));
+        }
+
         $form = $this->buildLoginForm();
 
         $this->assignation['form'] = $form->createView();

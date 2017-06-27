@@ -59,10 +59,8 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
-use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\RememberMeListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 use Symfony\Component\Security\Http\FirewallMap;
@@ -217,7 +215,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'secure' => false,
                     'httponly' => false,
                 ],
-                $c['logger']
+                $c['kernel']->isDebug() ? $c['logger'] : null
             );
         };
 
@@ -226,7 +224,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
                 $c['authentificationManager'],
-                $c['logger'],
+                $c['kernel']->isDebug() ? $c['logger'] : null,
                 $c['dispatcher']
             );
         };
@@ -306,28 +304,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['firewallMap'] = function () {
             return new FirewallMap();
-        };
-
-        $container['firewallExceptionListener'] = function ($c) {
-            return new ExceptionListener(
-                $c['securityTokenStorage'],
-                $c['securityAuthentificationTrustResolver'],
-                $c['httpUtils'],
-                Kernel::SECURITY_DOMAIN,
-                $c['formAuthentificationEntryPoint'],
-                null,
-                $c['accessDeniedHandler'],
-                $c['logger']
-            );
-        };
-
-        $container['formAuthentificationEntryPoint'] = function ($c) {
-            return new FormAuthenticationEntryPoint(
-                $c['httpKernel'],
-                $c['httpUtils'],
-                '/login',
-                true // Use forward, Be careful, Token will be set to null in sub-request!
-            );
         };
 
         $container['passwordEncoder'] = function () {

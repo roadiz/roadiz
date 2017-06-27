@@ -93,10 +93,6 @@ class FirewallEntry
      */
     private $listeners;
     /**
-     * @var array
-     */
-    private $additionnalListeners;
-    /**
      * @var RequestMatcher
      */
     private $requestMatcher;
@@ -116,6 +112,10 @@ class FirewallEntry
      * @var AccessDeniedHandlerInterface
      */
     private $accessDeniedHandler;
+    /**
+     * @var boolean
+     */
+    private $locked;
 
     /**
      * FirewallEntry constructor.
@@ -123,9 +123,9 @@ class FirewallEntry
      * @param Container $container
      * @param string $firewallBasePattern
      * @param string $firewallBasePath
-     * @param string $firewallLogin
-     * @param string $firewallLogout
-     * @param string $firewallLoginCheck
+     * @param string|null $firewallLogin
+     * @param string|null $firewallLogout
+     * @param string|null $firewallLoginCheck
      * @param string|array $firewallBaseRole
      * @param string $authenticationSuccessHandlerClass
      * @param string $authenticationFailureHandlerClass
@@ -134,9 +134,9 @@ class FirewallEntry
         Container $container,
         $firewallBasePattern,
         $firewallBasePath,
-        $firewallLogin,
-        $firewallLogout,
-        $firewallLoginCheck,
+        $firewallLogin = null,
+        $firewallLogout = null,
+        $firewallLoginCheck = null,
         $firewallBaseRole = 'ROLE_USER',
         $authenticationSuccessHandlerClass = 'RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler',
         $authenticationFailureHandlerClass = 'RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler'
@@ -163,35 +163,34 @@ class FirewallEntry
          * Add an access map entry only if basePath pattern is valid and
          * not root level.
          */
-        if (null !== $this->firewallBasePattern &&
-           "" !== $this->firewallBasePattern &&
-            "^/" !== $this->firewallBasePattern) {
+        if (null !== $this->firewallBasePattern && "" !== $this->firewallBasePattern) {
             $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
             $this->container['accessMap']->add($this->requestMatcher, $this->firewallBaseRole);
         }
 
         $this->listeners = [
             // manages the SecurityContext persistence through a session
-            $this->container['contextListener'],
-            // logout users
-            $this->getLogoutListener(),
-            $this->container['rememberMeListener'],
-            // other listeners are optional…
+            [$this->container['contextListener'], 0],
+            [$this->container['rememberMeListener'], 10],
         ];
-        $this->additionnalListeners = [];
     }
 
     /**
+     * Added anonymous listener to enable all visitor to
+     * access your firewall entry base pattern.
+     *
+     * Warning: this MUST be the before last listener to work.
+     *
      * @return $this
      */
     public function withAnonymousAuthenticationListener()
     {
-        $this->additionnalListeners[9999] = new AnonymousAuthenticationListener(
+        $this->listeners[] = [new AnonymousAuthenticationListener(
             $this->container['securityTokenStorage'],
             $this->container['config']['security']['secret'],
-            $this->container['logger'],
+            $this->container['kernel']->isDebug() ? $this->container['logger'] : null,
             $this->container['authentificationManager']
-        );
+        ), 8888];
         return $this;
     }
 
@@ -216,7 +215,7 @@ class FirewallEntry
      */
     public function withSwitchUserListener()
     {
-        $this->additionnalListeners[] = $this->container["switchUser"];
+        $this->listeners[] = [$this->container["switchUser"], 2];
         return $this;
     }
 
@@ -239,15 +238,42 @@ class FirewallEntry
     }
 
     /**
+     * @return bool
+     */
+    public function hasAuthenticationEntryPoints()
+    {
+        return null !== $this->firewallLogin &&
+                null !== $this->firewallLogout &&
+                null !== $this->firewallLoginCheck;
+    }
+
+    /**
      * @return AbstractAuthenticationListener[]
      */
     public function getListeners()
     {
-        return array_merge($this->listeners, [
-            // authentication via a simple form composed of a username and a password
-            $this->getAuthentificationListener(),
-            $this->container['securityAccessListener'],
-        ], $this->additionnalListeners);
+        if (!$this->locked) {
+            if ($this->hasAuthenticationEntryPoints()) {
+                // logout users
+                $this->listeners[] = [$this->getLogoutListener(), 1];
+
+                $this->listeners[] = [$this->getAuthentificationListener(), 20];
+                // Warning: this MUST be the last listener to work.
+                $this->listeners[] = [$this->container['securityAccessListener'], 9999];
+            }
+
+            /*
+             * Sort listeners by priority
+             */
+            usort($this->listeners, function ($a, $b) {
+                return ($a[1] > $b[1]) ? 1 : 0;
+            });
+            $this->locked = true;
+        }
+
+        return array_map(function ($a) {
+            return $a[0];
+        }, $this->listeners);
     }
 
     /**

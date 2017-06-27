@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
+use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -418,30 +419,49 @@ abstract class FrontendController extends AppController
     {
         parent::setupDependencyInjection($container);
 
-        /*
-         * Prepare app firewall
+        /**
+         * You can override default frontend firewall
+         * by overriding addDefaultFirewallEntry method
+         *
+         * @see FrontendController::addDefaultFirewallEntry
          */
-        $requestMatcher = new RequestMatcher('^/');
-        $container['accessMap']->add($requestMatcher, ['IS_AUTHENTICATED_ANONYMOUSLY']);
+        static::addDefaultFirewallEntry($container);
+    }
 
-        $listeners = [
-            // manages the TokenStorage persistence through a session
-            $container['contextListener'],
-            $container["switchUser"],
-            $container['rememberMeListener'],
-            // automatically adds a Token if none is already present.
-            new AnonymousAuthenticationListener(
-                $container['securityTokenStorage'],
-                $container['config']['security']['secret'],
-                null, // Do not provide logger
-                $container['authentificationManager']
-            ),
-        ];
+    /**
+     * Declare a default firewall for any routes and adds
+     * an Anonymous token and context listener to fetch current
+     * user information in front-end.
+     *
+     * Override this method to create a custom frontend security scheme
+     * with FirewallEntry.
+     *
+     * @param Container $container
+     * @see FirewallEntry
+     */
+    public static function addDefaultFirewallEntry(Container $container)
+    {
+        $firewallBasePattern = '^/';
+        $firewallBasePath = '/';
 
-        /*
-         * Inject a new firewall map element
-         */
-        $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
+        $firewallEntry = new FirewallEntry(
+            $container,
+            $firewallBasePattern,
+            $firewallBasePath,
+            null,
+            null,
+            null,
+            'IS_AUTHENTICATED_ANONYMOUSLY'
+        );
+        $firewallEntry
+            ->withSwitchUserListener()
+            ->withAnonymousAuthenticationListener();
+
+        $container['firewallMap']->add(
+            $firewallEntry->getRequestMatcher(),
+            $firewallEntry->getListeners(),
+            $firewallEntry->getExceptionListener()
+        );
     }
 
     /**

@@ -63,7 +63,10 @@ class AuthCollector extends DataCollector implements Renderable
                 return [
                     'name' => $this->tokenStorage->getToken()->getUsername(),
                     'user' => [
-                        'Roles' => array_map(function(RoleInterface $role) { return $role->getRole(); }, $this->tokenStorage->getToken()->getRoles()),
+                        'Token' => get_class($this->tokenStorage->getToken()),
+                        'Roles' => array_map(function (RoleInterface $role) {
+                            return $role->getRole();
+                        }, $this->tokenStorage->getToken()->getRoles()),
                         'Email' => $user->getEmail(),
                         'Last login' => $user->getLastLogin()->format("Y-m-d H:i:s"),
                     ]
@@ -72,7 +75,10 @@ class AuthCollector extends DataCollector implements Renderable
                 return [
                     'name' => 'Guest',
                     'user' => [
-                        'Roles' =>  array_map(function(RoleInterface $role) { return $role->getRole(); }, $this->tokenStorage->getToken()->getRoles()),
+                        'Token' => get_class($this->tokenStorage->getToken()),
+                        'Roles' =>  array_map(function (RoleInterface $role) {
+                            return $role->getRole();
+                        }, $this->tokenStorage->getToken()->getRoles()),
                     ]
                 ];
             }

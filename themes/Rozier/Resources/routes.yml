@@ -14,6 +14,7 @@ adminHomePage:
     path:     /rz-admin
     defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
 loginRoutes:
+    prefix: /rz-admin
     resource: "routing/login.yml"
 
 ajaxSessionMessages:

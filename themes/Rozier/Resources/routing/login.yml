@@ -19,10 +19,10 @@ loginImagePage:
     path:     /login/image
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::imageAction }
 logoutPage:
-    path:     /rz-admin/logout
+    path:     /logout
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::logoutAction }
 loginFailedPage:
     path:     /login_failed
     defaults: { _controller: Themes\Rozier\Controllers\LoginController::indexAction }
 loginCheckPage:
-    path:     /rz-admin/login_check
+    path:     /login_check

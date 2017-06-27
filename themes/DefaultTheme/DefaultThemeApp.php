@@ -186,6 +186,7 @@ class DefaultThemeApp extends FrontendController
         });
 
         /*
+         * Example:
          * Alter Solr indexing with custom data.
          */
         /** @var EventDispatcher $dispatcher */
