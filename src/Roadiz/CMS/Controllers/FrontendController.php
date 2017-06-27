@@ -427,9 +427,15 @@ abstract class FrontendController extends AppController
         $listeners = [
             // manages the TokenStorage persistence through a session
             $container['contextListener'],
-            // automatically adds a Token if none is already present.
-            new AnonymousAuthenticationListener($container['securityTokenStorage'], ''), // $key
             $container["switchUser"],
+            $container['rememberMeListener'],
+            // automatically adds a Token if none is already present.
+            new AnonymousAuthenticationListener(
+                $container['securityTokenStorage'],
+                $container['config']['security']['secret'],
+                null, // Do not provide logger
+                $container['authentificationManager']
+            ),
         ];
 
         /*

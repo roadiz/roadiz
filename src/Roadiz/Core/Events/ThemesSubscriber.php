@@ -64,10 +64,7 @@ class ThemesSubscriber implements EventSubscriberInterface
     {
         return [
             ConsoleEvents::COMMAND => 'onCommand',
-            KernelEvents::REQUEST => [
-                'onKernelRequest',
-                60,
-            ],
+            KernelEvents::REQUEST => ['onKernelRequest', 60],
         ];
     }
 

@@ -23,7 +23,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AuthCollector.php
+ * @file DispatcherCollector.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
@@ -31,24 +31,24 @@ namespace RZ\Roadiz\Utils\DebugBar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use RZ\Roadiz\Core\Entities\User;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Role\RoleInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\EventDispatcher\Debug\WrappedListener;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AuthCollector extends DataCollector implements Renderable
+class DispatcherCollector extends DataCollector implements Renderable
 {
     /**
-     * @var TokenStorage
+     * @var EventDispatcherInterface
      */
-    private $tokenStorage;
+    private $dispatcher;
+
 
     /**
-     * @param TokenStorage $tokenStorage
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(TokenStorage $tokenStorage)
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -56,32 +56,34 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        if (null !== $this->tokenStorage->getToken()) {
-            if ($this->tokenStorage->getToken()->getUser() instanceof UserInterface) {
-                /** @var User $user */
-                $user = $this->tokenStorage->getToken()->getUser();
-                return [
-                    'name' => $this->tokenStorage->getToken()->getUsername(),
-                    'user' => [
-                        'Roles' => array_map(function(RoleInterface $role) { return $role->getRole(); }, $this->tokenStorage->getToken()->getRoles()),
-                        'Email' => $user->getEmail(),
-                        'Last login' => $user->getLastLogin()->format("Y-m-d H:i:s"),
-                    ]
-                ];
-            } else {
-                return [
-                    'name' => 'Guest',
-                    'user' => [
-                        'Roles' =>  array_map(function(RoleInterface $role) { return $role->getRole(); }, $this->tokenStorage->getToken()->getRoles()),
-                    ]
-                ];
+        $array = [
+            'listeners' => [],
+        ];
+        foreach ($this->dispatcher->getListeners() as $eventName => $listeners) {
+            /** @var EventSubscriberInterface $listener */
+            foreach ($listeners as $priority => $listener) {
+                if (is_object($listener) &&
+                    $listener instanceof WrappedListener) {
+                    $listener = $listener->getWrappedListener();
+                }
+
+                if (is_object($listener)) {
+                    $className = get_class($listener);
+                    $method = null;
+                } else {
+                    if (is_object($listener[0])) {
+                        $className = get_class($listener[0]);
+                    } else {
+                        $className = '';
+                    }
+
+                    $method = $listener[1];
+                }
+                $array['listeners'][$eventName . '('.$priority.')'] = $className . ':' . $method;
             }
         }
 
-        return [
-            'name' => 'Guest',
-            'user' => [],
-        ];
+        return $array;
     }
 
     /**
@@ -89,7 +91,7 @@ class AuthCollector extends DataCollector implements Renderable
      */
     public function getName()
     {
-        return 'auth';
+        return 'dispatcher';
     }
 
     /**
@@ -98,18 +100,12 @@ class AuthCollector extends DataCollector implements Renderable
     public function getWidgets()
     {
         $widgets = [
-            'auth' => [
+            'dispatcher' => [
                 'icon' => 'lock',
-                'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
-                'map' => 'auth.user',
+                'widget' => 'PhpDebugBar.Widgets.KVListWidget',
+                'map' => 'dispatcher.listeners',
                 'default' => '{}'
             ]
-        ];
-        $widgets['auth.name'] = [
-            'icon' => 'user',
-            'tooltip' => 'Auth status',
-            'map' => 'auth.name',
-            'default' => '',
         ];
 
         return $widgets;

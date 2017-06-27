@@ -32,9 +32,10 @@ namespace RZ\Roadiz\Utils\Security;
 use Pimple\Container;
 use RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
+use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
@@ -111,6 +112,10 @@ class FirewallEntry
      * @var string
      */
     private $authenticationFailureHandlerClass;
+    /**
+     * @var AccessDeniedHandlerInterface
+     */
+    private $accessDeniedHandler;
 
     /**
      * FirewallEntry constructor.
@@ -141,6 +146,7 @@ class FirewallEntry
         $this->firewallLogin = $firewallLogin;
         $this->firewallLogout = $firewallLogout;
         $this->firewallLoginCheck = $firewallLoginCheck;
+        $this->accessDeniedHandler = null;
 
         if (is_array($firewallBaseRole)) {
             $this->firewallBaseRole = $firewallBaseRole;
@@ -180,11 +186,27 @@ class FirewallEntry
      */
     public function withAnonymousAuthenticationListener()
     {
-        $this->additionnalListeners[] = new AnonymousAuthenticationListener(
+        $this->additionnalListeners[9999] = new AnonymousAuthenticationListener(
             $this->container['securityTokenStorage'],
             $this->container['config']['security']['secret'],
             $this->container['logger'],
             $this->container['authentificationManager']
+        );
+        return $this;
+    }
+
+    /**
+     * @param string $redirectRoute
+     * @param array $redirectParameters
+     * @return $this
+     */
+    public function withAccessDeniedHandler($redirectRoute = '', $redirectParameters = [])
+    {
+        $this->accessDeniedHandler = new AccessDeniedHandler(
+            $this->container['urlGenerator'],
+            $this->container['logger'],
+            $redirectRoute,
+            $redirectParameters
         );
         return $this;
     }
@@ -290,12 +312,12 @@ class FirewallEntry
 
         return new ExceptionListener(
             $this->container['securityTokenStorage'],
-            new AuthenticationTrustResolver('', ''),
+            $this->container['securityAuthentificationTrustResolver'],
             $this->container['httpUtils'],
             Kernel::SECURITY_DOMAIN,
             $formEntryPoint,
             null,
-            null,
+            $this->accessDeniedHandler,
             $this->container['logger']
         );
     }

@@ -43,11 +43,13 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -231,6 +233,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['authentificationManager'] = function ($c) {
             return new AuthenticationProviderManager([
+                new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
             ]);
@@ -241,8 +244,16 @@ class SecurityServiceProvider implements ServiceProviderInterface
          */
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager([
+                new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
                 $c['roleHierarchyVoter'],
             ]);
+        };
+
+        $container['securityAuthentificationTrustResolver'] = function ($c) {
+            return new AuthenticationTrustResolver(
+                'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
+                'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken'
+            );
         };
 
         $container['securityAuthorizationChecker'] = function ($c) {
@@ -300,7 +311,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['firewallExceptionListener'] = function ($c) {
             return new ExceptionListener(
                 $c['securityTokenStorage'],
-                new AuthenticationTrustResolver('', ''),
+                $c['securityAuthentificationTrustResolver'],
                 $c['httpUtils'],
                 Kernel::SECURITY_DOMAIN,
                 $c['formAuthentificationEntryPoint'],

@@ -37,6 +37,7 @@ use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DebugBar;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
+use RZ\Roadiz\Utils\DebugBar\DataCollector\DispatcherCollector;
 
 class RoadizDebugBar extends DebugBar
 {
@@ -60,5 +61,6 @@ class RoadizDebugBar extends DebugBar
         $this->addCollector(new DoctrineCollector($this->container['doctrine.debugstack']));
         $this->addCollector(new ConfigCollector($this->container['config']));
         $this->addCollector(new AuthCollector($this->container['securityTokenStorage']));
+        $this->addCollector(new DispatcherCollector($this->container['dispatcher']));
     }
 }

@@ -450,6 +450,14 @@ abstract class AppController extends Controller
      */
     public static function setupDependencyInjection(Container $container)
     {
+        static::addThemeTemplatesPath($container);
+    }
+
+    /**
+     * @param Container $container
+     */
+    public static function addThemeTemplatesPath(Container $container)
+    {
         /*
          * Enable theme templates in main namespace and in its own theme namespace.
          */
