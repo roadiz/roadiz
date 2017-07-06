@@ -49,18 +49,24 @@ class UrlExtension extends \Twig_Extension
      * @var RequestStack
      */
     private $requestStack;
+    /**
+     * @var bool
+     */
+    private $throwExceptions;
 
     /**
      * UrlExtension constructor.
      * @param RequestStack $requestStack
      * @param CacheProvider|null $cacheProvider
      * @param bool $forceLocale
+     * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(RequestStack $requestStack, CacheProvider $cacheProvider = null, $forceLocale = false)
+    public function __construct(RequestStack $requestStack, CacheProvider $cacheProvider = null, $forceLocale = false, $throwExceptions = false)
     {
         $this->forceLocale = $forceLocale;
         $this->cacheProvider = $cacheProvider;
         $this->requestStack = $requestStack;
+        $this->throwExceptions = $throwExceptions;
     }
 
     /**
@@ -108,25 +114,30 @@ class UrlExtension extends \Twig_Extension
      */
     public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
     {
-        if (null !== $mixed) {
-            if ($mixed instanceof Document) {
-                try {
-                    $absolute = false;
-                    if (isset($criteria['absolute'])) {
-                        $absolute = (boolean) $criteria['absolute'];
-                    }
-                    return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
-                } catch (InvalidArgumentException $e) {
-                    throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
-                }
-            } elseif ($mixed instanceof NodesSources) {
-                return $this->getNodesSourceUrl($mixed, $criteria);
-            } elseif ($mixed instanceof Node) {
-                return $this->getNodeUrl($mixed, $criteria);
+        if (null === $mixed) {
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object");
+            } else {
+                return "";
             }
-            throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
         }
-        throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object");
+
+        if ($mixed instanceof Document) {
+            try {
+                $absolute = false;
+                if (isset($criteria['absolute'])) {
+                    $absolute = (boolean) $criteria['absolute'];
+                }
+                return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
+            } catch (InvalidArgumentException $e) {
+                throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+            }
+        } elseif ($mixed instanceof NodesSources) {
+            return $this->getNodesSourceUrl($mixed, $criteria);
+        } elseif ($mixed instanceof Node) {
+            return $this->getNodeUrl($mixed, $criteria);
+        }
+        throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
     }
 
     /**

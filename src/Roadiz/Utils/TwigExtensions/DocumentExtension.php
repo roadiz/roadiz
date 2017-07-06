@@ -44,14 +44,20 @@ class DocumentExtension extends \Twig_Extension
      * @var Container
      */
     private $container;
+    /**
+     * @var bool
+     */
+    private $throwExceptions;
 
     /**
      * DocumentExtension constructor.
      * @param Container $container
+     * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, $throwExceptions = false)
     {
         $this->container = $container;
+        $this->throwExceptions = $throwExceptions;
     }
 
     /**
@@ -86,7 +92,11 @@ class DocumentExtension extends \Twig_Extension
     public function display(Document $document = null, array $criteria = [])
     {
         if (null === $document) {
-            throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
+            } else {
+                return "";
+            }
         }
         try {
             return $document->getViewer()->getDocumentByArray($criteria);
@@ -104,9 +114,17 @@ class DocumentExtension extends \Twig_Extension
      *
      * @param Document $document
      * @return null|string
+     * @throws \Twig_Error_Runtime
      */
     public function getImageOrientation(Document $document = null)
     {
+        if (null === $document) {
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime('Document can’t be null to get its orientation.');
+            } else {
+                return null;
+            }
+        }
         if (null !== $document && $document->isImage()) {
             $size = $this->getImageSize($document);
             return $size['width'] >= $size['height'] ? 'landscape' : 'portrait';
@@ -117,10 +135,22 @@ class DocumentExtension extends \Twig_Extension
 
     /**
      * @param Document $document
-     * @return array|null
+     * @return array
+     * @throws \Twig_Error_Runtime
      */
     public function getImageSize(Document $document = null)
     {
+        if (null === $document) {
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime('Document can’t be null to get its size.');
+            } else {
+                return [
+                    'width' => 0,
+                    'height' => 0,
+                ];
+            }
+        }
+
         if (null !== $document && $document->isImage()) {
             $manager = new ImageManager();
             $documentPath = $this->container['assetPackages']->getDocumentFilePath($document);
@@ -131,21 +161,33 @@ class DocumentExtension extends \Twig_Extension
             ];
         }
 
-        return null;
+         return [
+            'width' => 0,
+            'height' => 0,
+        ];
     }
 
     /**
      * @param Document $document
-     * @return float|null
+     * @return float
+     * @throws \Twig_Error_Runtime
      */
     public function getImageRatio(Document $document = null)
     {
+        if (null === $document) {
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime('Document can’t be null to get its ratio.');
+            } else {
+                return 0.0;
+            }
+        }
+
         if (null !== $document && $document->isImage()) {
             $size = $this->getImageSize($document);
             return $size['width']/$size['height'];
         }
 
-        return null;
+        return 0.0;
     }
 
     /**

@@ -30,9 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Doctrine\Common\Util\Debug;
-use Doctrine\ORM\Mapping\Entity;
 use Pimple\Container;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 class DumpExtension extends \Twig_Extension
 {
