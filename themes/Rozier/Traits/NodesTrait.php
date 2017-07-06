@@ -68,6 +68,7 @@ trait NodesTrait
         /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($title);
+        $source->setPublishedAt(new \DateTime());
 
         $this->get('em')->persist($source);
         $this->get('em')->flush();

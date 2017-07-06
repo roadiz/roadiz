@@ -104,6 +104,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
 
         $ns = new NSPage($node, $translation);
         $ns->setTitle($title);
+        $ns->setPublishedAt(new \DateTime());
 
         static::getManager()->persist($node);
         static::getManager()->persist($ns);

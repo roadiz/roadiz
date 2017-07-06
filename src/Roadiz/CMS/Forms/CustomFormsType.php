@@ -37,6 +37,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -246,6 +247,12 @@ class CustomFormsType extends AbstractType
                     $countries = array_map('trim', $countries);
                     $option['preferred_choices'] = $countries;
                 }
+                break;
+            case AbstractField::EMAIL_T:
+                if (!isset($option['constraints'])) {
+                    $option['constraints'] = [];
+                }
+                $option['constraints'][] = new Email();
                 break;
             default:
                 break;

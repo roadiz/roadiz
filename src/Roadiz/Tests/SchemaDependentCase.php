@@ -102,6 +102,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
         $ns = new NodesSources($node, $translation);
         $ns->setTitle($title);
+        $ns->setPublishedAt(new \DateTime());
         static::getManager()->persist($ns);
 
         $node->addNodeSources($ns);
