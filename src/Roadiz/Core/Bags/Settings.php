@@ -104,7 +104,7 @@ class Settings extends ParameterBag
      * Get a document from its setting name.
      *
      * @param string $key
-     * @return \RZ\Roadiz\Core\Entities\Document|object|bool
+     * @return \RZ\Roadiz\Core\Entities\Document|null
      */
     public function getDocument($key)
     {
@@ -113,11 +113,11 @@ class Settings extends ParameterBag
                 $id = $this->getInt($key);
                 return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', $id);
             } catch (\Exception $e) {
-                return false;
+                return null;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
