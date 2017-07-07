@@ -93,7 +93,7 @@ class LoginController extends RozierApp
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse();
 
-            if (false !== $document = $this->get('settingsBag')->getDocument('login_image')) {
+            if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
                 $documentViewer = new DocumentViewer($document);
 
                 $response->setData([
