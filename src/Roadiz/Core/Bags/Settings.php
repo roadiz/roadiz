@@ -89,19 +89,19 @@ class Settings extends AbstractBag
      * Get a document from its setting name.
      *
      * @param string $settingName
-     * @return \RZ\Roadiz\Core\Entities\Document|object|bool
+     * @return \RZ\Roadiz\Core\Entities\Document|null
      */
     public function getDocument($settingName)
     {
         if (null !== $this->entityManager) {
             try {
                 $id = $this->getRepository()->getValue($settingName);
-                return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', (int) $id);
+                return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', $id);
             } catch (\Exception $e) {
-                return false;
+                return null;
             }
         }
 
-        return false;
+        return null;
     }
 }

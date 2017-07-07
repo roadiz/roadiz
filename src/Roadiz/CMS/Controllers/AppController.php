@@ -374,9 +374,9 @@ abstract class AppController extends Controller
             ],
         ];
 
-        if ('' != $this->get('settingsBag')->getDocument('static_domain_name')) {
+        if ('' != $this->get('settingsBag')->get('static_domain_name')) {
             $this->assignation['head']['absoluteResourcesUrl'] = $this->getStaticResourcesUrl();
-            $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->getDocument('static_domain_name');
+            $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->get('static_domain_name');
         }
 
         if ($this->get('securityAuthorizationChecker') !== null) {
