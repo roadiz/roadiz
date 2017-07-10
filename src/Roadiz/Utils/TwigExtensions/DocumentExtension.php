@@ -164,7 +164,7 @@ class DocumentExtension extends \Twig_Extension
          return [
             'width' => 0,
             'height' => 0,
-        ];
+         ];
     }
 
     /**
