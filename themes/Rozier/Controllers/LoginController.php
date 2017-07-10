@@ -56,7 +56,7 @@ class LoginController extends RozierApp
             return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
-        $form = $this->buildLoginForm();
+        $form = $this->buildLoginForm($request);
 
         $this->assignation['form'] = $form->createView();
 
@@ -120,7 +120,7 @@ class LoginController extends RozierApp
     /**
      * @return \Symfony\Component\Form\Form
      */
-    private function buildLoginForm()
+    private function buildLoginForm(Request $request)
     {
         $defaults = [];
 
@@ -145,6 +145,12 @@ class LoginController extends RozierApp
                                 'checked' => true
                             ],
                         ]);
+
+        if ($request->query->has('_home')) {
+            $builder->add('_target_path', 'hidden', [
+                'data' => $this->get('urlGenerator')->generate('adminHomePage')
+            ]);
+        }
 
         return $builder->getForm();
     }

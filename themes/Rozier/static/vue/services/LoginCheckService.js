@@ -38,7 +38,7 @@ import {
 export default class LoginCheckService {
     constructor (store) {
         this.store = store
-        this.intervalDuration = 5000
+        this.intervalDuration = 10000
         this.check()
     }
 
@@ -50,7 +50,8 @@ export default class LoginCheckService {
         this.interval = window.setInterval(() => {
             request({
                 method: 'GET',
-                url: RozierRoot.routes.ping
+                url: RozierRoot.routes.ping,
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
             })
                 .then((response) => {
                     if (response && response.status === 200) {

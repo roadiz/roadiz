@@ -20,7 +20,7 @@
     export default {
         data () {
             return {
-                linkUrl: RozierRoot.routes.loginPage
+                linkUrl: RozierRoot.routes.loginPage + '?_home=1'
             }
         },
         computed: {
