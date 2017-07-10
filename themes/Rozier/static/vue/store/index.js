@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import {
-    KEYBOARD_EVENT_ESCAPE
+    KEYBOARD_EVENT_ESCAPE,
+    LOGIN_CHECK_DISCONNECTED
 } from '../types/mutationTypes'
 
 // Modules
@@ -23,7 +24,13 @@ export default new Vuex.Store({
         blanchetteEditor
     },
     state: {
-        translations: RozierRoot.messages
+        translations: RozierRoot.messages,
+        connected: true
+    },
+    mutations: {
+        [LOGIN_CHECK_DISCONNECTED] (state) {
+            state.connected = false
+        }
     },
     actions: {
         escape ({ commit }) {

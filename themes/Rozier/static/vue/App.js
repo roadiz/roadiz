@@ -3,6 +3,7 @@ import store from './store'
 
 // Services
 import KeyboardEventService from './services/KeyboardEventService'
+import LoginCheckService from './services/LoginCheckService'
 
 // Containers
 import NodeTypeFieldFormContainer from './containers/NodeTypeFieldFormContainer.vue'
@@ -13,6 +14,7 @@ import FilterExplorerContainer from './containers/FilterExplorerContainer.vue'
 import TagsEditorContainer from './containers/TagsEditorContainer.vue'
 import DocumentPreviewContainer from './containers/DocumentPreviewContainer.vue'
 import BlanchetteEditorContainer from './containers/BlanchetteEditorContainer.vue'
+import ModalContainer from './containers/ModalContainer.vue'
 
 // Components
 import Overlay from './components/Overlay.vue'
@@ -26,6 +28,7 @@ import {
  */
 class AppVue {
     constructor () {
+        this.services = []
         this.navTrees = null
         this.containers = null
         this.documentExplorer = null
@@ -38,7 +41,8 @@ class AppVue {
             FilterExplorerContainer,
             TagsEditorContainer,
             DocumentPreviewContainer,
-            BlanchetteEditorContainer
+            BlanchetteEditorContainer,
+            ModalContainer
         }
 
         this.registeredComponents = {
@@ -67,7 +71,8 @@ class AppVue {
     }
 
     initServices () {
-        this.keyboardEventService = new KeyboardEventService(store)
+        this.services.push(new KeyboardEventService(store))
+        this.services.push(new LoginCheckService(store))
     }
 
     onPageChange () {
