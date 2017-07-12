@@ -67,13 +67,15 @@ class DocumentRepository extends EntityRepository
             return null;
         }
     }
+
     /**
      * Add a folder filtering to queryBuilder.
      *
-     * @param array        $criteria
+     * @param array $criteria
      * @param QueryBuilder $qb
+     * @param string $prefix
      */
-    protected function filterByFolder(&$criteria, &$qb)
+    protected function filterByFolder(&$criteria, &$qb, $prefix = 'd')
     {
         if (in_array('folders', array_keys($criteria))) {
             /*
@@ -84,8 +86,7 @@ class DocumentRepository extends EntityRepository
             }
 
             if (is_array($criteria['folders']) ||
-                (is_object($criteria['folders']) &&
-                    $criteria['folders'] instanceof Collection)) {
+                (is_object($criteria['folders']) && $criteria['folders'] instanceof Collection)) {
                 /*
                  * Do not filter if folder array is empty.
                  */
@@ -100,14 +101,14 @@ class DocumentRepository extends EntityRepository
                     // with AND operator
                     foreach ($criteria['folders'] as $index => $folder) {
                         $alias = 'fd' . $index;
-                        $qb->innerJoin('d.folders', $alias);
+                        $qb->innerJoin($prefix . '.folders', $alias);
                         $qb->andWhere($qb->expr()->eq($alias . '.id', $folder->getId()));
                     }
                     unset($criteria["folderExclusive"]);
                     unset($criteria['folders']);
                 } else {
                     $qb->innerJoin(
-                        'd.folders',
+                        $prefix . '.folders',
                         'fd',
                         'WITH',
                         'fd.id IN (:folders)'
@@ -115,7 +116,7 @@ class DocumentRepository extends EntityRepository
                 }
             } else {
                 $qb->innerJoin(
-                    'd.folders',
+                    $prefix . '.folders',
                     'fd',
                     'WITH',
                     'fd.id = :folders'
@@ -201,7 +202,8 @@ class DocumentRepository extends EntityRepository
         array &$criteria = [],
         $alias = "obj"
     ) {
-
+        $this->filterByFolder($criteria, $qb, $alias);
+        $this->applyFilterByFolder($criteria, $qb);
         $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
@@ -252,7 +254,7 @@ class DocumentRepository extends EntityRepository
      * Bind tag parameter to final query
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param Query|QueryBuilder $finalQuery
      */
     protected function applyFilterByFolder(array &$criteria, &$finalQuery)
     {
