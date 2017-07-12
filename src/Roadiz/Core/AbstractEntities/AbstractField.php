@@ -529,4 +529,235 @@ abstract class AbstractField extends AbstractEntity
         $this->expanded = $expanded;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isString()
+    {
+        return $this->getType() === static::STRING_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isText()
+    {
+        return $this->getType() === static::TEXT_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDate()
+    {
+        return $this->getType() === static::DATE_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDateTime()
+    {
+        return $this->getType() === static::DATETIME_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRichText()
+    {
+        return $this->getType() === static::RICHTEXT_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMarkdown()
+    {
+        return $this->getType() === static::MARKDOWN_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBoolean()
+    {
+        return $this->getType() === static::BOOLEAN_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBool()
+    {
+        return $this->isBoolean();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInteger()
+    {
+        return $this->getType() === static::INTEGER_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDecimal()
+    {
+        return $this->getType() === static::DECIMAL_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmail()
+    {
+        return $this->getType() === static::EMAIL_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDocuments()
+    {
+        return $this->getType() === static::DOCUMENTS_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPassword()
+    {
+        return $this->getType() === static::PASSWORD_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isColour()
+    {
+        return $this->getType() === static::COLOUR_T;
+    }
+    /**
+     * @return bool
+     */
+    public function isColor()
+    {
+        return $this->isColour();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGeoTag()
+    {
+        return $this->getType() === static::GEOTAG_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNodes()
+    {
+        return $this->getType() === static::NODES_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUser()
+    {
+        return $this->getType() === static::USER_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnum()
+    {
+        return $this->getType() === static::ENUM_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isChildrenNodes()
+    {
+        return $this->getType() === static::CHILDREN_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustomForms()
+    {
+        return $this->getType() === static::CUSTOM_FORMS_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return $this->getType() === static::MULTIPLE_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultiGeoTag()
+    {
+        return $this->getType() === static::MULTI_GEOTAG_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isJson()
+    {
+        return $this->getType() === static::JSON_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isYaml()
+    {
+        return $this->getType() === static::YAML_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCss()
+    {
+        return $this->getType() === static::CSS_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManyToMany()
+    {
+        return $this->getType() === static::MANY_TO_MANY_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManyToOne()
+    {
+        return $this->getType() === static::MANY_TO_ONE_T;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCountry()
+    {
+        return $this->getType() === static::COUNTRY_T;
+    }
 }

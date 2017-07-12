@@ -58,7 +58,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     protected $customFormField;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      * @var string
      */
     protected $value;

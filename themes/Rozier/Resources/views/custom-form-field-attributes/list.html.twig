@@ -22,8 +22,12 @@
                 <tbody>
                     {% for type in fields %}
                         <tr>
-                            <td>{{ type.customFormField.label }}</td>
-                            <td>{{ type.value }}</td>
+                            <td>{{ type.customFormField.label|trans }}</td>
+                            {% if type.customFormField.isCountry  %}
+                                <td>{{ type.value|country_iso(request.locale) }}</td>
+                            {% else %}
+                                <td>{{ type.value|trans }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
