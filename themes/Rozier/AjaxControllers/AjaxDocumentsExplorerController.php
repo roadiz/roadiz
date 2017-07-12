@@ -30,7 +30,6 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\HttpFoundation\JsonResponse;
