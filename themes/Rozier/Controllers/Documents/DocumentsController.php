@@ -86,7 +86,9 @@ class DocumentsController extends RozierApp
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
-        $prefilters = [];
+        $prefilters = [
+            'raw' => false,
+        ];
 
         if (null !== $folderId &&
             $folderId > 0) {
