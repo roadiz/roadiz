@@ -79,7 +79,6 @@ if ($request->query->has('env') && $request->query->get('env') == 'preview') {
     $kernel = Kernel::getInstance('prod', false);
 }
 
-$kernel = Kernel::getInstance('prod', false);
 $kernel->boot();
 $kernel->container['request'] = $request;
 
