@@ -70,9 +70,17 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
     exit();
 }
 
+$request = Request::createFromGlobals();
+if ($request->query->has('env') && $request->query->get('env') == 'preview') {
+    $kernel = Kernel::getInstance('prod', false, true);
+} elseif ($request->query->has('env') && $request->query->get('env') == 'dev') {
+    $kernel = Kernel::getInstance('dev', true);
+} else {
+    $kernel = Kernel::getInstance('prod', false);
+}
+
 $kernel = Kernel::getInstance('prod', false);
 $kernel->boot();
-$request = Request::createFromGlobals();
 $kernel->container['request'] = $request;
 
 $clearers = [

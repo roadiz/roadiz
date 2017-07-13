@@ -172,6 +172,7 @@ class RoadizApplication extends Application
             new SolrOptimizeCommand(),
             new CacheCommand(),
             new CacheInfosCommand(),
+            new CacheFpmCommand(),
             new HtaccessCommand(),
             new ThemeInstallCommand(),
             new DocumentDownscaleCommand(),
