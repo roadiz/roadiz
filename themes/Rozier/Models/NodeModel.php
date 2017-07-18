@@ -70,7 +70,7 @@ class NodeModel implements ModelInterface
             'id' => $this->node->getId(),
             'title' => $this->node->getNodeSources()->first()->getTitle(),
             'nodeName' => $this->node->getNodeName(),
-            'isPusblished' => $this->node->isPublished(),
+            'isPublished' => $this->node->isPublished(),
             'nodesEditPage' => $urlGenerator->generate('nodesEditPage', [
                 'nodeId' => $this->node->getId()
             ]),

@@ -7,16 +7,16 @@ return array(
                 '/style.6c74be86.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.e180be2b.min.js',
-                '/rozier-backend-theme-vendor.67a98db6.min.js',
-                '/vue-bundle.336d6c03.min.js',
+                '/rozier-backend-theme.cbdc4f05.min.js',
+                '/rozier-backend-theme-vendor.f45846ea.min.js',
+                '/vue-bundle.e0f55b14.min.js',
             ),
         ),
         'simple' => array(
             'css' => array(
             ),
             'js' => array(
-                '/rozier-backend-theme-simple.2e3ca1b3.min.js',
+                '/rozier-backend-theme-simple.c941c6cb.min.js',
             ),
         ),
         'custom-forms' => array(
@@ -25,7 +25,7 @@ return array(
                 '/custom-forms-front.7455d1eb.css',
             ),
             'js' => array(
-                '/rozier-backend-theme-cforms.47665bd7.min.js',
+                '/rozier-backend-theme-cforms.6cb124a4.min.js',
             ),
         ),
     )
