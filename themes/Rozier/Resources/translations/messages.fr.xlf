@@ -6681,6 +6681,16 @@
             <target xml:lang="fr" state="translated">Le placeholder s’affiche dans un champ ne contenant aucune donnée.</target>
             <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="session.expire.title">
+            <source>session.expire.title</source>
+            <target xml:lang="fr" state="translated">Votre session a expiré !</target>
+            <note>Title for login check warning "modal".</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="session.expire.content">
+            <source>session.expire.content</source>
+            <target xml:lang="fr" state="translated">Vous êtes déconnecté, veuillez vous reconnecter</target>
+            <note>Description for login check warning "modal".</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
