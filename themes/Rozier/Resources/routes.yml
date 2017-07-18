@@ -8,7 +8,6 @@ rozierRemoveTrailingSlash:
         url: .*/$
     methods: [GET]
 
-
 # Home page
 adminHomePage:
     path:     /rz-admin
@@ -22,6 +21,12 @@ ajaxSessionMessages:
     methods: [GET]
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxSessionMessages::getMessagesAction
+
+#Ping
+ping:
+    path:     /rz-admin/ping
+    methods: [GET]
+    defaults: { _controller: Themes\Rozier\Controllers\PingController::indexAction }
 
 # CACHES
 deleteDoctrineCache:

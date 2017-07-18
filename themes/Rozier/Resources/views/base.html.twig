@@ -89,6 +89,7 @@
             <filter-explorer-container></filter-explorer-container>
             <explorer-container></explorer-container>
             <document-preview-container></document-preview-container>
+            <modal-container></modal-container>
         </div>
 
         <script type="text/javascript">
@@ -101,25 +102,28 @@
                 'googleClientId': '{{ head.googleClientId }}',
                 'defaultMapLocation': {{ head.mapsLocation|default('null')|raw }},
                 'messages': {
-                    'createTag':         '{{ 'explorer.create_tag'|trans() }}',
-                    'explorer':          '{{ 'documents.toggle-explorer'|trans() }}',
-                    'forbiddenPage':     '{{ 'forbidden.page'|trans() }}',
-                    'document':          '{{ 'document'|trans() }}',
-                    'documents':         '{{ 'documents'|trans() }}',
-                    'item':              '{{ 'item'|trans() }}',
-                    'items':             '{{ 'items'|trans() }}',
-                    'folder':            '{{ 'folder'|trans() }}',
-                    'folders':           '{{ 'folders'|trans() }}',
-                    'see_all':           '{{ 'see_all'|trans() }}',
-                    'searchDocuments':   '{{ 'search.documents'|trans() }}',
-                    'searchNodes':       '{{ 'search.nodes'|trans() }}',
-                    'searchCustomForms': '{{ 'search.custom_forms'|trans() }}',
-                    'moreDocuments':     '{{ 'more.documents'|trans() }}',
-                    'moreNodes':         '{{ 'more.nodes'|trans() }}',
-                    'moreNodeTypes':     '{{ 'more.nodes'|trans() }}',
-                    'moreTags':          '{{ 'more.tags'|trans() }}',
-                    'moreEntities':      '{{ 'more.entities'|trans() }}',
-                    'moreCustomForms':   '{{ 'more.custom_forms'|trans() }}',
+                    'login':                  '{{ 'login'|trans() }}',
+                    'sessionExpireTitle':     '{{ 'session.expire.title'|trans() }}',
+                    'sessionExpireContent':   '{{ 'session.expire.content'|trans() }}',
+                    'createTag':              '{{ 'explorer.create_tag'|trans() }}',
+                    'explorer':               '{{ 'documents.toggle-explorer'|trans() }}',
+                    'forbiddenPage':          '{{ 'forbidden.page'|trans() }}',
+                    'document':               '{{ 'document'|trans() }}',
+                    'documents':              '{{ 'documents'|trans() }}',
+                    'item':                   '{{ 'item'|trans() }}',
+                    'items':                  '{{ 'items'|trans() }}',
+                    'folder':                 '{{ 'folder'|trans() }}',
+                    'folders':                '{{ 'folders'|trans() }}',
+                    'see_all':                '{{ 'see_all'|trans() }}',
+                    'searchDocuments':        '{{ 'search.documents'|trans() }}',
+                    'searchNodes':            '{{ 'search.nodes'|trans() }}',
+                    'searchCustomForms':      '{{ 'search.custom_forms'|trans() }}',
+                    'moreDocuments':          '{{ 'more.documents'|trans() }}',
+                    'moreNodes':              '{{ 'more.nodes'|trans() }}',
+                    'moreNodeTypes':          '{{ 'more.nodes'|trans() }}',
+                    'moreTags':               '{{ 'more.tags'|trans() }}',
+                    'moreEntities':           '{{ 'more.entities'|trans() }}',
+                    'moreCustomForms':        '{{ 'more.custom_forms'|trans() }}',
                     'blanchetteEditor': {
                         'blanchetteEditor': '{{ 'blanchetteEditor'|trans() }}',
                         'free': '{{ 'blanchetteEditor.free'|trans() }}',
@@ -178,6 +182,9 @@
                     }
                 },
                 'routes': {
+                    'ping' :                      '{{ path('ping') }}',
+                    'splashRequest':              '{{ path('loginImagePage') }}',
+                    'loginPage':                  '{{ path('loginPage') }}',
                     'nodeAjaxEdit' :              '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
                     'tagAjaxEdit' :               '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
                     'folderAjaxEdit' :            '{{ head.baseUrl }}/rz-admin/ajax/folder/edit/%folderId%',
