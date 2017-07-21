@@ -33,6 +33,9 @@
 
 namespace Themes\Rozier\Controllers;
 
+use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -55,20 +58,38 @@ class CustomFormFieldAttributesController extends RozierApp
          * Manage get request to filter list
          */
 
+        /** @var CustomFormAnswer $customFormAnswer */
         $customFormAnswer = $this->get("em")->find("RZ\Roadiz\Core\Entities\CustomFormAnswer", $customFormAnswerId);
+        $answers = $this->getAnswersByGroups($customFormAnswer->getAnswers());
 
-        $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\CustomFormFieldAttribute',
-            ["customFormAnswer" => $customFormAnswer]
-        );
-        $listManager->handle();
-
-        $customFormAnswer = $this->get('em')->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', $customFormAnswerId);
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['fields'] = $listManager->getEntities();
+        $this->assignation['fields'] = $answers;
+        $this->assignation['answer'] = $customFormAnswer;
         $this->assignation['customFormId'] = $customFormAnswer->getCustomForm()->getId();
 
         return $this->render('custom-form-field-attributes/list.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Collection|array $answers
+     * @return array
+     */
+    protected function getAnswersByGroups($answers)
+    {
+        $fieldsArray = [];
+
+        /** @var CustomFormFieldAttribute $answer */
+        foreach ($answers as $answer) {
+            $groupName = $answer->getCustomFormField()->getGroupName();
+            if ($groupName != '') {
+                if (!isset($fieldsArray[$groupName])) {
+                    $fieldsArray[$groupName] = [];
+                }
+                $fieldsArray[$groupName][] = $answer;
+            } else {
+                $fieldsArray[] = $answer;
+            }
+        }
+
+        return $fieldsArray;
     }
 }
