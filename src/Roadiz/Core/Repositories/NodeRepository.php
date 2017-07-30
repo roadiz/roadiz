@@ -545,7 +545,7 @@ class NodeRepository extends EntityRepository
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        $backendUser = $this->isBackendUser($authorizationChecker, $preview);
+        $backendUser = $this->isBackendUser();
 
         if ($backendUser) {
             $txtQuery .= ' AND n.status <= :status';
@@ -895,7 +895,7 @@ class NodeRepository extends EntityRepository
         $preview = false,
         $prefix = 'n'
     ) {
-        $backendUser = $this->isBackendUser($authorizationChecker, $preview);
+        $backendUser = $this->isBackendUser();
 
         if ($backendUser) {
             $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));

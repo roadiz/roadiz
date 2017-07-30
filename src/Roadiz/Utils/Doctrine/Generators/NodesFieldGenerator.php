@@ -40,8 +40,12 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldGetter()
     {
-        //TODO: Need to remove dependency to `getHandler` method.
-
+        /*
+         * TODO: Need to remove dependency to `getHandler` method.
+         *
+         * We have a problem with getNodesFromFieldName method which
+         * need AuthorizationChecker and isPreview dependencies
+         */
         return '
     /**
      * @return array Node array

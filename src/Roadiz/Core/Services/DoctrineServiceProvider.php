@@ -53,6 +53,7 @@ use RZ\Roadiz\Core\Events\TagLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 
 /**
  * Register Doctrine services for dependency injection container.
@@ -193,6 +194,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 );
                 $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
+                /*
+                 * Override default repository factory
+                 * to inject Container into Doctrine repositories!
+                 */
+                $config->setRepositoryFactory(new RoadizRepositoryFactory($c, $kernel->isPreview()));
 
                 return $config;
             } catch (NoConfigurationFoundException $e) {

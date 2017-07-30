@@ -212,7 +212,7 @@ class NodesSourcesRepository extends EntityRepository
         AuthorizationChecker &$authorizationChecker = null,
         $preview = false
     ) {
-        $backendUser = $this->isBackendUser($authorizationChecker, $preview);
+        $backendUser = $this->isBackendUser();
 
         if ($backendUser) {
             /*

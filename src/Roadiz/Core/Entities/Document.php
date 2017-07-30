@@ -492,7 +492,7 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
      */
     protected $documentTranslations;
