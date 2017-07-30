@@ -206,7 +206,10 @@ class NodeTypeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($nodes as $node) {
-            $node->getHandler()->removeWithChildrenAndAssociations();
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->kernel->get('node.handler');
+            $nodeHandler->setNode($node);
+            $nodeHandler->removeWithChildrenAndAssociations();
         }
 
         /*

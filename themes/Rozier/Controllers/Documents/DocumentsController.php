@@ -54,7 +54,6 @@ use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
-use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 use Themes\Rozier\Models\DocumentModel;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -672,15 +671,7 @@ class DocumentsController extends RozierApp
                         $documentModel = new DocumentModel($document, $this->getContainer());
                         return new JsonResponse([
                             'success' => true,
-                            'documentId' => $document->getId(),
                             'document' => $documentModel->toArray(),
-                            'thumbnail' => [
-                                'id' => $document->getId(),
-                                'filename' => $document->getFilename(),
-                                'large' => $document->getViewer()->getDocumentUrlByArray(['noProcess' => true]),
-                                'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                            ],
                         ]);
                     } else {
                         return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));

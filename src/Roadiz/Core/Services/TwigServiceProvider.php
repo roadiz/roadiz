@@ -165,10 +165,12 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new BlockRenderExtension($c));
             $extensions->add(new UrlExtension(
                 $c['requestStack'],
+                $c['assetPackages'],
+                $c['urlGenerator'],
                 $c['nodesSourcesUrlCacheProvider'],
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
-            $extensions->add(new RoadizTranslationExtension($c['requestStack']));
+            $extensions->add(new RoadizTranslationExtension($c['requestStack'], $c['translation.viewer']));
 
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
@@ -182,6 +184,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $extensions->add(new FontExtension($c));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
+                    $c['nodes_sources.handler'],
                     $kernel->isPreview()
                 ));
 

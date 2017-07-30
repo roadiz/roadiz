@@ -45,7 +45,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class UserViewer
 {
-    /** @var User  */
+    /** @var User|null  */
     protected $user;
 
     /** @var EntityManager */
@@ -61,9 +61,9 @@ class UserViewer
     protected $emailManager;
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\User $user
+     * @param User $user
      */
-    public function __construct(User $user)
+    public function __construct(User $user = null)
     {
         $this->user = $user;
 
@@ -129,5 +129,23 @@ class UserViewer
         }
 
         return $siteName;
+    }
+
+    /**
+     * @return null|User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param null|User $user
+     * @return UserViewer
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
 }

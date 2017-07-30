@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -43,17 +44,27 @@ class NodesSourcesExtension extends \Twig_Extension
      * @var bool
      */
     private $throwExceptions;
+    /**
+     * @var NodesSourcesHandler
+     */
+    private $nodesSourcesHandler;
 
     /**
      * @param AuthorizationChecker $securityAuthorizationChecker
+     * @param NodesSourcesHandler $nodesSourcesHandler
      * @param boolean $preview
      * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(AuthorizationChecker $securityAuthorizationChecker, $preview = false, $throwExceptions = false)
-    {
+    public function __construct(
+        AuthorizationChecker $securityAuthorizationChecker,
+        NodesSourcesHandler $nodesSourcesHandler,
+        $preview = false,
+        $throwExceptions = false
+    ) {
         $this->securityAuthorizationChecker = $securityAuthorizationChecker;
         $this->preview = $preview;
         $this->throwExceptions = $throwExceptions;
+        $this->nodesSourcesHandler = $nodesSourcesHandler;
     }
 
     public function getName()
@@ -91,8 +102,8 @@ class NodesSourcesExtension extends \Twig_Extension
                 return [];
             }
         }
-
-        return $ns->getHandler()->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -112,7 +123,8 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        return $ns->getHandler()->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -132,7 +144,8 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        return $ns->getHandler()->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -152,7 +165,8 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        return $ns->getHandler()->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -172,7 +186,8 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        return $ns->getHandler()->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -190,7 +205,7 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        return $ns->getHandler()->getParent();
+        return $ns->getParent();
     }
 
     /**
@@ -211,7 +226,8 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $preview = $preview !== null ? $preview : $this->preview;
-        return $ns->getHandler()->getParents($criteria, $this->securityAuthorizationChecker, $preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getParents($criteria, $this->securityAuthorizationChecker, $preview);
     }
 
     /**
@@ -229,6 +245,7 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        return $ns->getHandler()->getTags();
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getTags();
     }
 }

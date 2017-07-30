@@ -68,7 +68,7 @@ class ExportController extends RozierApp
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBy(["translation" => $translation], ['node.nodeType' => 'ASC']);
 
-        $serializer = new NodeSourceXlsxSerializer($this->get('em'), $this->get('translator'));
+        $serializer = new NodeSourceXlsxSerializer($this->get('em'), $this->get('translator'), $this->get('urlGenerator'));
         $serializer->setOnlyTexts(true);
         $serializer->addUrls($request, $this->get('settingsBag')->get('force_locale'));
 

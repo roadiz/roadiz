@@ -32,6 +32,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -64,18 +65,29 @@ class NodeSourceDocumentType extends AbstractType
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var NodesSourcesHandler
+     */
+    private $nodesSourcesHandler;
 
     /**
      * NodeSourceDocumentType constructor.
      * @param NodesSources $nodeSource
      * @param NodeTypeField $nodeTypeField
      * @param EntityManager $entityManager
+     * @param NodesSourcesHandler $nodesSourcesHandler
      */
-    public function __construct(NodesSources $nodeSource, NodeTypeField $nodeTypeField, EntityManager $entityManager)
-    {
+    public function __construct(
+        NodesSources $nodeSource,
+        NodeTypeField $nodeTypeField,
+        EntityManager $entityManager,
+        NodesSourcesHandler $nodesSourcesHandler
+    ) {
         $this->nodeSource = $nodeSource;
         $this->nodeTypeField = $nodeTypeField;
         $this->entityManager = $entityManager;
+        $this->nodesSourcesHandler = $nodesSourcesHandler;
+        $this->nodesSourcesHandler->setNodeSource($this->nodeSource);
     }
 
     /**
@@ -131,7 +143,9 @@ class NodeSourceDocumentType extends AbstractType
      */
     public function onPreSetData(FormEvent $event)
     {
-        $this->selectedDocuments = $this->nodeSource->getHandler()->getDocumentsFromFieldName($this->nodeTypeField->getName());
+        $this->selectedDocuments = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findByNodeSourceAndFieldName($this->nodeSource, $this->nodeTypeField->getName());
         $event->setData($this->selectedDocuments);
     }
 
@@ -140,8 +154,7 @@ class NodeSourceDocumentType extends AbstractType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $hdlr = $this->nodeSource->getHandler();
-        $hdlr->cleanDocumentsFromField($this->nodeTypeField, false);
+        $this->nodesSourcesHandler->cleanDocumentsFromField($this->nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
@@ -149,7 +162,7 @@ class NodeSourceDocumentType extends AbstractType
                 $tempDoc = $this->entityManager
                     ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
                 if ($tempDoc !== null) {
-                    $hdlr->addDocumentForField($tempDoc, $this->nodeTypeField, false, $position);
+                    $this->nodesSourcesHandler->addDocumentForField($tempDoc, $this->nodeTypeField, false, $position);
                     $position++;
                 } else {
                     throw new \RuntimeException('Document #'.$documentId.' was not found during relationship creation.');

@@ -31,11 +31,19 @@ namespace RZ\Roadiz\CMS\Traits;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\Security\TokenGenerator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * Trait LoginRequestTrait.
+ *
+ * This trait MUST be used in Controllers ONLY.
+ *
+ * @package RZ\Roadiz\CMS\Traits
+ */
 trait LoginRequestTrait
 {
     /**
@@ -64,7 +72,10 @@ trait LoginRequestTrait
                     $user->setPasswordRequestedAt(new \DateTime());
                     $user->setConfirmationToken($tokenGenerator->generateToken());
                     $entityManager->flush();
-                    $user->getViewer()->sendPasswordResetLink($urlGenerator, $resetRoute);
+                    /** @var UserViewer $userViewer */
+                    $userViewer = $this->get('user.viewer');
+                    $userViewer->setUser($user);
+                    $userViewer->sendPasswordResetLink($urlGenerator, $resetRoute);
                     return true;
                 } catch (\Exception $e) {
                     $user->setPasswordRequestedAt(null);

@@ -34,6 +34,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 
 class CustomFormFieldLifeCycleSubscriber implements EventSubscriber
 {
@@ -75,7 +76,10 @@ class CustomFormFieldLifeCycleSubscriber implements EventSubscriber
                 /*
                  * Get the last index after last node in parent
                  */
-                $lastPosition = $field->getHandler()->cleanPositions(false);
+                /** @var CustomFormFieldHandler $customFormFieldHandler */
+                $customFormFieldHandler = $this->container->offsetGet('custom_form_field.handler');
+                $customFormFieldHandler->setCustomFormField($field);
+                $lastPosition = $customFormFieldHandler->cleanPositions(false);
                 if ($lastPosition > 1) {
                     /*
                      * Need to decrement position because current field is already

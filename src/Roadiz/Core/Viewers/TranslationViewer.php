@@ -56,10 +56,13 @@ class TranslationViewer
     /** @var RouterInterface */
     private $router;
 
-    public function __construct(Translation $translation)
+    /**
+     * TranslationViewer constructor.
+     * @param Translation|null $translation
+     */
+    public function __construct(Translation $translation = null)
     {
         $this->translation = $translation;
-
         $this->entityManager = Kernel::getService('em');
         $this->settingsBag = Kernel::getService('settingsBag');
         $this->router = Kernel::getService('router');
@@ -127,7 +130,9 @@ class TranslationViewer
                 ->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } elseif (null !== $node) {
-            $translations = $node->getHandler()->getAvailableTranslations();
+            $translations = $this->entityManager
+                                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                 ->findAvailableTranslationForNode($node);
             $translations = array_filter(
                 $translations,
                 function (Translation $trans) {
@@ -149,8 +154,11 @@ class TranslationViewer
             $url = null;
 
             if ($node) {
+                $nodesSources = $this->entityManager
+                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->findOneBy(["node" => $node, "translation" => $translation]);
                 $url = $this->router->generate(
-                    $node->getHandler()->getNodeSourceByTranslation($translation),
+                    $nodesSources,
                     $query,
                     $absolute
                 );
@@ -200,5 +208,23 @@ class TranslationViewer
             }
         }
         return $return;
+    }
+
+    /**
+     * @return Translation
+     */
+    public function getTranslation()
+    {
+        return $this->translation;
+    }
+
+    /**
+     * @param Translation $translation
+     * @return TranslationViewer
+     */
+    public function setTranslation($translation)
+    {
+        $this->translation = $translation;
+        return $this;
     }
 }

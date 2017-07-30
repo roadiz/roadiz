@@ -128,15 +128,15 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             }
 
             $urlTokens = [];
-            $urlTokens[] = $this->nodeSource->getHandler()->getIdentifier();
+            $urlTokens[] = $this->nodeSource->getIdentifier();
 
-            $parent = $this->nodeSource->getHandler()->getParent();
+            $parent = $this->nodeSource->getParent();
             if ($parent !== null && !$parent->getNode()->isHome()) {
                 do {
                     if ($parent->getNode()->isVisible()) {
-                        $urlTokens[] = $parent->getHandler()->getIdentifier();
+                        $urlTokens[] = $parent->getIdentifier();
                     }
-                    $parent = $parent->getHandler()->getParent();
+                    $parent = $parent->getParent();
                 } while ($parent !== null && !$parent->getNode()->isHome());
             }
 

@@ -184,10 +184,10 @@ class NodesSourcesHandler extends AbstractHandler
     }
 
     /**
-     * Get a string describing uniquely the curent nodeSource.
+     * Get a string describing uniquely the current nodeSource.
      *
      * Can be the urlAlias or the nodeName
-     *
+     * @deprecated Use directly NodesSources::getIdentifier
      * @return string
      */
     public function getIdentifier()
@@ -203,6 +203,7 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get parent node-source to get the current translation.
      *
+     * @deprecated Use directly NodesSources::getParent
      * @return NodesSources
      */
     public function getParent()
@@ -434,8 +435,10 @@ class NodesSourcesHandler extends AbstractHandler
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $authorizationChecker, $preview);
+        if (null !== $this->nodeSource->getParent()) {
+            $parentHandler = new NodesSourcesHandler();
+            $parentHandler->setNodeSource($this->nodeSource->getParent());
+            return $parentHandler->getFirstChild($criteria, $order, $authorizationChecker, $preview);
         } else {
             $criteria['node.parent'] = null;
             return $this->getFirstChild($criteria, $order, $authorizationChecker, $preview);
@@ -460,8 +463,10 @@ class NodesSourcesHandler extends AbstractHandler
         AuthorizationChecker $authorizationChecker = null,
         $preview = false
     ) {
-        if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $authorizationChecker, $preview);
+        if (null !== $this->nodeSource->getParent()) {
+            $parentHandler = new NodesSourcesHandler();
+            $parentHandler->setNodeSource($this->nodeSource->getParent());
+            return $parentHandler->getLastChild($criteria, $order, $authorizationChecker, $preview);
         } else {
             $criteria['node.parent'] = null;
             return $this->getLastChild($criteria, $order, $authorizationChecker, $preview);

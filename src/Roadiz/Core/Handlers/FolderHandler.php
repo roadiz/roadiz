@@ -149,7 +149,9 @@ class FolderHandler extends AbstractHandler
     public function cleanPositions()
     {
         if ($this->folder->getParent() !== null) {
-            return $this->folder->getParent()->getHandler()->cleanChildrenPositions();
+            $parentHandler = new FolderHandler();
+            $parentHandler->setFolder($this->folder->getParent());
+            return $parentHandler->cleanChildrenPositions();
         } else {
             return $this->cleanRootFoldersPositions();
         }

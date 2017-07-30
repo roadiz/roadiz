@@ -30,16 +30,19 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Doctrine\Common\Cache\CacheProvider;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Extension that allow render nodes, nodesSources and documents Url
+ * Extension that allow render documents Url
  */
 class UrlExtension extends \Twig_Extension
 {
@@ -53,20 +56,38 @@ class UrlExtension extends \Twig_Extension
      * @var bool
      */
     private $throwExceptions;
+    /**
+     * @var Packages
+     */
+    private $packages;
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
 
     /**
      * UrlExtension constructor.
      * @param RequestStack $requestStack
+     * @param Packages $packages
+     * @param UrlGeneratorInterface $urlGenerator
      * @param CacheProvider|null $cacheProvider
      * @param bool $forceLocale
      * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(RequestStack $requestStack, CacheProvider $cacheProvider = null, $forceLocale = false, $throwExceptions = false)
-    {
+    public function __construct(
+        RequestStack $requestStack,
+        Packages $packages,
+        UrlGeneratorInterface $urlGenerator,
+        CacheProvider $cacheProvider = null,
+        $forceLocale = false,
+        $throwExceptions = false
+    ) {
         $this->forceLocale = $forceLocale;
         $this->cacheProvider = $cacheProvider;
         $this->requestStack = $requestStack;
         $this->throwExceptions = $throwExceptions;
+        $this->packages = $packages;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -91,6 +112,7 @@ class UrlExtension extends \Twig_Extension
      * @param NodesSources $ns
      * @param bool $absolute
      * @param string $canonicalScheme
+     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
     public function getCacheKey(NodesSources $ns, $absolute = false, $canonicalScheme = '')
@@ -104,8 +126,6 @@ class UrlExtension extends \Twig_Extension
      * Compatible AbstractEntity:
      *
      * - Document
-     * - NodesSources
-     * - Node
      *
      * @param  AbstractEntity|null $mixed
      * @param  array $criteria
@@ -128,7 +148,15 @@ class UrlExtension extends \Twig_Extension
                 if (isset($criteria['absolute'])) {
                     $absolute = (boolean) $criteria['absolute'];
                 }
-                return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
+
+                $urlGenerator = new DocumentUrlGenerator(
+                    $this->requestStack,
+                    $this->packages,
+                    $this->urlGenerator,
+                    $mixed,
+                    $criteria
+                );
+                return $urlGenerator->getUrl($absolute);
             } catch (InvalidArgumentException $e) {
                 throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
             }
@@ -183,6 +211,7 @@ class UrlExtension extends \Twig_Extension
      *
      * @param  Node   $node
      * @param  array  $criteria
+     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
     public function getNodeUrl(Node $node, array $criteria = [])

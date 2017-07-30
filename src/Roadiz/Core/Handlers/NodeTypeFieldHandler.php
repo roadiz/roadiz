@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with node-type fields entities.
@@ -64,6 +65,7 @@ class NodeTypeFieldHandler
     public function __construct(NodeTypeField $field = null)
     {
         $this->nodeTypeField = $field;
+        $this->container = Kernel::getInstance()->getContainer();
     }
 
     /**
@@ -74,7 +76,10 @@ class NodeTypeFieldHandler
     public function cleanPositions()
     {
         if ($this->nodeTypeField->getNodeType() !== null) {
-            return $this->nodeTypeField->getNodeType()->getHandler()->cleanFieldsPositions();
+            /** @var NodeTypeHandler $nodeTypeHandler */
+            $nodeTypeHandler = $this->container->offsetGet('custom_form.handler');
+            $nodeTypeHandler->setNodeType($this->nodeTypeField->getNodeType());
+            return $nodeTypeHandler->cleanFieldsPositions();
         }
 
         return 1;

@@ -70,8 +70,12 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
+        $documentUrlGenerator = Kernel::getService('document.url_generator');
+        $documentUrlGenerator->setDocument($document);
+        $documentUrlGenerator->setOptions($options);
+
         // Assert
-        $this->assertEquals($expectedUrl, $document->getViewer()->getDocumentUrlByArray($options, $absolute));
+        $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
     }
 
     public function testGetUrl()

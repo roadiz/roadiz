@@ -685,6 +685,7 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     {
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('translation', $translation));
+        $criteria->setMaxResults(1);
 
         return $this->nodeSources->matching($criteria);
     }

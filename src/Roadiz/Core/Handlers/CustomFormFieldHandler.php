@@ -30,13 +30,18 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with customForms fields entities.
  */
 class CustomFormFieldHandler
 {
+    /** @var null|CustomFormField  */
     private $customFormField = null;
+
+    /** @var \Pimple\Container  */
+    private $container;
 
     /**
      * @return CustomFormField
@@ -64,6 +69,7 @@ class CustomFormFieldHandler
     public function __construct(CustomFormField $field = null)
     {
         $this->customFormField = $field;
+        $this->container = Kernel::getInstance()->getContainer();
     }
 
     /**
@@ -75,7 +81,10 @@ class CustomFormFieldHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->customFormField->getCustomForm() !== null) {
-            return $this->customFormField->getCustomForm()->getHandler()->cleanFieldsPositions($setPositions);
+            /** @var CustomFormHandler $customFormHandler */
+            $customFormHandler = $this->container->offsetGet('custom_form.handler');
+            $customFormHandler->setCustomForm($this->customFormField->getCustomForm());
+            return $customFormHandler->cleanFieldsPositions($setPositions);
         }
 
         return 1;

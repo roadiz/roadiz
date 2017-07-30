@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use Intervention\Image\ImageManager;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
@@ -99,7 +100,10 @@ class DocumentExtension extends \Twig_Extension
             }
         }
         try {
-            return $document->getViewer()->getDocumentByArray($criteria);
+            /** @var DocumentViewer $documentViewer */
+            $documentViewer = $this->container->offsetGet('document.viewer');
+            $documentViewer->setDocument($document);
+            return $documentViewer->getDocumentByArray($criteria);
         } catch (InvalidArgumentException $e) {
             throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
         }

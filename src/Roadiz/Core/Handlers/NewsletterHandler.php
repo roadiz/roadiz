@@ -63,7 +63,7 @@ class NewsletterHandler extends AbstractHandler
      *
      * @param Newsletter $newsletter
      */
-    public function __construct(Newsletter $newsletter)
+    public function __construct(Newsletter $newsletter = null)
     {
         parent::__construct();
         $this->newsletter = $newsletter;

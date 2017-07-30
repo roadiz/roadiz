@@ -30,6 +30,8 @@
 namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
+use Pimple\Container;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -45,7 +47,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class DocumentViewer
 {
+    /** @var null|Document */
     protected $document;
+
     protected $embedFinder;
 
     /** @var Packages  */
@@ -66,18 +70,13 @@ class DocumentViewer
     /** @var UrlGeneratorInterface */
     private $urlGenerator;
 
-    /**
-     * @return \RZ\Roadiz\Core\Entities\Document
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
+    /** @var Container  */
+    private $container;
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Document $document
+     * @param Document|null $document
      */
-    public function __construct(Document $document)
+    public function __construct(Document $document = null)
     {
         $this->document = $document;
         $this->packages = Kernel::getService('assetPackages');
@@ -86,6 +85,25 @@ class DocumentViewer
         $this->entityManager = Kernel::getService('em');
         $this->documentPlatforms = Kernel::getService('document.platforms');
         $this->urlGenerator = Kernel::getService('urlGenerator');
+        $this->container = Kernel::getInstance()->getContainer();
+    }
+
+    /**
+     * @return null|Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * @param Document $document
+     * @return DocumentViewer
+     */
+    public function setDocument(Document $document)
+    {
+        $this->document = $document;
+        return $this;
     }
 
     /**
@@ -117,7 +135,11 @@ class DocumentViewer
             $srcset = [];
             foreach ($options['srcset'] as $set) {
                 if (isset($set['format']) && isset($set['rule'])) {
-                    $srcset[] = $this->getDocumentUrlByArray($set['format'], $options['absolute']) . ' ' . $set['rule'];
+                    /** @var DocumentUrlGenerator $documentUrlGenerator */
+                    $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
+                    $documentUrlGenerator->setOptions($set['format']);
+                    $documentUrlGenerator->setDocument($this->document);
+                    $srcset[] = $documentUrlGenerator->getUrl($options['absolute']) . ' ' . $set['rule'];
                 }
             }
             return implode(', ', $srcset);
@@ -197,9 +219,14 @@ class DocumentViewer
         $resolver = new ViewOptionsResolver();
         $options = $resolver->resolve($options);
 
+        /** @var DocumentUrlGenerator $documentUrlGenerator */
+        $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
+        $documentUrlGenerator->setOptions($options);
+        $documentUrlGenerator->setDocument($this->document);
+
         $assignation = [
             'document' => $this->document,
-            'url' => $this->getDocumentUrlByArray($options, $options['absolute']),
+            'url' => $documentUrlGenerator->getUrl($options['absolute']),
             'srcset' => $this->parseSrcSet($options),
             'sizes' => $this->parseSizes($options),
         ];
@@ -408,9 +435,13 @@ class DocumentViewer
                 ]);
 
             if (null !== $sourcesDoc && $sourcesDoc instanceof Document) {
+                /** @var DocumentUrlGenerator $documentUrlGenerator */
+                $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
+                $documentUrlGenerator->setOptions($options);
+                $documentUrlGenerator->setDocument($sourcesDoc);
                 return [
                     'mime' => $sourcesDoc->getMimeType(),
-                    'url' => $sourcesDoc->getViewer()->getDocumentUrlByArray($options, $absolute),
+                    'url' => $documentUrlGenerator->getUrl($absolute),
                 ];
             }
         }
@@ -440,7 +471,7 @@ class DocumentViewer
      *
      * @param array $options
      * @param boolean $absolute
-     *
+     * @deprecated Use DocumentUrlGenerator class
      * @return string Url
      */
     public function getDocumentUrlByArray(array $options = [], $absolute = false)
@@ -465,6 +496,7 @@ class DocumentViewer
 
     /**
      * @param array $options
+     * @deprecated Use DocumentUrlGenerator class
      * @return string
      */
     protected function getProcessedDocumentUrlByArray(array &$options = [])
@@ -531,6 +563,7 @@ class DocumentViewer
      * Need to remove base-path from url as AssetPackages will prepend it.
      *
      * @param string $path
+     * @deprecated Use DocumentUrlGenerator class
      * @return bool|string
      */
     protected function removeBasePath($path)
@@ -548,6 +581,7 @@ class DocumentViewer
      * real server root.
      *
      * @param string $path
+     * @deprecated Use DocumentUrlGenerator class
      * @return string
      */
     protected function removeStartingSlash($path)

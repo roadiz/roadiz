@@ -135,7 +135,9 @@ class EntityListManager
         // transform the key chroot in parent
         if (array_key_exists('chroot', $preFilters)) {
             if ($preFilters["chroot"] instanceof Node) {
-                $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId(); // get all offspringId
+                $ids = $this->_em
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->findAllOffspringIdByNode($preFilters["chroot"]); // get all offspringId
                 if (array_key_exists('parent', $preFilters)) {
                     // test if parent key exist
                     if (is_array($preFilters["parent"])) {

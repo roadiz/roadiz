@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -41,14 +42,20 @@ class TranslationExtension extends \Twig_Extension
      * @var RequestStack
      */
     private $requestStack;
+    /**
+     * @var TranslationViewer
+     */
+    private $translationViewer;
 
     /**
      * TranslationExtension constructor.
      * @param RequestStack $requestStack
+     * @param TranslationViewer $translationViewer
      */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, TranslationViewer $translationViewer)
     {
         $this->requestStack = $requestStack;
+        $this->translationViewer = $translationViewer;
     }
 
     public function getName()
@@ -72,7 +79,8 @@ class TranslationExtension extends \Twig_Extension
     public function getMenuAssignation(Translation $translation = null, $absolute = false)
     {
         if (null !== $translation) {
-            return $translation->getViewer()->getTranslationMenuAssignation($this->requestStack->getCurrentRequest(), $absolute);
+            $this->translationViewer->setTranslation($translation);
+            return $this->translationViewer->getTranslationMenuAssignation($this->requestStack->getCurrentRequest(), $absolute);
         } else {
             return [];
         }

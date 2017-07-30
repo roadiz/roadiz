@@ -34,6 +34,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 
 class NodeLifeCycleSubscriber implements EventSubscriber
 {
@@ -75,7 +76,10 @@ class NodeLifeCycleSubscriber implements EventSubscriber
                 /*
                  * Get the last index after last node in parent
                  */
-                $lastPosition = $node->getHandler()->cleanPositions(false);
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->container->offsetGet('node.handler');
+                $nodeHandler->setNode($node);
+                $lastPosition = $nodeHandler->cleanPositions(false);
                 if ($lastPosition > 1) {
                     /*
                      * Need to decrement position because current node is already

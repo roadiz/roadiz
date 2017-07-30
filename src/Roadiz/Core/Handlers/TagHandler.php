@@ -251,7 +251,9 @@ class TagHandler extends AbstractHandler
     public function cleanPositions()
     {
         if ($this->tag->getParent() !== null) {
-            return $this->tag->getParent()->getHandler()->cleanChildrenPositions();
+            $tagHandler = new TagHandler();
+            $tagHandler->setTag($this->tag->getParent());
+            return $tagHandler->cleanChildrenPositions();
         } else {
             return $this->cleanRootTagsPositions();
         }

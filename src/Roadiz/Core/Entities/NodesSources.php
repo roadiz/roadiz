@@ -333,6 +333,34 @@ class NodesSources extends AbstractEntity
     /**
      * @return string
      */
+    public function getIdentifier()
+    {
+        $urlAlias = $this->getUrlAliases()->first();
+        if (is_object($urlAlias)) {
+            return $urlAlias->getAlias();
+        }
+
+        return $this->getNode()->getNodeName();
+    }
+
+    /**
+     * Get parent node’ source based on the same translation.
+     *
+     * @return NodesSources|null
+     */
+    public function getParent()
+    {
+        if (null !== $this->getNode()->getParent()) {
+            $nodeSources = $this->getNode()->getParent()->getNodeSourcesByTranslation($this->translation);
+            return $nodeSources->count() > 0 ? $nodeSources->first() : null;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return '#' . $this->getId() .

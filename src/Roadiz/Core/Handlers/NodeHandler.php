@@ -252,7 +252,7 @@ class NodeHandler extends AbstractHandler
      *
      * @param Translation $translation
      *
-     * @return NodesSources
+     * @return NodesSources|null
      */
     public function getNodeSourceByTranslation($translation)
     {
@@ -506,7 +506,9 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            return $this->node->getParent()->getHandler()->cleanChildrenPositions($setPositions);
+            $parentHandler = new NodeHandler();
+            $parentHandler->setNode($this->node->getParent());
+            return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
             return $this->cleanRootNodesPositions($setPositions);
         }

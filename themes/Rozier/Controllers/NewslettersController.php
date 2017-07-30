@@ -196,6 +196,7 @@ class NewslettersController extends RozierApp
                     [
                         'controller' => $this,
                         'entityManager' => $this->get('em'),
+                        'container' => $this->getContainer(),
                     ]
                 );
                 $form->handleRequest($request);

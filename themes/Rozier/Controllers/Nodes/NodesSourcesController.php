@@ -102,6 +102,7 @@ class NodesSourcesController extends RozierApp
                     [
                         'controller' => $this,
                         'entityManager' => $this->get('em'),
+                        'container' => $this->getContainer(),
                         'withVirtual' => true,
                         'withTitle' => true,
                     ]

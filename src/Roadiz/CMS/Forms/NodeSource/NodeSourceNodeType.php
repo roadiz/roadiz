@@ -32,6 +32,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -63,21 +64,29 @@ class NodeSourceNodeType extends AbstractType
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var NodeHandler
+     */
+    private $nodeHandler;
 
     /**
      * NodeSourceDocumentType constructor.
      * @param NodesSources $nodeSource
      * @param NodeTypeField $nodeTypeField
      * @param EntityManager $entityManager
+     * @param NodeHandler $nodeHandler
      */
     public function __construct(
         NodesSources $nodeSource,
         NodeTypeField $nodeTypeField,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        NodeHandler $nodeHandler
     ) {
         $this->nodeSource = $nodeSource;
         $this->nodeTypeField = $nodeTypeField;
         $this->entityManager = $entityManager;
+        $this->nodeHandler = $nodeHandler;
+        $this->nodeHandler->setNode($this->nodeSource->getNode());
     }
 
     /**
@@ -150,8 +159,7 @@ class NodeSourceNodeType extends AbstractType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $hdlr = $this->nodeSource->getNode()->getHandler();
-        $hdlr->cleanNodesFromField($this->nodeTypeField, false);
+        $this->nodeHandler->cleanNodesFromField($this->nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
@@ -159,7 +167,7 @@ class NodeSourceNodeType extends AbstractType
                 $tempNode = $this->entityManager
                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
                 if ($tempNode !== null) {
-                    $hdlr->addNodeForField($tempNode, $this->nodeTypeField, false, $position);
+                    $this->nodeHandler->addNodeForField($tempNode, $this->nodeTypeField, false, $position);
                     $position++;
                 } else {
                     throw new \RuntimeException('Node #'.$nodeId.' was not found during relationship creation.');

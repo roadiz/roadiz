@@ -33,6 +33,7 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
@@ -392,12 +393,17 @@ abstract class FrontendController extends AppController
      */
     public function getNodeSEO(NodesSources $fallbackNodeSource = null)
     {
+        /** @var NodesSourcesHandler $nodesSourcesHandler */
+        $nodesSourcesHandler = $this->get('nodes_sources.handler');
+
         if (null !== $this->nodeSource) {
-            return $this->nodeSource->getHandler()->getSEO();
+            $nodesSourcesHandler->setNodeSource($this->nodeSource);
+            return $nodesSourcesHandler->getSEO();
         }
 
         if (null !== $fallbackNodeSource) {
-            return $fallbackNodeSource->getHandler()->getSEO();
+            $nodesSourcesHandler->setNodeSource($fallbackNodeSource);
+            return $nodesSourcesHandler->getSEO();
         }
 
         return [
