@@ -305,6 +305,7 @@ class NodesSources extends AbstractEntity
 
     /**
      * @return NodesSourcesHandler
+     * @deprecated Use nodes_sources.handler service.
      */
     public function getHandler()
     {

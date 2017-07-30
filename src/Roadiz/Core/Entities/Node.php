@@ -792,36 +792,8 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     }
 
     /**
-     * Set node position before persisting.
-     *
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        parent::prePersist();
-
-        /*
-         * Automatically set position only if not manually set before.
-         */
-        if ($this->getPosition() === 0.0) {
-            /*
-             * Get the last index after last node in parent
-             */
-            $lastPosition = $this->getHandler()->cleanPositions(false);
-            if ($lastPosition > 1) {
-                /*
-                 * Need to decrement position because current node is already
-                 * in parent's children collection count.
-                 */
-                $this->setPosition($lastPosition - 1);
-            } else {
-                $this->setPosition($lastPosition);
-            }
-        }
-    }
-
-    /**
      * @return NodeHandler
+     * @deprecated Use node.handler service.
      */
     public function getHandler()
     {

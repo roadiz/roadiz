@@ -434,6 +434,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return \RZ\Roadiz\Core\Viewers\DocumentViewer
+     * @deprecated Use document.viewer service.
      */
     public function getViewer()
     {
@@ -442,6 +443,7 @@ class Document extends AbstractDateTimed
 
     /**
      * @return \RZ\Roadiz\Core\Handlers\DocumentHandler
+     * @deprecated Use document.handler service.
      */
     public function getHandler()
     {

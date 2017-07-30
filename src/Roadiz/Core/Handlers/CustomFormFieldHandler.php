@@ -36,8 +36,8 @@ use RZ\Roadiz\Core\Entities\CustomFormField;
  */
 class CustomFormFieldHandler
 {
-
     private $customFormField = null;
+
     /**
      * @return CustomFormField
      */
@@ -50,19 +50,18 @@ class CustomFormFieldHandler
      *
      * @return $this
      */
-    public function setCustomFormField($customFormField)
+    public function setCustomFormField(CustomFormField $customFormField)
     {
         $this->customFormField = $customFormField;
-
         return $this;
     }
 
     /**
      * Create a new custom-form-field handler with custom-form-field to handle.
      *
-     * @param CustomFormField $field
+     * @param CustomFormField|null $field
      */
-    public function __construct(CustomFormField $field)
+    public function __construct(CustomFormField $field = null)
     {
         $this->customFormField = $field;
     }
@@ -70,12 +69,13 @@ class CustomFormFieldHandler
     /**
      * Clean position for current customForm siblings.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** customFormField
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->customFormField->getCustomForm() !== null) {
-            return $this->customFormField->getCustomForm()->getHandler()->cleanFieldsPositions();
+            return $this->customFormField->getCustomForm()->getHandler()->cleanFieldsPositions($setPositions);
         }
 
         return 1;

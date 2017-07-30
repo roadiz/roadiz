@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\Entities\Translation;
  */
 class TranslationHandler extends AbstractHandler
 {
-    private $translation = null;
+    private $translation;
 
     /**
      * @return Translation
@@ -52,19 +52,18 @@ class TranslationHandler extends AbstractHandler
      *
      * @return $this
      */
-    public function setTranslation($translation)
+    public function setTranslation(Translation $translation)
     {
         $this->translation = $translation;
-
         return $this;
     }
 
     /**
      * Create a new translation handler with translation to handle.
      *
-     * @param Translation $translation
+     * @param Translation|null $translation
      */
-    public function __construct(Translation $translation)
+    public function __construct(Translation $translation = null)
     {
         parent::__construct();
         $this->translation = $translation;

@@ -36,21 +36,21 @@ use RZ\Roadiz\Core\Entities\Group;
  */
 class GroupHandler extends AbstractHandler
 {
-    private $group = null;
+    private $group;
 
     /**
      * Create a new group handler with group to handle.
      *
-     * @param \RZ\Roadiz\Core\Entities\Group $group
+     * @param Group|null $group
      */
-    public function __construct(Group $group)
+    public function __construct(Group $group = null)
     {
         parent::__construct();
         $this->group = $group;
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Group
+     * @return Group
      */
     public function getGroup()
     {
@@ -58,14 +58,12 @@ class GroupHandler extends AbstractHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Group $group
-     *
+     * @param Group $group
      * @return $this
      */
-    public function setGroup($group)
+    public function setGroup(Group $group)
     {
         $this->group = $group;
-
         return $this;
     }
 

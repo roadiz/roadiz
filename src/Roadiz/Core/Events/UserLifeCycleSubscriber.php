@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserLifeCycleSubscriber implements EventSubscriber
 {
@@ -102,7 +103,31 @@ class UserLifeCycleSubscriber implements EventSubscriber
                     $user->setPictureUrl($user->getGravatarUrl());
                 }
             }
+            /*
+             * Encode user password
+             */
+            if ($event->hasChangedField('password')) {
+                $this->setPassword($user, $user->getPlainPassword());
+                $userEvent = new FilterUserEvent($user);
+                $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_PASSWORD_CHANGED, $userEvent);
+            }
         }
+    }
+
+    /**
+     * @param User $user
+     * @param $plainPassword
+     */
+    protected function setPassword(User $user, $plainPassword)
+    {
+        /** @var EncoderFactoryInterface $encoderFactory */
+        $encoderFactory = $this->container->offsetGet('userEncoderFactory');
+        $encoder = $encoderFactory->getEncoder($user);
+        $encodedPassword = $encoder->encodePassword(
+            $plainPassword,
+            $user->getSalt()
+        );
+        $user->setPassword($encodedPassword);
     }
 
     /**
@@ -154,9 +179,11 @@ class UserLifeCycleSubscriber implements EventSubscriber
             /*
              * If no plain password is present, we must generate one
              */
-            if ($user->getPlainPassword() == '') {
+            if ($user->getPlainPassword() === '') {
                 $passwordGenerator = new PasswordGenerator();
-                $user->setPlainPassword($passwordGenerator->generatePassword(12));
+                $plainPassword = $passwordGenerator->generatePassword(12);
+                $user->setPlainPassword($plainPassword);
+                $this->setPassword($user, $plainPassword);
             }
 
             /*

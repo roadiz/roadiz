@@ -36,20 +36,31 @@ use RZ\Roadiz\Core\Entities\Font;
  */
 class FontHandler
 {
-    protected $font = null;
+    protected $font;
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Font $font
+     * @param Font|null $font
      */
-    public function __construct(Font $font)
+    public function __construct(Font $font = null)
     {
         $this->font = $font;
     }
+
     /**
-     * @return \RZ\Roadiz\Core\Entities\Font Current font entity
+     * @return Font
      */
     public function getFont()
     {
         return $this->font;
+    }
+
+    /**
+     * @param Font $font
+     * @return FontHandler
+     */
+    public function setFont(Font $font)
+    {
+        $this->font = $font;
+        return $this;
     }
 }

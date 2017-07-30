@@ -63,13 +63,11 @@ class Newsletter extends AbstractDateTimed
 
     /**
      * @param integer $status
-     *
-     * @return integer
+     * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -151,6 +149,7 @@ class Newsletter extends AbstractDateTimed
 
     /**
      * @return NewsletterHandler
+     * @deprecated Use newsletter.handler service.
      */
     public function getHandler()
     {

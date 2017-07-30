@@ -100,13 +100,11 @@ class NewsletterSubscriber extends AbstractEntity
 
     /**
      * @param integer $status
-     *
-     * @return integer
+     * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
-
         return $this;
     }
 

@@ -281,6 +281,7 @@ class Folder extends AbstractDateTimedPositioned
 
     /**
      * @return \RZ\Roadiz\Core\Handlers\FolderHandler
+     * @deprecated Use folder.handler service.
      */
     public function getHandler()
     {

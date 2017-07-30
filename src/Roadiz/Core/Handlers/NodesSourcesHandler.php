@@ -64,9 +64,9 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Create a new node-source handler with node-source to handle.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param NodesSources|null $nodeSource
      */
-    public function __construct($nodeSource)
+    public function __construct(NodesSources $nodeSource = null)
     {
         parent::__construct();
         $this->nodeSource = $nodeSource;
@@ -78,7 +78,25 @@ class NodesSourcesHandler extends AbstractHandler
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
+     */
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
+
+    /**
+     * @param NodesSources $nodeSource
+     * @return NodesSourcesHandler
+     */
+    public function setNodeSource(NodesSources $nodeSource)
+    {
+        $this->nodeSource = $nodeSource;
+        return $this;
+    }
+
+    /**
+     * @return NodesSources|null
      */
     public function getParentNodeSource()
     {
@@ -86,13 +104,12 @@ class NodesSourcesHandler extends AbstractHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
-     * @return $this
+     * @param NodesSources|null $parentNodeSource
+     * @return NodesSourcesHandler
      */
-    public function setParentNodeSource($newparentNodeSource)
+    public function setParentNodeSource(NodesSources $parentNodeSource = null)
     {
-        $this->parentNodeSource = $newparentNodeSource;
-
+        $this->parentNodeSource = $parentNodeSource;
         return $this;
     }
 

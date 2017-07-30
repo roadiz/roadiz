@@ -52,9 +52,9 @@ class DocumentHandler extends AbstractHandler
     /**
      * Create a new document handler with document to handle.
      *
-     * @param Document $document
+     * @param Document|null $document
      */
-    public function __construct(Document $document)
+    public function __construct(Document $document = null)
     {
         parent::__construct();
         $this->document = $document;
@@ -204,5 +204,23 @@ class DocumentHandler extends AbstractHandler
 
         return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findByDocumentAndTranslation($this->document);
+    }
+
+    /**
+     * @return Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * @param Document $document
+     * @return DocumentHandler
+     */
+    public function setDocument(Document $document)
+    {
+        $this->document = $document;
+        return $this;
     }
 }

@@ -660,6 +660,7 @@ class Translation extends AbstractDateTimed
 
     /**
      * @return TranslationHandler
+     * @deprecated Use translation.handler service.
      */
     public function getHandler()
     {
@@ -668,6 +669,7 @@ class Translation extends AbstractDateTimed
 
     /**
      * @return TranslationViewer
+     * @deprecated Use translation.viewer service.
      */
     public function getViewer()
     {

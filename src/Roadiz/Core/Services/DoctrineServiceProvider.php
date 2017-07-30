@@ -43,6 +43,8 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\NodeLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
@@ -286,6 +288,8 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 new FontLifeCycleSubscriber($c),
                 new DocumentLifeCycleSubscriber($c),
                 new UserLifeCycleSubscriber($c),
+                new NodeLifeCycleSubscriber($c),
+                new CustomFormFieldLifeCycleSubscriber($c),
             ];
         };
 

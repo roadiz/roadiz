@@ -30,22 +30,39 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * TranslationViewer
  */
-class TranslationViewer implements ViewableInterface
+class TranslationViewer
 {
+    /** @var Translation  */
     protected $translation;
+
+    /** @var EntityManager */
+    private $entityManager;
+
+    /** @var Settings */
+    private $settingsBag;
+
+    /** @var RouterInterface */
+    private $router;
 
     public function __construct(Translation $translation)
     {
         $this->translation = $translation;
+
+        $this->entityManager = Kernel::getService('em');
+        $this->settingsBag = Kernel::getService('settingsBag');
+        $this->router = Kernel::getService('router');
     }
 
     /**
@@ -90,7 +107,7 @@ class TranslationViewer implements ViewableInterface
         $attr = $request->attributes->all();
         $query = $request->query->all();
         $name = "";
-        $forceLocale = (boolean) Kernel::getService('settingsBag')->get('force_locale');
+        $forceLocale = (boolean) $this->settingsBag->get('force_locale');
 
         /*
          * Fix absolute boolean to Int constant.
@@ -105,7 +122,7 @@ class TranslationViewer implements ViewableInterface
         }
 
         if ($node === null && !empty($attr["_route"])) {
-            $translations = Kernel::getService('em')
+            $translations = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                 ->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
@@ -132,7 +149,7 @@ class TranslationViewer implements ViewableInterface
             $url = null;
 
             if ($node) {
-                $url = Kernel::getService('router')->generate(
+                $url = $this->router->generate(
                     $node->getHandler()->getNodeSourceByTranslation($translation),
                     $query,
                     $absolute
@@ -148,7 +165,7 @@ class TranslationViewer implements ViewableInterface
                     /*
                      * Search for a Locale suffixed route
                      */
-                    if (null !== Kernel::getService('router')->getRouteCollection()->get($attr["_route"] . "Locale")) {
+                    if (null !== $this->router->getRouteCollection()->get($attr["_route"] . "Locale")) {
                         $name = $attr["_route"] . "Locale";
                     }
 
@@ -165,7 +182,7 @@ class TranslationViewer implements ViewableInterface
                     unset($query["_locale"]);
                 }
 
-                $url = Kernel::getService("router")->generate(
+                $url = $this->router->generate(
                     $name,
                     array_merge($attr["_route_params"], $query),
                     $absolute
@@ -183,21 +200,5 @@ class TranslationViewer implements ViewableInterface
             }
         }
         return $return;
-    }
-
-    /**
-     * @return \Symfony\Component\Translation\Translator.
-     */
-    public function getTranslator()
-    {
-        return null;
-    }
-
-    /**
-     * @return \Twig_Environment
-     */
-    public function getTwig()
-    {
-        return Kernel::getService('twig.environment');
     }
 }

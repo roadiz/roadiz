@@ -39,7 +39,7 @@ class FolderHandler extends AbstractHandler
     protected $folder = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Folder
+     * @return Folder
      */
     public function getFolder()
     {
@@ -47,22 +47,20 @@ class FolderHandler extends AbstractHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Folder $folder
-     *
+     * @param Folder $folder
      * @return $this
      */
     public function setFolder($folder)
     {
         $this->folder = $folder;
-
         return $this;
     }
     /**
      * Create a new folder handler with folder to handle.
      *
-     * @param Folder $folder
+     * @param Folder|null $folder
      */
-    public function __construct(Folder $folder)
+    public function __construct(Folder $folder = null)
     {
         parent::__construct();
         $this->folder = $folder;

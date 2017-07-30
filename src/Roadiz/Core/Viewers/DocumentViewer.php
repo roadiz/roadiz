@@ -29,24 +29,42 @@
  */
 namespace RZ\Roadiz\Core\Viewers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\ViewOptionsResolver;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class DocumentViewer
  * @package RZ\Roadiz\Core\Viewers
  */
-class DocumentViewer implements ViewableInterface
+class DocumentViewer
 {
     protected $document;
     protected $embedFinder;
+
     /** @var Packages  */
     protected $packages;
+
+    /** @var RequestStack */
+    protected $requestStack;
+
+    /** @var \Twig_Environment */
+    protected $twig;
+
+    /** @var EntityManager */
+    protected $entityManager;
+
+    /** @var array */
+    protected $documentPlatforms;
+
+    /** @var UrlGeneratorInterface */
+    private $urlGenerator;
 
     /**
      * @return \RZ\Roadiz\Core\Entities\Document
@@ -63,6 +81,11 @@ class DocumentViewer implements ViewableInterface
     {
         $this->document = $document;
         $this->packages = Kernel::getService('assetPackages');
+        $this->requestStack = Kernel::getService('requestStack');
+        $this->twig = Kernel::getService('twig.environment');
+        $this->entityManager = Kernel::getService('em');
+        $this->documentPlatforms = Kernel::getService('document.platforms');
+        $this->urlGenerator = Kernel::getService('urlGenerator');
     }
 
     /**
@@ -81,22 +104,6 @@ class DocumentViewer implements ViewableInterface
     {
         $this->packages = $packages;
         return $this;
-    }
-
-    /**
-     * @return \Symfony\Component\Translation\Translator.
-     */
-    public function getTranslator()
-    {
-        return null;
-    }
-
-    /**
-     * @return \Twig_Environment
-     */
-    public function getTwig()
-    {
-        return Kernel::getService('twig.environment');
     }
 
     /**
@@ -247,7 +254,7 @@ class DocumentViewer implements ViewableInterface
                 return false;
             }
         } elseif ($this->document->isImage()) {
-            return $this->getTwig()->render('documents/image.html.twig', $assignation);
+            return $this->twig->render('documents/image.html.twig', $assignation);
         } elseif ($this->document->isVideo()) {
             $assignation['sources'] = $this->getSourcesFiles();
 
@@ -262,12 +269,12 @@ class DocumentViewer implements ViewableInterface
                  */
                 $assignation['poster'] = $this->getPosterFile($options, $options['absolute']);
             }
-            return $this->getTwig()->render('documents/video.html.twig', $assignation);
+            return $this->twig->render('documents/video.html.twig', $assignation);
         } elseif ($this->document->isAudio()) {
             $assignation['sources'] = $this->getSourcesFiles();
-            return $this->getTwig()->render('documents/audio.html.twig', $assignation);
+            return $this->twig->render('documents/audio.html.twig', $assignation);
         } elseif ($this->document->isPdf()) {
-            return $this->getTwig()->render('documents/pdf.html.twig', $assignation);
+            return $this->twig->render('documents/pdf.html.twig', $assignation);
         } else {
             return 'document.format.unknown';
         }
@@ -278,12 +285,10 @@ class DocumentViewer implements ViewableInterface
      */
     public function isEmbedPlatformSupported()
     {
-        $handlers = Kernel::getService('document.platforms');
-
         if ($this->document->isEmbed() &&
             in_array(
                 $this->document->getEmbedPlatform(),
-                array_keys($handlers)
+                array_keys($this->documentPlatforms)
             )
         ) {
             return true;
@@ -299,8 +304,7 @@ class DocumentViewer implements ViewableInterface
     {
         if (null === $this->embedFinder) {
             if ($this->isEmbedPlatformSupported()) {
-                $handlers = Kernel::getService('document.platforms');
-                $class = $handlers[$this->document->getEmbedPlatform()];
+                $class = $this->documentPlatforms[$this->document->getEmbedPlatform()];
                 $this->embedFinder = new $class($this->document->getEmbedId());
             } else {
                 $this->embedFinder = false;
@@ -360,7 +364,7 @@ class DocumentViewer implements ViewableInterface
             return false;
         }
 
-        $sourcesDocs = Kernel::getService('em')
+        $sourcesDocs = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findBy(["filename" => $sourcesDocsName]);
 
@@ -396,7 +400,7 @@ class DocumentViewer implements ViewableInterface
                 $basename . '.webp',
             ];
 
-            $sourcesDoc = Kernel::getService('em')
+            $sourcesDoc = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\Document')
                 ->findOneBy([
                     "filename" => $sourcesDocsName,
@@ -509,7 +513,7 @@ class DocumentViewer implements ViewableInterface
             'filename' => $this->document->getRelativeUrl(),
         ];
 
-        $path = Kernel::getService('urlGenerator')->generate(
+        $path = $this->urlGenerator->generate(
             'interventionRequestProcess',
             $routeParams,
             UrlGeneratorInterface::ABSOLUTE_PATH
@@ -531,7 +535,7 @@ class DocumentViewer implements ViewableInterface
      */
     protected function removeBasePath($path)
     {
-        $basePath = Kernel::getService('request')->getBasePath();
+        $basePath = $this->requestStack->getMasterRequest()->getBasePath();
         if ($basePath != '') {
             $path = substr($path, strlen($basePath));
         }

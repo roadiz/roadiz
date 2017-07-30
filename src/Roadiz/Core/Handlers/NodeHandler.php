@@ -48,7 +48,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
  */
 class NodeHandler extends AbstractHandler
 {
-    private $node = null;
+    private $node;
 
     /** @var AuthorizationChecker */
     protected $authorizationChecker;
@@ -66,22 +66,20 @@ class NodeHandler extends AbstractHandler
 
     /**
      * @param Node $node
-     *
-     * @return $this
+     * @return NodeHandler
      */
-    public function setNode($node)
+    public function setNode(Node $node)
     {
         $this->node = $node;
-
         return $this;
     }
 
     /**
      * Create a new node handler with node to handle.
      *
-     * @param Node $node
+     * @param Node|null $node
      */
-    public function __construct(Node $node)
+    public function __construct(Node $node = null)
     {
         parent::__construct();
         $this->node = $node;

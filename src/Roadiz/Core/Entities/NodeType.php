@@ -408,6 +408,7 @@ class NodeType extends AbstractEntity
 
     /**
      * @return  \RZ\Roadiz\Core\Handlers\NodeTypeHandler
+     * @deprecated Use node_type.handler service.
      */
     public function getHandler()
     {

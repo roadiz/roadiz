@@ -32,18 +32,33 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * UserViewer
  */
-class UserViewer implements ViewableInterface
+class UserViewer
 {
-    protected $user = null;
-    protected $twig = null;
+    /** @var User  */
+    protected $user;
+
+    /** @var EntityManager */
+    protected $entityManager;
+
+    /** @var Settings */
+    protected $settingsBag;
+
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    /** @var EmailManager */
+    protected $emailManager;
 
     /**
      * @param \RZ\Roadiz\Core\Entities\User $user
@@ -51,60 +66,11 @@ class UserViewer implements ViewableInterface
     public function __construct(User $user)
     {
         $this->user = $user;
-    }
 
-    /**
-     * @return \Symfony\Component\Translation\Translator
-     */
-    public function getTranslator()
-    {
-        return Kernel::getService('translator');
-    }
-
-    /**
-     * @return \Twig_Environment
-     */
-    public function getTwig()
-    {
-        return Kernel::getService('twig.environment');
-    }
-
-    /**
-     * Send an email with credentials details to user.
-     *
-     * @return boolean
-     * @deprecated Sign in confirmation is already sent by user lifecycle events.
-     */
-    public function sendSignInConfirmation()
-    {
-        $emailContact = Kernel::getService('settingsBag')->get('email_sender');
-        if (empty($emailContact)) {
-            $emailContact = "noreply@roadiz.io";
-        }
-
-        $siteName = Kernel::getService('settingsBag')->get('site_name');
-        if (empty($siteName)) {
-            $siteName = "Unnamed site";
-        }
-
-        /** @var EmailManager $emailManager */
-        $emailManager = Kernel::getService('emailManager');
-        $emailManager->setAssignation([
-            'user' => $this->user,
-            'site' => $siteName,
-            'mailContact' => $emailContact,
-        ]);
-        $emailManager->setEmailTemplate('users/newUser_email.html.twig');
-        $emailManager->setEmailPlainTextTemplate('users/newUser_email.txt.twig');
-        $emailManager->setSubject(Kernel::getService('translator')->trans(
-            'welcome.user.email.%site%',
-            ['%site%' => $siteName]
-        ));
-        $emailManager->setReceiver($this->user->getEmail());
-        $emailManager->setSender([$emailContact => $siteName]);
-
-        // Send the message
-        return $emailManager->send();
+        $this->entityManager = Kernel::getService('em');
+        $this->settingsBag = Kernel::getService('settingsBag');
+        $this->translator = Kernel::getService('translator');
+        $this->emailManager = Kernel::getService('emailManager');
     }
 
     /**
@@ -116,19 +82,10 @@ class UserViewer implements ViewableInterface
      */
     public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator, $route = 'loginResetPage')
     {
-        $emailContact = Kernel::getService('settingsBag')->get('email_sender');
-        if (empty($emailContact)) {
-            $emailContact = "noreply@roadiz.io";
-        }
+        $emailContact = $this->getContactEmail();
+        $siteName = $this->getSiteName();
 
-        $siteName = Kernel::getService('settingsBag')->get('site_name');
-        if (empty($siteName)) {
-            $siteName = "Unnamed site";
-        }
-
-        /** @var EmailManager $emailManager */
-        $emailManager = Kernel::getService('emailManager');
-        $emailManager->setAssignation([
+        $this->emailManager->setAssignation([
             'resetLink' => $urlGenerator->generate($route, [
                 'token' => $this->user->getConfirmationToken(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -136,15 +93,41 @@ class UserViewer implements ViewableInterface
             'site' => $siteName,
             'mailContact' => $emailContact,
         ]);
-        $emailManager->setEmailTemplate('users/reset_password_email.html.twig');
-        $emailManager->setEmailPlainTextTemplate('users/reset_password_email.txt.twig');
-        $emailManager->setSubject(Kernel::getService('translator')->trans(
+        $this->emailManager->setEmailTemplate('users/reset_password_email.html.twig');
+        $this->emailManager->setEmailPlainTextTemplate('users/reset_password_email.txt.twig');
+        $this->emailManager->setSubject($this->translator->trans(
             'reset.password.request'
         ));
-        $emailManager->setReceiver($this->user->getEmail());
-        $emailManager->setSender([$emailContact => $siteName]);
+        $this->emailManager->setReceiver($this->user->getEmail());
+        $this->emailManager->setSender([$emailContact => $siteName]);
 
         // Send the message
-        return $emailManager->send();
+        return $this->emailManager->send();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getContactEmail()
+    {
+        $emailContact = $this->settingsBag->get('email_sender');
+        if (empty($emailContact)) {
+            $emailContact = "noreply@roadiz.io";
+        }
+
+        return $emailContact;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSiteName()
+    {
+        $siteName = $this->settingsBag->get('site_name');
+        if (empty($siteName)) {
+            $siteName = "Unnamed site";
+        }
+
+        return $siteName;
     }
 }

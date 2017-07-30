@@ -189,6 +189,7 @@ class NodeTypeField extends AbstractField
 
     /**
      * @return \RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler
+     * @deprecated Use node_type_field.handler service.
      */
     public function getHandler()
     {

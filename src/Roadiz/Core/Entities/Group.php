@@ -145,6 +145,7 @@ class Group extends AbstractEntity
 
     /**
      * @return GroupHandler
+     * @deprecated Use group.handler service.
      */
     public function getHandler()
     {

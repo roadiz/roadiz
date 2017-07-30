@@ -107,6 +107,9 @@ class CustomFormField extends AbstractField
     public function setCustomForm(CustomForm $customForm = null)
     {
         $this->customForm = $customForm;
+        if (null !== $customForm) {
+            $this->customForm->addField($this);
+        }
 
         return $this;
     }
@@ -153,21 +156,11 @@ class CustomFormField extends AbstractField
 
     /**
      * @return  \RZ\Roadiz\Core\Handlers\CustomFormFieldHandler
+     * @deprecated Use custom_form_field.handler service.
      */
     public function getHandler()
     {
         return new CustomFormFieldHandler($this);
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        /*
-         * Get the last index after last node in parent
-         */
-        $this->setPosition($this->getHandler()->cleanPositions());
     }
 
     /**

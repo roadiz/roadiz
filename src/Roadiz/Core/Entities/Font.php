@@ -485,6 +485,7 @@ class Font extends AbstractDateTimed
 
     /**
      * @return FontHandler
+     * @deprecated Use font.handler service.
      */
     public function getHandler()
     {

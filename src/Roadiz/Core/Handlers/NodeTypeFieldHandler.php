@@ -36,33 +36,32 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
  */
 class NodeTypeFieldHandler
 {
+    private $nodeTypeField;
 
-    private $nodeTypeField = null;
     /**
-     * @return NodeTypeField
+     * @return NodeTypeField|null
      */
     public function getNodeTypeField()
     {
         return $this->nodeTypeField;
     }
+
     /**
      * @param NodeTypeField $nodeTypeField
-     *
      * @return $this
      */
-    public function setNodeTypeField($nodeTypeField)
+    public function setNodeTypeField(NodeTypeField $nodeTypeField)
     {
         $this->nodeTypeField = $nodeTypeField;
-
         return $this;
     }
 
     /**
      * Create a new node-type-field handler with node-type-field to handle.
      *
-     * @param NodeTypeField $field
+     * @param NodeTypeField|null $field
      */
-    public function __construct(NodeTypeField $field)
+    public function __construct(NodeTypeField $field = null)
     {
         $this->nodeTypeField = $field;
     }

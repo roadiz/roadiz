@@ -37,10 +37,10 @@ use RZ\Roadiz\Core\Entities\Tag;
  */
 class TagHandler extends AbstractHandler
 {
-    private $tag = null;
+    private $tag;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      */
     public function getTag()
     {
@@ -48,22 +48,20 @@ class TagHandler extends AbstractHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Tag $tag
-     *
+     * @param Tag $tag
      * @return $this
      */
-    public function setTag($tag)
+    public function setTag(Tag $tag)
     {
         $this->tag = $tag;
-
         return $this;
     }
     /**
      * Create a new tag handler with tag to handle.
      *
-     * @param Tag $tag
+     * @param Tag|null $tag
      */
-    public function __construct(Tag $tag)
+    public function __construct(Tag $tag = null)
     {
         parent::__construct();
         $this->tag = $tag;

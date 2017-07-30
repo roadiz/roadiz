@@ -115,8 +115,7 @@ class Role extends AbstractEntity implements RoleInterface
 
     /**
      * @param \RZ\Roadiz\Core\Entities\Group $group
-     *
-     * @return \RZ\Roadiz\Core\Entities\Group
+     * @return $this
      */
     public function addGroup(Group $group)
     {
@@ -129,8 +128,7 @@ class Role extends AbstractEntity implements RoleInterface
 
     /**
      * @param \RZ\Roadiz\Core\Entities\Group $group
-     *
-     * @return \RZ\Roadiz\Core\Entities\Group
+     * @return $this
      */
     public function removeGroup(Group $group)
     {

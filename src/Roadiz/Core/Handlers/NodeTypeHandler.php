@@ -43,13 +43,13 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 class NodeTypeHandler extends AbstractHandler
 {
-    private $nodeType = null;
+    private $nodeType;
 
     /** @var Kernel  */
     protected $kernel;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\NodeType
+     * @return NodeType
      */
     public function getNodeType()
     {
@@ -57,23 +57,21 @@ class NodeTypeHandler extends AbstractHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
-     *
+     * @param NodeType $nodeType
      * @return $this
      */
-    public function setNodeType($nodeType)
+    public function setNodeType(NodeType $nodeType)
     {
         $this->nodeType = $nodeType;
-
         return $this;
     }
 
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param NodeType|null $nodeType
      */
-    public function __construct(NodeType $nodeType)
+    public function __construct(NodeType $nodeType = null)
     {
         parent::__construct();
         $this->nodeType = $nodeType;

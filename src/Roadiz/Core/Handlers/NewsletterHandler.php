@@ -37,10 +37,10 @@ use RZ\Roadiz\Utils\Node\NodeDuplicator;
  */
 class NewsletterHandler extends AbstractHandler
 {
-    private $newsletter = null;
+    private $newsletter;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\newsletter
+     * @return Newsletter
      */
     public function getNewsletter()
     {
@@ -48,21 +48,20 @@ class NewsletterHandler extends AbstractHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\newsletter $newsletter
+     * @param Newsletter|null $newsletter
      *
      * @return $this
      */
-    public function setNewsletter($newsletter)
+    public function setNewsletter(Newsletter $newsletter = null)
     {
         $this->newsletter = $newsletter;
-
         return $this;
     }
 
     /**
      * Create a new newsletter handler with newsletter to handle.
      *
-     * @param newsletter $newsletter
+     * @param Newsletter $newsletter
      */
     public function __construct(Newsletter $newsletter)
     {

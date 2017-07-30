@@ -288,7 +288,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * Get Pimple dependency injection service container.
      *
      * @param string $key Service name
-     *
+     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
      * @return mixed
      */
     public static function getService($key)
