@@ -488,9 +488,9 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findBySearchQuery($query, $limit = 25)
     {
-        if (true === Kernel::getService('solr.ready')) {
+        if (true === $this->get('solr.ready')) {
             /** @var NodeSourceSearchHandler $service */
-            $service = Kernel::getService('solr.search.nodeSource');
+            $service = $this->get('solr.search.nodeSource');
 
             if ($limit > 0) {
                 return $service->search($query, [], $limit);
@@ -513,9 +513,9 @@ class NodesSourcesRepository extends EntityRepository
      */
     public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
-        if (true === Kernel::getService('solr.ready')) {
+        if (true === $this->get('solr.ready')) {
             /** @var NodeSourceSearchHandler $service */
-            $service = Kernel::getService('solr.search.nodeSource');
+            $service = $this->get('solr.search.nodeSource');
             $params = [
                 'translation' => $translation,
             ];
