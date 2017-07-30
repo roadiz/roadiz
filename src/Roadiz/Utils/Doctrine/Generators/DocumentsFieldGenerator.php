@@ -40,6 +40,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldGetter()
     {
+        //TODO: Need to remove dependency to `getHandler` method.
         return '
     /**
      * @return array Documents array

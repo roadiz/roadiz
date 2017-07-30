@@ -40,6 +40,8 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldGetter()
     {
+        //TODO: Need to remove dependency to `getHandler` method.
+
         return '
     /**
      * @return array Node array

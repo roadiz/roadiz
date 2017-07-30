@@ -132,19 +132,12 @@ abstract class SchemaDependentCase extends KernelDependentCase
             );
 
             /*
-             * Fonts life cycle manager.
-             */
-            $evm->addEventSubscriber(new FontLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
-
-            /*
-             * Documents life cycle manager.
-             */
-            $evm->addEventSubscriber(new DocumentLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
-
-            /*
-             * Users life cycle manager.
-             */
-            $evm->addEventSubscriber(new UserLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
+                 * Inject doctrine event subscribers for
+                 * a service to be able to add new ones from themes.
+                 */
+            foreach (Kernel::getService('em.eventSubscribers') as $eventSubscriber) {
+                $evm->addEventSubscriber($eventSubscriber);
+            }
         }
 
         return static::$entityManager;
