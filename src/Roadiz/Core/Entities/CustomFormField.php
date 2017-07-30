@@ -119,12 +119,18 @@ class CustomFormField extends AbstractField
      */
     private $customFormFieldAttribute;
 
+    /**
+     * @return ArrayCollection
+     */
     public function getCustomFormFieldAttribute()
     {
         return $this->customFormFieldAttribute;
     }
 
-    public function __contruct()
+    /**
+     * CustomFormField constructor.
+     */
+    public function __construct()
     {
         $this->customFormFieldAttribute = new ArrayCollection();
     }
