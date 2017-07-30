@@ -23,7 +23,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeLifeCycleSubscriber.php
+ * @file TagLifeCycleSubscriber.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
@@ -33,10 +33,10 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pimple\Container;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Handlers\TagHandler;
 
-class NodeLifeCycleSubscriber implements EventSubscriber
+class TagLifeCycleSubscriber implements EventSubscriber
 {
     /**
      * @var Container
@@ -67,35 +67,35 @@ class NodeLifeCycleSubscriber implements EventSubscriber
      */
     public function prePersist(LifecycleEventArgs $event)
     {
-        $node = $event->getEntity();
-        if ($node instanceof Node) {
+        $tag = $event->getEntity();
+        if ($tag instanceof Tag) {
             /*
              * Automatically set position only if not manually set before.
              */
-            /** @var NodeHandler $nodeHandler */
-            $nodeHandler = $this->container->offsetGet('node.handler');
-            $nodeHandler->setNode($node);
+            /** @var TagHandler $tagHandler */
+            $tagHandler = $this->container->offsetGet('tag.handler');
+            $tagHandler->setTag($tag);
 
-            if ($node->getPosition() === 0.0) {
+            if ($tag->getPosition() === 0.0) {
                 /*
-                 * Get the last index after last node in parent
+                 * Get the last index after last tag in parent
                  */
-                $lastPosition = $nodeHandler->cleanPositions(false);
-                if ($lastPosition > 1 && null !== $node->getParent()) {
+                $lastPosition = $tagHandler->cleanPositions(false);
+                if ($lastPosition > 1 && null !== $tag->getParent()) {
                     /*
-                     * Need to decrement position because current node is already
+                     * Need to decrement position because current tag is already
                      * in parent's children collection count.
                      */
-                    $node->setPosition($lastPosition - 1);
+                    $tag->setPosition($lastPosition - 1);
                 } else {
-                    $node->setPosition($lastPosition);
+                    $tag->setPosition($lastPosition);
                 }
-            } elseif ($node->getPosition() === 0.5) {
+            } elseif ($tag->getPosition() === 0.5) {
                 /*
                  * Position is set to 0.5 so we need to
-                 * shift all nodes to the bottom.
+                 * shift all tags to the bottom.
                  */
-                $nodeHandler->cleanPositions(true);
+                $tagHandler->cleanPositions(true);
             }
         }
     }

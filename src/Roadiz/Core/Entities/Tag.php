@@ -187,6 +187,9 @@ class Tag extends AbstractDateTimedPositioned
     public function setParent(Tag $parent = null)
     {
         $this->parent = $parent;
+        if (null !== $this->parent) {
+            $this->parent->addChild($this);
+        }
 
         return $this;
     }

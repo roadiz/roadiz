@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
+use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
@@ -620,8 +621,12 @@ class DocumentsController extends RozierApp
         $document = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
+        /** @var DocumentHandler $handler */
+        $handler = $this->get('document.handler');
+        $handler->setDocument($document);
+
         if ($document !== null &&
-            null !== $response = $document->getHandler()->getDownloadResponse()) {
+            null !== $response = $handler->getDownloadResponse()) {
             return $response->send();
         }
 
@@ -1225,10 +1230,14 @@ class DocumentsController extends RozierApp
          * Change privacy document status
          */
         if ($data['private'] != $document->isPrivate()) {
+            /** @var DocumentHandler $handler */
+            $handler = $this->get('document.handler');
+            $handler->setDocument($document);
+
             if ($data['private'] === true) {
-                $document->getHandler()->makePrivate();
+                $handler->makePrivate();
             } else {
-                $document->getHandler()->makePublic();
+                $handler->makePublic();
             }
 
             unset($data['private']);

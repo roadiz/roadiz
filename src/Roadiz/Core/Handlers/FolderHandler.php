@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\Folder;
 
 /**
@@ -144,34 +145,46 @@ class FolderHandler extends AbstractHandler
     /**
      * Clean position for current folder siblings.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** folder
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->folder->getParent() !== null) {
             $parentHandler = new FolderHandler();
             $parentHandler->setFolder($this->folder->getParent());
-            return $parentHandler->cleanChildrenPositions();
+            return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
-            return $this->cleanRootFoldersPositions();
+            return $this->cleanRootFoldersPositions($setPositions);
         }
     }
 
     /**
      * Reset current folder children positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** folder
      */
-    public function cleanChildrenPositions()
+    public function cleanChildrenPositions($setPositions = true)
     {
-        $children = $this->folder->getChildren();
+        /*
+         * Force collection to sort on position
+         */
+        $sort = Criteria::create();
+        $sort->orderBy([
+            'position' => Criteria::ASC
+        ]);
+
+        $children = $this->folder->getChildren()->matching($sort);
         $i = 1;
         foreach ($children as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        $this->entityManager->flush();
 
         return $i;
     }
@@ -179,9 +192,12 @@ class FolderHandler extends AbstractHandler
     /**
      * Reset every root folders positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** folder
      */
-    public function cleanRootFoldersPositions()
+    public function cleanRootFoldersPositions($setPositions = true)
     {
         /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
         $folders = $this->entityManager
@@ -190,11 +206,11 @@ class FolderHandler extends AbstractHandler
 
         $i = 1;
         foreach ($folders as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        $this->entityManager->flush();
 
         return $i;
     }

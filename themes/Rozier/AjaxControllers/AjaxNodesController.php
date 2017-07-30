@@ -217,11 +217,10 @@ class AjaxNodesController extends AbstractAjaxController
         // Apply position update before cleaning
         $this->get('em')->flush();
 
-        if ($parent !== null) {
-            $parent->getHandler()->cleanChildrenPositions();
-        } else {
-            $node->getHandler()->cleanRootNodesPositions();
-        }
+        /** @var NodeHandler $nodeHandler */
+        $nodeHandler = $this->get('node.handler');
+        $nodeHandler->setNode($node);
+        $nodeHandler->cleanPositions();
 
         $this->get('em')->flush();
 

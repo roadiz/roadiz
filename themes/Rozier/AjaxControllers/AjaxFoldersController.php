@@ -136,7 +136,10 @@ class AjaxFoldersController extends AbstractAjaxController
                         );
             /** @var Folder $folder */
             foreach ($folders as $folder) {
-                $responseArray[] = $folder->getHandler()->getFullPath();
+                /** @var FolderHandler $handler */
+                $handler = $this->get('folder.handler');
+                $handler->setFolder($folder);
+                $responseArray[] = $handler->getFullPath();
             }
         }
 
@@ -193,10 +196,11 @@ class AjaxFoldersController extends AbstractAjaxController
         // Apply position update before cleaning
         $this->get('em')->flush();
 
-        if ($parent !== null) {
-            $parent->getHandler()->cleanChildrenPositions();
-        } else {
-            $folder->getHandler()->cleanRootFoldersPositions();
-        }
+        /** @var FolderHandler $handler */
+        $handler = $this->get('folder.handler');
+        $handler->setFolder($folder);
+        $handler->cleanPositions();
+
+        $this->get('em')->flush();
     }
 }

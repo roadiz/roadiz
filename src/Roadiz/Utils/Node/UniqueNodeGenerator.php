@@ -103,12 +103,6 @@ class UniqueNodeGenerator
         $this->entityManager->persist($source);
         $this->entityManager->flush();
 
-        /*
-         * Enforce cleaning node positions after each creation
-         */
-        $node->getHandler()->cleanPositions();
-        $this->entityManager->flush();
-
         return $source;
     }
 

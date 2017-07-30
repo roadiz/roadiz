@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\StringHandler;
  * Folders entity represent a directory on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="folders", indexes={
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"position"}),
@@ -87,6 +88,10 @@ class Folder extends AbstractDateTimedPositioned
     public function setParent(Folder $parent = null)
     {
         $this->parent = $parent;
+        if (null !== $this->parent) {
+            $this->parent->addChild($this);
+        }
+
         return $this;
     }
 

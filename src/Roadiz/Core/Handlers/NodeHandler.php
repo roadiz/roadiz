@@ -48,6 +48,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
  */
 class NodeHandler extends AbstractHandler
 {
+    /** @var null|Node  */
     private $node;
 
     /** @var AuthorizationChecker */

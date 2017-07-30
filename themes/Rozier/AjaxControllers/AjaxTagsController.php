@@ -326,11 +326,12 @@ class AjaxTagsController extends AbstractAjaxController
         // Apply position update before cleaning
         $this->get('em')->flush();
 
-        if ($parent !== null) {
-            $parent->getHandler()->cleanChildrenPositions();
-        } else {
-            $tag->getHandler()->cleanRootTagsPositions();
-        }
+        /** @var TagHandler $tagHandler */
+        $tagHandler = $this->get('tag.handler');
+        $tagHandler->setTag($tag);
+        $tagHandler->cleanPositions();
+
+        $this->get('em')->flush();
 
         /*
          * Dispatch event

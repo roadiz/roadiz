@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Tag;
 
@@ -246,34 +247,46 @@ class TagHandler extends AbstractHandler
     /**
      * Clean position for current tag siblings.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** tag
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->tag->getParent() !== null) {
             $tagHandler = new TagHandler();
             $tagHandler->setTag($this->tag->getParent());
-            return $tagHandler->cleanChildrenPositions();
+            return $tagHandler->cleanChildrenPositions($setPositions);
         } else {
-            return $this->cleanRootTagsPositions();
+            return $this->cleanRootTagsPositions($setPositions);
         }
     }
 
     /**
      * Reset current tag children positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** tag
      */
-    public function cleanChildrenPositions()
+    public function cleanChildrenPositions($setPositions = true)
     {
-        $children = $this->tag->getChildren();
+        /*
+         * Force collection to sort on position
+         */
+        $sort = Criteria::create();
+        $sort->orderBy([
+            'position' => Criteria::ASC
+        ]);
+
+        $children = $this->tag->getChildren()->matching($sort);
         $i = 1;
         foreach ($children as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        $this->entityManager->flush();
 
         return $i;
     }
@@ -281,21 +294,25 @@ class TagHandler extends AbstractHandler
     /**
      * Reset every root tags positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** tag
      */
-    public function cleanRootTagsPositions()
+    public function cleanRootTagsPositions($setPositions = true)
     {
         $tags = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;
+        /** @var Tag $child */
         foreach ($tags as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        $this->entityManager->flush();
 
         return $i;
     }

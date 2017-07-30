@@ -205,7 +205,7 @@ class RozierApp extends BackendController
          * Add custom event subscriber to manage node duplication
          */
         $container['dispatcher']->addSubscriber(
-            new NodeDuplicationSubscriber($container['em'])
+            new NodeDuplicationSubscriber($container['em'], $container['node.handler'])
         );
 
         /*
