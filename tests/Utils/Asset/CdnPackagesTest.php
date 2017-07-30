@@ -122,7 +122,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         $requestStack = new RequestStack();
         $requestStack->push(static::getMockRequest());
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, Kernel::getInstance(), 'static.localhost');
-        $documentUrlGenerator = new \Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, Kernel::getService('urlGenerator'));
+        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, Kernel::getService('urlGenerator'));
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
