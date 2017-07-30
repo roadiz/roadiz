@@ -56,6 +56,7 @@ trait LoginResetTrait
     public function updateUserPassword(FormInterface $form, User $user, EntityManager $entityManager)
     {
         $user->setConfirmationToken(null);
+        $user->setPasswordRequestedAt(null);
         $user->setPlainPassword($form->get('plainPassword')->getData());
         $entityManager->flush();
 

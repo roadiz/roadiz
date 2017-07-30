@@ -118,6 +118,7 @@ class Folder extends AbstractDateTimedPositioned
     {
         if (!$this->getChildren()->contains($child)) {
             $this->children->add($child);
+            $child->setParent($this);
         }
 
         return $this;

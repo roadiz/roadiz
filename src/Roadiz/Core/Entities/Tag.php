@@ -217,6 +217,7 @@ class Tag extends AbstractDateTimedPositioned
     {
         if (!$this->getChildren()->contains($child)) {
             $this->getChildren()->add($child);
+            $child->setParent($this);
         }
 
         return $this;

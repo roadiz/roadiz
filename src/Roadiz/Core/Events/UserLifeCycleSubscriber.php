@@ -106,7 +106,9 @@ class UserLifeCycleSubscriber implements EventSubscriber
             /*
              * Encode user password
              */
-            if ($event->hasChangedField('password')) {
+            if ($event->hasChangedField('password') &&
+                null !== $user->getPlainPassword() &&
+                '' !== $user->getPlainPassword()) {
                 $this->setPassword($user, $user->getPlainPassword());
                 $userEvent = new FilterUserEvent($user);
                 $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_PASSWORD_CHANGED, $userEvent);
@@ -179,11 +181,14 @@ class UserLifeCycleSubscriber implements EventSubscriber
             /*
              * If no plain password is present, we must generate one
              */
-            if ($user->getPlainPassword() === '') {
+            if (null === $user->getPlainPassword() ||
+                $user->getPlainPassword() === '') {
                 $passwordGenerator = new PasswordGenerator();
                 $plainPassword = $passwordGenerator->generatePassword(12);
                 $user->setPlainPassword($plainPassword);
                 $this->setPassword($user, $plainPassword);
+            } else {
+                $this->setPassword($user, $user->getPlainPassword());
             }
 
             /*

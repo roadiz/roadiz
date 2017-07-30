@@ -232,7 +232,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function setPassword($password)
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -259,10 +258,12 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
-        /*
-         * We MUST change password to trigger preUpdate lifeCycle event.
-         */
-        $this->password = '--password-changed--';
+        if (null !== $plainPassword && $plainPassword != '') {
+            /*
+             * We MUST change password to trigger preUpdate lifeCycle event.
+             */
+            $this->password = '--password-changed--' . uniqid();
+        }
         return $this;
     }
 
