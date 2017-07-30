@@ -88,7 +88,6 @@ class AjaxExplorerProviderController extends AbstractAjaxController
         } else {
             throw new InvalidParameterException('providerClass does not implement ExplorerProviderInterface.');
         }
-
     }
 
     /**

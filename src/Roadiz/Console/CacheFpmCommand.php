@@ -90,7 +90,6 @@ class CacheFpmCommand extends Command
                 $output->writeln($res->getEffectiveUrl());
             }
             $output->writeln('PHP-FPM caches were cleared for <info>'.$kernel->getEnvironment().'</info> environement.');
-
         } catch (ConnectException $exception) {
             $output->writeln('<error>Cannot reach ' . $url . ' [' . $exception->getCode() . ']</error>');
         } catch (ClientException $exception) {

@@ -29,7 +29,6 @@
 
 namespace Themes\Rozier\Explorer;
 
-
 use RZ\Roadiz\Core\Entities\Setting;
 
 class SettingExplorerItem extends AbstractExplorerItem

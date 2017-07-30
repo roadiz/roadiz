@@ -29,7 +29,6 @@
 
 namespace Themes\Rozier\Explorer;
 
-
 abstract class AbstractExplorerItem implements ExplorerItemInterface
 {
     /**
