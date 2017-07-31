@@ -206,7 +206,10 @@ class NodesSourcesRepository extends EntityRepository
     ) {
         if (true === $this->isDisplayingAllNodesStatuses()) {
             $qb->innerJoin('ns.node', $prefix);
-        } elseif (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
+            return $qb;
+        }
+
+        if (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */

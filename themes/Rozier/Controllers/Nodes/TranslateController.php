@@ -63,9 +63,9 @@ class TranslateController extends RozierApp
 
         if (null !== $node) {
             $availableTranslations = $this->get('em')
-                                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                                  ->setDisplayingNotPublishedNodes(true)
-                                 ->findUnavailableTranslationForNode($node);
+                                 ->findUnavailableTranslationsForNode($node);
 
             if (count($availableTranslations) > 0) {
                 /** @var Form $form */

@@ -40,12 +40,6 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldGetter()
     {
-        /*
-         * TODO: Need to remove dependency to `getHandler` method.
-         *
-         * We have a problem with getNodesFromFieldName method which
-         * need AuthorizationChecker and isPreview dependencies
-         */
         return '
     /**
      * @return array Node array
@@ -53,7 +47,17 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     public function '.$this->field->getGetterName().'()
     {
         if (null === $this->' . $this->field->getName() . ') {
-            $this->' . $this->field->getName() . ' = $this->getHandler()->getNodesFromFieldName("'.$this->field->getName().'");
+            if (null !== $this->objectManager) {
+                $this->' . $this->field->getName() . ' = $this->objectManager
+                     ->getRepository(\'RZ\Roadiz\Core\Entities\Node\')
+                     ->findByNodeAndFieldNameAndTranslation(
+                         $this->getNode(),
+                         "'.$this->field->getName().'",
+                         $this->getTranslation()
+                     );
+            } else {
+                $this->' . $this->field->getName() . ' = [];
+            }
         }
         return $this->' . $this->field->getName() . ';
     }'.PHP_EOL;

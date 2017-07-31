@@ -195,9 +195,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         /** @var AuthorizationCheckerInterface|null $checker */
         $checker = $this->get('securityAuthorizationChecker');
         try {
-            return $this->isPreview === true &&
-                null !== $checker &&
-                $checker->isGranted(Role::ROLE_BACKEND_USER);
+            return $this->isPreview === true && null !== $checker && $checker->isGranted(Role::ROLE_BACKEND_USER);
         } catch (AuthenticationCredentialsNotFoundException $e) {
             return false;
         }
@@ -215,7 +213,12 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         if (true === $this->isDisplayingAllNodesStatuses()) {
             // do not filter on status
             return $qb;
-        } elseif (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
+        } 
+        /*
+         * Check if user can see not-published node based on its Token 
+         * and context.
+         */
+        if (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
             $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
         } else {
             $qb->andWhere($qb->expr()->eq($prefix . '.status', Node::PUBLISHED));

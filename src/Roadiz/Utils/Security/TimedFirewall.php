@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\Firewall;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -73,5 +74,21 @@ class TimedFirewall extends Firewall
         $this->stopwatch->start('firewallFinish');
         parent::onKernelFinishRequest($event);
         $this->stopwatch->stop('firewallFinish');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        /*
+         * MUST set firewall dispatch BEFORE routing
+         * to be able to get preview mode working
+         * based on User token.
+         */
+        return array(
+            KernelEvents::REQUEST => ['onKernelRequest', 33],
+            KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
+        );
     }
 }

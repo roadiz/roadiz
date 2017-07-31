@@ -89,7 +89,7 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         $response->expire();
-
+        $response->headers->add(['X-Roadiz-Preview' => true]);
         $event->setResponse($response);
     }
 }

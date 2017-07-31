@@ -675,11 +675,10 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param Node|null $parent
-     * @return array
+     * @return Node[]
      */
-    public function findByParentWithDefaultTranslation(
-        Node $parent = null
-    ) {
+    public function findByParentWithDefaultTranslation(Node $parent = null)
+    {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
@@ -708,9 +707,8 @@ class NodeRepository extends EntityRepository
      * @param UrlAlias $urlAlias
      * @return null|Node
      */
-    public function findOneWithUrlAlias(
-        UrlAlias $urlAlias
-    ) {
+    public function findOneWithUrlAlias(UrlAlias $urlAlias)
+    {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
@@ -732,9 +730,8 @@ class NodeRepository extends EntityRepository
      * @param string $urlAliasAlias
      * @return null|Node
      */
-    public function findOneWithAliasAndAvailableTranslation(
-        $urlAliasAlias
-    ) {
+    public function findOneWithAliasAndAvailableTranslation($urlAliasAlias)
+    {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('n, ns, t, uas')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
@@ -777,7 +774,7 @@ class NodeRepository extends EntityRepository
     /**
      * @param Node $node
      * @param NodeTypeField $field
-     * @return array|null
+     * @return Node[]
      */
     public function findByNodeAndField(
         Node $node,
@@ -792,7 +789,7 @@ class NodeRepository extends EntityRepository
     /**
      * @param Node $node
      * @param string $fieldName
-     * @return array|null
+     * @return Node[]
      */
     public function findByNodeAndFieldName(
         Node $node,
@@ -1052,6 +1049,7 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param Node $node
+     * @deprecated This method should be called from Translation repository.
      * @return array
      */
     public function findAvailableTranslationForNode(Node $node)
@@ -1074,6 +1072,7 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param Node $node
+     * @deprecated This method should be called from Translation repository.
      * @return array
      */
     public function findUnavailableTranslationForNode(Node $node)
@@ -1094,6 +1093,7 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param Node $node
+     * @deprecated This method should be called from Translation repository.
      * @return array
      */
     public function findAvailableTranslationIdForNode(Node $node)
@@ -1117,6 +1117,7 @@ class NodeRepository extends EntityRepository
 
     /**
      * @param Node $node
+     * @deprecated This method should be called from Translation repository.
      * @return array
      */
     public function findUnavailableTranslationIdForNode(Node $node)

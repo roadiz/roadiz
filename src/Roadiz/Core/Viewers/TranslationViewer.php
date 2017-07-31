@@ -34,6 +34,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
@@ -66,6 +67,14 @@ class TranslationViewer
         $this->entityManager = Kernel::getService('em');
         $this->settingsBag = Kernel::getService('settingsBag');
         $this->router = Kernel::getService('router');
+    }
+
+    /**
+     * @return TranslationRepository
+     */
+    public function getRepository()
+    {
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation');
     }
 
     /**
@@ -125,14 +134,10 @@ class TranslationViewer
         }
 
         if ($node === null && !empty($attr["_route"])) {
-            $translations = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findAllAvailable();
+            $translations = $this->getRepository()->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } elseif (null !== $node) {
-            $translations = $this->entityManager
-                                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                 ->findAvailableTranslationForNode($node);
+            $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
             $translations = array_filter(
                 $translations,
                 function (Translation $trans) {
