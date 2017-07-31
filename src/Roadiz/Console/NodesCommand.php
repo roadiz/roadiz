@@ -71,11 +71,13 @@ class NodesCommand extends Command
             if (null !== $nodeType) {
                 $nodes = $this->entityManager
                     ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->setDisplayingNotPublishedNodes(true)
                     ->findBy(['nodeType' => $nodeType], ['nodeName' => 'ASC']);
             }
         } else {
             $nodes = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingNotPublishedNodes(true)
                 ->findBy([], ['nodeName' => 'ASC']);
         }
 

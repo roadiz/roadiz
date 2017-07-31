@@ -64,6 +64,7 @@ class TranslateController extends RozierApp
         if (null !== $node) {
             $availableTranslations = $this->get('em')
                                  ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                 ->setDisplayingNotPublishedNodes(true)
                                  ->findUnavailableTranslationForNode($node);
 
             if (count($availableTranslations) > 0) {
@@ -122,6 +123,8 @@ class TranslateController extends RozierApp
     {
         $existing = $this->get('em')
                          ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                         ->setDisplayingAllNodesStatuses(true)
+                         ->setDisplayingNotPublishedNodes(true)
                          ->findOneByNodeAndTranslation($node, $translation);
         if (null === $existing) {
             $baseSource = $node->getNodeSources()->first();

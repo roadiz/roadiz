@@ -35,12 +35,8 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -199,36 +195,29 @@ class NodesSourcesRepository extends EntityRepository
 
 
     /**
-     * @param array                     $criteria
-     * @param QueryBuilder              $qb
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param bool                      $preview
      *
-     * @return bool
+     * @param QueryBuilder $qb
+     * @param string $prefix
+     * @return QueryBuilder
      */
-    protected function filterByAuthorizationChecker(
-        &$criteria,
-        &$qb,
-        AuthorizationChecker &$authorizationChecker = null,
-        $preview = false
+    protected function alterQueryBuilderWithAuthorizationChecker(
+        QueryBuilder $qb,
+        $prefix = EntityRepository::NODE_ALIAS
     ) {
-        $backendUser = $this->isBackendUser();
-
-        if ($backendUser) {
+        if (true === $this->isDisplayingAllNodesStatuses()) {
+            $qb->innerJoin('ns.node', $prefix);
+        } elseif (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
-            $qb->innerJoin('ns.node', static::NODE_ALIAS, 'WITH', $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED));
-            return true;
-        } elseif (null !== $authorizationChecker) {
+            $qb->innerJoin('ns.node', $prefix, 'WITH', $qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
+        } else {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
-            $qb->innerJoin('ns.node', static::NODE_ALIAS, 'WITH', $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED));
-            return true;
+            $qb->innerJoin('ns.node', $prefix, 'WITH', $qb->expr()->eq($prefix . '.status', Node::PUBLISHED));
         }
-
-        return false;
+        return $qb;
     }
 
     /**
@@ -239,26 +228,20 @@ class NodesSourcesRepository extends EntityRepository
      * @param array|null $orderBy
      * @param integer|null $limit
      * @param integer|null $offset
-     * @param AuthorizationChecker $authorizationChecker
-     * @param boolean $preview
      * @return QueryBuilder
      */
     protected function getContextualQuery(
         array &$criteria,
         array $orderBy = null,
         $limit = null,
-        $offset = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        $offset = null
     ) {
         $joinedNodeType = false;
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
 
-        if (!$joinedNode) {
-            $qb->innerJoin('ns.node', static::NODE_ALIAS);
-            $joinedNode = true;
-        }
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
+        $joinedNode = true;
+
         $qb->addSelect(static::NODE_ALIAS);
 
         /*
@@ -295,21 +278,16 @@ class NodesSourcesRepository extends EntityRepository
      *
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array                                   $criteria
-     * @param AuthorizationChecker|null                    $authorizationChecker
-     * @param boolean $preview
-     *
+     * @param array $criteria
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
-        array &$criteria,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array &$criteria
     ) {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select($qb->expr()->countDistinct('ns.id'));
-        $joinedNode = $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview);
-
+        $qb->select($qb->expr()->countDistinct(static::NODESSOURCES_ALIAS . '.id'));
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
+        $joinedNode = true;
         /*
          * Filtering by tag
          */
@@ -323,20 +301,14 @@ class NodesSourcesRepository extends EntityRepository
      * Just like the countBy method but with relational criteria.
      *
      * @param array $criteria
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
-     *
      * @return int
+     *
      */
     public function countBy(
-        $criteria,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        $criteria
     ) {
         $query = $this->getCountContextualQueryWithTranslation(
-            $criteria,
-            $authorizationChecker,
-            $preview
+            $criteria
         );
 
         $finalQuery = $query->getQuery();
@@ -376,30 +348,23 @@ class NodesSourcesRepository extends EntityRepository
      * * `tags => [$tag1, $tag2]`
      * * `tags => [$tag1, $tag2], tagExclusive => true`
      *
-     * @param array           $criteria
-     * @param array           $orderBy
-     * @param integer         $limit
-     * @param integer         $offset
-     * @param AuthorizationChecker $authorizationChecker
-     * @param boolean $preview
-     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param integer $limit
+     * @param integer $offset
      * @return array|Paginator
      */
     public function findBy(
         array $criteria,
         array $orderBy = null,
         $limit = null,
-        $offset = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        $offset = null
     ) {
         $qb = $this->getContextualQuery(
             $criteria,
             $orderBy,
             $limit,
-            $offset,
-            $authorizationChecker,
-            $preview
+            $offset
         );
 
         /*
@@ -436,26 +401,19 @@ class NodesSourcesRepository extends EntityRepository
      * to see unpublished nodes.
      *
      *
-     * @param array           $criteria
-     * @param array           $orderBy
-     * @param AuthorizationChecker $authorizationChecker
-     * @param boolean $preview
-     *
-     * @return NodesSources|null
+     * @param array $criteria
+     * @param array $orderBy
+     * @return null|NodesSources
      */
     public function findOneBy(
         array $criteria,
-        array $orderBy = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $orderBy = null
     ) {
         $qb = $this->getContextualQuery(
             $criteria,
             $orderBy,
             1,
-            null,
-            $authorizationChecker,
-            $preview
+            null
         );
 
         /*
@@ -537,20 +495,17 @@ class NodesSourcesRepository extends EntityRepository
      * @param int $limit
      * @param array $nodeTypes
      * @param bool $onlyVisible
-     * @param AuthorizationChecker $authorizationChecker
-     * @param bool $preview
      * @return array
      */
     public function findByTextQuery(
         $textQuery,
         $limit = 0,
         $nodeTypes = [],
-        $onlyVisible = false,
-        AuthorizationChecker &$authorizationChecker = null,
-        $preview = false
+        $onlyVisible = false
     ) {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select('ns, n, ua')
+        $qb->addSelect(static::NODE_ALIAS)
+            ->addSelect('ua')
             ->leftJoin('ns.urlAliases', 'ua')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->like('ns.title', ':query'),
@@ -565,19 +520,18 @@ class NodesSourcesRepository extends EntityRepository
             $qb->setMaxResults($limit);
         }
 
-        $criteria = [];
-
-        if (false === $this->filterByAuthorizationChecker($criteria, $qb, $authorizationChecker, $preview)) {
-            $qb->innerJoin('ns.node', static::NODE_ALIAS);
-        }
+        /*
+         * Alteration always join node table.
+         */
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
 
         if (count($nodeTypes) > 0) {
-            $qb->andWhere($qb->expr()->in('n.nodeType', ':types'))
+            $qb->andWhere($qb->expr()->in(static::NODE_ALIAS . '.nodeType', ':types'))
                 ->setParameter(':types', $nodeTypes);
         }
 
         if (true === $onlyVisible) {
-            $qb->andWhere($qb->expr()->eq('n.visible', ':visible'))
+            $qb->andWhere($qb->expr()->eq(static::NODE_ALIAS . '.visible', ':visible'))
                 ->setParameter(':visible', true);
         }
 

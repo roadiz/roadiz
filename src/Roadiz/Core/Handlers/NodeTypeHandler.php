@@ -200,6 +200,7 @@ class NodeTypeHandler extends AbstractHandler
          */
         $nodes = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy([
                 'nodeType' => $this->getNodeType()
             ]);

@@ -105,6 +105,7 @@ class SettingsController extends RozierApp
             $criteria,
             ['name' => 'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

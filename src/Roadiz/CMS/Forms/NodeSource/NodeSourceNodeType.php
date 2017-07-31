@@ -147,6 +147,7 @@ class NodeSourceNodeType extends AbstractType
     {
         $this->selectedNodes = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findByNodeAndFieldName(
                 $this->nodeSource->getNode(),
                 $this->nodeTypeField->getName()

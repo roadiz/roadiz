@@ -224,9 +224,7 @@ class NodeHandler extends AbstractHandler
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByNodeAndFieldName(
                 $this->node,
-                $fieldName,
-                $this->authorizationChecker,
-                $this->isPreview
+                $fieldName
             );
     }
 
@@ -242,9 +240,7 @@ class NodeHandler extends AbstractHandler
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByReverseNodeAndFieldName(
                 $this->node,
-                $fieldName,
-                $this->authorizationChecker,
-                $this->isPreview
+                $fieldName
             );
     }
 
@@ -300,7 +296,6 @@ class NodeHandler extends AbstractHandler
     {
         $this->removeChildren();
         $this->removeAssociations();
-
         $this->entityManager->remove($this->node);
 
         return $this;
@@ -390,7 +385,8 @@ class NodeHandler extends AbstractHandler
      */
     public function getAvailableTranslations()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findAvailableTranslationForNode($this->node);
     }
     /**
@@ -400,8 +396,9 @@ class NodeHandler extends AbstractHandler
      */
     public function getAvailableTranslationsId()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                       ->findAvailableTranslationIdForNode($this->node);
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->findAvailableTranslationIdForNode($this->node);
     }
 
     /**
@@ -411,7 +408,8 @@ class NodeHandler extends AbstractHandler
      */
     public function getUnavailableTranslations()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findUnavailableTranslationForNode($this->node);
     }
 
@@ -422,7 +420,8 @@ class NodeHandler extends AbstractHandler
      */
     public function findUnavailableTranslationIdForNode()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findUnavailableTranslationIdForNode($this->node);
     }
 
@@ -557,6 +556,7 @@ class NodeHandler extends AbstractHandler
     {
         $nodes = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy(['parent' => null], ['position' => 'ASC']);
 
         $i = 1;
@@ -577,7 +577,8 @@ class NodeHandler extends AbstractHandler
      */
     public function getAllOffspringId()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findAllOffspringIdByNode($this->node);
     }
 
@@ -590,6 +591,7 @@ class NodeHandler extends AbstractHandler
     {
         $defaults = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy(['home' => true]);
 
         /** @var Node $default */
@@ -619,16 +621,12 @@ class NodeHandler extends AbstractHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function getPrevious(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         if ($this->node->getPosition() <= 1) {
             return null;
@@ -657,27 +655,21 @@ class NodeHandler extends AbstractHandler
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findOneBy(
                 $criteria,
-                $order,
-                $authorizationChecker,
-                $preview
+                $order
             );
     }
 
     /**
      * Get next node from hierarchy.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
+     * @param  array|null $criteria
+     * @param  array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function getNext(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         if (null === $criteria) {
             $criteria = [];
@@ -702,9 +694,7 @@ class NodeHandler extends AbstractHandler
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findOneBy(
                 $criteria,
-                $order,
-                $authorizationChecker,
-                $preview
+                $order
             );
     }
 }

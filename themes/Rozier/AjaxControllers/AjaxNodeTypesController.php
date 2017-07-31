@@ -61,6 +61,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
             'RZ\Roadiz\Core\Entities\NodeType',
             $arrayFilter
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
         $listManager->handle();
 

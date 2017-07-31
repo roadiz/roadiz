@@ -84,6 +84,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
         $listManager->handle();
 
@@ -128,9 +129,11 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $nodes = $em->getRepository('RZ\Roadiz\Core\Entities\Node')->findBy([
-            'id' => $cleanNodeIds,
-        ]);
+        $nodes = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
+            ->findBy([
+                'id' => $cleanNodeIds,
+            ]);
 
         // Sort array by ids given in request
         $nodes = $this->sortIsh($nodes, $cleanNodeIds);

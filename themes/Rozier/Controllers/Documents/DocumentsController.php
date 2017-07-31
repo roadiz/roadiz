@@ -132,6 +132,7 @@ class DocumentsController extends RozierApp
             $prefilters,
             ['createdAt' => 'DESC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(static::DEFAULT_ITEM_PER_PAGE);
 
         /*

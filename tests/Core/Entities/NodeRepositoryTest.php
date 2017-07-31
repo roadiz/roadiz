@@ -44,6 +44,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
 
         $nodeCount = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->countBy([
                 'tags' => $tags,
             ]);
@@ -77,6 +78,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
 
         $nodeCount = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->countBy([
                 'tags' => $tags,
                 'tagExclusive' => true,

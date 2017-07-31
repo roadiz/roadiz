@@ -63,6 +63,7 @@ class GroupsController extends RozierApp
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Group'
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

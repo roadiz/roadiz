@@ -69,8 +69,14 @@ abstract class NodeNameChecker
     {
         $nodeName = StringHandler::slugify($nodeName);
 
-        if (false === (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($nodeName) &&
-            false === (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')->exists($nodeName)) {
+        if (false === (boolean) $entityManager
+                ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
+                ->setDisplayingNotPublishedNodes(true)
+                ->exists($nodeName) &&
+            false === (boolean) $entityManager
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingNotPublishedNodes(true)
+                ->exists($nodeName)) {
             return false;
         }
         return true;

@@ -39,6 +39,7 @@ class NodesSourcesParentTest extends SchemaDependentCase
     {
         $nodes = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findAll();
 
         foreach ($nodes as $node) {

@@ -63,6 +63,7 @@ class SettingsProvider extends AbstractExplorerProvider
             [],
             ['name' =>'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage($this->options['itemPerPage']);
         $listManager->handle();
         $listManager->setPage($this->options['page']);
@@ -91,6 +92,7 @@ class SettingsProvider extends AbstractExplorerProvider
             [],
             ['name' =>'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage($this->options['itemPerPage']);
         $listManager->handle();
         $listManager->setPage($this->options['page']);

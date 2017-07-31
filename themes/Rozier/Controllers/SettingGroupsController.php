@@ -60,6 +60,7 @@ class SettingGroupsController extends RozierApp
             [],
             ['name' => 'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

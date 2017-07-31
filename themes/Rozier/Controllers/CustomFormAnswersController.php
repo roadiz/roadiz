@@ -66,6 +66,7 @@ class CustomFormAnswersController extends RozierApp
             ["customForm" => $customForm],
             ["submittedAt" => "DESC"]
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
         $this->assignation['customForm'] = $customForm;
         $this->assignation['filters'] = $listManager->getAssignation();

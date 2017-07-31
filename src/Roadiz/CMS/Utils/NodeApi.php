@@ -44,7 +44,8 @@ class NodeApi extends AbstractApi
      */
     public function getRepository()
     {
-        return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Node');
+        return $this->container['em']
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node');
     }
     /**
      * {@inheritdoc}
@@ -67,9 +68,7 @@ class NodeApi extends AbstractApi
                         $order,
                         $limit,
                         $offset,
-                        null,
-                        $this->container['securityAuthorizationChecker'],
-                        $this->container['kernel']->isPreview()
+                        null
                     );
     }
     /**
@@ -86,9 +85,7 @@ class NodeApi extends AbstractApi
         return $this->getRepository()
                     ->countBy(
                         $criteria,
-                        null,
-                        $this->container['securityAuthorizationChecker'],
-                        $this->container['kernel']->isPreview()
+                        null
                     );
     }
     /**
@@ -106,9 +103,7 @@ class NodeApi extends AbstractApi
                     ->findOneBy(
                         $criteria,
                         $order,
-                        null,
-                        $this->container['securityAuthorizationChecker'],
-                        $this->container['kernel']->isPreview()
+                        null
                     );
     }
 

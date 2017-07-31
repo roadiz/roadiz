@@ -61,6 +61,7 @@ class FontsController extends RozierApp
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Font'
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

@@ -64,6 +64,7 @@ class UsersController extends RozierApp
             [],
             ['username' => 'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         /*
          * Stored in session
          */

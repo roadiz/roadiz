@@ -63,6 +63,7 @@ class NewslettersController extends RozierApp
             [],
             ["id" => "DESC"]
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -176,6 +177,7 @@ class NewslettersController extends RozierApp
             /** @var NodesSources $source */
             $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['translation' => $translation, 'node' => $newsletter->getNode()]);
 
             if (null !== $source) {

@@ -69,10 +69,12 @@ class TranslationsController extends RozierApp
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Translation'
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
 
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
             // Make default forms
             $form = $this->buildMakeDefaultForm($translation);
