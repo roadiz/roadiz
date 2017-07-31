@@ -233,12 +233,12 @@ class Paginator
         $repository = $this->getRepository();
         if ($repository instanceof EntityRepository) {
             return $repository->searchBy(
-                    $this->searchPattern,
-                    $this->criteria,
-                    $order,
-                    $this->getItemsPerPage(),
-                    $this->getItemsPerPage() * ($page - 1)
-                );
+                $this->searchPattern,
+                $this->criteria,
+                $order,
+                $this->getItemsPerPage(),
+                $this->getItemsPerPage() * ($page - 1)
+            );
         }
 
         throw new \RuntimeException('Search feature is not available using Doctrine default repository.');

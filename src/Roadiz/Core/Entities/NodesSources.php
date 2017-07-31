@@ -179,7 +179,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
         $criteria->orderBy(['position' => 'ASC']);
         $relations = $this->getDocumentsByFields()
             ->matching($criteria)
-            ->filter(function($element) use ($fieldName) {
+            ->filter(function ($element) use ($fieldName) {
                 if ($element instanceof NodesSourcesDocuments) {
                     return $element->getField()->getName() === $fieldName;
                 }

@@ -66,11 +66,11 @@ class NodesSourcesPaginator extends Paginator
             return $this->searchByAtPage($order, $page);
         } else {
             return $this->getRepository()->findBy(
-                    $this->criteria,
-                    $order,
-                    $this->getItemsPerPage(),
-                    $this->getItemsPerPage() * ($page - 1)
-                );
+                $this->criteria,
+                $order,
+                $this->getItemsPerPage(),
+                $this->getItemsPerPage() * ($page - 1)
+            );
         }
     }
 }

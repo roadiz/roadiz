@@ -639,9 +639,9 @@ class NodeHandler extends AbstractHandler
         $order['position'] = 'DESC';
 
         return $this->getRepository()->findOneBy(
-                $criteria,
-                $order
-            );
+            $criteria,
+            $order
+        );
     }
 
     /**

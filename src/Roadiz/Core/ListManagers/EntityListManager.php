@@ -445,10 +445,10 @@ class EntityListManager
                 ;
             }
             return $repository->findBy(
-                    $this->filteringArray,
-                    $this->orderingArray,
-                    $this->itemPerPage
-                );
+                $this->filteringArray,
+                $this->orderingArray,
+                $this->itemPerPage
+            );
         }
     }
 

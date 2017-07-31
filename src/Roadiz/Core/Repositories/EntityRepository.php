@@ -213,7 +213,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         if (true === $this->isDisplayingAllNodesStatuses()) {
             // do not filter on status
             return $qb;
-        } 
+        }
         /*
          * Check if user can see not-published node based on its Token 
          * and context.
