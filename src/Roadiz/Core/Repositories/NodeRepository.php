@@ -360,7 +360,7 @@ class NodeRepository extends EntityRepository
     ) {
 
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select('n, ns');
+        $qb->addSelect(static::NODESSOURCES_ALIAS);
 
         $this->filterByTranslation($criteria, $qb, $translation);
 

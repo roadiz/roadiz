@@ -45,7 +45,9 @@ class NodeApi extends AbstractApi
     public function getRepository()
     {
         return $this->container['em']
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node');
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->setDisplayingNotPublishedNodes(false)
+                    ->setDisplayingAllNodesStatuses(false);
     }
     /**
      * {@inheritdoc}
@@ -56,8 +58,6 @@ class NodeApi extends AbstractApi
         $limit = null,
         $offset = null
     ) {
-        $this->secureQuery($criteria);
-
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
         }
@@ -76,8 +76,6 @@ class NodeApi extends AbstractApi
      */
     public function countBy(array $criteria)
     {
-        $this->secureQuery($criteria);
-
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
         }
@@ -93,8 +91,6 @@ class NodeApi extends AbstractApi
      */
     public function getOneBy(array $criteria, array $order = null)
     {
-        $this->secureQuery($criteria);
-
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;
         }
@@ -105,17 +101,5 @@ class NodeApi extends AbstractApi
                         $order,
                         null
                     );
-    }
-
-    /**
-     * Add status constraint if not present.
-     *
-     * @param array $criteria
-     */
-    protected function secureQuery(array &$criteria)
-    {
-        if (empty($criteria['status'])) {
-            $criteria['status'] = ['<=', Node::PUBLISHED];
-        }
     }
 }

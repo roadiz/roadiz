@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-
 /**
  * A paginator class to filter node-sources entities with limit and search.
  *
@@ -45,15 +43,9 @@ class NodesSourcesPaginator extends Paginator
     {
         if (null === $this->totalCount) {
             if (null !== $this->searchPattern) {
-                $this->totalCount = $this->em->getRepository($this->entityName)
-                    ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
-                    ->countSearchBy($this->searchPattern, $this->criteria);
+                $this->totalCount = $this->getRepository()->countSearchBy($this->searchPattern, $this->criteria);
             } else {
-                $this->totalCount = $this->em->getRepository($this->entityName)
-                    ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
-                    ->countBy(
-                        $this->criteria
-                    );
+                $this->totalCount = $this->getRepository()->countBy($this->criteria);
             }
         }
 
@@ -73,9 +65,7 @@ class NodesSourcesPaginator extends Paginator
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);
         } else {
-            return $this->em->getRepository($this->entityName)
-                ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
-                ->findBy(
+            return $this->getRepository()->findBy(
                     $this->criteria,
                     $order,
                     $this->getItemsPerPage(),

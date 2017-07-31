@@ -170,10 +170,15 @@ class Paginator
     public function getTotalCount()
     {
         if (null === $this->totalCount) {
-            if (null !== $this->searchPattern) {
-                $this->totalCount = $this->getRepository()->countSearchBy($this->searchPattern, $this->criteria);
+            $repository = $this->getRepository();
+            if ($repository instanceof EntityRepository) {
+                if (null !== $this->searchPattern) {
+                    $this->totalCount = $repository->countSearchBy($this->searchPattern, $this->criteria);
+                } else {
+                    $this->totalCount = $repository->countBy($this->criteria);
+                }
             } else {
-                $this->totalCount = $this->getRepository()->countBy($this->criteria);
+                throw new \RuntimeException('Count-by feature is not available using Doctrine default repository.');
             }
         }
 
@@ -225,14 +230,18 @@ class Paginator
      */
     public function searchByAtPage(array $order = [], $page = 1)
     {
-        return $this->getRepository()
-            ->searchBy(
-                $this->searchPattern,
-                $this->criteria,
-                $order,
-                $this->getItemsPerPage(),
-                $this->getItemsPerPage() * ($page - 1)
-            );
+        $repository = $this->getRepository();
+        if ($repository instanceof EntityRepository) {
+            return $repository->searchBy(
+                    $this->searchPattern,
+                    $this->criteria,
+                    $order,
+                    $this->getItemsPerPage(),
+                    $this->getItemsPerPage() * ($page - 1)
+                );
+        }
+
+        throw new \RuntimeException('Search feature is not available using Doctrine default repository.');
     }
 
     /**
@@ -255,7 +264,7 @@ class Paginator
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository
+     * @return \Doctrine\ORM\EntityRepository|EntityRepository
      */
     protected function getRepository()
     {

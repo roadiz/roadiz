@@ -55,7 +55,6 @@ class NodePaginator extends Paginator
     public function setTranslation(Translation $newtranslation = null)
     {
         $this->translation = $newtranslation;
-
         return $this;
     }
 
@@ -72,8 +71,7 @@ class NodePaginator extends Paginator
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);
         } else {
-            return $this->em->getRepository($this->entityName)
-                ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
+            return $this->getRepository()
                 ->findBy(
                     $this->criteria,
                     $order,
@@ -91,12 +89,10 @@ class NodePaginator extends Paginator
     {
         if (null === $this->totalCount) {
             if (null !== $this->searchPattern) {
-                $this->totalCount = $this->em->getRepository($this->entityName)
-                    ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
+                $this->totalCount = $this->getRepository()
                     ->countSearchBy($this->searchPattern, $this->criteria);
             } else {
-                $this->totalCount = $this->em->getRepository($this->entityName)
-                    ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
+                $this->totalCount = $this->getRepository()
                     ->countBy(
                         $this->criteria,
                         $this->translation

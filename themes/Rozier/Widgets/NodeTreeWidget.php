@@ -140,7 +140,6 @@ class NodeTreeWidget extends AbstractWidget
         $criteria = [
             'parent' => $parent,
             'translation' => $this->translation,
-            'status' => ['<=', Node::PUBLISHED],
         ];
 
         if (null !== $this->tag) {

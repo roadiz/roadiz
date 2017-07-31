@@ -102,7 +102,6 @@ class NodesController extends RozierApp
                     'status' => Node::DELETED,
                 ];
                 break;
-
             default:
                 $this->assignation['mainFilter'] = 'all';
                 $arrayFilter = [];
