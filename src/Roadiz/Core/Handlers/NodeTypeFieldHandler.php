@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Kernel;
 class NodeTypeFieldHandler extends AbstractHandler
 {
     private $nodeTypeField;
+    private $container;
 
     /**
      * @return NodeTypeField|null
