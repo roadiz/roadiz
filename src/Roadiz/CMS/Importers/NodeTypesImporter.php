@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 
 /**
@@ -44,9 +45,10 @@ class NodeTypesImporter implements ImporterInterface
      * @param string $serializedData
      * @param EntityManager $em
      *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $return = false;
         $serializer = new NodeTypeJsonSerializer();
@@ -62,10 +64,10 @@ class NodeTypesImporter implements ImporterInterface
                 $field->setNodeType($nodeType);
             }
         } else {
-            $existingNodeType->getHandler()->diff($nodeType);
+            $handlerFactory->getHandler($existingNodeType)->diff($nodeType);
         }
         $em->flush();
-        $existingNodeType->getHandler()->regenerateEntityClass();
+        $handlerFactory->getHandler($existingNodeType)->regenerateEntityClass();
         return $return;
     }
 }

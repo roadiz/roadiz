@@ -35,11 +35,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.
@@ -120,8 +117,6 @@ abstract class SchemaDependentCase extends KernelDependentCase
             $emConfig = Kernel::getService('em.config');
             static::$entityManager = EntityManager::create($config["doctrine"], $emConfig);
             $evm = static::$entityManager->getEventManager();
-
-            $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
 
             /*
              * Create dynamic discriminator map for our Node system

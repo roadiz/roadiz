@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -404,14 +403,5 @@ class NodeType extends AbstractEntity
         }
 
         return $searchable;
-    }
-
-    /**
-     * @return  \RZ\Roadiz\Core\Handlers\NodeTypeHandler
-     * @deprecated Use node_type.handler service.
-     */
-    public function getHandler()
-    {
-        return new NodeTypeHandler($this);
     }
 }

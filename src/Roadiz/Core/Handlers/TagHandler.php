@@ -69,8 +69,11 @@ class TagHandler extends AbstractHandler
      */
     private function removeChildren()
     {
+        /** @var Tag $tag */
         foreach ($this->tag->getChildren() as $tag) {
-            $tag->getHandler()->removeWithChildrenAndAssociations();
+            $handler = new TagHandler($this->objectManager);
+            $handler->setTag($tag);
+            $handler->removeWithChildrenAndAssociations();
         }
 
         return $this;

@@ -32,12 +32,14 @@
 namespace Themes\Rozier\Controllers\NodeTypes;
 
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
+use Twig\Node\Node;
 
 /**
  * {@inheritdoc}
@@ -137,6 +139,7 @@ class NodeTypesUtilsController extends RozierApp
                 if (null !== json_decode($serializedData)) {
                     $serializer = new NodeTypeJsonSerializer();
                     $nodeType = $serializer->deserialize($serializedData);
+                    /** @var NodeType $existingNT */
                     $existingNT = $this->get('em')
                                        ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
                                        ->findOneBy(['name' => $nodeType->getName()]);
@@ -167,14 +170,19 @@ class NodeTypesUtilsController extends RozierApp
                          * Node-type already exists.
                          * Must update fields.
                          */
-                        $existingNT->getHandler()->diff($nodeType);
+                        /** @var NodeTypeHandler $handler */
+                        $handler = $this->get('factory.handler')->getHandler($existingNT);
+                        $handler->diff($nodeType);
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.updated');
                         $this->publishConfirmMessage($request, $msg);
                     }
 
                     $this->get('em')->flush();
-                    $nodeType->getHandler()->updateSchema();
+
+                    /** @var NodeTypeHandler $handler */
+                    $handler = $this->get('factory.handler')->getHandler($nodeType);
+                    $handler->updateSchema();
 
                     /*
                      * Redirect to update schema page

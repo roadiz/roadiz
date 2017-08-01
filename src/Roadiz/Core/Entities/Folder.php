@@ -35,7 +35,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
-use RZ\Roadiz\Core\Handlers\FolderHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -242,15 +241,5 @@ class Folder extends AbstractDateTimedPositioned implements LeafInterface
     {
         $this->dirtyFolderName = $dirtyFolderName;
         return $this;
-    }
-
-
-    /**
-     * @return \RZ\Roadiz\Core\Handlers\FolderHandler
-     * @deprecated Use folder.handler service.
-     */
-    public function getHandler()
-    {
-        return new FolderHandler($this);
     }
 }

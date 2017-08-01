@@ -34,7 +34,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -439,15 +438,6 @@ class Document extends AbstractDateTimed
     public function getViewer()
     {
         return new DocumentViewer($this);
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Handlers\DocumentHandler
-     * @deprecated Use document.handler service.
-     */
-    public function getHandler()
-    {
-        return new DocumentHandler($this);
     }
 
     /**

@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -481,15 +480,6 @@ class Font extends AbstractDateTimed
     public static function getFilesFolderName()
     {
         return 'files/fonts';
-    }
-
-    /**
-     * @return FontHandler
-     * @deprecated Use font.handler service.
-     */
-    public function getHandler()
-    {
-        return new FontHandler($this);
     }
 
     /**

@@ -36,7 +36,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.
@@ -53,8 +52,6 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
  */
 class NodesSources extends AbstractEntity implements ObjectManagerAware
 {
-    private $handler = null;
-
     /** @var ObjectManager */
     protected $objectManager;
 
@@ -342,18 +339,6 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
         $this->metaDescription = trim($metaDescription);
 
         return $this;
-    }
-
-    /**
-     * @return NodesSourcesHandler
-     * @deprecated Use nodes_sources.handler service.
-     */
-    public function getHandler()
-    {
-        if (null === $this->handler) {
-            $this->handler = new NodesSourcesHandler($this);
-        }
-        return $this->handler;
     }
 
     /**

@@ -68,8 +68,11 @@ class FolderHandler extends AbstractHandler
      */
     private function removeChildren()
     {
+        /** @var Folder $folder */
         foreach ($this->folder->getChildren() as $folder) {
-            $folder->getHandler()->removeWithChildrenAndAssociations();
+            $handler = new FolderHandler($this->objectManager);
+            $handler->setFolder($folder);
+            $handler->removeWithChildrenAndAssociations();
         }
 
         return $this;

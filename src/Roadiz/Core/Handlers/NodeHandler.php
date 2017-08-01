@@ -242,8 +242,11 @@ class NodeHandler extends AbstractHandler
      */
     private function removeChildren()
     {
+        /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $node->getHandler()->removeWithChildrenAndAssociations();
+            $handler = new NodeHandler($this->objectManager);
+            $handler->setNode($node);
+            $handler->removeWithChildrenAndAssociations();
         }
 
         return $this;
@@ -255,6 +258,7 @@ class NodeHandler extends AbstractHandler
      */
     public function removeAssociations()
     {
+        /** @var NodesSources $ns */
         foreach ($this->node->getNodeSources() as $ns) {
             $this->objectManager->remove($ns);
         }
@@ -289,8 +293,11 @@ class NodeHandler extends AbstractHandler
     {
         $this->node->setStatus(Node::DELETED);
 
+        /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $node->getHandler()->softRemoveWithChildren();
+            $handler = new NodeHandler($this->objectManager);
+            $handler->setNode($node);
+            $handler->softRemoveWithChildren();
         }
 
         return $this;
@@ -307,8 +314,11 @@ class NodeHandler extends AbstractHandler
     {
         $this->node->setStatus(Node::PENDING);
 
+        /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $node->getHandler()->softUnremoveWithChildren();
+            $handler = new NodeHandler($this->objectManager);
+            $handler->setNode($node);
+            $handler->softUnremoveWithChildren();
         }
 
         return $this;
@@ -331,8 +341,11 @@ class NodeHandler extends AbstractHandler
             $this->node->setStatus(Node::PUBLISHED);
         }
 
+        /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $node->getHandler()->publishWithChildren();
+            $handler = new NodeHandler($this->objectManager);
+            $handler->setNode($node);
+            $handler->publishWithChildren();
         }
         return $this;
     }
@@ -348,8 +361,11 @@ class NodeHandler extends AbstractHandler
     {
         $this->node->setStatus(Node::ARCHIVED);
 
+        /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $node->getHandler()->archiveWithChildren();
+            $handler = new NodeHandler($this->objectManager);
+            $handler->setNode($node);
+            $handler->archiveWithChildren();
         }
 
         return $this;
