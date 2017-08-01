@@ -195,8 +195,8 @@ class NodeTypeHandler extends AbstractHandler
             new OPCacheClearer(),
         ];
 
-        if ($this->entityManager instanceof EntityManagerInterface) {
-            $clearers[] = new DoctrineCacheClearer($this->entityManager, $this->kernel);
+        if ($this->objectManager instanceof EntityManagerInterface) {
+            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel);
         }
 
         foreach ($clearers as $clearer) {
@@ -215,7 +215,7 @@ class NodeTypeHandler extends AbstractHandler
         /*
          * Delete every nodes
          */
-        $nodes = $this->entityManager
+        $nodes = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->setDisplayingNotPublishedNodes(true)
             ->findBy([
@@ -238,8 +238,8 @@ class NodeTypeHandler extends AbstractHandler
         /*
          * Remove node type
          */
-        $this->entityManager->remove($this->getNodeType());
-        $this->entityManager->flush();
+        $this->objectManager->remove($this->getNodeType());
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -302,14 +302,14 @@ class NodeTypeHandler extends AbstractHandler
                      * creating it.
                      */
                     $newField->setNodeType($this->nodeType);
-                    $this->entityManager->persist($newField);
+                    $this->objectManager->persist($newField);
                 } else {
                     /*
                      * Field already exists.
                      * Updating it.
                      */
                     /** @var NodeTypeField $oldField */
-                    $oldField = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                    $oldField = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                         ->findOneBy([
                             'nodeType' => $this->nodeType,
                             'name' => $newField->getName(),
