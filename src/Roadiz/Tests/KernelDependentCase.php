@@ -73,7 +73,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function getContainer()
     {
-        Kernel::getInstance()->getContainer();
+        return Kernel::getInstance()->getContainer();
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function setContainer(Container $container)
     {
-        Kernel::getInstance()->setContainer($container);
+        return Kernel::getInstance()->setContainer($container);
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function get($serviceName)
     {
-        Kernel::getInstance()->getContainer()->offsetGet($serviceName);
+        return Kernel::getInstance()->getContainer()->offsetGet($serviceName);
     }
 
     /**
@@ -104,6 +104,6 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function has($serviceName)
     {
-        Kernel::getInstance()->getContainer()->offsetExists($serviceName);
+        return Kernel::getInstance()->getContainer()->offsetExists($serviceName);
     }
 }

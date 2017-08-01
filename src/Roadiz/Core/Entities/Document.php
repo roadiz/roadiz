@@ -32,10 +32,8 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
@@ -307,48 +305,6 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * Return absolute file path according to its
-     * privacy status.
-     *
-     * @return string
-     * @deprecated Use Packages::getDocumentFilePath() method instead. Will be removed in Standard Edition.
-     */
-    public function getAbsolutePath()
-    {
-        return $this->isPrivate() ? $this->getPrivateAbsolutePath() : $this->getPublicAbsolutePath();
-    }
-
-    /**
-     * Only return public absolute file path.
-     *
-     * @return string|null
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getPublicAbsolutePath()
-    {
-        if (null !== $this->filename) {
-            return static::getFilesFolder() . '/' . $this->getRelativeUrl();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Only return private absolute file path.
-     *
-     * @return string|null
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getPrivateAbsolutePath()
-    {
-        if (null !== $this->filename) {
-            return static::getPrivateFilesFolder() . '/' . $this->getRelativeUrl();
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
      */
     protected $embedId = null;
@@ -530,42 +486,6 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return string Return absolute path to public files.
-     * @deprecated Use Kernel::getPublicFilesPath() whenever it’s possible. This will be removed in Standard Edition.
-     */
-    public static function getFilesFolder()
-    {
-        return ROADIZ_ROOT . '/' . static::getFilesFolderName();
-    }
-
-    /**
-     * @return string
-     * @deprecated Use Kernel::getPublicFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
-     */
-    public static function getFilesFolderName()
-    {
-        return 'files';
-    }
-
-    /**
-     * @return string Return absolute path to private files. This path should be protected.
-     * @deprecated Use Kernel::getPrivateFilesPath() whenever it’s possible. This will be removed in Standard Edition.
-     */
-    public static function getPrivateFilesFolder()
-    {
-        return ROADIZ_ROOT . '/' . static::getPrivateFilesFolderName();
-    }
-
-    /**
-     * @return string
-     * @deprecated Use Kernel::getPrivateFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
-     */
-    public static function getPrivateFilesFolderName()
-    {
-        return 'files/private';
-    }
-
-    /**
      * Gets the value of rawDocument.
      *
      * @return Document|null
@@ -614,16 +534,6 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @return bool
-     * @deprecated Use Packages methods to manage documents server paths. This will be removed in Standard Edition.
-     */
-    public function fileExists()
-    {
-        $fs = new Filesystem();
-        return $fs->exists($this->getAbsolutePath());
-    }
-
-    /**
      * Gets the downscaledDocument.
      *
      * @return Document|null
@@ -631,58 +541,6 @@ class Document extends AbstractDateTimed
     public function getDownscaledDocument()
     {
         return $this->downscaledDocument;
-    }
-
-    /**
-     * Get image orientation.
-     *
-     * - Return null if document is not an Image
-     * - Return `'landscape'` if width is higher or equal to height
-     * - Return `'portrait'` if height is strictly lower to width
-     *
-     * @return string|null
-     * @deprecated Use Twig filter "imageOrientation" instead. This will be removed in Standard Edition.
-     */
-    public function getOrientation()
-    {
-        if ($this->isImage()) {
-            $size = $this->getImageSize();
-            return $size['width'] >= $size['height'] ? 'landscape' : 'portrait';
-        }
-
-        return null;
-    }
-
-    /**
-     * @return array|null
-     * @deprecated Use Twig filter "imageSize" instead. This will be removed in Standard Edition.
-     */
-    public function getImageSize()
-    {
-        if ($this->isImage()) {
-            $manager = new ImageManager();
-            $imageProcess = $manager->make($this->getAbsolutePath());
-            return [
-                'width' => $imageProcess->width(),
-                'height' => $imageProcess->height(),
-            ];
-        }
-
-        return null;
-    }
-
-    /**
-     * @return float|null
-     * @deprecated Use Twig filter "imageRatio" instead. This will be removed in Standard Edition.
-     */
-    public function getImageSizeRatio()
-    {
-        if ($this->isImage()) {
-            $size = $this->getImageSize();
-            return $size['width']/$size['height'];
-        }
-
-        return null;
     }
 
     /**
