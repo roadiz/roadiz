@@ -248,9 +248,9 @@ class FontsController extends RozierApp
 
         if ($font !== null) {
             // Prepare File
-            $file = tempnam("tmp", "zip");
+            $file = tempnam(sys_get_temp_dir(), "font_" . $font->getId());
             $zip = new \ZipArchive();
-            $zip->open($file, \ZipArchive::OVERWRITE);
+            $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
             /** @var Packages $packages */
             $packages = $this->get('assetPackages');
