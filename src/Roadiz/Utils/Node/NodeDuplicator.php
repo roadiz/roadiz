@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -44,17 +44,21 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class NodeDuplicator
 {
     private $em = null;
+
+    /**
+     * @var null|Node
+     */
     private $originalNode = null;
 
     /**
      * NodeDuplicator constructor.
      *
      * @param Node          $originalNode
-     * @param EntityManager $em
+     * @param ObjectManager $em
      */
     public function __construct(
         Node $originalNode,
-        EntityManager $em
+        ObjectManager $em
     ) {
         $this->em = $em;
         $this->originalNode = $originalNode;

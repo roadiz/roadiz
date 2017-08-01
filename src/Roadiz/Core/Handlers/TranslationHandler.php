@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
@@ -37,6 +38,9 @@ use RZ\Roadiz\Core\Entities\Translation;
  */
 class TranslationHandler extends AbstractHandler
 {
+    /**
+     * @var Translation
+     */
     private $translation;
 
     /**
@@ -59,17 +63,6 @@ class TranslationHandler extends AbstractHandler
     }
 
     /**
-     * Create a new translation handler with translation to handle.
-     *
-     * @param Translation|null $translation
-     */
-    public function __construct(Translation $translation = null)
-    {
-        parent::__construct();
-        $this->translation = $translation;
-    }
-
-    /**
      * Set current translation as default one.
      *
      * @return $this
@@ -88,9 +81,11 @@ class TranslationHandler extends AbstractHandler
         $this->translation->setDefaultTranslation(true);
         $this->entityManager->flush();
 
-        $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
-            $cacheDriver->deleteAll();
+        if ($this->entityManager instanceof EntityManagerInterface) {
+            $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         return $this;

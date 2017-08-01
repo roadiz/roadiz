@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Folder;
 
 /**
@@ -37,6 +38,9 @@ use RZ\Roadiz\Core\Entities\Folder;
  */
 class FolderHandler extends AbstractHandler
 {
+    /**
+     * @var Folder|null
+     */
     protected $folder = null;
 
     /**
@@ -55,16 +59,6 @@ class FolderHandler extends AbstractHandler
     {
         $this->folder = $folder;
         return $this;
-    }
-    /**
-     * Create a new folder handler with folder to handle.
-     *
-     * @param Folder|null $folder
-     */
-    public function __construct(Folder $folder = null)
-    {
-        parent::__construct();
-        $this->folder = $folder;
     }
 
     /**
@@ -151,7 +145,7 @@ class FolderHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->folder->getParent() !== null) {
-            $parentHandler = new FolderHandler();
+            $parentHandler = new FolderHandler($this->entityManager);
             $parentHandler->setFolder($this->folder->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -179,6 +173,7 @@ class FolderHandler extends AbstractHandler
 
         $children = $this->folder->getChildren()->matching($sort);
         $i = 1;
+        /** @var Folder $child */
         foreach ($children as $child) {
             if ($setPositions) {
                 $child->setPosition($i);

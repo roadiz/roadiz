@@ -37,6 +37,9 @@ use RZ\Roadiz\Utils\Node\NodeDuplicator;
  */
 class NewsletterHandler extends AbstractHandler
 {
+    /**
+     * @var Newsletter
+     */
     private $newsletter;
 
     /**
@@ -56,17 +59,6 @@ class NewsletterHandler extends AbstractHandler
     {
         $this->newsletter = $newsletter;
         return $this;
-    }
-
-    /**
-     * Create a new newsletter handler with newsletter to handle.
-     *
-     * @param Newsletter $newsletter
-     */
-    public function __construct(Newsletter $newsletter = null)
-    {
-        parent::__construct();
-        $this->newsletter = $newsletter;
     }
 
     /**

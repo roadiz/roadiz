@@ -29,13 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Utils\TagApi;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
@@ -44,8 +44,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
  */
 class NodesSourcesHandler extends AbstractHandler
 {
+    /**
+     * @var NodesSources
+     */
     protected $nodeSource;
-    protected $parentNodeSource = null;
+
+    /**
+     * @var NodesSources[]
+     */
     protected $parentsNodeSources = null;
 
     /** @var AuthorizationChecker */
@@ -63,17 +69,16 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Create a new node-source handler with node-source to handle.
      *
-     * @param NodesSources|null $nodeSource
+     * @param ObjectManager $entityManager
+     * @param Settings $settingsBag
+     * @param TagApi $tagApi
      */
-    public function __construct(NodesSources $nodeSource = null)
+    public function __construct(ObjectManager $entityManager, Settings $settingsBag, TagApi $tagApi)
     {
-        parent::__construct();
-        $this->nodeSource = $nodeSource;
+        parent::__construct($entityManager);
 
-        $this->authorizationChecker = Kernel::getService('securityAuthorizationChecker');
-        $this->isPreview = Kernel::getInstance()->isPreview();
-        $this->settingsBag = Kernel::getService('settingsBag');
-        $this->tagApi = Kernel::getService('tagApi');
+        $this->settingsBag = $settingsBag;
+        $this->tagApi = $tagApi;
     }
 
     /**
@@ -91,24 +96,6 @@ class NodesSourcesHandler extends AbstractHandler
     public function setNodeSource(NodesSources $nodeSource)
     {
         $this->nodeSource = $nodeSource;
-        return $this;
-    }
-
-    /**
-     * @return NodesSources|null
-     */
-    public function getParentNodeSource()
-    {
-        return $this->parentNodeSource;
-    }
-
-    /**
-     * @param NodesSources|null $parentNodeSource
-     * @return NodesSourcesHandler
-     */
-    public function setParentNodeSource(NodesSources $parentNodeSource = null)
-    {
-        $this->parentNodeSource = $parentNodeSource;
         return $this;
     }
 
@@ -207,13 +194,7 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getParent()
     {
-        if (null === $this->parentNodeSource) {
-            $this->parentNodeSource = $this->entityManager
-                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                 ->findParent($this->nodeSource);
-        }
-
-        return $this->parentNodeSource;
+        return $this->nodeSource->getParent();
     }
 
     /**
@@ -391,7 +372,7 @@ class NodesSourcesHandler extends AbstractHandler
         array $order = null
     ) {
         if (null !== $this->nodeSource->getParent()) {
-            $parentHandler = new NodesSourcesHandler();
+            $parentHandler = new NodesSourcesHandler($this->entityManager, $this->settingsBag, $this->tagApi);
             $parentHandler->setNodeSource($this->nodeSource->getParent());
             return $parentHandler->getFirstChild($criteria, $order);
         } else {
@@ -415,7 +396,7 @@ class NodesSourcesHandler extends AbstractHandler
         array $order = null
     ) {
         if (null !== $this->nodeSource->getParent()) {
-            $parentHandler = new NodesSourcesHandler();
+            $parentHandler = new NodesSourcesHandler($this->entityManager, $this->settingsBag, $this->tagApi);
             $parentHandler->setNodeSource($this->nodeSource->getParent());
             return $parentHandler->getLastChild($criteria, $order);
         } else {

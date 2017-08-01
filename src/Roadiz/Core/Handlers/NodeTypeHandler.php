@@ -29,6 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -43,10 +46,18 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 class NodeTypeHandler extends AbstractHandler
 {
+    /**
+     * @var NodeType
+     */
     private $nodeType;
-
-    /** @var Kernel  */
-    protected $kernel;
+    /**
+     * @var Container
+     */
+    private $container;
+    /**
+     * @var Kernel
+     */
+    private $kernel;
 
     /**
      * @return NodeType
@@ -69,13 +80,15 @@ class NodeTypeHandler extends AbstractHandler
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param NodeType|null $nodeType
+     * @param ObjectManager $entityManager
+     * @param Container $container
+     * @param Kernel $kernel
      */
-    public function __construct(NodeType $nodeType = null)
+    public function __construct(ObjectManager $entityManager, Container $container, Kernel $kernel)
     {
-        parent::__construct();
-        $this->nodeType = $nodeType;
-        $this->kernel = Kernel::getInstance();
+        parent::__construct($entityManager);
+        $this->container = $container;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -179,9 +192,13 @@ class NodeTypeHandler extends AbstractHandler
     protected function clearCaches()
     {
         $clearers = [
-            new DoctrineCacheClearer($this->entityManager, $this->kernel),
             new OPCacheClearer(),
         ];
+
+        if ($this->entityManager instanceof EntityManagerInterface) {
+            $clearers[] = new DoctrineCacheClearer($this->entityManager, $this->kernel);
+        }
+
         foreach ($clearers as $clearer) {
             $clearer->clear();
         }
@@ -208,7 +225,7 @@ class NodeTypeHandler extends AbstractHandler
         /** @var Node $node */
         foreach ($nodes as $node) {
             /** @var NodeHandler $nodeHandler */
-            $nodeHandler = $this->kernel->get('node.handler');
+            $nodeHandler = $this->container['node.handler'];
             $nodeHandler->setNode($node);
             $nodeHandler->removeWithChildrenAndAssociations();
         }

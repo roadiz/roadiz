@@ -29,8 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\CustomFormField;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with customForms fields entities.
@@ -64,13 +65,13 @@ class CustomFormFieldHandler extends AbstractHandler
     /**
      * Create a new custom-form-field handler with custom-form-field to handle.
      *
-     * @param CustomFormField|null $field
+     * @param ObjectManager $entityManager
+     * @param Container $container
      */
-    public function __construct(CustomFormField $field = null)
+    public function __construct(ObjectManager $entityManager, Container $container)
     {
-        parent::__construct();
-        $this->customFormField = $field;
-        $this->container = Kernel::getInstance()->getContainer();
+        parent::__construct($entityManager);
+        $this->container = $container;
     }
 
     /**
@@ -83,7 +84,7 @@ class CustomFormFieldHandler extends AbstractHandler
     {
         if ($this->customFormField->getCustomForm() !== null) {
             /** @var CustomFormHandler $customFormHandler */
-            $customFormHandler = $this->container->offsetGet('custom_form.handler');
+            $customFormHandler = $this->container['custom_form.handler'];
             $customFormHandler->setCustomForm($this->customFormField->getCustomForm());
             return $customFormHandler->cleanFieldsPositions($setPositions);
         }

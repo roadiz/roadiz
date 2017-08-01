@@ -36,16 +36,10 @@ use RZ\Roadiz\Core\Entities\Font;
  */
 class FontHandler extends AbstractHandler
 {
-    protected $font;
-
     /**
-     * @param Font|null $font
+     * @var Font
      */
-    public function __construct(Font $font = null)
-    {
-        parent::__construct();
-        $this->font = $font;
-    }
+    protected $font;
 
     /**
      * @return Font

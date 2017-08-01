@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use RZ\Roadiz\Core\Entities\Tag;
 
 /**
@@ -38,6 +39,9 @@ use RZ\Roadiz\Core\Entities\Tag;
  */
 class TagHandler extends AbstractHandler
 {
+    /**
+     * @var Tag
+     */
     private $tag;
 
     /**
@@ -56,16 +60,6 @@ class TagHandler extends AbstractHandler
     {
         $this->tag = $tag;
         return $this;
-    }
-    /**
-     * Create a new tag handler with tag to handle.
-     *
-     * @param Tag|null $tag
-     */
-    public function __construct(Tag $tag = null)
-    {
-        parent::__construct();
-        $this->tag = $tag;
     }
 
     /**
@@ -184,6 +178,7 @@ class TagHandler extends AbstractHandler
      */
     public function getUnavailableTranslationsId()
     {
+        /** @var Query $query */
         $query = $this->entityManager
                         ->createQuery('
             SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
@@ -210,19 +205,7 @@ class TagHandler extends AbstractHandler
      */
     public function getParents()
     {
-        $parentsArray = [];
-        $parent = $this->tag;
-
-        do {
-            $parent = $parent->getParent();
-            if ($parent !== null) {
-                $parentsArray[] = $parent;
-            } else {
-                break;
-            }
-        } while ($parent !== null);
-
-        return array_reverse($parentsArray);
+        return $this->tag->getParents();
     }
 
     /**
@@ -233,16 +216,7 @@ class TagHandler extends AbstractHandler
      */
     public function getFullPath()
     {
-        $parents = $this->getParents();
-        $path = [];
-
-        foreach ($parents as $parent) {
-            $path[] = $parent->getTagName();
-        }
-
-        $path[] = $this->tag->getTagName();
-
-        return implode('/', $path);
+        return $this->tag->getFullPath();
     }
 
     /**
@@ -254,7 +228,7 @@ class TagHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->tag->getParent() !== null) {
-            $tagHandler = new TagHandler();
+            $tagHandler = new TagHandler($this->entityManager);
             $tagHandler->setTag($this->tag->getParent());
             return $tagHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -282,6 +256,7 @@ class TagHandler extends AbstractHandler
 
         $children = $this->tag->getChildren()->matching($sort);
         $i = 1;
+        /** @var Tag $child */
         foreach ($children as $child) {
             if ($setPositions) {
                 $child->setPosition($i);

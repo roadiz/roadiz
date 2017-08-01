@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Utils\Clearer;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -40,6 +40,9 @@ use Symfony\Component\Finder\Finder;
  */
 class DoctrineCacheClearer extends Clearer
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
     /**
      * @var Kernel
@@ -49,10 +52,10 @@ class DoctrineCacheClearer extends Clearer
     /**
      * DoctrineCacheClearer constructor.
      *
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param Kernel $kernel
      */
-    public function __construct(EntityManager $entityManager, Kernel $kernel)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel)
     {
         parent::__construct('');
         $this->entityManager = $entityManager;

@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\FolderRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -43,6 +43,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DocumentHandler extends AbstractHandler
 {
+    /**
+     * @var Document
+     */
     protected $document;
 
     /**
@@ -53,13 +56,13 @@ class DocumentHandler extends AbstractHandler
     /**
      * Create a new document handler with document to handle.
      *
-     * @param Document|null $document
+     * @param ObjectManager $entityManager
+     * @param Packages $packages
      */
-    public function __construct(Document $document = null)
+    public function __construct(ObjectManager $entityManager, Packages $packages)
     {
-        parent::__construct();
-        $this->document = $document;
-        $this->packages = Kernel::getService('assetPackages');
+        parent::__construct($entityManager);
+        $this->packages = $packages;
     }
 
     /**
@@ -92,9 +95,9 @@ class DocumentHandler extends AbstractHandler
                 /*
                  * Bubble privatisation to raw document if available.
                  */
-                if (null !== $this->document->getRawDocument() &&
-                    !$this->document->getRawDocument()->isPrivate()) {
-                    $rawHandler = new DocumentHandler($this->document->getRawDocument());
+                if (null !== $this->document->getRawDocument() && !$this->document->getRawDocument()->isPrivate()) {
+                    $rawHandler = new DocumentHandler($this->entityManager, $this->packages);
+                    $rawHandler->setDocument($this->document->getRawDocument());
                     $rawHandler->makePrivate();
                 }
             } else {
@@ -138,7 +141,8 @@ class DocumentHandler extends AbstractHandler
                  */
                 if (null !== $this->document->getRawDocument() &&
                     $this->document->getRawDocument()->isPrivate()) {
-                    $rawHandler = new DocumentHandler($this->document->getRawDocument());
+                    $rawHandler = new DocumentHandler($this->entityManager, $this->packages);
+                    $rawHandler->setDocument($this->document->getRawDocument());
                     $rawHandler->makePublic();
                 }
             } else {

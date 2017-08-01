@@ -68,17 +68,6 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * Create a new node handler with node to handle.
-     *
-     * @param Node|null $node
-     */
-    public function __construct(Node $node = null)
-    {
-        parent::__construct();
-        $this->node = $node;
-    }
-
-    /**
      * Remove every node to custom-forms associations for a given field.
      *
      * @param NodeTypeField $field
@@ -497,7 +486,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            $parentHandler = new NodeHandler();
+            $parentHandler = new NodeHandler($this->entityManager);
             $parentHandler->setNode($this->node->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -525,6 +514,7 @@ class NodeHandler extends AbstractHandler
 
         $children = $this->node->getChildren()->matching($sort);
         $i = 1;
+        /** @var Node $child */
         foreach ($children as $child) {
             if ($setPositions) {
                 $child->setPosition($i);
