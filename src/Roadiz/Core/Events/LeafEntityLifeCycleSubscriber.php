@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Core\Events;
 
-
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
@@ -100,7 +99,6 @@ class LeafEntityLifeCycleSubscriber implements EventSubscriber
                     }
                 }
             } catch (\InvalidArgumentException $e) {
-
             }
         }
     }
