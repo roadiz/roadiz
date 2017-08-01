@@ -32,6 +32,8 @@
 namespace Themes\Rozier\Controllers;
 
 use InlineStyle\InlineStyle;
+use RZ\Roadiz\Core\Entities\Newsletter;
+use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +46,7 @@ class NewslettersUtilsController extends RozierApp
 {
 
     /**
-     * Duplicate node by ID
+     * Duplicate node by ID.
      *
      * @param Request $request
      * @param int     $newsletterId
@@ -58,10 +60,13 @@ class NewslettersUtilsController extends RozierApp
         $translation = $this->get('defaultTranslation');
 
         try {
-            $existingNewsletter = $this->get('em')
-                                       ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+            /** @var Newsletter $existingNewsletter */
+            $existingNewsletter = $this->get('em')->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+            /** @var NewsletterHandler $handler */
+            $handler = $this->get('newsletter.handler');
+            $handler->setNewsletter($existingNewsletter);
 
-            $newNewsletter = $existingNewsletter->getHandler()->duplicate();
+            $newNewsletter = $handler->duplicate();
 
             $msg = $this->getTranslator()->trans("duplicated.newsletter.%name%", [
                 '%name%' => $existingNewsletter->getNode()->getNodeName(),

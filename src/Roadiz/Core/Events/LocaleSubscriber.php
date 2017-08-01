@@ -58,11 +58,11 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
+        /*
+         * Locale subscriber has HIGH priority over Firewall and Routing
+         */
         return [
-            KernelEvents::REQUEST => [
-                'onKernelRequest',
-                70,
-            ],
+            KernelEvents::REQUEST => ['onKernelRequest', 70],
         ];
     }
 

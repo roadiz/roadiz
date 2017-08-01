@@ -161,6 +161,8 @@ class NodeSourceType extends AbstractType
                                             ->findDefault();
 
         $sourceCount = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                                     ->setDisplayingAllNodesStatuses(true)
+                                     ->setDisplayingNotPublishedNodes(true)
                                      ->countBy([
                                          'node' => $source->getNode(),
                                          'translation' => $defaultTranslation,

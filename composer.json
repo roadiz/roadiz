@@ -81,7 +81,8 @@
         "erusev/parsedown-extra": "~0.7.1",
         "graylog2/gelf-php": "~1.0",
         "enshrined/svg-sanitize": "^0.5.3",
-        "maximebf/debugbar": "~1.13.0"
+        "maximebf/debugbar": "~1.13.0",
+        "jbzoo/pimpledumper": "^1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",

@@ -40,7 +40,6 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldGetter()
     {
-        //TODO: Need to remove dependency to `getHandler` method.
         return '
     /**
      * @return array Documents array
@@ -48,7 +47,13 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
     public function '.$this->field->getGetterName().'()
     {
         if (null === $this->' . $this->field->getName() . ') {
-            $this->' . $this->field->getName() . ' = $this->getHandler()->getDocumentsFromFieldName("'.$this->field->getName().'");
+            if (null !== $this->objectManager) {
+                $this->' . $this->field->getName() . ' = $this->objectManager
+                    ->getRepository(\'RZ\Roadiz\Core\Entities\Document\')
+                    ->findByNodeSourceAndFieldName($this, "'.$this->field->getName().'");
+            } else {
+                $this->' . $this->field->getName() . ' = [];
+            }
         }
         return $this->' . $this->field->getName() . ';
     }'.PHP_EOL;

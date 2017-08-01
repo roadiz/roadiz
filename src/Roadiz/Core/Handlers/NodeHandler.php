@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
@@ -38,10 +37,9 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Handle operations with nodes entities.
@@ -50,12 +48,6 @@ class NodeHandler extends AbstractHandler
 {
     /** @var null|Node  */
     private $node;
-
-    /** @var AuthorizationChecker */
-    protected $authorizationChecker;
-
-    /** @var bool  */
-    protected $isPreview = false;
 
     /**
      * @return Node
@@ -84,8 +76,6 @@ class NodeHandler extends AbstractHandler
     {
         parent::__construct();
         $this->node = $node;
-        $this->authorizationChecker = Kernel::getService('securityAuthorizationChecker');
-        $this->isPreview = Kernel::getInstance()->isPreview();
     }
 
     /**
@@ -216,17 +206,14 @@ class NodeHandler extends AbstractHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return ArrayCollection Collection of nodes
+     * @return Node[]
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->getRepository()
             ->findByNodeAndFieldName(
                 $this->node,
-                $fieldName,
-                $this->authorizationChecker,
-                $this->isPreview
+                $fieldName
             );
     }
 
@@ -234,17 +221,14 @@ class NodeHandler extends AbstractHandler
      * Get nodes reversed-linked to current node for a given fieldname.
      *
      * @param string $fieldName Name of the node-type field
-     * @return ArrayCollection Collection of nodes
+     * @return Node[]
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->getRepository()
             ->findByReverseNodeAndFieldName(
                 $this->node,
-                $fieldName,
-                $this->authorizationChecker,
-                $this->isPreview
+                $fieldName
             );
     }
 
@@ -300,7 +284,6 @@ class NodeHandler extends AbstractHandler
     {
         $this->removeChildren();
         $this->removeAssociations();
-
         $this->entityManager->remove($this->node);
 
         return $this;
@@ -384,45 +367,53 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * Alias for NodeRepository::findAvailableTranslationForNode.
+     * Alias for TranslationRepository::findAvailableTranslationsForNode.
      *
+     * @deprecated This method has no purpose here.
      * @return Translation[]
      */
     public function getAvailableTranslations()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findAvailableTranslationForNode($this->node);
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findAvailableTranslationsForNode($this->node);
     }
     /**
-     * Alias for NodeRepository::findAvailableTranslationIdForNode.
+     * Alias for TranslationRepository::findAvailableTranslationsIdForNode.
      *
-     * @return array Array of Translation id
+     * @deprecated This method has no purpose here.
+     * @return array
      */
     public function getAvailableTranslationsId()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
-                                       ->findAvailableTranslationIdForNode($this->node);
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findAvailableTranslationsIdForNode($this->node);
     }
 
     /**
-     * Alias for NodeRepository::findUnavailableTranslationForNode.
+     * Alias for TranslationRepository::findUnavailableTranslationsForNode.
      *
-     * @return array
+     * @deprecated This method has no purpose here.
+     * @return Translation[]
      */
     public function getUnavailableTranslations()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findUnavailableTranslationForNode($this->node);
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->findUnavailableTranslationsForNode($this->node);
     }
 
     /**
-     * Alias for NodeRepository::findUnavailableTranslationIdForNode.
+     * Alias for TranslationRepository::findUnavailableTranslationIdForNode.
      *
-     * @return array Array of Translation id
+     * @deprecated This method has no purpose here.
+     * @return array
      */
     public function findUnavailableTranslationIdForNode()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findUnavailableTranslationIdForNode($this->node);
     }
 
@@ -471,8 +462,7 @@ class NodeHandler extends AbstractHandler
     /**
      * Return every node’s parents
      * @param TokenStorageInterface|null $tokenStorage
-     *
-     * @return array
+     * @return Node[]
      */
     public function getParents(TokenStorageInterface $tokenStorage = null)
     {
@@ -555,8 +545,8 @@ class NodeHandler extends AbstractHandler
      */
     public function cleanRootNodesPositions($setPositions = true)
     {
-        $nodes = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+        $nodes = $this->getRepository()
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy(['parent' => null], ['position' => 'ASC']);
 
         $i = 1;
@@ -577,8 +567,7 @@ class NodeHandler extends AbstractHandler
      */
     public function getAllOffspringId()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findAllOffspringIdByNode($this->node);
+        return $this->getRepository()->findAllOffspringIdByNode($this->node);
     }
 
     /**
@@ -588,8 +577,8 @@ class NodeHandler extends AbstractHandler
      */
     public function makeHome()
     {
-        $defaults = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+        $defaults = $this->getRepository()
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy(['home' => true]);
 
         /** @var Node $default */
@@ -619,16 +608,12 @@ class NodeHandler extends AbstractHandler
      *
      * @param  array|null           $criteria
      * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function getPrevious(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         if ($this->node->getPosition() <= 1) {
             return null;
@@ -653,31 +638,23 @@ class NodeHandler extends AbstractHandler
 
         $order['position'] = 'DESC';
 
-        return $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
-            ->findOneBy(
-                $criteria,
-                $order,
-                $authorizationChecker,
-                $preview
-            );
+        return $this->getRepository()->findOneBy(
+            $criteria,
+            $order
+        );
     }
 
     /**
      * Get next node from hierarchy.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
+     * @param  array|null $criteria
+     * @param  array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return \RZ\Roadiz\Core\Entities\Node|null
      */
     public function getNext(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         if (null === $criteria) {
             $criteria = [];
@@ -698,13 +675,18 @@ class NodeHandler extends AbstractHandler
         ];
         $order['position'] = 'ASC';
 
-        return $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return $this->getRepository()
             ->findOneBy(
                 $criteria,
-                $order,
-                $authorizationChecker,
-                $preview
+                $order
             );
+    }
+
+    /**
+     * @return NodeRepository
+     */
+    public function getRepository()
+    {
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node');
     }
 }

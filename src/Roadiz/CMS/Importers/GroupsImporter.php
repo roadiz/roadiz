@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 
 /**
@@ -51,6 +52,7 @@ class GroupsImporter implements ImporterInterface
         /** @var \RZ\Roadiz\Core\Entities\Group[] $groups */
         $groups = $serializer->deserialize($serializedData);
         foreach ($groups as $group) {
+            /** @var Group $existingGroup */
             $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
                                 ->findOneByName($group->getName());
 

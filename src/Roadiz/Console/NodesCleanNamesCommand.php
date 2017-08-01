@@ -61,10 +61,13 @@ class NodesCleanNamesCommand extends Command
 
         $translation = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->setDisplayingNotPublishedNodes(true)
             ->findDefault();
 
         if (null !== $translation) {
-            $nodes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+            $nodes = $this->entityManager
+                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingNotPublishedNodes(true)
                 ->findBy([
                     'dynamicNodeName' => true,
                     'locked' => false,

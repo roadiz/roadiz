@@ -42,7 +42,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(columns={"updated_at"})
  * })
  */
-abstract class AbstractDateTimedPositioned extends AbstractDateTimed
+abstract class AbstractDateTimedPositioned extends AbstractDateTimed implements PositionedInterface
 {
     use PositionedTrait;
 }

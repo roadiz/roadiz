@@ -35,9 +35,10 @@ use RZ\Roadiz\Core\Kernel;
 /**
  * Handle operations with node-type fields entities.
  */
-class NodeTypeFieldHandler
+class NodeTypeFieldHandler extends AbstractHandler
 {
     private $nodeTypeField;
+    private $container;
 
     /**
      * @return NodeTypeField|null
@@ -64,6 +65,7 @@ class NodeTypeFieldHandler
      */
     public function __construct(NodeTypeField $field = null)
     {
+        parent::__construct();
         $this->nodeTypeField = $field;
         $this->container = Kernel::getInstance()->getContainer();
     }

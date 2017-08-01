@@ -40,9 +40,10 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"group_name_canonical"})
  * })
  */
-abstract class AbstractField extends AbstractEntity
+abstract class AbstractField extends AbstractEntity implements PositionedInterface
 {
     use PositionedTrait;
+
     /**
      * String field is a simple 255 characters long text.
      */

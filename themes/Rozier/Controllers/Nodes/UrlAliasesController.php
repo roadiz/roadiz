@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
@@ -76,6 +77,8 @@ class UrlAliasesController extends RozierApp
         /** @var NodesSources $source */
         $source = $this->get('em')
                        ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                       ->setDisplayingAllNodesStatuses(true)
+                       ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
 
         $node = $source->getNode();
@@ -243,11 +246,15 @@ class UrlAliasesController extends RozierApp
     private function addNodeUrlAlias($data, Node $node)
     {
         if ($data['nodeId'] == $node->getId()) {
+            /** @var Translation $translation */
             $translation = $this->get('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $data['translationId']);
 
+            /** @var NodesSources $nodeSource */
             $nodeSource = $this->get('em')
                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                               ->setDisplayingAllNodesStatuses(true)
+                               ->setDisplayingNotPublishedNodes(true)
                                ->findOneBy(['node' => $node, 'translation' => $translation]);
 
             if ($translation !== null &&
@@ -323,6 +330,7 @@ class UrlAliasesController extends RozierApp
     {
         return (boolean) $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                              ->setDisplayingNotPublishedNodes(true)
                               ->exists($name);
     }
 

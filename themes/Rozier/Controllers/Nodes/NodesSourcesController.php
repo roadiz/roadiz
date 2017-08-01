@@ -83,6 +83,8 @@ class NodesSourcesController extends RozierApp
             /** @var NodesSources $source */
             $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->setDisplayingAllNodesStatuses(true)
+                           ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
             if (null !== $source) {

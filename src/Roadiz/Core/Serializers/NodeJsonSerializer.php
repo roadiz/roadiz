@@ -111,6 +111,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     {
         if (null !== $this->em
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingNotPublishedNodes(true)
                 ->findHomeWithDefaultTranslation()) {
             return true;
         }

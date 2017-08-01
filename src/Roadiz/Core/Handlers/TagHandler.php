@@ -205,7 +205,7 @@ class TagHandler extends AbstractHandler
 
     /**
      * Return every tag’s parents.
-     *
+     * @deprecated Use directly Tag::getParents
      * @return array
      */
     public function getParents()
@@ -228,6 +228,7 @@ class TagHandler extends AbstractHandler
     /**
      * Get tag full path using tag names.
      *
+     * @deprecated Use directly Tag::getFullPath
      * @return string
      */
     public function getFullPath()

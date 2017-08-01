@@ -31,21 +31,134 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Pimple\Container;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Tag;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * EntityRepository that implements a simple countBy method.
  */
-class EntityRepository extends \Doctrine\ORM\EntityRepository
+class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {
+    /**
+     * @var bool
+     */
+    private $displayNotPublishedNodes;
+
+    /**
+     * @var bool
+     */
+    private $displayAllNodesStatuses;
+
+    /**
+     * @var bool
+     */
+    private $isPreview;
+
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * EntityRepository constructor.
+     * @param EntityManager $em
+     * @param Mapping\ClassMetadata $class
+     * @param Container $container
+     * @param bool $isPreview
+     */
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Container $container, $isPreview = false)
+    {
+        parent::__construct($em, $class);
+        $this->isPreview = $isPreview;
+        $this->container = $container;
+        $this->displayNotPublishedNodes = false;
+        $this->displayAllNodesStatuses = false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayingNotPublishedNodes()
+    {
+        return $this->displayNotPublishedNodes;
+    }
+
+    /**
+     * @param bool $displayNotPublishedNodes
+     * @return EntityRepository
+     */
+    public function setDisplayingNotPublishedNodes($displayNotPublishedNodes)
+    {
+        $this->displayNotPublishedNodes = $displayNotPublishedNodes;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayingAllNodesStatuses()
+    {
+        return $this->displayAllNodesStatuses;
+    }
+
+    /**
+     * Switch repository to disable any security on Node status. To use ONLY in order to
+     * view deleted and archived nodes.
+     *
+     * @param bool $displayAllNodesStatuses
+     * @return EntityRepository
+     */
+    public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)
+    {
+        $this->displayAllNodesStatuses = $displayAllNodesStatuses;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get($serviceName)
+    {
+        return $this->container->offsetGet($serviceName);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has($serviceName)
+    {
+        return $this->container->offsetExists($serviceName);
+    }
+
+
     /**
      * Alias for DQL and Query builder representing Node relation.
      */
@@ -75,19 +188,43 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
     protected $searchableTypes = ['string', 'text'];
 
     /**
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param bool $preview
      * @return bool
      */
-    protected function isBackendUser(AuthorizationChecker &$authorizationChecker = null, $preview = false)
+    protected function isBackendUserWithPreview()
     {
+        /** @var AuthorizationCheckerInterface|null $checker */
+        $checker = $this->get('securityAuthorizationChecker');
         try {
-            return $preview === true &&
-                null !== $authorizationChecker &&
-                $authorizationChecker->isGranted(Role::ROLE_BACKEND_USER);
+            return $this->isPreview === true && null !== $checker && $checker->isGranted(Role::ROLE_BACKEND_USER);
         } catch (AuthenticationCredentialsNotFoundException $e) {
             return false;
         }
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $prefix
+     * @return QueryBuilder
+     */
+    protected function alterQueryBuilderWithAuthorizationChecker(
+        QueryBuilder $qb,
+        $prefix = EntityRepository::NODE_ALIAS
+    ) {
+        if (true === $this->isDisplayingAllNodesStatuses()) {
+            // do not filter on status
+            return $qb;
+        }
+        /*
+         * Check if user can see not-published node based on its Token 
+         * and context.
+         */
+        if (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
+            $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
+        } else {
+            $qb->andWhere($qb->expr()->eq($prefix . '.status', Node::PUBLISHED));
+        }
+
+        return $qb;
     }
 
     /**
@@ -369,8 +506,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             // param is not needed
         } elseif (isset($value)) {
             $finalQuery->setParameter($key, $value);
-        } elseif (null === $value) {
-            // param is not needed
         }
     }
 

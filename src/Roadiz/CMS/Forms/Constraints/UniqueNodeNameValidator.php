@@ -67,7 +67,8 @@ class UniqueNodeNameValidator extends ConstraintValidator
     protected function urlAliasExists($name, $entityManager)
     {
         return (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-                                       ->exists($name);
+                                        ->setDisplayingNotPublishedNodes(true)
+                                        ->exists($name);
     }
 
     /**
@@ -79,6 +80,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
     protected function nodeNameExists($name, $entityManager)
     {
         return (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                       ->setDisplayingNotPublishedNodes(true)
                                        ->exists($name);
     }
 }

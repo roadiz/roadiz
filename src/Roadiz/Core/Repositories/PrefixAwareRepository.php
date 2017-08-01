@@ -178,7 +178,7 @@ class PrefixAwareRepository extends EntityRepository
      * @param array $order
      * @param null $limit
      * @param null $offset
-     * @return array
+     * @return array|Paginator
      */
     public function findBy(
         array $criteria,
@@ -277,7 +277,7 @@ class PrefixAwareRepository extends EntityRepository
      * @param integer $limit
      * @param integer $offset
      *
-     * @return array
+     * @return array|Paginator
      */
     public function searchBy(
         $pattern,

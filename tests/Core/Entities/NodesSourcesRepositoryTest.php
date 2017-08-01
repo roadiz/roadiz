@@ -44,7 +44,11 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
     public function testFindBySearchQuery($query, $expectedClass)
     {
         /** @var \RZ\Roadiz\Core\Repositories\NodesSourcesRepository $repository */
-        $repository = static::getManager()->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+        $repository = static::getManager()
+            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
+        ;
         $nSources = $repository->findBySearchQuery($query);
 
         if (null !== $nSources) {
@@ -76,6 +80,8 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
     {
         $nSources = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
             ->findBySearchQueryAndTranslation($query, $translation);
 
         if (null !== $nSources) {

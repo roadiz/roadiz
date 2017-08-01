@@ -78,6 +78,7 @@ class NodeTreeWidget extends AbstractWidget
 
         $this->availableTranslations = $this->getController()->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+             ->setDisplayingNotPublishedNodes(true)
              ->findAll();
     }
 
@@ -139,7 +140,6 @@ class NodeTreeWidget extends AbstractWidget
         $criteria = [
             'parent' => $parent,
             'translation' => $this->translation,
-            'status' => ['<=', Node::PUBLISHED],
         ];
 
         if (null !== $this->tag) {
@@ -168,6 +168,7 @@ class NodeTreeWidget extends AbstractWidget
             $criteria,
             $ordering
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
 
         if (true === $this->stackTree) {
             $listManager->setItemPerPage(20);

@@ -100,6 +100,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             $criteria,
             $orderBy
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
         $listManager->handle();
         $entities = $listManager->getEntities();

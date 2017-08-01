@@ -23,39 +23,66 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file CustomFormsFieldGenerator.php
+ * @file HandlerExtension.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\Utils\TwigExtensions;
+
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
 
 /**
- * Class CustomFormsFieldGenerator
- * @package RZ\Roadiz\Utils\Doctrine\Generators
+ * Class HandlerExtension
+ * @package RZ\Roadiz\Utils\TwigExtensions
  */
-class CustomFormsFieldGenerator extends AbstractFieldGenerator
+class HandlerExtension extends \Twig_Extension
 {
     /**
-     * @inheritDoc
+     * @var HandlerFactory
      */
-    public function getFieldGetter()
-    {
-        return '
+    private $handlerFactory;
+
     /**
-     * @return array CustomForm array
+     * HandlerExtension constructor.
+     * @param HandlerFactory $handlerFactory
      */
-    public function '.$this->field->getGetterName().'()
+    public function __construct(HandlerFactory $handlerFactory)
     {
-        if (null === $this->' . $this->field->getName() . ') {
-            if (null !== $this->objectManager) {
-                $this->' . $this->field->getName() . ' = $this->objectManager
-                    ->getRepository(\'RZ\Roadiz\Core\Entities\CustomForm\')
-                    ->findByNodeAndFieldName($this->getNode(), "'.$this->field->getName().'");
-            } else {
-                $this->' . $this->field->getName() . ' = [];
+        $this->handlerFactory = $handlerFactory;
+    }
+
+    public function getName()
+    {
+        return 'handlerExtension';
+    }
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('handler', [$this, 'getHandler']),
+        ];
+    }
+
+    /**
+     * @param $mixed
+     * @return \RZ\Roadiz\Core\Handlers\AbstractHandler|null
+     * @throws \Twig_Error_Runtime
+     */
+    public function getHandler($mixed)
+    {
+        if (null === $mixed) {
+            return null;
+        }
+
+        if ($mixed instanceof AbstractEntity) {
+            try {
+                return $this->handlerFactory->getHandler($mixed);
+            } catch (\InvalidArgumentException $exception) {
+                throw new \Twig_Error_Runtime($exception->getMessage(), -1, null, $exception);
             }
         }
-        return $this->' . $this->field->getName() . ';
-    }'.PHP_EOL;
+
+        throw new \Twig_Error_Runtime('Handler filter only supports AbstractEntity objects.');
     }
 }

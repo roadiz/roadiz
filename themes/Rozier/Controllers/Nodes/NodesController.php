@@ -29,13 +29,13 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -57,6 +57,8 @@ class NodesController extends RozierApp
 {
     use NodesTrait;
 
+
+
     /**
      * List every nodes.
      *
@@ -72,6 +74,7 @@ class NodesController extends RozierApp
 
         $translation = $this->get('defaultTranslation');
 
+        /** @var User $user */
         $user = $this->getUser();
 
         switch ($filter) {
@@ -99,7 +102,6 @@ class NodesController extends RozierApp
                     'status' => Node::DELETED,
                 ];
                 break;
-
             default:
                 $this->assignation['mainFilter'] = 'all';
                 $arrayFilter = [];
@@ -117,6 +119,9 @@ class NodesController extends RozierApp
             'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
+        $listManager->setDisplayingAllNodesStatuses(true);
+
         /*
          * Stored in session
          */
@@ -128,10 +133,14 @@ class NodesController extends RozierApp
         $this->assignation['translation'] = $translation;
         $this->assignation['availableTranslations'] = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
             ->findAllAvailable();
         $this->assignation['nodes'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->setDisplayingNotPublishedNodes(true)
+            ->setDisplayingAllNodesStatuses(true)
             ->findBy([
                 'newsletterType' => false,
                 'visible' => true,
@@ -255,6 +264,7 @@ class NodesController extends RozierApp
         /** @var Node $node */
         $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', $nodeId);
+        /** @var NodeType $type */
         $type = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\NodeType', $typeId);
 
@@ -290,6 +300,7 @@ class NodesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var NodeType $type */
         $type = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
@@ -532,6 +543,8 @@ class NodesController extends RozierApp
 
             $nodes = $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingAllNodesStatuses(true)
+                ->setDisplayingNotPublishedNodes(true)
                 ->findBy($criteria);
 
             /** @var Node $node */

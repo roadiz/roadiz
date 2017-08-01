@@ -1,12 +1,13 @@
 <?php
 /**
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -22,44 +23,58 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file PositionedTrait.php
- * @author Ambroise Maupate
+ * @file HandlerFactoryHelper.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\AbstractEntities;
 
-use Doctrine\ORM\Mapping as ORM;
+namespace RZ\Roadiz\Utils\Console\Helper;
+
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use Symfony\Component\Console\Helper\Helper;
 
 /**
- * Trait which describe a positioned entity
+ * Class HandlerFactoryHelper
+ * @package RZ\Roadiz\Utils\Console\Helper
  */
-trait PositionedTrait
+class HandlerFactoryHelper extends Helper
 {
     /**
-     * @ORM\Column(type="float")
+     * @var HandlerFactory
      */
-    protected $position = 0.0;
+    private $handlerFactory;
 
     /**
-     * @return float
+     * HandlerFactoryHelper constructor.
+     * @param HandlerFactory $handlerFactory
      */
-    public function getPosition()
+    public function __construct(HandlerFactory $handlerFactory)
     {
-        return $this->position;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
-     * Set position as a float to enable increment and decrement by O.5
-     * to insert a node between two others.
-     *
-     * @param float $newPosition
-     * @return $this
+     * @inheritDoc
      */
-    public function setPosition($newPosition)
+    public function getName()
     {
-        if ($newPosition > -1) {
-            $this->position = (float) $newPosition;
-        }
+        return 'handlerFactory';
+    }
 
-        return $this;
+    /**
+     * @param AbstractEntity $entity
+     * @return \RZ\Roadiz\Core\Handlers\AbstractHandler
+     */
+    public function getHandler(AbstractEntity $entity)
+    {
+        return $this->handlerFactory->getHandler($entity);
+    }
+
+    /**
+     * @return HandlerFactory
+     */
+    public function getHandlerFactory()
+    {
+        return $this->handlerFactory;
     }
 }

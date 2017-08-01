@@ -33,6 +33,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\FolderRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
@@ -190,20 +191,19 @@ class DocumentHandler extends AbstractHandler
      */
     public function getFolders(Translation $translation = null)
     {
+        /** @var FolderRepository $repository */
+        $repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder');
         if (null !== $translation) {
-            return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                ->findByDocumentAndTranslation($this->document, $translation);
+            return $repository->findByDocumentAndTranslation($this->document, $translation);
         }
 
         $docTranslation = $this->document->getDocumentTranslations()->first();
         if (null !== $docTranslation &&
             $docTranslation instanceof DocumentTranslation) {
-            return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                ->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());
+            return $repository->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());
         }
 
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
-            ->findByDocumentAndTranslation($this->document);
+        return $repository->findByDocumentAndTranslation($this->document);
     }
 
     /**

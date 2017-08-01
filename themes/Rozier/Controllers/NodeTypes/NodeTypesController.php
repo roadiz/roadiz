@@ -62,6 +62,7 @@ class NodeTypesController extends RozierApp
             [],
             ['name' => 'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
 
         /*
          * Stored in session

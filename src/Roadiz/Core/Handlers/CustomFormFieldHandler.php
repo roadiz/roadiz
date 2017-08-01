@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\Kernel;
 /**
  * Handle operations with customForms fields entities.
  */
-class CustomFormFieldHandler
+class CustomFormFieldHandler extends AbstractHandler
 {
     /** @var null|CustomFormField  */
     private $customFormField = null;
@@ -68,6 +68,7 @@ class CustomFormFieldHandler
      */
     public function __construct(CustomFormField $field = null)
     {
+        parent::__construct();
         $this->customFormField = $field;
         $this->container = Kernel::getInstance()->getContainer();
     }

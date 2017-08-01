@@ -195,6 +195,47 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
+     * Return every tag’s parents.
+     *
+     * @return Tag[]
+     */
+    public function getParents()
+    {
+        $parentsArray = [];
+        $parent = $this;
+
+        do {
+            $parent = $parent->getParent();
+            if ($parent !== null) {
+                $parentsArray[] = $parent;
+            } else {
+                break;
+            }
+        } while ($parent !== null);
+
+        return array_reverse($parentsArray);
+    }
+
+    /**
+     * Get tag full path using tag names.
+     *
+     * @return string
+     */
+    public function getFullPath()
+    {
+        $parents = $this->getParents();
+        $path = [];
+
+        foreach ($parents as $parent) {
+            $path[] = $parent->getTagName();
+        }
+
+        $path[] = $this->getTagName();
+
+        return implode('/', $path);
+    }
+
+    /**
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection

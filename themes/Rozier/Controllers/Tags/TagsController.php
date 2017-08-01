@@ -67,6 +67,7 @@ class TagsController extends RozierApp
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Tag'
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -566,6 +567,7 @@ class TagsController extends RozierApp
                     'tags' => $tag,
                 ]
             );
+            $listManager->setDisplayingNotPublishedNodes(true);
             $listManager->handle();
 
             $this->assignation['filters'] = $listManager->getAssignation();

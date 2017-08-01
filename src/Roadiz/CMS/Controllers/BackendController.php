@@ -91,4 +91,13 @@ abstract class BackendController extends AppController
             $firewallEntry->getExceptionListener(true)
         );
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        return parent::createEntityListManager($entity, $criteria, $ordering)
+            ->setDisplayingNotPublishedNodes(true);
+    }
 }

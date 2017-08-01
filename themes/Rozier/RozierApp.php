@@ -179,7 +179,7 @@ class RozierApp extends BackendController
          */
         if ($container['solr.ready']) {
             $container['dispatcher']->addSubscriber(
-                new SolariumSubscriber($container['solr'], $container['dispatcher'], $container['logger'])
+                new SolariumSubscriber($container['solr'], $container['dispatcher'], $container['logger'], $container['factory.handler'])
             );
         }
 

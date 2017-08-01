@@ -62,6 +62,9 @@ class ThemesSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
+        /*
+         * Theme request is between Locale and Firewall+routing
+         */
         return [
             ConsoleEvents::COMMAND => 'onCommand',
             KernelEvents::REQUEST => ['onKernelRequest', 60],

@@ -82,21 +82,24 @@ class SecurityServiceProvider implements ServiceProviderInterface
          * PDO instance only used with SessionStorage
          */
         $container['session.pdo'] = function ($c) {
-            $pdo = new \PDO(
-                $c['config']["sessionStorage"]['dsn'],
-                $c['config']["sessionStorage"]['user'],
-                $c['config']["sessionStorage"]['password']
-            );
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            if (isset($c['config']["sessionStorage"])) {
+                $pdo = new \PDO(
+                    $c['config']["sessionStorage"]['dsn'],
+                    $c['config']["sessionStorage"]['user'],
+                    $c['config']["sessionStorage"]['password']
+                );
+                $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            return $pdo;
+                return $pdo;
+            }
+            return null;
         };
 
         $container['session.storage'] = function ($c) {
             try {
                 if ($c['config'] !== null &&
                     isset($c['config']["sessionStorage"])) {
-                    if ($c['config']["sessionStorage"]["type"] == "pdo" &&
+                    if ($c['config']["sessionStorage"]["type"] === "pdo" &&
                         isset($c['config']["sessionStorage"]["options"])) {
                         return new NativeSessionStorage(
                             [],

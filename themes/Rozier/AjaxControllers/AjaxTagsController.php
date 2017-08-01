@@ -133,7 +133,7 @@ class AjaxTagsController extends AbstractAjaxController
                 'createdAt' => 'DESC'
             ]
         );
-
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
         $listManager->handle();
 
@@ -270,9 +270,9 @@ class AjaxTagsController extends AbstractAjaxController
                              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
                              ->searchBy($pattern, [], [], 10);
             }
-
+            /** @var Tag $tag */
             foreach ($tags as $tag) {
-                $responseArray[] = $tag->getHandler()->getFullPath();
+                $responseArray[] = $tag->getFullPath();
             }
         }
 

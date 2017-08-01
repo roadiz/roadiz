@@ -66,6 +66,8 @@ class ExportController extends RozierApp
 
         $sources = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy(["translation" => $translation], ['node.nodeType' => 'ASC']);
 
         $serializer = new NodeSourceXlsxSerializer($this->get('em'), $this->get('translator'), $this->get('urlGenerator'));

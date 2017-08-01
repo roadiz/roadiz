@@ -163,8 +163,10 @@ class NodesTreesController extends RozierApp
             $nodesIds = explode(',', $nodesIds);
             array_filter($nodesIds);
 
+            /** @var Node[] $nodes */
             $nodes = $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
@@ -214,8 +216,10 @@ class NodesTreesController extends RozierApp
             $nodesIds = explode(',', $nodesIds);
             array_filter($nodesIds);
 
+            /** @var Node[] $nodes */
             $nodes = $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
@@ -299,10 +303,12 @@ class NodesTreesController extends RozierApp
 
             $nodes = $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
 
+            /** @var Node $node */
             foreach ($nodes as $node) {
                 $node->getHandler()->softRemoveWithChildren();
             }
@@ -327,8 +333,10 @@ class NodesTreesController extends RozierApp
             $nodesIds = explode(',', $nodesIds);
             array_filter($nodesIds);
 
+            /** @var Node[] $nodes */
             $nodes = $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
@@ -401,8 +409,10 @@ class NodesTreesController extends RozierApp
             $nodesIds = explode(',', $data['nodesIds']);
             $nodesIds = array_filter($nodesIds);
 
+            /** @var Node[] $nodes */
             $nodes = $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
@@ -440,8 +450,10 @@ class NodesTreesController extends RozierApp
             $nodesIds = explode(',', $data['nodesIds']);
             $nodesIds = array_filter($nodesIds);
 
+            /** @var Node[] $nodes */
             $nodes = $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
