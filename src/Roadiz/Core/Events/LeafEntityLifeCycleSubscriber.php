@@ -23,20 +23,21 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FolderLifeCycleSubscriber.php
+ * @file LeafEntityLifeCycleSubscriber.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
 namespace RZ\Roadiz\Core\Events;
 
+
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pimple\Container;
-use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Handlers\FolderHandler;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
+use RZ\Roadiz\Core\Handlers\AbstractHandler;
 
-class FolderLifeCycleSubscriber implements EventSubscriber
+class LeafEntityLifeCycleSubscriber implements EventSubscriber
 {
     /**
      * @var Container
@@ -67,35 +68,39 @@ class FolderLifeCycleSubscriber implements EventSubscriber
      */
     public function prePersist(LifecycleEventArgs $event)
     {
-        $folder = $event->getEntity();
-        if ($folder instanceof Folder) {
+        $entity = $event->getEntity();
+        if ($entity instanceof LeafInterface) {
             /*
              * Automatically set position only if not manually set before.
              */
-            /** @var FolderHandler $folderHandler */
-            $folderHandler = $this->container->offsetGet('folder.handler');
-            $folderHandler->setFolder($folder);
-
-            if ($folder->getPosition() === 0.0) {
-                /*
-                 * Get the last index after last folder in parent
-                 */
-                $lastPosition = $folderHandler->cleanPositions(false);
-                if ($lastPosition > 1 && null !== $folder->getParent()) {
-                    /*
-                     * Need to decrement position because current folder is already
-                     * in parent's children collection count.
-                     */
-                    $folder->setPosition($lastPosition - 1);
-                } else {
-                    $folder->setPosition($lastPosition);
+            try {
+                /** @var AbstractHandler $handler */
+                $handler = $this->container->offsetGet('factory.handler')->getHandler($entity);
+                if (method_exists($handler, 'cleanPositions')) {
+                    if ($entity->getPosition() === 0.0) {
+                        /*
+                         * Get the last index after last tag in parent
+                         */
+                        $lastPosition = $handler->cleanPositions(false);
+                        if ($lastPosition > 1 && null !== $entity->getParent()) {
+                            /*
+                             * Need to decrement position because current tag is already
+                             * in parent's children collection count.
+                             */
+                            $entity->setPosition($lastPosition - 1);
+                        } else {
+                            $entity->setPosition($lastPosition);
+                        }
+                    } elseif ($entity->getPosition() === 0.5) {
+                        /*
+                         * Position is set to 0.5 so we need to
+                         * shift all tags to the bottom.
+                         */
+                        $handler->cleanPositions(true);
+                    }
                 }
-            } elseif ($folder->getPosition() === 0.5) {
-                /*
-                 * Position is set to 0.5 so we need to
-                 * shift all folders to the bottom.
-                 */
-                $folderHandler->cleanPositions(true);
+            } catch (\InvalidArgumentException $e) {
+
             }
         }
     }

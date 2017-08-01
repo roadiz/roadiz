@@ -44,12 +44,10 @@ use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\FolderLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\NodeLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\TagLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\LeafEntityLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
@@ -296,10 +294,8 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 new FontLifeCycleSubscriber($c),
                 new DocumentLifeCycleSubscriber($c),
                 new UserLifeCycleSubscriber($c),
-                new NodeLifeCycleSubscriber($c),
                 new CustomFormFieldLifeCycleSubscriber($c),
-                new TagLifeCycleSubscriber($c),
-                new FolderLifeCycleSubscriber($c),
+                new LeafEntityLifeCycleSubscriber($c),
             ];
         };
 
