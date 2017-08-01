@@ -77,7 +77,7 @@ class CustomFormHandler extends AbstractHandler
         }
 
         if ($setPositions) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $i;

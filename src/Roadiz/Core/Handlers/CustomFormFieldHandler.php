@@ -65,12 +65,12 @@ class CustomFormFieldHandler extends AbstractHandler
     /**
      * Create a new custom-form-field handler with custom-form-field to handle.
      *
-     * @param ObjectManager $entityManager
+     * @param ObjectManager $objectManager
      * @param Container $container
      */
-    public function __construct(ObjectManager $entityManager, Container $container)
+    public function __construct(ObjectManager $objectManager, Container $container)
     {
-        parent::__construct($entityManager);
+        parent::__construct($objectManager);
         $this->container = $container;
     }
 

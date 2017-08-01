@@ -77,7 +77,7 @@ class GroupHandler extends AbstractHandler
 
             foreach ($newGroup->getRolesEntities() as $newRole) {
                 if (false === in_array($newRole->getName(), $existingRolesNames)) {
-                    $role = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role')
+                    $role = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Role')
                                                  ->findOneByName($newRole->getName());
                     $this->group->addRole($role);
                 }

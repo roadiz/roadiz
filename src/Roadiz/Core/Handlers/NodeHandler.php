@@ -76,16 +76,16 @@ class NodeHandler extends AbstractHandler
      */
     public function cleanCustomFormsFromField(NodeTypeField $field, $flush = true)
     {
-        $nodesCustomForms = $this->entityManager
+        $nodesCustomForms = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
             ->findBy(['node' => $this->node, 'field' => $field]);
 
         foreach ($nodesCustomForms as $ncf) {
-            $this->entityManager->remove($ncf);
+            $this->objectManager->remove($ncf);
         }
 
         if (true === $flush) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -105,7 +105,7 @@ class NodeHandler extends AbstractHandler
         $ncf = new NodesCustomForms($this->node, $customForm, $field);
 
         if (null === $position) {
-            $latestPosition = $this->entityManager
+            $latestPosition = $this->objectManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
                 ->getLatestPosition($this->node, $field);
             $ncf->setPosition($latestPosition + 1);
@@ -113,10 +113,10 @@ class NodeHandler extends AbstractHandler
             $ncf->setPosition($position);
         }
 
-        $this->entityManager->persist($ncf);
+        $this->objectManager->persist($ncf);
 
         if (true === $flush) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -130,7 +130,7 @@ class NodeHandler extends AbstractHandler
      */
     public function getCustomFormsFromFieldName($fieldName)
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
             ->findByNodeAndFieldName($this->node, $fieldName);
     }
@@ -145,16 +145,16 @@ class NodeHandler extends AbstractHandler
      */
     public function cleanNodesFromField(NodeTypeField $field, $flush = true)
     {
-        $nodesToNodes = $this->entityManager
+        $nodesToNodes = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
             ->findBy(['nodeA' => $this->node, 'field' => $field]);
 
         foreach ($nodesToNodes as $ntn) {
-            $this->entityManager->remove($ntn);
+            $this->objectManager->remove($ntn);
         }
 
         if (true === $flush) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -174,7 +174,7 @@ class NodeHandler extends AbstractHandler
         $ntn = new NodesToNodes($this->node, $node, $field);
 
         if (null === $position) {
-            $latestPosition = $this->entityManager
+            $latestPosition = $this->objectManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
                 ->getLatestPosition($this->node, $field);
             $ntn->setPosition($latestPosition + 1);
@@ -182,9 +182,9 @@ class NodeHandler extends AbstractHandler
             $ntn->setPosition($position);
         }
 
-        $this->entityManager->persist($ntn);
+        $this->objectManager->persist($ntn);
         if (true === $flush) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -230,7 +230,7 @@ class NodeHandler extends AbstractHandler
      */
     public function getNodeSourceByTranslation($translation)
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(["node" => $this->node, "translation" => $translation]);
     }
@@ -256,7 +256,7 @@ class NodeHandler extends AbstractHandler
     public function removeAssociations()
     {
         foreach ($this->node->getNodeSources() as $ns) {
-            $this->entityManager->remove($ns);
+            $this->objectManager->remove($ns);
         }
 
         return $this;
@@ -265,7 +265,7 @@ class NodeHandler extends AbstractHandler
      * Remove current node with its children recursively and
      * its associations.
      *
-     * This method DOES NOT flush entityManager
+     * This method DOES NOT flush objectManager
      *
      * @return $this
      */
@@ -273,7 +273,7 @@ class NodeHandler extends AbstractHandler
     {
         $this->removeChildren();
         $this->removeAssociations();
-        $this->entityManager->remove($this->node);
+        $this->objectManager->remove($this->node);
 
         return $this;
     }
@@ -363,7 +363,7 @@ class NodeHandler extends AbstractHandler
      */
     public function getAvailableTranslations()
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findAvailableTranslationsForNode($this->node);
     }
@@ -375,7 +375,7 @@ class NodeHandler extends AbstractHandler
      */
     public function getAvailableTranslationsId()
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findAvailableTranslationsIdForNode($this->node);
     }
@@ -388,7 +388,7 @@ class NodeHandler extends AbstractHandler
      */
     public function getUnavailableTranslations()
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findUnavailableTranslationsForNode($this->node);
     }
@@ -401,7 +401,7 @@ class NodeHandler extends AbstractHandler
      */
     public function findUnavailableTranslationIdForNode()
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findUnavailableTranslationIdForNode($this->node);
     }
@@ -486,7 +486,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            $parentHandler = new NodeHandler($this->entityManager);
+            $parentHandler = new NodeHandler($this->objectManager);
             $parentHandler->setNode($this->node->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -576,7 +576,7 @@ class NodeHandler extends AbstractHandler
             $default->setHome(false);
         }
         $this->node->setHome(true);
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -589,7 +589,7 @@ class NodeHandler extends AbstractHandler
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->node, $this->entityManager);
+        $duplicator = new NodeDuplicator($this->node, $this->objectManager);
         return $duplicator->duplicate();
     }
 
@@ -677,6 +677,6 @@ class NodeHandler extends AbstractHandler
      */
     public function getRepository()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node');
+        return $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Node');
     }
 }

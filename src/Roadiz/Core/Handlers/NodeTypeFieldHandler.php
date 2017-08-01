@@ -69,12 +69,12 @@ class NodeTypeFieldHandler extends AbstractHandler
     /**
      * Create a new node-type-field handler with node-type-field to handle.
      *
-     * @param ObjectManager $entityManager
+     * @param ObjectManager $objectManager
      * @param Container $container
      */
-    public function __construct(ObjectManager $entityManager, Container $container)
+    public function __construct(ObjectManager $objectManager, Container $container)
     {
-        parent::__construct($entityManager);
+        parent::__construct($objectManager);
         $this->container = $container;
     }
 

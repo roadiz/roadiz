@@ -83,7 +83,7 @@ class TagHandler extends AbstractHandler
     public function removeAssociations()
     {
         foreach ($this->tag->getTranslatedTags() as $tt) {
-            $this->entityManager->remove($tt);
+            $this->objectManager->remove($tt);
         }
 
         return $this;
@@ -99,12 +99,12 @@ class TagHandler extends AbstractHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        $this->entityManager->remove($this->tag);
+        $this->objectManager->remove($this->tag);
 
         /*
          * Final flush
          */
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -114,7 +114,7 @@ class TagHandler extends AbstractHandler
      */
     public function getAvailableTranslations()
     {
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr
             FROM RZ\Roadiz\Core\Entities\Translation tr
@@ -134,7 +134,7 @@ class TagHandler extends AbstractHandler
      */
     public function getAvailableTranslationsId()
     {
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr.id FROM RZ\Roadiz\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
@@ -160,7 +160,7 @@ class TagHandler extends AbstractHandler
      */
     public function getUnavailableTranslations()
     {
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr FROM RZ\Roadiz\Core\Entities\Translation tr
             WHERE tr.id NOT IN (:translations_id)')
@@ -179,7 +179,7 @@ class TagHandler extends AbstractHandler
     public function getUnavailableTranslationsId()
     {
         /** @var Query $query */
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
             WHERE t.id NOT IN (:translations_id)')
@@ -228,7 +228,7 @@ class TagHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->tag->getParent() !== null) {
-            $tagHandler = new TagHandler($this->entityManager);
+            $tagHandler = new TagHandler($this->objectManager);
             $tagHandler->setTag($this->tag->getParent());
             return $tagHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -277,7 +277,7 @@ class TagHandler extends AbstractHandler
      */
     public function cleanRootTagsPositions($setPositions = true)
     {
-        $tags = $this->entityManager
+        $tags = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 

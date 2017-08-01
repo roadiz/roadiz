@@ -56,12 +56,12 @@ class DocumentHandler extends AbstractHandler
     /**
      * Create a new document handler with document to handle.
      *
-     * @param ObjectManager $entityManager
+     * @param ObjectManager $objectManager
      * @param Packages $packages
      */
-    public function __construct(ObjectManager $entityManager, Packages $packages)
+    public function __construct(ObjectManager $objectManager, Packages $packages)
     {
-        parent::__construct($entityManager);
+        parent::__construct($objectManager);
         $this->packages = $packages;
     }
 
@@ -96,7 +96,7 @@ class DocumentHandler extends AbstractHandler
                  * Bubble privatisation to raw document if available.
                  */
                 if (null !== $this->document->getRawDocument() && !$this->document->getRawDocument()->isPrivate()) {
-                    $rawHandler = new DocumentHandler($this->entityManager, $this->packages);
+                    $rawHandler = new DocumentHandler($this->objectManager, $this->packages);
                     $rawHandler->setDocument($this->document->getRawDocument());
                     $rawHandler->makePrivate();
                 }
@@ -141,7 +141,7 @@ class DocumentHandler extends AbstractHandler
                  */
                 if (null !== $this->document->getRawDocument() &&
                     $this->document->getRawDocument()->isPrivate()) {
-                    $rawHandler = new DocumentHandler($this->entityManager, $this->packages);
+                    $rawHandler = new DocumentHandler($this->objectManager, $this->packages);
                     $rawHandler->setDocument($this->document->getRawDocument());
                     $rawHandler->makePublic();
                 }
@@ -196,7 +196,7 @@ class DocumentHandler extends AbstractHandler
     public function getFolders(Translation $translation = null)
     {
         /** @var FolderRepository $repository */
-        $repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder');
+        $repository = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Folder');
         if (null !== $translation) {
             return $repository->findByDocumentAndTranslation($this->document, $translation);
         }

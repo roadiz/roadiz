@@ -66,17 +66,17 @@ class NewsletterHandler extends AbstractHandler
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->newsletter->getNode(), $this->entityManager);
+        $duplicator = new NodeDuplicator($this->newsletter->getNode(), $this->objectManager);
         $newNode = $duplicator->duplicate();
-        $this->entityManager->persist($newNode);
+        $this->objectManager->persist($newNode);
 
-        $this->entityManager->refresh($this->newsletter);
+        $this->objectManager->refresh($this->newsletter);
         $newsletter = clone $this->newsletter;
-        $this->entityManager->persist($newsletter);
+        $this->objectManager->persist($newsletter);
 
         $newsletter->setNode($newNode);
 
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
         return $newsletter;
     }

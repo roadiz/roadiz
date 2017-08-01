@@ -80,13 +80,13 @@ class NodeTypeHandler extends AbstractHandler
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param ObjectManager $entityManager
+     * @param ObjectManager $objectManager
      * @param Container $container
      * @param Kernel $kernel
      */
-    public function __construct(ObjectManager $entityManager, Container $container, Kernel $kernel)
+    public function __construct(ObjectManager $objectManager, Container $container, Kernel $kernel)
     {
-        parent::__construct($entityManager);
+        parent::__construct($objectManager);
         $this->container = $container;
         $this->kernel = $kernel;
     }

@@ -85,12 +85,12 @@ class FolderHandler extends AbstractHandler
     {
         $this->removeChildren();
 
-        $this->entityManager->remove($this->folder);
+        $this->objectManager->remove($this->folder);
 
         /*
          * Final flush
          */
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -145,7 +145,7 @@ class FolderHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->folder->getParent() !== null) {
-            $parentHandler = new FolderHandler($this->entityManager);
+            $parentHandler = new FolderHandler($this->objectManager);
             $parentHandler->setFolder($this->folder->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -195,7 +195,7 @@ class FolderHandler extends AbstractHandler
     public function cleanRootFoldersPositions($setPositions = true)
     {
         /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
-        $folders = $this->entityManager
+        $folders = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 

@@ -69,13 +69,13 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Create a new node-source handler with node-source to handle.
      *
-     * @param ObjectManager $entityManager
+     * @param ObjectManager $objectManager
      * @param Settings $settingsBag
      * @param TagApi $tagApi
      */
-    public function __construct(ObjectManager $entityManager, Settings $settingsBag, TagApi $tagApi)
+    public function __construct(ObjectManager $objectManager, Settings $settingsBag, TagApi $tagApi)
     {
-        parent::__construct($entityManager);
+        parent::__construct($objectManager);
 
         $this->settingsBag = $settingsBag;
         $this->tagApi = $tagApi;
@@ -108,17 +108,17 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
     {
-        $nsDocuments = $this->entityManager
+        $nsDocuments = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
             ->findBy(['nodeSource' => $this->nodeSource, 'field' => $field]);
 
         if (count($nsDocuments) > 0) {
             foreach ($nsDocuments as $nsDoc) {
-                $this->entityManager->remove($nsDoc);
+                $this->objectManager->remove($nsDoc);
             }
 
             if (true === $flush) {
-                $this->entityManager->flush();
+                $this->objectManager->flush();
             }
         }
 
@@ -139,7 +139,7 @@ class NodesSourcesHandler extends AbstractHandler
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
         if (null === $position) {
-            $latestPosition = $this->entityManager
+            $latestPosition = $this->objectManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
                 ->getLatestPosition($this->nodeSource, $field);
 
@@ -148,9 +148,9 @@ class NodesSourcesHandler extends AbstractHandler
             $nsDoc->setPosition($position);
         }
 
-        $this->entityManager->persist($nsDoc);
+        $this->objectManager->persist($nsDoc);
         if (true === $flush) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -164,7 +164,7 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getDocumentsFromFieldName($fieldName)
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
     }
@@ -223,7 +223,7 @@ class NodesSourcesHandler extends AbstractHandler
                         'translation' => $this->nodeSource->getTranslation(),
                     ]
                 );
-                $currentParent = $this->entityManager
+                $currentParent = $this->objectManager
                     ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                     ->findOneBy(
                         $criteria,
@@ -270,7 +270,7 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBy(
                 $defaultCrit,
@@ -312,7 +312,7 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
@@ -351,7 +351,7 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
@@ -372,7 +372,7 @@ class NodesSourcesHandler extends AbstractHandler
         array $order = null
     ) {
         if (null !== $this->nodeSource->getParent()) {
-            $parentHandler = new NodesSourcesHandler($this->entityManager, $this->settingsBag, $this->tagApi);
+            $parentHandler = new NodesSourcesHandler($this->objectManager, $this->settingsBag, $this->tagApi);
             $parentHandler->setNodeSource($this->nodeSource->getParent());
             return $parentHandler->getFirstChild($criteria, $order);
         } else {
@@ -396,7 +396,7 @@ class NodesSourcesHandler extends AbstractHandler
         array $order = null
     ) {
         if (null !== $this->nodeSource->getParent()) {
-            $parentHandler = new NodesSourcesHandler($this->entityManager, $this->settingsBag, $this->tagApi);
+            $parentHandler = new NodesSourcesHandler($this->objectManager, $this->settingsBag, $this->tagApi);
             $parentHandler->setNodeSource($this->nodeSource->getParent());
             return $parentHandler->getLastChild($criteria, $order);
         } else {
@@ -449,7 +449,7 @@ class NodesSourcesHandler extends AbstractHandler
         $order['node.position'] = 'DESC';
 
         /** @var NodesSourcesRepository $repo */
-        $repo = $this->entityManager
+        $repo = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
 
         return $repo->findOneBy(
@@ -497,7 +497,7 @@ class NodesSourcesHandler extends AbstractHandler
 
         $order['node.position'] = 'ASC';
 
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
@@ -553,7 +553,7 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
@@ -571,7 +571,7 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return $this->entityManager
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByReverseNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
