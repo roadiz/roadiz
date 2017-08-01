@@ -30,7 +30,10 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -81,6 +84,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
+        /** @var NodeTypeField $field */
         $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', $nodeTypeFieldId);
 
@@ -97,7 +101,11 @@ class NodeTypeFieldsController extends RozierApp
 
             if ($form->isValid()) {
                 $this->get('em')->flush();
-                $field->getNodeType()->getHandler()->updateSchema();
+
+                /** @var NodeTypeHandler $handler */
+                $handler = $this->get('node_type.handler');
+                $handler->setNodeType($field->getNodeType());
+                $handler->updateSchema();
 
                 $msg = $this->getTranslator()->trans('nodeTypeField.%name%.updated', ['%name%' => $field->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -134,6 +142,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $field = new NodeTypeField();
+        /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
@@ -161,7 +170,10 @@ class NodeTypeFieldsController extends RozierApp
                     $this->get('em')->flush();
                     $this->get('em')->refresh($nodeType);
 
-                    $nodeType->getHandler()->updateSchema();
+                    /** @var NodeTypeHandler $handler */
+                    $handler = $this->get('node_type.handler');
+                    $handler->setNodeType($nodeType);
+                    $handler->updateSchema();
 
                     $msg = $this->getTranslator()->trans(
                         'nodeTypeField.%name%.created',
@@ -212,6 +224,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
+        /** @var NodeTypeField $field */
         $field = $this->get('em')
                       ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
 
@@ -229,10 +242,14 @@ class NodeTypeFieldsController extends RozierApp
                 /*
                  * Update Database
                  */
+                /** @var NodeType $nodeType */
                 $nodeType = $this->get('em')
                                  ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
-                $nodeType->getHandler()->updateSchema();
+                /** @var NodeTypeHandler $handler */
+                $handler = $this->get('node_type.handler');
+                $handler->setNodeType($nodeType);
+                $handler->updateSchema();
 
                 $msg = $this->getTranslator()->trans(
                     'nodeTypeField.%name%.deleted',

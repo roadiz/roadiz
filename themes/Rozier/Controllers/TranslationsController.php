@@ -36,6 +36,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterTranslationEvent;
 use RZ\Roadiz\Core\Events\TranslationEvents;
+use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -81,7 +82,11 @@ class TranslationsController extends RozierApp
             $form->handleRequest($request);
             if ($form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
-                $translation->getHandler()->makeDefault();
+
+                /** @var TranslationHandler $handler */
+                $handler = $this->get('translation.handler');
+                $handler->setTranslation($translation);
+                $handler->makeDefault();
 
                 $msg = $this->getTranslator()->trans('translation.%name%.made_default', ['%name%' => $translation->getName()]);
                 $this->publishConfirmMessage($request, $msg);

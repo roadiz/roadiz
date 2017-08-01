@@ -34,7 +34,9 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
@@ -570,18 +572,22 @@ abstract class AppController extends Controller
      */
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
+        /** @var User $user */
         $user = $this->getUser();
-        $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
-            $parents = $node->getHandler()->getParents();
+
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->get('factory.handler')->getHandler($node);
+            $parents = $nodeHandler->getParents();
 
             if ($includeChroot) {
                 $parents[] = $node;
             }
-            $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+            $isNewsletterFriend = $nodeHandler->isRelatedToNewsletter();
         } else {
             $parents = [];
             $isNewsletterFriend = false;

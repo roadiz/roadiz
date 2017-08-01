@@ -3,11 +3,10 @@
     <ul class="uk-navbar-nav">
         {% if node != session.user.chroot %}
             <li class="uk-navbar-item{% if current == 'source' %} uk-active{% endif %}">
-                {% if source and
-                      translation not in node.handler.availableTranslations %}
-                {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId:source.translation.id }) %}
+                {% if source and translation not in (node|handler).availableTranslations %}
+                {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId: source.translation.id }) %}
                 {% else %}
-                {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId:translation.id }) %}
+                {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId: translation.id }) %}
                 {% endif %}
                 <a class="uk-navbar-link" href="{{ url }}">{% trans %}node.content{% endtrans %}</a>
             </li>

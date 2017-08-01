@@ -393,16 +393,15 @@ abstract class FrontendController extends AppController
      */
     public function getNodeSEO(NodesSources $fallbackNodeSource = null)
     {
-        /** @var NodesSourcesHandler $nodesSourcesHandler */
-        $nodesSourcesHandler = $this->get('nodes_sources.handler');
-
         if (null !== $this->nodeSource) {
-            $nodesSourcesHandler->setNodeSource($this->nodeSource);
+            /** @var NodesSourcesHandler $nodesSourcesHandler */
+            $nodesSourcesHandler = $this->get('factory.handler')->getHandler($this->nodeSource);
             return $nodesSourcesHandler->getSEO();
         }
 
         if (null !== $fallbackNodeSource) {
-            $nodesSourcesHandler->setNodeSource($fallbackNodeSource);
+            /** @var NodesSourcesHandler $nodesSourcesHandler */
+            $nodesSourcesHandler = $this->get('factory.handler')->getHandler($fallbackNodeSource);
             return $nodesSourcesHandler->getSEO();
         }
 

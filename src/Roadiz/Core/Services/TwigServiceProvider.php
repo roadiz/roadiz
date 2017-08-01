@@ -41,6 +41,7 @@ use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
+use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
@@ -156,6 +157,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             )));
 
             $extensions->add(new ParsedownExtension());
+            $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c['requestStack']));
             $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));

@@ -85,9 +85,9 @@ class NodesSourcesParentTest extends SchemaDependentCase
             $expectedParent = $source[1];
 
             if (null === $expectedParent) {
-                $this->assertNull($nodeSource->getHandler()->getParent());
+                $this->assertNull($nodeSource->getParent());
             } else {
-                $this->assertEquals($nodeSource->getHandler()->getParent()->getId(), $expectedParent->getId());
+                $this->assertEquals($nodeSource->getParent()->getId(), $expectedParent->getId());
             }
         }
     }

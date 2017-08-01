@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,48 +23,58 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file GroupsImporter.php
- * @author Maxime Constantinian
+ * @file HandlerFactoryHelper.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
+namespace RZ\Roadiz\Utils\Console\Helper;
+
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use Symfony\Component\Console\Helper\Helper;
 
 /**
- * {@inheritdoc}
+ * Class HandlerFactoryHelper
+ * @package RZ\Roadiz\Utils\Console\Helper
  */
-class GroupsImporter implements ImporterInterface
+class HandlerFactoryHelper extends Helper
 {
     /**
-     * Import a Json file (.rzt) containing group.
-     *
-     * @param string $serializedData
-     * @param EntityManager $em
-     *
-     * @return bool
+     * @var HandlerFactory
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    private $handlerFactory;
+
+    /**
+     * HandlerFactoryHelper constructor.
+     * @param HandlerFactory $handlerFactory
+     */
+    public function __construct(HandlerFactory $handlerFactory)
     {
-        $serializer = new GroupCollectionJsonSerializer($em);
-        /** @var \RZ\Roadiz\Core\Entities\Group[] $groups */
-        $groups = $serializer->deserialize($serializedData);
-        foreach ($groups as $group) {
-            /** @var Group $existingGroup */
-            $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
-                                ->findOneByName($group->getName());
+        $this->handlerFactory = $handlerFactory;
+    }
 
-            if (null === $existingGroup) {
-                $em->persist($group);
-                // Flush before creating group's roles.
-                $em->flush($group);
-            } else {
-                $existingGroup->getHandler()->diff($group);
-                $em->flush($existingGroup);
-            }
-        }
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+        return 'handlerFactory';
+    }
 
-        return true;
+    /**
+     * @param AbstractEntity $entity
+     * @return \RZ\Roadiz\Core\Handlers\AbstractHandler
+     */
+    public function getHandler(AbstractEntity $entity)
+    {
+        return $this->handlerFactory->getHandler($entity);
+    }
+
+    /**
+     * @return HandlerFactory
+     */
+    public function getHandlerFactory()
+    {
+        return $this->handlerFactory;
     }
 }

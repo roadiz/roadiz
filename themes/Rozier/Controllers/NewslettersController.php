@@ -171,6 +171,7 @@ class NewslettersController extends RozierApp
              * if not doctrine will grab a cache tag because of NodeTreeWidget
              * that is initialized before calling route method.
              */
+            /** @var Newsletter $newsletter */
             $newsletter = $this->get('em')
                                ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
 
@@ -184,7 +185,9 @@ class NewslettersController extends RozierApp
                 $node = $source->getNode();
 
                 $this->assignation['translation'] = $translation;
-                $this->assignation['available_translations'] = $newsletter->getNode()->getHandler()->getAvailableTranslations();
+                $this->assignation['available_translations'] = $this->get('em')
+                                                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                                                    ->findAvailableTranslationsForNode($newsletter->getNode());
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
                 $this->assignation['newsletterId'] = $newsletterId;

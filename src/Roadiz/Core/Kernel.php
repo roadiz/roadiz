@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core;
 
+use JBZoo\PimpleDumper\PimpleDumper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
@@ -37,6 +38,7 @@ use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
@@ -281,6 +283,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
          */
         if (!$this->isInstallMode() && $this->isDebug()) {
             $dispatcher->addSubscriber(new DebugBarSubscriber($this->container));
+            $dispatcher->addSubscriber(new PimpleDumperSubscriber($this->container));
         }
     }
 

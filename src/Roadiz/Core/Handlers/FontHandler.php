@@ -34,7 +34,7 @@ use RZ\Roadiz\Core\Entities\Font;
 /**
  * Handle operations with fonts entities..
  */
-class FontHandler
+class FontHandler extends AbstractHandler
 {
     protected $font;
 
@@ -43,6 +43,7 @@ class FontHandler
      */
     public function __construct(Font $font = null)
     {
+        parent::__construct();
         $this->font = $font;
     }
 

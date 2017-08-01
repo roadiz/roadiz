@@ -31,6 +31,7 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
@@ -57,11 +58,11 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         $tags = [];
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
 
+        /** @var Tag $tag */
         foreach ($node->getTags() as $tag) {
-            $tags[] = $tag->getHandler()->getFullPath();
+            $tags[] = $tag->getFullPath();
         }
 
         return new JsonResponse(

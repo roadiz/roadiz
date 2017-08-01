@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,6 +57,7 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
         $text = "";
         $name = $input->getArgument('name');
 
+        /** @var NodeType $nodetype */
         $nodetype = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findOneBy(['name' => $name]);
@@ -66,7 +68,9 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
                 ->findLatestPositionInNodeType($nodetype);
             $this->addNodeTypeField($nodetype, $latestPosition + 1, $input, $output);
             $this->entityManager->flush();
-            $nodetype->getHandler()->regenerateEntityClass();
+
+            $handler = $this->getHelper('handlerFactory')->getHandler($nodetype);
+            $handler->regenerateEntityClass();
 
             $output->writeln('Do not forget to update database schema! <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info>');
         } else {
