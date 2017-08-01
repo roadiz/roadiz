@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\CMS\Controllers\AssetsController;
-use RZ\Roadiz\CMS\Controllers\EntryPointsController;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
@@ -102,11 +101,6 @@ class RoadizRouteCollection extends DeferredRouteCollection
                 $assets->setHost($staticDomain);
             }
             $this->addCollection($assets);
-
-            /*
-             * Add Entry points controller routes
-             */
-            $this->addCollection(EntryPointsController::getRoutes());
 
             /*
              * Add Frontend routes

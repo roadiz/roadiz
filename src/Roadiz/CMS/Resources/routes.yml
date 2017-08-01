@@ -19,15 +19,6 @@ interventionRequestProcess:
         queryString : "[a-zA-Z:0-9\-]+"
         filename : "[a-zA-Z0-9\-_\.\/]+"
 
-#
-# Contact form handling
-#
-contactFormLocaleAction:
-    path:     /{_locale}/submit-form/contact
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\EntryPointsController::contactFormAction }
-    requirements:
-        _locale: "[a-z]{2}_?[A-Z]{0,2}"
-
 customFormSendAction:
     path:     /custom-form/{customFormId}
     defaults: { _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::addAction }
