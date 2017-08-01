@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PositionedInterface;
 use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
 
 /**
@@ -42,7 +43,7 @@ use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
  *     @ORM\Index(columns={"position"})
  * })
  */
-class NodesToNodes extends AbstractEntity
+class NodesToNodes extends AbstractEntity implements PositionedInterface
 {
     use PositionedTrait;
 

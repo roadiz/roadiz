@@ -76,7 +76,7 @@ class DocumentExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('display', [$this, 'display'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('imageRatio', [$this, 'getImageSize']),
+            new \Twig_SimpleFilter('imageRatio', [$this, 'getImageRatio']),
             new \Twig_SimpleFilter('imageSize', [$this, 'getImageSize']),
             new \Twig_SimpleFilter('imageOrientation', [$this, 'getImageOrientation']),
             new \Twig_SimpleFilter('path', [$this, 'getPath']),
