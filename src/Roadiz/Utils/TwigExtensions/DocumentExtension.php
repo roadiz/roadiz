@@ -81,7 +81,29 @@ class DocumentExtension extends \Twig_Extension
             new \Twig_SimpleFilter('imageOrientation', [$this, 'getImageOrientation']),
             new \Twig_SimpleFilter('path', [$this, 'getPath']),
             new \Twig_SimpleFilter('exists', [$this, 'exists']),
+            new \Twig_SimpleFilter('embedFinder', [$this, 'getEmbedFinder']),
         ];
+    }
+
+    /**
+     * @param Document|null $document
+     * @return bool|\RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder
+     * @throws \Twig_Error_Runtime
+     */
+    public function getEmbedFinder(Document $document = null)
+    {
+        if (null === $document) {
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime('Document can’t be null to get its EmbedFinder.');
+            } else {
+                return false;
+            }
+        }
+
+        /** @var DocumentViewer $documentViewer */
+        $documentViewer = $this->container->offsetGet('document.viewer');
+        $documentViewer->setDocument($document);
+        return $documentViewer->getEmbedFinder();
     }
 
     /**
