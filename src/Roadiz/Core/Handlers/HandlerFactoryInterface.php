@@ -23,56 +23,19 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AbstractHandler.php
+ * @file HandlerFactoryInterface.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
-abstract class AbstractHandler
+interface HandlerFactoryInterface
 {
-    /** @var EntityManager */
-    protected $entityManager;
-
     /**
-     * @return EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * @param EntityManager $entityManager
+     * @param AbstractEntity $entity
      * @return AbstractHandler
      */
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
-        return $this;
-    }
-
-    /**
-     * AbstractHandler constructor.
-     *
-     * Need to get rid of Kernel singleton.
-     */
-    public function __construct()
-    {
-        $this->entityManager = Kernel::getService('em');
-    }
-
-    /**
-     * Clean positions for current entity siblings.
-     *
-     * @param bool $setPositions
-     * @return int Return the next position after the **last** entity
-     */
-    public function cleanPositions($setPositions = true)
-    {
-        return 1;
-    }
+    public function getHandler(AbstractEntity $entity);
 }

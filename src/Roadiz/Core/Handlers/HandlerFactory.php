@@ -31,9 +31,21 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Font;
+use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\Newsletter;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 
-class HandlerFactory
+class HandlerFactory implements HandlerFactoryInterface
 {
     /**
      * @var Container
@@ -55,34 +67,32 @@ class HandlerFactory
      */
     public function getHandler(AbstractEntity $entity)
     {
-        if ($entity instanceof NodesSources) {
-            return $this->container['nodes_sources.handler']->setNodeSource($entity);
-        }
-
-        switch (get_class($entity)) {
-            case 'RZ\Roadiz\Core\Entities\Node':
+        switch (true) {
+            case ($entity instanceof Node):
                 return $this->container['node.handler']->setNode($entity);
-            case 'RZ\Roadiz\Core\Entities\NodeType':
+            case ($entity instanceof NodesSources):
+                return $this->container['nodes_sources.handler']->setNodeSource($entity);
+            case ($entity instanceof NodeType):
                 return $this->container['node_type.handler']->setNodeType($entity);
-            case 'RZ\Roadiz\Core\Entities\NodeTypeField':
+            case ($entity instanceof NodeTypeField):
                 return $this->container['node_type_field.handler']->setNodeTypeField($entity);
-            case 'RZ\Roadiz\Core\Entities\Document':
+            case ($entity instanceof Document):
                 return $this->container['document.handler']->setDocument($entity);
-            case 'RZ\Roadiz\Core\Entities\CustomForm':
+            case ($entity instanceof CustomForm):
                 return $this->container['custom_form.handler']->setCustomForm($entity);
-            case 'RZ\Roadiz\Core\Entities\CustomFormField':
+            case ($entity instanceof CustomFormField):
                 return $this->container['custom_form_field.handler']->setCustomFormField($entity);
-            case 'RZ\Roadiz\Core\Entities\Folder':
+            case ($entity instanceof Folder):
                 return $this->container['folder.handler']->setFolder($entity);
-            case 'RZ\Roadiz\Core\Entities\Font':
+            case ($entity instanceof Font):
                 return $this->container['font.handler']->setFont($entity);
-            case 'RZ\Roadiz\Core\Entities\Group':
+            case ($entity instanceof Group):
                 return $this->container['group.handler']->setGroup($entity);
-            case 'RZ\Roadiz\Core\Entities\Newsletter':
+            case ($entity instanceof Newsletter):
                 return $this->container['newsletter.handler']->setNewsletter($entity);
-            case 'RZ\Roadiz\Core\Entities\Tag':
+            case ($entity instanceof Tag):
                 return $this->container['tag.handler']->setTag($entity);
-            case 'RZ\Roadiz\Core\Entities\Translation':
+            case ($entity instanceof Translation):
                 return $this->container['translation.handler']->setTranslation($entity);
         }
 

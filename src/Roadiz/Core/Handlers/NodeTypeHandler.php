@@ -315,9 +315,10 @@ class NodeTypeHandler extends AbstractHandler
     /**
      * Reset current node-type fields positions.
      *
+     * @param bool $setPosition
      * @return int Return the next position after the **last** field
      */
-    public function cleanFieldsPositions()
+    public function cleanPositions($setPosition = false)
     {
         $fields = $this->nodeType->getFields();
         $i = 1;
@@ -325,8 +326,6 @@ class NodeTypeHandler extends AbstractHandler
             $field->setPosition($i);
             $i++;
         }
-
-        $this->entityManager->flush();
 
         return $i;
     }

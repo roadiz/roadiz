@@ -73,15 +73,16 @@ class NodeTypeFieldHandler extends AbstractHandler
     /**
      * Clean position for current node siblings.
      *
+     * @param bool $setPosition
      * @return int Return the next position after the **last** node
      */
-    public function cleanPositions()
+    public function cleanPositions($setPosition = false)
     {
         if ($this->nodeTypeField->getNodeType() !== null) {
             /** @var NodeTypeHandler $nodeTypeHandler */
-            $nodeTypeHandler = $this->container->offsetGet('custom_form.handler');
-            $nodeTypeHandler->setNodeType($this->nodeTypeField->getNodeType());
-            return $nodeTypeHandler->cleanFieldsPositions();
+            $nodeTypeHandler = $this->container['factory.handler']
+                                    ->getHandler($this->nodeTypeField->getNodeType());
+            return $nodeTypeHandler->cleanPositions();
         }
 
         return 1;

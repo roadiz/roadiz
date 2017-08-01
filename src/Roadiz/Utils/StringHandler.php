@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Utils;
 
-use RZ\Roadiz\Core\Exceptions\EmptySaltException;
-
 /**
  * String handling methods.
  */
@@ -144,7 +142,7 @@ class StringHandler
      * @param string $secret Secret salt
      *
      * @return string
-     * @throws EmptySaltException
+     * @throws \InvalidArgumentException
      */
     public static function encodeWithSecret($value, $secret)
     {
@@ -154,7 +152,7 @@ class StringHandler
             $secret = crypt($secret, $secret);
             return base64_encode($secret . base64_encode(strip_tags($value)));
         } else {
-            throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
+            throw new \InvalidArgumentException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
         }
     }
 
@@ -165,7 +163,7 @@ class StringHandler
      * @param string $secret Secret salt
      *
      * @return string
-     * @throws EmptySaltException
+     * @throws \InvalidArgumentException
      */
     public static function decodeWithSecret($value, $secret)
     {
@@ -179,7 +177,7 @@ class StringHandler
 
             return base64_decode($nonSalted);
         } else {
-            throw new EmptySaltException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
+            throw new \InvalidArgumentException("You cannot encode with an empty salt. Did you enter a secret security phrase in your conf/config.json file?", 1);
         }
     }
 

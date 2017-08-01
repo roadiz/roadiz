@@ -32,24 +32,24 @@ namespace RZ\Roadiz\Core\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Pimple\Container;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
-use RZ\Roadiz\Core\Handlers\AbstractHandler;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 
 class LeafEntityLifeCycleSubscriber implements EventSubscriber
 {
     /**
-     * @var Container
+     * @var HandlerFactoryInterface
      */
-    private $container;
-
+    private $handlerFactory;
     /**
      * UserLifeCycleSubscriber constructor.
-     * @param Container $container
+     *
+     * @param HandlerFactoryInterface $handlerFactory
      */
-    public function __construct(Container $container)
+    public function __construct(HandlerFactoryInterface $handlerFactory)
     {
-        $this->container = $container;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -68,35 +68,32 @@ class LeafEntityLifeCycleSubscriber implements EventSubscriber
     public function prePersist(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if ($entity instanceof LeafInterface) {
+        if ($entity instanceof AbstractEntity && $entity instanceof LeafInterface) {
             /*
              * Automatically set position only if not manually set before.
              */
             try {
-                /** @var AbstractHandler $handler */
-                $handler = $this->container->offsetGet('factory.handler')->getHandler($entity);
-                if (method_exists($handler, 'cleanPositions')) {
-                    if ($entity->getPosition() === 0.0) {
+                $handler = $this->handlerFactory->getHandler($entity);
+                if ($entity->getPosition() === 0.0) {
+                    /*
+                     * Get the last index after last tag in parent
+                     */
+                    $lastPosition = $handler->cleanPositions(false);
+                    if ($lastPosition > 1 && null !== $entity->getParent()) {
                         /*
-                         * Get the last index after last tag in parent
+                         * Need to decrement position because current tag is already
+                         * in parent's children collection count.
                          */
-                        $lastPosition = $handler->cleanPositions(false);
-                        if ($lastPosition > 1 && null !== $entity->getParent()) {
-                            /*
-                             * Need to decrement position because current tag is already
-                             * in parent's children collection count.
-                             */
-                            $entity->setPosition($lastPosition - 1);
-                        } else {
-                            $entity->setPosition($lastPosition);
-                        }
-                    } elseif ($entity->getPosition() === 0.5) {
-                        /*
-                         * Position is set to 0.5 so we need to
-                         * shift all tags to the bottom.
-                         */
-                        $handler->cleanPositions(true);
+                        $entity->setPosition($lastPosition - 1);
+                    } else {
+                        $entity->setPosition($lastPosition);
                     }
+                } elseif ($entity->getPosition() === 0.5) {
+                    /*
+                     * Position is set to 0.5 so we need to
+                     * shift all tags to the bottom.
+                     */
+                    $handler->cleanPositions(true);
                 }
             } catch (\InvalidArgumentException $e) {
             }

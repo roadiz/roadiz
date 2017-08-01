@@ -33,6 +33,7 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Handlers\AbstractHandler;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -109,17 +110,11 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
             $field->setPosition($parameters['newPosition']);
             // Apply position update before cleaning
             $this->get('em')->flush();
-            if ($field instanceof NodeTypeField) {
-                /** @var NodeTypeFieldHandler $handler */
-                $handler = $this->get('node_type_field.handler');
-                $handler->setNodeTypeField($field);
-                $handler->cleanPositions();
-            } elseif ($field instanceof CustomFormField) {
-                /** @var CustomFormFieldHandler $handler */
-                $handler = $this->get('custom_form_field.handler');
-                $handler->setCustomFormField($field);
-                $handler->cleanPositions();
-            }
+            /** @var AbstractHandler $handler */
+            $handler = $this->get('factory.handler')->getHandler($field);
+            $handler->cleanPositions();
+
+            $this->get('em')->flush();
         }
     }
 }
