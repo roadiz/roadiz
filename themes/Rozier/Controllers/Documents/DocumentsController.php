@@ -1087,7 +1087,7 @@ class DocumentsController extends RozierApp
     private function downloadDocuments($documents)
     {
         if (count($documents) > 0) {
-            $tmpFileName = tempnam("/tmp", "rzdocs_");
+            $tmpFileName = tempnam(sys_get_temp_dir(), "rzdocs_");
             $zip = new \ZipArchive();
             $zip->open($tmpFileName, \ZipArchive::CREATE);
 

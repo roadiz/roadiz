@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 
 /**
  * Newsletters entities wrap a Node and are linked to
@@ -143,20 +142,6 @@ class Newsletter extends AbstractDateTimed
     {
         $this->status = static::DRAFT;
         $this->node = $node;
-    }
-
-    private $handler;
-
-    /**
-     * @return NewsletterHandler
-     * @deprecated Use newsletter.handler service.
-     */
-    public function getHandler()
-    {
-        if (null === $this->handler) {
-            $this->handler = new NewsletterHandler($this);
-        }
-        return $this->handler;
     }
 
     public function __clone()

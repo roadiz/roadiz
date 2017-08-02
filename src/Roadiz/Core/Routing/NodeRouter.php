@@ -209,13 +209,13 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $queryString = '?' . http_build_query($parameters);
         }
 
-        if ($referenceType == self::ABSOLUTE_PATH) {
-            // Relative path
-            return $this->getContext()->getBaseUrl() . '/' . $resourcePath . $queryString;
-        } elseif ($referenceType == self::ABSOLUTE_URL) {
+        if ($referenceType == self::ABSOLUTE_URL) {
             // Absolute path
             return $schemeAuthority . $this->getContext()->getBaseUrl() . '/' . $resourcePath . $queryString;
         }
+
+        // ABSOLUTE_PATH
+        return $this->getContext()->getBaseUrl() . '/' . $resourcePath . $queryString;
     }
 
     /**

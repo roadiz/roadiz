@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\objectManagerInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
@@ -37,6 +38,9 @@ use RZ\Roadiz\Core\Entities\Translation;
  */
 class TranslationHandler extends AbstractHandler
 {
+    /**
+     * @var Translation
+     */
     private $translation;
 
     /**
@@ -59,24 +63,13 @@ class TranslationHandler extends AbstractHandler
     }
 
     /**
-     * Create a new translation handler with translation to handle.
-     *
-     * @param Translation|null $translation
-     */
-    public function __construct(Translation $translation = null)
-    {
-        parent::__construct();
-        $this->translation = $translation;
-    }
-
-    /**
      * Set current translation as default one.
      *
      * @return $this
      */
     public function makeDefault()
     {
-        $defaults = $this->entityManager
+        $defaults = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findBy(['defaultTranslation'=>true]);
 
@@ -84,13 +77,15 @@ class TranslationHandler extends AbstractHandler
         foreach ($defaults as $default) {
             $default->setDefaultTranslation(false);
         }
-        $this->entityManager->flush();
+        $this->objectManager->flush();
         $this->translation->setDefaultTranslation(true);
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
-        $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
-            $cacheDriver->deleteAll();
+        if ($this->objectManager instanceof objectManagerInterface) {
+            $cacheDriver = $this->objectManager->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         return $this;

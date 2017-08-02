@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Importers;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**
@@ -44,10 +45,10 @@ class SettingsImporter implements ImporterInterface
      *
      * @param string $serializedData
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $serializer = new SettingCollectionJsonSerializer();
 

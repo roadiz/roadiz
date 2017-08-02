@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
-use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -791,15 +790,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         $saltGenerator = new SaltGenerator();
         $this->setSalt($saltGenerator->generateSalt());
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Viewers\UserViewer
-     * @deprecated Use user.viewer service.
-     */
-    public function getViewer()
-    {
-        return new UserViewer($this);
     }
 
     /**

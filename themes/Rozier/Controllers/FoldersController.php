@@ -342,9 +342,9 @@ class FoldersController extends RozierApp
 
         if ($folder !== null) {
             // Prepare File
-            $file = tempnam("tmp", "zip");
+            $file = tempnam(sys_get_temp_dir(), "folder_" . $folder->getId());
             $zip = new \ZipArchive();
-            $zip->open($file, \ZipArchive::OVERWRITE);
+            $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
             $documents = $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Document')

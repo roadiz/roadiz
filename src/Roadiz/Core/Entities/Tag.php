@@ -35,7 +35,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
-use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -245,15 +244,6 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     {
         return $this->getId() . " — " . $this->getTagName() .
             " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Handlers\TagHandler
-     * @deprecated Use tag.handler service.
-     */
-    public function getHandler()
-    {
-        return new TagHandler($this);
     }
 
     /**

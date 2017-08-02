@@ -30,9 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\AbstractEntities\PositionedInterface;
-use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
+use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 
 /**
  * Describes a complexe ManyToMany relation
@@ -43,10 +41,8 @@ use RZ\Roadiz\Core\AbstractEntities\PositionedTrait;
  *     @ORM\Index(columns={"position"})
  * })
  */
-class NodesToNodes extends AbstractEntity implements PositionedInterface
+class NodesToNodes extends AbstractPositioned
 {
-    use PositionedTrait;
-
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes", fetch="EAGER")
      * @ORM\JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")

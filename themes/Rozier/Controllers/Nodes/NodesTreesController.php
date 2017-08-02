@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -310,7 +311,9 @@ class NodesTreesController extends RozierApp
 
             /** @var Node $node */
             foreach ($nodes as $node) {
-                $node->getHandler()->softRemoveWithChildren();
+                /** @var NodeHandler $handler */
+                $handler = $this->get('factory.handler')->getHandler($node);
+                $handler->softRemoveWithChildren();
             }
 
             $this->get('em')->flush();

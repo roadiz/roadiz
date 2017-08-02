@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 
 /**
  * NodeTypeField entities are used to create NodeTypes with
@@ -185,15 +184,6 @@ class NodeTypeField extends AbstractField
         $this->visible = $visible;
 
         return $this;
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler
-     * @deprecated Use node_type_field.handler service.
-     */
-    public function getHandler()
-    {
-        return new NodeTypeFieldHandler($this);
     }
 
     /**

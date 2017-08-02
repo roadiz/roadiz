@@ -35,7 +35,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -87,8 +86,6 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
         throw new \InvalidArgumentException('Status does not exist.');
     }
-
-    protected $handler;
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
@@ -732,18 +729,6 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
         }
 
         return $text;
-    }
-
-    /**
-     * @return NodeHandler
-     * @deprecated Use node.handler service.
-     */
-    public function getHandler()
-    {
-        if (null === $this->handler) {
-            $this->handler = new NodeHandler($this);
-        }
-        return $this->handler;
     }
 
     /**

@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use RZ\Roadiz\Core\Entities\Tag;
 
 /**
@@ -38,6 +39,9 @@ use RZ\Roadiz\Core\Entities\Tag;
  */
 class TagHandler extends AbstractHandler
 {
+    /**
+     * @var Tag
+     */
     private $tag;
 
     /**
@@ -57,16 +61,6 @@ class TagHandler extends AbstractHandler
         $this->tag = $tag;
         return $this;
     }
-    /**
-     * Create a new tag handler with tag to handle.
-     *
-     * @param Tag|null $tag
-     */
-    public function __construct(Tag $tag = null)
-    {
-        parent::__construct();
-        $this->tag = $tag;
-    }
 
     /**
      * Remove only current tag children.
@@ -75,8 +69,11 @@ class TagHandler extends AbstractHandler
      */
     private function removeChildren()
     {
+        /** @var Tag $tag */
         foreach ($this->tag->getChildren() as $tag) {
-            $tag->getHandler()->removeWithChildrenAndAssociations();
+            $handler = new TagHandler($this->objectManager);
+            $handler->setTag($tag);
+            $handler->removeWithChildrenAndAssociations();
         }
 
         return $this;
@@ -89,7 +86,7 @@ class TagHandler extends AbstractHandler
     public function removeAssociations()
     {
         foreach ($this->tag->getTranslatedTags() as $tt) {
-            $this->entityManager->remove($tt);
+            $this->objectManager->remove($tt);
         }
 
         return $this;
@@ -105,12 +102,12 @@ class TagHandler extends AbstractHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        $this->entityManager->remove($this->tag);
+        $this->objectManager->remove($this->tag);
 
         /*
          * Final flush
          */
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -120,7 +117,7 @@ class TagHandler extends AbstractHandler
      */
     public function getAvailableTranslations()
     {
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr
             FROM RZ\Roadiz\Core\Entities\Translation tr
@@ -140,7 +137,7 @@ class TagHandler extends AbstractHandler
      */
     public function getAvailableTranslationsId()
     {
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr.id FROM RZ\Roadiz\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
@@ -166,7 +163,7 @@ class TagHandler extends AbstractHandler
      */
     public function getUnavailableTranslations()
     {
-        $query = $this->entityManager
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr FROM RZ\Roadiz\Core\Entities\Translation tr
             WHERE tr.id NOT IN (:translations_id)')
@@ -184,7 +181,8 @@ class TagHandler extends AbstractHandler
      */
     public function getUnavailableTranslationsId()
     {
-        $query = $this->entityManager
+        /** @var Query $query */
+        $query = $this->objectManager
                         ->createQuery('
             SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
             WHERE t.id NOT IN (:translations_id)')
@@ -210,19 +208,7 @@ class TagHandler extends AbstractHandler
      */
     public function getParents()
     {
-        $parentsArray = [];
-        $parent = $this->tag;
-
-        do {
-            $parent = $parent->getParent();
-            if ($parent !== null) {
-                $parentsArray[] = $parent;
-            } else {
-                break;
-            }
-        } while ($parent !== null);
-
-        return array_reverse($parentsArray);
+        return $this->tag->getParents();
     }
 
     /**
@@ -233,16 +219,7 @@ class TagHandler extends AbstractHandler
      */
     public function getFullPath()
     {
-        $parents = $this->getParents();
-        $path = [];
-
-        foreach ($parents as $parent) {
-            $path[] = $parent->getTagName();
-        }
-
-        $path[] = $this->tag->getTagName();
-
-        return implode('/', $path);
+        return $this->tag->getFullPath();
     }
 
     /**
@@ -254,7 +231,7 @@ class TagHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->tag->getParent() !== null) {
-            $tagHandler = new TagHandler();
+            $tagHandler = new TagHandler($this->objectManager);
             $tagHandler->setTag($this->tag->getParent());
             return $tagHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -282,6 +259,7 @@ class TagHandler extends AbstractHandler
 
         $children = $this->tag->getChildren()->matching($sort);
         $i = 1;
+        /** @var Tag $child */
         foreach ($children as $child) {
             if ($setPositions) {
                 $child->setPosition($i);
@@ -302,7 +280,7 @@ class TagHandler extends AbstractHandler
      */
     public function cleanRootTagsPositions($setPositions = true)
     {
-        $tags = $this->entityManager
+        $tags = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 

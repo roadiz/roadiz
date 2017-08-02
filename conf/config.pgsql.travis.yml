@@ -25,7 +25,7 @@ mailer:
     password: ""
 entities:
     - "src/Roadiz/Core/Entities"
-    - "src/Roadiz/Core/AbstractEntities"
+    - "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities"
     - "gen-src/GeneratedNodeSources"
 # Lifetime of remember-me cookie in seconds (30 days)
 rememberMeLifetime: 2592000

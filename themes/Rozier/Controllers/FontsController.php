@@ -24,7 +24,6 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * Description
  *
  * @file FontsController.php
  * @author Ambroise Maupate
@@ -37,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,6 +129,7 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
+        /** @var Font $font */
         $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
@@ -241,29 +242,33 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
+        /** @var Font $font */
         $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
             // Prepare File
-            $file = tempnam("tmp", "zip");
+            $file = tempnam(sys_get_temp_dir(), "font_" . $font->getId());
             $zip = new \ZipArchive();
-            $zip->open($file, \ZipArchive::OVERWRITE);
+            $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+            /** @var Packages $packages */
+            $packages = $this->get('assetPackages');
 
             if ("" != $font->getEOTFilename()) {
-                $zip->addFile($font->getEOTAbsolutePath(), $font->getEOTFilename());
+                $zip->addFile($packages->getFontsPath($font->getEOTFilename()), $font->getEOTFilename());
             }
             if ("" != $font->getSVGFilename()) {
-                $zip->addFile($font->getSVGAbsolutePath(), $font->getSVGFilename());
+                $zip->addFile($packages->getFontsPath($font->getSVGFilename()), $font->getSVGFilename());
             }
             if ("" != $font->getWOFFFilename()) {
-                $zip->addFile($font->getWOFFAbsolutePath(), $font->getWOFFFilename());
+                $zip->addFile($packages->getFontsPath($font->getWOFFFilename()), $font->getWOFFFilename());
             }
             if ("" != $font->getWOFF2Filename()) {
-                $zip->addFile($font->getWOFF2AbsolutePath(), $font->getWOFF2Filename());
+                $zip->addFile($packages->getFontsPath($font->getWOFF2Filename()), $font->getWOFF2Filename());
             }
             if ("" != $font->getOTFFilename()) {
-                $zip->addFile($font->getOTFAbsolutePath(), $font->getOTFFilename());
+                $zip->addFile($packages->getFontsPath($font->getOTFFilename()), $font->getOTFFilename());
             }
             // Close and send to users
             $zip->close();

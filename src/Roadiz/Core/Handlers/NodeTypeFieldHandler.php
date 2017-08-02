@@ -29,15 +29,23 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with node-type fields entities.
  */
 class NodeTypeFieldHandler extends AbstractHandler
 {
+    /**
+     * @var NodeTypeField
+     */
     private $nodeTypeField;
+
+    /**
+     * @var Container
+     */
     private $container;
 
     /**
@@ -61,13 +69,13 @@ class NodeTypeFieldHandler extends AbstractHandler
     /**
      * Create a new node-type-field handler with node-type-field to handle.
      *
-     * @param NodeTypeField|null $field
+     * @param ObjectManager $objectManager
+     * @param Container $container
      */
-    public function __construct(NodeTypeField $field = null)
+    public function __construct(ObjectManager $objectManager, Container $container)
     {
-        parent::__construct();
-        $this->nodeTypeField = $field;
-        $this->container = Kernel::getInstance()->getContainer();
+        parent::__construct($objectManager);
+        $this->container = $container;
     }
 
     /**

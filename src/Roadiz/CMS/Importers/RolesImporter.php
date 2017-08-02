@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 
 /**
@@ -42,10 +43,10 @@ class RolesImporter implements ImporterInterface
      *
      * @param string $serializedData
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $serializer = new RoleCollectionJsonSerializer($em);
         $serializer->deserialize($serializedData);

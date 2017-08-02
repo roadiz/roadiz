@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 
 /**
  * Class for create all importer.
@@ -41,8 +42,8 @@ interface ImporterInterface
      *
      * @param string $template
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($template, EntityManager $em);
+    public static function importJsonFile($template, EntityManager $em, HandlerFactoryInterface $handlerFactory);
 }

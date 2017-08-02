@@ -111,7 +111,7 @@ class SettingsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (SettingsImporter::importJsonFile($serializedData, $this->get('em'))) {
+                    if (SettingsImporter::importJsonFile($serializedData, $this->get('em'), $this->get('factory.handler'))) {
                         $msg = $this->getTranslator()->trans('setting.imported');
                         $this->publishConfirmMessage($request, $msg);
 

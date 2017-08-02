@@ -44,8 +44,11 @@
         "bin-dir": "bin"
     },
     "require": {
-        "php":                         ">=5.4.3",
-        "doctrine/orm":                "2.*",
+        "php":                         ">=5.6",
+        "roadiz/models":               "dev-master",
+        "doctrine/orm":                "2.5.*",
+        "doctrine/collections":        "1.4.0",
+        "doctrine/annotations":        "1.4.*",
         "symfony/yaml":                "2.8.*",
         "symfony/console":             "2.8.*",
         "symfony/http-foundation":     "2.8.*",

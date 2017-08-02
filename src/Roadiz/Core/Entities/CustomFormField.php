@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 
 /**
  * CustomFormField entities are used to create CustomForms with
@@ -158,15 +157,6 @@ class CustomFormField extends AbstractField
         $this->required = $required;
 
         return $this;
-    }
-
-    /**
-     * @return  \RZ\Roadiz\Core\Handlers\CustomFormFieldHandler
-     * @deprecated Use custom_form_field.handler service.
-     */
-    public function getHandler()
-    {
-        return new CustomFormFieldHandler($this);
     }
 
     /**

@@ -100,7 +100,8 @@ class InstallCommand extends Command
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     RolesImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -109,7 +110,8 @@ class InstallCommand extends Command
                 foreach ($data["importFiles"]['groups'] as $filename) {
                     GroupsImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
                 }
@@ -118,7 +120,8 @@ class InstallCommand extends Command
                 foreach ($data["importFiles"]['settings'] as $filename) {
                     SettingsImporter::importJsonFile(
                         file_get_contents($installRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme files “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }

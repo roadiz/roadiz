@@ -37,6 +37,9 @@ use RZ\Roadiz\Utils\Node\NodeDuplicator;
  */
 class NewsletterHandler extends AbstractHandler
 {
+    /**
+     * @var Newsletter
+     */
     private $newsletter;
 
     /**
@@ -59,32 +62,21 @@ class NewsletterHandler extends AbstractHandler
     }
 
     /**
-     * Create a new newsletter handler with newsletter to handle.
-     *
-     * @param Newsletter $newsletter
-     */
-    public function __construct(Newsletter $newsletter = null)
-    {
-        parent::__construct();
-        $this->newsletter = $newsletter;
-    }
-
-    /**
      * Duplicate newsletter
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->newsletter->getNode(), $this->entityManager);
+        $duplicator = new NodeDuplicator($this->newsletter->getNode(), $this->objectManager);
         $newNode = $duplicator->duplicate();
-        $this->entityManager->persist($newNode);
+        $this->objectManager->persist($newNode);
 
-        $this->entityManager->refresh($this->newsletter);
+        $this->objectManager->refresh($this->newsletter);
         $newsletter = clone $this->newsletter;
-        $this->entityManager->persist($newsletter);
+        $this->objectManager->persist($newsletter);
 
         $newsletter->setNode($newNode);
 
-        $this->entityManager->flush();
+        $this->objectManager->flush();
 
         return $newsletter;
     }

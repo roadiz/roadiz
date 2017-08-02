@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 /**
@@ -50,12 +51,10 @@ class NodesImporter implements ImporterInterface
      *
      * @param string $serializedData
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
-     * @throws EntityAlreadyExistsException
-     * @throws EntityNotFoundException
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         static::$usedTranslations = [];
         $serializer = new NodeJsonSerializer($em);

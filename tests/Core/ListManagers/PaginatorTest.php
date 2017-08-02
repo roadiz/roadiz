@@ -27,7 +27,7 @@
  * @file PaginatorTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Kernel;
+
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use RZ\Roadiz\Core\ListManagers\Paginator;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;

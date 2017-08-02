@@ -87,56 +87,43 @@ class FactoryServiceProvider implements ServiceProviderInterface
         };
 
         $container['node.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new NodeHandler();
+            return new NodeHandler($c['em']);
         });
         $container['nodes_sources.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new NodesSourcesHandler();
+            return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);
         });
         $container['node_type.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new NodeTypeHandler();
+            return new NodeTypeHandler($c['em'], $c, $c['kernel']);
         });
         $container['node_type_field.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new NodeTypeFieldHandler();
+            return new NodeTypeFieldHandler($c['em'], $c);
         });
         $container['document.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new DocumentHandler();
+            return new DocumentHandler($c['em'], $c['assetPackages']);
         });
         $container['custom_form.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new CustomFormHandler();
+            return new CustomFormHandler($c['em']);
         });
         $container['custom_form_field.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new CustomFormFieldHandler();
+            return new CustomFormFieldHandler($c['em'], $c);
         });
         $container['folder.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new FolderHandler();
+            return new FolderHandler($c['em']);
         });
         $container['font.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new FontHandler();
+            return new FontHandler($c['em']);
         });
         $container['group.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new GroupHandler();
+            return new GroupHandler($c['em']);
         });
         $container['newsletter.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new NewsletterHandler();
+            return new NewsletterHandler($c['em']);
         });
         $container['tag.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new TagHandler();
+            return new TagHandler($c['em']);
         });
         $container['translation.handler'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new TranslationHandler();
+            return new TranslationHandler($c['em']);
         });
 
         /*

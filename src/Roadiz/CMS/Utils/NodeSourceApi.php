@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 

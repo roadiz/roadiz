@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 
 /**
@@ -43,10 +44,10 @@ class GroupsImporter implements ImporterInterface
      *
      * @param string $serializedData
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $serializer = new GroupCollectionJsonSerializer($em);
         /** @var \RZ\Roadiz\Core\Entities\Group[] $groups */
@@ -61,7 +62,7 @@ class GroupsImporter implements ImporterInterface
                 // Flush before creating group's roles.
                 $em->flush($group);
             } else {
-                $existingGroup->getHandler()->diff($group);
+                $handlerFactory->getHandler($existingGroup)->diff($group);
                 $em->flush($existingGroup);
             }
         }

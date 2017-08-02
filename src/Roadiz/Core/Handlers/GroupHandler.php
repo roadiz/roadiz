@@ -36,18 +36,10 @@ use RZ\Roadiz\Core\Entities\Group;
  */
 class GroupHandler extends AbstractHandler
 {
-    private $group;
-
     /**
-     * Create a new group handler with group to handle.
-     *
-     * @param Group|null $group
+     * @var Group
      */
-    public function __construct(Group $group = null)
-    {
-        parent::__construct();
-        $this->group = $group;
-    }
+    private $group;
 
     /**
      * @return Group
@@ -85,7 +77,7 @@ class GroupHandler extends AbstractHandler
 
             foreach ($newGroup->getRolesEntities() as $newRole) {
                 if (false === in_array($newRole->getName(), $existingRolesNames)) {
-                    $role = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role')
+                    $role = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Role')
                                                  ->findOneByName($newRole->getName());
                     $this->group->addRole($role);
                 }

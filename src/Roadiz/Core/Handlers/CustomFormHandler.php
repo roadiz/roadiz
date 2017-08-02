@@ -36,6 +36,9 @@ use RZ\Roadiz\Core\Entities\CustomForm;
  */
 class CustomFormHandler extends AbstractHandler
 {
+    /**
+     * @var CustomForm|null
+     */
     protected $customForm = null;
 
     /**
@@ -57,17 +60,6 @@ class CustomFormHandler extends AbstractHandler
     }
 
     /**
-     * Create a new node-type handler with node-type to handle.
-     *
-     * @param \RZ\Roadiz\Core\Entities\CustomForm|null $customForm
-     */
-    public function __construct(CustomForm $customForm = null)
-    {
-        parent::__construct();
-        $this->customForm = $customForm;
-    }
-
-    /**
      * Reset current node-type fields positions.
      *
      * @param bool $setPositions
@@ -85,7 +77,7 @@ class CustomFormHandler extends AbstractHandler
         }
 
         if ($setPositions) {
-            $this->entityManager->flush();
+            $this->objectManager->flush();
         }
 
         return $i;

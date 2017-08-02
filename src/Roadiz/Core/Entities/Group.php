@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Handlers\GroupHandler;
 
 /**
  * A group gather User and Roles.
@@ -141,15 +140,6 @@ class Group extends AbstractEntity
         }
 
         return $this;
-    }
-
-    /**
-     * @return GroupHandler
-     * @deprecated Use group.handler service.
-     */
-    public function getHandler()
-    {
-        return new GroupHandler($this);
     }
 
     /**
