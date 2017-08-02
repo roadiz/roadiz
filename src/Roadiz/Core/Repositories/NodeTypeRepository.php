@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * {@inheritdoc}

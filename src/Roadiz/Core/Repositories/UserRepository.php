@@ -39,17 +39,18 @@ class UserRepository extends EntityRepository
     /**
      * @param string $username
      *
-     * @return array
+     * @return boolean
      */
     public function usernameExists($username)
     {
-        $query = $this->_em->createQuery('
-            SELECT COUNT(u.username) FROM RZ\Roadiz\Core\Entities\User u
-            WHERE u.username = :username')
-                        ->setParameter('username', $username);
+        $qb = $this->createQueryBuilder('u');
+        $qb->select($qb->expr()->count('u.username'))
+            ->andWhere($qb->expr()->eq('u.username', ':username'))
+            ->setParameter('username', $username)
+            ->setCacheable(true);
 
         try {
-            return (boolean) $query->getSingleScalarResult();
+            return (boolean) $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return false;
         }
@@ -58,17 +59,18 @@ class UserRepository extends EntityRepository
     /**
      * @param string $email
      *
-     * @return array
+     * @return boolean
      */
     public function emailExists($email)
     {
-        $query = $this->_em->createQuery('
-            SELECT COUNT(u.email) FROM RZ\Roadiz\Core\Entities\User u
-            WHERE u.email = :email')
-                        ->setParameter('email', $email);
+        $qb = $this->createQueryBuilder('u');
+        $qb->select($qb->expr()->count('u.email'))
+            ->andWhere($qb->expr()->eq('u.email', ':email'))
+            ->setParameter('email', $email)
+            ->setCacheable(true);
 
         try {
-            return (boolean) $query->getSingleScalarResult();
+            return (boolean) $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return false;
         }

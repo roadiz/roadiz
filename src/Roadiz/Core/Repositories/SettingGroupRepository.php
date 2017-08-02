@@ -57,7 +57,7 @@ class SettingGroupRepository extends EntityRepository
     }
 
     /**
-     * @return bool
+     * @return array
      */
     public function findAllNames()
     {
@@ -72,7 +72,7 @@ class SettingGroupRepository extends EntityRepository
 
             return $ids;
         } catch (NoResultException $e) {
-            return false;
+            return [];
         }
     }
 }

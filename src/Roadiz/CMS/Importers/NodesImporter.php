@@ -101,7 +101,6 @@ class NodesImporter implements ImporterInterface
         foreach ($node->getNodeSources() as $nodeSource) {
             /** @var Translation|null $trans */
             $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->setDisplayingNotPublishedNodes(true)
                         ->findOneByLocale($nodeSource->getTranslation()->getLocale());
 
             if (null === $trans &&

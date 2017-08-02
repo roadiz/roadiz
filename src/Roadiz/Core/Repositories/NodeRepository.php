@@ -42,7 +42,7 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 /**
  * NodeRepository
  */
-class NodeRepository extends EntityRepository
+class NodeRepository extends StatusAwareRepository
 {
     /**
      * Just like the countBy method but with relational criteria.
@@ -978,11 +978,12 @@ class NodeRepository extends EntityRepository
 
         do {
             $theOffprings = array_merge($theOffprings, $in);
-            $query = $this->_em->createQuery('
-                SELECT n.id FROM RZ\Roadiz\Core\Entities\Node n
-                WHERE n.parent IN (:tab)')
-                ->setParameter('tab', $in);
-            $result = $query->getScalarResult();
+            $subQb = $this->createQueryBuilder('n');
+            $subQb->select('n.id')
+                  ->andWhere($subQb->expr()->in('n.parent', ':tab'))
+                  ->setParameter('tab', $in)
+                  ->setCacheable(true);
+            $result = $subQb->getQuery()->getScalarResult();
             $in = [];
 
             //For memory optimizations

@@ -61,7 +61,6 @@ class NodesCleanNamesCommand extends Command
 
         $translation = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->setDisplayingNotPublishedNodes(true)
             ->findDefault();
 
         if (null !== $translation) {

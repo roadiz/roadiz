@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -438,11 +439,9 @@ class EntityListManager
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
             $repository = $this->_em->getRepository($this->entityName);
-            if ($repository instanceof EntityRepository) {
-                $repository
-                    ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
-                    ->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses())
-                ;
+            if ($repository instanceof StatusAwareRepository) {
+                $repository->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes());
+                $repository->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses());
             }
             return $repository->findBy(
                 $this->filteringArray,

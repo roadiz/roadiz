@@ -41,7 +41,7 @@ use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 /**
  * EntityRepository that implements search engine query with Solr.
  */
-class NodesSourcesRepository extends EntityRepository
+class NodesSourcesRepository extends StatusAwareRepository
 {
     /**
      * Add a tag filtering to queryBuilder.

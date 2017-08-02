@@ -45,12 +45,15 @@ class TranslationRepository extends EntityRepository
      */
     public function findDefault()
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
-            WHERE t.defaultTranslation = true
-            AND t.available = true
-        ');
-        $query->setMaxResults(1);
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->andWhere($qb->expr()->eq('t.defaultTranslation', ':defaultTranslation'))
+            ->setParameter(':available', true)
+            ->setParameter(':defaultTranslation', true)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        $query = $qb->getQuery();
         $query->useResultCache(true, 1800, 'RZTranslationDefault');
 
         try {
@@ -67,11 +70,12 @@ class TranslationRepository extends EntityRepository
      */
     public function findAllAvailable()
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Translation t
-            WHERE t.available = true
-        ');
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->setParameter(':available', true)
+            ->setCacheable(true);
 
+        $query = $qb->getQuery();
         $query->useResultCache(true, 1800, 'RZTranslationAllAvailable');
 
         try {
@@ -88,11 +92,13 @@ class TranslationRepository extends EntityRepository
      */
     public function exists($locale)
     {
-        $query = $this->_em->createQuery('
-            SELECT COUNT(t.locale) FROM RZ\Roadiz\Core\Entities\Translation t
-            WHERE t.locale = :locale
-        ')->setParameter('locale', $locale);
+        $qb = $this->createQueryBuilder('t');
+        $qb->select($qb->expr()->countDistinct('t.locale'))
+            ->andWhere($qb->expr()->eq('t.locale', ':locale'))
+            ->setParameter(':locale', $locale)
+            ->setCacheable(true);
 
+        $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationExists-' . $locale);
 
         try {
@@ -109,10 +115,13 @@ class TranslationRepository extends EntityRepository
      */
     public function getAvailableLocales()
     {
-        $query = $this->_em->createQuery('
-        SELECT t.locale FROM RZ\Roadiz\Core\Entities\Translation t
-        WHERE t.available = true');
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t.locale')
+            ->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->setParameter(':available', true)
+            ->setCacheable(true);
 
+        $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAvailableLocales');
 
         try {
@@ -129,12 +138,16 @@ class TranslationRepository extends EntityRepository
      */
     public function getAvailableOverrideLocales()
     {
-        $query = $this->_em->createQuery("
-        SELECT t.overrideLocale FROM RZ\Roadiz\Core\Entities\Translation t
-        WHERE t.available = true
-        AND t.overrideLocale IS NOT NULL
-        AND t.overrideLocale <> ''");
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t.overrideLocale')
+            ->andWhere($qb->expr()->isNotNull('t.overrideLocale'))
+            ->andWhere($qb->expr()->neq('t.overrideLocale', ':overrideLocale'))
+            ->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->setParameter(':available', true)
+            ->setParameter(':overrideLocale', '')
+            ->setCacheable(true);
 
+        $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAvailableOverrideLocales');
 
         try {

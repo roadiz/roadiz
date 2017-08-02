@@ -78,7 +78,6 @@ class NodeTreeWidget extends AbstractWidget
 
         $this->availableTranslations = $this->getController()->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-             ->setDisplayingNotPublishedNodes(true)
              ->findAll();
     }
 

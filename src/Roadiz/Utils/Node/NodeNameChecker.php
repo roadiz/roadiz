@@ -71,7 +71,6 @@ abstract class NodeNameChecker
 
         if (false === (boolean) $entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
-                ->setDisplayingNotPublishedNodes(true)
                 ->exists($nodeName) &&
             false === (boolean) $entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')

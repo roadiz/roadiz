@@ -84,7 +84,6 @@ class NodesCreationCommand extends Command
         if (null === $existingNode) {
             $type = $this->entityManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-                ->setDisplayingNotPublishedNodes(true)
                 ->findOneByName($typeName);
 
             if (null !== $type) {
@@ -93,7 +92,6 @@ class NodesCreationCommand extends Command
                 if ($locale) {
                     $translation = $this->entityManager
                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                        ->setDisplayingNotPublishedNodes(true)
                         ->findOneBy(['locale' => $locale]);
                 }
 

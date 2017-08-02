@@ -51,7 +51,6 @@ class TranslateNodeType extends AbstractType
         /** @var ObjectManager $em */
         $em = $options['em'];
         $translations = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                           ->setDisplayingNotPublishedNodes(true)
                            ->findUnavailableTranslationsForNode($options['node']);
 
 

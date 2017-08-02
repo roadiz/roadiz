@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\ListManagers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 
 /**
  * A simple paginator class to filter entities with limit and search.
@@ -269,7 +270,7 @@ class Paginator
     protected function getRepository()
     {
         $repository = $this->em->getRepository($this->entityName);
-        if ($repository instanceof EntityRepository) {
+        if ($repository instanceof StatusAwareRepository) {
             $repository->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes());
             $repository->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses());
         }
