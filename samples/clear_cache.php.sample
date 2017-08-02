@@ -51,8 +51,8 @@ define('ROADIZ_ROOT', dirname(__FILE__));
 require("vendor/autoload.php");
 
 $allowedIp = [
-    // '10.0.2.2',     // vagrant host (forwarded)
-    // '192.168.33.1', // vagrant host (private)
+    '10.0.2.2',     // vagrant host (forwarded)
+    '192.168.33.1', // vagrant host (private)
     '127.0.0.1', 'fe80::1', '::1', ':ffff:127.0.0.1', '::ffff:127.0.0.1', // localhost
 ];
 
