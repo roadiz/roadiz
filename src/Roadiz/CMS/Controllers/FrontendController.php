@@ -483,21 +483,4 @@ abstract class FrontendController extends AppController
             ['content-type' => 'text/html']
         );
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
-    {
-        $elm = parent::createEntityListManager($entity, $criteria, $ordering);
-
-        /*
-         * When using EntityListManager you need to manually set the
-         * security context
-         */
-        $elm->setAuthorizationChecker($this->get('securityAuthorizationChecker'));
-        $elm->setPreview($this->get('kernel')->isPreview());
-
-        return $elm;
-    }
 }
