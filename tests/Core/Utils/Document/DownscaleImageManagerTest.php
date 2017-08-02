@@ -59,19 +59,26 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     {
         $originalHashes = [];
 
+        /** @var \RZ\Roadiz\Utils\Asset\Packages $packages */
+        $packages =  Kernel::getService('assetPackages');
+
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
-            Kernel::getService('assetPackages'),
+            $packages,
             Kernel::getService('logger'),
             'gd',
             100
         );
 
+        /**
+         * @var int $key
+         * @var Document $document
+         */
         foreach (static::$documentCollection as $key => $document) {
-            $originalHashes[$key] = hash_file('md5', $document->getAbsolutePath());
+            $originalHashes[$key] = hash_file('md5', $packages->getDocumentFilePath($document));
 
             $manager->processAndOverrideDocument($document);
-            $afterHash = hash_file('md5', $document->getAbsolutePath());
+            $afterHash = hash_file('md5', $packages->getDocumentFilePath($document));
 
             if ($document->getMimeType() == 'image/gif') {
                 /*
@@ -90,7 +97,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
                 /*
                  * Raw document must be equal to original file
                  */
-                $rawHash = hash_file('md5', $document->getRawDocument()->getAbsolutePath());
+                $rawHash = hash_file('md5', $packages->getDocumentFilePath($document->getRawDocument()));
                 $this->assertEquals($originalHashes[$key], $rawHash);
             }
         }
@@ -101,7 +108,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          */
         $manager = new DownscaleImageManager(
             Kernel::getService('em'),
-            Kernel::getService('assetPackages'),
+            $packages,
             Kernel::getService('logger'),
             'gd',
             100000
@@ -109,7 +116,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
 
         foreach (static::$documentCollection as $key => $document) {
             $manager->processDocumentFromExistingRaw($document);
-            $afterHash = hash_file('md5', $document->getAbsolutePath());
+            $afterHash = hash_file('md5', $packages->getDocumentFilePath($document));
 
             $this->assertEquals($originalHashes[$key], $afterHash);
             $this->assertNull($document->getRawDocument());
