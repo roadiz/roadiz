@@ -35,6 +35,8 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
+use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -49,7 +51,7 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"updated_at"})
  * })
  */
-class Folder extends AbstractDateTimedPositioned implements LeafInterface
+class Folder extends AbstractDateTimedPositioned implements FolderInterface
 {
     use LeafTrait;
 
@@ -96,7 +98,7 @@ class Folder extends AbstractDateTimedPositioned implements LeafInterface
     protected $documents;
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection<DocumentInterface>
      */
     public function getDocuments()
     {
@@ -104,10 +106,10 @@ class Folder extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @param Document $document
+     * @param DocumentInterface $document
      * @return $this
      */
-    public function addDocument(Document $document)
+    public function addDocument(DocumentInterface $document)
     {
         if (!$this->getDocuments()->contains($document)) {
             $this->documents->add($document);
@@ -117,10 +119,10 @@ class Folder extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @param Document $document
+     * @param DocumentInterface $document
      * @return $this
      */
-    public function removeDocument(Document $document)
+    public function removeDocument(DocumentInterface $document)
     {
         if ($this->getDocuments()->contains($document)) {
             $this->documents->removeElement($document);
@@ -241,5 +243,25 @@ class Folder extends AbstractDateTimedPositioned implements LeafInterface
     {
         $this->dirtyFolderName = $dirtyFolderName;
         return $this;
+    }
+
+    /**
+     * Get folder full path using folder names.
+     *
+     * @return string
+     */
+    public function getFullPath()
+    {
+        $parents = $this->getParents();
+        $path = [];
+
+        /** @var Folder $parent */
+        foreach ($parents as $parent) {
+            $path[] = $parent->getFolderName();
+        }
+
+        $path[] = $this->getFolderName();
+
+        return implode('/', $path);
     }
 }

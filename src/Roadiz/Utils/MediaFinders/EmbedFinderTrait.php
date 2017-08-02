@@ -23,45 +23,50 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AssetPackagesHelper.php
+ * @file EmbedFinderTrait.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Utils\Console\Helper;
+namespace RZ\Roadiz\Utils\MediaFinders;
 
-use Pimple\Container;
-use RZ\Roadiz\Utils\Asset\Packages;
-use Symfony\Component\Console\Helper\Helper;
+use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
-class AssetPackagesHelper extends Helper
+trait EmbedFinderTrait
 {
     /**
-     * @var Container
+     * @inheritDoc
      */
-    private $container;
-
-    /**
-     * AssetPackagesHelper constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
+    protected function documentExists(ObjectManager $objectManager, $embedId, $embedPlatform)
     {
-        $this->container = $container;
+        $existingDocument = $objectManager->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->findOneBy([
+                'embedId' => $embedId,
+                'embedPlatform' => $embedPlatform,
+            ]);
+
+        return null !== $existingDocument;
     }
 
     /**
-     * @return Packages
+     * @inheritDoc
      */
-    public function getPackages()
+    protected function injectMetaInDocument(ObjectManager $objectManager, DocumentInterface $document)
     {
-        return $this->container->offsetGet('assetPackages');
-    }
+        $translations = $objectManager->getRepository('RZ\Roadiz\Core\Entities\Translation')->findAll();
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'assetPackages';
+        foreach ($translations as $translation) {
+            $documentTr = new DocumentTranslation();
+            $documentTr->setDocument($document);
+            $documentTr->setTranslation($translation);
+            $documentTr->setName($this->getMediaTitle());
+            $documentTr->setDescription($this->getMediaDescription());
+            $documentTr->setCopyright($this->getMediaCopyright());
+
+            $objectManager->persist($documentTr);
+        }
+
+        return $document;
     }
 }

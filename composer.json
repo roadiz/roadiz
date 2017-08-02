@@ -46,6 +46,7 @@
     "require": {
         "php":                         ">=5.6",
         "roadiz/models":               "~0.19.0",
+        "roadiz/documents":            "~0.19.0",
         "doctrine/orm":                "2.5.*",
         "doctrine/collections":        "1.4.0",
         "doctrine/annotations":        "1.4.*",

@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Folder;
 
 /**
@@ -70,7 +69,7 @@ class FolderHandler extends AbstractHandler
     {
         /** @var Folder $folder */
         foreach ($this->folder->getChildren() as $folder) {
-            $handler = new FolderHandler($this->objectManager);
+            $handler = new static($this->objectManager);
             $handler->setFolder($folder);
             $handler->removeWithChildrenAndAssociations();
         }
@@ -101,6 +100,7 @@ class FolderHandler extends AbstractHandler
     /**
      * Return every folder’s parents.
      *
+     * @deprecated Use directly Folder::getParents method.
      * @return \RZ\Roadiz\Core\Entities\Folder[]
      */
     public function getParents()
@@ -123,6 +123,7 @@ class FolderHandler extends AbstractHandler
     /**
      * Get folder full path using folder names.
      *
+     * @deprecated Use directly Folder::getFullPath method.
      * @return string
      */
     public function getFullPath()
@@ -148,7 +149,7 @@ class FolderHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->folder->getParent() !== null) {
-            $parentHandler = new FolderHandler($this->objectManager);
+            $parentHandler = new static($this->objectManager);
             $parentHandler->setFolder($this->folder->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {

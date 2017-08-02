@@ -32,7 +32,9 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Core\Models\AbstractDocument;
+use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -44,92 +46,8 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"private"})
  * })
  */
-class Document extends AbstractDateTimed
+class Document extends AbstractDocument
 {
-    /**
-     * Associate mime type to simple types.
-     *
-     * - code
-     * - image
-     * - word
-     * - video
-     * - audio
-     * - pdf
-     * - archive
-     * - excel
-     * - powerpoint
-     * - font
-     *
-     * @var array
-     */
-    public static $mimeToIcon = [
-        'text/html' => 'code',
-        'application/javascript' => 'code',
-        'text/css' => 'code',
-        'text/rtf' => 'word',
-        'text/xml' => 'code',
-        'image/png' => 'image',
-        'image/jpeg' => 'image',
-        'image/gif' => 'image',
-        'image/tiff' => 'image',
-        'application/pdf' => 'pdf',
-        // Audio types
-        'audio/mpeg' => 'audio',
-        'audio/x-wav' => 'audio',
-        'audio/wav' => 'audio',
-        'audio/aac' => 'audio',
-        'audio/mp4' => 'audio',
-        'audio/webm' => 'audio',
-        'audio/ogg' => 'audio',
-        'audio/vorbis' => 'audio',
-        'audio/ac3' => 'audio',
-        // Video types
-        'application/ogg' => 'video',
-        'video/ogg' => 'video',
-        'video/webm' => 'video',
-        'video/mpeg' => 'video',
-        'video/mp4' => 'video',
-        'video/x-m4v' => 'video',
-        'video/quicktime' => 'video',
-        'video/x-flv' => 'video',
-        'video/3gpp' => 'video',
-        'video/3gpp2' => 'video',
-        'video/3gpp-tt' => 'video',
-        'video/VP8' => 'video',
-        // Epub type
-        'application/epub+zip' => 'epub',
-        // Archives types
-        'application/gzip' => 'archive',
-        'application/zip' => 'archive',
-        'application/x-bzip2' => 'archive',
-        'application/x-tar' => 'archive',
-        'application/x-7z-compressed' => 'archive',
-        'application/x-apple-diskimage' => 'archive',
-        'application/x-rar-compressed' => 'archive',
-        // Office types
-        'application/msword' => 'word',
-        'application/vnd.ms-excel' => 'excel',
-        'application/vnd.ms-office' => 'excel',
-        'application/vnd.ms-powerpoint' => 'powerpoint',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'word',
-        'application/vnd.oasis.opendocument.text ' => 'word',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.template' => 'excel',
-        'application/vnd.oasis.opendocument.spreadsheet' => 'excel',
-        'application/vnd.openxmlformats-officedocument.presentationml.slideshow' => 'powerpoint',
-        'application/vnd.oasis.opendocument.presentation' => 'powerpoint',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'powerpoint',
-        // Fonts types
-        'image/svg+xml' => 'font',
-        'application/x-font-ttf' => 'font',
-        'application/x-font-truetype' => 'font',
-        'application/x-font-opentype' => 'font',
-        'application/font-woff' => 'font',
-        'application/vnd.ms-fontobject' => 'font',
-        'font/opentype' => 'font',
-        'font/ttf' => 'font',
-    ];
-
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -192,80 +110,6 @@ class Document extends AbstractDateTimed
      */
     protected $raw = false;
 
-    /**
-     * Get short type name for current document Mime type.
-     *
-     * @return string
-     */
-    public function getShortType()
-    {
-        if (isset(static::$mimeToIcon[$this->getMimeType()])) {
-            return static::$mimeToIcon[$this->getMimeType()];
-        } else {
-            return 'unknown';
-        }
-    }
-
-    /**
-     * Get short Mime type.
-     *
-     * @return string
-     */
-    public function getShortMimeType()
-    {
-        $mime = explode('/', $this->getMimeType());
-        return $mime[count($mime) - 1];
-    }
-
-    /**
-     * Is current document an image.
-     *
-     * @return boolean
-     */
-    public function isImage()
-    {
-        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'image';
-    }
-
-    /**
-     * Is current document a vector SVG file.
-     *
-     * @return boolean
-     */
-    public function isSvg()
-    {
-        return $this->getMimeType() == 'image/svg+xml' || $this->getMimeType() == 'image/svg';
-    }
-
-    /**
-     * Is current document a video.
-     *
-     * @return boolean
-     */
-    public function isVideo()
-    {
-        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'video';
-    }
-
-    /**
-     * Is current document an audio file.
-     *
-     * @return boolean
-     */
-    public function isAudio()
-    {
-        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'audio';
-    }
-
-    /**
-     * Is current document a PDF file.
-     *
-     * @return bool
-     */
-    public function isPdf()
-    {
-        return isset(static::$mimeToIcon[$this->getMimeType()]) && static::$mimeToIcon[$this->getMimeType()] == 'pdf';
-    }
 
     /**
      * @ORM\Column(type="string")
@@ -289,19 +133,7 @@ class Document extends AbstractDateTimed
     public function setFolder($folder)
     {
         $this->folder = $folder;
-        return $this->folder;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRelativeUrl()
-    {
-        if (null !== $this->filename) {
-            return $this->getFolder() . '/' . $this->getFilename();
-        } else {
-            return null;
-        }
+        return $this;
     }
 
     /**
@@ -352,15 +184,6 @@ class Document extends AbstractDateTimed
         return $this;
     }
 
-    /**
-     * Tells if current document has embed media informations.
-     *
-     * @return boolean
-     */
-    public function isEmbed()
-    {
-        return (null !== $this->embedId && null !== $this->embedPlatform);
-    }
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
@@ -415,13 +238,26 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * @param Folder $folder
+     * @param FolderInterface $folder
      * @return $this
      */
-    public function addFolder(Folder $folder)
+    public function addFolder(FolderInterface $folder)
     {
         if (!$this->getFolders()->contains($folder)) {
             $this->folders->add($folder);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param FolderInterface $folder
+     * @return $this
+     */
+    public function removeFolder(FolderInterface $folder)
+    {
+        if ($this->getFolders()->contains($folder)) {
+            $this->folders->remove($folder);
         }
 
         return $this;
@@ -475,14 +311,15 @@ class Document extends AbstractDateTimed
     }
 
     /**
-     * Create a new Document.
+     * Document constructor.
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->folders = new ArrayCollection();
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
-        $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
     }
 
     /**
@@ -498,11 +335,11 @@ class Document extends AbstractDateTimed
     /**
      * Sets the value of rawDocument.
      *
-     * @param Document|null $rawDocument the raw document
+     * @param DocumentInterface|null $rawDocument the raw document
      *
      * @return self
      */
-    public function setRawDocument(Document $rawDocument = null)
+    public function setRawDocument(DocumentInterface $rawDocument = null)
     {
         $this->rawDocument = $rawDocument;
 

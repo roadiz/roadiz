@@ -82,6 +82,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $loader = new \Twig_Loader_Filesystem([
                 // Default Form extension templates
                 $vendorDir . '/symfony/twig-bridge/Resources/views/Form',
+                // Documents rendering templates
+                $vendorDir . '/roadiz/documents/src/Roadiz/Resources/views',
                 CmsController::getViewsFolder(),
             ]);
 
