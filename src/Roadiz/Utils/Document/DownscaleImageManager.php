@@ -137,8 +137,7 @@ class DownscaleImageManager
     protected function getDownscaledImage(Image $processImage)
     {
         if ($processImage->mime() != 'image/gif' &&
-            ($processImage->width() > $this->maxPixelSize ||
-                $processImage->height() > $this->maxPixelSize)) {
+            ($processImage->width() > $this->maxPixelSize || $processImage->height() > $this->maxPixelSize)) {
             // prevent possible upsizing
             $processImage->resize($this->maxPixelSize, $this->maxPixelSize, function (Constraint $constraint) {
                 $constraint->aspectRatio();
@@ -161,8 +160,7 @@ class DownscaleImageManager
     {
         $fs = new Filesystem();
 
-        if (false === $keepExistingRaw &&
-            null !== $formerRawDoc = $originalDocument->getRawDocument()) {
+        if (false === $keepExistingRaw && null !== $formerRawDoc = $originalDocument->getRawDocument()) {
             /*
              * When document already exists with a raw doc reference.
              * We have to delete former raw document before creating a new one.

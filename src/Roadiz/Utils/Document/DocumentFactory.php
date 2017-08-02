@@ -80,23 +80,18 @@ class DocumentFactory
 
     /**
      * DocumentFactory constructor.
-     * @param File $file
+     *
      * @param EntityManager $em
      * @param EventDispatcherInterface $dispatcher
      * @param Packages $packages
-     * @param Folder $folder
      * @param LoggerInterface $logger
      */
     public function __construct(
-        File $file,
         EntityManager $em,
         EventDispatcherInterface $dispatcher,
         Packages $packages,
-        Folder $folder = null,
         LoggerInterface $logger = null
     ) {
-        $this->file = $file;
-        $this->folder = $folder;
         $this->logger = $logger;
         $this->em = $em;
         $this->dispatcher = $dispatcher;
@@ -105,6 +100,42 @@ class DocumentFactory
         if (null === $this->logger) {
             $this->logger = new NullLogger();
         }
+    }
+
+    /**
+     * @return File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param File $file
+     * @return DocumentFactory
+     */
+    public function setFile(File $file)
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    /**
+     * @return Folder
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
+
+    /**
+     * @param Folder $folder
+     * @return DocumentFactory
+     */
+    public function setFolder(Folder $folder = null)
+    {
+        $this->folder = $folder;
+        return $this;
     }
 
     /**
@@ -130,8 +161,11 @@ class DocumentFactory
      */
     public function getDocument()
     {
-        if ($this->file instanceof UploadedFile &&
-            !$this->file->isValid()) {
+        if (null === $this->file) {
+            throw new \InvalidArgumentException('File must be set before getting document.');
+        }
+
+        if ($this->file instanceof UploadedFile && !$this->file->isValid()) {
             return null;
         }
 
@@ -185,6 +219,10 @@ class DocumentFactory
      */
     public function updateDocument(Document $document)
     {
+        if (null === $this->file) {
+            throw new \InvalidArgumentException('File must be set before getting document.');
+        }
+
         $fs = new Filesystem();
 
         if ($this->file instanceof UploadedFile &&
@@ -235,6 +273,10 @@ class DocumentFactory
      */
     protected function getFileName()
     {
+        if (null === $this->file) {
+            throw new \InvalidArgumentException('File must be set before getting its fileName.');
+        }
+
         $fileName = $this->file->getFilename();
 
         if ($this->file instanceof UploadedFile) {

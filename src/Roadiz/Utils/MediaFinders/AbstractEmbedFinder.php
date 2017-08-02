@@ -29,10 +29,10 @@
  */
 namespace RZ\Roadiz\Utils\MediaFinders;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Stream\Stream;
-use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -208,15 +208,15 @@ abstract class AbstractEmbedFinder
     }
 
     /**
-     * Create a Document from an embed media
+     * Create a Document from an embed media.
      *
-     * @param Container $container description
+     * Be careful, this method does not flush.
      *
+     * @param ObjectManager $objectManager
+     * @param DocumentFactory $documentFactory
      * @return Document
-     * @throws EntityAlreadyExistsException
-     * @throws \RuntimeException
      */
-    public function createDocumentFromFeed(Container $container)
+    public function createDocumentFromFeed(ObjectManager $objectManager, DocumentFactory $documentFactory)
     {
         /** @var File $file */
         $file = $this->downloadThumbnail();
@@ -225,7 +225,7 @@ abstract class AbstractEmbedFinder
             throw new \RuntimeException('no.embed.document.found');
         }
 
-        $existingDocument = $container['em']->getRepository('RZ\Roadiz\Core\Entities\Document')
+        $existingDocument = $objectManager->getRepository('RZ\Roadiz\Core\Entities\Document')
                                             ->findOneBy([
                                                 'embedId'=>$this->embedId,
                                                 'embedPlatform'=>static::$platform,
@@ -235,16 +235,7 @@ abstract class AbstractEmbedFinder
             throw new EntityAlreadyExistsException('embed.document.already_exists');
         }
 
-
-        $documentFactory = new DocumentFactory(
-            $file,
-            $container['em'],
-            $container['dispatcher'],
-            $container['assetPackages'],
-            null,
-            $container['logger']
-        );
-
+        $documentFactory->setFile($file);
         $document = $documentFactory->getDocument();
 
         if (null === $document) {
@@ -258,9 +249,7 @@ abstract class AbstractEmbedFinder
          * Create document metas
          * for each translation
          */
-        $translations = $container['em']
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findAll();
+        $translations = $objectManager->getRepository('RZ\Roadiz\Core\Entities\Translation')->findAll();
 
         foreach ($translations as $translation) {
             $documentTr = new DocumentTranslation();
@@ -270,11 +259,8 @@ abstract class AbstractEmbedFinder
             $documentTr->setDescription($this->getMediaDescription());
             $documentTr->setCopyright($this->getMediaCopyright());
 
-            $container['em']->persist($documentTr);
+            $objectManager->persist($documentTr);
         }
-
-        $container['em']->flush();
-
 
         return $document;
     }

@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
@@ -148,6 +149,13 @@ class FactoryServiceProvider implements ServiceProviderInterface
          */
         $container['document.url_generator'] = $container->factory(function ($c) {
             return new DocumentUrlGenerator($c['requestStack'], $c['assetPackages'], $c['urlGenerator']);
+        });
+
+        /*
+         * DocumentFactory
+         */
+        $container['document.factory'] = $container->factory(function ($c) {
+            return new DocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
         });
 
         return $container;

@@ -210,14 +210,10 @@ class DocumentsController extends RozierApp
 
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $fileForm->get('editDocument')->getData();
-                $documentFactory = new DocumentFactory(
-                    $uploadedFile,
-                    $em,
-                    $this->get('dispatcher'),
-                    $this->get('assetPackages'),
-                    null,
-                    $this->get('logger')
-                );
+                /** @var DocumentFactory $documentFactory */
+                $documentFactory = $this->get('document.factory');
+                $documentFactory->setFile($uploadedFile);
+
 
                 $documentFactory->updateDocument($document);
                 $em->flush();
@@ -1146,7 +1142,7 @@ class DocumentsController extends RozierApp
             }
 
             if ($finder->exists()) {
-                $document = $finder->createDocumentFromFeed($this->getContainer());
+                $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
 
                 if (null !== $document &&
                     null !== $folderId &&
@@ -1157,8 +1153,9 @@ class DocumentsController extends RozierApp
 
                     $document->addFolder($folder);
                     $folder->addDocument($document);
-                    $this->get('em')->flush();
                 }
+
+                $this->get('em')->flush();
 
                 return $document;
             } else {
@@ -1181,18 +1178,20 @@ class DocumentsController extends RozierApp
     public function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        $document = $finder->createDocumentFromFeed($this->getContainer());
+        $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
 
         if (null !== $document &&
             null !== $folderId &&
             $folderId > 0) {
+            /** @var Folder $folder */
             $folder = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);
-            $this->get('em')->flush();
         }
+        $this->get('em')->flush();
+
         return $document;
     }
 
@@ -1263,16 +1262,11 @@ class DocumentsController extends RozierApp
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $data['newDocument'];
 
-            $documentFactory = new DocumentFactory(
-                $uploadedFile,
-                $this->get('em'),
-                $this->get('dispatcher'),
-                $this->get('assetPackages'),
-                null,
-                $this->get('logger')
-            );
-
+            /** @var DocumentFactory $documentFactory */
+            $documentFactory = $this->get('document.factory');
+            $documentFactory->setFile($uploadedFile);
             $documentFactory->updateDocument($document);
+
             $this->get('em')->flush();
         }
         return $document;
@@ -1298,14 +1292,10 @@ class DocumentsController extends RozierApp
         if (!empty($data['attachment'])) {
             $uploadedFile = $data['attachment']->getData();
 
-            $documentFactory = new DocumentFactory(
-                $uploadedFile,
-                $this->get('em'),
-                $this->get('dispatcher'),
-                $this->get('assetPackages'),
-                $folder,
-                $this->get('logger')
-            );
+            /** @var DocumentFactory $documentFactory */
+            $documentFactory = $this->get('document.factory');
+            $documentFactory->setFile($uploadedFile);
+            $documentFactory->setFolder($folder);
 
             if (null !== $document = $documentFactory->getDocument()) {
                 $this->get('em')->flush();
