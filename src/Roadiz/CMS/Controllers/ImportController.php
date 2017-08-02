@@ -210,7 +210,7 @@ class ImportController extends AppController
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'));
+                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'), $this->get('factory.handler'));
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }
