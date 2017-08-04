@@ -289,10 +289,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return EventSubscriber[] Event subscribers for Entity manager.
          */
-        $container['em.eventSubscribers'] = function ($c) {
+        $container['em.eventSubscribers'] = function (Container $c) {
             return [
                 new FontLifeCycleSubscriber($c),
-                new DocumentLifeCycleSubscriber($c),
+                new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
                 new CustomFormFieldLifeCycleSubscriber($c),
                 new LeafEntityLifeCycleSubscriber($c['factory.handler']),
