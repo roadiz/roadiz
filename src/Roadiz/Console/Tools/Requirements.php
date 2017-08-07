@@ -68,8 +68,8 @@ class Requirements
         $checks = [];
 
         $checks['php_version'] = [
-            'status' => $this->testPHPVersion('5.4.3'),
-            'version_minimum' => '5.4.3',
+            'status' => $this->testPHPVersion('5.6.0'),
+            'version_minimum' => '5.6.0',
             'found' => phpversion(),
             'message' => 'Your PHP version is outdated, you must update it.',
         ];

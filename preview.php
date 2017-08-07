@@ -31,9 +31,9 @@
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 
-if (version_compare(phpversion(), '5.4.3', '<')) {
+if (version_compare(phpversion(), '5.6.0', '<')) {
     echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 5.4.3';
+    echo 'You need a least PHP version 5.6.0';
     exit(1);
 }
 
