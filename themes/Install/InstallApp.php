@@ -305,7 +305,6 @@ class InstallApp extends AppController
         $tempProdKernel->boot();
         $tempProdKernel->container['request'] = $request;
         $clearers = [
-            // PROD
             new AssetsClearer($tempProdKernel->getCacheDir()),
             new RoutingCacheClearer($tempProdKernel->getCacheDir()),
             new TemplatesCacheClearer($tempProdKernel->getCacheDir()),
@@ -313,9 +312,10 @@ class InstallApp extends AppController
             new ConfigurationCacheClearer($tempProdKernel->getCacheDir()),
             new NodesSourcesUrlsCacheClearer($tempProdKernel->get('nodesSourcesUrlCacheProvider')),
             new OPCacheClearer(),
-            // Keep doctrine at the end
-            new DoctrineCacheClearer($tempProdKernel->get('em'), $tempProdKernel),
         ];
+        if (null !== $entityManager = $tempProdKernel->get('em')) {
+            $clearers[] = new DoctrineCacheClearer($entityManager, $tempProdKernel);
+        }
         foreach ($clearers as $clearer) {
             try {
                 $clearer->clear();
