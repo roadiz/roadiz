@@ -332,7 +332,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         return $this->environment == 'prod';
     }
-    
+
     /**
      * {@inheritdoc}
      */
