@@ -40,9 +40,9 @@ use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-if (version_compare(phpversion(), '5.4.3', '<')) {
+if (version_compare(phpversion(), '5.6.0', '<')) {
     echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 5.4.3';
+    echo 'You need a least PHP version 5.6.0';
     exit(1);
 }
 
@@ -53,7 +53,7 @@ require("vendor/autoload.php");
 $allowedIp = [
     '10.0.2.2',     // vagrant host (forwarded)
     '192.168.33.1', // vagrant host (private)
-    '127.0.0.1', 'fe80::1', '::1', ':ffff:127.0.0.1', '::ffff:127.0.0.1', // localhost
+    '127.0.0.1', 'fe80::1', '::1', ':ffff:127.0.0.1', '::ffff:127.0.0.1' // localhost
 ];
 
 // This check prevents access to debug front controllers that are deployed by accident to production servers.

@@ -65,7 +65,7 @@ class RequirementsCommand extends Command
         $this->requirements = new Requirements($kernel);
         $text = "";
 
-        $text .= $this->testPHPVersion('5.4.3');
+        $text .= $this->testPHPVersion('5.6.0');
         $text .= $this->testExtension('session');
         $text .= $this->testExtension('json');
         $text .= $this->testExtension('zip');
