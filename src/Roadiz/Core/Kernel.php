@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core;
 
-use JBZoo\PimpleDumper\PimpleDumper;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
@@ -89,7 +88,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     public static $cmsBuild = null;
     public static $cmsVersion = "0.19.6";
-    protected static $instance = null;
 
     /**
      * @var Container|null
@@ -289,18 +287,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * Get Pimple dependency injection service container.
-     *
-     * @param string $key Service name
-     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
-     * @return mixed
-     */
-    public static function getService($key)
-    {
-        return static::getInstance()->container[$key];
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getEnvironment()
@@ -346,36 +332,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     {
         return $this->environment == 'prod';
     }
-
-    /**
-     * Return unique instance of Kernel.
-     *
-     * @param string $environment
-     * @param bool $debug
-     * @param bool $preview
-     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
-     *
-     * @return Kernel
-     */
-    public static function getInstance($environment = 'prod', $debug = false, $preview = false)
-    {
-        if (static::$instance === null) {
-            static::$instance = new static($environment, $debug, $preview);
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * Clear Kernel singleton.
-     *
-     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
-     */
-    public static function destroy()
-    {
-        static::$instance = null;
-    }
-
+    
     /**
      * {@inheritdoc}
      */
