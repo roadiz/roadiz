@@ -39,7 +39,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\Services\AssetsServiceProvider;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
-use Themes\DefaultTheme\Services\NodeTypeServiceProvider;
 
 /**
  * Class DefaultThemeApp
