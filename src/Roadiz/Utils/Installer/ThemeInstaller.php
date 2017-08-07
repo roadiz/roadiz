@@ -48,7 +48,7 @@ class ThemeInstaller
     {
         $themeFolder = call_user_func([$classname, 'getThemeFolder']);
         $file = $themeFolder . "/config.yml";
-        return Yaml::parse($file);
+        return Yaml::parse(file_get_contents($file));
     }
 
     /**

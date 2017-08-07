@@ -193,7 +193,7 @@ class DatabaseController extends InstallApp
         /*
          * files to import
          */
-        $installData = Yaml::parse(InstallApp::getThemeFolder() . "/config.yml");
+        $installData = Yaml::parse(file_get_contents(InstallApp::getThemeFolder() . "/config.yml"));
         $this->assignation['imports'] = $installData['importFiles'];
 
         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);

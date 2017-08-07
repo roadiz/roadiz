@@ -76,7 +76,7 @@ class ThemesType extends AbstractType
 
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
-            $data = Yaml::parse($file->getPathname());
+            $data = Yaml::parse(file_get_contents($file->getPathname()));
 
             $classname = '\Themes\\' . $data['themeDir'] . "\\" . $data['themeDir'] . "App";
 

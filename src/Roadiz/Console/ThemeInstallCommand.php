@@ -205,7 +205,7 @@ class ThemeInstallCommand extends Command
 
     protected function getThemeConfig()
     {
-        return Yaml::parse($this->themeRoot . "/config.yml");
+        return Yaml::parse(file_get_contents($this->themeRoot . "/config.yml"));
     }
 
     protected function importTheme($classname, &$text)
