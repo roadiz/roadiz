@@ -30,6 +30,9 @@
 namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
+use AM\InterventionRequest\InterventionRequest;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
@@ -117,6 +120,34 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $subscribers[] = $refClass->newInstanceArgs($constructArgs);
             }
             return $subscribers;
+        };
+
+
+        /**
+         * @param Container $c
+         * @return Logger
+         */
+        $container['interventionRequestLogger'] = function (Container $c) {
+            $log = new Logger('InterventionRequest');
+            $log->pushHandler(new StreamHandler($c['kernel']->getLogDir() . '/interventionRequest.log', Logger::INFO));
+            return $log;
+        };
+
+        /**
+         * @param Container $c
+         * @return InterventionRequest
+         */
+        $container['interventionRequest'] = function (Container $c) {
+            $intervention = new InterventionRequest(
+                $c['interventionRequestConfiguration'],
+                $c['interventionRequestLogger']
+            );
+
+            foreach ($c['interventionRequestSubscribers'] as $subscriber) {
+                $intervention->addSubscriber($subscriber);
+            }
+
+            return $intervention;
         };
 
         return $container;
