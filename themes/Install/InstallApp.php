@@ -320,7 +320,6 @@ class InstallApp extends AppController
             try {
                 $clearer->clear();
             } catch (\Exception $e) {
-
             }
         }
     }
