@@ -27,8 +27,8 @@
  * @file SettingTest.php
  * @author Ambroise Maupate
  */
+
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 class SettingTest extends SchemaDependentCase
@@ -40,7 +40,7 @@ class SettingTest extends SchemaDependentCase
      */
     public function testGetValue($name, $expected)
     {
-        $value = Kernel::getService('em')
+        $value = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Setting')
             ->getValue($name);
 
@@ -72,9 +72,9 @@ class SettingTest extends SchemaDependentCase
             $s = new Setting();
             $s->setName($setting[0]);
             $s->setValue($setting[1]);
-            Kernel::getService('em')->persist($s);
+            static::getManager()->persist($s);
         }
 
-        Kernel::getService('em')->flush();
+        static::getManager()->flush();
     }
 }

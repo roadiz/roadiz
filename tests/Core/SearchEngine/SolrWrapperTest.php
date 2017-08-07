@@ -27,10 +27,10 @@
  * @file SolrWrapperTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Kernel;
+
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Tests\KernelDependentCase;
 use Solarium\Exception\HttpException;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 
 /**
  * SolrWrapperTest.
@@ -41,7 +41,7 @@ class SolrWrapperTest extends KernelDependentCase
 
     public function testIndex()
     {
-        $solr = Kernel::getService('solr');
+        $solr = $this->get('solr');
 
         if (null !== $solr) {
             $testTitle = "Roadiz first test";
@@ -106,7 +106,7 @@ class SolrWrapperTest extends KernelDependentCase
      */
     public static function tearDownAfterClass()
     {
-        $solr = Kernel::getService('solr');
+        $solr = static::$kernel->get('solr');
 
         if (null !== $solr) {
             try {

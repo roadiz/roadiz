@@ -60,9 +60,9 @@ require("vendor/autoload.php");
 
 // Use DevKernel on Vagrant box to use a cache dir not
 // in the shared folder.
-//$kernel = DevKernel::getInstance('dev', true, false, 'my_site');
+//$kernel = new DevKernel('dev', true, false, 'my_site');
 
-$kernel = Kernel::getInstance('dev', true, false);
+$kernel = new Kernel('dev', true, false);
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);

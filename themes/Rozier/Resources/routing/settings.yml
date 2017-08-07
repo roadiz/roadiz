@@ -1,17 +1,22 @@
 settingsEditPage:
     path:     /edit/{settingId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::editAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsController::editAction
     requirements: { settingId : "[0-9]+" }
 settingsAddPage:
     path:     /add
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::addAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsController::addAction
 settingsDeletePage:
     path:     /delete/{settingId}
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::deleteAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsController::deleteAction
     requirements: { settingId : "[0-9]+" }
 settingsExportAllPage:
     path:     /export
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::exportAllAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsUtilsController::exportAllAction
 settingsImportPage:
     path:     /import
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsUtilsController::importJsonFileAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsUtilsController::importJsonFileAction

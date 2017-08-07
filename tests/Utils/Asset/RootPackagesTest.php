@@ -29,7 +29,6 @@
  */
 
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +69,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $documentUrlGenerator = Kernel::getService('document.url_generator');
+        $documentUrlGenerator = $this->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
 
@@ -82,12 +81,12 @@ class RootPackagesTest extends DefaultThemeDependentCase
     {
         $this->assertEquals(
             '/files/some-custom-file',
-            Kernel::getService('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
+            $this->get('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertEquals(
             '/files/folder/some-custom-file',
-            Kernel::getService('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
+            $this->get('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
         );
     }
 
@@ -101,12 +100,12 @@ class RootPackagesTest extends DefaultThemeDependentCase
     {
         $this->assertNotEquals(
             '/files/some-custom-file',
-            Kernel::getService('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
+            $this->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertNotEquals(
             '/files/folder/some-custom-file',
-            Kernel::getService('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
+            $this->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
         );
     }
 

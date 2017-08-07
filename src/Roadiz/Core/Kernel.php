@@ -353,6 +353,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      * @param string $environment
      * @param bool $debug
      * @param bool $preview
+     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
      *
      * @return Kernel
      */
@@ -367,6 +368,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
     /**
      * Clear Kernel singleton.
+     *
+     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
      */
     public static function destroy()
     {

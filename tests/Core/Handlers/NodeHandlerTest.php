@@ -29,7 +29,6 @@
  */
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 class NodeHandlerTest extends DefaultThemeDependentCase
@@ -65,7 +64,7 @@ class NodeHandlerTest extends DefaultThemeDependentCase
 
             $this->assertEquals($nbNode + 1, count(static::$runtimeCollection));
 
-            Kernel::getService('em')->flush();
+            static::getManager()->flush();
         }
     }
 

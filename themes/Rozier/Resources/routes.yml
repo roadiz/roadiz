@@ -3,7 +3,8 @@
 ##
 rozierRemoveTrailingSlash:
     path: /{url}
-    defaults: { _controller: Themes\Rozier\RozierApp::removeTrailingSlashAction }
+    defaults:
+        _controller: Themes\Rozier\RozierApp::removeTrailingSlashAction
     requirements:
         url: .*/$
     methods: [GET]
@@ -11,7 +12,8 @@ rozierRemoveTrailingSlash:
 # Home page
 adminHomePage:
     path:     /rz-admin
-    defaults: { _controller: Themes\Rozier\Controllers\DashboardController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\DashboardController::indexAction
 loginRoutes:
     prefix: /rz-admin
     resource: "routing/login.yml"
@@ -26,20 +28,24 @@ ajaxSessionMessages:
 ping:
     path:     /rz-admin/ping
     methods: [GET]
-    defaults: { _controller: Themes\Rozier\Controllers\PingController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\PingController::indexAction
 
 # CACHES
 deleteDoctrineCache:
     path:     /rz-admin/cache/delete-doctrine-cache
-    defaults: { _controller: Themes\Rozier\Controllers\CacheController::deleteDoctrineCache }
+    defaults:
+        _controller: Themes\Rozier\Controllers\CacheController::deleteDoctrineCache
 deleteAssetsCache:
     path:     /rz-admin/cache/delete-assets-cache
-    defaults: { _controller: Themes\Rozier\Controllers\CacheController::deleteAssetsCache }
+    defaults:
+        _controller: Themes\Rozier\Controllers\CacheController::deleteAssetsCache
 
 # NODES
 nodesHomePage:
     path:     /rz-admin/nodes
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction
 nodesRoutes:
     resource: "routing/nodes.yml"
     prefix: /rz-admin/nodes
@@ -52,7 +58,8 @@ ajaxRequestsRoutes:
 # Node TYPES
 nodeTypesHomePage:
     path:     /rz-admin/node-types
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::indexAction
 nodeTypesRoutes:
     resource: "routing/node-types.yml"
     prefix: /rz-admin/node-types
@@ -66,7 +73,8 @@ nodeTypeFieldsRoutes:
 # SETTINGS
 settingsHomePage:
     path:     /rz-admin/settings
-    defaults: { _controller: Themes\Rozier\Controllers\SettingsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsController::indexAction
 settingsRoutes:
     resource: "routing/settings.yml"
     prefix: /rz-admin/settings
@@ -75,7 +83,8 @@ settingsRoutes:
 # SETTINGS GROUPS
 settingGroupsHomePage:
     path:     /rz-admin/setting-groups
-    defaults: { _controller: Themes\Rozier\Controllers\SettingGroupsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingGroupsController::indexAction
 settingGroupsRoutes:
     resource: "routing/setting-groups.yml"
     prefix: /rz-admin/setting-groups
@@ -84,7 +93,8 @@ settingGroupsRoutes:
 # TAGS
 tagsHomePage:
     path:     /rz-admin/tags
-    defaults: { _controller: Themes\Rozier\Controllers\Tags\TagsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Tags\TagsController::indexAction
 tagsRoutes:
     resource: "routing/tags.yml"
     prefix: /rz-admin/tags
@@ -92,7 +102,8 @@ tagsRoutes:
 # USERS
 usersHomePage:
     path:     /rz-admin/users
-    defaults: { _controller: Themes\Rozier\Controllers\Users\UsersController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Users\UsersController::indexAction
 usersRoutes:
     resource: "routing/users.yml"
     prefix: /rz-admin/users
@@ -101,7 +112,8 @@ usersRoutes:
 # FONTS
 fontsHomePage:
     path:     /rz-admin/fonts
-    defaults: { _controller: Themes\Rozier\Controllers\FontsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\FontsController::indexAction
 fontsRoutes:
     resource: "routing/fonts.yml"
     prefix: /rz-admin/fonts
@@ -110,7 +122,8 @@ fontsRoutes:
 # FOLDERS
 foldersHomePage:
     path:     /rz-admin/folders
-    defaults: { _controller: Themes\Rozier\Controllers\FoldersController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\FoldersController::indexAction
 foldersRoutes:
     resource: "routing/folders.yml"
     prefix: /rz-admin/folders
@@ -119,7 +132,8 @@ foldersRoutes:
 # TRANSLATIONS
 translationsHomePage:
     path:     /rz-admin/translations
-    defaults: { _controller: Themes\Rozier\Controllers\TranslationsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\TranslationsController::indexAction
 translationsRoutes:
     resource: "routing/translations.yml"
     prefix: /rz-admin/translations
@@ -128,7 +142,9 @@ translationsRoutes:
 # DOCUMENTS
 documentsHomePage:
     path:     /rz-admin/documents/{folderId}
-    defaults: { _controller: Themes\Rozier\Controllers\Documents\DocumentsController::indexAction, folderId:null }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Documents\DocumentsController::indexAction
+        folderId: null
     requirements: { folderId : "[0-9]+" }
 documentsRoutes:
     resource: "routing/documents.yml"
@@ -147,7 +163,8 @@ redirectionsRoutes:
 # THEMES
 themesHomePage:
     path:     /rz-admin/themes
-    defaults: { _controller: Themes\Rozier\Controllers\ThemesController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\ThemesController::indexAction
 themesRoutes:
     resource: "routing/themes.yml"
     prefix: /rz-admin/themes
@@ -156,7 +173,8 @@ themesRoutes:
 # ROLES
 rolesHomePage:
     path:     /rz-admin/roles
-    defaults: { _controller: Themes\Rozier\Controllers\RolesController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\RolesController::indexAction
 rolesRoutes:
     resource: "routing/roles.yml"
     prefix: /rz-admin/roles
@@ -165,7 +183,8 @@ rolesRoutes:
 # GROUPS
 groupsHomePage:
     path:     /rz-admin/groups
-    defaults: { _controller: Themes\Rozier\Controllers\GroupsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\GroupsController::indexAction
 groupsRoutes:
     resource: "routing/groups.yml"
     prefix: /rz-admin/groups
@@ -174,16 +193,19 @@ groupsRoutes:
 #LOGS
 historyHomePage:
     path:     /rz-admin/history
-    defaults: { _controller: Themes\Rozier\Controllers\HistoryController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\HistoryController::indexAction
 historyUserPage:
     path:     /rz-admin/history/user/{userId}
     requirements: { userId : "[0-9]+" }
-    defaults: { _controller: Themes\Rozier\Controllers\HistoryController::userAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\HistoryController::userAction
 
 # Custom Form
 customFormsHomePage:
     path:     /rz-admin/custom-forms
-    defaults: { _controller: Themes\Rozier\Controllers\CustomFormsController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\CustomFormsController::indexAction
 customFormsRoutes:
     resource: "routing/custom-forms.yml"
     prefix: /rz-admin/custom-forms
@@ -202,16 +224,19 @@ customFormFieldsRoutes:
 # SEARCH
 searchNodePage:
     path:     /rz-admin/search
-    defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SearchController::searchNodeAction
 searchNodeSourcePage:
     path:     /rz-admin/search/{nodetypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction
     requirements: { nodetypeId : "[0-9]+" }
 
 #NEWSLETTERS
 newslettersIndexPage:
     path:     /rz-admin/newsletter
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::listAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NewslettersController::listAction
 newslettersRoutes:
     resource: "routing/newsletters.yml"
     prefix: /rz-admin/newsletter
@@ -220,9 +245,11 @@ newslettersRoutes:
 # CSS to style with main color
 cssMainColor:
     path : /rz-admin/css/main-color.css
-    defaults: { _controller: Themes\Rozier\RozierApp::cssAction }
+    defaults:
+        _controller: Themes\Rozier\RozierApp::cssAction
 
 aboutPage:
     path: /rz-admin/about
-    defaults: { _controller: Themes\Rozier\Controllers\AboutController::indexAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\AboutController::indexAction
 

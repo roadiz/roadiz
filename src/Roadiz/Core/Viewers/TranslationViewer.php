@@ -33,7 +33,6 @@ namespace RZ\Roadiz\Core\Viewers;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,28 +44,29 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class TranslationViewer
 {
-    /** @var Translation  */
-    protected $translation;
-
-    /** @var EntityManager */
-    private $entityManager;
-
     /** @var Settings */
     private $settingsBag;
-
-    /** @var RouterInterface */
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var RouterInterface
+     */
     private $router;
+    private $translation;
 
     /**
      * TranslationViewer constructor.
-     * @param Translation|null $translation
+     * @param EntityManager $entityManager
+     * @param Settings $settingsBag
+     * @param RouterInterface $router
      */
-    public function __construct(Translation $translation = null)
+    public function __construct(EntityManager $entityManager, Settings $settingsBag, RouterInterface $router)
     {
-        $this->translation = $translation;
-        $this->entityManager = Kernel::getService('em');
-        $this->settingsBag = Kernel::getService('settingsBag');
-        $this->router = Kernel::getService('router');
+        $this->settingsBag = $settingsBag;
+        $this->entityManager = $entityManager;
+        $this->router = $router;
     }
 
     /**

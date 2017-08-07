@@ -3,11 +3,16 @@
 #
 FontFile:
     path:     /fonts/files/{filename}_{variant}.{extension}
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFileAction }
-    requirements: { filename: "[a-zA-Z0-9\-_]+", variant: "[0-9]", extension: "[a-z0-9]+" }
+    defaults:
+        _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFileAction
+    requirements:
+        filename: "[a-zA-Z0-9\\-_]+"
+        variant: "[0-9]"
+        extension: "[a-z0-9]+"
 FontFaceCSS:
     path:     /font-faces.css
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction }
+    defaults:
+        _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction
 #
 # InterventionRequest is hard coded before run app
 #
@@ -16,16 +21,18 @@ interventionRequestProcess:
     defaults:
         _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::interventionRequestAction
     requirements:
-        queryString : "[a-zA-Z:0-9\-]+"
-        filename : "[a-zA-Z0-9\-_\.\/]+"
+        queryString : "[a-zA-Z:0-9\\-]+"
+        filename : "[a-zA-Z0-9\\-_\\.\\/]+"
 
 customFormSendAction:
     path:     /custom-form/{customFormId}
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::addAction }
+    defaults:
+        _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::addAction
     requirements:
         customFormId: "[0-9]+"
 customFormSentAction:
     path:     /custom-form/{customFormId}/sent
-    defaults: { _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::sentAction }
+    defaults:
+        _controller: \RZ\Roadiz\CMS\Controllers\CustomFormController::sentAction
     requirements:
         customFormId: "[0-9]+"

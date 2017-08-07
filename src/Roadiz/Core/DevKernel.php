@@ -61,6 +61,7 @@ class DevKernel extends Kernel
      * @param bool $debug
      * @param bool $preview
      * @param string $appName
+     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
      * @return DevKernel
      */
     public static function getInstance($environment = 'dev', $debug = true, $preview = false, $appName = "roadiz_dev")

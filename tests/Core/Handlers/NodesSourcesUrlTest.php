@@ -27,9 +27,9 @@
  * @file NodesSourcesUrlTest.php
  * @author Ambroise Maupate
  */
+
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 
@@ -82,7 +82,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
             /*
              * Test current syntax
              */
-            $this->assertEquals($expectedUrl, Kernel::getService('urlGenerator')->generate($nodeSource));
+            $this->assertEquals($expectedUrl, $this->get('urlGenerator')->generate($nodeSource));
         }
     }
 

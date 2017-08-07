@@ -27,7 +27,7 @@
  * @file SettingJsonSerializerTest.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Kernel;
+
 use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
@@ -47,8 +47,8 @@ class SettingJsonSerializerTest extends SchemaDependentCase
         $serializer = new SettingJsonSerializer();
         $setting = $serializer->deserialize($json);
 
-        Kernel::getService('em')->persist($setting);
-        Kernel::getService('em')->flush();
+        $this->get('em')->persist($setting);
+        $this->get('em')->flush();
 
         // Assert
         $this->assertNotNull($setting->getId());

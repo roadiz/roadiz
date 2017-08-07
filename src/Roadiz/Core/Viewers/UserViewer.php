@@ -61,16 +61,18 @@ class UserViewer
     protected $emailManager;
 
     /**
-     * @param User $user
+     * @param EntityManager $entityManager
+     * @param Settings $settingsBag
+     * @param TranslatorInterface $translator
+     * @param EmailManager $emailManager
+     * @internal param User $user
      */
-    public function __construct(User $user = null)
+    public function __construct(EntityManager $entityManager, Settings $settingsBag, TranslatorInterface $translator, EmailManager $emailManager)
     {
-        $this->user = $user;
-
-        $this->entityManager = Kernel::getService('em');
-        $this->settingsBag = Kernel::getService('settingsBag');
-        $this->translator = Kernel::getService('translator');
-        $this->emailManager = Kernel::getService('emailManager');
+        $this->entityManager = $entityManager;
+        $this->settingsBag = $settingsBag;
+        $this->translator = $translator;
+        $this->emailManager = $emailManager;
     }
 
     /**

@@ -46,6 +46,8 @@ use Symfony\Component\Console\Input\StringInput;
  */
 abstract class DefaultThemeDependentCase extends SchemaDependentCase
 {
+
+
     /**
      * @var RoadizApplication
      */
@@ -58,7 +60,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     {
         parent::setUpBeforeClass();
 
-        static::$application = new RoadizApplication(Kernel::getInstance());
+        static::$application = new RoadizApplication(static::$kernel);
         static::$application->setAutoExit(false);
 
         static::runCommand('install -n');

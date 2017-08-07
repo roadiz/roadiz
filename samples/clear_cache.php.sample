@@ -72,11 +72,11 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 
 $request = Request::createFromGlobals();
 if ($request->query->has('env') && $request->query->get('env') == 'preview') {
-    $kernel = Kernel::getInstance('prod', false, true);
+    $kernel = new Kernel('prod', false, true);
 } elseif ($request->query->has('env') && $request->query->get('env') == 'dev') {
-    $kernel = Kernel::getInstance('dev', true);
+    $kernel = new Kernel('dev', true);
 } else {
-    $kernel = Kernel::getInstance('prod', false);
+    $kernel = new Kernel('prod', false);
 }
 
 $kernel->boot();
@@ -89,11 +89,11 @@ $clearers = [
     new TemplatesCacheClearer($kernel->getCacheDir()),
     new TranslationsCacheClearer($kernel->getCacheDir()),
     new ConfigurationCacheClearer($kernel->getCacheDir()),
-    new NodesSourcesUrlsCacheClearer($kernel->getService('nodesSourcesUrlCacheProvider')),
+    new NodesSourcesUrlsCacheClearer($kernel->get('nodesSourcesUrlCacheProvider')),
     new AppCacheClearer($kernel->getCacheDir()),
     new OPCacheClearer(),
     // Keep doctrine at the end
-    new DoctrineCacheClearer($kernel->getService('em'), $kernel),
+    new DoctrineCacheClearer($kernel->get('em'), $kernel),
 ];
 
 $text = [

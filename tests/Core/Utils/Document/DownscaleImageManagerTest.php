@@ -27,7 +27,6 @@
 use Doctrine\Common\Collections\ArrayCollection;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Filesystem\Filesystem;
@@ -45,9 +44,9 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     public function testConstructor()
     {
         $manager = new DownscaleImageManager(
-            Kernel::getService('em'),
-            Kernel::getService('assetPackages'),
-            Kernel::getService('logger'),
+            $this->get('em'),
+            $this->get('assetPackages'),
+            $this->get('logger'),
             'gd',
             1920
         );
@@ -60,12 +59,12 @@ class DownscaleImageManagerTest extends SchemaDependentCase
         $originalHashes = [];
 
         /** @var \RZ\Roadiz\Utils\Asset\Packages $packages */
-        $packages =  Kernel::getService('assetPackages');
+        $packages =  $this->get('assetPackages');
 
         $manager = new DownscaleImageManager(
-            Kernel::getService('em'),
+            $this->get('em'),
             $packages,
-            Kernel::getService('logger'),
+            $this->get('logger'),
             'gd',
             100
         );
@@ -107,9 +106,9 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          * not more raw and no more difference
          */
         $manager = new DownscaleImageManager(
-            Kernel::getService('em'),
+            $this->get('em'),
             $packages,
-            Kernel::getService('logger'),
+            $this->get('logger'),
             'gd',
             100000
         );
@@ -143,13 +142,13 @@ class DownscaleImageManagerTest extends SchemaDependentCase
             $document->setFilename($image->getBasename());
             $document->setMimeType($image->getMimeType());
 
-            $fs->copy($file, Kernel::getInstance()->getPublicFilesPath() . '/' . $document->getFolder() . '/' . $document->getFilename());
+            $fs->copy($file, static::$kernel->getPublicFilesPath() . '/' . $document->getFolder() . '/' . $document->getFilename());
 
-            Kernel::getService('em')->persist($document);
+            static::$kernel->get('em')->persist($document);
 
             static::$documentCollection->add($document);
         }
 
-        Kernel::getService('em')->flush();
+        static::$kernel->get('em')->flush();
     }
 }

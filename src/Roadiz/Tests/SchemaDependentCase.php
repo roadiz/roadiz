@@ -113,8 +113,8 @@ abstract class SchemaDependentCase extends KernelDependentCase
     public static function getManager()
     {
         if (static::$entityManager === null) {
-            $config = Kernel::getService('config');
-            $emConfig = Kernel::getService('em.config');
+            $config = static::$kernel->get('config');
+            $emConfig = static::$kernel->get('em.config');
             static::$entityManager = EntityManager::create($config["doctrine"], $emConfig);
             $evm = static::$entityManager->getEventManager();
 
@@ -123,14 +123,14 @@ abstract class SchemaDependentCase extends KernelDependentCase
              */
             $evm->addEventListener(
                 Events::loadClassMetadata,
-                new DataInheritanceEvent(Kernel::getInstance()->getContainer())
+                new DataInheritanceEvent(static::$kernel->getContainer())
             );
 
             /*
                  * Inject doctrine event subscribers for
                  * a service to be able to add new ones from themes.
                  */
-            foreach (Kernel::getService('em.eventSubscribers') as $eventSubscriber) {
+            foreach (static::$kernel->get('em.eventSubscribers') as $eventSubscriber) {
                 $evm->addEventSubscriber($eventSubscriber);
             }
         }

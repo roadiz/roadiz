@@ -143,12 +143,10 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
         $container['translation.viewer'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new TranslationViewer();
+            return new TranslationViewer($c['em'], $c['settingsBag'], $c['router']);
         });
         $container['user.viewer'] = $container->factory(function ($c) {
-            // TODO: inject container deps in constructor.
-            return new UserViewer();
+            return new UserViewer($c['em'], $c['settingsBag'], $c['translator'], $c['emailManager']);
         });
 
         /*

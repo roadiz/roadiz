@@ -1,28 +1,33 @@
 newslettersAddPage:
     path:     /add/{nodeTypeId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::addAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NewslettersController::addAction
     requirements:
         nodetypeId : "[0-9]+"
         translationId : "[0-9]+"
 newslettersEditPage:
     path:     /edit/{newsletterId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersController::editAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NewslettersController::editAction
     requirements:
         newsletterId : "[0-9]+"
         translationId : "[0-9]+"
 newslettersPreviewPage:
     path:     /preview/{newsletterId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::previewAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NewslettersUtilsController::previewAction
     requirements:
         newsletterId : "[0-9]+"
 newslettersDuplicatePage:
     path:     /duplicate/{newsletterId}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NewslettersUtilsController::duplicateAction
     requirements:
         newsletterId : "[0-9]+"
 newslettersExportPage:
     path:     /export/{newsletterId}/{inline}
-    defaults: { _controller: Themes\Rozier\Controllers\NewslettersUtilsController::exportAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NewslettersUtilsController::exportAction
     requirements:
         newsletterId : "[0-9]+"
         inline: 0|1

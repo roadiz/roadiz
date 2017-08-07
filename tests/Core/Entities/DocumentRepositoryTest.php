@@ -27,11 +27,11 @@
  * @file DocumentRepositoryTest.php
  * @author Ambroise Maupate
  */
+
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 class DocumentRepositoryTest extends SchemaDependentCase
@@ -53,7 +53,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
     public function testDocumentFolders($documentFilename, $expectedFolderCount)
     {
         /** @var Document $document */
-        $document = Kernel::getService('em')
+        $document = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findOneByFilename($documentFilename);
 
@@ -76,11 +76,11 @@ class DocumentRepositoryTest extends SchemaDependentCase
      */
     public function testGetByFolderInclusive($foldersNames, $expectedDocumentCount)
     {
-        $folders = Kernel::getService('em')
+        $folders = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findByFolderName($foldersNames);
 
-        $documentCount = Kernel::getService('em')
+        $documentCount = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->countBy([
                 'folders' => $folders,
@@ -109,11 +109,11 @@ class DocumentRepositoryTest extends SchemaDependentCase
      */
     public function testGetByFolderExclusive($foldersNames, $expectedDocumentCount)
     {
-        $folders = Kernel::getService('em')
+        $folders = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findByFolderName($foldersNames);
 
-        $documentCount = Kernel::getService('em')
+        $documentCount = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->countBy([
                 'folders' => $folders,
@@ -147,7 +147,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
 
         static::$documentCollection = new ArrayCollection();
         static::$folderCollection = new ArrayCollection();
-        $em = Kernel::getService('em');
+        $em = static::getManager();
 
         $folders = [
             'unittest-folder-1',
@@ -184,7 +184,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
                 static::$folderCollection->add($folder);
             }
         }
-        Kernel::getService('em')->flush();
+        $em->flush();
 
         /*
          * Adding documents

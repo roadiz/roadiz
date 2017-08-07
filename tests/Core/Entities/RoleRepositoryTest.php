@@ -27,9 +27,8 @@
  * @file RoleRepositoryTest.php
  * @author Ambroise Maupate
  */
+
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Entities\RoleRepository;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 class RoleRepositoryTest extends SchemaDependentCase
@@ -41,7 +40,7 @@ class RoleRepositoryTest extends SchemaDependentCase
      */
     public function testRoleValue($name, $expected)
     {
-        $role = Kernel::getService('em')
+        $role = static::getManager()
             ->getRepository('RZ\Roadiz\Core\Entities\Role')
             ->findOneByName($name);
 
@@ -69,17 +68,17 @@ class RoleRepositoryTest extends SchemaDependentCase
         );
 
         foreach ($roles as $value) {
-            $role = Kernel::getService('em')
+            $role = static::getManager()
                         ->getRepository('RZ\Roadiz\Core\Entities\Role')
                         ->findOneByName($value[1]);
 
             if (null === $role) {
                 $a = new Role();
                 $a->setName($value[0]);
-                Kernel::getService('em')->persist($a);
+                static::getManager()->persist($a);
             }
         }
 
-        Kernel::getService('em')->flush();
+        static::getManager()->flush();
     }
 }

@@ -30,7 +30,6 @@
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
@@ -78,7 +77,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     {
         $requestStack = new RequestStack();
         $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, Kernel::getInstance(), 'static.localhost');
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
 
         $this->assertEquals(true, $packages->useStaticDomain());
     }
@@ -87,7 +86,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     {
         $requestStack = new RequestStack();
         $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, Kernel::getInstance(), 'static.localhost');
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
 
         $this->assertEquals(
             'https://static.localhost/files/some-custom-file',
@@ -121,8 +120,8 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     {
         $requestStack = new RequestStack();
         $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, Kernel::getInstance(), 'static.localhost');
-        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, Kernel::getService('urlGenerator'));
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
+        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $this->get('urlGenerator'));
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
