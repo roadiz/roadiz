@@ -529,20 +529,20 @@ class DocumentRepository extends EntityRepository
         $nodeSource,
         NodeTypeField $field
     ) {
-        $query = $this->_em->createQuery('
-            SELECT d, dt FROM RZ\Roadiz\Core\Entities\Document d
-            LEFT JOIN d.documentTranslations dt
-                WITH dt.translation = :translation
-            INNER JOIN d.nodesSourcesByFields nsf
-                WITH nsf.nodeSource = :nodeSource
-            WHERE nsf.field = :field AND d.raw = :raw
-            ORDER BY nsf.position ASC')
+        $qb = $this->createQueryBuilder('d');
+        $qb->addSelect('dt')
+            ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
+            ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
+            ->andWhere($qb->expr()->eq('nsf.field', ':field'))
+            ->andWhere($qb->expr()->eq('d.raw', ':raw'))
+            ->addOrderBy('nsf.position', 'ASC')
             ->setParameter('field', $field)
             ->setParameter('nodeSource', $nodeSource)
             ->setParameter('translation', $nodeSource->getTranslation())
-            ->setParameter('raw', false);
+            ->setParameter('raw', false)
+            ->setCacheable(true);
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }
@@ -558,22 +558,20 @@ class DocumentRepository extends EntityRepository
         $nodeSource,
         $fieldName
     ) {
-        $query = $this->_em->createQuery('
-            SELECT d, dt FROM RZ\Roadiz\Core\Entities\Document d
-            LEFT JOIN d.documentTranslations dt
-                WITH dt.translation = :translation
-            INNER JOIN d.nodesSourcesByFields nsf
-                WITH nsf.nodeSource = :nodeSource
-            INNER JOIN nsf.field f
-                WITH f.name = :name
-            WHERE d.raw = :raw
-            ORDER BY nsf.position ASC')
+        $qb = $this->createQueryBuilder('d');
+        $qb->addSelect('dt')
+            ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
+            ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
+            ->innerJoin('nsf.field', 'f', 'WITH', 'f.name = :name')
+            ->andWhere($qb->expr()->eq('d.raw', ':raw'))
+            ->addOrderBy('nsf.position', 'ASC')
             ->setParameter('name', (string) $fieldName)
             ->setParameter('nodeSource', $nodeSource)
             ->setParameter('translation', $nodeSource->getTranslation())
-            ->setParameter('raw', false);
+            ->setParameter('raw', false)
+            ->setCacheable(true);
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }

@@ -33,7 +33,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
+use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -55,8 +56,10 @@ use RZ\Roadiz\Utils\StringHandler;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \Countable
+class Node extends AbstractDateTimedPositioned implements LeafInterface
 {
+    use LeafTrait;
+
     const DRAFT = 10;
     const PENDING = 20;
     const PUBLISHED = 30;
@@ -83,8 +86,6 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
 
         throw new \InvalidArgumentException('Status does not exist.');
     }
-
-    protected $handler;
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
@@ -491,76 +492,14 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
      * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node
      */
-    private $parent;
-
-    /**
-     * @return Node Parent node
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @param Node|null $parent
-     *
-     * @return $this
-     */
-    public function setParent(Node $parent = null)
-    {
-        if ($parent === $this) {
-            throw new \InvalidArgumentException('A node cannot have itself as a parent');
-        }
-
-        $this->parent = $parent;
-
-        return $this;
-    }
+    protected $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
-    private $children;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * @param Node $child
-     *
-     * @return $this
-     */
-    public function addChild(Node $child)
-    {
-        if (!$this->children->contains($child)) {
-            $this->children->add($child);
-            $child->setParent($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Node $child
-     *
-     * @return $this
-     */
-    public function removeChild(Node $child)
-    {
-        if ($this->children->contains($child)) {
-            $this->children->removeElement($child);
-            $child->setParent(null);
-        }
-
-        return $this;
-    }
+    protected $children;
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
@@ -685,6 +624,7 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     {
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('translation', $translation));
+        $criteria->setMaxResults(1);
 
         return $this->nodeSources->matching($criteria);
     }
@@ -750,19 +690,6 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", mappedBy="node")
-     */
-    protected $newsletter;
-
-    /**
-     * @return \RZ\Roadiz\Core\Entities\Newsletter
-     */
-    public function getNewsletter()
-    {
-        return $this->newsletter;
-    }
-
-    /**
      * Create a new empty Node according to given node-type.
      *
      * @param NodeType $nodeType
@@ -802,46 +729,6 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
         }
 
         return $text;
-    }
-
-    /**
-     * Set node position before persisting.
-     *
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        parent::prePersist();
-
-        /*
-         * Automatically set position only if not manually set before.
-         */
-        if ($this->getPosition() === 0.0) {
-            /*
-             * Get the last index after last node in parent
-             */
-            $lastPosition = $this->getHandler()->cleanPositions(false);
-            if ($lastPosition > 1) {
-                /*
-                 * Need to decrement position because current node is already
-                 * in parent's children collection count.
-                 */
-                $this->setPosition($lastPosition - 1);
-            } else {
-                $this->setPosition($lastPosition);
-            }
-        }
-    }
-
-    /**
-     * @return NodeHandler
-     */
-    public function getHandler()
-    {
-        if (null === $this->handler) {
-            $this->handler = new NodeHandler($this);
-        }
-        return $this->handler;
     }
 
     /**
@@ -885,34 +772,5 @@ class Node extends AbstractDateTimedPositioned implements \IteratorAggregate, \C
     public function __toString()
     {
         return '[Node]' . $this->getId() . " — " . $this->getNodeName() . " <" . $this->getNodeType()->getName() . '>';
-    }
-
-    /**
-     * Gets the nodes depth.
-     *
-     * @return int
-     */
-    public function getDepth()
-    {
-        if ($this->getParent() === null) {
-            return 0;
-        }
-        return $this->getParent()->getDepth() + 1;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator()
-    {
-        return $this->getChildren()->getIterator();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
-    {
-        return $this->getChildren()->count();
     }
 }

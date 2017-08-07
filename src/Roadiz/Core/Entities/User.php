@@ -32,8 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
-use RZ\Roadiz\Core\Handlers\UserHandler;
-use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -50,6 +48,14 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 class User extends AbstractHuman implements AdvancedUserInterface
 {
+    /**
+     * Email confirmation link TTL (in seconds) to change
+     * password.
+     *
+     * @var int
+     */
+    const CONFIRMATION_TTL = 300;
+
     /**
      * @var bool
      */
@@ -225,7 +231,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function setPassword($password)
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -247,16 +252,17 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * @param string $plainPassword
-     *
      * @return User
      */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
-        if ($plainPassword != '') {
-            $this->getHandler()->encodePassword();
+        if (null !== $plainPassword && $plainPassword != '') {
+            /*
+             * We MUST change password to trigger preUpdate lifeCycle event.
+             */
+            $this->password = '--password-changed--' . uniqid();
         }
-
         return $this;
     }
 
@@ -784,22 +790,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         $saltGenerator = new SaltGenerator();
         $this->setSalt($saltGenerator->generateSalt());
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Handlers\UserHandler
-     */
-    public function getHandler()
-    {
-        return new UserHandler($this);
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Viewers\UserViewer
-     */
-    public function getViewer()
-    {
-        return new UserViewer($this);
     }
 
     /**

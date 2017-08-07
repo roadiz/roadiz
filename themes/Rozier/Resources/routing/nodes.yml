@@ -4,43 +4,58 @@
 #
 nodesHomeDraftPage:
     path:     /drafts
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'draft' }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction
+        filter: 'draft'
 nodesHomePendingPage:
     path:     /pending
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'pending' }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction
+        filter: 'pending'
 nodesHomeArchivedPage:
     path:     /archived
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'archived' }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction
+        filter: 'archived'
 nodesHomeDeletedPage:
     path:     /deleted
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction, filter:'deleted' }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::indexAction
+        filter: 'deleted'
 nodesEditPage:
     path:     /edit/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::editAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::editAction
     requirements: { nodeId : "[0-9]+" }
 nodesTranstypePage:
     path:     /edit/{nodeId}/transtype
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\TranstypeController::transtypeAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\TranstypeController::transtypeAction
     requirements: { nodeId : "[0-9]+" }
 nodesTranslatePage:
     path:     /translate/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\TranslateController::translateAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\TranslateController::translateAction
     requirements: { nodeId : "[0-9]+" }
 nodesEditSourcePage:
     path:     /edit/{nodeId}/source/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesSourcesController::editSourceAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesSourcesController::editSourceAction
     requirements: { nodeId : "[0-9]+", translationId : "[0-9]+" }
 nodesDeleteSourcePage:
     path:     /source/delete/{nodeSourceId}
-    defaults: { _controller : Themes\Rozier\Controllers\Nodes\NodesSourcesController::removeAction }
+    defaults:
+        _controller : Themes\Rozier\Controllers\Nodes\NodesSourcesController::removeAction
     requirements: {nodeSourceId : "[0-9]+"}
 nodesEditTagsPage:
     path:     /edit/{nodeId}/tags
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::editTagsAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::editTagsAction
     requirements: { nodeId : "[0-9]+" }
 nodesRemoveTagsPage:
     path:     /edit/{nodeId}/tags/{tagId}/remove
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::removeTagAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::removeTagAction
     requirements: { nodeId : "[0-9]+", tagId : "[0-9]+" }
 nodesRemoveStackTypePage:
     path:     /edit/{nodeId}/stacktype/{typeId}/remove
@@ -50,7 +65,8 @@ nodesRemoveStackTypePage:
     requirements: { nodeId : "[0-9]+", typeId : "[0-9]+" }
 nodesEditSEOPage:
     path:     /edit/{nodeId}/seo/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\UrlAliasesController::editAliasesAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\UrlAliasesController::editAliasesAction
     requirements: { nodeId : "[0-9]+" }
 nodesTreePage:
     path:     /tree/{nodeId}/{translationId}
@@ -63,51 +79,65 @@ nodesTreePage:
         translationId : "[0-9]+"
 nodesBulkDeletePage:
     path:     /bulk-delete
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkDeleteAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkDeleteAction
 nodesBulkStatusPage:
     path:     /bulk-status
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkStatusAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesTreesController::bulkStatusAction
 nodesAddPage:
     path:     /add/{nodeTypeId}/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::addAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::addAction
     requirements: { nodeTypeId : "[0-9]+", translationId : "[0-9]+" }
 nodesAddChildPage:
     path:     /add-child/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::addChildAction, nodeId:null}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::addChildAction
+        nodeId: ~
     requirements: { nodeId : "[0-9]+" }
 nodesDeletePage:
     path:     /delete/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::deleteAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::deleteAction
     requirements: { nodeId : "[0-9]+" }
 nodesUndeletePage:
     path:     /undelete/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::undeleteAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::undeleteAction
     requirements: { nodeId : "[0-9]+" }
 nodesExportPage:
     path:     /export/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAction
     requirements: { nodeId : "[0-9]+" }
 nodesExportAllPage:
     path:     /export
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAllAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::exportAllAction
 nodesExportAllXlsxPage:
     path:     /export/xlsx/{translationId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\ExportController::exportAllXlsxAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\ExportController::exportAllXlsxAction
     requirements:
         translationId : "[0-9]+"
 nodesDuplicatePage:
     path:     /duplicate/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::duplicateAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesUtilsController::duplicateAction
     requirements: { nodeId : "[0-9]+" }
 nodesEmptyTrashPage:
     path:     /empty-trash
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::emptyTrashAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::emptyTrashAction
 nodesGenerateAndAddNodeAction:
     path:     /create
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::generateAndAddNodeAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::generateAndAddNodeAction
 nodesPublishAllAction:
     path:     /publish-all/{nodeId}
-    defaults: { _controller: Themes\Rozier\Controllers\Nodes\NodesController::publishAllAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesController::publishAllAction
     requirements: { nodeId : "[0-9]+" }
 nodesHistoryPage:
     path:     /history/{nodeId}/{page}

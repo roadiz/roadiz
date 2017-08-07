@@ -54,7 +54,7 @@ abstract class AbstractConfigurationServiceProvider implements ServiceProviderIn
             } else {
                 $relPaths = [
                     "src/Roadiz/Core/Entities",
-                    "src/Roadiz/Core/AbstractEntities",
+                    "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources",
                 ];
             }

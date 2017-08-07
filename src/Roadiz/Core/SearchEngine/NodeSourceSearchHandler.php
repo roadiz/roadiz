@@ -105,25 +105,12 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
     protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
     {
         if (!empty($q)) {
-            $query = $this->client->createSelect();
+            $query = $this->createSolrQuery($args, $rows, $page);
             $queryTxt = $this->buildQuery($q, $args, $searchTags, $proximity);
 
-            $filterQueries = [];
+
             $query->setQuery($queryTxt);
-            foreach ($args as $key => $value) {
-                if (is_array($value)) {
-                    foreach ($value as $k => $v) {
-                        $filterQueries["fq" . $k] = $v;
-                        $query->addFilterQuery([
-                            "key" => "fq" . $k,
-                            "query" => $v,
-                        ]);
-                    }
-                } else {
-                    $query->addParam($key, $value);
-                }
-            }
-            $query->addSort('score', $query::SORT_DESC);
+
             /*
              * Only need these fields as Doctrine
              * will do the rest.
@@ -135,18 +122,10 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                 'node_name_s',
                 'locale_s',
             ]);
-            $query->setRows($rows);
-            /**
-             * Add start if not first page.
-             */
-            if ($page > 1) {
-                $query->setStart(($page - 1) * $rows);
-            }
 
             if (null !== $this->logger) {
                 $this->logger->debug('[Solr] Request node-sources search…', [
                     'query' => $queryTxt,
-                    'filters' => $filterQueries,
                     'params' => $query->getParams(),
                 ]);
             }

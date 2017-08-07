@@ -29,19 +29,23 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with tags entities.
  */
-class TagHandler
+class TagHandler extends AbstractHandler
 {
-    private $tag = null;
+    /**
+     * @var Tag
+     */
+    private $tag;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      */
     public function getTag()
     {
@@ -49,24 +53,13 @@ class TagHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Tag $tag
-     *
+     * @param Tag $tag
      * @return $this
      */
-    public function setTag($tag)
+    public function setTag(Tag $tag)
     {
         $this->tag = $tag;
-
         return $this;
-    }
-    /**
-     * Create a new tag handler with tag to handle.
-     *
-     * @param Tag $tag
-     */
-    public function __construct(Tag $tag)
-    {
-        $this->tag = $tag;
     }
 
     /**
@@ -76,8 +69,11 @@ class TagHandler
      */
     private function removeChildren()
     {
+        /** @var Tag $tag */
         foreach ($this->tag->getChildren() as $tag) {
-            $tag->getHandler()->removeWithChildrenAndAssociations();
+            $handler = new TagHandler($this->objectManager);
+            $handler->setTag($tag);
+            $handler->removeWithChildrenAndAssociations();
         }
 
         return $this;
@@ -90,7 +86,7 @@ class TagHandler
     public function removeAssociations()
     {
         foreach ($this->tag->getTranslatedTags() as $tt) {
-            Kernel::getService('em')->remove($tt);
+            $this->objectManager->remove($tt);
         }
 
         return $this;
@@ -106,12 +102,12 @@ class TagHandler
         $this->removeChildren();
         $this->removeAssociations();
 
-        Kernel::getService('em')->remove($this->tag);
+        $this->objectManager->remove($this->tag);
 
         /*
          * Final flush
          */
-        Kernel::getService('em')->flush();
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -121,7 +117,7 @@ class TagHandler
      */
     public function getAvailableTranslations()
     {
-        $query = Kernel::getService('em')
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr
             FROM RZ\Roadiz\Core\Entities\Translation tr
@@ -141,7 +137,7 @@ class TagHandler
      */
     public function getAvailableTranslationsId()
     {
-        $query = Kernel::getService('em')
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr.id FROM RZ\Roadiz\Core\Entities\Tag t
             INNER JOIN t.translatedTags tt
@@ -167,7 +163,7 @@ class TagHandler
      */
     public function getUnavailableTranslations()
     {
-        $query = Kernel::getService('em')
+        $query = $this->objectManager
                         ->createQuery('
             SELECT tr FROM RZ\Roadiz\Core\Entities\Translation tr
             WHERE tr.id NOT IN (:translations_id)')
@@ -185,7 +181,8 @@ class TagHandler
      */
     public function getUnavailableTranslationsId()
     {
-        $query = Kernel::getService('em')
+        /** @var Query $query */
+        $query = $this->objectManager
                         ->createQuery('
             SELECT t.id FROM RZ\Roadiz\Core\Entities\Translation t
             WHERE t.id NOT IN (:translations_id)')
@@ -206,74 +203,69 @@ class TagHandler
 
     /**
      * Return every tag’s parents.
-     *
+     * @deprecated Use directly Tag::getParents
      * @return array
      */
     public function getParents()
     {
-        $parentsArray = [];
-        $parent = $this->tag;
-
-        do {
-            $parent = $parent->getParent();
-            if ($parent !== null) {
-                $parentsArray[] = $parent;
-            } else {
-                break;
-            }
-        } while ($parent !== null);
-
-        return array_reverse($parentsArray);
+        return $this->tag->getParents();
     }
 
     /**
      * Get tag full path using tag names.
      *
+     * @deprecated Use directly Tag::getFullPath
      * @return string
      */
     public function getFullPath()
     {
-        $parents = $this->getParents();
-        $path = [];
-
-        foreach ($parents as $parent) {
-            $path[] = $parent->getTagName();
-        }
-
-        $path[] = $this->tag->getTagName();
-
-        return implode('/', $path);
+        return $this->tag->getFullPath();
     }
 
     /**
      * Clean position for current tag siblings.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** tag
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->tag->getParent() !== null) {
-            return $this->tag->getParent()->getHandler()->cleanChildrenPositions();
+            $tagHandler = new TagHandler($this->objectManager);
+            $tagHandler->setTag($this->tag->getParent());
+            return $tagHandler->cleanChildrenPositions($setPositions);
         } else {
-            return static::cleanRootTagsPositions();
+            return $this->cleanRootTagsPositions($setPositions);
         }
     }
 
     /**
      * Reset current tag children positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** tag
      */
-    public function cleanChildrenPositions()
+    public function cleanChildrenPositions($setPositions = true)
     {
-        $children = $this->tag->getChildren();
+        /*
+         * Force collection to sort on position
+         */
+        $sort = Criteria::create();
+        $sort->orderBy([
+            'position' => Criteria::ASC
+        ]);
+
+        $children = $this->tag->getChildren()->matching($sort);
         $i = 1;
+        /** @var Tag $child */
         foreach ($children as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -281,21 +273,25 @@ class TagHandler
     /**
      * Reset every root tags positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** tag
      */
-    public static function cleanRootTagsPositions()
+    public function cleanRootTagsPositions($setPositions = true)
     {
-        $tags = Kernel::getService('em')
+        $tags = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;
+        /** @var Tag $child */
         foreach ($tags as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }

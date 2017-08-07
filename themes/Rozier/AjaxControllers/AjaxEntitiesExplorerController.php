@@ -100,6 +100,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             $criteria,
             $orderBy
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
         $listManager->handle();
         $entities = $listManager->getEntities();
@@ -184,8 +185,8 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             }
             $entitiesArray[] = [
                 'id' => $entity->getId(),
-                'classname' => utf8_encode($alt),
-                'displayable' => utf8_encode(call_user_func([$entity, $configuration['displayable']])),
+                'classname' => $alt,
+                'displayable' => call_user_func([$entity, $configuration['displayable']]),
             ];
         }
 

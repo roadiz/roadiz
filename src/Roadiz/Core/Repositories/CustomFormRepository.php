@@ -38,23 +38,6 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class CustomFormRepository extends EntityRepository
 {
     /**
-     * Get all custom-form names from PARTIAL objects.
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function findAllNames()
-    {
-        $query = $this->_em->createQuery('
-            SELECT partial nt.{id,name} FROM RZ\Roadiz\Core\Entities\CustomForm nt');
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
-    }
-
-    /**
      * @param \RZ\Roadiz\Core\Entities\Node          $node
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
      *

@@ -27,9 +27,9 @@
  * @file SolariumNodeSourceTest.php
  * @author Ambroise Maupate
  */
+
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use Solarium\Exception\HttpException;
@@ -44,7 +44,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
     public function testIndex()
     {
-        if (Kernel::getService('solr') === null) {
+        if ($this->get('solr') === null) {
             $this->markTestSkipped('Solr is not available.');
             return;
         }
@@ -59,8 +59,9 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             try {
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
-                    Kernel::getService('solr'),
-                    Kernel::getService('dispatcher')
+                    $this->get('solr'),
+                    $this->get('dispatcher'),
+                    $this->get('factory.handler')
                 );
 
                 $solrDoc->indexAndCommit();
@@ -72,11 +73,11 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                  * Now query the database
                  */
                 // get a select query instance
-                $query = Kernel::getService('solr')->createSelect();
+                $query = $this->get('solr')->createSelect();
                 $query->setQuery('title:"' . $testTitle . '"');
 
                 // this executes the query and returns the result
-                $resultset = Kernel::getService('solr')->select($query);
+                $resultset = $this->get('solr')->select($query);
 
                 foreach ($resultset as $document) {
                     // Assert
@@ -94,7 +95,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
     public function testGetDocumentFromIndex()
     {
-        if (Kernel::getService('solr') === null) {
+        if ($this->get('solr') === null) {
             $this->markTestSkipped('Solr is not available.');
             return;
         }
@@ -109,8 +110,9 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             try {
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
-                    Kernel::getService('solr'),
-                    Kernel::getService('dispatcher')
+                    $this->get('solr'),
+                    $this->get('dispatcher'),
+                    $this->get('factory.handler')
                 );
 
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
@@ -127,7 +129,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
     public function testCleanAndCommit()
     {
-        if (Kernel::getService('solr') === null) {
+        if ($this->get('solr') === null) {
             $this->markTestSkipped('Solr is not available.');
             return;
         }
@@ -142,8 +144,9 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
             try {
                 $solrDoc = new SolariumNodeSource(
                     $nodeSource,
-                    Kernel::getService('solr'),
-                    Kernel::getService('dispatcher')
+                    $this->get('solr'),
+                    $this->get('dispatcher'),
+                    $this->get('factory.handler')
                 );
 
                 $solrDoc->cleanAndCommit();
@@ -187,7 +190,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
     public static function tearDownAfterClass()
     {
         try {
-            $solr = Kernel::getService('solr');
+            $solr = static::$kernel->get('solr');
 
             if (null !== $solr) {
                 // get an update query instance

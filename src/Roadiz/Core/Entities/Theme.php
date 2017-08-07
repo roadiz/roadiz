@@ -241,8 +241,7 @@ class Theme extends AbstractEntity
 
     /**
     * @param \RZ\Roadiz\Core\Entities\Node $homeNode
-    *
-    * @return \RZ\Roadiz\Core\Entities\Node
+    * @return $this
     */
     public function setHomeNode(Node $homeNode = null)
     {
@@ -270,7 +269,7 @@ class Theme extends AbstractEntity
     /**
     * @param \RZ\Roadiz\Core\Entities\Node $root
     *
-    * @return \RZ\Roadiz\Core\Entities\Node
+    * @return $this
     */
     public function setRoot(Node $root = null)
     {

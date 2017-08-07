@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
@@ -87,7 +86,6 @@ class NodeSourceApi extends AbstractApi
         $limit = null,
         $offset = null
     ) {
-        $this->secureQuery($criteria);
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()
@@ -95,9 +93,7 @@ class NodeSourceApi extends AbstractApi
                         $criteria,
                         $order,
                         $limit,
-                        $offset,
-                        $this->container['securityAuthorizationChecker'],
-                        $this->container['kernel']->isPreview()
+                        $offset
                     );
     }
 
@@ -108,14 +104,11 @@ class NodeSourceApi extends AbstractApi
     public function countBy(
         array $criteria
     ) {
-        $this->secureQuery($criteria);
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()
                     ->countBy(
-                        $criteria,
-                        $this->container['securityAuthorizationChecker'],
-                        $this->container['kernel']->isPreview()
+                        $criteria
                     );
     }
 
@@ -126,15 +119,12 @@ class NodeSourceApi extends AbstractApi
      */
     public function getOneBy(array $criteria, array $order = null)
     {
-        $this->secureQuery($criteria);
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()
                     ->findOneBy(
                         $criteria,
-                        $order,
-                        $this->container['securityAuthorizationChecker'],
-                        $this->container['kernel']->isPreview()
+                        $order
                     );
     }
 
@@ -158,24 +148,10 @@ class NodeSourceApi extends AbstractApi
                     $textQuery,
                     $limit,
                     $nodeTypes,
-                    $onlyVisible,
-                    $this->container['securityAuthorizationChecker'],
-                    $this->container['kernel']->isPreview()
+                    $onlyVisible
                 );
         }
 
         return [];
-    }
-
-    /**
-     * Add status constraint if not present.
-     *
-     * @param array $criteria
-     */
-    protected function secureQuery(array &$criteria)
-    {
-        if (empty($criteria['node.status'])) {
-            $criteria['node.status'] = ['<=', Node::PUBLISHED];
-        }
     }
 }

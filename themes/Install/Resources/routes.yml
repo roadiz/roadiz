@@ -1,96 +1,126 @@
 # Home page
 installHomePage:
     path:     /
-    defaults: { _controller: Themes\Install\InstallApp::indexAction }
+    defaults:
+        _controller: Themes\Install\InstallApp::indexAction
 installHomePageRedirect:
     path:     /install
-    defaults: { _controller: Themes\Install\InstallApp::redirectIndexAction }
+    defaults:
+        _controller: Themes\Install\InstallApp::redirectIndexAction
 installCheckPage:
     path:     /install/check-requirements
-    defaults: { _controller: Themes\Install\InstallApp::requirementsAction }
+    defaults:
+        _controller: Themes\Install\InstallApp::requirementsAction
 installDatabasePage:
     path:     /install/database
-    defaults: { _controller: Themes\Install\Controllers\DatabaseController::databaseAction }
+    defaults:
+        _controller: Themes\Install\Controllers\DatabaseController::databaseAction
 installDatabaseSchemaPage:
     path:     /install/database/schema
-    defaults: { _controller: Themes\Install\Controllers\DatabaseController::databaseSchemaAction }
+    defaults:
+        _controller: Themes\Install\Controllers\DatabaseController::databaseSchemaAction
 installDatabaseFixturesPage:
     path:     /install/database/fixtures
-    defaults: { _controller: Themes\Install\Controllers\DatabaseController::databaseFixturesAction }
+    defaults:
+        _controller: Themes\Install\Controllers\DatabaseController::databaseFixturesAction
 installImportSettings:
     path:     /install/import/settings/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction, themeId: null }
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction
+        themeId: null
     requirements:
-        filename: "^[a-zA-Z_/\.-]+$"
+        filename: "^[a-zA-Z_/\\.-]+$"
         themeId: "[0-9]+"
 installImportGroups:
     path:     /install/import/groups/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction, themeId: null }
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction
+        themeId: null
     requirements:
-        filename: "^[a-zA-Z_/\.-]+$"
+        filename: "^[a-zA-Z_/\\.-]+$"
         themeId: "[0-9]+"
 installImportRoles:
     path:     /install/import/roles/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction, themeId: null }
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction
+        themeId: null
     requirements:
-        filename: "^[a-zA-Z_/\.-]+$"
+        filename: "^[a-zA-Z_/\\.-]+$"
         themeId: "[0-9]+"
 installImportNodes:
     path:     /install/import/nodes/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction, themeId: null }
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction
+        themeId: null
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         id: "[0-9]+"
 installImportNodeTypes:
     path:     /install/import/nodetypes/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction }
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
 installImportTags:
     path:     /install/import/tags/{themeId}
-    defaults: { _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction }
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
 installImportThemePage:
     path:     /install/import/theme/{id}
-    defaults: { _controller: Themes\Install\Controllers\ThemeController::importThemeAction }
-    requirements: { id : "[0-9]+" }
+    defaults:
+        _controller: Themes\Install\Controllers\ThemeController::importThemeAction
+    requirements:
+        id : "[0-9]+"
 installUserPage:
     path:     /install/user
-    defaults: { _controller: Themes\Install\InstallApp::userAction }
+    defaults:
+        _controller: Themes\Install\InstallApp::userAction
 installUserSummaryPage:
     path:     /install/user/summary/{userId}
-    defaults: { _controller: Themes\Install\InstallApp::userSummaryAction }
-    requirements: { userId : "[0-9]+" }
+    defaults:
+        _controller: Themes\Install\InstallApp::userSummaryAction
+    requirements:
+        userId : "[0-9]+"
 installThemesPage:
-    path:     /install/themes
-    defaults: { _controller: Themes\Install\Controllers\ThemeController::themesAction }
+    path: /install/themes
+    defaults:
+        _controller: Themes\Install\Controllers\ThemeController::themesAction
 installThemeSummaryPage:
     path:     /install/themes/summary
-    defaults: { _controller: Themes\Install\Controllers\ThemeController::themeSummaryAction }
+    defaults:
+        _controller: Themes\Install\Controllers\ThemeController::themeSummaryAction
 installThemeBasePage:
-    path:     /install/themes/base
-    defaults: { _controller: Themes\Install\Controllers\ThemeController::themeInstallAction }
+    path: /install/themes/base
+    defaults:
+        _controller: Themes\Install\Controllers\ThemeController::themeInstallAction
 installDonePage:
-    path:     /install/done
-    defaults: { _controller: Themes\Install\InstallApp::doneAction }
+    path: /install/done
+    defaults:
+        _controller: Themes\Install\InstallApp::doneAction
 installAfterDonePage:
     path:     /install/done/end
-    defaults: { _controller: Themes\Install\InstallApp::afterDoneAction }
+    defaults:
+        _controller: Themes\Install\InstallApp::afterDoneAction
 installFailedPage:
     path:     /install/failed
-    defaults: { _controller: Themes\Install\InstallApp::failedAction }
+    defaults:
+        _controller: Themes\Install\InstallApp::failedAction
 installClearCacheSchema:
     path:     /install/clear-cache
-    defaults: { _controller: Themes\Install\Controllers\DatabaseController::clearDoctrineCacheAction }
+    defaults:
+        _controller: Themes\Install\Controllers\DatabaseController::clearDoctrineCacheAction
 installUpdateSchema:
     path:     /install/update
-    defaults: { _controller: Themes\Install\Controllers\DatabaseController::updateSchemaAction }
+    defaults:
+        _controller: Themes\Install\Controllers\DatabaseController::updateSchemaAction
 removeTrailingSlash:
     path:     /{url}
-    defaults: { _controller:  Themes\Install\InstallApp::removeTrailingSlashAction }
+    defaults:
+        _controller:  Themes\Install\InstallApp::removeTrailingSlashAction
     requirements:
         url: .*/$
     methods: [GET]

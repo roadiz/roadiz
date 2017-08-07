@@ -97,6 +97,7 @@ class FilesExportCommand extends Command
     /**
      * @param ZipArchive $zip
      * @param $folder
+     * @param string $prefix
      */
     protected function zipFolder(ZipArchive $zip, $folder, $prefix = "/public")
     {

@@ -33,7 +33,6 @@ use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
@@ -49,7 +48,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -480,17 +478,14 @@ abstract class Controller implements ContainerAwareInterface
         }
 
         /** @var TokenInterface $token */
-        $token = $this->get('securityTokenStorage')->getToken();
-
-        if (null === $token) {
+        if (null === $token = $this->container->offsetGet('securityTokenStorage')->getToken()) {
             return null;
         }
-
-        if (is_string($token->getUser())) {
+        if (!is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
             return null;
         }
-
-        return $token->getUser();
+        return $user;
     }
 
     /**
@@ -507,6 +502,25 @@ abstract class Controller implements ContainerAwareInterface
         if (!$this->has('securityAuthorizationChecker')) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
+
         return $this->get('securityAuthorizationChecker')->isGranted($attributes, $object);
+    }
+
+    /**
+     * Throws an exception unless the attributes are granted against the current authentication token and optionally
+     * supplied object.
+     *
+     * @param mixed  $attributes The attributes
+     * @param mixed  $object     The object
+     * @param string $message    The message passed to the exception
+     *
+     * @throws AccessDeniedException
+     */
+    protected function denyAccessUnlessGranted($attributes, $object = null, $message = 'Access Denied.')
+    {
+        if (!$this->isGranted($attributes, $object)) {
+            $exception = $this->createAccessDeniedException($message);
+            throw $exception;
+        }
     }
 }

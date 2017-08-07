@@ -32,6 +32,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -63,21 +64,29 @@ class NodeSourceCustomFormType extends AbstractType
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var NodeHandler
+     */
+    private $nodeHandler;
 
     /**
      * NodeSourceDocumentType constructor.
      * @param NodesSources $nodeSource
      * @param NodeTypeField $nodeTypeField
      * @param EntityManager $entityManager
+     * @param NodeHandler $nodeHandler
      */
     public function __construct(
         NodesSources $nodeSource,
         NodeTypeField $nodeTypeField,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        NodeHandler $nodeHandler
     ) {
         $this->nodeSource = $nodeSource;
         $this->nodeTypeField = $nodeTypeField;
         $this->entityManager = $entityManager;
+        $this->nodeHandler = $nodeHandler;
+        $this->nodeHandler->setNode($this->nodeSource->getNode());
     }
 
     /**
@@ -133,8 +142,9 @@ class NodeSourceCustomFormType extends AbstractType
      */
     public function onPreSetData(FormEvent $event)
     {
-        $this->selectedCustomForms = $this->nodeSource->getNode()->getHandler()
-            ->getCustomFormsFromFieldName($this->nodeTypeField->getName());
+        $this->selectedCustomForms = $this->entityManager
+            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+            ->findByNodeAndFieldName($this->nodeSource->getNode(), $this->nodeTypeField->getName());
         $event->setData($this->selectedCustomForms);
     }
 
@@ -143,16 +153,16 @@ class NodeSourceCustomFormType extends AbstractType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $hdlr = $this->nodeSource->getNode()->getHandler();
-        $hdlr->cleanCustomFormsFromField($this->nodeTypeField, false);
+        $this->nodeHandler->cleanCustomFormsFromField($this->nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
             foreach ($event->getData() as $customFormId) {
+                /** @var CustomForm|null $tempCForm */
                 $tempCForm = $this->entityManager
                     ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
                 if ($tempCForm !== null) {
-                    $hdlr->addCustomFormForField($tempCForm, $this->nodeTypeField, false, $position);
+                    $this->nodeHandler->addCustomFormForField($tempCForm, $this->nodeTypeField, false, $position);
                     $position++;
                 } else {
                     throw new \RuntimeException('Custom form #'.$customFormId.' was not found during relationship creation.');

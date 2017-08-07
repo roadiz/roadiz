@@ -118,6 +118,7 @@ class ThemesController extends RozierApp
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Theme'
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();

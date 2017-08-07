@@ -34,8 +34,11 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormError;
@@ -342,6 +345,10 @@ abstract class AppController extends Controller
      *     - messages
      *     - id
      *     - user
+     * - bags
+     *     - nodeTypes (ParametersBag)
+     *     - settings (ParametersBag)
+     *     - roles (ParametersBag)
      * - securityAuthorizationChecker
      *
      * @return $this
@@ -372,6 +379,11 @@ abstract class AppController extends Controller
                 'id' => $this->getRequest()->getSession()->getId(),
                 'user' => $this->getUser(),
             ],
+            'bags' => [
+                'settings' => $this->get('settingsBag'),
+                'roles' => $this->get('rolesBag'),
+                'nodeTypes' => $this->get('nodeTypesBag'),
+            ]
         ];
 
         if ('' != $this->get('settingsBag')->get('static_domain_name')) {
@@ -412,6 +424,7 @@ abstract class AppController extends Controller
      */
     public function getTheme()
     {
+        $this->container['stopwatch']->start('getTheme');
         if (null === $this->theme) {
             $className = static::getCalledClass();
             while (!StringHandler::endsWith($className, "App")) {
@@ -428,6 +441,7 @@ abstract class AppController extends Controller
                 ->getRepository('RZ\Roadiz\Core\Entities\Theme')
                 ->findOneByClassName($className);
         }
+        $this->container['stopwatch']->stop('getTheme');
         return $this->theme;
     }
 
@@ -437,6 +451,14 @@ abstract class AppController extends Controller
      * @param \Pimple\Container $container
      */
     public static function setupDependencyInjection(Container $container)
+    {
+        static::addThemeTemplatesPath($container);
+    }
+
+    /**
+     * @param Container $container
+     */
+    public static function addThemeTemplatesPath(Container $container)
     {
         /*
          * Enable theme templates in main namespace and in its own theme namespace.
@@ -453,39 +475,29 @@ abstract class AppController extends Controller
      */
     protected function getHome(Translation $translation = null)
     {
+        $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
             $theme = $this->getTheme();
+            /** @var NodeRepository $nodeRepository */
+            $nodeRepository = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node');
 
             if ($theme !== null) {
                 $home = $theme->getHomeNode();
                 if ($home !== null) {
                     if ($translation !== null) {
-                        $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findWithTranslation(
-                                $home->getId(),
-                                $translation,
-                                $this->get('securityAuthorizationChecker')
-                            );
+                        $this->homeNode = $nodeRepository->findWithTranslation($home->getId(), $translation);
                     } else {
-                        $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                            ->findWithDefaultTranslation(
-                                $home->getId(),
-                                $this->get('securityAuthorizationChecker')
-                            );
+                        $this->homeNode = $nodeRepository->findWithDefaultTranslation($home->getId());
                     }
                 }
             }
             if ($translation !== null) {
-                $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findHomeWithTranslation(
-                        $translation,
-                        $this->get('securityAuthorizationChecker')
-                    );
+                $this->homeNode = $nodeRepository->findHomeWithTranslation($translation);
             } else {
-                $this->homeNode = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node')
-                    ->findHomeWithDefaultTranslation($this->get('securityAuthorizationChecker'));
+                $this->homeNode = $nodeRepository->findHomeWithDefaultTranslation();
             }
         }
+        $this->container['stopwatch']->stop('getHome');
 
         return $this->homeNode;
     }
@@ -560,18 +572,22 @@ abstract class AppController extends Controller
      */
     public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
     {
+        /** @var User $user */
         $user = $this->getUser();
-        $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
-            $parents = $node->getHandler()->getParents();
+
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->get('factory.handler')->getHandler($node);
+            $parents = $nodeHandler->getParents();
 
             if ($includeChroot) {
                 $parents[] = $node;
             }
-            $isNewsletterFriend = $node->getHandler()->isRelatedToNewsletter();
+            $isNewsletterFriend = $nodeHandler->isRelatedToNewsletter();
         } else {
             $parents = [];
             $isNewsletterFriend = false;
@@ -585,7 +601,8 @@ abstract class AppController extends Controller
                 throw new AccessDeniedException("You don't have access to this page");
             }
 
-            if ($user->getChroot() !== null &&
+            if (null !== $user &&
+                $user->getChroot() !== null &&
                 !in_array($user->getChroot(), $parents, true)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }

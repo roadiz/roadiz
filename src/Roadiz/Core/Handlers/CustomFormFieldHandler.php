@@ -29,15 +29,21 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 
 /**
  * Handle operations with customForms fields entities.
  */
-class CustomFormFieldHandler
+class CustomFormFieldHandler extends AbstractHandler
 {
-
+    /** @var null|CustomFormField  */
     private $customFormField = null;
+
+    /** @var \Pimple\Container  */
+    private $container;
+
     /**
      * @return CustomFormField
      */
@@ -50,32 +56,37 @@ class CustomFormFieldHandler
      *
      * @return $this
      */
-    public function setCustomFormField($customFormField)
+    public function setCustomFormField(CustomFormField $customFormField)
     {
         $this->customFormField = $customFormField;
-
         return $this;
     }
 
     /**
      * Create a new custom-form-field handler with custom-form-field to handle.
      *
-     * @param CustomFormField $field
+     * @param ObjectManager $objectManager
+     * @param Container $container
      */
-    public function __construct(CustomFormField $field)
+    public function __construct(ObjectManager $objectManager, Container $container)
     {
-        $this->customFormField = $field;
+        parent::__construct($objectManager);
+        $this->container = $container;
     }
 
     /**
      * Clean position for current customForm siblings.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** customFormField
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->customFormField->getCustomForm() !== null) {
-            return $this->customFormField->getCustomForm()->getHandler()->cleanFieldsPositions();
+            /** @var CustomFormHandler $customFormHandler */
+            $customFormHandler = $this->container['custom_form.handler'];
+            $customFormHandler->setCustomForm($this->customFormField->getCustomForm());
+            return $customFormHandler->cleanFieldsPositions($setPositions);
         }
 
         return 1;

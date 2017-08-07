@@ -30,9 +30,12 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.
@@ -47,12 +50,21 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\HasLifecycleCallbacks
  */
-class NodesSources extends AbstractEntity
+class NodesSources extends AbstractEntity implements ObjectManagerAware
 {
-    private $handler = null;
+    /** @var ObjectManager */
+    protected $objectManager;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @inheritDoc
+     */
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;
@@ -118,6 +130,7 @@ class NodesSources extends AbstractEntity
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource")
      */
     private $urlAliases = null;
+
     /**
      * @return ArrayCollection
      */
@@ -151,6 +164,32 @@ class NodesSources extends AbstractEntity
     public function getDocumentsByFields()
     {
         return $this->documentsByFields;
+    }
+
+    /**
+     * @param $fieldName
+     * @return Document[]
+     */
+    public function getDocumentsByFieldsWithName($fieldName)
+    {
+        $criteria = Criteria::create();
+        $criteria->orderBy(['position' => 'ASC']);
+        $relations = $this->getDocumentsByFields()
+            ->matching($criteria)
+            ->filter(function ($element) use ($fieldName) {
+                if ($element instanceof NodesSourcesDocuments) {
+                    return $element->getField()->getName() === $fieldName;
+                }
+                return false;
+            });
+
+        $documents = [];
+        /** @var NodesSourcesDocuments $relation */
+        foreach ($relations as $relation) {
+            $documents[] = $relation->getDocument();
+        }
+
+        return $documents;
     }
 
     /**
@@ -303,17 +342,6 @@ class NodesSources extends AbstractEntity
     }
 
     /**
-     * @return NodesSourcesHandler
-     */
-    public function getHandler()
-    {
-        if (null === $this->handler) {
-            $this->handler = new NodesSourcesHandler($this);
-        }
-        return $this->handler;
-    }
-
-    /**
      * Create a new NodeSource with its Node and Translation.
      *
      * @param Node        $node
@@ -326,6 +354,34 @@ class NodesSources extends AbstractEntity
         $this->urlAliases = new ArrayCollection();
         $this->documentsByFields = new ArrayCollection();
         $this->logs = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        $urlAlias = $this->getUrlAliases()->first();
+        if (is_object($urlAlias)) {
+            return $urlAlias->getAlias();
+        }
+
+        return $this->getNode()->getNodeName();
+    }
+
+    /**
+     * Get parent node’ source based on the same translation.
+     *
+     * @return NodesSources|null
+     */
+    public function getParent()
+    {
+        if (null !== $this->getNode()->getParent()) {
+            $nodeSources = $this->getNode()->getParent()->getNodeSourcesByTranslation($this->translation);
+            return $nodeSources->count() > 0 ? $nodeSources->first() : null;
+        } else {
+            return null;
+        }
     }
 
     /**

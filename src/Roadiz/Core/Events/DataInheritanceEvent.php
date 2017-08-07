@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
@@ -39,13 +40,19 @@ use RZ\Roadiz\Core\Entities\NodeType;
 class DataInheritanceEvent
 {
     protected $tablesPrefix;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
+     * @param Container $container
      * @param string $tablesPrefix
      */
-    public function __construct($tablesPrefix = '')
+    public function __construct(Container $container, $tablesPrefix = '')
     {
         $this->tablesPrefix = $tablesPrefix;
+        $this->container = $container;
     }
 
     /**
@@ -82,7 +89,7 @@ class DataInheritanceEvent
             try {
                 // List node types
                 /** @var NodeType[] $nodeTypes */
-                $nodeTypes = $eventArgs->getEntityManager()->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findAll();
+                $nodeTypes = $this->container->offsetGet('nodeTypesBag')->all();
                 $map = [];
                 foreach ($nodeTypes as $type) {
                     $map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();

@@ -30,34 +30,64 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Doctrine\Common\Cache\CacheProvider;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Extension that allow render nodes, nodesSources and documents Url
+ * Extension that allow render documents Url
  */
 class UrlExtension extends \Twig_Extension
 {
-    protected $request;
     protected $forceLocale;
     protected $cacheProvider;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    /**
+     * @var bool
+     */
+    private $throwExceptions;
+    /**
+     * @var Packages
+     */
+    private $packages;
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
 
     /**
      * UrlExtension constructor.
-     * @param Request $request
+     * @param RequestStack $requestStack
+     * @param Packages $packages
+     * @param UrlGeneratorInterface $urlGenerator
      * @param CacheProvider|null $cacheProvider
      * @param bool $forceLocale
+     * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(Request $request, CacheProvider $cacheProvider = null, $forceLocale = false)
-    {
-        $this->request = $request;
+    public function __construct(
+        RequestStack $requestStack,
+        Packages $packages,
+        UrlGeneratorInterface $urlGenerator,
+        CacheProvider $cacheProvider = null,
+        $forceLocale = false,
+        $throwExceptions = false
+    ) {
         $this->forceLocale = $forceLocale;
         $this->cacheProvider = $cacheProvider;
+        $this->requestStack = $requestStack;
+        $this->throwExceptions = $throwExceptions;
+        $this->packages = $packages;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -82,6 +112,7 @@ class UrlExtension extends \Twig_Extension
      * @param NodesSources $ns
      * @param bool $absolute
      * @param string $canonicalScheme
+     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
     public function getCacheKey(NodesSources $ns, $absolute = false, $canonicalScheme = '')
@@ -95,8 +126,6 @@ class UrlExtension extends \Twig_Extension
      * Compatible AbstractEntity:
      *
      * - Document
-     * - NodesSources
-     * - Node
      *
      * @param  AbstractEntity|null $mixed
      * @param  array $criteria
@@ -105,25 +134,38 @@ class UrlExtension extends \Twig_Extension
      */
     public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
     {
-        if (null !== $mixed) {
-            if ($mixed instanceof Document) {
-                try {
-                    $absolute = false;
-                    if (isset($criteria['absolute'])) {
-                        $absolute = (boolean) $criteria['absolute'];
-                    }
-                    return $mixed->getViewer()->getDocumentUrlByArray($criteria, $absolute);
-                } catch (InvalidArgumentException $e) {
-                    throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
-                }
-            } elseif ($mixed instanceof NodesSources) {
-                return $this->getNodesSourceUrl($mixed, $criteria);
-            } elseif ($mixed instanceof Node) {
-                return $this->getNodeUrl($mixed, $criteria);
+        if (null === $mixed) {
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object");
+            } else {
+                return "";
             }
-            throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
         }
-        throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object");
+
+        if ($mixed instanceof Document) {
+            try {
+                $absolute = false;
+                if (isset($criteria['absolute'])) {
+                    $absolute = (boolean) $criteria['absolute'];
+                }
+
+                $urlGenerator = new DocumentUrlGenerator(
+                    $this->requestStack,
+                    $this->packages,
+                    $this->urlGenerator,
+                    $mixed,
+                    $criteria
+                );
+                return $urlGenerator->getUrl($absolute);
+            } catch (InvalidArgumentException $e) {
+                throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+            }
+        } elseif ($mixed instanceof NodesSources) {
+            return $this->getNodesSourceUrl($mixed, $criteria);
+        } elseif ($mixed instanceof Node) {
+            return $this->getNodeUrl($mixed, $criteria);
+        }
+        throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
     }
 
     /**
@@ -152,7 +194,7 @@ class UrlExtension extends \Twig_Extension
             return $this->cacheProvider->fetch($cacheKey);
         } else {
             $urlGenerator = new NodesSourcesUrlGenerator(
-                $this->request,
+                $this->requestStack->getCurrentRequest(),
                 $ns,
                 $this->forceLocale
             );
@@ -169,6 +211,7 @@ class UrlExtension extends \Twig_Extension
      *
      * @param  Node   $node
      * @param  array  $criteria
+     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
     public function getNodeUrl(Node $node, array $criteria = [])

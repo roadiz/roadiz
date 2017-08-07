@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 
 /**
  * Newsletters entities wrap a Node and are linked to
@@ -63,13 +62,11 @@ class Newsletter extends AbstractDateTimed
 
     /**
      * @param integer $status
-     *
-     * @return integer
+     * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -94,7 +91,7 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="newsletter", fetch="EAGER")
+     * @ORM\OneToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id")
      */
     private $node;
@@ -110,12 +107,11 @@ class Newsletter extends AbstractDateTimed
     /**
      * @param \RZ\Roadiz\Core\Entities\Node $node
      *
-     * @return Node
+     * @return $this
      */
     public function setNode($node)
     {
         $this->node = $node;
-
         return $this;
     }
 
@@ -146,19 +142,6 @@ class Newsletter extends AbstractDateTimed
     {
         $this->status = static::DRAFT;
         $this->node = $node;
-    }
-
-    private $handler;
-
-    /**
-     * @return NewsletterHandler
-     */
-    public function getHandler()
-    {
-        if (null === $this->handler) {
-            $this->handler = new NewsletterHandler($this);
-        }
-        return $this->handler;
     }
 
     public function __clone()

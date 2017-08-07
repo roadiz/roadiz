@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,8 +60,10 @@ class NodesSourcesCommand extends Command
         if (count($nodetypes) > 0) {
             /** @var NodeType $nt */
             foreach ($nodetypes as $nt) {
-                $nt->getHandler()->removeSourceEntityClass();
-                $text .= '<info>' . $nt->getHandler()->generateSourceEntityClass() . '</info>' . PHP_EOL;
+                /** @var NodeTypeHandler $handler */
+                $handler = $this->getHelper('handlerFactory')->getHandler($nt);
+                $handler->removeSourceEntityClass();
+                $text .= '<info>' . $handler->generateSourceEntityClass() . '</info>' . PHP_EOL;
             }
         } else {
             $text = '<info>No available node-types…</info>' . PHP_EOL;

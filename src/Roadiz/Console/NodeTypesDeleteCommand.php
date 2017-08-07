@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -61,6 +62,7 @@ class NodeTypesDeleteCommand extends Command
         $text = "";
         $name = $input->getArgument('name');
 
+        /** @var NodeType $nodetype */
         $nodetype = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
             ->findOneByName($name);
@@ -80,7 +82,8 @@ class NodeTypesDeleteCommand extends Command
                 $output,
                 $question
             )) {
-                $nodetype->getHandler()->removeSourceEntityClass();
+                $handler = $this->getHelper('handlerFactory')->getHandler($nodetype);
+                $handler->removeSourceEntityClass();
                 $this->entityManager->remove($nodetype);
                 $this->entityManager->flush();
                 $text .= '<info>Node-type deleted.</info>' . PHP_EOL .

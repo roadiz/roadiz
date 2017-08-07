@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Entities\Theme;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Install\InstallApp;
 use Symfony\Component\HttpFoundation\Request;
@@ -209,23 +210,21 @@ class ImportController extends AppController
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'));
+                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'), $this->get('factory.handler'));
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();
-            return new Response(
-                json_encode($data),
-                Response::HTTP_NOT_FOUND,
-                ['content-type' => 'application/javascript']
+            return new JsonResponse(
+                $data,
+                Response::HTTP_NOT_FOUND
             );
         }
         $data['status'] = true;
-        return new Response(
-            json_encode($data),
-            Response::HTTP_OK,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $data,
+            Response::HTTP_OK
         );
     }
 
@@ -240,10 +239,9 @@ class ImportController extends AppController
         $data['status'] = false;
         $data['error'] = 'File to import not found.';
 
-        return new Response(
-            json_encode($data),
-            Response::HTTP_NOT_FOUND,
-            ['content-type' => 'application/javascript']
+        return new JsonResponse(
+            $data,
+            Response::HTTP_NOT_FOUND
         );
     }
 }

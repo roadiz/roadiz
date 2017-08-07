@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * A paginator class to filter node entities with limit and search.
@@ -39,28 +38,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
  */
 class NodePaginator extends Paginator
 {
-    protected $authorizationChecker = null;
-    protected $preview = false;
     protected $translation = null;
-
-    /**
-     * @return AuthorizationChecker
-     */
-    public function getAuthorizationChecker()
-    {
-        return $this->authorizationChecker;
-    }
-
-    /**
-     * @param AuthorizationChecker $authorizationChecker
-     * @return $this
-     */
-    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-
-        return $this;
-    }
 
     /**
      * @return \RZ\Roadiz\Core\Entities\Translation
@@ -77,7 +55,6 @@ class NodePaginator extends Paginator
     public function setTranslation(Translation $newtranslation = null)
     {
         $this->translation = $newtranslation;
-
         return $this;
     }
 
@@ -94,15 +71,13 @@ class NodePaginator extends Paginator
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);
         } else {
-            return $this->em->getRepository($this->entityName)
+            return $this->getRepository()
                 ->findBy(
                     $this->criteria,
                     $order,
                     $this->getItemsPerPage(),
                     $this->getItemsPerPage() * ($page - 1),
-                    $this->translation,
-                    $this->authorizationChecker,
-                    $this->preview
+                    $this->translation
                 );
         }
     }
@@ -114,43 +89,17 @@ class NodePaginator extends Paginator
     {
         if (null === $this->totalCount) {
             if (null !== $this->searchPattern) {
-                $this->totalCount = $this->em->getRepository($this->entityName)
+                $this->totalCount = $this->getRepository()
                     ->countSearchBy($this->searchPattern, $this->criteria);
             } else {
-                $this->totalCount = $this->em->getRepository($this->entityName)
+                $this->totalCount = $this->getRepository()
                     ->countBy(
                         $this->criteria,
-                        $this->translation,
-                        $this->authorizationChecker,
-                        $this->preview
+                        $this->translation
                     );
             }
         }
 
         return $this->totalCount;
-    }
-
-    /**
-     * Gets the value of preview.
-     *
-     * @return boolean
-     */
-    public function getPreview()
-    {
-        return $this->preview;
-    }
-
-    /**
-     * Sets the value of preview.
-     *
-     * @param boolean $preview the preview
-     *
-     * @return self
-     */
-    public function setPreview($preview)
-    {
-        $this->preview = (boolean) $preview;
-
-        return $this;
     }
 }

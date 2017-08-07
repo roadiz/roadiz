@@ -262,7 +262,7 @@ class TagRepository extends EntityRepository
     ) {
 
         $qb = $this->createQueryBuilder('tg');
-        $qb->add('select', 'tg, tt');
+        $qb->addSelect('tt');
 
         $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);

@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 
 /**
  * Special controller app file for backend themes.
@@ -53,10 +54,23 @@ abstract class BackendController extends AppController
 
         $firewallBasePattern = '^/rz-admin';
         $firewallBasePath = '/rz-admin';
-        $firewallLogin = '/login';
+        $firewallLogin = $firewallBasePath . '/login';
         $firewallLogout = $firewallBasePath . '/logout';
         $firewallLoginCheck = $firewallBasePath . '/login_check';
         $firewallBaseRole = Role::ROLE_BACKEND_USER;
+
+        /*
+         * Force login pages (connection, logout and reset) to be public
+         * before rz-admin base pattern to be restricted
+         */
+        $container['accessMap']->add(
+            new RequestMatcher('^/rz-admin/login'),
+            ['IS_AUTHENTICATED_ANONYMOUSLY']
+        );
+        $container['accessMap']->add(
+            new RequestMatcher('^/rz-admin/logout'),
+            ['IS_AUTHENTICATED_ANONYMOUSLY']
+        );
 
         $firewallEntry = new FirewallEntry(
             $container,
@@ -67,13 +81,23 @@ abstract class BackendController extends AppController
             $firewallLoginCheck,
             $firewallBaseRole
         );
-        $firewallEntry->withSwitchUserListener();
-        $firewallEntry->withReferer();
+        $firewallEntry->withSwitchUserListener()
+            ->withAnonymousAuthenticationListener()
+            ->withReferer();
 
         $container['firewallMap']->add(
             $firewallEntry->getRequestMatcher(),
             $firewallEntry->getListeners(),
-            $container['firewallExceptionListener']
+            $firewallEntry->getExceptionListener(true)
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        return parent::createEntityListManager($entity, $criteria, $ordering)
+            ->setDisplayingNotPublishedNodes(true);
     }
 }

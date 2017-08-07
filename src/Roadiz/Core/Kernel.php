@@ -33,16 +33,20 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
+use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
+use RZ\Roadiz\Core\Services\DebugServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
@@ -58,7 +62,7 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
-use RZ\Roadiz\Utils\DebugPanel;
+use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -83,8 +87,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.19.6";
-    protected static $instance = null;
+    public static $cmsVersion = "0.20.0";
 
     /**
      * @var Container|null
@@ -147,11 +150,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function register(Container $container)
     {
         $container['stopwatch'] = function () {
-            return new Stopwatch();
-        };
-
-        $container['debugPanel'] = function ($c) {
-            return new DebugPanel($c);
+            if ($this->isDebug()) {
+                return new Stopwatch();
+            }
+            return new NullStopwatch();
         };
 
         $container['dispatcher'] = function () {
@@ -179,6 +181,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new LoggerServiceProvider());
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
+        if ($this->isDebug()) {
+            $container->register(new DebugServiceProvider());
+        }
 
         try {
             /*
@@ -275,21 +280,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         /*
          * If debug, alter HTML responses to append Debug panel to view
          */
-        if ($this->isDebug()) {
-            $dispatcher->addSubscriber($this->container['debugPanel']);
+        if (!$this->isInstallMode() && $this->isDebug()) {
+            $dispatcher->addSubscriber(new DebugBarSubscriber($this->container));
+            $dispatcher->addSubscriber(new PimpleDumperSubscriber($this->container));
         }
-    }
-
-    /**
-     * Get Pimple dependency injection service container.
-     *
-     * @param string $key Service name
-     *
-     * @return mixed
-     */
-    public static function getService($key)
-    {
-        return static::getInstance()->container[$key];
     }
 
     /**
@@ -337,32 +331,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function isProdMode()
     {
         return $this->environment == 'prod';
-    }
-
-    /**
-     * Return unique instance of Kernel.
-     *
-     * @param string $environment
-     * @param bool $debug
-     * @param bool $preview
-     *
-     * @return Kernel
-     */
-    public static function getInstance($environment = 'prod', $debug = false, $preview = false)
-    {
-        if (static::$instance === null) {
-            static::$instance = new static($environment, $debug, $preview);
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * Clear Kernel singleton.
-     */
-    public static function destroy()
-    {
-        static::$instance = null;
     }
 
     /**

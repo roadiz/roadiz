@@ -96,8 +96,10 @@ class NodesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var Node[] $existingNodes */
         $existingNodes = $this->get('em')
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy(["parent" => null]);
 
         foreach ($existingNodes as $existingNode) {

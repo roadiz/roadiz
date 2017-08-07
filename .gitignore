@@ -5,6 +5,7 @@
 /dev.php
 /install.php
 /clear_cache.php
+/pimple.json
 
 # Ignore Google webmaster tool verification
 /google*.html
@@ -105,3 +106,9 @@ testDir/
 
 ## XDebug profile folder
 /.xdebug
+
+### Bower ###
+bower_components
+.bower-cache
+.bower-registry
+.bower-tmp

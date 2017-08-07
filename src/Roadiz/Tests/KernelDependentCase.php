@@ -42,6 +42,11 @@ use RZ\Roadiz\Core\Kernel;
 abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implements ContainerAwareInterface
 {
     /**
+     * @var Kernel
+     */
+    static $kernel;
+
+    /**
      * @return Request
      */
     public static function getMockRequest()
@@ -54,18 +59,18 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public static function setUpBeforeClass()
     {
-        $kernel = Kernel::getInstance('test', true, false);
-        $kernel->boot();
+
+        static::$kernel = new Kernel('test', true, false);
+        static::$kernel->boot();
 
         $request = static::getMockRequest();
-        $kernel->getContainer()->offsetSet('request', $request);
-        $kernel->get('requestStack')->push($request);
+        static::$kernel->getContainer()->offsetSet('request', $request);
+        static::$kernel->get('requestStack')->push($request);
     }
 
     public static function tearDownAfterClass()
     {
-        Kernel::getInstance()->shutdown();
-        Kernel::destroy();
+        static::$kernel->shutdown();
     }
 
     /**
@@ -73,7 +78,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function getContainer()
     {
-        Kernel::getInstance()->getContainer();
+        return static::$kernel->getContainer();
     }
 
     /**
@@ -82,7 +87,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function setContainer(Container $container)
     {
-        Kernel::getInstance()->setContainer($container);
+        return static::$kernel->setContainer($container);
     }
 
     /**
@@ -93,7 +98,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function get($serviceName)
     {
-        Kernel::getInstance()->getContainer()->offsetGet($serviceName);
+        return static::$kernel->get($serviceName);
     }
 
     /**
@@ -104,6 +109,6 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public function has($serviceName)
     {
-        Kernel::getInstance()->getContainer()->offsetExists($serviceName);
+        return static::$kernel->has($serviceName);
     }
 }

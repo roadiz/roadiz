@@ -30,9 +30,9 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -316,14 +316,12 @@ class CustomForm extends AbstractDateTimed
      */
     private $customFormAnswers;
 
+    /**
+     * @return Collection
+     */
     public function getCustomFormAnswers()
     {
         return $this->customFormAnswers;
-    }
-
-    public function getHandler()
-    {
-        return new CustomFormHandler($this);
     }
 
     /**

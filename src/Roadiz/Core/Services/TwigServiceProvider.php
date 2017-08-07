@@ -39,7 +39,9 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
+use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
+use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
@@ -77,15 +79,15 @@ class TwigServiceProvider implements ServiceProviderInterface
             $kernel = $c['kernel'];
             $vendorDir = realpath($kernel->getVendorDir());
 
-            // le chemin vers TwigBridge pour que Twig puisse localiser
-            // le fichier form_div_layout.html.twig
-            $vendorTwigBridgeDir = $vendorDir . '/symfony/twig-bridge';
-
-            return new \Twig_Loader_Filesystem([
+            $loader = new \Twig_Loader_Filesystem([
                 // Default Form extension templates
-                $vendorTwigBridgeDir . '/Resources/views/Form',
+                $vendorDir . '/symfony/twig-bridge/Resources/views/Form',
+                // Documents rendering templates
+                $vendorDir . '/roadiz/documents/src/Roadiz/Resources/views',
                 CmsController::getViewsFolder(),
             ]);
+
+            return $loader;
         };
 
         /**
@@ -157,6 +159,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             )));
 
             $extensions->add(new ParsedownExtension());
+            $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c['requestStack']));
             $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));
@@ -165,11 +168,13 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new \Twig_Extensions_Extension_Text());
             $extensions->add(new BlockRenderExtension($c));
             $extensions->add(new UrlExtension(
-                $c['request'],
+                $c['requestStack'],
+                $c['assetPackages'],
+                $c['urlGenerator'],
                 $c['nodesSourcesUrlCacheProvider'],
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
-            $extensions->add(new RoadizTranslationExtension($c['request']));
+            $extensions->add(new RoadizTranslationExtension($c['requestStack'], $c['translation.viewer']));
 
             if (null !== $c['twig.cacheExtension']) {
                 $extensions->add($c['twig.cacheExtension']);
@@ -179,18 +184,25 @@ class TwigServiceProvider implements ServiceProviderInterface
              * with EntityManager not null.
              */
             if (true !== $kernel->isInstallMode()) {
-                $extensions->add(new DocumentExtension($c['assetPackages']));
-                $extensions->add(new FontExtension($c['assetPackages']));
+                $extensions->add(new DocumentExtension($c));
+                $extensions->add(new FontExtension($c));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
+                    $c['nodes_sources.handler'],
                     $kernel->isPreview()
                 ));
-            }
-            if (true === $kernel->isDebug()) {
-                $extensions->add(new \Twig_Extension_Debug());
+
+                $extensions->add(new DumpExtension($c));
+                if ($kernel->isDebug()) {
+                    $extensions->add(new \Twig_Extension_Profiler($c['twig.profile']));
+                }
             }
 
             return $extensions;
+        };
+
+        $container['twig.profile'] = function () {
+            return new \Twig_Profiler_Profile();
         };
 
         /**
@@ -199,7 +211,6 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @return TwigRendererEngine
          */
         $container['twig.formRenderer'] = function () {
-
             return new TwigRendererEngine([
                 'form_div_layout.html.twig',
             ]);

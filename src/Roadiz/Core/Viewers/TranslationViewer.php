@@ -30,22 +30,51 @@
 
 namespace RZ\Roadiz\Core\Viewers;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * TranslationViewer
  */
-class TranslationViewer implements ViewableInterface
+class TranslationViewer
 {
-    protected $translation;
+    /** @var Settings */
+    private $settingsBag;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+    private $translation;
 
-    public function __construct(Translation $translation)
+    /**
+     * TranslationViewer constructor.
+     * @param EntityManager $entityManager
+     * @param Settings $settingsBag
+     * @param RouterInterface $router
+     */
+    public function __construct(EntityManager $entityManager, Settings $settingsBag, RouterInterface $router)
     {
-        $this->translation = $translation;
+        $this->settingsBag = $settingsBag;
+        $this->entityManager = $entityManager;
+        $this->router = $router;
+    }
+
+    /**
+     * @return TranslationRepository
+     */
+    public function getRepository()
+    {
+        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation');
     }
 
     /**
@@ -90,7 +119,7 @@ class TranslationViewer implements ViewableInterface
         $attr = $request->attributes->all();
         $query = $request->query->all();
         $name = "";
-        $forceLocale = (boolean) Kernel::getService('settingsBag')->get('force_locale');
+        $forceLocale = (boolean) $this->settingsBag->get('force_locale');
 
         /*
          * Fix absolute boolean to Int constant.
@@ -105,12 +134,10 @@ class TranslationViewer implements ViewableInterface
         }
 
         if ($node === null && !empty($attr["_route"])) {
-            $translations = Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findAllAvailable();
+            $translations = $this->getRepository()->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } elseif (null !== $node) {
-            $translations = $node->getHandler()->getAvailableTranslations();
+            $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
             $translations = array_filter(
                 $translations,
                 function (Translation $trans) {
@@ -132,8 +159,11 @@ class TranslationViewer implements ViewableInterface
             $url = null;
 
             if ($node) {
-                $url = Kernel::getService('router')->generate(
-                    $node->getHandler()->getNodeSourceByTranslation($translation),
+                $nodesSources = $this->entityManager
+                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->findOneBy(["node" => $node, "translation" => $translation]);
+                $url = $this->router->generate(
+                    $nodesSources,
                     $query,
                     $absolute
                 );
@@ -148,7 +178,7 @@ class TranslationViewer implements ViewableInterface
                     /*
                      * Search for a Locale suffixed route
                      */
-                    if (null !== Kernel::getService('router')->getRouteCollection()->get($attr["_route"] . "Locale")) {
+                    if (null !== $this->router->getRouteCollection()->get($attr["_route"] . "Locale")) {
                         $name = $attr["_route"] . "Locale";
                     }
 
@@ -165,7 +195,7 @@ class TranslationViewer implements ViewableInterface
                     unset($query["_locale"]);
                 }
 
-                $url = Kernel::getService("router")->generate(
+                $url = $this->router->generate(
                     $name,
                     array_merge($attr["_route_params"], $query),
                     $absolute
@@ -186,18 +216,20 @@ class TranslationViewer implements ViewableInterface
     }
 
     /**
-     * @return \Symfony\Component\Translation\Translator.
+     * @return Translation
      */
-    public function getTranslator()
+    public function getTranslation()
     {
-        return null;
+        return $this->translation;
     }
 
     /**
-     * @return \Twig_Environment
+     * @param Translation $translation
+     * @return TranslationViewer
      */
-    public function getTwig()
+    public function setTranslation($translation)
     {
-        return Kernel::getService('twig.environment');
+        $this->translation = $translation;
+        return $this;
     }
 }

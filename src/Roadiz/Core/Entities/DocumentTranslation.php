@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * DocumentTranslation.
@@ -151,10 +152,10 @@ class DocumentTranslation extends AbstractEntity
     }
 
     /**
-     * @param Document $document
+     * @param DocumentInterface $document
      * @return $this
      */
-    public function setDocument(Document $document)
+    public function setDocument(DocumentInterface $document)
     {
         $this->document = $document;
 

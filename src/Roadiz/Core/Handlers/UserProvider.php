@@ -90,14 +90,17 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        /** @var User|null $refreshUser */
-        $refreshUser = $this->em->find('RZ\Roadiz\Core\Entities\User', (int) $user->getId());
+        if ($user instanceof User) {
+            /** @var User|null $refreshUser */
+            $refreshUser = $this->em->find('RZ\Roadiz\Core\Entities\User', (int) $user->getId());
 
-        if ($refreshUser !== null) {
-            return $refreshUser;
-        } else {
-            throw new UnsupportedUserException();
+            if ($refreshUser !== null) {
+                return $refreshUser;
+            } else {
+                throw new UnsupportedUserException();
+            }
         }
+        throw new UnsupportedUserException();
     }
     /**
      * Whether this provider supports the given user class

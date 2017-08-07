@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Utils;
 
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
@@ -97,6 +98,7 @@ class ContactFormManager extends EmailManager
      * @param \Twig_Environment $templating
      * @param \Swift_Mailer $mailer
      * @param Settings|null $settingsBag
+     * @param DocumentUrlGenerator $documentUrlGenerator
      */
     public function __construct(
         Request $request,
@@ -104,9 +106,10 @@ class ContactFormManager extends EmailManager
         TranslatorInterface $translator,
         \Twig_Environment $templating,
         \Swift_Mailer $mailer,
-        Settings $settingsBag
+        Settings $settingsBag,
+        DocumentUrlGenerator $documentUrlGenerator
     ) {
-        parent::__construct($request, $translator, $templating, $mailer, $settingsBag);
+        parent::__construct($request, $translator, $templating, $mailer, $settingsBag, $documentUrlGenerator);
 
         $this->formBuilder = $formFactory->createBuilder('form', null, [
                  'attr' => [

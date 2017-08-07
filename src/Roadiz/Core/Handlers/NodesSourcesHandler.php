@@ -29,51 +29,73 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\CMS\Utils\TagApi;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Handle operations with node-sources entities.
  */
-class NodesSourcesHandler
+class NodesSourcesHandler extends AbstractHandler
 {
+    /**
+     * @var NodesSources
+     */
     protected $nodeSource;
-    protected $parentNodeSource = null;
+
+    /**
+     * @var NodesSources[]
+     */
     protected $parentsNodeSources = null;
+
+    /** @var AuthorizationChecker */
+    protected $authorizationChecker;
+
+    /** @var bool  */
+    protected $isPreview = false;
+
+    /** @var Settings  */
+    protected $settingsBag;
+
+    /** @var TagApi */
+    protected $tagApi;
 
     /**
      * Create a new node-source handler with node-source to handle.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param ObjectManager $objectManager
+     * @param Settings $settingsBag
+     * @param TagApi $tagApi
      */
-    public function __construct($nodeSource)
+    public function __construct(ObjectManager $objectManager, Settings $settingsBag, TagApi $tagApi)
+    {
+        parent::__construct($objectManager);
+
+        $this->settingsBag = $settingsBag;
+        $this->tagApi = $tagApi;
+    }
+
+    /**
+     * @return NodesSources
+     */
+    public function getNodeSource()
+    {
+        return $this->nodeSource;
+    }
+
+    /**
+     * @param NodesSources $nodeSource
+     * @return NodesSourcesHandler
+     */
+    public function setNodeSource(NodesSources $nodeSource)
     {
         $this->nodeSource = $nodeSource;
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
-     */
-    public function getParentNodeSource()
-    {
-        return $this->parentNodeSource;
-    }
-
-    /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $newparentNodeSource
-     * @return $this
-     */
-    public function setParentNodeSource($newparentNodeSource)
-    {
-        $this->parentNodeSource = $newparentNodeSource;
-
         return $this;
     }
 
@@ -86,17 +108,17 @@ class NodesSourcesHandler
      */
     public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
     {
-        $nsDocuments = Kernel::getService('em')
+        $nsDocuments = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
             ->findBy(['nodeSource' => $this->nodeSource, 'field' => $field]);
 
         if (count($nsDocuments) > 0) {
             foreach ($nsDocuments as $nsDoc) {
-                Kernel::getService('em')->remove($nsDoc);
+                $this->objectManager->remove($nsDoc);
             }
 
             if (true === $flush) {
-                Kernel::getService('em')->flush();
+                $this->objectManager->flush();
             }
         }
 
@@ -117,7 +139,7 @@ class NodesSourcesHandler
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
         if (null === $position) {
-            $latestPosition = Kernel::getService('em')
+            $latestPosition = $this->objectManager
                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
                 ->getLatestPosition($this->nodeSource, $field);
 
@@ -126,9 +148,9 @@ class NodesSourcesHandler
             $nsDoc->setPosition($position);
         }
 
-        Kernel::getService('em')->persist($nsDoc);
+        $this->objectManager->persist($nsDoc);
         if (true === $flush) {
-            Kernel::getService('em')->flush();
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -142,26 +164,23 @@ class NodesSourcesHandler
      */
     public function getDocumentsFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Document')
             ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
     }
 
     /**
-     * Get a string describing uniquely the curent nodeSource.
+     * Get a string describing uniquely the current nodeSource.
      *
      * Can be the urlAlias or the nodeName
-     *
+     * @deprecated Use directly NodesSources::getIdentifier
      * @return string
      */
     public function getIdentifier()
     {
-        if (count($this->nodeSource->getUrlAliases()) > 0) {
-            $urlalias = $this->nodeSource->getUrlAliases()->first();
-
-            if ($urlalias !== null) {
-                return $urlalias->getAlias();
-            }
+        $urlalias = $this->nodeSource->getUrlAliases()->first();
+        if (is_object($urlalias)) {
+            return $urlalias->getAlias();
         }
 
         return $this->nodeSource->getNode()->getNodeName();
@@ -170,32 +189,22 @@ class NodesSourcesHandler
     /**
      * Get parent node-source to get the current translation.
      *
+     * @deprecated Use directly NodesSources::getParent
      * @return NodesSources
      */
     public function getParent()
     {
-        if (null === $this->parentNodeSource) {
-            $this->parentNodeSource = Kernel::getService('em')
-                 ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                 ->findParent($this->nodeSource);
-        }
-
-        return $this->parentNodeSource;
+        return $this->nodeSource->getParent();
     }
 
     /**
      * Get every nodeSources parents from direct parent to farest ancestor.
      *
-     * @param  array                $criteria
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
-     *
+     * @param  array $criteria
      * @return array
      */
     public function getParents(
-        array $criteria = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $criteria = null
     ) {
         if (null === $this->parentsNodeSources) {
             $this->parentsNodeSources = [];
@@ -214,13 +223,11 @@ class NodesSourcesHandler
                         'translation' => $this->nodeSource->getTranslation(),
                     ]
                 );
-                $currentParent = Kernel::getService('em')
+                $currentParent = $this->objectManager
                     ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
                     ->findOneBy(
                         $criteria,
-                        [],
-                        $authorizationChecker,
-                        $preview
+                        []
                     );
 
                 if (null !== $currentParent) {
@@ -237,23 +244,17 @@ class NodesSourcesHandler
     /**
      * Get children nodes sources to lock with current translation.
      *
-     * @param array|null                  $criteria Additionnal criteria
-     * @param array|null                  $order Non default ordering
-     * @param AuthorizationChecker|null   $authorizationChecker
-     * @param boolean                     $preview
+     * @param array|null $criteria Additionnal criteria
+     * @param array|null $order Non default ordering
      *
-     * @return ArrayCollection NodesSources collection
+     * @return NodesSources[] collection
      */
     public function getChildren(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
-
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
-            'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
         ];
 
@@ -269,19 +270,13 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        if (null === $authorizationChecker) {
-            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
-        }
-
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findBy(
                 $defaultCrit,
                 $defaultOrder,
                 null,
-                null,
-                $authorizationChecker,
-                $preview
+                null
             );
     }
 
@@ -290,22 +285,17 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param array|null                $criteria
-     * @param array|null                $order
-     * @param AuthorizationChecker|null $authorizationChecker
-     * @param boolean                   $preview
+     * @param array|null $criteria
+     * @param array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
     public function getFirstChild(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
-            'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
             'node.nodeType.newsletterType' => false,
         ];
@@ -322,17 +312,11 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        if (null === $authorizationChecker) {
-            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
-        }
-
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
-                $defaultOrder,
-                $authorizationChecker,
-                $preview
+                $defaultOrder
             );
     }
     /**
@@ -340,22 +324,17 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param  boolean $preview
+     * @param  array|null $criteria
+     * @param  array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
     public function getLastChild(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
-            'node.status' => ['<=', Node::PUBLISHED],
             'translation' => $this->nodeSource->getTranslation(),
             'node.nodeType.newsletterType' => false,
         ];
@@ -372,41 +351,33 @@ class NodesSourcesHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        if (null === $authorizationChecker) {
-            $authorizationChecker = Kernel::getService('securityAuthorizationChecker');
-        }
-
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
-                $defaultOrder,
-                $authorizationChecker,
-                $preview
+                $defaultOrder
             );
     }
 
     /**
      * Get first node-source in the same parent as current node-source.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param  array|null $criteria
+     * @param  array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
     public function getFirstSibling(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
-        if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getFirstChild($criteria, $order, $authorizationChecker, $preview);
+        if (null !== $this->nodeSource->getParent()) {
+            $parentHandler = new NodesSourcesHandler($this->objectManager, $this->settingsBag, $this->tagApi);
+            $parentHandler->setNodeSource($this->nodeSource->getParent());
+            return $parentHandler->getFirstChild($criteria, $order);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getFirstChild($criteria, $order, $authorizationChecker, $preview);
+            return $this->getFirstChild($criteria, $order);
         }
     }
 
@@ -415,24 +386,22 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param array|null $criteria
+     * @param array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
     public function getLastSibling(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
-        if (null !== $this->getParent()) {
-            return $this->getParent()->getHandler()->getLastChild($criteria, $order, $authorizationChecker, $preview);
+        if (null !== $this->nodeSource->getParent()) {
+            $parentHandler = new NodesSourcesHandler($this->objectManager, $this->settingsBag, $this->tagApi);
+            $parentHandler->setNodeSource($this->nodeSource->getParent());
+            return $parentHandler->getLastChild($criteria, $order);
         } else {
             $criteria['node.parent'] = null;
-            return $this->getLastChild($criteria, $order, $authorizationChecker, $preview);
+            return $this->getLastChild($criteria, $order);
         }
     }
 
@@ -441,18 +410,14 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param array|null $criteria
+     * @param array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
     public function getPrevious(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         if ($this->nodeSource->getNode()->getPosition() <= 1) {
             return null;
@@ -484,14 +449,12 @@ class NodesSourcesHandler
         $order['node.position'] = 'DESC';
 
         /** @var NodesSourcesRepository $repo */
-        $repo = Kernel::getService('em')
+        $repo = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
 
         return $repo->findOneBy(
             $defaultCriteria,
-            $order,
-            $authorizationChecker,
-            $preview
+            $order
         );
     }
 
@@ -500,18 +463,14 @@ class NodesSourcesHandler
      *
      * Get non-newsletter nodes-sources by default.
      *
-     * @param  array|null           $criteria
-     * @param  array|null           $order
-     * @param  AuthorizationChecker|null $authorizationChecker
-     * @param boolean $preview
+     * @param array|null $criteria
+     * @param array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
     public function getNext(
         array $criteria = null,
-        array $order = null,
-        AuthorizationChecker $authorizationChecker = null,
-        $preview = false
+        array $order = null
     ) {
         $defaultCrit = [
             'node.nodeType.newsletterType' => false,
@@ -538,13 +497,11 @@ class NodesSourcesHandler
 
         $order['node.position'] = 'ASC';
 
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
             ->findOneBy(
                 $defaultCrit,
-                $order,
-                $authorizationChecker,
-                $preview
+                $order
             );
     }
 
@@ -555,7 +512,7 @@ class NodesSourcesHandler
      */
     public function getTags()
     {
-        $tags = Kernel::getService('tagApi')->getBy([
+        $tags = $this->tagApi->getBy([
             "nodes" => $this->nodeSource->getNode(),
             "translation" => $this->nodeSource->getTranslation(),
         ]);
@@ -579,10 +536,10 @@ class NodesSourcesHandler
         return [
             'title' => ($this->nodeSource->getMetaTitle() != "") ?
             $this->nodeSource->getMetaTitle() :
-            $this->nodeSource->getTitle() . ' – ' . Kernel::getService('settingsBag')->get('site_name'),
+            $this->nodeSource->getTitle() . ' – ' . $this->settingsBag->get('site_name'),
             'description' => ($this->nodeSource->getMetaDescription() != "") ?
             $this->nodeSource->getMetaDescription() :
-            $this->nodeSource->getTitle() . ', ' . Kernel::getService('settingsBag')->get('seo_description'),
+            $this->nodeSource->getTitle() . ', ' . $this->settingsBag->get('seo_description'),
             'keywords' => $this->nodeSource->getMetaKeywords(),
         ];
     }
@@ -596,14 +553,12 @@ class NodesSourcesHandler
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
-                $this->nodeSource->getTranslation(),
-                Kernel::getService('securityAuthorizationChecker'),
-                Kernel::getInstance()->isPreview()
+                $this->nodeSource->getTranslation()
             );
     }
 
@@ -616,14 +571,12 @@ class NodesSourcesHandler
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return Kernel::getService('em')
+        return $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
             ->findByReverseNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
-                $this->nodeSource->getTranslation(),
-                Kernel::getService('securityAuthorizationChecker'),
-                Kernel::getInstance()->isPreview()
+                $this->nodeSource->getTranslation()
             );
     }
 }

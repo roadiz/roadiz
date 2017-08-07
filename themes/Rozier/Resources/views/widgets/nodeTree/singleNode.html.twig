@@ -1,11 +1,10 @@
-{% set source = node.getNodeSources.first %}
-
-{% if source.getTitle %}
-    {% set name = source.getTitle %}
+{% set source = node.nodeSources.first %}
+{% if source.title %}
+    {% set name = source.title %}
 {% else %}
-    {% set name = node.getNodeName %}
+    {% set name = node.nodeName %}
 {% endif %}
-{% set type = node.getNodeType.getName() %}
+{% set type = node.nodeType.name %}
 
 {% set classes = [
 type|lower,
@@ -40,7 +39,7 @@ type|lower,
 {% if not node.isPublished %}{% set innerClasses = innerClasses|merge(['unpublished-node']) %}{% endif %}
 {% if not node.isArchived %}{% set innerClasses = innerClasses|merge(['archived-node']) %}{% endif %}
 {% if not node.isLocked %}{% set innerClasses = innerClasses|merge(['locked-node']) %}{% endif %}
-{% if nodeTree.isStackTree and source.publishedAt %}
+{% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
     {% set innerClasses = innerClasses|merge(['datetime-publishable']) %}
     {% if source.publishedAt > date() %}
         {% set innerClasses = innerClasses|merge(['datetime-publishable-future']) %}
@@ -75,7 +74,7 @@ type|lower,
             {% elseif node.isHome and node.isHidingChildren %}
                 <i class="uk-icon-rz-building"></i>
             {% endif %}
-            {% if nodeTree.isStackTree and source.publishedAt %}
+            {% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
                 <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|localizeddate('short', 'none') }}</div>
             {% endif %}
         </div>

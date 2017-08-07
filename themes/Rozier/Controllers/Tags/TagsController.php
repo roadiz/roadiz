@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Handlers\TagHandler;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -67,6 +68,7 @@ class TagsController extends RozierApp
         $listManager = $this->createEntityListManager(
             'RZ\Roadiz\Core\Entities\Tag'
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -566,6 +568,7 @@ class TagsController extends RozierApp
                     'tags' => $tag,
                 ]
             );
+            $listManager->setDisplayingNotPublishedNodes(true);
             $listManager->handle();
 
             $this->assignation['filters'] = $listManager->getAssignation();
@@ -653,8 +656,11 @@ class TagsController extends RozierApp
                     'id' => $tagsIds,
                 ]);
 
+            /** @var Tag $tag */
             foreach ($tags as $tag) {
-                $tag->getHandler()->removeWithChildrenAndAssociations();
+                /** @var TagHandler $handler */
+                $handler = $this->get('factory.handler')->getHandler($tag);
+                $handler->removeWithChildrenAndAssociations();
             }
 
             $this->get('em')->flush();

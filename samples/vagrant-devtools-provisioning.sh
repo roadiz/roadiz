@@ -34,3 +34,4 @@ sudo apt-get -y install yarn > /dev/null 2>&1
 ##### CLEAN UP #####
 sudo dpkg --configure -a  > /dev/null 2>&1; # when upgrade or install doesnt run well (e.g. loss of connection) this may resolve quite a few issues
 sudo apt-get autoremove -y  > /dev/null 2>&1; # remove obsolete packages
+sudo apt-get clean; # remove obsolete packages

@@ -78,6 +78,7 @@ class NodesCreationCommand extends Command
 
         $existingNode = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findOneByNodeName($nodeName);
 
         if (null === $existingNode) {

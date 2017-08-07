@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -94,6 +95,7 @@ class DynamicUrlMatcher extends UrlMatcher
      */
     protected function parseTranslation(&$tokens)
     {
+        /** @var TranslationRepository $repository */
         $repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation');
 
         if (!empty($tokens[0])) {

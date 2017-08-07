@@ -4,7 +4,7 @@
             class="uk-sortable-list-item drawer-item type-label"
             v-if="item"
             @click.prevent="onAddItemButtonClick"
-            :class="isPusblishedClass">
+            :class="isPublishedClass">
 
             <div class="uk-sortable-handle"></div>
             <div class="border" :style="{ backgroundColor: getColor() }"></div>
@@ -72,7 +72,7 @@
             name: {
                 type: String
             },
-            isPusblishedClass: {
+            isPublishedClass: {
                 type: String
             }
         },

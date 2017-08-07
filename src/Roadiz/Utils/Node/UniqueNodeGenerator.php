@@ -97,15 +97,10 @@ class UniqueNodeGenerator
         /** @var \RZ\Roadiz\Core\Entities\NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
+        $source->setPublishedAt(new \DateTime());
 
         $this->entityManager->persist($node);
         $this->entityManager->persist($source);
-        $this->entityManager->flush();
-
-        /*
-         * Enforce cleaning node positions after each creation
-         */
-        $node->getHandler()->cleanPositions();
         $this->entityManager->flush();
 
         return $source;

@@ -39,9 +39,11 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.
@@ -54,19 +56,32 @@ class SolariumNodeSource extends AbstractSolarium
     protected $nodeSource = null;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
+    /**
+     * @var HandlerFactory
+     */
+    private $handlerFactory;
+    /**
+     * @var Client
+     */
+    protected $client;
+    /**
+     * @var Logger
+     */
+    protected $logger;
 
     /**
      * Create a new SolariumNodeSource.
      *
      * @param NodesSources $nodeSource
      * @param Client $client
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcherInterface $dispatcher
+     * @param HandlerFactory $handlerFactory
      * @param Logger $logger
      */
-    public function __construct(NodesSources $nodeSource, Client $client, EventDispatcher $dispatcher, Logger $logger = null)
+    public function __construct(NodesSources $nodeSource, Client $client, EventDispatcherInterface $dispatcher, HandlerFactory $handlerFactory, Logger $logger = null)
     {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
@@ -76,6 +91,7 @@ class SolariumNodeSource extends AbstractSolarium
         $this->nodeSource = $nodeSource;
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -131,11 +147,13 @@ class SolariumNodeSource extends AbstractSolarium
         $locale = $this->nodeSource->getTranslation()->getLocale();
         $lang = \Locale::getPrimaryLanguage($locale);
         $assoc['locale_s'] = $locale;
+        /** @var NodesSourcesHandler $handler */
+        $handler = $this->handlerFactory->getHandler($this->nodeSource);
         $out = array_map(
             function (Tag $x) {
                 return $x->getTranslatedTags()->first()->getName();
             },
-            $this->nodeSource->getHandler()->getTags()
+            $handler->getTags()
         );
         // Use tags_txt to be compatible with other data types
         $assoc['tags_txt'] = $out;

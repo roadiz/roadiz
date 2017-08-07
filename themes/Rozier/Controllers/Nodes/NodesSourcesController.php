@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -82,14 +83,19 @@ class NodesSourcesController extends RozierApp
             /** @var NodesSources $source */
             $source = $this->get('em')
                            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->setDisplayingAllNodesStatuses(true)
+                           ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
 
             if (null !== $source) {
                 $this->get('em')->refresh($source);
                 $node = $source->getNode();
 
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->get('node.handler')->setNode($gnode);
+
                 $this->assignation['translation'] = $translation;
-                $this->assignation['available_translations'] = $gnode->getHandler()->getAvailableTranslations();
+                $this->assignation['available_translations'] = $nodeHandler->getAvailableTranslations();
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
 
@@ -102,6 +108,7 @@ class NodesSourcesController extends RozierApp
                     [
                         'controller' => $this,
                         'entityManager' => $this->get('em'),
+                        'container' => $this->getContainer(),
                         'withVirtual' => true,
                         'withTitle' => true,
                     ]

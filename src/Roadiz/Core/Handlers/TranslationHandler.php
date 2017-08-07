@@ -29,15 +29,19 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\objectManagerInterface;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with translations entities.
  */
-class TranslationHandler
+class TranslationHandler extends AbstractHandler
 {
-    private $translation = null;
+    /**
+     * @var Translation
+     */
+    private $translation;
 
     /**
      * @return Translation
@@ -52,21 +56,10 @@ class TranslationHandler
      *
      * @return $this
      */
-    public function setTranslation($translation)
+    public function setTranslation(Translation $translation)
     {
         $this->translation = $translation;
-
         return $this;
-    }
-
-    /**
-     * Create a new translation handler with translation to handle.
-     *
-     * @param Translation $translation
-     */
-    public function __construct(Translation $translation)
-    {
-        $this->translation = $translation;
     }
 
     /**
@@ -76,20 +69,23 @@ class TranslationHandler
      */
     public function makeDefault()
     {
-        $defaults = Kernel::getService('em')
+        $defaults = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findBy(['defaultTranslation'=>true]);
 
+        /** @var Translation $default */
         foreach ($defaults as $default) {
             $default->setDefaultTranslation(false);
         }
-        Kernel::getService('em')->flush();
+        $this->objectManager->flush();
         $this->translation->setDefaultTranslation(true);
-        Kernel::getService('em')->flush();
+        $this->objectManager->flush();
 
-        $cacheDriver = Kernel::getService('em')->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null) {
-            $cacheDriver->deleteAll();
+        if ($this->objectManager instanceof objectManagerInterface) {
+            $cacheDriver = $this->objectManager->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         return $this;

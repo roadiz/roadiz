@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\NodeTypes;
 
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -62,6 +63,7 @@ class NodeTypesController extends RozierApp
             [],
             ['name' => 'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
 
         /*
          * Stored in session
@@ -89,6 +91,7 @@ class NodeTypesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
+        /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
@@ -105,7 +108,9 @@ class NodeTypesController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->get('em')->flush();
-                    $nodeType->getHandler()->updateSchema();
+                    /** @var NodeTypeHandler $handler */
+                    $handler = $this->get('factory.handler')->getHandler($nodeType);
+                    $handler->updateSchema();
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.updated', ['%name%' => $nodeType->getName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -154,7 +159,9 @@ class NodeTypesController extends RozierApp
                 try {
                     $this->get('em')->persist($nodeType);
                     $this->get('em')->flush();
-                    $nodeType->getHandler()->updateSchema();
+                    /** @var NodeTypeHandler $handler */
+                    $handler = $this->get('factory.handler')->getHandler($nodeType);
+                    $handler->updateSchema();
 
                     $msg = $this->getTranslator()->trans('nodeType.%name%.created', ['%name%' => $nodeType->getName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -191,6 +198,7 @@ class NodeTypesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
 
+        /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
@@ -206,7 +214,9 @@ class NodeTypesController extends RozierApp
                 /*
                  * Delete All node-type association and schema
                  */
-                $nodeType->getHandler()->deleteWithAssociations();
+                /** @var NodeTypeHandler $handler */
+                $handler = $this->get('factory.handler')->getHandler($nodeType);
+                $handler->deleteWithAssociations();
 
                 $msg = $this->getTranslator()->trans('nodeType.%name%.deleted', ['%name%' => $nodeType->getName()]);
                 $this->publishConfirmMessage($request, $msg);

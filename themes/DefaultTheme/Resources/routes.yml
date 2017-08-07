@@ -1,7 +1,8 @@
 # This route is required!
 homePage:
     path:     /
-    defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction }
+    defaults:
+        _controller: Themes\DefaultTheme\DefaultThemeApp::homeAction
 homePageLocale:
     path:     /{_locale}
     defaults:
@@ -17,7 +18,8 @@ contactPage:
         _locale: en
 contactPageLocale:
     path:     /{_locale}/contact
-    defaults: { _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction }
+    defaults:
+        _controller: Themes\DefaultTheme\Controllers\ContactController::indexAction
     requirements:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
@@ -28,13 +30,15 @@ searchPage:
         _locale: en
 searchPageLocale:
     path:     /{_locale}/search
-    defaults: { _controller: Themes\DefaultTheme\Controllers\SearchController::defaultAction }
+    defaults:
+        _controller: Themes\DefaultTheme\Controllers\SearchController::defaultAction
     requirements:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
 defaultRemoveTrailingSlash:
     path: /{url}
-    defaults: { _controller: Themes\DefaultTheme\DefaultThemeApp::removeTrailingSlashAction }
+    defaults:
+        _controller: Themes\DefaultTheme\DefaultThemeApp::removeTrailingSlashAction
     requirements:
         url: .*/$
     methods: [GET]

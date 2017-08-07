@@ -46,11 +46,14 @@ class ThemeRepository extends EntityRepository
      */
     public function findAvailableBackend()
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true
-            AND t.backendTheme = true')
-                    ->setMaxResults(1);
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->andWhere($qb->expr()->eq('t.backendTheme', ':backendTheme'))
+            ->setParameter('available', true)
+            ->setParameter('backendTheme', true)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+        $query = $qb->getQuery();
 
         $query->useResultCache(true, 3600, 'RZTheme_backend');
 
@@ -73,11 +76,15 @@ class ThemeRepository extends EntityRepository
      */
     public function findAvailableFrontends()
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true
-            AND t.backendTheme = false
-            ORDER BY t.hostname DESC, t.staticTheme DESC');
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->andWhere($qb->expr()->eq('t.backendTheme', ':backendTheme'))
+            ->addOrderBy('t.hostname', 'DESC')
+            ->addOrderBy('t.staticTheme', 'DESC')
+            ->setParameter('available', true)
+            ->setParameter('backendTheme', false)
+            ->setCacheable(true);
+        $query = $qb->getQuery();
 
         $query->useResultCache(true, 3600, 'RZTheme_frontends');
 
@@ -97,20 +104,7 @@ class ThemeRepository extends EntityRepository
      */
     public function findFirstAvailableFrontend()
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true
-            AND t.backendTheme = false
-            AND t.hostname = \'*\'')
-                    ->setMaxResults(1);
-
-        $query->useResultCache(true, 3600, 'RZTheme_first_frontend');
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->findAvailableFrontendWithHost();
     }
 
     /**
@@ -125,13 +119,16 @@ class ThemeRepository extends EntityRepository
      */
     public function findAvailableFrontendWithHost($hostname = "*")
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true
-            AND t.backendTheme = false
-            AND t.hostname = :hostname')
-                    ->setParameter('hostname', $hostname)
-                    ->setMaxResults(1);
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->andWhere($qb->expr()->eq('t.backendTheme', ':backendTheme'))
+            ->andWhere($qb->expr()->eq('t.hostname', ':hostname'))
+            ->setParameter('available', true)
+            ->setParameter('backendTheme', false)
+            ->setParameter('hostname', $hostname)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+        $query = $qb->getQuery();
 
         $query->useResultCache(true, 3600, 'RZTheme_frontend_'.$hostname);
 
@@ -154,21 +151,7 @@ class ThemeRepository extends EntityRepository
      */
     public function findFirstAvailableNonStaticFrontend()
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true
-            AND t.backendTheme = false
-            AND t.staticTheme = false
-            AND t.hostname = \'*\'')
-                    ->setMaxResults(1);
-
-        $query->useResultCache(true, 3600, 'RZTheme_first_nonstatic_frontend');
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->findAvailableNonStaticFrontendWithHost();
     }
 
     /**
@@ -186,14 +169,18 @@ class ThemeRepository extends EntityRepository
      */
     public function findAvailableNonStaticFrontendWithHost($hostname = "*")
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.available = true
-            AND t.backendTheme = false
-            AND t.staticTheme = false
-            AND t.hostname = :hostname')
-                    ->setParameter('hostname', $hostname)
-                    ->setMaxResults(1);
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            ->andWhere($qb->expr()->eq('t.backendTheme', ':backendTheme'))
+            ->andWhere($qb->expr()->eq('t.hostname', ':hostname'))
+            ->andWhere($qb->expr()->eq('t.staticTheme', ':staticTheme'))
+            ->setParameter('available', true)
+            ->setParameter('backendTheme', false)
+            ->setParameter('staticTheme', false)
+            ->setParameter('hostname', $hostname)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+        $query = $qb->getQuery();
 
         $query->useResultCache(true, 3600, 'RZTheme_nonstatic_frontend_'.$hostname);
 
@@ -213,11 +200,12 @@ class ThemeRepository extends EntityRepository
      */
     public function findOneByClassName($className)
     {
-        $query = $this->_em->createQuery('
-            SELECT t FROM RZ\Roadiz\Core\Entities\Theme t
-            WHERE t.className = :className')
-                    ->setParameter('className', $className)
-                    ->setMaxResults(1);
+        $qb = $this->createQueryBuilder('t');
+        $qb->andWhere($qb->expr()->eq('t.className', ':className'))
+            ->setParameter('className', $className)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+        $query = $qb->getQuery();
 
         $query->useResultCache(true, 3600, 'RZTheme_'.$className);
 

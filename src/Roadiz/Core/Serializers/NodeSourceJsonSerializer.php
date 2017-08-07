@@ -57,6 +57,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         $data['meta_title'] = $nodeSource->getMetaTitle();
         $data['meta_keywords'] = $nodeSource->getMetaKeywords();
         $data['meta_description'] = $nodeSource->getMetaDescription();
+        $data['published_at'] = $nodeSource->getPublishedAt();
 
         $data = array_merge($data, $this->getSourceFields($nodeSource));
 
@@ -123,6 +124,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
             "meta_title",
             "meta_keywords",
             "meta_description",
+            "published_at",
         ];
 
         foreach ($fields as $field) {

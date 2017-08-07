@@ -33,7 +33,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-use RZ\Roadiz\Core\Handlers\TagHandler;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
+use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -50,8 +51,10 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"updated_at"})
  * })
  */
-class Tag extends AbstractDateTimedPositioned
+class Tag extends AbstractDateTimedPositioned implements LeafInterface
 {
+    use LeafTrait;
+
     /**
      * @ORM\Column(type="string", name="tag_name", unique=true)
      */
@@ -165,78 +168,45 @@ class Tag extends AbstractDateTimedPositioned
     }
 
     /**
+     * Get tag full path using tag names.
+     *
+     * @return string
+     */
+    public function getFullPath()
+    {
+        $parents = $this->getParents();
+        $path = [];
+
+        /** @var Tag $parent */
+        foreach ($parents as $parent) {
+            $path[] = $parent->getTagName();
+        }
+
+        $path[] = $this->getTagName();
+
+        return implode('/', $path);
+    }
+
+    /**
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
      */
-    private $parent;
-
-    /**
-     * @return Tag parent
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @param Tag $parent
-     *
-     * @return $this
-     */
-    public function setParent(Tag $parent = null)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
+    protected $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
-    private $children;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-    /**
-     * @param Tag $child
-     *
-     * @return $this
-     */
-    public function addChild(Tag $child)
-    {
-        if (!$this->getChildren()->contains($child)) {
-            $this->getChildren()->add($child);
-        }
-
-        return $this;
-    }
-    /**
-     * @param Tag $child
-     *
-     * @return $this
-     */
-    public function removeChild(Tag $child)
-    {
-        if ($this->getChildren()->contains($child)) {
-            $this->getChildren()->removeElement($child);
-        }
-
-        return $this;
-    }
+    protected $children;
 
     /**
      * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
      */
     private $translatedTags = null;
+
     /**
      * @return ArrayCollection
      */
@@ -274,14 +244,6 @@ class Tag extends AbstractDateTimedPositioned
     {
         return $this->getId() . " — " . $this->getTagName() .
             " — Visible : " . ($this->isVisible() ? 'true' : 'false') . PHP_EOL;
-    }
-
-    /**
-     * @return \RZ\Roadiz\Core\Handlers\TagHandler
-     */
-    public function getHandler()
-    {
-        return new TagHandler($this);
     }
 
     /**

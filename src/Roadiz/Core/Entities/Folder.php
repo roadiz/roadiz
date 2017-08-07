@@ -33,13 +33,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
-use RZ\Roadiz\Core\Handlers\FolderHandler;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
+use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
+use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * Folders entity represent a directory on server with datetime and naming.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\FolderRepository")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="folders", indexes={
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"position"}),
@@ -47,8 +51,10 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"updated_at"})
  * })
  */
-class Folder extends AbstractDateTimedPositioned
+class Folder extends AbstractDateTimedPositioned implements FolderInterface
 {
+    use LeafTrait;
+
     /**
      * @ORM\Column(name="folder_name", type="string", unique=true, nullable=false)
      * @var string
@@ -73,50 +79,11 @@ class Folder extends AbstractDateTimedPositioned
     protected $parent = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Folder
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @param \RZ\Roadiz\Core\Entities\Folder $parent
-     * @return $this
-     */
-    public function setParent(Folder $parent = null)
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
-    private $children;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * @param Folder $child
-     * @return $this
-     */
-    public function addChild(Folder $child)
-    {
-        if (!$this->getChildren()->contains($child)) {
-            $this->children->add($child);
-        }
-
-        return $this;
-    }
+    protected $children;
 
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true)
@@ -131,7 +98,7 @@ class Folder extends AbstractDateTimedPositioned
     protected $documents;
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection<DocumentInterface>
      */
     public function getDocuments()
     {
@@ -139,10 +106,10 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @param Document $document
+     * @param DocumentInterface $document
      * @return $this
      */
-    public function addDocument(Document $document)
+    public function addDocument(DocumentInterface $document)
     {
         if (!$this->getDocuments()->contains($document)) {
             $this->documents->add($document);
@@ -152,10 +119,10 @@ class Folder extends AbstractDateTimedPositioned
     }
 
     /**
-     * @param Document $document
+     * @param DocumentInterface $document
      * @return $this
      */
-    public function removeDocument(Document $document)
+    public function removeDocument(DocumentInterface $document)
     {
         if ($this->getDocuments()->contains($document)) {
             $this->documents->removeElement($document);
@@ -278,12 +245,23 @@ class Folder extends AbstractDateTimedPositioned
         return $this;
     }
 
-
     /**
-     * @return \RZ\Roadiz\Core\Handlers\FolderHandler
+     * Get folder full path using folder names.
+     *
+     * @return string
      */
-    public function getHandler()
+    public function getFullPath()
     {
-        return new FolderHandler($this);
+        $parents = $this->getParents();
+        $path = [];
+
+        /** @var Folder $parent */
+        foreach ($parents as $parent) {
+            $path[] = $parent->getFolderName();
+        }
+
+        $path[] = $this->getFolderName();
+
+        return implode('/', $path);
     }
 }

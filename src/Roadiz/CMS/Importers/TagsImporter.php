@@ -34,6 +34,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 
 /**
@@ -48,10 +49,10 @@ class TagsImporter implements ImporterInterface
      *
      * @param string $serializedData
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $serializer = new TagJsonSerializer();
         $tags = $serializer->deserialize($serializedData);

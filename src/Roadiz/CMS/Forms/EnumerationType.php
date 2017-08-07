@@ -67,6 +67,10 @@ class EnumerationType extends AbstractType
             'placeholder' => 'choose.value',
             'expanded' => $this->field->isExpanded(),
         ]);
+
+        if ('' !== $this->field->getPlaceholder()) {
+            $resolver->setDefault('placeholder', $this->field->getPlaceholder());
+        }
     }
     /**
      * {@inheritdoc}

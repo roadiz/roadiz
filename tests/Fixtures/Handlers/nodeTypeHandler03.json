@@ -20,7 +20,11 @@
             "universal": false,
             "default_values": "value1, value2",
             "group_name": null,
-            "expanded": false
+            "group_name_canonical": null,
+            "expanded": false,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         }
     ]
 }

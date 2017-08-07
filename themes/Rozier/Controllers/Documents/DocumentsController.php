@@ -29,7 +29,6 @@
 namespace Themes\Rozier\Controllers\Documents;
 
 use Doctrine\ORM\EntityManager;
-use Intervention\Image\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
@@ -37,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
+use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
@@ -55,7 +55,6 @@ use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
-use Themes\Rozier\AjaxControllers\AjaxDocumentsExplorerController;
 use Themes\Rozier\Models\DocumentModel;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -133,6 +132,7 @@ class DocumentsController extends RozierApp
             $prefilters,
             ['createdAt' => 'DESC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(static::DEFAULT_ITEM_PER_PAGE);
 
         /*
@@ -210,14 +210,10 @@ class DocumentsController extends RozierApp
 
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $fileForm->get('editDocument')->getData();
-                $documentFactory = new DocumentFactory(
-                    $uploadedFile,
-                    $em,
-                    $this->get('dispatcher'),
-                    $this->get('assetPackages'),
-                    null,
-                    $this->get('logger')
-                );
+                /** @var DocumentFactory $documentFactory */
+                $documentFactory = $this->get('document.factory');
+                $documentFactory->setFile($uploadedFile);
+
 
                 $documentFactory->updateDocument($document);
                 $em->flush();
@@ -622,8 +618,12 @@ class DocumentsController extends RozierApp
         $document = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
+        /** @var DocumentHandler $handler */
+        $handler = $this->get('document.handler');
+        $handler->setDocument($document);
+
         if ($document !== null &&
-            null !== $response = $document->getHandler()->getDownloadResponse()) {
+            null !== $response = $handler->getDownloadResponse()) {
             return $response->send();
         }
 
@@ -673,15 +673,7 @@ class DocumentsController extends RozierApp
                         $documentModel = new DocumentModel($document, $this->getContainer());
                         return new JsonResponse([
                             'success' => true,
-                            'documentId' => $document->getId(),
                             'document' => $documentModel->toArray(),
-                            'thumbnail' => [
-                                'id' => $document->getId(),
-                                'filename' => $document->getFilename(),
-                                'large' => $document->getViewer()->getDocumentUrlByArray(['noProcess' => true]),
-                                'thumbnail' => $document->getViewer()->getDocumentUrlByArray(AjaxDocumentsExplorerController::$thumbnailArray),
-                                'html' => $this->getTwig()->render('widgets/documentSmallThumbnail.html.twig', ['document' => $document]),
-                            ],
                         ]);
                     } else {
                         return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
@@ -723,7 +715,7 @@ class DocumentsController extends RozierApp
             }
         }
         $this->assignation['form'] = $form->createView();
-        $this->assignation['maxUploadSize'] = \Symfony\Component\HttpFoundation\File\UploadedFile::getMaxFilesize() / 1024 / 1024;
+        $this->assignation['maxUploadSize'] = UploadedFile::getMaxFilesize() / 1024 / 1024;
 
         return $this->render('documents/upload.html.twig', $this->assignation);
     }
@@ -1091,7 +1083,7 @@ class DocumentsController extends RozierApp
     private function downloadDocuments($documents)
     {
         if (count($documents) > 0) {
-            $tmpFileName = tempnam("/tmp", "rzdocs_");
+            $tmpFileName = tempnam(sys_get_temp_dir(), "rzdocs_");
             $zip = new \ZipArchive();
             $zip->open($tmpFileName, \ZipArchive::CREATE);
 
@@ -1150,7 +1142,7 @@ class DocumentsController extends RozierApp
             }
 
             if ($finder->exists()) {
-                $document = $finder->createDocumentFromFeed($this->getContainer());
+                $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
 
                 if (null !== $document &&
                     null !== $folderId &&
@@ -1161,8 +1153,9 @@ class DocumentsController extends RozierApp
 
                     $document->addFolder($folder);
                     $folder->addDocument($document);
-                    $this->get('em')->flush();
                 }
+
+                $this->get('em')->flush();
 
                 return $document;
             } else {
@@ -1185,18 +1178,20 @@ class DocumentsController extends RozierApp
     public function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        $document = $finder->createDocumentFromFeed($this->getContainer());
+        $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
 
         if (null !== $document &&
             null !== $folderId &&
             $folderId > 0) {
+            /** @var Folder $folder */
             $folder = $this->get('em')
                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);
-            $this->get('em')->flush();
         }
+        $this->get('em')->flush();
+
         return $document;
     }
 
@@ -1235,10 +1230,14 @@ class DocumentsController extends RozierApp
          * Change privacy document status
          */
         if ($data['private'] != $document->isPrivate()) {
+            /** @var DocumentHandler $handler */
+            $handler = $this->get('document.handler');
+            $handler->setDocument($document);
+
             if ($data['private'] === true) {
-                $document->getHandler()->makePrivate();
+                $handler->makePrivate();
             } else {
-                $document->getHandler()->makePublic();
+                $handler->makePublic();
             }
 
             unset($data['private']);
@@ -1263,16 +1262,11 @@ class DocumentsController extends RozierApp
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $data['newDocument'];
 
-            $documentFactory = new DocumentFactory(
-                $uploadedFile,
-                $this->get('em'),
-                $this->get('dispatcher'),
-                $this->get('assetPackages'),
-                null,
-                $this->get('logger')
-            );
-
+            /** @var DocumentFactory $documentFactory */
+            $documentFactory = $this->get('document.factory');
+            $documentFactory->setFile($uploadedFile);
             $documentFactory->updateDocument($document);
+
             $this->get('em')->flush();
         }
         return $document;
@@ -1298,14 +1292,10 @@ class DocumentsController extends RozierApp
         if (!empty($data['attachment'])) {
             $uploadedFile = $data['attachment']->getData();
 
-            $documentFactory = new DocumentFactory(
-                $uploadedFile,
-                $this->get('em'),
-                $this->get('dispatcher'),
-                $this->get('assetPackages'),
-                $folder,
-                $this->get('logger')
-            );
+            /** @var DocumentFactory $documentFactory */
+            $documentFactory = $this->get('document.factory');
+            $documentFactory->setFile($uploadedFile);
+            $documentFactory->setFolder($folder);
 
             if (null !== $document = $documentFactory->getDocument()) {
                 $this->get('em')->flush();

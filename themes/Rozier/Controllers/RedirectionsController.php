@@ -55,6 +55,7 @@ class RedirectionsController extends RozierApp
             [],
             ['query' => 'ASC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         /*
          * Stored in session
          */

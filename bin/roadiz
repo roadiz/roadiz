@@ -55,7 +55,7 @@ if ($debug) {
     Debug::enable();
 }
 
-$kernel = Kernel::getInstance($env, $debug, $preview);
+$kernel = new Kernel($env, $debug, $preview);
 
 $application = new RoadizApplication($kernel);
 $application->run($input);

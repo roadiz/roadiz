@@ -27,7 +27,6 @@
 use Doctrine\Common\Collections\ArrayCollection;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Filesystem\Filesystem;
@@ -45,9 +44,9 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     public function testConstructor()
     {
         $manager = new DownscaleImageManager(
-            Kernel::getService('em'),
-            Kernel::getService('assetPackages'),
-            Kernel::getService('logger'),
+            $this->get('em'),
+            $this->get('assetPackages'),
+            $this->get('logger'),
             'gd',
             1920
         );
@@ -59,19 +58,26 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     {
         $originalHashes = [];
 
+        /** @var \RZ\Roadiz\Utils\Asset\Packages $packages */
+        $packages =  $this->get('assetPackages');
+
         $manager = new DownscaleImageManager(
-            Kernel::getService('em'),
-            Kernel::getService('assetPackages'),
-            Kernel::getService('logger'),
+            $this->get('em'),
+            $packages,
+            $this->get('logger'),
             'gd',
             100
         );
 
+        /**
+         * @var int $key
+         * @var Document $document
+         */
         foreach (static::$documentCollection as $key => $document) {
-            $originalHashes[$key] = hash_file('md5', $document->getAbsolutePath());
+            $originalHashes[$key] = hash_file('md5', $packages->getDocumentFilePath($document));
 
             $manager->processAndOverrideDocument($document);
-            $afterHash = hash_file('md5', $document->getAbsolutePath());
+            $afterHash = hash_file('md5', $packages->getDocumentFilePath($document));
 
             if ($document->getMimeType() == 'image/gif') {
                 /*
@@ -90,7 +96,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
                 /*
                  * Raw document must be equal to original file
                  */
-                $rawHash = hash_file('md5', $document->getRawDocument()->getAbsolutePath());
+                $rawHash = hash_file('md5', $packages->getDocumentFilePath($document->getRawDocument()));
                 $this->assertEquals($originalHashes[$key], $rawHash);
             }
         }
@@ -100,16 +106,16 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          * not more raw and no more difference
          */
         $manager = new DownscaleImageManager(
-            Kernel::getService('em'),
-            Kernel::getService('assetPackages'),
-            Kernel::getService('logger'),
+            $this->get('em'),
+            $packages,
+            $this->get('logger'),
             'gd',
             100000
         );
 
         foreach (static::$documentCollection as $key => $document) {
             $manager->processDocumentFromExistingRaw($document);
-            $afterHash = hash_file('md5', $document->getAbsolutePath());
+            $afterHash = hash_file('md5', $packages->getDocumentFilePath($document));
 
             $this->assertEquals($originalHashes[$key], $afterHash);
             $this->assertNull($document->getRawDocument());
@@ -136,13 +142,13 @@ class DownscaleImageManagerTest extends SchemaDependentCase
             $document->setFilename($image->getBasename());
             $document->setMimeType($image->getMimeType());
 
-            $fs->copy($file, Kernel::getInstance()->getPublicFilesPath() . '/' . $document->getFolder() . '/' . $document->getFilename());
+            $fs->copy($file, static::$kernel->getPublicFilesPath() . '/' . $document->getFolder() . '/' . $document->getFilename());
 
-            Kernel::getService('em')->persist($document);
+            static::$kernel->get('em')->persist($document);
 
             static::$documentCollection->add($document);
         }
 
-        Kernel::getService('em')->flush();
+        static::$kernel->get('em')->flush();
     }
 }

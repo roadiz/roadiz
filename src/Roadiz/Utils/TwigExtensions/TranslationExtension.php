@@ -30,18 +30,32 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\HttpFoundation\Request;
+use RZ\Roadiz\Core\Viewers\TranslationViewer;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Extension that allow render document images
  */
 class TranslationExtension extends \Twig_Extension
 {
-    protected $request;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    /**
+     * @var TranslationViewer
+     */
+    private $translationViewer;
 
-    public function __construct(Request $request)
+    /**
+     * TranslationExtension constructor.
+     * @param RequestStack $requestStack
+     * @param TranslationViewer $translationViewer
+     */
+    public function __construct(RequestStack $requestStack, TranslationViewer $translationViewer)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
+        $this->translationViewer = $translationViewer;
     }
 
     public function getName()
@@ -53,6 +67,7 @@ class TranslationExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('menu', [$this, 'getMenuAssignation']),
+            new \Twig_SimpleFilter('country_iso', [$this, 'getCountryName']),
         ];
     }
 
@@ -64,9 +79,20 @@ class TranslationExtension extends \Twig_Extension
     public function getMenuAssignation(Translation $translation = null, $absolute = false)
     {
         if (null !== $translation) {
-            return $translation->getViewer()->getTranslationMenuAssignation($this->request, $absolute);
+            $this->translationViewer->setTranslation($translation);
+            return $this->translationViewer->getTranslationMenuAssignation($this->requestStack->getCurrentRequest(), $absolute);
         } else {
             return [];
         }
+    }
+
+    /**
+     * @param string $iso
+     * @param string $locale
+     * @return string
+     */
+    public function getCountryName($iso, $locale = 'en')
+    {
+        return \Locale::getDisplayRegion('-'.$iso, $locale);
     }
 }

@@ -33,7 +33,7 @@ namespace RZ\Roadiz\Config;
 use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Class YamlConfiguration
@@ -42,14 +42,15 @@ use Symfony\Component\Yaml\Yaml;
 class YamlConfigurationHandler extends ConfigurationHandler
 {
     /**
-     * @param string $file
+     * @param string $file File path
      * @return string|array|\stdClass
      * @throws NoYamlConfigurationFoundException
      */
     protected function loadFromFile($file)
     {
         if (file_exists($file)) {
-            return Yaml::parse($file);
+            $parser = new Parser();
+            return $parser->parse(file_get_contents($file));
         }
 
         throw new NoYamlConfigurationFoundException();

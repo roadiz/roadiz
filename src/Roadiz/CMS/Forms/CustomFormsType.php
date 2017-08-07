@@ -37,6 +37,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -186,6 +187,10 @@ class CustomFormsType extends AbstractType
             ],
         ];
 
+        if ($field->getPlaceholder() !== '') {
+            $option['attr']['placeholder'] = $field->getPlaceholder();
+        }
+
         if ($field->isRequired()) {
             $option['required'] = true;
             $option['constraints'] = [
@@ -199,6 +204,9 @@ class CustomFormsType extends AbstractType
 
         switch ($field->getType()) {
             case AbstractField::ENUM_T:
+                if ($field->getPlaceholder() !== '') {
+                    $option['placeholder'] = $field->getPlaceholder();
+                }
                 $option["choices"] = $this->getChoices($field);
                 $option["expanded"] = $field->isExpanded();
                 $option["choices_as_values"] = true;
@@ -211,6 +219,9 @@ class CustomFormsType extends AbstractType
                 }
                 break;
             case AbstractField::MULTIPLE_T:
+                if ($field->getPlaceholder() !== '') {
+                    $option['placeholder'] = $field->getPlaceholder();
+                }
                 $option["choices"] = $this->getChoices($field);
                 $option["multiple"] = true;
                 $option["choices_as_values"] = true;
@@ -228,11 +239,20 @@ class CustomFormsType extends AbstractType
                 break;
             case AbstractField::COUNTRY_T:
                 $option["expanded"] = $field->isExpanded();
+                if ($field->getPlaceholder() !== '') {
+                    $option['placeholder'] = $field->getPlaceholder();
+                }
                 if ($field->getDefaultValues() !== '') {
                     $countries = explode(',', $field->getDefaultValues());
                     $countries = array_map('trim', $countries);
                     $option['preferred_choices'] = $countries;
                 }
+                break;
+            case AbstractField::EMAIL_T:
+                if (!isset($option['constraints'])) {
+                    $option['constraints'] = [];
+                }
+                $option['constraints'][] = new Email();
                 break;
             default:
                 break;

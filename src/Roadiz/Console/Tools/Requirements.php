@@ -68,8 +68,8 @@ class Requirements
         $checks = [];
 
         $checks['php_version'] = [
-            'status' => $this->testPHPVersion('5.4.3'),
-            'version_minimum' => '5.4.3',
+            'status' => $this->testPHPVersion('5.6.0'),
+            'version_minimum' => '5.6.0',
             'found' => phpversion(),
             'message' => 'Your PHP version is outdated, you must update it.',
         ];
@@ -221,17 +221,17 @@ class Requirements
      *
      * @return boolean
      */
-    protected function testPHPIntValue($name, $expected)
+    public function testPHPIntValue($name, $expected)
     {
-
-        $intValue = (int) (str_replace(['s', 'K', 'M', 'G'], ['', '', '', ''], ini_get($name)));
+        $expected = $this->parseSuffixedAmount($expected);
+        $actual = $this->parseSuffixedAmount(ini_get($name));
 
         /*
          * 0 value means no limitations
          */
-        if ($intValue === 0) {
+        if ($actual === 0) {
             return true;
-        } elseif ($intValue < $expected) {
+        } elseif ($actual < $expected) {
             return false;
         }
 
@@ -243,7 +243,7 @@ class Requirements
      *
      * @return boolean
      */
-    protected function methodExists($name)
+    public function methodExists($name)
     {
         return (function_exists($name) === true) ? (true) : (false);
     }
@@ -253,7 +253,7 @@ class Requirements
      *
      * @return boolean
      */
-    protected function folderWritable($filename)
+    public function folderWritable($filename)
     {
         return is_writable($filename) === true ? true : false;
     }
@@ -263,7 +263,7 @@ class Requirements
      *
      * @return boolean
      */
-    protected function testExtension($name)
+    public function testExtension($name)
     {
         return extension_loaded($name);
     }
@@ -273,8 +273,30 @@ class Requirements
      *
      * @return integer
      */
-    protected function testPHPVersion($version)
+    public function testPHPVersion($version)
     {
         return !version_compare(phpversion(), $version, '<');
+    }
+
+    /**
+     * @param string $amount
+     * @return int Always return value in Megas
+     */
+    public function parseSuffixedAmount($amount)
+    {
+        $intValue = intval(preg_replace('#([0-9]+)[s|k|m|g|t]#i', '$1', $amount));
+
+        /*
+         * If actual is in Gigas
+         */
+        if (preg_match('#([0-9]+)g#i', $amount) > 0) {
+            return $intValue * 1024;
+        } elseif (preg_match('#([0-9]+)t#i', $amount) > 0) {
+            return $intValue * 1024 * 1024;
+        } elseif (preg_match('#([0-9]+)k#i', $amount) > 0) {
+            return $intValue / 1024;
+        } else {
+            return $intValue;
+        }
     }
 }

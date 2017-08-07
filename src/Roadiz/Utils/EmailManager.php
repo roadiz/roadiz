@@ -33,7 +33,7 @@ use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -101,6 +101,10 @@ class EmailManager
      * @var null|Settings
      */
     protected $settingsBag;
+    /**
+     * @var null|DocumentUrlGenerator
+     */
+    private $documentUrlGenerator;
 
 
     /**
@@ -114,13 +118,15 @@ class EmailManager
      * @param \Twig_Environment $templating
      * @param \Swift_Mailer $mailer
      * @param Settings|null $settingsBag
+     * @param DocumentUrlGenerator|null $documentUrlGenerator
      */
     public function __construct(
         Request $request,
         TranslatorInterface $translator,
         \Twig_Environment $templating,
         \Swift_Mailer $mailer,
-        Settings $settingsBag = null
+        Settings $settingsBag = null,
+        DocumentUrlGenerator $documentUrlGenerator = null
     ) {
         $this->request = $request;
         $this->translator = $translator;
@@ -134,6 +140,7 @@ class EmailManager
          */
         $this->emailStylesheet = CmsController::getResourcesFolder() . '/css/transactionalStyles.css';
         $this->settingsBag = $settingsBag;
+        $this->documentUrlGenerator = $documentUrlGenerator;
     }
 
     /**
@@ -184,9 +191,10 @@ class EmailManager
         if (empty($this->assignation['headerImageSrc']) && null !== $this->settingsBag) {
             $adminImage = $this->settingsBag->getDocument('admin_image');
             if (null !== $adminImage &&
-                $adminImage instanceof Document) {
-                $documentViewer = new DocumentViewer($adminImage);
-                $this->assignation['headerImageSrc'] = $documentViewer->getDocumentUrlByArray([], true);
+                $adminImage instanceof Document &&
+                null !== $this->documentUrlGenerator) {
+                $this->documentUrlGenerator->setDocument($adminImage);
+                $this->assignation['headerImageSrc'] = $this->documentUrlGenerator->getUrl(true);
             }
         }
 

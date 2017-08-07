@@ -82,6 +82,7 @@ class PageController extends DefaultThemeApp
             [
                 'controller' => $this,
                 'entityManager' => $this->get('em'),
+                'container' => $this->getContainer(),
                 'withVirtual' => false,
                 'withTitle' => false,
             ]

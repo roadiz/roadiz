@@ -75,7 +75,6 @@ class UsersPasswordCommand extends UsersCommand
                 )) {
                     $passwordGenerator = new PasswordGenerator();
                     $user->setPlainPassword($passwordGenerator->generatePassword(12));
-                    $user->getHandler()->encodePassword();
                     $this->entityManager->flush();
                     $text = '<info>User password regenerated…</info>' . PHP_EOL;
                     $text .= 'Password: <info>' . $user->getPlainPassword() . '</info>' . PHP_EOL;

@@ -218,6 +218,9 @@ class SearchController extends RozierApp
                 'RZ\Roadiz\Core\Entities\Node',
                 $data
             );
+            $listManager->setDisplayingNotPublishedNodes(true);
+            $listManager->setDisplayingAllNodesStatuses(true);
+
             if ($this->pagination === false) {
                 $listManager->setItemPerPage($this->itemPerPage);
                 $listManager->disablePagination();
@@ -373,6 +376,8 @@ class SearchController extends RozierApp
                 NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
                 $data
             );
+            $listManager->setDisplayingNotPublishedNodes(true);
+            $listManager->setDisplayingAllNodesStatuses(true);
             if ($this->pagination === false) {
                 $listManager->setItemPerPage($this->itemPerPage);
                 $listManager->disablePagination();
@@ -444,7 +449,8 @@ class SearchController extends RozierApp
             $answers[$idx] = $array;
         }
 
-        return XlsxExporter::exportXlsx($answers, $keys);
+        $exporter = new XlsxExporter($this->get('translator'));
+        return $exporter->exportXlsx($answers, $keys);
     }
 
     /**

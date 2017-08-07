@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
-use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -366,14 +365,7 @@ class Font extends AbstractDateTimed
     {
         return $this->getFolder() . '/' . $this->getEOTFilename();
     }
-    /**
-     * @return string
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getEOTAbsolutePath()
-    {
-        return static::getFilesFolder() . '/' . $this->getEOTRelativeUrl();
-    }
+
     /**
      * @return string
      */
@@ -381,14 +373,7 @@ class Font extends AbstractDateTimed
     {
         return $this->getFolder() . '/' . $this->getWOFFFilename();
     }
-    /**
-     * @return string
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getWOFFAbsolutePath()
-    {
-        return static::getFilesFolder() . '/' . $this->getWOFFRelativeUrl();
-    }
+
     /**
      * @return string
      */
@@ -396,14 +381,7 @@ class Font extends AbstractDateTimed
     {
         return $this->getFolder() . '/' . $this->getWOFF2Filename();
     }
-    /**
-     * @return string
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getWOFF2AbsolutePath()
-    {
-        return static::getFilesFolder() . '/' . $this->getWOFF2RelativeUrl();
-    }
+
     /**
      * @return string
      */
@@ -411,28 +389,13 @@ class Font extends AbstractDateTimed
     {
         return $this->getFolder() . '/' . $this->getOTFFilename();
     }
-    /**
-     * @return string
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getOTFAbsolutePath()
-    {
-        return static::getFilesFolder() . '/' . $this->getOTFRelativeUrl();
-    }
+
     /**
      * @return string
      */
     public function getSVGRelativeUrl()
     {
         return $this->getFolder() . '/' . $this->getSVGFilename();
-    }
-    /**
-     * @return string
-     * @deprecated Use Assets package service instead. Will be removed in Standard Edition.
-     */
-    public function getSVGAbsolutePath()
-    {
-        return static::getFilesFolder() . '/' . $this->getSVGRelativeUrl();
     }
 
     /**
@@ -464,31 +427,6 @@ class Font extends AbstractDateTimed
     public function __construct()
     {
         $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
-    }
-
-    /**
-     * @return string Return absolute path to fonts folder. This path should be protected.
-     * @deprecated Use Kernel::getFontsFilesPath() whenever it’s possible. This will be removed in Standard Edition.
-     */
-    public static function getFilesFolder()
-    {
-        return ROADIZ_ROOT . '/' . static::getFilesFolderName();
-    }
-    /**
-     * @return string
-     * @deprecated Use Kernel::getFontsFilesBasePath() whenever it’s possible. This will be removed in Standard Edition.
-     */
-    public static function getFilesFolderName()
-    {
-        return 'files/fonts';
-    }
-
-    /**
-     * @return FontHandler
-     */
-    public function getHandler()
-    {
-        return new FontHandler($this);
     }
 
     /**

@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Themes\Install\InstallApp;
 
@@ -96,6 +97,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
             );
 
             $translator->addLoader('xlf', new XliffFileLoader());
+            $translator->addLoader('yml', new YamlFileLoader());
             $classes = [$c['backendTheme']];
             $classes = array_merge($classes, $c['frontendThemes']);
 
@@ -107,10 +109,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
                                                  ->findAllAvailable();
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {
-                    $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes);
+                    $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
                 }
             } else {
-                $this->addResourcesForLocale($c['translator.locale'], $translator, $classes);
+                $this->addResourcesForLocale($c['translator.locale'], $translator, $classes, $c['kernel']);
             }
             $c['stopwatch']->stop('initTranslator');
 
@@ -124,9 +126,34 @@ class TranslationServiceProvider implements ServiceProviderInterface
      * @param string $locale
      * @param Translator $translator
      * @param array $classes
+     * @param Kernel $kernel
      */
-    protected function addResourcesForLocale($locale, Translator $translator, array &$classes)
+    protected function addResourcesForLocale($locale, Translator $translator, array &$classes, Kernel $kernel)
     {
+        /*
+         * Add existing Symfony validator translations
+         */
+        $vendorDir = $kernel->getVendorDir();
+        $vendorFormDir = $vendorDir.'/symfony/form';
+        $vendorValidatorDir = $vendorDir.'/symfony/validator';
+        $validatorFromVendorFormDir = $vendorFormDir.'/Resources/translations/validators.'.$locale.'.xlf';
+        $validatorFromVendorValidatorDir = $vendorValidatorDir.'/Resources/translations/validators.'.$locale.'.xlf';
+        if (file_exists($validatorFromVendorFormDir)) {
+            // there are built-in translations for the core error messages
+            $translator->addResource(
+                'xlf',
+                $validatorFromVendorFormDir,
+                $locale
+            );
+        }
+        if (file_exists($validatorFromVendorValidatorDir)) {
+            $translator->addResource(
+                'xlf',
+                $validatorFromVendorValidatorDir,
+                $locale
+            );
+        }
+
         /*
          * Add general CMS translations
          */
@@ -135,6 +162,13 @@ class TranslationServiceProvider implements ServiceProviderInterface
             CmsController::getTranslationsFolder(),
             'xlf',
             $locale
+        );
+        $this->addTranslatorResource(
+            $translator,
+            CmsController::getTranslationsFolder(),
+            'xlf',
+            $locale,
+            'validators'
         );
 
         /*
@@ -157,32 +191,45 @@ class TranslationServiceProvider implements ServiceProviderInterface
                     'xlf',
                     $locale
                 );
+                $this->addTranslatorResource(
+                    $translator,
+                    $resourcesFolder . '/translations',
+                    'yml',
+                    $locale
+                );
             }
         }
     }
 
     /**
      * @param Translator $translator
-     * @param string     $path
-     * @param string     $extension
-     * @param string     $locale
+     * @param string $path
+     * @param string $extension
+     * @param string $locale
+     * @param null $domain
      */
-    protected function addTranslatorResource(Translator $translator, $path, $extension, $locale)
+    protected function addTranslatorResource(Translator $translator, $path, $extension, $locale, $domain = null)
     {
-        $completePath = $path . '/messages.' . $locale . '.' . $extension;
-        $fallbackPath = $path . '/messages.en.' . $extension;
+        $filename = 'messages';
+        if ($domain !== null && $domain !== '') {
+            $filename = $domain;
+        }
+        $completePath = $path . '/' . $filename . '.' . $locale . '.' . $extension;
+        $fallbackPath = $path . '/' . $filename . '.en.' . $extension;
 
         if (file_exists($completePath)) {
             $translator->addResource(
                 $extension,
                 $completePath,
-                $locale
+                $locale,
+                $domain
             );
         } elseif (file_exists($fallbackPath)) {
             $translator->addResource(
                 $extension,
                 $fallbackPath,
-                $locale
+                $locale,
+                $domain
             );
         }
     }

@@ -75,6 +75,8 @@ class HistoryController extends RozierApp
             [],
             ['datetime' => 'DESC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
+        $listManager->setDisplayingAllNodesStatuses(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
@@ -113,6 +115,8 @@ class HistoryController extends RozierApp
                 ['user' => $user],
                 ['datetime' => 'DESC']
             );
+            $listManager->setDisplayingNotPublishedNodes(true);
+            $listManager->setDisplayingAllNodesStatuses(true);
             $listManager->setItemPerPage(30);
             $listManager->handle();
 

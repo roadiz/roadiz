@@ -1,36 +1,60 @@
 {% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
+{% import _self as macro %}
+
+{% macro column(type, request) %}
+    <dl>
+        <dt>{{ type.customFormField.label|trans }}</dt>
+        {% if type.customFormField.isCountry  %}
+            <dd>{{ type.value|country_iso(request.locale) }}</dd>
+        {% elseif type.customFormField.isDate %}
+            <dd>{{ type.value|localizeddate('full', 'none') }}</dd>
+        {% elseif type.customFormField.isDateTime %}
+            <dd>{{ type.value|localizeddate('full', 'medium') }}</dd>
+        {% else %}
+            <dd>{{ type.value|trans }}</dd>
+        {% endif %}
+    </dl>
+{% endmacro %}
+
 {% block content %}
 <section class="content-global content-nav-and-filters">
 
     <header class="content-header header-node-types header-node-types-list">
         <h1 class="content-title nodes-node-types-title">{% trans %}customFormFieldAttribute{% endtrans %}</h1>
-        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormAnswersHomePage', {'customFormId': customFormId}) }}" title="{% trans %}back_to.customFormAnswers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
     </header>
 
     <article class="content content-no-action-menu content-node-types-list">
-        <div class="content-table-cont">
+        <div class="data-uk-margin">
             {% spaceless %}
-            <table class="node-types content-table uk-table">
-                <thead>
-                    <tr>
-                        <th>{% trans %}label{% endtrans %}</th>
-                        <th>{% trans %}value{% endtrans %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for type in fields %}
-                        <tr>
-                            <td>{{ type.customFormField.label }}</td>
-                            <td>{{ type.value }}</td>
-                        </tr>
+            {% for groupName, answers in fields %}
+                {% if answers is iterable %}
+                    </div>
+                    <hr>
+                    <div class="data-uk-margin">
+                    <h2>{{ groupName|trans }}</h2>
+
+                    {% for type in answers %}
+                        {{ macro.column(type, request) }}
                     {% endfor %}
-                </tbody>
-            </table>
+                {% else %}
+                    {{ macro.column(answers, request) }}
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr>
+            <div class="data-uk-margin">
+                <dl>
+                    <dt>{{ 'ip'|trans }}</dt>
+                    <dd>{{ answer.ip }}</dd>
+                </dl>
+                <dl>
+                    <dt>{{ 'submitted.date'|trans }}</dt>
+                    <dd>{{ answer.submittedAt|localizeddate('full', 'medium') }}</dd>
+                </dl>
             {% endspaceless %}
         </div>
     </article>
-
 </section>
 {% endblock %}

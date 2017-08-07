@@ -33,8 +33,9 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Perform basic filtering and search over entity listings.
@@ -98,14 +99,16 @@ class EntityListManager
      * @var Translation|null
      */
     protected $translation = null;
-    /**
-     * @var AuthorizationChecker|null
-     */
-    protected $authorizationChecker = null;
+
     /**
      * @var bool
      */
-    protected $preview = false;
+    protected $displayNotPublishedNodes;
+
+    /**
+     * @var bool
+     */
+    protected $displayAllNodesStatuses;
 
     /**
      * @param Request $request
@@ -124,44 +127,53 @@ class EntityListManager
         $this->request = $request;
         $this->entityName = $entityName;
         $this->_em = $_em;
+        $this->displayNotPublishedNodes = false;
+        $this->displayAllNodesStatuses = false;
 
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
         $this->assignation = [];
         $this->queryArray = array_filter($request->query->all());
-
         $this->itemPerPage = static::ITEM_PER_PAGE;
+    }
 
-        // transform the key chroot in parent
-        if (array_key_exists('chroot', $preFilters)) {
-            if ($preFilters["chroot"] instanceof Node) {
-                $ids = $preFilters["chroot"]->getHandler()->getAllOffspringId(); // get all offspringId
-                if (array_key_exists('parent', $preFilters)) {
-                    // test if parent key exist
-                    if (is_array($preFilters["parent"])) {
-                        // test if multiple parent id
-                        if (count(array_intersect($preFilters["parent"], $ids))
-                            != count($preFilters["parent"])) {
-                            // test if all parent are in the chroot
-                            $this->filteringArray["parent"] = -1; // -1 for make the search return []
-                        }
-                    } else {
-                        if ($preFilters["parent"] instanceof Node) {
-                            // make transforme all id in int
-                            $parent = $preFilters["parent"]->getId();
-                        } else {
-                            $parent = (int) $preFilters["parent"];
-                        }
-                        if (!in_array($parent, $ids, true)) {
-                            $this->filteringArray["parent"] = -1;
-                        }
-                    }
-                } else {
-                    $this->filteringArray["parent"] = $ids;
-                }
-            }
-            unset($this->filteringArray["chroot"]); // remove placeholder
-        }
+    /**
+     * @return bool
+     */
+    public function isDisplayingNotPublishedNodes()
+    {
+        return $this->displayNotPublishedNodes;
+    }
+
+    /**
+     * @param bool $displayNotPublishedNodes
+     * @return EntityListManager
+     */
+    public function setDisplayingNotPublishedNodes($displayNotPublishedNodes)
+    {
+        $this->displayNotPublishedNodes = $displayNotPublishedNodes;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayingAllNodesStatuses()
+    {
+        return $this->displayAllNodesStatuses;
+    }
+
+    /**
+     * Switch repository to disable any security on Node status. To use ONLY in order to
+     * view deleted and archived nodes.
+     *
+     * @param bool $displayAllNodesStatuses
+     * @return $this
+     */
+    public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)
+    {
+        $this->displayAllNodesStatuses = $displayAllNodesStatuses;
+        return $this;
     }
 
     /**
@@ -193,25 +205,6 @@ class EntityListManager
     }
 
     /**
-     * @return AuthorizationChecker
-     */
-    public function getAuthorizationChecker()
-    {
-        return $this->authorizationChecker;
-    }
-
-    /**
-     * @param AuthorizationChecker $authorizationChecker
-     * @return $this
-     */
-    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-
-        return $this;
-    }
-
-    /**
      * Handle request to find filter to apply to entity listing.
      *
      * @param boolean $disabled Disable pagination and filtering over GET params
@@ -219,6 +212,41 @@ class EntityListManager
      */
     public function handle($disabled = false)
     {
+        // transform the key chroot in parent
+        if (array_key_exists('chroot', $this->filteringArray)) {
+            if ($this->filteringArray["chroot"] instanceof Node) {
+                $ids = $this->_em
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
+                    ->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses())
+                    ->findAllOffspringIdByNode($this->filteringArray["chroot"]); // get all offspringId
+                if (array_key_exists('parent', $this->filteringArray)) {
+                    // test if parent key exist
+                    if (is_array($this->filteringArray["parent"])) {
+                        // test if multiple parent id
+                        if (count(array_intersect($this->filteringArray["parent"], $ids))
+                            != count($this->filteringArray["parent"])) {
+                            // test if all parent are in the chroot
+                            $this->filteringArray["parent"] = -1; // -1 for make the search return []
+                        }
+                    } else {
+                        if ($this->filteringArray["parent"] instanceof Node) {
+                            // make transforme all id in int
+                            $parent = $this->filteringArray["parent"]->getId();
+                        } else {
+                            $parent = (int) $this->filteringArray["parent"];
+                        }
+                        if (!in_array($parent, $ids, true)) {
+                            $this->filteringArray["parent"] = -1;
+                        }
+                    }
+                } else {
+                    $this->filteringArray["parent"] = $ids;
+                }
+            }
+            unset($this->filteringArray["chroot"]); // remove placeholder
+        }
+
         if (false === $disabled) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
@@ -289,9 +317,9 @@ class EntityListManager
 
     protected function createPaginator()
     {
-        if ($this->entityName == 'RZ\Roadiz\Core\Entities\Node' ||
-            $this->entityName == '\RZ\Roadiz\Core\Entities\Node' ||
-            $this->entityName == "Node") {
+        if ($this->entityName === 'RZ\Roadiz\Core\Entities\Node' ||
+            $this->entityName === '\RZ\Roadiz\Core\Entities\Node' ||
+            $this->entityName === "Node") {
             $this->paginator = new NodePaginator(
                 $this->_em,
                 $this->entityName,
@@ -299,8 +327,6 @@ class EntityListManager
                 $this->filteringArray
             );
             $this->paginator->setTranslation($this->translation);
-            $this->paginator->setAuthorizationChecker($this->authorizationChecker);
-            $this->paginator->setPreview($this->preview);
         } elseif ($this->entityName == 'RZ\Roadiz\Core\Entities\NodesSources' ||
             $this->entityName == '\RZ\Roadiz\Core\Entities\NodesSources' ||
             $this->entityName == "NodesSources" ||
@@ -311,9 +337,6 @@ class EntityListManager
                 $this->itemPerPage,
                 $this->filteringArray
             );
-
-            $this->paginator->setAuthorizationChecker($this->authorizationChecker);
-            $this->paginator->setPreview($this->preview);
         } else {
             $this->paginator = new Paginator(
                 $this->_em,
@@ -322,6 +345,9 @@ class EntityListManager
                 $this->filteringArray
             );
         }
+
+        $this->paginator->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes());
+        $this->paginator->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses());
     }
 
     /**
@@ -408,42 +434,21 @@ class EntityListManager
      */
     public function getEntities()
     {
-        if ($this->pagination === true &&
-            null !== $this->paginator) {
+        if ($this->pagination === true && null !== $this->paginator) {
             $this->paginator->setItemsPerPage($this->getItemPerPage());
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
-            return $this->_em->getRepository($this->entityName)
-                ->findBy(
-                    $this->filteringArray,
-                    $this->orderingArray,
-                    $this->itemPerPage
-                );
+            $repository = $this->_em->getRepository($this->entityName);
+            if ($repository instanceof StatusAwareRepository) {
+                $repository->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes());
+                $repository->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses());
+            }
+            return $repository->findBy(
+                $this->filteringArray,
+                $this->orderingArray,
+                $this->itemPerPage
+            );
         }
-    }
-
-    /**
-     * Gets the value of preview.
-     *
-     * @return boolean
-     */
-    public function isPreview()
-    {
-        return $this->preview;
-    }
-
-    /**
-     * Sets the value of preview.
-     *
-     * @param boolean $preview the preview
-     *
-     * @return self
-     */
-    public function setPreview($preview)
-    {
-        $this->preview = (boolean) $preview;
-
-        return $this;
     }
 
     /**

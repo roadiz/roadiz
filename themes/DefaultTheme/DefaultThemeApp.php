@@ -39,7 +39,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\Services\AssetsServiceProvider;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
-use Themes\DefaultTheme\Services\NodeTypeServiceProvider;
 
 /**
  * Class DefaultThemeApp
@@ -88,7 +87,6 @@ class DefaultThemeApp extends FrontendController
          * Register services
          */
         $this->themeContainer->register(new NodeServiceProvider($this->getContainer(), $this->translation));
-        $this->themeContainer->register(new NodeTypeServiceProvider($this->get('nodeTypeApi')));
         $this->themeContainer->register(new AssetsServiceProvider());
 
         $this->assignation['themeServices'] = $this->themeContainer;
@@ -187,6 +185,7 @@ class DefaultThemeApp extends FrontendController
         });
 
         /*
+         * Example:
          * Alter Solr indexing with custom data.
          */
         /** @var EventDispatcher $dispatcher */

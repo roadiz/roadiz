@@ -29,18 +29,21 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with folders entities.
  */
-class FolderHandler
+class FolderHandler extends AbstractHandler
 {
-    private $folder = null;
+    /**
+     * @var Folder|null
+     */
+    protected $folder = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Folder
+     * @return Folder
      */
     public function getFolder()
     {
@@ -48,24 +51,13 @@ class FolderHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Folder $folder
-     *
+     * @param Folder $folder
      * @return $this
      */
     public function setFolder($folder)
     {
         $this->folder = $folder;
-
         return $this;
-    }
-    /**
-     * Create a new folder handler with folder to handle.
-     *
-     * @param Folder $folder
-     */
-    public function __construct(Folder $folder)
-    {
-        $this->folder = $folder;
     }
 
     /**
@@ -75,8 +67,11 @@ class FolderHandler
      */
     private function removeChildren()
     {
+        /** @var Folder $folder */
         foreach ($this->folder->getChildren() as $folder) {
-            $folder->getHandler()->removeWithChildrenAndAssociations();
+            $handler = new static($this->objectManager);
+            $handler->setFolder($folder);
+            $handler->removeWithChildrenAndAssociations();
         }
 
         return $this;
@@ -92,12 +87,12 @@ class FolderHandler
     {
         $this->removeChildren();
 
-        Kernel::getService('em')->remove($this->folder);
+        $this->objectManager->remove($this->folder);
 
         /*
          * Final flush
          */
-        Kernel::getService('em')->flush();
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -105,6 +100,7 @@ class FolderHandler
     /**
      * Return every folder’s parents.
      *
+     * @deprecated Use directly Folder::getParents method.
      * @return \RZ\Roadiz\Core\Entities\Folder[]
      */
     public function getParents()
@@ -127,6 +123,7 @@ class FolderHandler
     /**
      * Get folder full path using folder names.
      *
+     * @deprecated Use directly Folder::getFullPath method.
      * @return string
      */
     public function getFullPath()
@@ -146,32 +143,47 @@ class FolderHandler
     /**
      * Clean position for current folder siblings.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** folder
      */
-    public function cleanPositions()
+    public function cleanPositions($setPositions = true)
     {
         if ($this->folder->getParent() !== null) {
-            return $this->folder->getParent()->getHandler()->cleanChildrenPositions();
+            $parentHandler = new static($this->objectManager);
+            $parentHandler->setFolder($this->folder->getParent());
+            return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
-            return static::cleanRootFoldersPositions();
+            return $this->cleanRootFoldersPositions($setPositions);
         }
     }
 
     /**
      * Reset current folder children positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** folder
      */
-    public function cleanChildrenPositions()
+    public function cleanChildrenPositions($setPositions = true)
     {
-        $children = $this->folder->getChildren();
+        /*
+         * Force collection to sort on position
+         */
+        $sort = Criteria::create();
+        $sort->orderBy([
+            'position' => Criteria::ASC
+        ]);
+
+        $children = $this->folder->getChildren()->matching($sort);
         $i = 1;
+        /** @var Folder $child */
         foreach ($children as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }
@@ -179,22 +191,25 @@ class FolderHandler
     /**
      * Reset every root folders positions.
      *
+     * Warning, this method does not flush.
+     *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** folder
      */
-    public static function cleanRootFoldersPositions()
+    public function cleanRootFoldersPositions($setPositions = true)
     {
         /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
-        $folders = Kernel::getService('em')
+        $folders = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;
         foreach ($folders as $child) {
-            $child->setPosition($i);
+            if ($setPositions) {
+                $child->setPosition($i);
+            }
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }

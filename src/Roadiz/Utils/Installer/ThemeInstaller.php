@@ -48,7 +48,7 @@ class ThemeInstaller
     {
         $themeFolder = call_user_func([$classname, 'getThemeFolder']);
         $file = $themeFolder . "/config.yml";
-        return Yaml::parse($file);
+        return Yaml::parse(file_get_contents($file));
     }
 
     /**
@@ -134,9 +134,7 @@ class ThemeInstaller
 
         $assignation["cms"] = ["version" => Kernel::$cmsVersion];
         $assignation["status"] = [];
-
         $assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) <= 0) ? true : false;
-
         $assignation["cms"]["locale"] = $locale;
         $assignation["status"]["locale"] = in_array($locale, $data["supportedLocale"]);
         $assignation["status"]["import"] = [];

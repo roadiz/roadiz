@@ -51,12 +51,11 @@ class DocumentSearchHandler extends AbstractSearchHandler
     protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
     {
         if (!empty($q)) {
-            $query = $this->client->createSelect();
+            $query = $this->createSolrQuery($args, $rows, $page);
 
             $q = trim($q);
             $qHelper = new Helper();
             $q = $qHelper->escapeTerm($q);
-
             $singleWord = strpos($q, ' ') === false ? true : false;
 
             /*
@@ -79,23 +78,8 @@ class DocumentSearchHandler extends AbstractSearchHandler
                 }
             }
 
-
-            $filterQueries = [];
             $query->setQuery($queryTxt);
-            foreach ($args as $key => $value) {
-                if (is_array($value)) {
-                    foreach ($value as $k => $v) {
-                        $filterQueries["fq" . $k] = $v;
-                        $query->addFilterQuery([
-                            "key" => "fq" . $k,
-                            "query" => $v,
-                        ]);
-                    }
-                } else {
-                    $query->addParam($key, $value);
-                }
-            }
-            $query->addSort('score', $query::SORT_DESC);
+
             /*
              * Only need these fields as Doctrine
              * will do the rest.
@@ -107,18 +91,11 @@ class DocumentSearchHandler extends AbstractSearchHandler
                 'filename_s',
                 'locale_s',
             ]);
-            $query->setRows($rows);
-            /**
-             * Add start if not first page.
-             */
-            if ($page > 1) {
-                $query->setStart(($page - 1) * $rows);
-            }
+
 
             if (null !== $this->logger) {
                 $this->logger->debug('[Solr] Request document search…', [
                     'query' => $queryTxt,
-                    'filters' => $filterQueries,
                     'params' => $query->getParams(),
                 ]);
             }

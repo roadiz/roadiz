@@ -29,7 +29,6 @@
  */
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 class UserHandlerTest extends SchemaDependentCase
@@ -43,10 +42,10 @@ class UserHandlerTest extends SchemaDependentCase
     public function testEncodeUser($userName, $email, $plainPassword)
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Kernel::getService("em");
+        $entityManager = $this->get("em");
 
         /** @var \Symfony\Component\Security\Core\Encoder\EncoderFactory $encoderFactory */
-        $encoderFactory = Kernel::getService('userEncoderFactory');
+        $encoderFactory = $this->get('userEncoderFactory');
 
         $user = new User();
         $user->setUsername($userName);

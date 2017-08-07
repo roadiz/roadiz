@@ -43,12 +43,15 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\LeafEntityLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 
 /**
  * Register Doctrine services for dependency injection container.
@@ -189,6 +192,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 );
                 $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
+                /*
+                 * Override default repository factory
+                 * to inject Container into Doctrine repositories!
+                 */
+                $config->setRepositoryFactory(new RoadizRepositoryFactory($c, $kernel->isPreview()));
 
                 return $config;
             } catch (NoConfigurationFoundException $e) {
@@ -249,7 +257,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  */
                 $evm->addEventListener(
                     Events::loadClassMetadata,
-                    new DataInheritanceEvent($prefix)
+                    new DataInheritanceEvent($c, $prefix)
                 );
 
                 /*
@@ -258,6 +266,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  */
                 foreach ($c['em.eventSubscribers'] as $eventSubscriber) {
                     $evm->addEventSubscriber($eventSubscriber);
+                }
+
+                if (!$c['kernel']->isInstallMode() && $c['kernel']->isDebug()) {
+                    $em->getConnection()->getConfiguration()->setSQLLogger($c['doctrine.debugstack']);
                 }
 
                 $c['stopwatch']->stop('initDoctrine');
@@ -277,11 +289,13 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return EventSubscriber[] Event subscribers for Entity manager.
          */
-        $container['em.eventSubscribers'] = function ($c) {
+        $container['em.eventSubscribers'] = function (Container $c) {
             return [
                 new FontLifeCycleSubscriber($c),
-                new DocumentLifeCycleSubscriber($c),
+                new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
+                new CustomFormFieldLifeCycleSubscriber($c),
+                new LeafEntityLifeCycleSubscriber($c['factory.handler']),
             ];
         };
 

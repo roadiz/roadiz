@@ -59,6 +59,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
             'RZ\Roadiz\Core\Entities\CustomForm',
             $arrayFilter
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(40);
         $listManager->handle();
 

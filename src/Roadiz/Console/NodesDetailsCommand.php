@@ -61,6 +61,7 @@ class NodesDetailsCommand extends Command
 
         /** @var Node $node */
         $node = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+                                    ->setDisplayingNotPublishedNodes(true)
                                     ->findOneBy([
                                         'nodeName' => $input->getArgument('nodeName'),
                                         'translation' => $translation,

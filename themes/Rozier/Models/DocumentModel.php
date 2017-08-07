@@ -31,6 +31,8 @@ namespace Themes\Rozier\Models;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Viewers\DocumentViewer;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
 /**
  * Class DocumentModel.
@@ -40,7 +42,10 @@ use RZ\Roadiz\Core\Entities\Document;
 class DocumentModel implements ModelInterface
 {
     public static $thumbnailArray;
+    public static $thumbnail80Array;
     public static $previewArray;
+    public static $largeArray;
+
     /**
      * @var Document
      */
@@ -59,28 +64,35 @@ class DocumentModel implements ModelInterface
     {
         $this->document = $document;
         $this->container = $container;
-
-        static::$thumbnailArray = [
-            "fit" => "40x40",
-            "quality" => 50,
-            "inline" => false,
-        ];
-
-        static::$previewArray = [
-            "width" => 1440,
-            "quality" => 80,
-            "inline" => false,
-            "embed" => true,
-        ];
     }
 
     public function toArray()
     {
         $name = $this->document->getFilename();
 
-        if ($this->document->getDocumentTranslations()->first() && $this->document->getDocumentTranslations()->first()->getName()) {
+        if ($this->document->getDocumentTranslations()->first() &&
+            $this->document->getDocumentTranslations()->first()->getName()) {
             $name = $this->document->getDocumentTranslations()->first()->getName();
         }
+        /** @var DocumentViewer $documentViewer */
+        $documentViewer = $this->container->offsetGet('document.viewer');
+        $documentViewer->setDocument($this->document);
+
+        /** @var DocumentUrlGenerator $documentUrlGenerator */
+        $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
+        $documentUrlGenerator->setDocument($this->document);
+
+        $documentUrlGenerator->setOptions(static::$thumbnailArray);
+        $thumbnailUrl = $documentUrlGenerator->getUrl();
+
+        $documentUrlGenerator->setOptions(static::$thumbnail80Array);
+        $thumbnail80Url = $documentUrlGenerator->getUrl();
+
+        $documentUrlGenerator->setOptions(static::$previewArray);
+        $previewUrl = $documentUrlGenerator->getUrl();
+
+        $documentUrlGenerator->setOptions(static::$largeArray);
+        $largeUrl = $documentUrlGenerator->getUrl();
 
         return [
             'id' => $this->document->getId(),
@@ -96,17 +108,36 @@ class DocumentModel implements ModelInterface
             'editUrl' => $this->container->offsetGet('urlGenerator')->generate('documentsEditPage', [
                 'documentId' => $this->document->getId()
             ]),
-            'thumbnail' => $this->document->getViewer()->getDocumentUrlByArray(static::$thumbnailArray),
-            'preview' => $this->document->getViewer()->getDocumentUrlByArray(static::$previewArray),
-            'preview_html' => $this->document->getViewer()->getDocumentByArray(static::$previewArray),
+            'thumbnail' => $thumbnailUrl,
+            'large' => $largeUrl,
+            'preview' => $previewUrl,
+            'preview_html' => $documentViewer->getDocumentByArray(static::$previewArray),
             'embedPlatform' => $this->document->getEmbedPlatform(),
             'shortMimeType' => $this->document->getShortMimeType(),
-            'thumbnail_80' => $this->document->getViewer()->getDocumentUrlByArray([
-                "fit" => "80x80",
-                "quality" => 50,
-                "inline" => false,
-            ]),
+            'thumbnail_80' => $thumbnail80Url,
             'html' => $this->container->offsetGet('twig.environment')->render('widgets/documentSmallThumbnail.html.twig', ['document' => $this->document]),
         ];
     }
 }
+DocumentModel::$thumbnailArray = [
+    "fit" => "40x40",
+    "quality" => 50,
+    "inline" => false,
+];
+
+DocumentModel::$thumbnail80Array = [
+    "fit" => "80x80",
+    "quality" => 50,
+    "inline" => false,
+];
+
+DocumentModel::$previewArray = [
+    "width" => 1440,
+    "quality" => 80,
+    "inline" => false,
+    "embed" => true,
+];
+
+DocumentModel::$largeArray = [
+    "noProcess" => true,
+];

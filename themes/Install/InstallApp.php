@@ -36,10 +36,13 @@ use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -286,7 +289,39 @@ class InstallApp extends AppController
      */
     public function afterDoneAction(Request $request)
     {
+        $this->clearProductionCache($request);
+        $this->clearProductionCache($request, true);
+
         return $this->render('steps/after-done.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     * @param bool $preview
+     */
+    protected function clearProductionCache(Request $request, $preview = false)
+    {
+        $tempProdKernel = new Kernel('prod', false, $preview);
+        $tempProdKernel->boot();
+        $tempProdKernel->container['request'] = $request;
+        $clearers = [
+            // PROD
+            new AssetsClearer($tempProdKernel->getCacheDir()),
+            new RoutingCacheClearer($tempProdKernel->getCacheDir()),
+            new TemplatesCacheClearer($tempProdKernel->getCacheDir()),
+            new TranslationsCacheClearer($tempProdKernel->getCacheDir()),
+            new ConfigurationCacheClearer($tempProdKernel->getCacheDir()),
+            new NodesSourcesUrlsCacheClearer($tempProdKernel->get('nodesSourcesUrlCacheProvider')),
+            new OPCacheClearer(),
+            // Keep doctrine at the end
+            new DoctrineCacheClearer($tempProdKernel->get('em'), $tempProdKernel),
+        ];
+        foreach ($clearers as $clearer) {
+            try {
+                $clearer->clear();
+            } catch (\Exception $e) {
+            }
+        }
     }
 
     /**

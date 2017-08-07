@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,6 +40,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RequirementsCommand extends Command
 {
+    /** @var Requirements */
+    private $requirements;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct($name = null)
+    {
+        parent::__construct($name);
+    }
+
     protected function configure()
     {
         $this
@@ -50,10 +62,10 @@ class RequirementsCommand extends Command
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
+        $this->requirements = new Requirements($kernel);
         $text = "";
 
-        $text .= $this->testPHPVersion('5.4.3');
-        $text .= $this->testExtension('ereg');
+        $text .= $this->testPHPVersion('5.6.0');
         $text .= $this->testExtension('session');
         $text .= $this->testExtension('json');
         $text .= $this->testExtension('zip');
@@ -62,9 +74,9 @@ class RequirementsCommand extends Command
         $text .= $this->testExtension('curl');
         $text .= $this->testExtension('intl');
 
-        $text .= $this->testPHPIntValue('memory_limit', '64');
-        $text .= $this->testPHPIntValue('post_max_size', '16');
-        $text .= $this->testPHPIntValue('upload_max_filesize', '16');
+        $text .= $this->testPHPIntValue('memory_limit', '64M');
+        $text .= $this->testPHPIntValue('post_max_size', '16M');
+        $text .= $this->testPHPIntValue('upload_max_filesize', '16M');
 
         $text .= $this->methodExists('gettext');
         $text .= $this->folderWritable($kernel->getRootDir());
@@ -79,23 +91,34 @@ class RequirementsCommand extends Command
 
     protected function testPHPIntValue($name, $expected)
     {
-        $intValue = (int) (str_replace(['s', 'K', 'M', 'G'], ['', '', '', ''], ini_get($name)));
+        $actual = ini_get($name);
+        $actualM = $this->requirements->parseSuffixedAmount($actual);
 
-        if ($intValue < $expected) {
-            return '<info>' . $name . '</info> : ' . ini_get($name) . '  Excepted : ' . $expected . ' — <error>Fail</error>' . PHP_EOL;
+        $expectedM = $this->requirements->parseSuffixedAmount($expected);
+
+        if (!$this->requirements->testPHPIntValue($name, $expected)) {
+            return '<info>' . $name . '</info> : ' . $actualM . 'M  Excepted : ' . $expectedM . 'M — <error>Fail</error>' . PHP_EOL;
+        } else {
+            return '<info>' . $name . '</info> : ' . $actualM . 'M — Excepted : ' . $expectedM . 'M ' . PHP_EOL;
         }
-
-        return '<info>' . $name . '</info> : ' . ini_get($name) . ' — Excepted : ' . $expected . '' . PHP_EOL;
     }
 
     protected function methodExists($name, $mandatory = true)
     {
-        return '<info>Method ' . $name . '()</info> — ' . (function_exists($name) === true && $mandatory === true ? 'OK' : '<error>Fail</error>') . '' . PHP_EOL;
+        if ($this->requirements->methodExists($name) && $mandatory === true) {
+            return '<info>Method ' . $name . '()</info> — OK' . PHP_EOL;
+        } else {
+            return '<info>Method ' . $name . '()</info> — <error>Fail</error>' . PHP_EOL;
+        }
     }
 
     protected function folderWritable($filename)
     {
-        return '<info>Folder “' . $filename . '”</info> — ' . (is_writable($filename) === true ? 'Writable' : '<error>Not writable</error>') . '' . PHP_EOL;
+        if ($this->requirements->folderWritable($filename)) {
+            return '<info>Folder “' . $filename . '”</info> — Writable' . PHP_EOL;
+        } else {
+            return '<info>Folder “' . $filename . '”</info> — <error>Not writable</error>' . PHP_EOL;
+        }
     }
 
     protected function testExtension($name)

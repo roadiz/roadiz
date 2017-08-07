@@ -2,4 +2,5 @@
 # to show you how to extend backoffice features.
 adminTestPage:
     path:     /rz-admin/test # Setting your path behind rz-admin will activate Firewall
-    defaults: { _controller: Themes\DefaultTheme\Controllers\AdminController::listAction }
+    defaults:
+        _controller: Themes\DefaultTheme\Controllers\AdminController::listAction

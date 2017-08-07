@@ -66,8 +66,10 @@ class NodesType extends AbstractType
         $callback = function ($object, ExecutionContextInterface $context) {
 
             if (is_array($object)) {
-                $nodes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
-                ->findBy(['id' => $object]);
+                $nodes = $this->entityManager
+                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->setDisplayingNotPublishedNodes(true)
+                    ->findBy(['id' => $object]);
 
                 foreach (array_values($object) as $key => $value) {
                     // Vérifie si le nom est bidon

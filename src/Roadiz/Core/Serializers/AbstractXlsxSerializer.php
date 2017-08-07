@@ -30,12 +30,27 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Define basic serialize operations for XLSX data type.
  */
 abstract class AbstractXlsxSerializer implements SerializerInterface
 {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * AbstractXlsxSerializer constructor.
+     * @param Translator $translator
+     */
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * Serializes data.
      *
@@ -46,7 +61,8 @@ abstract class AbstractXlsxSerializer implements SerializerInterface
     public function serialize($obj)
     {
         $data = $this->toArray($obj);
+        $exporter = new XlsxExporter($this->translator);
 
-        return XlsxExporter::exportXlsx($data);
+        return $exporter->exportXlsx($data);
     }
 }

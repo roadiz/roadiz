@@ -140,7 +140,7 @@ class RolesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (RolesImporter::importJsonFile($serializedData, $this->get('em'))) {
+                    if (RolesImporter::importJsonFile($serializedData, $this->get('em'), $this->get('factory.handler'))) {
                         $msg = $this->getTranslator()->trans('role.imported');
                         $this->publishConfirmMessage($request, $msg);
 

@@ -125,6 +125,8 @@ class SolrReindexCommand extends SolrCommand
         // Then index
         $nSources = $this->entityManager
             ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
             ->findAll();
 
         $progress = new ProgressBar($output, count($nSources));
@@ -137,6 +139,7 @@ class SolrReindexCommand extends SolrCommand
                 $ns,
                 $this->solr,
                 $this->getHelper('kernel')->getKernel()->get('dispatcher'),
+                $this->getHelper('handlerFactory')->getHandlerFactory(),
                 $this->getHelper('logger')->getLogger()
             );
             $solarium->createEmptyDocument($update);

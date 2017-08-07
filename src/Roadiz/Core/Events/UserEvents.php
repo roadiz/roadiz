@@ -87,4 +87,15 @@ final class UserEvents
      * @var string
      */
     const USER_DISABLED = 'user.disabled';
+
+    /**
+     * Event user.password_changed is triggered each time a user
+     * has its password changed.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterUserEvent instance
+     *
+     * @var string
+     */
+    const USER_PASSWORD_CHANGED = 'user.password_changed';
 }

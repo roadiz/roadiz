@@ -31,18 +31,78 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Pimple\Container;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\Tag;
 
 /**
  * EntityRepository that implements a simple countBy method.
  */
-class EntityRepository extends \Doctrine\ORM\EntityRepository
+class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {
+    /**
+     * @var bool
+     */
+    protected $isPreview;
+
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * EntityRepository constructor.
+     * @param EntityManager $em
+     * @param Mapping\ClassMetadata $class
+     * @param Container $container
+     * @param bool $isPreview
+     */
+    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Container $container, $isPreview = false)
+    {
+        parent::__construct($em, $class);
+        $this->isPreview = $isPreview;
+        $this->container = $container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get($serviceName)
+    {
+        return $this->container->offsetGet($serviceName);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has($serviceName)
+    {
+        return $this->container->offsetExists($serviceName);
+    }
+
     /**
      * Alias for DQL and Query builder representing Node relation.
      */
@@ -350,8 +410,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             // param is not needed
         } elseif (isset($value)) {
             $finalQuery->setParameter($key, $value);
-        } elseif (null === $value) {
-            // param is not needed
         }
     }
 

@@ -79,6 +79,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
                 'createdAt' => 'DESC'
             ]
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
         $listManager->handle();
 

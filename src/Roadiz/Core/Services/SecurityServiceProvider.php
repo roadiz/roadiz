@@ -43,11 +43,13 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
+use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -57,10 +59,8 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AccessListener;
 use Symfony\Component\Security\Http\Firewall\ContextListener;
-use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\RememberMeListener;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 use Symfony\Component\Security\Http\FirewallMap;
@@ -82,21 +82,24 @@ class SecurityServiceProvider implements ServiceProviderInterface
          * PDO instance only used with SessionStorage
          */
         $container['session.pdo'] = function ($c) {
-            $pdo = new \PDO(
-                $c['config']["sessionStorage"]['dsn'],
-                $c['config']["sessionStorage"]['user'],
-                $c['config']["sessionStorage"]['password']
-            );
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            if (isset($c['config']["sessionStorage"])) {
+                $pdo = new \PDO(
+                    $c['config']["sessionStorage"]['dsn'],
+                    $c['config']["sessionStorage"]['user'],
+                    $c['config']["sessionStorage"]['password']
+                );
+                $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            return $pdo;
+                return $pdo;
+            }
+            return null;
         };
 
         $container['session.storage'] = function ($c) {
             try {
                 if ($c['config'] !== null &&
                     isset($c['config']["sessionStorage"])) {
-                    if ($c['config']["sessionStorage"]["type"] == "pdo" &&
+                    if ($c['config']["sessionStorage"]["type"] === "pdo" &&
                         isset($c['config']["sessionStorage"]["options"])) {
                         return new NativeSessionStorage(
                             [],
@@ -215,7 +218,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'secure' => false,
                     'httponly' => false,
                 ],
-                $c['logger']
+                $c['kernel']->isDebug() ? $c['logger'] : null
             );
         };
 
@@ -224,13 +227,14 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
                 $c['authentificationManager'],
-                $c['logger'],
+                $c['kernel']->isDebug() ? $c['logger'] : null,
                 $c['dispatcher']
             );
         };
 
         $container['authentificationManager'] = function ($c) {
             return new AuthenticationProviderManager([
+                new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
             ]);
@@ -241,8 +245,16 @@ class SecurityServiceProvider implements ServiceProviderInterface
          */
         $container['accessDecisionManager'] = function ($c) {
             return new AccessDecisionManager([
+                new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
                 $c['roleHierarchyVoter'],
             ]);
+        };
+
+        $container['securityAuthentificationTrustResolver'] = function ($c) {
+            return new AuthenticationTrustResolver(
+                'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
+                'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken'
+            );
         };
 
         $container['securityAuthorizationChecker'] = function ($c) {
@@ -295,28 +307,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['firewallMap'] = function () {
             return new FirewallMap();
-        };
-
-        $container['firewallExceptionListener'] = function ($c) {
-            return new ExceptionListener(
-                $c['securityTokenStorage'],
-                new AuthenticationTrustResolver('', ''),
-                $c['httpUtils'],
-                Kernel::SECURITY_DOMAIN,
-                $c['formAuthentificationEntryPoint'],
-                null,
-                $c['accessDeniedHandler'],
-                $c['logger']
-            );
-        };
-
-        $container['formAuthentificationEntryPoint'] = function ($c) {
-            return new FormAuthenticationEntryPoint(
-                $c['httpKernel'],
-                $c['httpUtils'],
-                '/login',
-                true // Use forward, Be careful, Token will be set to null in sub-request!
-            );
         };
 
         $container['passwordEncoder'] = function () {

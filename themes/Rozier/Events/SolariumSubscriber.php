@@ -41,10 +41,11 @@ use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Client;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -56,21 +57,27 @@ class SolariumSubscriber implements EventSubscriberInterface
     protected $solr;
     protected $logger;
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $dispatcher;
+    /**
+     * @var HandlerFactory
+     */
+    private $handlerFactory;
 
     /**
      * SolariumSubscriber constructor.
      * @param Client $solr
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface $logger
+     * @param HandlerFactory $handlerFactory
      */
-    public function __construct(Client $solr, EventDispatcher $dispatcher, LoggerInterface $logger)
+    public function __construct(Client $solr, EventDispatcherInterface $dispatcher, LoggerInterface $logger, HandlerFactory $handlerFactory)
     {
         $this->solr = $solr;
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
+        $this->handlerFactory = $handlerFactory;
     }
 
     public static function getSubscribedEvents()
@@ -108,6 +115,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $event->getNodeSource(),
                 $this->solr,
                 $this->dispatcher,
+                $this->handlerFactory,
                 $this->logger
             );
             $solrSource->getDocumentFromIndex();
@@ -128,6 +136,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $event->getNodeSource(),
                 $this->solr,
                 $this->dispatcher,
+                $this->handlerFactory,
                 $this->logger
             );
             $solrSource->getDocumentFromIndex();
@@ -148,6 +157,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                     $nodeSource,
                     $this->solr,
                     $this->dispatcher,
+                    $this->handlerFactory,
                     $this->logger
                 );
                 $solrSource->getDocumentFromIndex();
@@ -169,6 +179,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                     $nodeSource,
                     $this->solr,
                     $this->dispatcher,
+                    $this->handlerFactory,
                     $this->logger
                 );
                 $solrSource->getDocumentFromIndex();
@@ -235,6 +246,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                         $nodeSource,
                         $this->solr,
                         $this->dispatcher,
+                        $this->handlerFactory,
                         $this->logger
                     );
                     $solrSource->getDocumentFromIndex();

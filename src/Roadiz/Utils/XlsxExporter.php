@@ -30,17 +30,32 @@
 namespace RZ\Roadiz\Utils;
 
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Translation\Translator;
 
 class XlsxExporter
 {
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * XlsxExporter constructor.
+     * @param Translator $translator
+     */
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * Export an array of data to XLSX format.
      *
-     * @param  array  $data
+     * @param  \IteratorAggregate|array $data
      * @param  array  $keys
      * @return string
      */
-    public static function exportXlsx($data, $keys = [])
+    public function exportXlsx($data, $keys = [])
     {
         // Create new PHPExcel object
         $objPHPExcel = new \PHPExcel();
@@ -78,7 +93,7 @@ class XlsxExporter
             foreach ($keys as $key => $value) {
                 $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
                 $activeSheet->getStyle($columnAlpha . ($activeRow))->applyFromArray($headerStyles);
-                $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $value);
+                $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
             }
             $activeRow++;
             $hasGlobalHeader = true;
@@ -97,7 +112,7 @@ class XlsxExporter
                 foreach ($headerkeys as $key => $value) {
                     $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
                     $activeSheet->getStyle($columnAlpha . $activeRow)->applyFromArray($headerStyles);
-                    $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $value);
+                    $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
                 }
                 $activeRow++;
             }
@@ -124,7 +139,7 @@ class XlsxExporter
                  * Set value into cell
                  */
                 $activeSheet->getStyle($columnAlpha . $activeRow)->getAlignment()->setWrapText(true);
-                $activeSheet->setCellValueByColumnAndRow($k, $activeRow, $value);
+                $activeSheet->setCellValueByColumnAndRow($k, $activeRow, $this->translator->trans($value));
             }
 
             $activeRow++;

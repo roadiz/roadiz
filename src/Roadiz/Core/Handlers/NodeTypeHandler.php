@@ -29,6 +29,9 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -41,12 +44,23 @@ use Symfony\Component\Filesystem\Exception\IOException;
 /**
  * Handle operations with node-type entities.
  */
-class NodeTypeHandler
+class NodeTypeHandler extends AbstractHandler
 {
-    private $nodeType = null;
+    /**
+     * @var NodeType
+     */
+    private $nodeType;
+    /**
+     * @var Container
+     */
+    private $container;
+    /**
+     * @var Kernel
+     */
+    private $kernel;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\NodeType
+     * @return NodeType
      */
     public function getNodeType()
     {
@@ -54,25 +68,27 @@ class NodeTypeHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
-     *
+     * @param NodeType $nodeType
      * @return $this
      */
-    public function setNodeType($nodeType)
+    public function setNodeType(NodeType $nodeType)
     {
         $this->nodeType = $nodeType;
-
         return $this;
     }
 
     /**
      * Create a new node-type handler with node-type to handle.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param ObjectManager $objectManager
+     * @param Container $container
+     * @param Kernel $kernel
      */
-    public function __construct(NodeType $nodeType)
+    public function __construct(ObjectManager $objectManager, Container $container, Kernel $kernel)
     {
-        $this->nodeType = $nodeType;
+        parent::__construct($objectManager);
+        $this->container = $container;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -80,7 +96,7 @@ class NodeTypeHandler
      */
     public function getGeneratedEntitiesFolder()
     {
-        return Kernel::getInstance()->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
+        return $this->kernel->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
     }
 
     /**
@@ -176,9 +192,13 @@ class NodeTypeHandler
     protected function clearCaches()
     {
         $clearers = [
-            new DoctrineCacheClearer(Kernel::getService('em'), Kernel::getInstance()),
             new OPCacheClearer(),
         ];
+
+        if ($this->objectManager instanceof EntityManagerInterface) {
+            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel);
+        }
+
         foreach ($clearers as $clearer) {
             $clearer->clear();
         }
@@ -195,15 +215,19 @@ class NodeTypeHandler
         /*
          * Delete every nodes
          */
-        $nodes = Kernel::getService('em')
+        $nodes = $this->objectManager
             ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->setDisplayingNotPublishedNodes(true)
             ->findBy([
                 'nodeType' => $this->getNodeType()
             ]);
 
         /** @var Node $node */
         foreach ($nodes as $node) {
-            $node->getHandler()->removeWithChildrenAndAssociations();
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->container['node.handler'];
+            $nodeHandler->setNode($node);
+            $nodeHandler->removeWithChildrenAndAssociations();
         }
 
         /*
@@ -214,8 +238,8 @@ class NodeTypeHandler
         /*
          * Remove node type
          */
-        Kernel::getService('em')->remove($this->getNodeType());
-        Kernel::getService('em')->flush();
+        $this->objectManager->remove($this->getNodeType());
+        $this->objectManager->flush();
 
         return $this;
     }
@@ -278,14 +302,14 @@ class NodeTypeHandler
                      * creating it.
                      */
                     $newField->setNodeType($this->nodeType);
-                    Kernel::getService('em')->persist($newField);
+                    $this->objectManager->persist($newField);
                 } else {
                     /*
                      * Field already exists.
                      * Updating it.
                      */
                     /** @var NodeTypeField $oldField */
-                    $oldField = Kernel::getService('em')->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                    $oldField = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
                         ->findOneBy([
                             'nodeType' => $this->nodeType,
                             'name' => $newField->getName(),
@@ -308,9 +332,10 @@ class NodeTypeHandler
     /**
      * Reset current node-type fields positions.
      *
+     * @param bool $setPosition
      * @return int Return the next position after the **last** field
      */
-    public function cleanFieldsPositions()
+    public function cleanPositions($setPosition = false)
     {
         $fields = $this->nodeType->getFields();
         $i = 1;
@@ -318,8 +343,6 @@ class NodeTypeHandler
             $field->setPosition($i);
             $i++;
         }
-
-        Kernel::getService('em')->flush();
 
         return $i;
     }

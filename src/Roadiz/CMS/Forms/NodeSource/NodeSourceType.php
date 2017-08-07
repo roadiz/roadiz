@@ -98,7 +98,9 @@ class NodeSourceType extends AbstractType
         $resolver->setRequired([
             'entityManager',
             'controller',
+            'container',
         ]);
+        $resolver->setAllowedTypes('container', 'Pimple\Container');
         $resolver->setAllowedTypes('controller', 'RZ\Roadiz\CMS\Controllers\Controller');
         $resolver->setAllowedTypes('entityManager', 'Doctrine\ORM\EntityManager');
         $resolver->setAllowedTypes('withTitle', 'boolean');
@@ -159,6 +161,8 @@ class NodeSourceType extends AbstractType
                                             ->findDefault();
 
         $sourceCount = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                                     ->setDisplayingAllNodesStatuses(true)
+                                     ->setDisplayingNotPublishedNodes(true)
                                      ->countBy([
                                          'node' => $source->getNode(),
                                          'translation' => $defaultTranslation,
@@ -182,11 +186,26 @@ class NodeSourceType extends AbstractType
             case NodeTypeField::MANY_TO_MANY_T:
                 return new NodeSourceJoinType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::DOCUMENTS_T:
-                return new NodeSourceDocumentType($nodeSource, $field, $options['entityManager']);
+                return new NodeSourceDocumentType(
+                    $nodeSource,
+                    $field,
+                    $options['entityManager'],
+                    $options['container']->offsetGet('nodes_sources.handler')
+                );
             case NodeTypeField::NODES_T:
-                return new NodeSourceNodeType($nodeSource, $field, $options['entityManager']);
+                return new NodeSourceNodeType(
+                    $nodeSource,
+                    $field,
+                    $options['entityManager'],
+                    $options['container']->offsetGet('node.handler')
+                );
             case NodeTypeField::CUSTOM_FORMS_T:
-                return new NodeSourceCustomFormType($nodeSource, $field, $options['entityManager']);
+                return new NodeSourceCustomFormType(
+                    $nodeSource,
+                    $field,
+                    $options['entityManager'],
+                    $options['container']->offsetGet('node.handler')
+                );
             case NodeTypeField::CHILDREN_T:
                 /*
                  * NodeTreeType is a virtual type which is only available
@@ -239,6 +258,9 @@ class NodeSourceType extends AbstractType
         }
         if ('' !== $field->getDescription()) {
             $options['attr']['data-desc'] = $field->getDescription();
+        }
+        if ('' !== $field->getPlaceholder()) {
+            $options['attr']['placeholder'] = $field->getPlaceholder();
         }
         if ($field->getMinLength() > 0) {
             $options['attr']['data-min-length'] = $field->getMinLength();
@@ -359,6 +381,9 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'expanded' => $field->isExpanded(),
                 ]);
+                if ('' !== $field->getPlaceholder()) {
+                    $options['placeholder'] = $field->getPlaceholder();
+                }
                 if ($field->getDefaultValues() !== '') {
                     $countries = explode(',', $field->getDefaultValues());
                     $countries = array_map('trim', $countries);

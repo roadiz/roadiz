@@ -35,11 +35,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Kernel;
 
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.
@@ -102,6 +99,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
         $ns = new NodesSources($node, $translation);
         $ns->setTitle($title);
+        $ns->setPublishedAt(new \DateTime());
         static::getManager()->persist($ns);
 
         $node->addNodeSources($ns);
@@ -115,35 +113,26 @@ abstract class SchemaDependentCase extends KernelDependentCase
     public static function getManager()
     {
         if (static::$entityManager === null) {
-            $config = Kernel::getService('config');
-            $emConfig = Kernel::getService('em.config');
+            $config = static::$kernel->get('config');
+            $emConfig = static::$kernel->get('em.config');
             static::$entityManager = EntityManager::create($config["doctrine"], $emConfig);
             $evm = static::$entityManager->getEventManager();
-
-            $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
 
             /*
              * Create dynamic discriminator map for our Node system
              */
             $evm->addEventListener(
                 Events::loadClassMetadata,
-                new DataInheritanceEvent($prefix)
+                new DataInheritanceEvent(static::$kernel->getContainer())
             );
 
             /*
-             * Fonts life cycle manager.
-             */
-            $evm->addEventSubscriber(new FontLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
-
-            /*
-             * Documents life cycle manager.
-             */
-            $evm->addEventSubscriber(new DocumentLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
-
-            /*
-             * Users life cycle manager.
-             */
-            $evm->addEventSubscriber(new UserLifeCycleSubscriber(Kernel::getInstance()->getContainer()));
+                 * Inject doctrine event subscribers for
+                 * a service to be able to add new ones from themes.
+                 */
+            foreach (static::$kernel->get('em.eventSubscribers') as $eventSubscriber) {
+                $evm->addEventSubscriber($eventSubscriber);
+            }
         }
 
         return static::$entityManager;

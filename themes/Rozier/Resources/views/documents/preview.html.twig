@@ -27,7 +27,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if document.isEmbed and document.viewer.embedFinder %}
+                    {% if document.isEmbed %}
                         <hr />
                         <h3>{% trans %}embed.preview{% endtrans %}</h3>
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat|merge({
@@ -48,8 +48,8 @@
                     <tr><td>{% trans %}document.relative_url{% endtrans %}</td><td>{{ document|url(thumbnailFormat) }}</td></tr>
                     <tr><td>{% trans %}document.absolute_url{% endtrans %}</td><td>{{ document|url(thumbnailFormat|merge({absolute:true})) }}</td></tr>
                     <tr><td>{% trans %}document.unprocessed_url{% endtrans %}</td><td>{{ document|url({noProcess:true}) }}</td></tr>
-                    {% if document.isEmbed and document.viewer.embedFinder %}
-                        <tr><td>{% trans %}document.source_url{% endtrans %}</td><td>{{ document.viewer.embedFinder.source }}</td></tr>
+                    {% if document.isEmbed and document|embedFinder %}
+                        <tr><td>{% trans %}document.source_url{% endtrans %}</td><td>{{ (document|embedFinder).source }}</td></tr>
                     {% endif %}
                     {% for key, info in infos %}
                         <tr><td>{{ ('document.' ~ key)|trans }}</td><td>{{ info }}</td></tr>

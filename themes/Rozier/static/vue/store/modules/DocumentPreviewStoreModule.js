@@ -88,10 +88,8 @@ const mutations = {
         }
     },
     [KEYBOARD_EVENT_ESCAPE] (state) {
-        if (state.isVisible) {
-            state.isVisible = false
-            state.document = null
-        }
+        state.isVisible = false
+        state.document = null
     },
     [DOCUMENT_PREVIEW_OPEN] (state) {
         state.isVisible = true

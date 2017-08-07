@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-
 /**
  * A paginator class to filter node-sources entities with limit and search.
  *
@@ -38,28 +36,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
  */
 class NodesSourcesPaginator extends Paginator
 {
-    protected $authorizationChecker = null;
-    protected $preview = false;
-
-    /**
-     * @return AuthorizationChecker
-     */
-    public function getAuthorizationChecker()
-    {
-        return $this->authorizationChecker;
-    }
-
-    /**
-     * @param AuthorizationChecker $authorizationChecker
-     * @return $this
-     */
-    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker = null)
-    {
-        $this->authorizationChecker = $authorizationChecker;
-
-        return $this;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -67,15 +43,9 @@ class NodesSourcesPaginator extends Paginator
     {
         if (null === $this->totalCount) {
             if (null !== $this->searchPattern) {
-                $this->totalCount = $this->em->getRepository($this->entityName)
-                    ->countSearchBy($this->searchPattern, $this->criteria);
+                $this->totalCount = $this->getRepository()->countSearchBy($this->searchPattern, $this->criteria);
             } else {
-                $this->totalCount = $this->em->getRepository($this->entityName)
-                    ->countBy(
-                        $this->criteria,
-                        $this->authorizationChecker,
-                        $this->preview
-                    );
+                $this->totalCount = $this->getRepository()->countBy($this->criteria);
             }
         }
 
@@ -95,39 +65,12 @@ class NodesSourcesPaginator extends Paginator
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);
         } else {
-            return $this->em->getRepository($this->entityName)
-                ->findBy(
-                    $this->criteria,
-                    $order,
-                    $this->getItemsPerPage(),
-                    $this->getItemsPerPage() * ($page - 1),
-                    $this->authorizationChecker,
-                    $this->preview
-                );
+            return $this->getRepository()->findBy(
+                $this->criteria,
+                $order,
+                $this->getItemsPerPage(),
+                $this->getItemsPerPage() * ($page - 1)
+            );
         }
-    }
-
-    /**
-     * Gets the value of preview.
-     *
-     * @return boolean
-     */
-    public function getPreview()
-    {
-        return $this->preview;
-    }
-
-    /**
-     * Sets the value of preview.
-     *
-     * @param boolean $preview the preview
-     *
-     * @return self
-     */
-    public function setPreview($preview)
-    {
-        $this->preview = (boolean) $preview;
-
-        return $this;
     }
 }

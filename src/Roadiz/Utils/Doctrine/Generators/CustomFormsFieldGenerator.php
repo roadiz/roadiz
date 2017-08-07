@@ -47,7 +47,13 @@ class CustomFormsFieldGenerator extends AbstractFieldGenerator
     public function '.$this->field->getGetterName().'()
     {
         if (null === $this->' . $this->field->getName() . ') {
-            $this->' . $this->field->getName() . ' = $this->getNode()->getHandler()->getCustomFormsFromFieldName("'.$this->field->getName().'");
+            if (null !== $this->objectManager) {
+                $this->' . $this->field->getName() . ' = $this->objectManager
+                    ->getRepository(\'RZ\Roadiz\Core\Entities\CustomForm\')
+                    ->findByNodeAndFieldName($this->getNode(), "'.$this->field->getName().'");
+            } else {
+                $this->' . $this->field->getName() . ' = [];
+            }
         }
         return $this->' . $this->field->getName() . ';
     }'.PHP_EOL;

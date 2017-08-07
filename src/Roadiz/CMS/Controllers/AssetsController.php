@@ -66,9 +66,6 @@ class AssetsController extends CmsController
      */
     public function interventionRequestAction(Request $request, $queryString, $filename)
     {
-        $log = new Logger('InterventionRequest');
-        $log->pushHandler(new StreamHandler($this->get('kernel')->getLogDir() . '/interventionRequest.log', Logger::INFO));
-
         try {
             /*
              * Handle short url with Url rewriting
@@ -79,32 +76,17 @@ class AssetsController extends CmsController
             /*
              * Handle main image request
              */
-            $iRequest = new InterventionRequest(
-                $this->get('interventionRequestConfiguration'),
-                $request,
-                $log
-            );
-
-            foreach ($this->get('interventionRequestSubscribers') as $subscriber) {
-                $iRequest->addSubscriber($subscriber);
-            }
-
-            $iRequest->handle();
-            return $iRequest->getResponse();
+            $interventionRequest = $this->get('interventionRequest');
+            $interventionRequest->handleRequest($request);
+            return $interventionRequest->getResponse($request);
         } catch (\ReflectionException $e) {
             $message = '[Configuration] ' . $e->getMessage();
-            if (null !== $log) {
-                $log->error($message);
-            }
             return new Response(
                 $message,
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 ['content-type' => 'text/plain']
             );
         } catch (\Exception $e) {
-            if (null !== $log) {
-                $log->error($e->getMessage());
-            }
             return new Response(
                 $e->getMessage(),
                 Response::HTTP_NOT_FOUND,

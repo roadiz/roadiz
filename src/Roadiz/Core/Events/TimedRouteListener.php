@@ -44,6 +44,14 @@ class TimedRouteListener extends RouterListener
 {
     protected $stopwatch;
 
+    /**
+     * TimedRouteListener constructor.
+     * @param ChainRouter $router
+     * @param RequestContext|null $context
+     * @param LoggerInterface|null $logger
+     * @param RequestStack|null $requestStack
+     * @param Stopwatch|null $stopwatch
+     */
     public function __construct(
         ChainRouter $router,
         RequestContext $context = null,
@@ -56,6 +64,9 @@ class TimedRouteListener extends RouterListener
         $this->stopwatch = $stopwatch;
     }
 
+    /**
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $this->stopwatch->start('routeListener');

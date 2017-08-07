@@ -29,10 +29,11 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\FolderRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,18 +41,28 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Handle operations with documents entities.
  */
-class DocumentHandler
+class DocumentHandler extends AbstractHandler
 {
+    /**
+     * @var Document
+     */
     protected $document;
+
+    /**
+     * @var Packages
+     */
+    protected $packages;
 
     /**
      * Create a new document handler with document to handle.
      *
-     * @param Document $document
+     * @param ObjectManager $objectManager
+     * @param Packages $packages
      */
-    public function __construct(Document $document)
+    public function __construct(ObjectManager $objectManager, Packages $packages)
     {
-        $this->document = $document;
+        parent::__construct($objectManager);
+        $this->packages = $packages;
     }
 
     /**
@@ -62,10 +73,8 @@ class DocumentHandler
      */
     public function makePrivate()
     {
-        /** @var Packages $packages */
-        $packages = Kernel::getService('assetPackages');
-        $documentPublicPath = $packages->getPublicFilesPath($this->document->getRelativeUrl());
-        $documentPrivatePath = $packages->getPrivateFilesPath($this->document->getRelativeUrl());
+        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativeUrl());
+        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativeUrl());
 
         if (!$this->document->isPrivate()) {
             $fs = new Filesystem();
@@ -86,9 +95,9 @@ class DocumentHandler
                 /*
                  * Bubble privatisation to raw document if available.
                  */
-                if (null !== $this->document->getRawDocument() &&
-                    !$this->document->getRawDocument()->isPrivate()) {
-                    $rawHandler = new DocumentHandler($this->document->getRawDocument());
+                if (null !== $this->document->getRawDocument() && !$this->document->getRawDocument()->isPrivate()) {
+                    $rawHandler = new DocumentHandler($this->objectManager, $this->packages);
+                    $rawHandler->setDocument($this->document->getRawDocument());
                     $rawHandler->makePrivate();
                 }
             } else {
@@ -107,10 +116,8 @@ class DocumentHandler
      */
     public function makePublic()
     {
-        /** @var Packages $packages */
-        $packages = Kernel::getService('assetPackages');
-        $documentPublicPath = $packages->getPublicFilesPath($this->document->getRelativeUrl());
-        $documentPrivatePath = $packages->getPrivateFilesPath($this->document->getRelativeUrl());
+        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativeUrl());
+        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativeUrl());
 
         if ($this->document->isPrivate()) {
             $fs = new Filesystem();
@@ -134,7 +141,8 @@ class DocumentHandler
                  */
                 if (null !== $this->document->getRawDocument() &&
                     $this->document->getRawDocument()->isPrivate()) {
-                    $rawHandler = new DocumentHandler($this->document->getRawDocument());
+                    $rawHandler = new DocumentHandler($this->objectManager, $this->packages);
+                    $rawHandler->setDocument($this->document->getRawDocument());
                     $rawHandler->makePublic();
                 }
             } else {
@@ -158,9 +166,7 @@ class DocumentHandler
     {
         $fs = new Filesystem();
 
-        /** @var Packages $packages */
-        $packages = Kernel::getService('assetPackages');
-        $documentPath = $packages->getDocumentFilePath($this->document);
+        $documentPath = $this->packages->getDocumentFilePath($this->document);
 
         if ($fs->exists($documentPath)) {
             $response = new Response();
@@ -189,22 +195,36 @@ class DocumentHandler
      */
     public function getFolders(Translation $translation = null)
     {
+        /** @var FolderRepository $repository */
+        $repository = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Folder');
         if (null !== $translation) {
-            return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                ->findByDocumentAndTranslation($this->document, $translation);
+            return $repository->findByDocumentAndTranslation($this->document, $translation);
         }
 
         $docTranslation = $this->document->getDocumentTranslations()->first();
         if (null !== $docTranslation &&
             $docTranslation instanceof DocumentTranslation) {
-            return Kernel::getService('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                ->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());
+            return $repository->findByDocumentAndTranslation($this->document, $docTranslation->getTranslation());
         }
 
-        return Kernel::getService('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
-            ->findByDocumentAndTranslation($this->document);
+        return $repository->findByDocumentAndTranslation($this->document);
+    }
+
+    /**
+     * @return Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * @param Document $document
+     * @return DocumentHandler
+     */
+    public function setDocument(Document $document)
+    {
+        $this->document = $document;
+        return $this;
     }
 }

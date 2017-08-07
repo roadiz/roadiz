@@ -29,11 +29,13 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -55,6 +57,8 @@ class NodesController extends RozierApp
 {
     use NodesTrait;
 
+
+
     /**
      * List every nodes.
      *
@@ -70,6 +74,7 @@ class NodesController extends RozierApp
 
         $translation = $this->get('defaultTranslation');
 
+        /** @var User $user */
         $user = $this->getUser();
 
         switch ($filter) {
@@ -97,7 +102,6 @@ class NodesController extends RozierApp
                     'status' => Node::DELETED,
                 ];
                 break;
-
             default:
                 $this->assignation['mainFilter'] = 'all';
                 $arrayFilter = [];
@@ -115,6 +119,9 @@ class NodesController extends RozierApp
             'RZ\Roadiz\Core\Entities\Node',
             $arrayFilter
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
+        $listManager->setDisplayingAllNodesStatuses(true);
+
         /*
          * Stored in session
          */
@@ -253,6 +260,7 @@ class NodesController extends RozierApp
         /** @var Node $node */
         $node = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Node', $nodeId);
+        /** @var NodeType $type */
         $type = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\NodeType', $typeId);
 
@@ -288,6 +296,7 @@ class NodesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        /** @var NodeType $type */
         $type = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 
@@ -469,7 +478,10 @@ class NodesController extends RozierApp
                 $event = new FilterNodeEvent($node);
                 $this->get('dispatcher')->dispatch(NodeEvents::NODE_DELETED, $event);
 
-                $node->getHandler()->softRemoveWithChildren();
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->get('node.handler')->setNode($node);
+
+                $nodeHandler->softRemoveWithChildren();
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -513,25 +525,34 @@ class NodesController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $chroot = $user->getChroot();
             $criteria = ['status' => Node::DELETED];
-            if ($chroot !== null) {
-                $ids = $chroot->getHandler()->getAllOffspringId();
-                $criteria["parent"] = $ids;
+            $user = $this->getUser();
+            if ($user instanceof User) {
+                $chroot = $user->getChroot();
+                if ($chroot !== null) {
+                    /** @var NodeHandler $nodeHandler */
+                    $nodeHandler = $this->get('node.handler')->setNode($chroot);
+                    $ids = $nodeHandler->getAllOffspringId();
+                    $criteria["parent"] = $ids;
+                }
             }
+
             $nodes = $this->get('em')
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingAllNodesStatuses(true)
+                ->setDisplayingNotPublishedNodes(true)
                 ->findBy($criteria);
 
             /** @var Node $node */
             foreach ($nodes as $node) {
-                $node->getHandler()->removeWithChildrenAndAssociations();
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->get('node.handler')->setNode($node);
+                $nodeHandler->removeWithChildrenAndAssociations();
             }
             /*
              * Final flush
              */
-            Kernel::getService('em')->flush();
+            $this->get('em')->flush();
 
             $msg = $this->getTranslator()->trans('node.trash.emptied');
             $this->publishConfirmMessage($request, $msg);
@@ -575,7 +596,9 @@ class NodesController extends RozierApp
                 $event = new FilterNodeEvent($node);
                 $this->get('dispatcher')->dispatch(NodeEvents::NODE_UNDELETED, $event);
 
-                $node->getHandler()->softUnremoveWithChildren();
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->get('node.handler')->setNode($node);
+                $nodeHandler->softUnremoveWithChildren();
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -645,7 +668,9 @@ class NodesController extends RozierApp
                 ])->getForm();
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $node->getHandler()->publishWithChildren();
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->get('node.handler')->setNode($node);
+                $nodeHandler->publishWithChildren();
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('node.offspring.published');

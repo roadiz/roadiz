@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 
 /**
  * CustomFormField entities are used to create CustomForms with
@@ -107,6 +106,9 @@ class CustomFormField extends AbstractField
     public function setCustomForm(CustomForm $customForm = null)
     {
         $this->customForm = $customForm;
+        if (null !== $customForm) {
+            $this->customForm->addField($this);
+        }
 
         return $this;
     }
@@ -116,12 +118,18 @@ class CustomFormField extends AbstractField
      */
     private $customFormFieldAttribute;
 
+    /**
+     * @return ArrayCollection
+     */
     public function getCustomFormFieldAttribute()
     {
         return $this->customFormFieldAttribute;
     }
 
-    public function __contruct()
+    /**
+     * CustomFormField constructor.
+     */
+    public function __construct()
     {
         $this->customFormFieldAttribute = new ArrayCollection();
     }
@@ -149,25 +157,6 @@ class CustomFormField extends AbstractField
         $this->required = $required;
 
         return $this;
-    }
-
-    /**
-     * @return  \RZ\Roadiz\Core\Handlers\CustomFormFieldHandler
-     */
-    public function getHandler()
-    {
-        return new CustomFormFieldHandler($this);
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function prePersist()
-    {
-        /*
-         * Get the last index after last node in parent
-         */
-        $this->setPosition($this->getHandler()->cleanPositions());
     }
 
     /**

@@ -213,8 +213,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
                 $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
-                if ($identifier !== null &&
-                    $identifier != '') {
+                if ($identifier !== null && $identifier != '') {
                     return $this->repository
                         ->findByNodeNameWithTranslation(
                             $identifier,

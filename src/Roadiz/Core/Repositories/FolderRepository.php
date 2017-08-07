@@ -260,7 +260,7 @@ class FolderRepository extends EntityRepository
     public function countSearchBy($pattern, array $criteria = [])
     {
         $qb = $this->createQueryBuilder('f');
-        $qb->add('select', 'count(f)')
+        $qb->select($qb->expr()->countDistinct('f'))
             ->leftJoin('f.translatedFolders', 'obj');
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);

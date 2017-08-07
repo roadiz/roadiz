@@ -17,7 +17,10 @@
             "virtual": false,
             "universal": false,
             "default_values": null,
-            "group_name": null
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "newsletter_title",
@@ -29,7 +32,10 @@
             "virtual": false,
             "universal": false,
             "default_values": null,
-            "group_name": null
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "title_link",
@@ -41,7 +47,10 @@
             "virtual": false,
             "universal": true,
             "default_values": null,
-            "group_name": null
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "datetime",
@@ -53,7 +62,10 @@
             "virtual": false,
             "universal": true,
             "default_values": null,
-            "group_name": null
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         },
         {
             "name": "children",
@@ -65,7 +77,10 @@
             "virtual": true,
             "universal": false,
             "default_values": "BasicBlock",
-            "group_name": null
+            "group_name": null,
+            "placeholder": null,
+            "min_length": null,
+            "max_length": null
         }
     ]
 }

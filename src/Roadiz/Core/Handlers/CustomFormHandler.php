@@ -30,17 +30,19 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Handle operations with node-type entities.
  */
-class CustomFormHandler
+class CustomFormHandler extends AbstractHandler
 {
-    private $customForm = null;
+    /**
+     * @var CustomForm|null
+     */
+    protected $customForm = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\CustomForm
+     * @return CustomForm
      */
     public function getCustomForm()
     {
@@ -48,42 +50,35 @@ class CustomFormHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
-     *
+     * @param CustomForm $customForm
      * @return $this
      */
-    public function setCustomForm($customForm)
+    public function setCustomForm(CustomForm $customForm)
     {
         $this->customForm = $customForm;
-
         return $this;
-    }
-
-    /**
-     * Create a new node-type handler with node-type to handle.
-     *
-     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
-     */
-    public function __construct(CustomForm $customForm)
-    {
-        $this->customForm = $customForm;
     }
 
     /**
      * Reset current node-type fields positions.
      *
+     * @param bool $setPositions
      * @return int Return the next position after the **last** field
      */
-    public function cleanFieldsPositions()
+    public function cleanFieldsPositions($setPositions = true)
     {
         $fields = $this->customForm->getFields();
         $i = 1;
         foreach ($fields as $field) {
-            $field->setPosition($i);
+            if ($setPositions) {
+                $field->setPosition($i);
+            }
             $i++;
         }
 
-        Kernel::getService('em')->flush();
+        if ($setPositions) {
+            $this->objectManager->flush();
+        }
 
         return $i;
     }

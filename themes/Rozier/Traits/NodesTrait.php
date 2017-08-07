@@ -53,6 +53,7 @@ trait NodesTrait
         $nodeName = StringHandler::slugify($title);
         if (null !== $this->get('em')
                           ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->setDisplayingNotPublishedNodes(true)
                           ->findOneByNodeName($nodeName)) {
             $nodeName .= '-' . uniqid();
         }
@@ -68,6 +69,7 @@ trait NodesTrait
         /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($title);
+        $source->setPublishedAt(new \DateTime());
 
         $this->get('em')->persist($source);
         $this->get('em')->flush();

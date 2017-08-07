@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
@@ -39,15 +40,31 @@ class NodesSourcesExtension extends \Twig_Extension
 {
     protected $preview;
     protected $securityAuthorizationChecker;
+    /**
+     * @var bool
+     */
+    private $throwExceptions;
+    /**
+     * @var NodesSourcesHandler
+     */
+    private $nodesSourcesHandler;
 
     /**
      * @param AuthorizationChecker $securityAuthorizationChecker
-     * @param boolean              $preview
+     * @param NodesSourcesHandler $nodesSourcesHandler
+     * @param boolean $preview
+     * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(AuthorizationChecker $securityAuthorizationChecker, $preview = false)
-    {
+    public function __construct(
+        AuthorizationChecker $securityAuthorizationChecker,
+        NodesSourcesHandler $nodesSourcesHandler,
+        $preview = false,
+        $throwExceptions = false
+    ) {
         $this->securityAuthorizationChecker = $securityAuthorizationChecker;
         $this->preview = $preview;
+        $this->throwExceptions = $throwExceptions;
+        $this->nodesSourcesHandler = $nodesSourcesHandler;
     }
 
     public function getName()
@@ -73,16 +90,20 @@ class NodesSourcesExtension extends \Twig_Extension
      * @param NodesSources|null $ns
      * @param array|null $criteria
      * @param array|null $order
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return array
      * @throws \Twig_Error_Runtime
      */
     public function getChildren(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get children from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get children from a NULL node-source.");
+            } else {
+                return [];
+            }
         }
-
-        return $ns->getHandler()->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -95,10 +116,15 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getNext(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get next sibling from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get next sibling from a NULL node-source.");
+            } else {
+                return null;
+            }
         }
 
-        return $ns->getHandler()->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -111,10 +137,15 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getPrevious(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get previous sibling from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get previous sibling from a NULL node-source.");
+            } else {
+                return null;
+            }
         }
 
-        return $ns->getHandler()->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -127,10 +158,15 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getLastSibling(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get last sibling from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get last sibling from a NULL node-source.");
+            } else {
+                return null;
+            }
         }
 
-        return $ns->getHandler()->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -143,10 +179,15 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getFirstSibling(NodesSources $ns = null, array $criteria = null, array $order = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get first sibling from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get first sibling from a NULL node-source.");
+            } else {
+                return null;
+            }
         }
 
-        return $ns->getHandler()->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
     }
 
     /**
@@ -157,10 +198,14 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getParent(NodesSources $ns = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get parent from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get parent from a NULL node-source.");
+            } else {
+                return null;
+            }
         }
 
-        return $ns->getHandler()->getParent();
+        return $ns->getParent();
     }
 
     /**
@@ -173,11 +218,16 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getParents(NodesSources $ns = null, array $criteria = null, $preview = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get parents from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get parents from a NULL node-source.");
+            } else {
+                return [];
+            }
         }
 
         $preview = $preview !== null ? $preview : $this->preview;
-        return $ns->getHandler()->getParents($criteria, $this->securityAuthorizationChecker, $preview);
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getParents($criteria, $this->securityAuthorizationChecker, $preview);
     }
 
     /**
@@ -188,9 +238,14 @@ class NodesSourcesExtension extends \Twig_Extension
     public function getTags(NodesSources $ns = null)
     {
         if (null === $ns) {
-            throw new \Twig_Error_Runtime("Cannot get tags from a NULL node-source.");
+            if ($this->throwExceptions) {
+                throw new \Twig_Error_Runtime("Cannot get tags from a NULL node-source.");
+            } else {
+                return [];
+            }
         }
 
-        return $ns->getHandler()->getTags();
+        $this->nodesSourcesHandler->setNodeSource($ns);
+        return $this->nodesSourcesHandler->getTags();
     }
 }

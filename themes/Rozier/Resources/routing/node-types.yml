@@ -4,26 +4,33 @@
 #
 nodeTypesEditPage:
     path:     /edit/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::editAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::editAction
     requirements: { nodeTypeId : "[0-9]+" }
 nodeTypesAddPage:
     path:     /add
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::addAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::addAction
 nodeTypesImportPage:
     path:     /import
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::importJsonFileAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::importJsonFileAction
 nodeTypesDeletePage:
     path:     /delete/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::deleteAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesController::deleteAction
     requirements: { nodeTypeId : "[0-9]+" }
 nodesTypesExportPage:
     path:     /export/{nodeTypeId}
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportJsonFileAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportJsonFileAction
     requirements: { nodeTypeId : "[0-9]+" }
 nodesTypesExportAllPage:
     path:     /export/all
-    defaults: { _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportAllAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportAllAction
 
 nodeTypesSchemaUpdate:
     path:     /update-schema
-    defaults: { _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction }
+    defaults:
+        _controller: Themes\Rozier\Controllers\SchemaController::updateNodeTypesSchemaAction

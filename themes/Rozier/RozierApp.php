@@ -179,7 +179,7 @@ class RozierApp extends BackendController
          */
         if ($container['solr.ready']) {
             $container['dispatcher']->addSubscriber(
-                new SolariumSubscriber($container['solr'], $container['dispatcher'], $container['logger'])
+                new SolariumSubscriber($container['solr'], $container['dispatcher'], $container['logger'], $container['factory.handler'])
             );
         }
 
@@ -205,7 +205,7 @@ class RozierApp extends BackendController
          * Add custom event subscriber to manage node duplication
          */
         $container['dispatcher']->addSubscriber(
-            new NodeDuplicationSubscriber($container['em'])
+            new NodeDuplicationSubscriber($container['em'], $container['node.handler'])
         );
 
         /*

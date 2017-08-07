@@ -34,8 +34,9 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\Translator;
 
 /**
  * XLSX Serialization handler for NodeSource.
@@ -51,14 +52,22 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     protected $forceLocale = false;
     protected $addUrls = false;
     protected $onlyTexts = false;
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
 
     /**
      *
      * @param EntityManager $em
+     * @param Translator $translator
+     * @param UrlGeneratorInterface $urlGenerator
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Translator $translator, UrlGeneratorInterface $urlGenerator)
     {
+        parent::__construct($translator);
         $this->em = $em;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -73,8 +82,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
         if ($nodeSource instanceof NodesSources) {
             if ($this->addUrls === true) {
-                $generator = new NodesSourcesUrlGenerator($this->request, $nodeSource, $this->forceLocale);
-                $data['_url'] = $generator->getUrl(true);
+                $data['_url'] = $this->urlGenerator->generate($nodeSource, UrlGeneratorInterface::ABSOLUTE_URL);
             }
 
             $data['translation'] = $nodeSource->getTranslation()->getLocale();

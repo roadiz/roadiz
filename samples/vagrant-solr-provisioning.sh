@@ -74,6 +74,7 @@ fi
 
 echo -e "\n--- Restarting Solr server ---\n"
 sudo service solr restart > /dev/null 2>&1;
+sudo apt-get clean; # remove obsolete packages
 
 export PRIVATE_IP=`/sbin/ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 

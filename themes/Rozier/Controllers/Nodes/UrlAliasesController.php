@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
@@ -40,6 +41,7 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -75,6 +77,8 @@ class UrlAliasesController extends RozierApp
         /** @var NodesSources $source */
         $source = $this->get('em')
                        ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                       ->setDisplayingAllNodesStatuses(true)
+                       ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
 
         $node = $source->getNode();
@@ -85,11 +89,14 @@ class UrlAliasesController extends RozierApp
                         ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
                         ->findAllFromNode($node->getId());
 
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->get('node.handler')->setNode($node);
+
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $source;
             $this->assignation['aliases'] = [];
             $this->assignation['translation'] = $translation;
-            $this->assignation['available_translations'] = $node->getHandler()->getAvailableTranslations();
+            $this->assignation['available_translations'] = $nodeHandler->getAvailableTranslations();
 
             /*
              * SEO Form
@@ -239,11 +246,15 @@ class UrlAliasesController extends RozierApp
     private function addNodeUrlAlias($data, Node $node)
     {
         if ($data['nodeId'] == $node->getId()) {
+            /** @var Translation $translation */
             $translation = $this->get('em')
                                 ->find('RZ\Roadiz\Core\Entities\Translation', (int) $data['translationId']);
 
+            /** @var NodesSources $nodeSource */
             $nodeSource = $this->get('em')
                                ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                               ->setDisplayingAllNodesStatuses(true)
+                               ->setDisplayingNotPublishedNodes(true)
                                ->findOneBy(['node' => $node, 'translation' => $translation]);
 
             if ($translation !== null &&
@@ -319,6 +330,7 @@ class UrlAliasesController extends RozierApp
     {
         return (boolean) $this->get('em')
                               ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                              ->setDisplayingNotPublishedNodes(true)
                               ->exists($name);
     }
 

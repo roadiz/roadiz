@@ -42,7 +42,10 @@ class ValidAccountEmailValidator extends ConstraintValidator
                                ->findOneByEmail($value);
 
             if (null === $user) {
-                $this->context->addViolation($constraint->message, ['%email%' => $value]);
+                $this->context->buildViolation($constraint->message)
+                    ->setParameter('%email%', $this->formatValue($value))
+                    ->setInvalidValue($value)
+                    ->addViolation();
             }
         } else {
             $this->context->addViolation('“ValidAccountEmail” constraint requires a valid EntityManager');

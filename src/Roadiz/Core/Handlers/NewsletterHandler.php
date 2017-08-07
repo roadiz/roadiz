@@ -30,18 +30,20 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use RZ\Roadiz\Core\Entities\Newsletter;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 
 /**
  * Handle operations with newsletters entities.
  */
-class NewsletterHandler
+class NewsletterHandler extends AbstractHandler
 {
-    private $newsletter = null;
+    /**
+     * @var Newsletter
+     */
+    private $newsletter;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\newsletter
+     * @return Newsletter
      */
     public function getNewsletter()
     {
@@ -49,25 +51,14 @@ class NewsletterHandler
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\newsletter $newsletter
+     * @param Newsletter|null $newsletter
      *
      * @return $this
      */
-    public function setNewsletter($newsletter)
+    public function setNewsletter(Newsletter $newsletter = null)
     {
         $this->newsletter = $newsletter;
-
         return $this;
-    }
-
-    /**
-     * Create a new newsletter handler with newsletter to handle.
-     *
-     * @param newsletter $newsletter
-     */
-    public function __construct(Newsletter $newsletter)
-    {
-        $this->newsletter = $newsletter;
     }
 
     /**
@@ -75,17 +66,17 @@ class NewsletterHandler
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->newsletter->getNode(), Kernel::getService('em'));
+        $duplicator = new NodeDuplicator($this->newsletter->getNode(), $this->objectManager);
         $newNode = $duplicator->duplicate();
-        Kernel::getService('em')->persist($newNode);
+        $this->objectManager->persist($newNode);
 
-        Kernel::getService('em')->refresh($this->newsletter);
+        $this->objectManager->refresh($this->newsletter);
         $newsletter = clone $this->newsletter;
-        Kernel::getService('em')->persist($newsletter);
+        $this->objectManager->persist($newsletter);
 
         $newsletter->setNode($newNode);
 
-        Kernel::getService('em')->flush();
+        $this->objectManager->flush();
 
         return $newsletter;
     }

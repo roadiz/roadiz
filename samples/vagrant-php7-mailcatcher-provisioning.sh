@@ -37,6 +37,7 @@ sudo phpenmod -v ALL -s ALL mailcatcher;
 
 echo -e "\n--- Restart PHP service ---\n";
 sudo service php7.0-fpm restart > /dev/null 2>&1;
+sudo apt-get clean; # remove obsolete packages
 
 echo -e "\n--- Run MailCatcher  ---\n";
 /usr/bin/env $(which mailcatcher) --ip=0.0.0.0 > /dev/null 2>&1;

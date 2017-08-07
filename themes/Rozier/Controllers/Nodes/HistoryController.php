@@ -65,6 +65,8 @@ class HistoryController extends RozierApp
             ],
             ['datetime' => 'DESC']
         );
+        $listManager->setDisplayingNotPublishedNodes(true);
+        $listManager->setDisplayingAllNodesStatuses(true);
         /*
          * Stored in session
          */

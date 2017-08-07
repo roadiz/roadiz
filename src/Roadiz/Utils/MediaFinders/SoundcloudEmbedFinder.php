@@ -29,119 +29,12 @@
  */
 namespace RZ\Roadiz\Utils\MediaFinders;
 
-use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
-
 /**
  * Soundcloud tools class.
  *
  * Manage a youtube video feed
  */
-class SoundcloudEmbedFinder extends AbstractEmbedFinder
+class SoundcloudEmbedFinder extends AbstractSoundcloudEmbedFinder
 {
-    protected static $platform = 'soundcloud';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaTitle()
-    {
-        return $this->getFeed()['title'];
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaDescription()
-    {
-        return $this->getFeed()['description'];
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaCopyright()
-    {
-        return "";
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getThumbnailURL()
-    {
-        return $this->getFeed()['artwork_url'];
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSearchFeed($searchTerm, $author, $maxResults = 15)
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMediaFeed($search = null)
-    {
-        if ($this->getKey() != "") {
-            $url = "http://api.soundcloud.com/tracks/".
-                    $this->embedId.
-                    ".json?client_id=".
-                    $this->getKey();
-
-            return $this->downloadFeedFromAPI($url);
-        } else {
-            throw new APINeedsAuthentificationException("Soundcloud need a clientId to perform API calls, create a “soundcloud_client_id” setting.", 1);
-        }
-    }
-
-    /**
-     * Get embed media source URL.
-     *
-     * ## Available fields
-     *
-     * * hide_related
-     * * show_comments
-     * * show_user
-     * * show_reposts
-     * * visual
-     *
-     * @param array $options
-     *
-     * @return string
-     */
-    public function getSource(array &$options = [])
-    {
-        parent::getSource($options);
-
-        $queryString = [
-            'url' => 'https://api.soundcloud.com/tracks/'.$this->embedId,
-        ];
-
-        if ($options['hide_related']) {
-            $queryString['hide_related'] = (int) $options['hide_related'];
-        }
-        if ($options['show_comments']) {
-            $queryString['show_comments'] = (int) $options['show_comments'];
-        }
-        if ($options['show_user']) {
-            $queryString['show_user'] = (int) $options['show_user'];
-        }
-        if ($options['show_reposts']) {
-            $queryString['show_reposts'] = (int) $options['show_reposts'];
-        }
-        if ($options['visual']) {
-            $queryString['visual'] = (int) $options['visual'];
-        }
-
-        if ($options['autoplay']) {
-            $queryString['auto_play'] = (int) $options['autoplay'];
-        }
-        if ($options['controls']) {
-            $queryString['controls'] = (int) $options['controls'];
-        }
-
-
-        return '//w.soundcloud.com/player/?' . http_build_query($queryString);
-    }
+    use EmbedFinderTrait;
 }

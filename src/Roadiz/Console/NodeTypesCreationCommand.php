@@ -105,7 +105,8 @@ class NodeTypesCreationCommand extends Command
         $this->addNodeTypeField($nt, 1, $input, $output);
 
         $this->entityManager->flush();
-        $nt->getHandler()->regenerateEntityClass();
+        $handler = $this->getHelper('handlerFactory')->getHandler($nt);
+        $handler->regenerateEntityClass();
 
         $success = 'Node type <info>' . $nt->getName() . '</info> has been created.' . PHP_EOL .
             'Do not forget to update database schema! <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info>';

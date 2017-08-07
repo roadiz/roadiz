@@ -123,7 +123,8 @@ class ThemeInstallCommand extends Command
                 foreach ($data["importFiles"]['groups'] as $filename) {
                     GroupsImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -132,7 +133,8 @@ class ThemeInstallCommand extends Command
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     RolesImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -141,7 +143,8 @@ class ThemeInstallCommand extends Command
                 foreach ($data["importFiles"]['settings'] as $filename) {
                     SettingsImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -150,7 +153,8 @@ class ThemeInstallCommand extends Command
                 foreach ($data["importFiles"]['nodetypes'] as $filename) {
                     NodeTypesImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -159,7 +163,8 @@ class ThemeInstallCommand extends Command
                 foreach ($data["importFiles"]['tags'] as $filename) {
                     TagsImporter::importJsonFile(
                         file_get_contents($this->themeRoot . "/" . $filename),
-                        $this->entityManager
+                        $this->entityManager,
+                        $this->getHelper('handlerFactory')->getHandlerFactory()
                     );
                     $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
@@ -182,7 +187,8 @@ class ThemeInstallCommand extends Command
                     try {
                         NodesImporter::importJsonFile(
                             file_get_contents($this->themeRoot . "/" . $filename),
-                            $this->entityManager
+                            $this->entityManager,
+                            $this->getHelper('handlerFactory')->getHandlerFactory()
                         );
                         $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                     } catch (EntityAlreadyExistsException $e) {
@@ -199,7 +205,7 @@ class ThemeInstallCommand extends Command
 
     protected function getThemeConfig()
     {
-        return Yaml::parse($this->themeRoot . "/config.yml");
+        return Yaml::parse(file_get_contents($this->themeRoot . "/config.yml"));
     }
 
     protected function importTheme($classname, &$text)

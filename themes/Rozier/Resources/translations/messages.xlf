@@ -4610,6 +4610,10 @@
         <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+        <source>embedId.is_not_valid</source>
+        <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="document.metas">
         <source>document.metas</source>
@@ -6810,6 +6814,27 @@
             <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
             <target></target>
             <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="placeholder">
+            <source>placeholder</source>
+            <target></target>
+            <note>Label for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
+            <source>label_for_field_with_empty_data</source>
+            <target></target>
+            <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="session.expire.title">
+            <source>session.expire.title</source>
+            <target></target>
+            <note>Title for login check warning "modal".</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="session.expire.content">
+            <source>session.expire.content</source>
+            <target></target>
+            <note>Description for login check warning "modal".</note>
         </trans-unit>
     </body>
   </file>

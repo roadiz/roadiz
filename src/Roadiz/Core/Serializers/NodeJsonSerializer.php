@@ -111,6 +111,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     {
         if (null !== $this->em
                 ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->setDisplayingNotPublishedNodes(true)
                 ->findHomeWithDefaultTranslation()) {
             return true;
         }
@@ -171,6 +172,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             /** @var NodesSources $nodeSource */
             $nodeSource = new $class($node, $trans);
             $nodeSource->setTitle($source["title"]);
+            if (isset($source["published_at"]) && $source["published_at"] instanceof \DateTime) {
+                $nodeSource->setPublishedAt($source["published_at"]);
+            }
             $nodeSource->setMetaTitle($source["meta_title"]);
             $nodeSource->setMetaKeywords($source["meta_keywords"]);
             $nodeSource->setMetaDescription($source["meta_description"]);

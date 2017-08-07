@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Font;
-use RZ\Roadiz\Utils\Asset\Packages;
 
 /**
  * Extension that allow render fonts.
@@ -38,17 +38,17 @@ use RZ\Roadiz\Utils\Asset\Packages;
 class FontExtension extends \Twig_Extension
 {
     /**
-     * @var Packages
+     * @var Container
      */
-    private $packages;
+    private $container;
 
     /**
      * DocumentExtension constructor.
-     * @param Packages $packages
+     * @param Container $container
      */
-    public function __construct(Packages $packages)
+    public function __construct(Container $container)
     {
-        $this->packages = $packages;
+        $this->container = $container;
     }
 
     /**
@@ -84,7 +84,7 @@ class FontExtension extends \Twig_Extension
         if (null === $font) {
             throw new \Twig_Error_Runtime('Font can’t be null.');
         }
-        return $this->packages->getFontsPath($font->getEOTRelativeUrl());
+        return $this->container['assetPackages']->getFontsPath($font->getEOTRelativeUrl());
     }
 
     /**
@@ -97,7 +97,7 @@ class FontExtension extends \Twig_Extension
         if (null === $font) {
             throw new \Twig_Error_Runtime('Font can’t be null.');
         }
-        return $this->packages->getFontsPath($font->getOTFRelativeUrl());
+        return $this->container['assetPackages']->getFontsPath($font->getOTFRelativeUrl());
     }
 
     /**
@@ -110,7 +110,7 @@ class FontExtension extends \Twig_Extension
         if (null === $font) {
             throw new \Twig_Error_Runtime('Font can’t be null.');
         }
-        return $this->packages->getFontsPath($font->getSVGRelativeUrl());
+        return $this->container['assetPackages']->getFontsPath($font->getSVGRelativeUrl());
     }
 
     /**
@@ -123,7 +123,7 @@ class FontExtension extends \Twig_Extension
         if (null === $font) {
             throw new \Twig_Error_Runtime('Font can’t be null.');
         }
-        return $this->packages->getFontsPath($font->getWOFFRelativeUrl());
+        return $this->container['assetPackages']->getFontsPath($font->getWOFFRelativeUrl());
     }
 
     /**
@@ -136,6 +136,6 @@ class FontExtension extends \Twig_Extension
         if (null === $font) {
             throw new \Twig_Error_Runtime('Font can’t be null.');
         }
-        return $this->packages->getFontsPath($font->getWOFF2RelativeUrl());
+        return $this->container['assetPackages']->getFontsPath($font->getWOFF2RelativeUrl());
     }
 }

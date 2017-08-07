@@ -33,7 +33,9 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
+use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -332,6 +334,7 @@ abstract class FrontendController extends AppController
      */
     protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
     {
+        $this->container['stopwatch']->start('prepareThemeAssignation');
         $this->storeNodeAndTranslation($node, $translation);
         $this->assignation['home'] = $this->getHome($translation);
         /*
@@ -339,7 +342,10 @@ abstract class FrontendController extends AppController
          */
         $this->themeContainer = new Container();
 
+        $this->container['stopwatch']->start('extendAssignation');
         $this->extendAssignation();
+        $this->container['stopwatch']->stop('extendAssignation');
+        $this->container['stopwatch']->stop('prepareThemeAssignation');
     }
 
     /**
@@ -388,11 +394,15 @@ abstract class FrontendController extends AppController
     public function getNodeSEO(NodesSources $fallbackNodeSource = null)
     {
         if (null !== $this->nodeSource) {
-            return $this->nodeSource->getHandler()->getSEO();
+            /** @var NodesSourcesHandler $nodesSourcesHandler */
+            $nodesSourcesHandler = $this->get('factory.handler')->getHandler($this->nodeSource);
+            return $nodesSourcesHandler->getSEO();
         }
 
         if (null !== $fallbackNodeSource) {
-            return $fallbackNodeSource->getHandler()->getSEO();
+            /** @var NodesSourcesHandler $nodesSourcesHandler */
+            $nodesSourcesHandler = $this->get('factory.handler')->getHandler($fallbackNodeSource);
+            return $nodesSourcesHandler->getSEO();
         }
 
         return [
@@ -414,24 +424,49 @@ abstract class FrontendController extends AppController
     {
         parent::setupDependencyInjection($container);
 
-        /*
-         * Prepare app firewall
+        /**
+         * You can override default frontend firewall
+         * by overriding addDefaultFirewallEntry method
+         *
+         * @see FrontendController::addDefaultFirewallEntry
          */
-        $requestMatcher = new RequestMatcher('^/');
-        $container['accessMap']->add($requestMatcher, ['IS_AUTHENTICATED_ANONYMOUSLY']);
+        static::addDefaultFirewallEntry($container);
+    }
 
-        $listeners = [
-            // manages the TokenStorage persistence through a session
-            $container['contextListener'],
-            // automatically adds a Token if none is already present.
-            new AnonymousAuthenticationListener($container['securityTokenStorage'], ''), // $key
-            $container["switchUser"],
-        ];
+    /**
+     * Declare a default firewall for any routes and adds
+     * an Anonymous token and context listener to fetch current
+     * user information in front-end.
+     *
+     * Override this method to create a custom frontend security scheme
+     * with FirewallEntry.
+     *
+     * @param Container $container
+     * @see FirewallEntry
+     */
+    public static function addDefaultFirewallEntry(Container $container)
+    {
+        $firewallBasePattern = '^/';
+        $firewallBasePath = '/';
 
-        /*
-         * Inject a new firewall map element
-         */
-        $container['firewallMap']->add($requestMatcher, $listeners, $container['firewallExceptionListener']);
+        $firewallEntry = new FirewallEntry(
+            $container,
+            $firewallBasePattern,
+            $firewallBasePath,
+            null,
+            null,
+            null,
+            'IS_AUTHENTICATED_ANONYMOUSLY'
+        );
+        $firewallEntry
+            ->withSwitchUserListener()
+            ->withAnonymousAuthenticationListener();
+
+        $container['firewallMap']->add(
+            $firewallEntry->getRequestMatcher(),
+            $firewallEntry->getListeners(),
+            $firewallEntry->getExceptionListener()
+        );
     }
 
     /**
@@ -447,22 +482,5 @@ abstract class FrontendController extends AppController
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
-    {
-        $elm = parent::createEntityListManager($entity, $criteria, $ordering);
-
-        /*
-         * When using EntityListManager you need to manually set the
-         * security context
-         */
-        $elm->setAuthorizationChecker($this->get('securityAuthorizationChecker'));
-        $elm->setPreview($this->get('kernel')->isPreview());
-
-        return $elm;
     }
 }

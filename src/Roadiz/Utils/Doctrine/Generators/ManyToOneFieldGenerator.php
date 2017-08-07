@@ -57,7 +57,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
         return '
     /**
      * ' . $this->field->getLabel() .'
-     * @var ' . $configuration['classname'] . '
+     * @var \\' . $configuration['classname'] . '
      * @ORM\ManyToOne(targetEntity="'. $configuration['classname'] .'")
      * @ORM\JoinColumn(' . static::flattenORMParameters($ormParams) . ')
      */'.PHP_EOL;

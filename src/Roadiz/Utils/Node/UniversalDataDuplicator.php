@@ -73,7 +73,11 @@ class UniversalDataDuplicator
 
             if (count($universalFields) > 0) {
                 /** @var NodesSourcesRepository $repository */
-                $repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+                $repository = $this->em
+                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->setDisplayingAllNodesStatuses(true)
+                    ->setDisplayingNotPublishedNodes(true)
+                ;
                 $otherSources = $repository->findBy([
                     'node' => $source->getNode(),
                     'id' => ['!=', $source->getId()],
@@ -86,8 +90,14 @@ class UniversalDataDuplicator
                         if (!$universalField->isVirtual()) {
                             $this->duplicateNonVirtualField($source, $otherSource, $universalField);
                         } else {
-                            if ($universalField->getType() == NodeTypeField::DOCUMENTS_T) {
-                                $this->duplicateDocumentsField($source, $otherSource, $universalField);
+                            switch ($universalField->getType()) {
+                                case NodeTypeField::DOCUMENTS_T:
+                                    $this->duplicateDocumentsField($source, $otherSource, $universalField);
+                                    break;
+                                case NodeTypeField::MANY_TO_ONE_T:
+                                case NodeTypeField::MANY_TO_MANY_T:
+                                    $this->duplicateNonVirtualField($source, $otherSource, $universalField);
+                                    break;
                             }
                         }
                     }
@@ -110,6 +120,8 @@ class UniversalDataDuplicator
             ->findDefault();
 
         $sourceCount = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
             ->countBy([
                 'node' => $source->getNode(),
                 'translation' => $defaultTranslation,

@@ -46,21 +46,37 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     protected $logger;
     protected $urlGenerator;
+    /**
+     * @var string
+     */
+    private $redirectRoute;
+    /**
+     * @var array
+     */
+    private $redirectParameters;
 
     /**
      * @param UrlGeneratorInterface $urlGenerator
      * @param LoggerInterface $logger
+     * @param string $redirectRoute Route to redirect if access denied is thrown
+     * @param array $redirectParameters
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator, LoggerInterface $logger)
-    {
+    public function __construct(
+        UrlGeneratorInterface $urlGenerator,
+        LoggerInterface $logger,
+        $redirectRoute = '',
+        $redirectParameters = []
+    ) {
         $this->logger = $logger;
         $this->urlGenerator = $urlGenerator;
+        $this->redirectRoute = $redirectRoute;
+        $this->redirectParameters = $redirectParameters;
     }
 
     /**
      * Handles an access denied failure redirecting to home page
      *
-     * @param Request               $request
+     * @param Request $request
      * @param AccessDeniedException $accessDeniedException
      *
      * @return Response may return null
@@ -76,10 +92,15 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
                     'trace' => $accessDeniedException->getTraceAsString(),
                     'exception' => get_class($accessDeniedException),
                 ],
-                Response::HTTP_SERVICE_UNAVAILABLE
+                Response::HTTP_FORBIDDEN
             );
         } else {
-            $response = new RedirectResponse($request->getSchemeAndHttpHost());
+            if ('' !== $this->redirectRoute) {
+                $redirectUrl = $this->urlGenerator->generate($this->redirectRoute, $this->redirectParameters);
+            } else {
+                $redirectUrl = $request->getBaseUrl();
+            }
+            $response = new RedirectResponse($redirectUrl);
             $response->setStatusCode(Response::HTTP_FORBIDDEN);
 
             return $response;

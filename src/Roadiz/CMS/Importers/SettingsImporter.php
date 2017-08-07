@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Importers;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**
@@ -44,25 +45,22 @@ class SettingsImporter implements ImporterInterface
      *
      * @param string $serializedData
      * @param EntityManager $em
-     *
+     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      */
-    public static function importJsonFile($serializedData, EntityManager $em)
+    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $serializer = new SettingCollectionJsonSerializer();
 
         /** @var \RZ\Roadiz\Core\Entities\SettingGroup[] $settingGroups */
         $settingGroups = $serializer->deserialize($serializedData);
 
-        $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
-            ->findAllNames();
-
-        $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
-            ->findAllNames();
+        $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')->findAllNames();
+        $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')->findAllNames();
 
         $newSettings = [];
 
-        foreach ($settingGroups as $index => $settingGroup) {
+        foreach ($settingGroups as $settingGroup) {
             /*
              * Loop over settings to set their group
              * and move them to a temp collection

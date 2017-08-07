@@ -66,6 +66,21 @@ nodesAjaxByArray:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxNodesExplorerController::listAction
         _format: json
+
+# Explorer provider
+providerAjaxExplorerPage:
+    path:     /provider/explore
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxExplorerProviderController::indexAction
+        _format: json
+providerAjaxByArray:
+    path:     /provider/list
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxExplorerProviderController::listAction
+        _format: json
+
 # Entities
 entitiesAjaxExplorerPage:
     path:     /entities/explore
