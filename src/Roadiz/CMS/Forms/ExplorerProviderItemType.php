@@ -34,6 +34,7 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Themes\Rozier\Explorer\ExplorerItemInterface;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
@@ -67,7 +68,7 @@ class ExplorerProviderItemType extends AbstractType
             function ($entitiesToForm) {
                 if (!empty($entitiesToForm) && $this->explorerProvider->supports($entitiesToForm)) {
                     $item = $this->explorerProvider->toExplorerItem($entitiesToForm);
-                    return $item;
+                    return [$item];
                 } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
                     $idArray = [];
                     foreach ($entitiesToForm as $entity) {
@@ -103,6 +104,13 @@ class ExplorerProviderItemType extends AbstractType
     {
         parent::buildView($view, $form, $options);
 
+        if ($options['max_length'] > 0) {
+            $view->vars['attr']['data-max-length'] = $options['max_length'];
+        }
+        if ($options['min_length'] > 0) {
+            $view->vars['attr']['data-min-length'] = $options['min_length'];
+        }
+
         $view->vars['provider_class'] = get_class($this->explorerProvider);
     }
 
@@ -112,6 +120,19 @@ class ExplorerProviderItemType extends AbstractType
     public function getName()
     {
         return 'explorer_provider';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefault('max_length', 0);
+        $resolver->setDefault('min_length', 0);
+        $resolver->setAllowedTypes('max_length', ['int']);
+        $resolver->setAllowedTypes('min_length', ['int']);
     }
 
     /**
