@@ -16,6 +16,29 @@
         <p>This page is created from DefaultTheme to show you how to extend backoffice features.</p>
         <p>To disable this backstage area, edit your <code>themes/DefaultTheme/DefaultThemeApp.php</code> file and
             remove <code>$entries['test']</code> from <code>setupDependencyInjection</code> method. Or simply disable DefaultTheme.</p>
+
+        {% if data %}
+            <h3>{% trans %}Chosen settings{% endtrans %}</h3>
+            <ul>
+                {% for setting in data %}
+                    <li>{{ setting.name }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if form %}
+            {% form_theme form '@Rozier/forms.html.twig' %}
+            <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+                <fieldset data-uk-margin>
+                    {% spaceless %}
+                        <button data-action-save="#edit-document-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                            <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                            <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                        </button>
+                    {% endspaceless %}
+                </fieldset>
+            </form>
+        {% endif %}
     </article>
 </section>
 {% endblock %}

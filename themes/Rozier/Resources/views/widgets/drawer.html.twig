@@ -11,9 +11,10 @@
              v-if="drawer"
              ref="drawer"
              {{ widget_attributes|raw }}
-             data-accept-entity="{{ entity }}"
+             {% if entity %}data-accept-entity="{{ entity }}"{% endif %}
              data-entity-types="[]"
              data-is-sortable="{{ isSortable }}"
+             {% if provider_class %}data-provider-class="{{ provider_class }}" {% endif %}
              data-initial-items="{{ entityIds|json_encode }}">
             {% if label is empty -%}
                 {% set label = name|humanize %}

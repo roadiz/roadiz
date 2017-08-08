@@ -4,7 +4,8 @@ import {
     NODE_TYPE_ENTITY,
     JOIN_ENTITY,
     CUSTOM_FORM_ENTITY,
-    TAG_ENTITY
+    TAG_ENTITY,
+    EXPLORER_PROVIDER_ENTITY
 } from '../types/entityTypes'
 
 // Components
@@ -42,6 +43,7 @@ export default class EntityAwareFactory {
                 result.trans.moreItems = 'moreNodes'
                 result.isFilterEnable = true
                 break
+            case EXPLORER_PROVIDER_ENTITY:
             case JOIN_ENTITY:
                 result.currentListingView = JoinPreviewItem
                 result.trans.moreItems = 'moreEntities'
@@ -68,6 +70,7 @@ export default class EntityAwareFactory {
                 return DocumentPreviewListItem
             case NODE_ENTITY:
                 return NodePreviewItem
+            case EXPLORER_PROVIDER_ENTITY:
             case JOIN_ENTITY:
                 return JoinPreviewItem
             case CUSTOM_FORM_ENTITY:
