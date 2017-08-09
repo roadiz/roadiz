@@ -77,7 +77,12 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         $environment = 'prod'
     ) {
         if ($environment === 'prod') {
-            if (extension_loaded('apc') &&
+            if (extension_loaded('apcu') &&
+                !empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'apcu'
+            ) {
+                $cache = new ApcuCache();
+            } elseif (extension_loaded('apc') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'apc'
             ) {
