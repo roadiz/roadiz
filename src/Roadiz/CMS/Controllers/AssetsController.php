@@ -29,10 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Repositories\FontRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
