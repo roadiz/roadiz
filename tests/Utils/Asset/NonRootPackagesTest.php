@@ -38,7 +38,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
     /**
      * @return Request
      */
-    public static function getMockRequest()
+    public function getRequest()
     {
         return new Request([], [], [], [], [], [
             'REQUEST_URI' => '/test/',
@@ -69,25 +69,67 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $documentUrlGenerator = $this->get('document.url_generator');
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
+        $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
 
         // Assert
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
+
+        $kernel->shutdown();
     }
 
+    /**
+     *
+     */
+    public function testBaseUrl()
+    {
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
+        $this->assertEquals(
+            '/test',
+            $kernel->get('request')->getBaseUrl()
+        );
+
+        $kernel->shutdown();
+    }
+
+    /**
+     *
+     */
     public function testGetUrl()
     {
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
         $this->assertEquals(
-            '/test/files/some-custom-file',
-            $this->get('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
+            '/test/files/some-custom-file.txt',
+            $kernel->get('assetPackages')->getUrl('some-custom-file.txt', Packages::DOCUMENTS)
         );
 
         $this->assertEquals(
-            '/test/files/folder/some-custom-file',
-            $this->get('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
+            '/test/files/folder/some-custom-file.txt',
+            $kernel->get('assetPackages')->getUrl('folder/some-custom-file.txt', Packages::DOCUMENTS)
         );
+
+        $this->assertEquals(
+            'http://localhost/test/files/folder/some-custom-file.txt',
+            $kernel->get('assetPackages')->getUrl('folder/some-custom-file.txt', Packages::ABSOLUTE_DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            '/test/themes/DefaultTheme/static/css/styles.css',
+            $kernel->get('assetPackages')->getUrl('themes/DefaultTheme/static/css/styles.css')
+        );
+
+        $kernel->shutdown();
     }
 
     /**
@@ -98,15 +140,21 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrlWithSlash()
     {
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
         $this->assertNotEquals(
             '/test/files/some-custom-file',
-            $this->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
+            $kernel->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertNotEquals(
             '/test/files/folder/some-custom-file',
-            $this->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
+            $kernel->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
         );
+
+        $kernel->shutdown();
     }
 
     /**

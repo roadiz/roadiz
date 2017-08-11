@@ -59,7 +59,6 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
      */
     public static function setUpBeforeClass()
     {
-
         static::$kernel = new Kernel('test', true, false);
         static::$kernel->boot();
 

@@ -37,6 +37,14 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\AssetsClearer;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
+use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.
@@ -70,6 +78,32 @@ abstract class SchemaDependentCase extends KernelDependentCase
         }
         $schemaTool->dropDatabase();
         $schemaTool->createSchema($metadata);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        /*
+         * Empty caches
+         */
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $clearers = [
+            // PROD
+            new AssetsClearer($kernel->getCacheDir()),
+            new RoutingCacheClearer($kernel->getCacheDir()),
+            new TemplatesCacheClearer($kernel->getCacheDir()),
+            new TranslationsCacheClearer($kernel->getCacheDir()),
+            new ConfigurationCacheClearer($kernel->getCacheDir()),
+            new OPCacheClearer(),
+        ];
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
+        $kernel->shutdown();
     }
 
     public static function tearDownAfterClass()
@@ -127,9 +161,9 @@ abstract class SchemaDependentCase extends KernelDependentCase
             );
 
             /*
-                 * Inject doctrine event subscribers for
-                 * a service to be able to add new ones from themes.
-                 */
+             * Inject doctrine event subscribers for
+             * a service to be able to add new ones from themes.
+             */
             foreach (static::$kernel->get('em.eventSubscribers') as $eventSubscriber) {
                 $evm->addEventSubscriber($eventSubscriber);
             }

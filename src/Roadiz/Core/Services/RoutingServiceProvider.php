@@ -133,13 +133,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
-                    'generator_cache_class' => 'NodeUrlGenerator',
-                    'matcher_cache_class' => 'NodeUrlMatcher',
+                    'generator_cache_class' => 'RedirectionUrlGenerator',
+                    'matcher_cache_class' => 'RedirectionUrlMatcher',
                 ],
                 $c['requestContext'],
                 $c['logger'],
-                $c['stopwatch'],
-                $kernel->isPreview()
+                $c['stopwatch']
             );
         };
 

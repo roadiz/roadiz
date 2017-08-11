@@ -41,7 +41,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     /**
      * @return Request
      */
-    public static function getMockRequest()
+    public function getRequest()
     {
         return new Request([], [], [], [], [], [
             'REQUEST_URI' => '/',
@@ -63,30 +63,36 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         ]);
     }
 
-    public function setUp()
-    {
-        /** @var Setting $setting */
-        $setting = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
-            ->findOneByName('static_domain_name');
-        $setting->setValue('static.localhost');
-        static::getManager()->flush();
-    }
-
     public function testUseStaticDomain()
     {
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
-        $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
+        $requestStack->push($request);
+
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
+        $kernel->get('settingsBag')->set('static_domain_name', 'static.localhost');
+        $kernel->handle($request);
+
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, 'static.localhost');
 
         $this->assertEquals(true, $packages->useStaticDomain());
     }
 
     public function testGetUrl()
     {
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
-        $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
+        $requestStack->push($request);
+
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
+        $kernel->get('settingsBag')->set('static_domain_name', 'static.localhost');
+        $kernel->handle($request);
+
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, 'static.localhost');
 
         $this->assertEquals(
             'https://static.localhost/files/some-custom-file',
@@ -116,12 +122,20 @@ class CdnPackagesTest extends DefaultThemeDependentCase
      * @param $absolute
      * @param $expectedUrl
      */
-    public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
+    public function testDocumentUrlWithBasePath($domainName, Document $document, array $options, $absolute, $expectedUrl)
     {
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
-        $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
-        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $this->get('urlGenerator'));
+        $requestStack->push($request);
+
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
+        $kernel->get('settingsBag')->set('static_domain_name', $domainName);
+        $kernel->handle($request);
+
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, $domainName);
+        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $kernel->get('urlGenerator'));
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
@@ -139,31 +153,53 @@ class CdnPackagesTest extends DefaultThemeDependentCase
 
         return [
             [
+                'static.localhost',
                 $document1,
                 [
                     'quality' => 80
                 ],
                 false,
-                'https://static.localhost/assets/q80/folder/file.jpg',
+                '//static.localhost/assets/q80/folder/file.jpg',
             ],
             [
+                'http://static.localhost',
                 $document1,
                 [
                     'quality' => 90,
                     'width' => 600,
                 ],
                 true,
-                'https://static.localhost/assets/w600-q90/folder/file.jpg',
+                'http://static.localhost/assets/w600-q90/folder/file.jpg',
             ],
             [
+                '//static.localhost',
                 $document1,
                 [
                     'noProcess' => true,
                 ],
                 true,
+                '//static.localhost/files/folder/file.jpg',
+            ],
+            [
+                'https://static.localhost',
+                $document1,
+                [
+                    'noProcess' => true,
+                ],
+                false,
                 'https://static.localhost/files/folder/file.jpg',
             ],
             [
+                'http://static.localhost',
+                $document1,
+                [
+                    'noProcess' => true,
+                ],
+                false,
+                'http://static.localhost/files/folder/file.jpg',
+            ],
+            [
+                'static.localhost',
                 $document1,
                 [
                     'noProcess' => true,
