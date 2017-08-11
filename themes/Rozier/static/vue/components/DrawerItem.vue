@@ -20,8 +20,8 @@
             </p>
             <span class="name">{{ name }}</span>
             <input type="hidden" :name="drawerName + '[' + index +']'" :value="item.id" />
-            <div class="links" :class="editItem ? '' : 'no-edit'">
-                <ajax-link :href="editItem + getReferer()" class="uk-button link uk-button-mini" v-if="editItem">
+            <div class="links" :class="getEditItem() ? '' : 'no-edit'">
+                <ajax-link :href="getEditItem() + getReferer()" class="uk-button link uk-button-mini" v-if="getEditItem()">
                     <i class="uk-icon-rz-pencil"></i>
                 </ajax-link><a href="#"
                                class="uk-button uk-button-mini link uk-button-danger rz-no-ajax-link"
@@ -92,6 +92,15 @@
                     return this.item.nodeType.color
                 } else if (this.item.color) {
                     return this.item.color
+                }
+
+                return null
+            },
+            getEditItem () {
+                if (this.editItem) {
+                    return this.editItem
+                } else if (this.item.editItem) {
+                    return this.item.editItem
                 }
 
                 return null
