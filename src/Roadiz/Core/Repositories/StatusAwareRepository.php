@@ -72,7 +72,7 @@ class StatusAwareRepository extends EntityRepository
 
     /**
      * @param bool $displayNotPublishedNodes
-     * @return EntityRepository
+     * @return StatusAwareRepository
      */
     public function setDisplayingNotPublishedNodes($displayNotPublishedNodes)
     {
@@ -93,7 +93,7 @@ class StatusAwareRepository extends EntityRepository
      * view deleted and archived nodes.
      *
      * @param bool $displayAllNodesStatuses
-     * @return EntityRepository
+     * @return StatusAwareRepository
      */
     public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)
     {
