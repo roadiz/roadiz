@@ -182,6 +182,9 @@ class NodeSourceType extends AbstractType
     public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array $options)
     {
         switch ($field->getType()) {
+            case NodeTypeField::MULTI_PROVIDER_T:
+            case NodeTypeField::SINGLE_PROVIDER_T:
+                return new NodeSourceProviderType($nodeSource, $field, $options['entityManager'], $options['container']);
             case NodeTypeField::MANY_TO_ONE_T:
             case NodeTypeField::MANY_TO_MANY_T:
                 return new NodeSourceJoinType($nodeSource, $field, $options['entityManager']);

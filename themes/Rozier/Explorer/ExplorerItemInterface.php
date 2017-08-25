@@ -49,7 +49,7 @@ interface ExplorerItemInterface extends ModelInterface
     public function getDisplayable();
 
     /**
-     * Get original item
+     * Get original item.
      *
      * @return mixed
      */

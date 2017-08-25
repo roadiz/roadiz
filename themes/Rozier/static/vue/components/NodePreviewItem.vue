@@ -7,7 +7,6 @@
         :parent-name="item.parent ? item.parent.title : ''"
         :sub-parent-name="item.subparent ? item.subparent.title : ''"
         :name="item.title ? item.title : item.nodeName"
-        :is-pusblished-class="item.isPublished ? '' : 'not-published'"
         :edit-item="item.nodesEditPage"
         :add-item="addItem"
         :remove-item="removeItem">
