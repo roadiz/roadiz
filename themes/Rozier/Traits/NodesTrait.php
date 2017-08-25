@@ -30,12 +30,14 @@
  */
 namespace Themes\Rozier\Traits;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -51,9 +53,14 @@ trait NodesTrait
     protected function createNode($title, Translation $translation, Node $node = null, NodeType $type = null)
     {
         $nodeName = StringHandler::slugify($title);
-        if (null !== $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('em');
+        /** @var NodeRepository $repository */
+        $repository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node');
+
+        if (null !== $repository
                           ->setDisplayingNotPublishedNodes(true)
+                          ->setDisplayingAllNodesStatuses(true)
                           ->findOneByNodeName($nodeName)) {
             $nodeName .= '-' . uniqid();
         }
@@ -63,7 +70,7 @@ trait NodesTrait
         }
 
         $node->setNodeName($nodeName);
-        $this->get('em')->persist($node);
+        $entityManager->persist($node);
 
         $sourceClass = "GeneratedNodeSources\\" . $node->getNodeType()->getSourceEntityClassName();
         /** @var NodesSources $source */
@@ -71,8 +78,8 @@ trait NodesTrait
         $source->setTitle($title);
         $source->setPublishedAt(new \DateTime());
 
-        $this->get('em')->persist($source);
-        $this->get('em')->flush();
+        $entityManager->persist($source);
+        $entityManager->flush();
 
         return $node;
     }
