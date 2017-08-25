@@ -97,12 +97,12 @@ class Document extends AbstractDocument
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
-     **/
+     */
     protected $rawDocument = null;
 
     /**
      * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
-     **/
+     */
     private $downscaledDocument = null;
 
     /**
