@@ -45,14 +45,15 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
         /*
          *
          * Many Users have One Address.
-         * @ManyToOne(targetEntity="Address")
-         * @JoinColumn(name="address_id", referencedColumnName="id")
+         * @ORM\ManyToOne(targetEntity="Address")
+         * @ORM\JoinColumn(name="address_id", referencedColumnName="id", onDelete="SET NULL")
          *
          */
         $configuration = Yaml::parse($this->field->getDefaultValues());
         $ormParams = [
             'name' => '"' . $this->field->getName() . '_id"',
             'referencedColumnName' => '"id"',
+            'onDelete' => '"SET NULL"',
         ];
         return '
     /**
