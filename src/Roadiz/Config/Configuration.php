@@ -88,7 +88,7 @@ class Configuration implements ConfigurationInterface
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->enumNode('type')
-                        ->values([null, 'array', 'apc', 'xcache', 'memcache', 'memcached', 'redis'])
+                        ->values([null, 'array', 'apcu', 'apc', 'xcache', 'memcache', 'memcached', 'redis'])
                         ->defaultNull()
                         ->info('If null or empty, Roadiz will try to detect best cache driver available')
                     ->end()
