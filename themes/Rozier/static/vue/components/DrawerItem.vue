@@ -8,7 +8,7 @@
 
             <div class="uk-sortable-handle"></div>
             <div class="border" :style="{ backgroundColor: getColor() }"></div>
-            <figure class="thumbnail" v-if="item.thumbnail"><img :src="item.thumbnail" :alt="name"></figure>
+            <figure class="thumbnail" v-if="item.thumbnail" :style="{ 'background-image': 'url(' + item.thumbnail + ')' }"></figure>
             <div class="names">
                 <p class="parent-name">
                     <template v-if="parentName">
