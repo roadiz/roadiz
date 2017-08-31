@@ -1,10 +1,10 @@
 {% spaceless %}
     {% set attributes = {
-        'alt': alt|url_encode,
+    'alt': alt,
     } %}
     {% if width %}
         {% set attributes = attributes|merge({
-            'width': width,
+        'width': width,
         }) %}
     {% endif %}
     {% if height %}
@@ -43,13 +43,13 @@
         {% if value is same as(true)  %}
             {% set attributesCompiled = attributesCompiled|merge([key]) %}
         {% else %}
-            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value ~ '"']) %}
+            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value|escape('html_attr') ~ '"']) %}
         {% endif %}
     {% endfor %}
-<audio data-document {{ attributesCompiled|join(' ')|raw }}>
-    {% for source in sources %}
-    <source type="{{ source.mime }}" src="{{ source.url }}">
-    {% endfor %}
-    Your browser does not support the audio tag.
-</audio>
+    <audio data-document {{ attributesCompiled|join(' ')|raw }}>
+        {% for source in sources %}
+            <source type="{{ source.mime }}" src="{{ source.url }}">
+        {% endfor %}
+        Your browser does not support the audio tag.
+    </audio>
 {% endspaceless %}

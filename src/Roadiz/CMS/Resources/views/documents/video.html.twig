@@ -1,6 +1,6 @@
 {% spaceless %}
     {% set attributes = {
-    'alt': alt|url_encode,
+    'alt': alt,
     } %}
     {% if width %}
         {% set attributes = attributes|merge({
@@ -53,13 +53,13 @@
         {% if value is same as(true)  %}
             {% set attributesCompiled = attributesCompiled|merge([key]) %}
         {% else %}
-            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value ~ '"']) %}
+            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value|escape('html_attr') ~ '"']) %}
         {% endif %}
     {% endfor %}
-<video data-document {{ attributesCompiled|join(' ')|raw }}>
-    {% for source in sources %}
-    <source type="{{ source.mime }}" src="{{ source.url }}">
-    {% endfor %}
-    Your browser does not support the video tag.
-</video>
+    <video data-document {{ attributesCompiled|join(' ')|raw }}>
+        {% for source in sources %}
+            <source type="{{ source.mime }}" src="{{ source.url }}">
+        {% endfor %}
+        Your browser does not support the video tag.
+    </video>
 {% endspaceless %}

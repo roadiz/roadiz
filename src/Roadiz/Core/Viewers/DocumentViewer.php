@@ -422,17 +422,19 @@ class DocumentViewer implements ViewableInterface
     {
         $resolver = new ViewOptionsResolver();
         $options = $resolver->resolve($options);
+        /** @var Packages $packages */
+        $packages = Kernel::getService('assetPackages');
 
         if ($options['noProcess'] === true || !$this->document->isImage()) {
             $documentPackageName = $absolute ? Packages::ABSOLUTE_DOCUMENTS : Packages::DOCUMENTS;
-            return Kernel::getService('assetPackages')->getUrl(
+            return $packages->getUrl(
                 $this->document->getRelativeUrl(),
                 $documentPackageName
             );
         }
 
         $defaultPackageName = $absolute ? Packages::ABSOLUTE : null;
-        return Kernel::getService('assetPackages')->getUrl(
+        return $packages->getUrl(
             $this->getProcessedDocumentUrlByArray($options),
             $defaultPackageName
         );

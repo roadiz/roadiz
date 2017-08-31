@@ -1,6 +1,6 @@
 {% spaceless %}
     {% set attributes = {
-    'alt': alt|url_encode,
+    'alt': alt,
     'type': "application/pdf",
     'data': url,
     } %}
@@ -29,10 +29,10 @@
         {% if value is same as(true)  %}
             {% set attributesCompiled = attributesCompiled|merge([key]) %}
         {% else %}
-            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value ~ '"']) %}
+            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value|escape('html_attr') ~ '"']) %}
         {% endif %}
     {% endfor %}
-<object {{ attributesCompiled|join(' ')|raw }}>
-    <p>Your browser does not support PDF native viewer.</p>
-</object>
+    <object {{ attributesCompiled|join(' ')|raw }}>
+        <p>Your browser does not support PDF native viewer.</p>
+    </object>
 {% endspaceless %}

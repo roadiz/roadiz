@@ -1,50 +1,64 @@
 {% spaceless %}
-{% set attributes = {
-    alt : 'alt="' ~ alt|url_encode ~ '"',
-} %}
-{% if lazyload %}
-    {% set attributes = attributes|merge({datasrc : 'data-src="' ~ url ~ '"'}) %}
-    {% set attributes = attributes|merge({src : 'src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="'}) %}
-    {% if srcset %}
-        {% set attributes = attributes|merge({datasrcset : 'data-srcset="' ~ srcset ~ '"'}) %}
+    {% set attributes = {
+    'alt' : alt,
+    } %}
+    {% if lazyload %}
+        {% set attributes = attributes|merge({'data-src' : url}) %}
+        {% set attributes = attributes|merge({src: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="}) %}
+        {% if srcset %}
+            {% set attributes = attributes|merge({'data-srcset' : srcset}) %}
+        {% endif %}
+        {% if sizes %}
+            {% set attributes = attributes|merge({'sizes' : sizes}) %}
+        {% endif %}
+    {% else %}
+        {% set attributes = attributes|merge({'src' : url}) %}
+        {% if srcset %}
+            {% set attributes = attributes|merge({'srcset' : srcset}) %}
+        {% endif %}
+        {% if sizes %}
+            {% set attributes = attributes|merge({'sizes' : sizes}) %}
+        {% endif %}
     {% endif %}
-    {% if sizes %}
-        {% set attributes = attributes|merge({sizes : 'sizes="' ~ sizes ~ '"'}) %}
+
+    {% if width and not sizes %}
+        {% set attributes = attributes|merge({'width' : width}) %}
     {% endif %}
-{% else %}
-    {% set attributes = attributes|merge({src : 'src="' ~ url ~ '"'}) %}
-    {% if srcset %}
-        {% set attributes = attributes|merge({srcset : 'srcset="' ~ srcset ~ '"'}) %}
+    {% if height and not sizes %}
+        {% set attributes = attributes|merge({'height' : height}) %}
     {% endif %}
-    {% if sizes %}
-        {% set attributes = attributes|merge({sizes : 'sizes="' ~ sizes ~ '"'}) %}
+    {% if class %}
+        {% set attributes = attributes|merge({'class' : class}) %}
     {% endif %}
-{% endif %}
-
-{% if width and not sizes %}
-    {% set attributes = attributes|merge({width : 'width="' ~ width ~ '"'}) %}
-{% endif %}
-
-{% if height and not sizes %}
-    {% set attributes = attributes|merge({height : 'height="' ~ height ~ '"'}) %}
-{% endif %}
-
-{% if class %}
-    {% set attributes = attributes|merge({class : 'class="' ~ class ~ '"'}) %}
-{% endif %}
-
-{% if identifier %}
-    {% set attributes = attributes|merge({id : 'id="' ~ identifier ~ '"'}) %}
-{% endif %}
-
-<img {{ attributes|join(' ')|raw }} />
-{% if lazyload %}
-    {% set attributes = attributes|merge({src : 'src="' ~ url ~ '"'}) %}
-    {% if srcset %}
-        {% set attributes = attributes|merge({srcset : 'srcset="' ~ srcset ~ '"'}) %}
+    {% if identifier %}
+        {% set attributes = attributes|merge({'id' : identifier}) %}
     {% endif %}
-    <noscript>
-        <img {{ attributes|join(' ')|raw }} />
-    </noscript>
-{% endif %}
+
+    {% set attributesCompiled = {} %}
+    {% for key, value in attributes %}
+        {% if value is same as(true)  %}
+            {% set attributesCompiled = attributesCompiled|merge([key]) %}
+        {% else %}
+            {% set attributesCompiled = attributesCompiled|merge([key ~ '="' ~ value|escape('html_attr') ~ '"']) %}
+        {% endif %}
+    {% endfor %}
+
+    <img {{ attributesCompiled|join(' ')|raw }} />
+    {% if lazyload %}
+        {% set attributes = attributes|merge({'src' : url}) %}
+        {% if srcset %}
+            {% set attributes = attributes|merge({'srcset' : srcset}) %}
+        {% endif %}
+        {% set attributesCompiledFallback = {} %}
+        {% for key, value in attributes %}
+            {% if value is same as(true)  %}
+                {% set attributesCompiledFallback = attributesCompiledFallback|merge([key]) %}
+            {% else %}
+                {% set attributesCompiledFallback = attributesCompiledFallback|merge([key ~ '="' ~ value|escape('html_attr') ~ '"']) %}
+            {% endif %}
+        {% endfor %}
+        <noscript>
+            <img {{ attributesCompiledFallback|join(' ')|raw }} />
+        </noscript>
+    {% endif %}
 {% endspaceless %}
