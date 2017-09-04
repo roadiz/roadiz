@@ -96,7 +96,16 @@ class DoctrineCacheClearer extends Clearer
     {
         if ($cacheDriver !== null) {
             $this->output .= 'Doctrine ' . $description . ' cache: ' . $cacheDriver->getNamespace() . ' — ';
-            $this->output .= $cacheDriver->deleteAll() ? '<info>OK</info>' : '<info>FAIL</info>';
+            if (!$cacheDriver->flushAll()) {
+                if (!$cacheDriver->deleteAll()) {
+                    $this->output .= '<error>FAIL</error>';
+                } else {
+                    $this->output .= '<info>OK</info>: DELETED';
+                }
+            } else {
+                $this->output .= '<info>OK</info>: FLUSHED';
+            }
+            $this->output .= PHP_EOL;
         }
     }
 
