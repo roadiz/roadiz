@@ -1,16 +1,15 @@
-var Import = function ( routesArray ) {
+var Import = function (routesArray) {
     var _this = this;
 
     _this.routes = routesArray;
-    console.log("init importer");
     _this.always(0);
+    _this.$nextStepButton = $('#next-step-button');
 };
 
 Import.prototype.routes = null;
 Import.prototype.score = 0;
 Import.prototype.always = function(index) {
     var _this = this;
-
     if(_this.routes.length > index) {
         if (typeof _this.routes[index].update !== "undefined") {
             $.ajax({
@@ -18,7 +17,6 @@ Import.prototype.always = function(index) {
                 type: 'POST',
                 dataType: 'json',
                 complete: function() {
-                    //console.log("updateSchema");
                     _this.callSingleImport(index);
                 }
             });
@@ -26,19 +24,19 @@ Import.prototype.always = function(index) {
             _this.callSingleImport(index);
         }
     } else {
-        $('#next-step-button').removeClass('uk-button-disabled');
+        if (_this.$nextStepButton.length) {
+            _this.$nextStepButton.removeClass('uk-button-disabled');
+        }
     }
 };
 
 Import.prototype.callSingleImport = function( index ) {
     var _this = this;
-
     var $row = $("#"+_this.routes[index].id);
     var $icon = $row.find("i");
     $icon.removeClass('uk-icon-circle-o');
     $icon.addClass('uk-icon-spin');
     $icon.addClass('uk-icon-spinner');
-
 
     var postData = {
         'filename':_this.routes[index].filename
@@ -57,7 +55,7 @@ Import.prototype.callSingleImport = function( index ) {
             /*
              * Call post-update route
              */
-            if (typeof _this.routes[index].postUpdate !== "undefined") {
+            if (_this.routes[index].postUpdate) {
                 if(_this.routes[index].postUpdate instanceof Array &&
                     _this.routes[index].postUpdate.length > 1){
                     /*
@@ -77,7 +75,6 @@ Import.prototype.callSingleImport = function( index ) {
                                 type: 'POST',
                                 dataType: 'json',
                                 complete: function() {
-                                    console.log('Calling: ' + _this.routes[index].postUpdate[1]);
                                     _this.always(index + 1);
                                 }
                             });
@@ -98,13 +95,10 @@ Import.prototype.callSingleImport = function( index ) {
             }
         },
         error: function(data) {
-            console.log(data);
             $icon.removeClass('uk-icon-spinner');
             $icon.addClass('uk-icon-warning');
             $row.addClass('uk-badge-danger');
-
-            if (typeof data.responseJSON != "undefined" &&
-                typeof data.responseJSON.error != "undefined") {
+            if (data.responseJSON && data.responseJSON.error) {
                 $row.parent().parent().after("<tr><td class=\"uk-alert uk-alert-danger\" colspan=\"3\">"+data.responseJSON.error+"</td></tr>");
             }
         },

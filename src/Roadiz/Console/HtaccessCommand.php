@@ -43,7 +43,7 @@ class HtaccessCommand extends Command
     {
         $this
             ->setName('generate:htaccess')
-            ->setDescription('Generate .htaccess files to protect critical directories');
+            ->setDescription('Generate .htaccess files to protect critical directories. <info>Source edition only</info>');
     }
 
     /**

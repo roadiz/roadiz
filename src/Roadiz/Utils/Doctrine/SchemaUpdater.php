@@ -32,14 +32,20 @@ namespace RZ\Roadiz\Utils\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 
 /**
  * SchemaUpdater.
  */
 class SchemaUpdater
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
+
     /**
      * @var Kernel
      */
@@ -56,10 +62,20 @@ class SchemaUpdater
         $this->kernel = $kernel;
     }
 
+    /**
+     *
+     */
     public function clearMetadata()
     {
-        $clearer = new DoctrineCacheClearer($this->entityManager, $this->kernel);
-        $clearer->clear();
+        $clearers = [
+            new DoctrineCacheClearer($this->entityManager, $this->kernel),
+            new OPCacheClearer(),
+        ];
+
+        /** @var ClearerInterface $clearer */
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
     }
 
     /**

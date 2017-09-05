@@ -3,11 +3,9 @@
 {% block siteTitle %}{{ head.siteTitle|trans }} — {% trans %}import.theme.content.title{% endtrans %}{% endblock %}
 {% block content %}
     <article id="content-import-node-type" class="content">
-
         <div class="content-title-cont">
             <h1 class="content-title">{% trans %}import.theme.content.title{% endtrans %}</h1>
         </div>
-
         <div class="content-progress">
             <div class="content-progress-item first active"></div>
             <div class="content-progress-item active"></div>
@@ -145,13 +143,8 @@
                 <a id="next-step-button" class="content-button uk-button uk-button-primary uk-button-disabled" href="{{ path('installUserPage')}}">{% trans %}goto.user{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
             </div>
             {% endspaceless %}
-
-
-
         </div>
-
     </article>
-
 {% endblock %}
 
 {% block customScripts %}

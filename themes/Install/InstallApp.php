@@ -33,6 +33,7 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\CMS\Forms\ThemesType;
+use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Kernel;
@@ -44,6 +45,8 @@ use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -266,6 +269,7 @@ class InstallApp extends AppController
                     foreach ($clearers as $clearer) {
                         $clearer->clear();
                     }
+
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
@@ -282,6 +286,31 @@ class InstallApp extends AppController
     }
 
     /**
+     * @param string $env
+     * @param bool $debug
+     * @param bool $preview
+     */
+    protected function callClearCacheCommands($env = 'prod', $debug = false, $preview = false)
+    {
+        $application = new RoadizApplication(new Kernel($env, $debug, $preview));
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'cache:clear'
+        ));
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $inputFpm = new ArrayInput(array(
+            'command' => 'cache:clear-fpm'
+        ));
+        // You can use NullOutput() if you don't need the output
+        $outputFpm = new BufferedOutput();
+        $application->run($inputFpm, $outputFpm);
+    }
+
+    /**
      * After done and clearing caches.
      *
      * @param  Request $request
@@ -289,39 +318,14 @@ class InstallApp extends AppController
      */
     public function afterDoneAction(Request $request)
     {
-        $this->clearProductionCache($request);
-        $this->clearProductionCache($request, true);
+        /*
+         * This can take some time to execute.
+         */
+        $this->callClearCacheCommands('prod');
+        $this->callClearCacheCommands('prod', false, true);
+        $this->callClearCacheCommands('dev', true);
 
         return $this->render('steps/after-done.html.twig', $this->assignation);
-    }
-
-    /**
-     * @param Request $request
-     * @param bool $preview
-     */
-    protected function clearProductionCache(Request $request, $preview = false)
-    {
-        $tempProdKernel = new Kernel('prod', false, $preview);
-        $tempProdKernel->boot();
-        $tempProdKernel->container['request'] = $request;
-        $clearers = [
-            new AssetsClearer($tempProdKernel->getCacheDir()),
-            new RoutingCacheClearer($tempProdKernel->getCacheDir()),
-            new TemplatesCacheClearer($tempProdKernel->getCacheDir()),
-            new TranslationsCacheClearer($tempProdKernel->getCacheDir()),
-            new ConfigurationCacheClearer($tempProdKernel->getCacheDir()),
-            new NodesSourcesUrlsCacheClearer($tempProdKernel->get('nodesSourcesUrlCacheProvider')),
-            new OPCacheClearer(),
-        ];
-        if (null !== $entityManager = $tempProdKernel->get('em')) {
-            $clearers[] = new DoctrineCacheClearer($entityManager, $tempProdKernel);
-        }
-        foreach ($clearers as $clearer) {
-            try {
-                $clearer->clear();
-            } catch (\Exception $e) {
-            }
-        }
     }
 
     /**
