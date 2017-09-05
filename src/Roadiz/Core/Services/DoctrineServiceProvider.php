@@ -66,17 +66,15 @@ class DoctrineServiceProvider implements ServiceProviderInterface
      *
      * @param array $cacheConfig
      * @param string $namespace
-     * @param bool $isPreview
-     * @param string $environment
+     * @param Kernel $kernel
      * @return Cache
      */
     protected function getManuallyDefinedCache(
         array $cacheConfig,
         $namespace = 'dc2',
-        $isPreview = false,
-        $environment = 'prod'
+        Kernel $kernel
     ) {
-        if ($environment === 'prod') {
+        if ($kernel->isProdMode()) {
             if (extension_loaded('apcu') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'apcu'
@@ -135,11 +133,12 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         } else {
             $cache = new ArrayCache();
         }
+
         /*
          * Set namespace
          */
         if ($cache instanceof CacheProvider) {
-            $cache->setNamespace($this->getNamespace($namespace, $isPreview, $environment));
+            $cache->setNamespace($this->getNamespace($namespace, $kernel->isPreview(), $kernel->getEnvironment()));
         }
 
         return $cache;
@@ -177,13 +176,12 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
                 $cache = null;
-                if (isset($c['config']['cacheDriver']) &&
-                    !empty($c['config']['cacheDriver']['type'])) {
+
+                if ($c['config']['cacheDriver']['type'] !== null) {
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
                         $c['config']["appNamespace"],
-                        $kernel->isPreview(),
-                        $kernel->getEnvironment()
+                        $kernel
                     );
                 }
 
@@ -219,42 +217,31 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 $evm = $em->getEventManager();
 
                 $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
+                $namespace = $this->getNamespace(
+                    $c['config']["appNamespace"],
+                    $kernel->isPreview(),
+                    $kernel->getEnvironment()
+                );
 
                 /** @var CacheProvider $resultCacheDriver */
                 $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
                 if ($resultCacheDriver !== null) {
-                    $resultCacheDriver->setNamespace($this->getNamespace(
-                        $c['config']["appNamespace"],
-                        $kernel->isPreview(),
-                        $kernel->getEnvironment()
-                    ));
+                    $resultCacheDriver->setNamespace($namespace);
                 }
                 /** @var CacheProvider $hydratationCacheDriver */
                 $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
                 if ($hydratationCacheDriver !== null) {
-                    $hydratationCacheDriver->setNamespace($this->getNamespace(
-                        $c['config']["appNamespace"],
-                        $kernel->isPreview(),
-                        $kernel->getEnvironment()
-                    ));
+                    $hydratationCacheDriver->setNamespace($namespace);
                 }
                 /** @var CacheProvider $queryCacheDriver */
                 $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
                 if ($queryCacheDriver !== null) {
-                    $queryCacheDriver->setNamespace($this->getNamespace(
-                        $c['config']["appNamespace"],
-                        $kernel->isPreview(),
-                        $kernel->getEnvironment()
-                    ));
+                    $queryCacheDriver->setNamespace($namespace);
                 }
                 /** @var CacheProvider $metadataCacheDriver */
                 $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
                 if (null !== $metadataCacheDriver) {
-                    $metadataCacheDriver->setNamespace($this->getNamespace(
-                        $c['config']["appNamespace"],
-                        $kernel->isPreview(),
-                        $kernel->getEnvironment()
-                    ));
+                    $metadataCacheDriver->setNamespace($namespace);
                 }
 
                 /*
@@ -273,7 +260,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     $evm->addEventSubscriber($eventSubscriber);
                 }
 
-                if (!$c['kernel']->isInstallMode() && $c['kernel']->isDebug()) {
+                if (!$kernel->isInstallMode() && $kernel->isDebug()) {
                     $em->getConnection()->getConfiguration()->setSQLLogger($c['doctrine.debugstack']);
                 }
 

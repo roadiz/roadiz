@@ -51,40 +51,6 @@ use Themes\Rozier\RozierApp;
 class ThemesController extends RozierApp
 {
     /**
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function updateSchemaAction(Request $request)
-    {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
-
-        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
-        $updater->updateSchema();
-
-        return new JsonResponse(['status' => true]);
-    }
-    /**
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function clearDoctrineCacheAction(Request $request)
-    {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
-
-        $doctrineClearer = new DoctrineCacheClearer($this->get('em'), $this->get('kernel'));
-        $doctrineClearer->clear();
-
-        $opcacheClearer = new OPCacheClearer();
-        $opcacheClearer->clear();
-
-        return new JsonResponse(['status' => true]);
-    }
-
-    /**
      * Import theme screen.
      *
      * @param Request $request
@@ -500,7 +466,7 @@ class ThemesController extends RozierApp
             throw new EntityAlreadyExistsException(
                 $this->getTranslator()->trans(
                     'theme.%name%.no_creation.already_exists',
-                    ['%name%' => $theme->getClassName()]
+                    ['%name%' => $existing->getClassName()]
                 ),
                 1
             );

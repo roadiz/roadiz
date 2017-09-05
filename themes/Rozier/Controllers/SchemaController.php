@@ -32,12 +32,21 @@
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
+use Doctrine\ORM\Mapping\MappingException;
+use RZ\Roadiz\Console\RoadizApplication;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\ClearerInterface;
+use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
 /**
  * Redirection controller use to update database schema.
+ * THIS CONTROLLER MUST NOT PREPARE ANY DATA.
  */
 class SchemaController extends RozierApp
 {
@@ -59,6 +68,7 @@ class SchemaController extends RozierApp
     public function updateNodeTypesSchemaAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->clearMetadata();
         $this->updateSchema($request);
 
         return $this->redirect($this->generateUrl(
@@ -68,13 +78,14 @@ class SchemaController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int     $nodeTypeId
+     * @param int $nodeTypeId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $nodeTypeId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->clearMetadata();
         $this->updateSchema($request);
 
         return $this->redirect($this->generateUrl(
@@ -86,14 +97,104 @@ class SchemaController extends RozierApp
     }
 
     /**
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateThemeSchemaAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        try {
+            $this->clearMetadata();
+            $this->updateSchema($request);
+            return new JsonResponse(['status' => true]);
+        } catch (MappingException $e) {
+            return new JsonResponse([
+                'status' => false,
+                'error' => $e->getMessage(),
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function clearThemeCacheAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        $kernelClass = get_class($this->get('kernel'));
+        $application = new RoadizApplication(new $kernelClass('prod', false));
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'cache:clear'
+        ));
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $inputFpm = new ArrayInput(array(
+            'command' => 'cache:clear-fpm'
+        ));
+        // You can use NullOutput() if you don't need the output
+        $outputFpm = new BufferedOutput();
+        $application->run($inputFpm, $outputFpm);
+
+        return new JsonResponse(['status' => true]);
+    }
+
+    /**
+     *
+     */
+    protected function clearMetadata()
+    {
+        $clearers = [
+            new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
+            new OPCacheClearer(),
+        ];
+
+        /** @var ClearerInterface $clearer */
+        foreach ($clearers as $clearer) {
+            $clearer->clear();
+        }
+    }
+
+    /**
      * @param Request $request
      */
     protected function updateSchema(Request $request)
     {
-        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
-        $updater->updateSchema();
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        $kernelClass = get_class($this->get('kernel'));
+        $application = new RoadizApplication(new $kernelClass('dev', true));
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'orm:schema-tool:update',
+            '--dump-sql' => true,
+            '--force' => true,
+        ));
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
 
         $msg = $this->getTranslator()->trans('database.schema.updated');
         $this->publishConfirmMessage($request, $msg);
+
+        $this->get('logger')->info('DB schema has been updated.', ['sql' => $content]);
     }
 }

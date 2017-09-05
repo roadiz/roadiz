@@ -463,6 +463,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="NodeType")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @var NodeType
      */
     private $nodeType;

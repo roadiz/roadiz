@@ -118,7 +118,7 @@
 <div id="error" class="uk-modal">
     <div class="uk-modal-dialog">
         <h3 class="import-nodetypes-part">{% trans %}error.modal.title{% endtrans %}</h3>
-        <lu class="import-nodetypes-part">
+        <ul class="import-nodetypes-part">
             {% if not status.version %}
                 <li>{% trans %}error.version.message{% endtrans %}</li>
             {% endif %}
@@ -132,9 +132,12 @@
                     {% endif %}
                 {% endfor %}
             {% endfor %}
-        </lu>
+        </ul>
         <p>{% trans %}warning.theme.continue{% endtrans %}</p>
-        <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
+        <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage') ~ '?classname=' ~ classname|url_encode }}">
+            <span class="label"><span class="label-text">{% trans %}install.theme{% endtrans %} </span></span>
+            <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
+        </a>
     </div>
 </div>
 {% endblock %}
