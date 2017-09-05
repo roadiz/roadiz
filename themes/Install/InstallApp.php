@@ -292,7 +292,12 @@ class InstallApp extends AppController
      */
     protected function callClearCacheCommands($env = 'prod', $debug = false, $preview = false)
     {
-        $application = new RoadizApplication(new Kernel($env, $debug, $preview));
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        $kernelClass = get_class($this->get('kernel'));
+        $application = new RoadizApplication(new $kernelClass($env, $debug, $preview));
         $application->setAutoExit(false);
 
         $input = new ArrayInput(array(

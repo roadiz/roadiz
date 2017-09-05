@@ -126,7 +126,12 @@ class SchemaController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $application = new RoadizApplication(new Kernel('prod', false));
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        $kernelClass = get_class($this->get('kernel'));
+        $application = new RoadizApplication(new $kernelClass('prod', false));
         $application->setAutoExit(false);
 
         $input = new ArrayInput(array(
@@ -167,7 +172,12 @@ class SchemaController extends RozierApp
      */
     protected function updateSchema(Request $request)
     {
-        $application = new RoadizApplication(new Kernel('dev', true));
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        $kernelClass = get_class($this->get('kernel'));
+        $application = new RoadizApplication(new $kernelClass('dev', true));
         $application->setAutoExit(false);
 
         $input = new ArrayInput(array(
