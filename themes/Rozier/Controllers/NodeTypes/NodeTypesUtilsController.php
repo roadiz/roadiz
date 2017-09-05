@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,7 +39,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
-use Twig\Node\Node;
 
 /**
  * {@inheritdoc}
@@ -58,8 +57,8 @@ class NodeTypesUtilsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
-        $nodeType = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
+        /** @var NodeType $nodeType */
+        $nodeType = $this->get('em')->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
 
         $serializer = new NodeTypeJsonSerializer();
 
@@ -118,7 +117,6 @@ class NodeTypesUtilsController extends RozierApp
      * Import a Json file (.rzt) containing NodeType datas and fields.
      *
      * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importJsonFileAction(Request $request)
@@ -190,8 +188,7 @@ class NodeTypesUtilsController extends RozierApp
                     return $this->redirect($this->generateUrl('nodeTypesSchemaUpdate'));
                 } else {
                     $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
+                    $this->publishErrorMessage($request, $msg);
 
                     // redirect even if its null
                     return $this->redirect($this->generateUrl(
@@ -200,8 +197,7 @@ class NodeTypesUtilsController extends RozierApp
                 }
             } else {
                 $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->get('logger')->error($msg);
+                $this->publishErrorMessage($request, $msg);
 
                 // redirect even if its null
                 return $this->redirect($this->generateUrl(

@@ -116,13 +116,13 @@ class DoctrineCacheClearer extends Clearer
     {
         $fs = new Filesystem();
         $finder = new Finder();
-        $proxyFolder = $this->kernel->getRootDir() . '/gen-src/Proxies';
-        $finder->files()->in($proxyFolder);
+        $conf = $this->entityManager->getConfiguration();
+        $finder->files()->in($conf->getProxyDir());
         $fs->remove($finder);
 
         $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $proxyFactory = $this->entityManager->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, $proxyFolder);
+        $proxyFactory->generateProxyClasses($meta, $conf->getProxyDir());
         $this->output .= 'Doctrine proxy classes has been recreated.';
     }
 }

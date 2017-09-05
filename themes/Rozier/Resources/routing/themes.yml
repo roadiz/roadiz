@@ -27,14 +27,17 @@ themesImportPage:
     requirements: { id : "[0-9]+" }
 themesClearCacheSchema:
     path:     /clear-cache
+    methods: ["POST"]
     defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::clearDoctrineCacheAction
+        _controller: Themes\Rozier\Controllers\SchemaController::clearThemeCacheAction
 themesUpdateSchema:
     path:     /update
+    methods: ["POST"]
     defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::updateSchemaAction
+        _controller: Themes\Rozier\Controllers\SchemaController::updateThemeSchemaAction
 themesImportSettings:
     path:     /import/settings/{themeId}
+    methods: ["POST"]
     defaults:
         _controller: Themes\Rozier\Controllers\ThemesImportController::importSettingsAction
         themeId: null
@@ -43,6 +46,7 @@ themesImportSettings:
         themeId: "[0-9]+"
 themesImportGroups:
     path:     /import/groups/{themeId}
+    methods: ["POST"]
     defaults:
         _controller: Themes\Rozier\Controllers\ThemesImportController::importGroupsAction
         themeId: null
@@ -51,6 +55,7 @@ themesImportGroups:
         themeId: "[0-9]+"
 themesImportRoles:
     path:     /import/roles/{themeId}
+    methods: ["POST"]
     defaults:
         _controller: Themes\Rozier\Controllers\ThemesImportController::importRolesAction
         themeId: null
@@ -59,6 +64,7 @@ themesImportRoles:
         themeId: "[0-9]+"
 themesImportNodes:
     path:     /import/nodes/{themeId}
+    methods: ["POST"]
     defaults:
         _controller: Themes\Rozier\Controllers\ThemesImportController::importNodesAction
         themeId: null
@@ -67,6 +73,7 @@ themesImportNodes:
         id: "[0-9]+"
 themesImportNodeTypes:
     path:     /import/nodetypes/{themeId}
+    methods: ["POST"]
     defaults:
         _controller: Themes\Rozier\Controllers\ThemesImportController::importNodeTypesAction
     requirements:
@@ -74,6 +81,7 @@ themesImportNodeTypes:
         themeId: "[0-9]+"
 themesImportTags:
     path:     /import/tags/{themeId}
+    methods: ["POST"]
     defaults:
         _controller: Themes\Rozier\Controllers\ThemesImportController::importTagsAction
     requirements:

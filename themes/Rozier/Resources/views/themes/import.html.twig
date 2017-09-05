@@ -133,16 +133,16 @@
 
             {% spaceless %}
             <div class="content-buttons">
-                <a id="next-step-button" class="content-button uk-button uk-button-primary uk-button-disabled rz-no-ajax-link" href="{{ path('themesHomePage')}}">{% trans %}next{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></a>
+                <a id="next-step-button"
+                   class="content-button uk-button uk-button-primary uk-button-disabled rz-no-ajax-link"
+                   href="{{ path('themesHomePage')}}">
+                    <span class="label"><span class="label-text">{% trans %}next{% endtrans %} </span></span>
+                    <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
+                </a>
             </div>
             {% endspaceless %}
-
-
-
         </div>
-
     </article>
-
 {% endblock %}
 
 {% block customScripts %}

@@ -25,6 +25,7 @@ installDatabaseFixturesPage:
         _controller: Themes\Install\Controllers\DatabaseController::databaseFixturesAction
 installImportSettings:
     path:     /install/import/settings/{themeId}
+    methods: [POST]
     defaults:
         _controller: RZ\Roadiz\CMS\Controllers\ImportController::importSettingsAction
         themeId: null
@@ -33,6 +34,7 @@ installImportSettings:
         themeId: "[0-9]+"
 installImportGroups:
     path:     /install/import/groups/{themeId}
+    methods: [POST]
     defaults:
         _controller: RZ\Roadiz\CMS\Controllers\ImportController::importGroupsAction
         themeId: null
@@ -41,6 +43,7 @@ installImportGroups:
         themeId: "[0-9]+"
 installImportRoles:
     path:     /install/import/roles/{themeId}
+    methods: [POST]
     defaults:
         _controller: RZ\Roadiz\CMS\Controllers\ImportController::importRolesAction
         themeId: null
@@ -49,6 +52,7 @@ installImportRoles:
         themeId: "[0-9]+"
 installImportNodes:
     path:     /install/import/nodes/{themeId}
+    methods: [POST]
     defaults:
         _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodesAction
         themeId: null
@@ -57,6 +61,7 @@ installImportNodes:
         id: "[0-9]+"
 installImportNodeTypes:
     path:     /install/import/nodetypes/{themeId}
+    methods: [POST]
     defaults:
         _controller: RZ\Roadiz\CMS\Controllers\ImportController::importNodeTypesAction
     requirements:
@@ -64,6 +69,7 @@ installImportNodeTypes:
         themeId: "[0-9]+"
 installImportTags:
     path:     /install/import/tags/{themeId}
+    methods: [POST]
     defaults:
         _controller: RZ\Roadiz\CMS\Controllers\ImportController::importTagsAction
     requirements:

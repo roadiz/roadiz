@@ -9,7 +9,7 @@ var Install = {
     import: null
 };
 
-Install.onDocumentReady = function( event ) {
+Install.onDocumentReady = function(event) {
 
     Install.resizeContainer = new resizeContainer();
 
