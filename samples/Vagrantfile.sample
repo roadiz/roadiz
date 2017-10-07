@@ -23,6 +23,10 @@ Vagrant.configure(2) do |config|
 
     # Use NFS for synced folders (MacOS + Linux with NFS support), better file IO performances
     config.vm.synced_folder "./", "/var/www", nfs: true, mount_options: ['actimeo=1']
+
+    # Quick fix for Vagrant on macOS 10.13 (High Sierra)
+    #config.vm.synced_folder "./", "/var/www", nfs: true, mount_options: ['rw', 'vers=3', 'tcp', 'fsc' ,'actimeo=1']
+
     # Use regular driver for synced folders (Linux + Windows)
     #config.vm.synced_folder "./", "/var/www", mount_options: ['dmode=775', 'fmode=664']
 

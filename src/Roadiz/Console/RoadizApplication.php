@@ -186,6 +186,7 @@ class RoadizApplication extends Application
             new ComposerPostInstallCommand(),
             new ComposerPostUpdateCommand(),
             new ThemeGenerateCommand(),
+            new LogsCleanupCommand(),
         );
 
         /*
