@@ -250,7 +250,9 @@ class EntityListManager
         if (false === $disabled) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
-                $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
+                $this->orderingArray = [
+                    $this->request->query->get('field') => $this->request->query->get('ordering')
+                ];
                 $this->queryArray['field'] = $this->request->query->get('field');
                 $this->queryArray['ordering'] = $this->request->query->get('ordering');
             }
