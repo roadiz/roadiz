@@ -441,6 +441,9 @@ abstract class FrontendController extends AppController
      * Override this method to create a custom frontend security scheme
      * with FirewallEntry.
      *
+     * Always declare before ^/ any firewall base pattern that is INSIDE
+     * site base_path.
+     *
      * @param Container $container
      * @see FirewallEntry
      */
