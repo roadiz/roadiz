@@ -77,9 +77,11 @@ class PageController extends DefaultThemeApp
          * Current page edition form
          */
         $form = $this->createForm(
-            new NodeSourceType($this->node->getNodeType()),
+            NodeSourceType::class,
             $this->nodeSource,
             [
+                'class' => $this->node->getNodeType()->getSourceEntityFullQualifiedClassName(),
+                'nodeType' => $this->node->getNodeType(),
                 'controller' => $this,
                 'entityManager' => $this->get('em'),
                 'container' => $this->getContainer(),

@@ -196,9 +196,11 @@ class NewslettersController extends RozierApp
                  * Form
                  */
                 $form = $this->createForm(
-                    new NodeSourceType($node->getNodeType()),
+                    NodeSourceType::class,
                     $source,
                     [
+                        'class' => $node->getNodeType()->getSourceEntityFullQualifiedClassName(),
+                        'nodeType' => $node->getNodeType(),
                         'controller' => $this,
                         'entityManager' => $this->get('em'),
                         'container' => $this->getContainer(),

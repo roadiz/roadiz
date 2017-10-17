@@ -50,26 +50,16 @@ use Themes\Rozier\Forms\NodeTreeType;
 class NodeSourceType extends AbstractType
 {
     /**
-     * @var NodeType
-     */
-    private $nodeType;
-
-    public function __construct(NodeType $nodeType)
-    {
-        $this->nodeType = $nodeType;
-    }
-
-    /**
      * @param  FormBuilderInterface $builder
      * @param  array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager']);
+        $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager'], $options['nodeType']);
 
         if ($options['withTitle'] === true) {
-            $builder->add('base', new NodeSourceBaseType(), [
-                'publishable' => $this->nodeType->isPublishable(),
+            $builder->add('base', NodeSourceBaseType::class, [
+                'publishable' => $options['nodeType']->isPublishable(),
             ]);
         }
         /** @var NodeTypeField $field */
@@ -90,21 +80,24 @@ class NodeSourceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => NodeType::getGeneratedEntitiesNamespace().'\\'.$this->nodeType->getSourceEntityClassName(),
             'property' => 'id',
             'withTitle' => true,
             'withVirtual' => true,
         ]);
         $resolver->setRequired([
+            'class',
             'entityManager',
             'controller',
             'container',
+            'nodeType',
         ]);
         $resolver->setAllowedTypes('container', 'Pimple\Container');
         $resolver->setAllowedTypes('controller', 'RZ\Roadiz\CMS\Controllers\Controller');
         $resolver->setAllowedTypes('entityManager', 'Doctrine\ORM\EntityManager');
         $resolver->setAllowedTypes('withTitle', 'boolean');
         $resolver->setAllowedTypes('withVirtual', 'boolean');
+        $resolver->setAllowedTypes('nodeType', NodeType::class);
+        $resolver->setAllowedTypes('class', 'string');
     }
 
     /**
@@ -118,12 +111,13 @@ class NodeSourceType extends AbstractType
     /**
      * @param NodesSources $source
      * @param EntityManager $entityManager
+     * @param NodeType $nodeType
      * @return array|null
      */
-    private function getFieldsForSource(NodesSources $source, EntityManager $entityManager)
+    private function getFieldsForSource(NodesSources $source, EntityManager $entityManager, NodeType $nodeType)
     {
         $criteria = [
-            'nodeType' => $this->nodeType,
+            'nodeType' => $nodeType,
             'visible' => true,
         ];
 
@@ -157,10 +151,10 @@ class NodeSourceType extends AbstractType
     private function hasDefaultTranslation(NodesSources $source, EntityManager $entityManager)
     {
         /** @var Translation $defaultTranslation */
-        $defaultTranslation = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $defaultTranslation = $entityManager->getRepository(Translation::class)
                                             ->findDefault();
 
-        $sourceCount = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+        $sourceCount = $entityManager->getRepository(NodesSources::class)
                                      ->setDisplayingAllNodesStatuses(true)
                                      ->setDisplayingNotPublishedNodes(true)
                                      ->countBy([

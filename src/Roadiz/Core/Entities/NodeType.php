@@ -362,6 +362,14 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @return string
+     */
+    public function getSourceEntityFullQualifiedClassName()
+    {
+        return static::getGeneratedEntitiesNamespace() . '\\' . $this->getSourceEntityClassName();
+    }
+
+    /**
      * Get node-source entity database table name.
      *
      * @return string
