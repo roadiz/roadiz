@@ -120,7 +120,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $twig = $c['twig.environment_class'];
             $formEngine = $c['twig.formRenderer'];
             $csrfManager = $c['csrfTokenManager'];
-            
+
             $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader(array(
                 TwigRenderer::class => function () use ($formEngine, $csrfManager) {
                     return new TwigRenderer($formEngine, $csrfManager);
