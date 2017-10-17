@@ -39,6 +39,8 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -418,7 +420,7 @@ abstract class Controller implements ContainerAwareInterface
      */
     protected function createFormBuilder($data = null, array $options = [])
     {
-        return $this->get('formFactory')->createBuilder('form', $data, $options);
+        return $this->get('formFactory')->createBuilder(FormType::class, $data, $options);
     }
 
     /**

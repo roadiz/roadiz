@@ -43,7 +43,7 @@
                             <a class="uk-button uk-button-content uk-button-small" title="{% trans %}edit{% endtrans %}" href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             {% if t.translation.isDefaultTranslation == false %}
                                 {% form_theme t.defaultForm 'forms.html.twig' %}
-                                <form class="uk-form-translation-default" action="#" method="post" {{ form_enctype(t.defaultForm) }}>
+                                <form class="uk-form-translation-default" action="#" method="post">
                                     {{ form_widget(t.defaultForm) }}
                                     <button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></button>
                                 </form>

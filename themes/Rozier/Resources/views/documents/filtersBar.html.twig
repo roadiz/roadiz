@@ -51,10 +51,10 @@
                 <a class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-documents" href="#" title="{% trans %}bulk.delete.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
                 {% if joinFolderForm %}
                 <div class="bulk-folder-cont documents-bulk-folder-cont">
-                    {% form_theme joinFolderForm '@Rozier/forms.html.twig' %}
-                    <form class="uk-form uk-form-horizontal document-bulk-folder-form" action="#" method="post" {{ form_enctype(joinFolderForm) }}>
+                    {% form_theme joinFolderForm '@Rozier/horizontalForms.html.twig' %}
+                    {{ form_start(joinFolderForm, { attr: {id: "embed-dropzone-document"}}) }}
                         {{ form_widget(joinFolderForm) }}
-                    </form>
+                    {{ form_end(joinFolderForm) }}
                 </div>
                 {% endif %}
             {% endspaceless %}

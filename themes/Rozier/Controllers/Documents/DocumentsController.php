@@ -45,6 +45,9 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -934,13 +937,13 @@ class DocumentsController extends RozierApp
     {
         $builder = $this->get('formFactory')
             ->createNamedBuilder('folderForm')
-            ->add('documentsId', 'hidden', [
+            ->add('documentsId', HiddenType::class, [
                 'attr' => ['class' => 'document-id-bulk-folder'],
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('folderPaths', 'text', [
+            ->add('folderPaths', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'rz-folder-autocomplete',
@@ -950,7 +953,7 @@ class DocumentsController extends RozierApp
                     new NotBlank(),
                 ],
             ])
-            ->add('submitFolder', 'submit', [
+            ->add('submitFolder', SubmitType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'uk-button uk-button-primary',
@@ -958,7 +961,7 @@ class DocumentsController extends RozierApp
                     'data-uk-tooltip' => "{animation:true}",
                 ],
             ])
-            ->add('submitUnfolder', 'submit', [
+            ->add('submitUnfolder', SubmitType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'uk-button',

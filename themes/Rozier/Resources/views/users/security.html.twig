@@ -7,24 +7,23 @@
     <header class="content-header header-user header-user-edit">
         <h1 class="content-title user-add-title">{{ "edit.user.%name%.security"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('usersHomePage') }}" title="{% trans %}back_to.users{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-	    {% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'security'} %}
+        {% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'security'} %}
     </header>
 
     <article class="content content-edit">
 
-    	{% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-user-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form) }}
             {{ form_widget(form) }}
-    	    <fieldset data-uk-margin>
+            <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#edit-user-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
                 {% endspaceless %}
-       		</fieldset>
-    	</form>
-
+            </fieldset>
+        {{ form_end(form) }}
 
         <div class="content-table-cont">
             <table class="content-table users uk-table">

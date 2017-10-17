@@ -34,6 +34,10 @@ use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -111,7 +115,7 @@ class ContactFormManager extends EmailManager
     ) {
         parent::__construct($request, $translator, $templating, $mailer, $settingsBag, $documentUrlGenerator);
 
-        $this->formBuilder = $formFactory->createBuilder('form', null, [
+        $this->formBuilder = $formFactory->createBuilder(FormType::class, null, [
                  'attr' => [
                      'id' => 'contactForm',
                  ],
@@ -157,7 +161,7 @@ class ContactFormManager extends EmailManager
      */
     public function withDefaultFields()
     {
-        $this->formBuilder->add('email', 'email', [
+        $this->formBuilder->add('email', EmailType::class, [
             'label' => 'your.email',
             'constraints' => [
                 new NotBlank(),
@@ -166,13 +170,13 @@ class ContactFormManager extends EmailManager
                 ]),
             ],
         ])
-            ->add('name', 'text', [
+            ->add('name', TextType::class, [
                 'label' => 'your.name',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('message', 'textarea', [
+            ->add('message', TextareaType::class, [
                 'label' => 'your.message',
                 'constraints' => [
                     new NotBlank(),

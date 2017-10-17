@@ -10,7 +10,7 @@
 
     <article class="content content-themes-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-theme-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <button data-action-save="#edit-theme-form" class="uk-button uk-button-primary rz-action-save" type="submit">
@@ -18,7 +18,7 @@
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
     {% include '@Rozier/themes/actionsMenu.html.twig' %}
 </section>

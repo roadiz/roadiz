@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\TagHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -599,7 +600,7 @@ class TagsController extends RozierApp
     private function buildDeleteForm(Tag $tag)
     {
         $builder = $this->createFormBuilder()
-            ->add('tagId', 'hidden', [
+            ->add('tagId', HiddenType::class, [
                 'data' => $tag->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -621,7 +622,7 @@ class TagsController extends RozierApp
     ) {
         $builder = $this->get('formFactory')
             ->createNamedBuilder('deleteForm')
-            ->add('tagsIds', 'hidden', [
+            ->add('tagsIds', HiddenType::class, [
                 'data' => implode(',', $tagsIds),
                 'attr' => ['class' => 'tags-id-bulk-tags'],
                 'constraints' => [
@@ -630,7 +631,7 @@ class TagsController extends RozierApp
             ]);
 
         if (false !== $referer) {
-            $builder->add('referer', 'hidden', [
+            $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
             ]);
         }

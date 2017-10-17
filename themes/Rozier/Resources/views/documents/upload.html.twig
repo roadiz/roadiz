@@ -20,7 +20,7 @@
                   class="uk-form uk-form-stacked dropzone"
                   action="#"
                   method="post"
-                  {{ form_enctype(form) }}>
+                  enctype="multipart/form-data">
                 <div class="fallback">
                     {{ form_widget(form) }}
                     <input class="uk-button uk-button-primary" type="submit" value="{% trans %}upload{% endtrans %}" />

@@ -30,6 +30,9 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -107,17 +110,17 @@ class UsersSecurityController extends RozierApp
 
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
-                        ->createNamedBuilder('source', 'form', $defaults);
+                        ->createNamedBuilder('source', FormType::class, $defaults);
 
-        $builder->add('enabled', 'checkbox', [
+        $builder->add('enabled', CheckboxType::class, [
                     'label' => 'user.enabled',
                     'required' => false,
                 ])
-                ->add('locked', 'checkbox', [
+                ->add('locked', CheckboxType::class, [
                     'label' => 'user.locked',
                     'required' => false,
                 ])
-                ->add('expiresAt', 'datetime', [
+                ->add('expiresAt', DateTimeType::class, [
                     'label' => 'user.expiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
@@ -131,11 +134,11 @@ class UsersSecurityController extends RozierApp
                         'minute' => 'minute',
                     ],
                 ])
-                ->add('expired', 'checkbox', [
+                ->add('expired', CheckboxType::class, [
                     'label' => 'user.force.expired',
                     'required' => false,
                 ])
-                ->add('credentialsExpiresAt', 'datetime', [
+                ->add('credentialsExpiresAt', DateTimeType::class, [
                     'label' => 'user.credentialsExpiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
@@ -149,7 +152,7 @@ class UsersSecurityController extends RozierApp
                         'minute' => 'minute',
                     ],
                 ])
-                ->add('credentialsExpired', 'checkbox', [
+                ->add('credentialsExpired', CheckboxType::class, [
                     'label' => 'user.force.credentialsExpired',
                     'required' => false,
                 ]);

@@ -4,27 +4,27 @@
 {% block content %}
 <section class="content-global embed-document">
 
-	<header class="content-header header-document header-document-embed">
+    <header class="content-header header-document header-document-embed">
         <h1 class="content-title document-embed-title">{% trans %}embed.document{% endtrans %}</h1>
-		<a class="content-header-nav-back uk-navbar-content"
+        <a class="content-header-nav-back uk-navbar-content"
            href="{{ path('documentsHomePage', {folderId: folder.id}) }}"
            title="{% trans %}back_to.documents{% endtrans %}"
            data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-embed">
-    	{% form_theme form '@Rozier/forms.html.twig' %}
-		<form id="embed-dropzone-document" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-	   		{{ form_widget(form) }}
-    	    <fieldset data-uk-margin>
-    	    	{% spaceless %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form, { attr: {id: "embed-dropzone-document"}}) }}
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
                 <button data-action-save="#embed-dropzone-document" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-upload"></i></span>
                     <span class="label"><span class="label-text">{% trans %}embed{% endtrans %}</span></span>
                 </button>
                 {% endspaceless %}
-       		</fieldset>
-		</form>
-	</article>
+            </fieldset>
+        {{ form_end(form) }}
+    </article>
 </section>
 {% endblock %}

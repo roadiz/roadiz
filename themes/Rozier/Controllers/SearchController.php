@@ -39,6 +39,9 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -288,7 +291,7 @@ class SearchController extends RozierApp
         $builderNodeType = $this->get('formFactory')
                                 ->createNamedBuilder(
                                     'nodeTypeForm',
-                                    "form",
+                                    FormType::class,
                                     [],
                                     ["method" => "get"]
                                 );
@@ -311,12 +314,12 @@ class SearchController extends RozierApp
      */
     protected function addButtons(FormBuilder $builder)
     {
-        $builder->add('search', 'submit', [
+        $builder->add('search', SubmitType::class, [
             'label' => 'search.a.node',
             'attr' => [
                 'class' => 'uk-button uk-button-primary',
             ]
-        ])->add('export', 'submit', [
+        ])->add('export', SubmitType::class, [
             'disabled' => true,
             'label' => 'export.all.nodesSource',
             'attr' => [
@@ -552,7 +555,7 @@ class SearchController extends RozierApp
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
-                $type = "choice";
+                $type = ChoiceType::class;
                 $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["expanded"] = false;
@@ -564,7 +567,7 @@ class SearchController extends RozierApp
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
-                $type = "choice";
+                $type = ChoiceType::class;
                 $option["choices"] = $choices;
                 $option['placeholder'] = 'ignore';
                 $option['required'] = false;

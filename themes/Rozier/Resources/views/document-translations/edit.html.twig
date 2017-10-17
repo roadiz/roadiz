@@ -13,7 +13,7 @@
 
     <article class="content content-document-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: { id: "edit-document-form"}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -23,7 +23,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
 
     {% include '@Rozier/documents/actionsMenu.html.twig' %}

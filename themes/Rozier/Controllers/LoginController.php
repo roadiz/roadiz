@@ -34,6 +34,11 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -128,20 +133,20 @@ class LoginController extends RozierApp
         $defaults = [];
 
         $builder = $this->get('formFactory')
-                        ->createNamedBuilder(null, 'form', $defaults, [])
-                        ->add('_username', 'text', [
+                        ->createNamedBuilder(null, FormType::class, $defaults, [])
+                        ->add('_username', TextType::class, [
                             'label' => 'username',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('_password', 'password', [
+                        ->add('_password', PasswordType::class, [
                             'label' => 'password',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('_remember_me', 'checkbox', [
+                        ->add('_remember_me', CheckboxType::class, [
                             'label' => 'keep_me_logged_in',
                             'required' => false,
                             'attr' => [
@@ -150,7 +155,7 @@ class LoginController extends RozierApp
                         ]);
 
         if ($request->query->has('_home')) {
-            $builder->add('_target_path', 'hidden', [
+            $builder->add('_target_path', HiddenType::class, [
                 'data' => $this->get('urlGenerator')->generate('adminHomePage')
             ]);
         }

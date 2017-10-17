@@ -3,8 +3,8 @@
 {% block subcontent %}
 
     <article class="content content-node-type-field-edit">
-       {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-custom-form-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form, { attr: {id: "edit-custom-form-field-form"}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -14,7 +14,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
 
 {% endblock %}

@@ -31,18 +31,15 @@
                 </div>
             {% endif %}
 
-            <form class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(doneForm) }}>
-
+            {% form_theme doneForm '@Install/forms.html.twig' %}
+            {{ form_start(doneForm) }}
                 <div class="content-text">
-
                     {{ form_errors(doneForm) }}
-
                     {% for item in doneForm %}
                         {{ form_errors(item) }}
                         {{ form_widget(item) }}
                     {% endfor %}
                     {{ form_rest(doneForm) }}
-
                 </div>
 
                 {% spaceless %}
@@ -51,7 +48,7 @@
                         <button class="content-button uk-button uk-button-primary"><i class="uk-icon-check"></i> {% trans %}success.quit_install{% endtrans %}</button>
                     </div>
                 {% endspaceless %}
-            </form>
+            {{ form_end(doneForm) }}
         </div>
     </article>
 {% endblock %}

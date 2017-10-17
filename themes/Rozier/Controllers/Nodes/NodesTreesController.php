@@ -33,6 +33,9 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -273,7 +276,7 @@ class NodesTreesController extends RozierApp
     ) {
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('deleteForm')
-                        ->add('nodesIds', 'hidden', [
+                        ->add('nodesIds', HiddenType::class, [
                             'data' => implode(',', $nodesIds),
                             'attr' => ['class' => 'nodes-id-bulk-tags'],
                             'constraints' => [
@@ -282,7 +285,7 @@ class NodesTreesController extends RozierApp
                         ]);
 
         if (false !== $referer) {
-            $builder->add('referer', 'hidden', [
+            $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
             ]);
         }
@@ -363,13 +366,13 @@ class NodesTreesController extends RozierApp
     {
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('tagForm')
-                        ->add('nodesIds', 'hidden', [
+                        ->add('nodesIds', HiddenType::class, [
                             'attr' => ['class' => 'nodes-id-bulk-tags'],
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('tagsPaths', 'text', [
+                        ->add('tagsPaths', TextType::class, [
                             'label' => false,
                             'attr' => [
                                 'class' => 'rz-tag-autocomplete',
@@ -379,7 +382,7 @@ class NodesTreesController extends RozierApp
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('submitTag', 'submit', [
+                        ->add('submitTag', SubmitType::class, [
                             'label' => 'link.tags',
                             'attr' => [
                                 'class' => 'uk-button uk-button-primary',
@@ -387,7 +390,7 @@ class NodesTreesController extends RozierApp
                                 'data-uk-tooltip' => "{animation:true}",
                             ],
                         ])
-                        ->add('submitUntag', 'submit', [
+                        ->add('submitUntag', SubmitType::class, [
                             'label' => 'unlink.tags',
                             'attr' => [
                                 'class' => 'uk-button',
@@ -499,7 +502,7 @@ class NodesTreesController extends RozierApp
     ) {
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('statusForm')
-                        ->add('nodesIds', 'hidden', [
+                        ->add('nodesIds', HiddenType::class, [
                             'attr' => ['class' => 'nodes-id-bulk-status'],
                             'data' => implode(',', $nodesIds),
                             'constraints' => [
@@ -522,12 +525,12 @@ class NodesTreesController extends RozierApp
                         ]);
 
         if (false !== $referer) {
-            $builder->add('referer', 'hidden', [
+            $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
             ]);
         }
         if (true === $submit) {
-            $builder->add('submitStatus', 'submit', [
+            $builder->add('submitStatus', SubmitType::class, [
                 'label' => 'change.nodes.status',
                 'attr' => [
                     'class' => 'uk-button uk-button-primary',

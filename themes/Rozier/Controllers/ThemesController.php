@@ -34,11 +34,11 @@ use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -279,7 +279,7 @@ class ThemesController extends RozierApp
     protected function buildAddForm(Theme $theme)
     {
         $builder = $this->get('formFactory')
-            ->createNamedBuilder('source', 'form', []);
+            ->createNamedBuilder('source', FormType::class, []);
 
         /*
          * See if its possible to prepend field instead of adding it
@@ -351,14 +351,14 @@ class ThemesController extends RozierApp
         ];
 
         $builder = $this->get('formFactory')
-            ->createNamedBuilder('source', 'form', $defaults)
-            ->add('available', 'checkbox', [
+            ->createNamedBuilder('source', FormType::class, $defaults)
+            ->add('available', CheckboxType::class, [
                 'label' => 'available',
                 'required' => false,
             ])
             ->add(
                 'staticTheme',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'staticTheme',
                     'required' => false,
@@ -367,14 +367,14 @@ class ThemesController extends RozierApp
                     ],
                 ]
             )
-            ->add('hostname', 'text', [
+            ->add('hostname', TextType::class, [
                 'label' => 'hostname',
             ])
-            ->add('routePrefix', 'text', [
+            ->add('routePrefix', TextType::class, [
                 'label' => 'routePrefix',
                 'required' => false,
             ])
-            ->add('backendTheme', 'checkbox', [
+            ->add('backendTheme', CheckboxType::class, [
                 'label' => 'backendTheme',
                 'required' => false,
             ]);
@@ -412,7 +412,7 @@ class ThemesController extends RozierApp
     protected function buildDeleteForm(Theme $theme)
     {
         $builder = $this->createFormBuilder()
-            ->add('themeId', 'hidden', [
+            ->add('themeId', HiddenType::class, [
                 'data' => $theme->getId(),
             ]);
 

@@ -3,20 +3,20 @@
 
 {% block content %}
 <section class="content-global">
-	<header class="content-header header-role header-role-add">
+    <header class="content-header header-role header-role-add">
         <h1 class="content-title">{{ "delete.role.%name%"|trans({'%name%': role.name })|truncate(25, true, '[…]') }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">
-		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<legend>{% trans %}are_you_sure.delete.role{% endtrans %}</legend>
-		    	<a href="{{ path('rolesHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-		    	<button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
-	   		</fieldset>
-		</form>
-	</article>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend>{% trans %}are_you_sure.delete.role{% endtrans %}</legend>
+                <a href="{{ path('rolesHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+            </fieldset>
+        {{ form_end(form) }}
+    </article>
 </section>
 {% endblock %}
