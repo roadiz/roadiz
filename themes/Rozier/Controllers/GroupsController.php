@@ -36,6 +36,8 @@ use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -377,7 +379,7 @@ class GroupsController extends RozierApp
     protected function buildAddForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('name', 'text', [
+                        ->add('name', TextType::class, [
                             'label' => 'group.name',
                             'constraints' => [
                                 new NotBlank(),
@@ -400,13 +402,13 @@ class GroupsController extends RozierApp
             'name' => $group->getName(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('groupId', 'hidden', [
+                        ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('name', 'text', [
+                        ->add('name', TextType::class, [
                             'label' => 'group.name',
                             'data' => $group->getName(),
                             'constraints' => [
@@ -427,7 +429,7 @@ class GroupsController extends RozierApp
     protected function buildDeleteForm(Group $group)
     {
         $builder = $this->createFormBuilder()
-                        ->add('groupId', 'hidden', [
+                        ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -448,7 +450,7 @@ class GroupsController extends RozierApp
             'groupId' => $group->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('groupId', 'hidden', [
+                        ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -474,7 +476,7 @@ class GroupsController extends RozierApp
             'groupId' => $group->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('groupId', 'hidden', [
+                        ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -503,13 +505,13 @@ class GroupsController extends RozierApp
     private function buildRemoveRoleForm(Group $group, Role $role)
     {
         $builder = $this->createFormBuilder()
-                        ->add('groupId', 'hidden', [
+                        ->add('groupId',  HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('roleId', 'hidden', [
+                        ->add('roleId',  HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -528,13 +530,13 @@ class GroupsController extends RozierApp
     private function buildRemoveUserForm(Group $group, User $user)
     {
         $builder = $this->createFormBuilder()
-                        ->add('groupId', 'hidden', [
+                        ->add('groupId',  HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('userId', 'hidden', [
+                        ->add('userId',  HiddenType::class, [
                             'data' => $user->getId(),
                             'constraints' => [
                                 new NotBlank(),

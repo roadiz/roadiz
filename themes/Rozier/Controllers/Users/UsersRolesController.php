@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Users;
 use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -195,9 +196,7 @@ class UsersRolesController extends RozierApp
             'userId' => $user->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add(
-                            'userId',
-                            'hidden',
+                        ->add('userId',  HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -223,9 +222,7 @@ class UsersRolesController extends RozierApp
     private function buildRemoveRoleForm(User $user, Role $role)
     {
         $builder = $this->createFormBuilder()
-                        ->add(
-                            'userId',
-                            'hidden',
+                        ->add('userId',  HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -233,9 +230,7 @@ class UsersRolesController extends RozierApp
                                 ],
                             ]
                         )
-                        ->add(
-                            'roleId',
-                            'hidden',
+                        ->add('roleId',  HiddenType::class,
                             [
                                 'data' => $role->getId(),
                                 'constraints' => [

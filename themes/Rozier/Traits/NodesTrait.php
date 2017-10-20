@@ -39,6 +39,8 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
@@ -117,7 +119,7 @@ trait NodesTrait
 
             $builder = $this->get('formFactory')
                             ->createBuilder('form', $defaults)
-                            ->add('nodeId', 'hidden', [
+                            ->add('nodeId',  HiddenType::class, [
                                 'data' => (int) $node->getId(),
                             ])
                             ->add('nodeTypeId', new NodeTypesType($this->get('em'), true), [
@@ -143,7 +145,7 @@ trait NodesTrait
         $defaults = [];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('nodeName', 'text', [
+                        ->add('nodeName',  TextType::class, [
                             'label' => 'nodeName',
                             'constraints' => [
                                 new NotBlank(),
@@ -160,7 +162,7 @@ trait NodesTrait
             ]);
 
         if (null !== $parentNode) {
-            $builder->add('parentId', 'hidden', [
+            $builder->add('parentId',  HiddenType::class, [
                 'data' => (int) $parentNode->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -179,7 +181,7 @@ trait NodesTrait
     protected function buildDeleteForm(Node $node)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeId', 'hidden', [
+                        ->add('nodeId',  HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
                                 new NotBlank(),

@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -242,7 +243,7 @@ class NodeTypesController extends RozierApp
     private function buildDeleteForm(NodeType $nodeType)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeTypeId', 'hidden', [
+                        ->add('nodeTypeId',  HiddenType::class, [
                             'data' => $nodeType->getId(),
                             'constraints' => [
                                 new NotBlank(),

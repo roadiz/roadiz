@@ -30,8 +30,10 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
+use RZ\Roadiz\CMS\Forms\GroupsType;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -195,9 +197,7 @@ class UsersGroupsController extends RozierApp
             'userId' => $user->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add(
-                            'userId',
-                            'hidden',
+                        ->add('userId',  HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -207,7 +207,7 @@ class UsersGroupsController extends RozierApp
                         )
                         ->add(
                             'group',
-                            new \RZ\Roadiz\CMS\Forms\GroupsType($this->get('em'), $user->getGroups()),
+                            new GroupsType($this->get('em'), $user->getGroups()),
                             ['label' => 'Group']
                         );
 
@@ -223,9 +223,7 @@ class UsersGroupsController extends RozierApp
     private function buildRemoveGroupForm(User $user, Group $group)
     {
         $builder = $this->createFormBuilder()
-                        ->add(
-                            'userId',
-                            'hidden',
+                        ->add('userId',  HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -233,9 +231,7 @@ class UsersGroupsController extends RozierApp
                                 ],
                             ]
                         )
-                        ->add(
-                            'groupId',
-                            'hidden',
+                        ->add('groupId',  HiddenType::class,
                             [
                                 'data' => $group->getId(),
                                 'constraints' => [

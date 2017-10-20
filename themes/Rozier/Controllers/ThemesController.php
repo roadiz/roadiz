@@ -323,7 +323,7 @@ class ThemesController extends RozierApp
     protected function buildSettingForm(Theme $theme, $classname)
     {
         $builder = $this->buildCommonForm($theme)
-            ->add('classname', 'hidden', [
+            ->add('classname',  HiddenType::class, [
                 'data' => $classname,
             ]);
         return $builder->getForm();

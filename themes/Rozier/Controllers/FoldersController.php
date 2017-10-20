@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -391,7 +392,7 @@ class FoldersController extends RozierApp
     protected function buildDeleteForm(Folder $folder)
     {
         $builder = $this->createFormBuilder()
-                        ->add('folder_id', 'hidden', [
+                        ->add('folder_id', HiddenType::class, [
                             'data' => $folder->getId(),
                         ]);
 

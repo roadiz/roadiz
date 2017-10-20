@@ -28,11 +28,14 @@
  */
 namespace Themes\Rozier\Controllers\Documents;
 
+use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -218,7 +221,7 @@ class DocumentTranslationsController extends RozierApp
             'documentTranslationId' => $doc->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('documentTranslationId', 'hidden', [
+                        ->add('documentTranslationId',  HiddenType::class, [
                             'data' => $doc->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -241,19 +244,19 @@ class DocumentTranslationsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('referer', 'hidden', [
+                        ->add('referer',  HiddenType::class, [
                             'data' => $this->get('request')->get('referer'),
                             'mapped' => false,
                         ])
-                        ->add('name', 'text', [
+                        ->add('name',  TextType::class, [
                             'label' => 'name',
                             'required' => false,
                         ])
-                        ->add('description', new \RZ\Roadiz\CMS\Forms\MarkdownType(), [
+                        ->add('description', MarkdownType::class, [
                             'label' => 'description',
                             'required' => false,
                         ])
-                        ->add('copyright', 'text', [
+                        ->add('copyright',  TextType::class, [
                             'label' => 'copyright',
                             'required' => false,
                         ]);

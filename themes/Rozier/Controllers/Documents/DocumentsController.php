@@ -45,6 +45,7 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -760,7 +761,7 @@ class DocumentsController extends RozierApp
             'documentId' => $doc->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-            ->add('documentId', 'hidden', [
+            ->add('documentId',  HiddenType::class, [
                 'data' => $doc->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -778,7 +779,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-            ->add('checksum', 'hidden', [
+            ->add('checksum',  HiddenType::class, [
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
@@ -797,7 +798,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-            ->add('checksum', 'hidden', [
+            ->add('checksum',  HiddenType::class, [
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
@@ -842,11 +843,11 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-            ->add('referer', 'hidden', [
+            ->add('referer',  HiddenType::class, [
                 'data' => $this->get('request')->get('referer'),
                 'mapped' => false,
             ])
-            ->add('filename', 'text', [
+            ->add('filename',  TextType::class, [
                 'label' => 'filename',
                 'required' => false,
                 'constraints' => [
@@ -862,7 +863,7 @@ class DocumentsController extends RozierApp
                     ]),
                 ],
             ])
-            ->add('private', 'checkbox', [
+            ->add('private',  CheckboxType::class, [
                 'label' => 'private',
                 'required' => false,
             ])
@@ -900,7 +901,7 @@ class DocumentsController extends RozierApp
 
         if (null !== $folderId &&
             $folderId > 0) {
-            $builder->add('folderId', 'hidden', [
+            $builder->add('folderId',  HiddenType::class, [
                 'data' => $folderId,
             ]);
         }
@@ -919,7 +920,7 @@ class DocumentsController extends RozierApp
         }
 
         $builder = $this->createFormBuilder()
-            ->add('embedId', 'text', [
+            ->add('embedId',  TextType::class, [
                 'label' => 'document.embedId',
             ])
             ->add('embedPlatform', 'choice', [

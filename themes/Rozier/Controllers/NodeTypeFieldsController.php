@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -284,7 +285,7 @@ class NodeTypeFieldsController extends RozierApp
     private function buildDeleteForm(NodeTypeField $field)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeTypeFieldId', 'hidden', [
+                        ->add('nodeTypeFieldId',  HiddenType::class, [
                             'data' => $field->getId(),
                             'constraints' => [
                                 new NotBlank(),

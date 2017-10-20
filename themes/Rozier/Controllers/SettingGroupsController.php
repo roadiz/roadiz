@@ -32,6 +32,9 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -308,13 +311,13 @@ class SettingGroupsController extends RozierApp
             'inMenu' => $settingGroup->isInMenu(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('name', 'text', [
+                        ->add('name',  TextType::class, [
                             'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('inMenu', 'checkbox', [
+                        ->add('inMenu',  CheckboxType::class, [
                             'label' => 'settingGroup.in.menu',
                             'required' => false,
                         ])
@@ -336,17 +339,13 @@ class SettingGroupsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add(
-                            'name',
-                            'text',
+                        ->add('name', TextType::class,
                             [
                                 'label' => 'name',
                                 'constraints' => [new NotBlank()],
                             ]
                         )
-                        ->add(
-                            'inMenu',
-                            'checkbox',
+                        ->add('inMenu', CheckboxType::class,
                             [
                                 'label' => 'settingGroup.in.menu',
                                 'required' => false,
@@ -364,7 +363,7 @@ class SettingGroupsController extends RozierApp
     private function buildDeleteForm(SettingGroup $settingGroup)
     {
         $builder = $this->createFormBuilder()
-                        ->add('settingGroupId', 'hidden', [
+                        ->add('settingGroupId',  HiddenType::class, [
                             'data' => $settingGroup->getId(),
                             'constraints' => [
                                 new NotBlank(),

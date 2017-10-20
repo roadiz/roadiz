@@ -31,6 +31,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -224,7 +225,7 @@ class CustomFormsController extends RozierApp
     private function buildDeleteForm(CustomForm $customForm)
     {
         $builder = $this->createFormBuilder()
-                        ->add('customFormId', 'hidden', [
+                        ->add('customFormId', HiddenType::class, [
                             'data' => $customForm->getId(),
                             'constraints' => [
                                 new NotBlank(),

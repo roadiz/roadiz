@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -660,7 +661,7 @@ class NodesController extends RozierApp
 
         if (null !== $node) {
             $form = $this->createFormBuilder()
-                ->add('nodeId', 'hidden', [
+                ->add('nodeId',  HiddenType::class, [
                     'data' => $node->getId(),
                     'constraints' => [
                         new NotBlank(),

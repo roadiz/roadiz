@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -129,7 +130,7 @@ class CustomFormAnswersController extends RozierApp
     private function buildDeleteForm(CustomFormAnswer $customFormAnswer)
     {
         $builder = $this->createFormBuilder()
-                        ->add('customFormAnswerId', 'hidden', [
+                        ->add('customFormAnswerId', HiddenType::class, [
                             'data' => $customFormAnswer->getId(),
                             'constraints' => [
                                 new NotBlank(),

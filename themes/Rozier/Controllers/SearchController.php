@@ -39,9 +39,11 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -511,13 +513,13 @@ class SearchController extends RozierApp
                             ],
                         ])
                         // No need to prefix tags
-                        ->add('tags', 'text', [
+                        ->add('tags',  TextType::class, [
                             'label' => 'node.tags',
                             'required' => false,
                             'attr' => ["class" => "rz-tag-autocomplete"],
                         ])
                         // No need to prefix tags
-                        ->add('tagExclusive', 'checkbox', [
+                        ->add('tagExclusive',  CheckboxType::class, [
                             'label' => 'node.tag.exclusive',
                             'required' => false,
                         ]);

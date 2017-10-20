@@ -73,7 +73,7 @@ class UserDetailsType extends AbstractType
                 ])
                 ->add('birthday', DateType::class, [
                     'label' => 'birthday',
-                    'empty_value' => [
+                    'placeholder' => [
                         'year' => 'year',
                         'month' => 'month',
                         'day' => 'day'

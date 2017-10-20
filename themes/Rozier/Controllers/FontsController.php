@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -303,7 +304,7 @@ class FontsController extends RozierApp
     protected function buildDeleteForm(Font $font)
     {
         $builder = $this->createFormBuilder()
-                        ->add('fontId', 'hidden', [
+                        ->add('fontId', HiddenType::class, [
                             'data' => $font->getId(),
                         ]);
 

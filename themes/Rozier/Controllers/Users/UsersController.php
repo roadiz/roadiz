@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -289,9 +290,7 @@ class UsersController extends RozierApp
     private function buildDeleteForm(User $user)
     {
         $builder = $this->createFormBuilder()
-                        ->add(
-                            'userId',
-                            'hidden',
+                        ->add('userId',  HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [

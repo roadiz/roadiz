@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -105,7 +106,7 @@ class NewslettersController extends RozierApp
             /** @var Form $form */
             $form = $this->get('formFactory')
                          ->createBuilder()
-                         ->add('title', 'text', [
+                         ->add('title',  TextType::class, [
                              'label' => 'title',
                              'constraints' => [
                                  new NotBlank(),

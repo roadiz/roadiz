@@ -35,6 +35,9 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Translation\Translator;
@@ -431,7 +434,7 @@ class SettingsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('name', 'text', [
+                        ->add('name',  TextType::class, [
                             'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
@@ -441,7 +444,7 @@ class SettingsController extends RozierApp
                             'label' => 'value',
                             'required' => false,
                         ])
-                        ->add('visible', 'checkbox', [
+                        ->add('visible',  CheckboxType::class, [
                             'label' => 'visible',
                             'required' => false,
                         ])
@@ -485,17 +488,13 @@ class SettingsController extends RozierApp
         }
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add(
-                            'id',
-                            'hidden',
+                        ->add('id',  HiddenType::class,
                             [
                                 'data' => $setting->getId(),
                                 'required' => true,
                             ]
                         )
-                        ->add(
-                            'name',
-                            'text',
+                        ->add('name',  TextType::class,
                             [
                                 'label' => 'name',
                                 'constraints' => [new NotBlank()],
@@ -506,9 +505,7 @@ class SettingsController extends RozierApp
                             $this->getFormTypeFromSettingType($setting),
                             static::getFormOptionsForSetting($setting, $this->getTranslator())
                         )
-                        ->add(
-                            'visible',
-                            'checkbox',
+                        ->add('visible',  CheckboxType::class,
                             [
                                 'label' => 'visible',
                                 'required' => false,
@@ -569,7 +566,7 @@ class SettingsController extends RozierApp
             $defaults['value'] = null;
         }
         $builder = $this->createFormBuilder($defaults)
-                        ->add('id', 'hidden', [
+                        ->add('id',  HiddenType::class, [
                             'data' => $setting->getId(),
                             'required' => true,
                         ])
@@ -590,7 +587,7 @@ class SettingsController extends RozierApp
     private function buildDeleteForm(Setting $setting)
     {
         $builder = $this->createFormBuilder()
-                        ->add('settingId', 'hidden', [
+                        ->add('settingId',  HiddenType::class, [
                             'data' => $setting->getId(),
                             'constraints' => [
                                 new NotBlank(),

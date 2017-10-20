@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterTranslationEvent;
 use RZ\Roadiz\Core\Events\TranslationEvents;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -290,9 +291,7 @@ class TranslationsController extends RozierApp
     private function buildDeleteForm(Translation $translation)
     {
         $builder = $this->createFormBuilder()
-                        ->add(
-                            'translationId',
-                            'hidden',
+                        ->add('translationId',  HiddenType::class,
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [
@@ -312,9 +311,7 @@ class TranslationsController extends RozierApp
     private function buildMakeDefaultForm(Translation $translation)
     {
         $builder = $this->createFormBuilder()
-                        ->add(
-                            'translationId',
-                            'hidden',
+                        ->add('translationId',  HiddenType::class,
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [
