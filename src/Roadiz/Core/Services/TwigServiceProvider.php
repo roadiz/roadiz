@@ -53,6 +53,7 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * Register Twig services for dependency injection container.
@@ -100,6 +101,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         /**
          * Twig form renderer extension.
          *
+         * @param $c
          * @return TwigRendererEngine
          */
         $container['twig.formRenderer'] = function ($c) {
@@ -117,15 +119,8 @@ class TwigServiceProvider implements ServiceProviderInterface
          */
         $container['twig.environment'] = function ($c) {
             $c['stopwatch']->start('initTwig');
+            /** @var \Twig_Environment $twig */
             $twig = $c['twig.environment_class'];
-            $formEngine = $c['twig.formRenderer'];
-            $csrfManager = $c['csrfTokenManager'];
-
-            $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader(array(
-                TwigRenderer::class => function () use ($formEngine, $csrfManager) {
-                    return new TwigRenderer($formEngine, $csrfManager);
-                },
-            )));
 
             foreach ($c['twig.extensions'] as $extension) {
                 if ($extension instanceof \Twig_Extension) {
@@ -142,6 +137,17 @@ class TwigServiceProvider implements ServiceProviderInterface
                     throw new \RuntimeException('Try to add Twig filter which does not extends Twig_SimpleFilter.');
                 }
             }
+
+            /** @var TwigRendererEngine $formEngine */
+            $formEngine = $c['twig.formRenderer'];
+            /** @var CsrfTokenManager $csrfManager */
+            $csrfManager = $c['csrfTokenManager'];
+
+            $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
+                TwigRenderer::class => function () use ($formEngine, $csrfManager) {
+                    return new TwigRenderer($formEngine, $csrfManager);
+                },
+            ]));
 
             $c['stopwatch']->stop('initTwig');
             return $twig;

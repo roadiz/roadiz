@@ -229,7 +229,7 @@ class Requirements
         /*
          * 0 value means no limitations
          */
-        if ($actual === 0) {
+        if ($actual === 0 || $actual == -1) {
             return true;
         } elseif ($actual < $expected) {
             return false;
