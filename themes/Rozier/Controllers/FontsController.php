@@ -83,7 +83,7 @@ class FontsController extends RozierApp
 
         $font = new Font();
 
-        $form = $this->createForm(new FontType(), $font, [
+        $form = $this->createForm(FontType::class, $font, [
             'em' => $this->get('em'),
             'constraints' => [
                 new UniqueFontVariant([
@@ -183,7 +183,7 @@ class FontsController extends RozierApp
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
         if ($font !== null) {
-            $form = $this->createForm(new FontType(), $font, [
+            $form = $this->createForm(FontType::class, $font, [
                 'em' => $this->get('em'),
                 'name' => $font->getName(),
                 'variant' => $font->getVariant(),

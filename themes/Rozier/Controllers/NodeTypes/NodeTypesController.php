@@ -98,7 +98,7 @@ class NodeTypesController extends RozierApp
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
 
-            $form = $this->createForm(new NodeTypeType(), $nodeType, [
+            $form = $this->createForm(NodeTypeType::class, $nodeType, [
                 'em' => $this->get('em'),
                 'name' => $nodeType->getName(),
             ]);
@@ -150,7 +150,7 @@ class NodeTypesController extends RozierApp
             /*
              * form
              */
-            $form = $this->createForm(new NodeTypeType(), $nodeType, [
+            $form = $this->createForm(NodeTypeType::class, $nodeType, [
                 'em' => $this->get('em'),
             ]);
 

@@ -101,7 +101,7 @@ class UsersController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(new UserType(), $user, [
+            $form = $this->createForm(UserType::class, $user, [
                 'em' => $this->get('em'),
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
@@ -157,7 +157,7 @@ class UsersController extends RozierApp
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-            $form = $this->createForm(new UserDetailsType(), $user);
+            $form = $this->createForm(UserDetailsType::class, $user);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
@@ -203,7 +203,7 @@ class UsersController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(new UserType(), $user, [
+            $form = $this->createForm(UserType::class, $user, [
                 'em' => $this->get('em'),
             ]);
 

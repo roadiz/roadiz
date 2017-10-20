@@ -135,7 +135,7 @@ class TagsController extends RozierApp
                     ->getRepository('RZ\Roadiz\Core\Entities\Translation')
                     ->findAllAvailable();
 
-                $form = $this->createForm(new TagTranslationType(), $tt, [
+                $form = $this->createForm(TagTranslationType::class, $tt, [
                     'em' => $this->get('em'),
                     'tagName' => $tag->getTagName(),
                 ]);
@@ -288,7 +288,7 @@ class TagsController extends RozierApp
         if ($tag !== null &&
             $translation !== null) {
             $this->assignation['tag'] = $tag;
-            $form = $this->createForm(new TagType(), $tag, [
+            $form = $this->createForm(TagType::class, $tag, [
                 'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);
@@ -349,7 +349,7 @@ class TagsController extends RozierApp
             ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
 
         if ($tag !== null) {
-            $form = $this->createForm(new TagType(), $tag, [
+            $form = $this->createForm(TagType::class, $tag, [
                 'em' => $this->get('em'),
                 'tagName' => $tag->getTagName(),
             ]);
@@ -492,7 +492,7 @@ class TagsController extends RozierApp
 
         if ($translation !== null &&
             $parentTag !== null) {
-            $form = $this->createForm(new TagType(), $tag, [
+            $form = $this->createForm(TagType::class, $tag, [
                 'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);

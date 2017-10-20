@@ -31,6 +31,7 @@ namespace Themes\Install\Forms;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -59,7 +60,7 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('password', RepeatedType::class, [
-                'type' => 'password',
+                'type' => PasswordType::class,
                 'invalid_message' => 'password.must_match',
                 'first_options' => ['label' => 'password'],
                 'second_options' => ['label' => 'password.verify'],

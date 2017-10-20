@@ -95,7 +95,7 @@ class FoldersController extends RozierApp
             }
         }
         /** @var Form $form */
-        $form = $this->createForm(new FolderType(), $folder, [
+        $form = $this->createForm(FolderType::class, $folder, [
             'em' => $this->get('em'),
         ]);
         $form->handleRequest($request);
@@ -211,7 +211,7 @@ class FoldersController extends RozierApp
 
         if ($folder !== null) {
             /** @var Form $form */
-            $form = $this->createForm(new FolderType(), $folder, [
+            $form = $this->createForm(FolderType::class, $folder, [
                 'em' => $this->get('em'),
                 'name' => $folder->getFolderName(),
             ]);
@@ -282,7 +282,7 @@ class FoldersController extends RozierApp
 
         if (null !== $folder && null !== $translation) {
             /** @var Form $form */
-            $form = $this->createForm(new FolderTranslationType(), $folderTranslation);
+            $form = $this->createForm(FolderTranslationType::class, $folderTranslation);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {

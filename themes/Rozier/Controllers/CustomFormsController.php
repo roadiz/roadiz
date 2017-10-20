@@ -85,7 +85,7 @@ class CustomFormsController extends RozierApp
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            $form = $this->createForm(new CustomFormType(), $customForm, [
+            $form = $this->createForm(CustomFormType::class, $customForm, [
                 'em' => $this->get('em'),
                 'name' => $customForm->getName(),
             ]);
@@ -138,7 +138,7 @@ class CustomFormsController extends RozierApp
             /*
              * form
              */
-            $form = $this->createForm(new CustomFormType(), $customForm, [
+            $form = $this->createForm(CustomFormType::class, $customForm, [
                 'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);

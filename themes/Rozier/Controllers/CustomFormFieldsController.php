@@ -88,7 +88,7 @@ class CustomFormFieldsController extends RozierApp
         if ($field !== null) {
             $this->assignation['customForm'] = $field->getCustomForm();
             $this->assignation['field'] = $field;
-            $form = $this->createForm(new CustomFormFieldType(), $field, [
+            $form = $this->createForm(CustomFormFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'customForm' => $field->getCustomForm(),
                 'fieldName' => $field->getName(),
@@ -141,7 +141,7 @@ class CustomFormFieldsController extends RozierApp
             $field !== null) {
             $this->assignation['customForm'] = $customForm;
             $this->assignation['field'] = $field;
-            $form = $this->createForm(new CustomFormFieldType(), $field, [
+            $form = $this->createForm(CustomFormFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'customForm' => $customForm,
             ]);

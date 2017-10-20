@@ -83,7 +83,7 @@ class NodesTagsController extends RozierApp
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
 
-                $form = $this->createForm(new NodeTagsType(), $node, [
+                $form = $this->createForm(NodeTagsType::class, $node, [
                     'entityManager' => $this->get('em'),
                 ]);
 

@@ -52,7 +52,7 @@ class LoginResetController extends RozierApp
         $user = $this->getUserByToken($this->get('em'), $token);
 
         if (null !== $user) {
-            $form = $this->createForm(new LoginResetForm(), null, [
+            $form = $this->createForm(LoginResetForm::class, null, [
                 'token' => $token,
                 'confirmationTtl' => User::CONFIRMATION_TTL,
                 'entityManager' => $this->get('em'),

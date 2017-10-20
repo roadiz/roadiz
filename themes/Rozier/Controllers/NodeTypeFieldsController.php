@@ -92,7 +92,7 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['nodeType'] = $field->getNodeType();
             $this->assignation['field'] = $field;
 
-            $form = $this->createForm(new NodeTypeFieldType(), $field, [
+            $form = $this->createForm(NodeTypeFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'fieldName' => $field->getName(),
                 'nodeType' => $field->getNodeType(),
@@ -158,7 +158,7 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['nodeType'] = $nodeType;
             $this->assignation['field'] = $field;
 
-            $form = $this->createForm(new NodeTypeFieldType(), $field, [
+            $form = $this->createForm(NodeTypeFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'nodeType' => $field->getNodeType(),
             ]);
