@@ -29,10 +29,12 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -51,7 +53,7 @@ class TranstypeType extends AbstractType
     {
         $builder->add(
             'nodeTypeId',
-            'choice',
+            ChoiceType::class,
             [
                 'choices_as_values' => true,
                 'choices' => $this->getAvailableTypes($options['em'], $options['currentType']),
@@ -90,8 +92,8 @@ class TranstypeType extends AbstractType
             'currentType',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
-        $resolver->setAllowedTypes('currentType', 'RZ\Roadiz\Core\Entities\NodeType');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
+        $resolver->setAllowedTypes('currentType', NodeType::class);
     }
 
     /**
@@ -103,7 +105,7 @@ class TranstypeType extends AbstractType
     {
         $qb = $em->createQueryBuilder();
         $qb->select('n')
-           ->from('RZ\Roadiz\Core\Entities\NodeType', 'n')
+           ->from(NodeType::class, 'n')
            ->where($qb->expr()->neq('n.id', $currentType->getId()))
            ->orderBy('n.displayName', 'ASC');
 

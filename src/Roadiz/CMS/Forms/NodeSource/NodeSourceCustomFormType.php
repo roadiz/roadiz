@@ -115,7 +115,7 @@ class NodeSourceCustomFormType extends AbstractType
             'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
-            'class' => '\RZ\Roadiz\Core\Entities\CustomForm',
+            'class' => CustomForm::class,
             'multiple' => true,
             'property' => 'id',
         ]);
@@ -143,7 +143,7 @@ class NodeSourceCustomFormType extends AbstractType
     public function onPreSetData(FormEvent $event)
     {
         $this->selectedCustomForms = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+            ->getRepository(CustomForm::class)
             ->findByNodeAndFieldName($this->nodeSource->getNode(), $this->nodeTypeField->getName());
         $event->setData($this->selectedCustomForms);
     }
@@ -160,7 +160,7 @@ class NodeSourceCustomFormType extends AbstractType
             foreach ($event->getData() as $customFormId) {
                 /** @var CustomForm|null $tempCForm */
                 $tempCForm = $this->entityManager
-                    ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                    ->find(CustomForm::class, (int) $customFormId);
                 if ($tempCForm !== null) {
                     $this->nodeHandler->addCustomFormForField($tempCForm, $this->nodeTypeField, false, $position);
                     $position++;

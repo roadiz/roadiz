@@ -30,7 +30,10 @@ namespace Themes\Rozier\Forms;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
+use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -58,17 +61,17 @@ class RedirectionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('query', 'text', [
+        $builder->add('query', TextType::class, [
             'label' => 'redirection.query',
             'constraints' => [
                 new NotBlank(),
             ],
         ])
-        ->add('redirectUri', 'text', [
+        ->add('redirectUri', TextType::class, [
             'label' => 'redirection.redirect_uri',
             'required' => false,
         ])
-        ->add('type', 'choice', [
+        ->add('type', ChoiceType::class, [
             'label' => 'redirection.type',
             'choices_as_values' => true,
             'choices' => [
@@ -86,7 +89,7 @@ class RedirectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'RZ\Roadiz\Core\Entities\Redirection',
+            'data_class' => Redirection::class,
             'attr' => [
                 'class' => 'uk-form redirection-form',
             ],

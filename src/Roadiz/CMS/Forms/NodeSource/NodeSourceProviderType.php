@@ -30,9 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Proxy\Proxy;
 use Pimple\Container;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;

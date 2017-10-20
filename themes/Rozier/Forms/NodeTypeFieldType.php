@@ -29,11 +29,16 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -46,7 +51,7 @@ class NodeTypeFieldType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
+        $builder->add('name', TextType::class, [
             'label' => 'name',
             'constraints' => [
                 new NotBlank(),
@@ -62,7 +67,7 @@ class NodeTypeFieldType extends AbstractType
                 'data-desc' => 'technical_name_for_database_and_templating'
             ],
         ])
-        ->add('label', 'text', [
+        ->add('label', TextType::class, [
             'label' => 'label',
             'constraints' => [
                 new NotBlank(),
@@ -71,59 +76,59 @@ class NodeTypeFieldType extends AbstractType
                 'data-desc' => 'human_readable_field_name'
             ],
         ])
-        ->add('type', 'choice', [
+        ->add('type', ChoiceType::class, [
             'label' => 'type',
             'required' => true,
             'choices' => array_flip(NodeTypeField::$typeToHuman),
             'choices_as_values' => true,
         ])
-        ->add('description', 'text', [
+        ->add('description', TextType::class, [
             'label' => 'description',
             'required' => false,
         ])
-        ->add('placeholder', 'text', [
+        ->add('placeholder', TextType::class, [
             'label' => 'placeholder',
             'required' => false,
             'attr' => [
                 'data-desc' => 'label_for_field_with_empty_data'
             ],
         ])
-        ->add('groupName', 'text', [
+        ->add('groupName', TextType::class, [
             'label' => 'groupName',
             'required' => false,
             'attr' => [
                 'data-desc' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs'
             ],
         ])
-        ->add('visible', 'checkbox', [
+        ->add('visible', CheckboxType::class, [
             'label' => 'visible',
             'required' => false,
             'attr' => [
                 'data-desc' => 'disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice'
             ],
         ])
-        ->add('indexed', 'checkbox', [
+        ->add('indexed', CheckboxType::class, [
             'label' => 'indexed',
             'required' => false,
             'attr' => [
                 'data-desc' => 'field_should_be_indexed_if_you_plan_to_query_or_order_by_it'
             ],
         ])
-        ->add('universal', 'checkbox', [
+        ->add('universal', CheckboxType::class, [
             'label' => 'universal',
             'required' => false,
             'attr' => [
                 'data-desc' => 'universal_fields_will_be_only_editable_from_default_translation'
             ],
         ])
-        ->add('expanded', 'checkbox', [
+        ->add('expanded', CheckboxType::class, [
             'label' => 'expanded',
             'attr' => [
                 'data-desc' => 'use_checkboxes_or_radio_buttons_instead_of_select_box'
             ],
             'required' => false,
         ])
-        ->add('defaultValues', new DynamicType(), [
+        ->add('defaultValues', DynamicType::class, [
             'label' => 'defaultValues',
             'required' => false,
             'attr' => [
@@ -133,7 +138,7 @@ class NodeTypeFieldType extends AbstractType
         ])
         ->add(
             'minLength',
-            'integer',
+            IntegerType::class,
             [
                 'label' => 'nodeTypeField.minLength',
                 'required' => false,
@@ -141,7 +146,7 @@ class NodeTypeFieldType extends AbstractType
         )
         ->add(
             'maxLength',
-            'integer',
+            IntegerType::class,
             [
                 'label' => 'nodeTypeField.maxLength',
                 'required' => false,
@@ -160,7 +165,7 @@ class NodeTypeFieldType extends AbstractType
             'label' => false,
             'fieldName' => '',
             'nodeType' => null,
-            'data_class' => 'RZ\Roadiz\Core\Entities\NodeTypeField',
+            'data_class' => NodeTypeField::class,
             'attr' => [
                 'class' => 'uk-form node-type-field-form',
             ],
@@ -173,8 +178,8 @@ class NodeTypeFieldType extends AbstractType
             'nodeType',
             'em',
         ]);
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('fieldName', 'string');
-        $resolver->setAllowedTypes('nodeType', 'RZ\Roadiz\Core\Entities\NodeType');
+        $resolver->setAllowedTypes('nodeType', NodeType::class);
     }
 }

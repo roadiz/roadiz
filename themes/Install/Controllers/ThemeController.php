@@ -30,6 +30,7 @@
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,8 +52,8 @@ class ThemeController extends InstallApp
      */
     public function importThemeAction(Request $request, $id)
     {
-
-        $result = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+        /** @var Theme $result */
+        $result = $this->get('em')->find(Theme::class, $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
@@ -72,8 +73,9 @@ class ThemeController extends InstallApp
     public function themeInstallAction(Request $request)
     {
         $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->get("em"));
+        /** @var Theme $theme */
         $theme = $this->get("em")
-                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->getRepository(Theme::class)
                       ->findOneByClassName($request->get("classname"));
         if ($importFile === false) {
             return $this->redirect($this->generateUrl(

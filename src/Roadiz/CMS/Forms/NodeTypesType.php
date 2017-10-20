@@ -72,7 +72,7 @@ class NodeTypesType extends AbstractType
             $criteria['visible'] = true;
         }
 
-        $nodeTypes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy($criteria);
+        $nodeTypes = $this->entityManager->getRepository(NodeType::class)->findBy($criteria);
 
         $choices = [];
         /** @var NodeType $nodeType */

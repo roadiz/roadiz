@@ -29,9 +29,14 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -43,7 +48,7 @@ class TagType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tagName', 'text', [
+        $builder->add('tagName', TextType::class, [
                 'label' => 'tagName',
                 'constraints' => [
                     new NotBlank(),
@@ -53,7 +58,7 @@ class TagType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('color', 'text', [
+            ->add('color', TextType::class, [
                 'label' => 'tag.color',
                 'required' => false,
                 'attr' => ['class' => 'colorpicker-input'],
@@ -61,15 +66,15 @@ class TagType extends AbstractType
                     new HexadecimalColor(),
                 ],
             ])
-            ->add('visible', 'checkbox', [
+            ->add('visible', CheckboxType::class, [
                 'label' => 'visible',
                 'required' => false,
             ])
-            ->add('locked', 'checkbox', [
+            ->add('locked', CheckboxType::class, [
                 'label' => 'locked',
                 'required' => false,
             ])
-            ->add('childrenOrder', 'choice', [
+            ->add('childrenOrder', ChoiceType::class, [
                 'label' => 'tag.childrenOrder',
                 'choices_as_values' => true,
                 'choices' => [
@@ -79,7 +84,7 @@ class TagType extends AbstractType
                     'updatedAt' => 'updatedAt',
                 ],
             ])
-            ->add('childrenOrderDirection', 'choice', [
+            ->add('childrenOrderDirection', ChoiceType::class, [
                 'label' => 'tag.childrenOrderDirection',
                 'choices_as_values' => true,
                 'choices' => [
@@ -99,7 +104,7 @@ class TagType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'tagName' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\Tag',
+            'data_class' => Tag::class,
             'attr' => [
                 'class' => 'uk-form tag-form',
             ],
@@ -109,7 +114,7 @@ class TagType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('tagName', 'string');
     }
 }

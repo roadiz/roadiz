@@ -31,6 +31,9 @@ namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -42,7 +45,7 @@ class NodeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nodeName', 'text', [
+        $builder->add('nodeName', TextType::class, [
                 'label' => 'nodeName',
                 'constraints' => [
                     new NotBlank(),
@@ -52,12 +55,12 @@ class NodeType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('home', 'checkbox', [
+            ->add('home', CheckboxType::class, [
                 'label' => 'node.isHome',
                 'required' => false,
                 'attr' => ['class' => 'rz-boolean-checkbox'],
             ])
-            ->add('dynamicNodeName', 'checkbox', [
+            ->add('dynamicNodeName', CheckboxType::class, [
                 'label' => 'node.dynamicNodeName',
                 'required' => false,
                 'attr' => [
@@ -65,7 +68,7 @@ class NodeType extends AbstractType
                     'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation'
                 ],
             ])
-            ->add('childrenOrder', 'choice', [
+            ->add('childrenOrder', ChoiceType::class, [
                 'label' => 'node.childrenOrder',
                 'choices_as_values' => true,
                 'choices' => [
@@ -76,7 +79,7 @@ class NodeType extends AbstractType
                     'publishedAt' => 'ns.publishedAt',
                 ],
             ])
-            ->add('childrenOrderDirection', 'choice', [
+            ->add('childrenOrderDirection', ChoiceType::class, [
                 'label' => 'node.childrenOrderDirection',
                 'choices_as_values' => true,
                 'choices' => [

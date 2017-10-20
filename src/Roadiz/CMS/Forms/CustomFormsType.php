@@ -33,8 +33,11 @@ use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -98,7 +101,7 @@ class CustomFormsType extends AbstractType
                 $options['recaptcha_verifyurl'] :
                 'https://www.google.com/recaptcha/api/siteverify';
 
-            $builder->add('recaptcha', new RecaptchaType(), [
+            $builder->add('recaptcha', RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $options['recaptcha_public_key'],
@@ -156,13 +159,13 @@ class CustomFormsType extends AbstractType
         switch ($field->getType()) {
             case AbstractField::ENUM_T:
             case AbstractField::MULTIPLE_T:
-                $type = "choice";
+                $type = ChoiceType::class;
                 break;
             case AbstractField::DOCUMENTS_T:
-                $type = "file";
+                $type = FileType::class;
                 break;
             case AbstractField::MARKDOWN_T:
-                $type = new MarkdownType();
+                $type = MarkdownType::class;
                 break;
             default:
                 $type = CustomFormField::$typeToForm[$field->getType()];
@@ -286,7 +289,7 @@ class CustomFormsType extends AbstractType
             'request' => null,
         ]);
 
-        $optionsResolver->setAllowedTypes('request', ['Symfony\Component\HttpFoundation\Request', 'null']);
+        $optionsResolver->setAllowedTypes('request', [Request::class, 'null']);
         $optionsResolver->setAllowedTypes('recaptcha_public_key', ['string', 'null', 'boolean']);
         $optionsResolver->setAllowedTypes('recaptcha_private_key', ['string', 'null', 'boolean']);
         $optionsResolver->setAllowedTypes('recaptcha_verifyurl', ['string', 'null', 'boolean']);

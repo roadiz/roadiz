@@ -60,8 +60,7 @@ class GroupsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $groups = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Group')
-                       ->findAll();
+        $groups = $this->entityManager->getRepository(Group::class)->findAll();
 
         $choices = [];
         /** @var Group $group */

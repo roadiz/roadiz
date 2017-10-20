@@ -35,6 +35,10 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -239,13 +243,13 @@ class DatabaseController extends InstallApp
         $defaults = $conf['doctrine'];
 
         $builder = $this->createFormBuilder($defaults)
-            ->add('driver', 'choice', [
+            ->add('driver', ChoiceType::class, [
                 'choices' => [
                     'pdo_mysql' => 'pdo_mysql',
                     'pdo_pgsql' => 'pdo_pgsql',
                     'pdo_sqlite' => 'pdo_sqlite',
                 ],
-                'label' => $this->getTranslator()->trans('driver'),
+                'label' => 'driver',
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -253,59 +257,59 @@ class DatabaseController extends InstallApp
                     "id" => "choice",
                 ],
             ])
-            ->add('host', 'text', [
+            ->add('host', TextType::class, [
                 "required" => false,
-                'label' => $this->getTranslator()->trans('host'),
+                'label' => 'host',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => "host",
                 ],
             ])
-            ->add('port', 'integer', [
+            ->add('port', IntegerType::class, [
                 "required" => false,
-                'label' => $this->getTranslator()->trans('port'),
+                'label' => 'port',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => "port",
                 ],
             ])
-            ->add('unix_socket', 'text', [
+            ->add('unix_socket', TextType::class, [
                 "required" => false,
-                'label' => $this->getTranslator()->trans('unix_socket'),
+                'label' => 'unix_socket',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => "unix_socket",
                 ],
             ])
-            ->add('path', 'text', [
+            ->add('path', TextType::class, [
                 "required" => false,
-                'label' => $this->getTranslator()->trans('path'),
+                'label' => 'path',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => "path",
                 ],
             ])
-            ->add('user', 'text', [
+            ->add('user', TextType::class, [
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => "user",
                 ],
-                'label' => $this->getTranslator()->trans('username'),
+                'label' => 'username',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('password', 'password', [
+            ->add('password', PasswordType::class, [
                 "required" => false,
-                'label' => $this->getTranslator()->trans('password'),
+                'label' => 'password',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => 'password',
                 ],
             ])
-            ->add('dbname', 'text', [
+            ->add('dbname', TextType::class, [
                 "required" => false,
-                'label' => $this->getTranslator()->trans('dbname'),
+                'label' => 'dbname',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => 'dbname',

@@ -36,6 +36,7 @@ use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
@@ -47,8 +48,17 @@ use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Type;
+use Themes\Install\Forms\UserType;
 
 /**
  * Installation application
@@ -173,7 +183,7 @@ class InstallApp extends AppController
      */
     public function userAction(Request $request)
     {
-        $userForm = $this->buildUserForm($request);
+        $userForm = $this->createForm(UserType::class);
 
         if ($userForm !== null) {
             $userForm->handleRequest($request);
@@ -197,8 +207,9 @@ class InstallApp extends AppController
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
+                    /** @var User $user */
                     $user = $this->get('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\User')
+                        ->getRepository(User::class)
                         ->findOneBy(['username' => $userForm->getData()['username']]);
 
                     return $this->redirect($this->generateUrl(
@@ -226,7 +237,8 @@ class InstallApp extends AppController
      */
     public function userSummaryAction(Request $request, $userId)
     {
-        $user = $this->get('em')->find('RZ\Roadiz\Core\Entities\User', $userId);
+        /** @var User $user */
+        $user = $this->get('em')->find(User::class, $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
         return $this->render('steps/userSummary.html.twig', $this->assignation);
@@ -343,12 +355,13 @@ class InstallApp extends AppController
     protected function buildLanguageForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('language', 'choice', [
+            ->add('language', ChoiceType::class, [
+                'choices_as_values' => true,
                 'choices' => [
-                    'en' => 'English',
-                    'fr' => 'Français',
-                    'ru' => 'Русский язык',
-                    'tr' => 'Türkçe',
+                    'English' => 'en',
+                    'Français' => 'fr',
+                    'Русский язык' => 'ru',
+                    'Türkçe' => 'tr',
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -358,44 +371,6 @@ class InstallApp extends AppController
                     "id" => "language",
                 ],
                 'data' => $request->getLocale(),
-            ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * Build forms
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildUserForm(Request $request)
-    {
-        $builder = $this->createFormBuilder()
-            ->add('username', 'text', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email', 'email', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('email'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('password', 'repeated', [
-                'type' => 'password',
-                'invalid_message' => 'password.must_match',
-                'first_options' => ['label' => 'password'],
-                'second_options' => ['label' => 'password.verify'],
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                ],
             ]);
 
         return $builder->getForm();
@@ -427,44 +402,46 @@ class InstallApp extends AppController
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
         ];
         $builder = $this->createFormBuilder($defaults)
-            ->add('site_name', 'text', [
+            ->add('site_name', TextType::class, [
                 'required' => true,
-                'label' => $this->getTranslator()->trans('site_name'),
+                'label' => 'site_name',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('email_sender', 'email', [
+            ->add('email_sender', EmailType::class, [
                 'required' => true,
-                'label' => $this->getTranslator()->trans('email_sender'),
+                'label' => 'email_sender',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('email_sender_name', 'text', [
+            ->add('email_sender_name', TextType::class, [
                 'required' => true,
-                'label' => $this->getTranslator()->trans('email_sender_name'),
+                'label' => 'email_sender_name',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('seo_description', 'text', [
+            ->add('seo_description', TextType::class, [
                 'required' => false,
-                'label' => $this->getTranslator()->trans('meta_description'),
+                'label' => 'meta_description',
             ])
-            ->add('timezone', 'choice', [
+            ->add('timezone', ChoiceType::class, [
+                'choices_as_values' => true,
                 'choices' => $timeZoneList,
-                'label' => $this->getTranslator()->trans('timezone'),
+                'label' => 'timezone',
                 'required' => true,
             ]);
 
         $themesType = new ThemesType($this->get('em'));
 
         if ($themesType->getSize() > 0) {
-            $builder->add('separator_1', new SeparatorType(), [
-                'label' => $this->getTranslator()->trans('themes.frontend.description'),
-            ])
-                ->add('install_theme', 'checkbox', [
+            $builder
+                ->add('separator_1', SeparatorType::class, [
+                    'label' => $this->getTranslator()->trans('themes.frontend.description'),
+                ])
+                ->add('install_theme', CheckboxType::class, [
                     'required' => false,
                     'label' => $this->getTranslator()->trans('install_theme'),
                     'data' => true,
@@ -476,11 +453,12 @@ class InstallApp extends AppController
                         'label' => $this->getTranslator()->trans('theme.selector'),
                         'required' => true,
                         'constraints' => [
-                            new \Symfony\Component\Validator\Constraints\NotNull(),
-                            new \Symfony\Component\Validator\Constraints\Type('string'),
+                            new NotNull(),
+                            new Type('string'),
                         ],
                     ]
-                );
+                )
+            ;
         }
 
         return $builder->getForm();
@@ -496,7 +474,7 @@ class InstallApp extends AppController
     protected function buildDoneForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('action', 'hidden', [
+            ->add('action', HiddenType::class, [
                 'data' => 'quit_install',
             ]);
 

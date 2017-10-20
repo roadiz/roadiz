@@ -60,7 +60,7 @@ class UsersType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $users = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->findAll();
+        $users = $this->entityManager->getRepository(User::class)->findAll();
 
         $choices = [];
         /** @var User $user */

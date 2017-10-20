@@ -115,7 +115,7 @@ class NodeSourceNodeType extends AbstractType
             'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
-            'class' => '\RZ\Roadiz\Core\Entities\Node',
+            'class' => Node::class,
             'multiple' => true,
             'property' => 'id',
             'attr' => [
@@ -146,7 +146,7 @@ class NodeSourceNodeType extends AbstractType
     public function onPreSetData(FormEvent $event)
     {
         $this->selectedNodes = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findByNodeAndFieldName(
                 $this->nodeSource->getNode(),
@@ -166,7 +166,7 @@ class NodeSourceNodeType extends AbstractType
             $position = 0;
             foreach ($event->getData() as $nodeId) {
                 $tempNode = $this->entityManager
-                    ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                    ->find(Node::class, (int) $nodeId);
                 if ($tempNode !== null) {
                     $this->nodeHandler->addNodeForField($tempNode, $this->nodeTypeField, false, $position);
                     $position++;

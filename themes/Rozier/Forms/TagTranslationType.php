@@ -29,9 +29,12 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
+use RZ\Roadiz\Core\Entities\TagTranslation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -43,7 +46,7 @@ class TagTranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
+        $builder->add('name', TextType::class, [
                     'label' => 'name',
                     'constraints' => [
                         new NotBlank(),
@@ -53,7 +56,7 @@ class TagTranslationType extends AbstractType
                         ])
                     ],
                 ])
-                ->add('description', new MarkdownType(), [
+                ->add('description', MarkdownType::class, [
                     'label' => 'description',
                     'required' => false,
                 ]);
@@ -69,7 +72,7 @@ class TagTranslationType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'tagName' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\TagTranslation',
+            'data_class' => TagTranslation::class,
             'attr' => [
                 'class' => 'uk-form tag-translation-form',
             ],
@@ -79,7 +82,7 @@ class TagTranslationType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('tagName', 'string');
     }
 }

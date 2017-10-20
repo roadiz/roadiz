@@ -30,7 +30,10 @@
 namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -41,34 +44,34 @@ class UserDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstName', 'text', [
+        $builder->add('firstName', TextType::class, [
                     'label' => 'firstName',
                     'required' => false,
                 ])
-                ->add('lastName', 'text', [
+                ->add('lastName', TextType::class, [
                     'label' => 'lastName',
                     'required' => false,
                 ])
-                ->add('phone', 'text', [
+                ->add('phone', TextType::class, [
                     'label' => 'phone',
                     'required' => false,
                 ])
-                ->add('facebookName', 'text', [
+                ->add('facebookName', TextType::class, [
                     'label' => 'facebookName',
                     'required' => false,
                     'constraints' => [
                         new ValidFacebookName(),
                     ],
                 ])
-                ->add('company', 'text', [
+                ->add('company', TextType::class, [
                     'label' => 'company',
                     'required' => false,
                 ])
-                ->add('job', 'text', [
+                ->add('job', TextType::class, [
                     'label' => 'job',
                     'required' => false,
                 ])
-                ->add('birthday', 'date', [
+                ->add('birthday', DateType::class, [
                     'label' => 'birthday',
                     'empty_value' => [
                         'year' => 'year',
@@ -95,7 +98,7 @@ class UserDetailsType extends AbstractType
         $resolver->setDefaults([
             'compound' => true,
             'label' => false,
-            'data_class' => 'RZ\Roadiz\Core\Entities\User',
+            'data_class' => User::class,
             'attr' => [
                 'class' => 'uk-form user-form',
             ],

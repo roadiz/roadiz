@@ -29,10 +29,14 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationLocale;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationOverrideLocale;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -46,7 +50,7 @@ class TranslationType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'label' => 'name',
                 'constraints' => [
@@ -56,7 +60,7 @@ class TranslationType extends AbstractType
         )
         ->add(
             'locale',
-            'choice',
+            ChoiceType::class,
             [
                 'label' => 'locale',
                 'required' => true,
@@ -72,7 +76,7 @@ class TranslationType extends AbstractType
         )
         ->add(
             'available',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'available',
                 'required' => false,
@@ -80,7 +84,7 @@ class TranslationType extends AbstractType
         )
         ->add(
             'overrideLocale',
-            'text',
+            TextType::class,
             [
                 'label' => 'overrideLocale',
                 'required' => false,
@@ -105,7 +109,7 @@ class TranslationType extends AbstractType
             'label' => false,
             'locale' => '',
             'overrideLocale' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\Translation',
+            'data_class' => Translation::class,
             'attr' => [
                 'class' => 'uk-form translation-form',
             ],
@@ -115,7 +119,7 @@ class TranslationType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('locale', ['string']);
         $resolver->setAllowedTypes('overrideLocale', ['string', 'null']);
     }

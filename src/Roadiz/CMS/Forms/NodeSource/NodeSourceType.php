@@ -29,6 +29,8 @@
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
+use Pimple\Container;
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
@@ -91,9 +93,9 @@ class NodeSourceType extends AbstractType
             'container',
             'nodeType',
         ]);
-        $resolver->setAllowedTypes('container', 'Pimple\Container');
-        $resolver->setAllowedTypes('controller', 'RZ\Roadiz\CMS\Controllers\Controller');
-        $resolver->setAllowedTypes('entityManager', 'Doctrine\ORM\EntityManager');
+        $resolver->setAllowedTypes('container', Container::class);
+        $resolver->setAllowedTypes('controller', Controller::class);
+        $resolver->setAllowedTypes('entityManager', EntityManager::class);
         $resolver->setAllowedTypes('withTitle', 'boolean');
         $resolver->setAllowedTypes('withVirtual', 'boolean');
         $resolver->setAllowedTypes('nodeType', NodeType::class);
@@ -129,8 +131,7 @@ class NodeSourceType extends AbstractType
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
-        return $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
-            ->findBy($criteria, $position);
+        return $entityManager->getRepository(NodeTypeField::class)->findBy($criteria, $position);
     }
 
     /**
@@ -171,7 +172,7 @@ class NodeSourceType extends AbstractType
      * @param NodesSources $nodeSource
      * @param NodeTypeField $field
      * @param array $options
-     * @return AbstractType
+     * @return AbstractType|string
      */
     public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array $options)
     {
@@ -214,13 +215,13 @@ class NodeSourceType extends AbstractType
                     $options['controller']
                 );
             case NodeTypeField::JSON_T:
-                return new JsonType();
+                return JsonType::class;
             case NodeTypeField::CSS_T:
-                return new CssType();
+                return CssType::class;
             case NodeTypeField::YAML_T:
-                return new YamlType();
+                return YamlType::class;
             case NodeTypeField::MARKDOWN_T:
-                return new MarkdownType();
+                return MarkdownType::class;
             case NodeTypeField::ENUM_T:
                 return new EnumerationType($field);
             case NodeTypeField::MULTIPLE_T:

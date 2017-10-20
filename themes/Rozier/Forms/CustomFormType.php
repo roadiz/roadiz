@@ -29,10 +29,16 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
+use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -45,7 +51,7 @@ class CustomFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('displayName', 'text', [
+        $builder->add('displayName', TextType::class, [
                 'label' => 'customForm.displayName',
                 'constraints' => [
                     new NotBlank(),
@@ -55,22 +61,22 @@ class CustomFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('description', new MarkdownType(), [
+            ->add('description', MarkdownType::class, [
                 'label' => 'description',
                 'required' => false,
             ])
-            ->add('email', 'email', [
+            ->add('email', EmailType::class, [
                 'label' => 'email',
                 'required' => false,
                 'constraints' => [
                     new Email(),
                 ],
             ])
-            ->add('open', 'checkbox', [
+            ->add('open', CheckboxType::class, [
                 'label' => 'customForm.open',
                 'required' => false,
             ])
-            ->add('closeDate', 'datetime', [
+            ->add('closeDate', DateTimeType::class, [
                 'label' => 'customForm.closeDate',
                 'required' => true,
                 'date_widget' => 'single_text',
@@ -83,7 +89,7 @@ class CustomFormType extends AbstractType
                     'minute' => 'minute',
                 ],
             ])
-            ->add('color', 'text', [
+            ->add('color', TextType::class, [
                 'label' => 'customForm.color',
                 'required' => false,
                 'attr' => ['class' => 'colorpicker-input'],
@@ -103,7 +109,7 @@ class CustomFormType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'name' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\CustomForm',
+            'data_class' => CustomForm::class,
             'attr' => [
                 'class' => 'uk-form custom-form-form',
             ],
@@ -112,7 +118,7 @@ class CustomFormType extends AbstractType
         $resolver->setRequired([
             'em',
         ]);
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
     }
 }

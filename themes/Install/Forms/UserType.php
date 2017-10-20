@@ -23,60 +23,51 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeTagsType.php
- * @author Adrien Scholaert <adrien@rezo-zero.com>
+ * @file UserType.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace Themes\Rozier\Forms;
+namespace Themes\Install\Forms;
 
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\CMS\Forms\TagsType;
-use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Themes\Rozier\Forms\DataTransformer\TagTransformer;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * Class NodeTagsType.
- *
- * @package Themes\Rozier\Forms
- */
-class NodeTagsType extends AbstractType
+class UserType extends AbstractType
 {
-
     /**
      * {@inheritdoc}
-     *
-     * @param FormBuilderInterface $builder
-     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tags', TagsType::class);
-        $builder->get('tags')
-            ->addModelTransformer(new TagTransformer($options['entityManager']));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param OptionsResolver $optionsResolver
-     */
-    public function configureOptions(OptionsResolver $optionsResolver)
-    {
-        $optionsResolver->setRequired('entityManager');
-        $optionsResolver->setDefault('data_class', Node::class);
-        $optionsResolver->setAllowedTypes('entityManager', EntityManager::class);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'node_tags';
+        $builder
+            ->add('username', TextType::class, [
+                'required' => true,
+                'label' => 'username',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('email', EmailType::class, [
+                'required' => true,
+                'label' => 'email',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('password', RepeatedType::class, [
+                'type' => 'password',
+                'invalid_message' => 'password.must_match',
+                'first_options' => ['label' => 'password'],
+                'second_options' => ['label' => 'password.verify'],
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+        ;
     }
 }

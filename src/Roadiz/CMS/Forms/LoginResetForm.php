@@ -28,8 +28,11 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,7 +43,7 @@ class LoginResetForm extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('token', 'hidden', [
+        $builder->add('token', HiddenType::class, [
             'required' => true,
             'data' => $options['token'],
             'label' => false,
@@ -53,7 +56,7 @@ class LoginResetForm extends AbstractType
                 ]),
             ],
         ])
-        ->add('plainPassword', 'repeated', [
+        ->add('plainPassword', RepeatedType::class, [
             'type' => 'password',
             'invalid_message' => 'password.must.match',
             'first_options' => [
@@ -87,6 +90,6 @@ class LoginResetForm extends AbstractType
 
         $resolver->setAllowedTypes('token', ['string']);
         $resolver->setAllowedTypes('confirmationTtl', ['int']);
-        $resolver->setAllowedTypes('entityManager', ['Doctrine\ORM\EntityManager']);
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
     }
 }

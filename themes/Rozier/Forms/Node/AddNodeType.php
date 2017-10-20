@@ -29,10 +29,14 @@
  */
 namespace Themes\Rozier\Forms\Node;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -50,7 +54,7 @@ class AddNodeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', [
+        $builder->add('title', TextType::class, [
             'label' => 'title',
             'mapped' => false,
             'constraints' => [
@@ -69,7 +73,7 @@ class AddNodeType extends AbstractType
                 ->addModelTransformer(new NodeTypeTransformer($options['em']));
         }
 
-        $builder->add('dynamicNodeName', 'checkbox', [
+        $builder->add('dynamicNodeName', CheckboxType::class, [
             'label' => 'node.dynamicNodeName',
             'required' => false,
             'attr' => [
@@ -77,22 +81,22 @@ class AddNodeType extends AbstractType
                 'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation',
             ],
         ])
-        ->add('visible', 'checkbox', [
+        ->add('visible', CheckboxType::class, [
             'label' => 'visible',
             'required' => false,
             'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
-        ->add('locked', 'checkbox', [
+        ->add('locked', CheckboxType::class, [
             'label' => 'locked',
             'required' => false,
             'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
-        ->add('hideChildren', 'checkbox', [
+        ->add('hideChildren', CheckboxType::class, [
             'label' => 'hiding-children',
             'required' => false,
             'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
-        ->add('status', 'choice', [
+        ->add('status', ChoiceType::class, [
             'label' => 'node.status',
             'required' => true,
             'choices_as_values' => true,
@@ -132,7 +136,7 @@ class AddNodeType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('nodeName', 'string');
         $resolver->setAllowedTypes('showNodeType', 'boolean');
     }

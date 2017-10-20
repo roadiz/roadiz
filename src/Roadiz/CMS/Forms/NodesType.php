@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -67,7 +68,7 @@ class NodesType extends AbstractType
 
             if (is_array($object)) {
                 $nodes = $this->entityManager
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes(true)
                     ->findBy(['id' => $object]);
 
@@ -83,7 +84,7 @@ class NodesType extends AbstractType
                     }
                 }
             } else {
-                $node = $this->entityManager->find('RZ\Roadiz\Core\Entities\Node', (int) $object);
+                $node = $this->entityManager->find(Node::class, (int) $object);
 
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $node) {
@@ -96,7 +97,7 @@ class NodesType extends AbstractType
         };
 
         $resolver->setDefaults([
-            'class' => '\RZ\Roadiz\Core\Entities\Node',
+            'class' => Node::class,
             'multiple' => true,
             'property' => 'id',
             'constraints' => [
