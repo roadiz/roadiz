@@ -19,7 +19,7 @@ mailer:
     type: ~
     host: "localhost"
     port: 25
-    encryption: false
+    encryption: ~
     username: ""
     password: ""
 entities:
