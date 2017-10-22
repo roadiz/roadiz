@@ -180,6 +180,6 @@ class NodeTypeFieldType extends AbstractType
         ]);
         $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('fieldName', 'string');
-        $resolver->setAllowedTypes('nodeType', NodeType::class);
+        $resolver->setAllowedTypes('nodeType', \RZ\Roadiz\Core\Entities\NodeType::class);
     }
 }

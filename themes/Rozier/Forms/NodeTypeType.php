@@ -124,7 +124,7 @@ class NodeTypeType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'name' => '',
-            'data_class' => NodeType::class,
+            'data_class' => \RZ\Roadiz\Core\Entities\NodeType::class,
             'attr' => [
                 'class' => 'uk-form node-type-form',
             ],

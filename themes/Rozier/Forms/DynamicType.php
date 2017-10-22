@@ -31,6 +31,7 @@ namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidYaml;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -45,7 +46,7 @@ class DynamicType extends AbstractType
      */
     public function getParent()
     {
-        return 'textarea';
+        return TextareaType::class;
     }
     /**
      * {@inheritdoc}
