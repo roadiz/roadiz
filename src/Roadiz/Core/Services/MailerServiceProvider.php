@@ -60,10 +60,7 @@ class MailerServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['mailer.transport'] = function ($c) {
-
-            if (isset($c['config']['mailer']) &&
-                isset($c['config']['mailer']['type']) &&
-                strtolower($c['config']['mailer']['type']) == "smtp") {
+            if ($c['config']['mailer']['type'] == "smtp") {
                 $transport = \Swift_SmtpTransport::newInstance();
 
                 if (!empty($c['config']['mailer']['host'])) {
@@ -71,16 +68,9 @@ class MailerServiceProvider implements ServiceProviderInterface
                 } else {
                     $transport->setHost('localhost');
                 }
+                $transport->setPort($c['config']['mailer']['port']);
 
-                if (!empty($c['config']['mailer']['port'])) {
-                    $transport->setPort((int) $c['config']['mailer']['port']);
-                } else {
-                    $transport->setPort(25);
-                }
-
-                if (!empty($c['config']['mailer']['encryption']) &&
-                    (strtolower($c['config']['mailer']['encryption']) == "tls" ||
-                        strtolower($c['config']['mailer']['encryption']) == "ssl")) {
+                if (null !== $c['config']['mailer']['encryption'] && false !== $c['config']['mailer']['encryption']) {
                     $transport->setEncryption($c['config']['mailer']['encryption']);
                 }
 
