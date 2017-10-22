@@ -465,12 +465,7 @@ class SearchController extends RozierApp
     protected function buildSimpleForm($prefix)
     {
         /** @var FormBuilder $builder */
-        $builder = $this->get('formFactory')
-                        ->createBuilder(
-                            'form',
-                            [],
-                            ["method" => "get"]
-                        )
+        $builder = $this->createFormBuilder([], ["method" => "get"])
                         ->add($prefix . 'status', new NodeStatesType(), [
                             'label' => 'node.status',
                             'required' => false,

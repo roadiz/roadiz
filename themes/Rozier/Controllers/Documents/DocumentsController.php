@@ -46,6 +46,7 @@ use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -818,7 +819,7 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-            ->add('editDocument', 'file', [
+            ->add('editDocument', FileType::class, [
                 'label' => 'overwrite.document',
                 'required' => false,
                 'constraints' => [
@@ -867,7 +868,7 @@ class DocumentsController extends RozierApp
                 'label' => 'private',
                 'required' => false,
             ])
-            ->add('newDocument', 'file', [
+            ->add('newDocument', FileType::class, [
                 'label' => 'overwrite.document',
                 'required' => false,
                 'constraints' => [
@@ -885,14 +886,10 @@ class DocumentsController extends RozierApp
      */
     private function buildUploadForm($folderId = null)
     {
-        $builder = $this->get('formFactory')
-            ->createBuilder('form', [], [
+        $builder = $this->createFormBuilder([], [
                 'csrf_protection' => false,
-                'csrf_field_name' => '_token',
-                // a unique key to help generate the secret token
-                'intention' => static::AJAX_TOKEN_INTENTION,
             ])
-            ->add('attachment', 'file', [
+            ->add('attachment', FileType::class, [
                 'label' => 'choose.documents.to_upload',
                 'constraints' => [
                     new File(),

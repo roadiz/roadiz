@@ -117,8 +117,7 @@ trait NodesTrait
         if ($node->isHidingChildren()) {
             $defaults = [];
 
-            $builder = $this->get('formFactory')
-                            ->createBuilder('form', $defaults)
+            $builder = $this->createFormBuilder($defaults)
                             ->add('nodeId',  HiddenType::class, [
                                 'data' => (int) $node->getId(),
                             ])

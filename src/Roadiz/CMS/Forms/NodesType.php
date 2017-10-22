@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Forms;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -127,7 +128,7 @@ class NodesType extends AbstractType
      */
     public function getParent()
     {
-        return 'hidden';
+        return HiddenType::class;
     }
     /**
      * {@inheritdoc}

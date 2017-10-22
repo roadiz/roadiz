@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -217,7 +218,7 @@ class NodeTypesUtilsController extends RozierApp
     private function buildImportJsonFileForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('node_type_file', 'file', [
+                        ->add('node_type_file', FileType::class, [
                             'label' => 'nodeType.file',
                         ]);
 
