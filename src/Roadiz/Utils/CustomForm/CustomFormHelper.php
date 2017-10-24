@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 
@@ -205,20 +204,6 @@ class CustomFormHelper
         return $repo->findOneBy([
             'customFormAnswer' => $answer,
             'customFormField' => $field,
-        ]);
-    }
-
-    /**
-     * @param string $name
-     * @return null|CustomFormField
-     */
-    private function getField($name)
-    {
-        /** @var EntityRepository $repo */
-        $repo = $this->em->getRepository('RZ\Roadiz\Core\Entities\CustomFormField');
-        return $repo->findOneBy([
-            'name' => $name,
-            'customForm' => $this->customForm,
         ]);
     }
 }

@@ -33,9 +33,7 @@ use Doctrine\ORM\EntityManager;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -43,20 +41,8 @@ use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
 
-class NodeSourceProviderType extends AbstractType
+class NodeSourceProviderType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodesSources
-     */
-    private $nodeSource;
-    /**
-     * @var NodeTypeField
-     */
-    private $nodeTypeField;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var string
      */
@@ -66,6 +52,7 @@ class NodeSourceProviderType extends AbstractType
      * @var AbstractExplorerProvider
      */
     private $provider;
+
     /**
      * @var Container
      */
@@ -78,11 +65,14 @@ class NodeSourceProviderType extends AbstractType
      * @param EntityManager $entityManager
      * @param Container $container
      */
-    public function __construct(NodesSources $nodeSource, NodeTypeField $nodeTypeField, EntityManager $entityManager, Container $container)
-    {
-        $this->nodeSource = $nodeSource;
-        $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        NodesSources $nodeSource,
+        NodeTypeField $nodeTypeField,
+        EntityManager $entityManager,
+        Container $container
+    ) {
+        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
+
         $this->container = $container;
 
         if ($this->nodeTypeField->getType() === NodeTypeField::MULTI_PROVIDER_T ||
@@ -168,13 +158,5 @@ class NodeSourceProviderType extends AbstractType
     public function getName()
     {
         return 'provider';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return HiddenType::class;
     }
 }

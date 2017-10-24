@@ -34,28 +34,14 @@ use Doctrine\ORM\Proxy\Proxy;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Yaml\Yaml;
 
-class NodeSourceJoinType extends AbstractType
+class NodeSourceJoinType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodesSources
-     */
-    private $nodeSource;
-    /**
-     * @var NodeTypeField
-     */
-    private $nodeTypeField;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var string
      */
@@ -74,9 +60,7 @@ class NodeSourceJoinType extends AbstractType
      */
     public function __construct(NodesSources $nodeSource, NodeTypeField $nodeTypeField, EntityManager $entityManager)
     {
-        $this->nodeSource = $nodeSource;
-        $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
+        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
 
         if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_MANY_T ||
             $this->nodeTypeField->getType() === NodeTypeField::MANY_TO_ONE_T) {
@@ -185,13 +169,5 @@ class NodeSourceJoinType extends AbstractType
     public function getName()
     {
         return 'join';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return HiddenType::class;
     }
 }

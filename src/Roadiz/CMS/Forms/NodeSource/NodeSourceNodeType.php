@@ -33,8 +33,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -44,27 +42,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class NodeSourceNodeType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class NodeSourceNodeType extends AbstractType
+class NodeSourceNodeType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodesSources
-     */
-    private $nodeSource;
-
-    /**
-     * @var NodeTypeField
-     */
-    private $nodeTypeField;
-
     /**
      * @var Node[]
      */
     private $selectedNodes;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var NodeHandler
      */
@@ -83,9 +67,8 @@ class NodeSourceNodeType extends AbstractType
         EntityManager $entityManager,
         NodeHandler $nodeHandler
     ) {
-        $this->nodeSource = $nodeSource;
-        $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
+        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
+
         $this->nodeHandler = $nodeHandler;
         $this->nodeHandler->setNode($this->nodeSource->getNode());
     }
@@ -131,14 +114,6 @@ class NodeSourceNodeType extends AbstractType
     public function getName()
     {
         return 'nodes';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return HiddenType::class;
     }
 
     /**

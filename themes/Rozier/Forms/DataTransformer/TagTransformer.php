@@ -54,7 +54,7 @@ class TagTransformer implements DataTransformerInterface
 
     /**
      * @param ArrayCollection $tags
-     * @return int|string
+     * @return array|string
      */
     public function transform($tags)
     {
@@ -66,7 +66,6 @@ class TagTransformer implements DataTransformerInterface
         foreach ($tags as $tag) {
             $ids[] = $tag->getId();
         }
-//        return implode(',', $ids);
         return $ids;
     }
 
