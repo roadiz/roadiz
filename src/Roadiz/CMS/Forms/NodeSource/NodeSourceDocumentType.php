@@ -45,26 +45,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class NodeSourceDocumentType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class NodeSourceDocumentType extends AbstractType
+class NodeSourceDocumentType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodesSources
-     */
-    private $nodeSource;
-    /**
-     * @var NodeTypeField
-     */
-    private $nodeTypeField;
-
     /**
      * @var Document[]
      */
     private $selectedDocuments;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var NodesSourcesHandler
      */
@@ -83,9 +70,8 @@ class NodeSourceDocumentType extends AbstractType
         EntityManager $entityManager,
         NodesSourcesHandler $nodesSourcesHandler
     ) {
-        $this->nodeSource = $nodeSource;
-        $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
+        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
+
         $this->nodesSourcesHandler = $nodesSourcesHandler;
         $this->nodesSourcesHandler->setNodeSource($this->nodeSource);
     }
@@ -131,14 +117,6 @@ class NodeSourceDocumentType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'hidden';
-    }
-
-    /**
      * @param FormEvent $event
      */
     public function onPreSetData(FormEvent $event)
@@ -169,19 +147,5 @@ class NodeSourceDocumentType extends AbstractType
                 }
             }
         }
-    }
-
-    /**
-     * Pass nodeSource to form twig template.
-     *
-     * @param FormView $view
-     * @param FormInterface $form
-     * @param array $options
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
-
-        $view->vars['nodeSource'] = $this->nodeSource;
     }
 }

@@ -70,8 +70,6 @@ class TagModel implements ModelInterface
             $name = $firstTrans->getName();
         }
 
-        $parent = null;
-
         /** @var UrlGenerator $urlGenerator */
         $urlGenerator = $this->container->offsetGet('urlGenerator');
 

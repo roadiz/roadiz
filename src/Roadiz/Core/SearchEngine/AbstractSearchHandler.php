@@ -92,13 +92,11 @@ abstract class AbstractSearchHandler
      */
     protected function createSolrQuery(array &$args = [], $rows = 20, $page = 1)
     {
-        $filterQueries = [];
         $query = $this->client->createSelect();
 
         foreach ($args as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $k => $v) {
-                    $filterQueries["fq" . $k] = $v;
                     $query->addFilterQuery([
                         "key" => "fq" . $k,
                         "query" => $v,
