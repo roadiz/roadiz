@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms;
+use Themes\Rozier\Forms\Node\AddNodeType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -314,7 +315,7 @@ class NodesController extends RozierApp
             $node = new Node($type);
 
             /** @var Form $form */
-            $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [
+            $form = $this->createForm(AddNodeType::class, $node, [
                 'nodeName' => '',
                 'em' => $this->get('em'),
             ]);
@@ -400,7 +401,7 @@ class NodesController extends RozierApp
             }
 
             /** @var Form $form */
-            $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [
+            $form = $this->createForm(AddNodeType::class, $node, [
                 'nodeName' => '',
                 'em' => $this->get('em'),
             ]);

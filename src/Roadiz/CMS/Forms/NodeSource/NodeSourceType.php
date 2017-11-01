@@ -214,7 +214,7 @@ class NodeSourceType extends AbstractType
             case NodeTypeField::MARKDOWN_T:
                 return MarkdownType::class;
             case NodeTypeField::ENUM_T:
-                return new EnumerationType($field);
+                return EnumerationType::class;
             case NodeTypeField::MULTIPLE_T:
                 return new MultipleEnumerationType($field);
             default:
@@ -351,6 +351,11 @@ class NodeSourceType extends AbstractType
                     'constraints' => [
                         new Email(),
                     ],
+                ]);
+                break;
+            case NodeTypeField::ENUM_T:
+                $options = array_merge_recursive($options, [
+                    'nodeTypeField' => $field,
                 ]);
                 break;
             case NodeTypeField::DECIMAL_T:

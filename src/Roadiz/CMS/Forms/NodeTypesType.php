@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -41,50 +42,36 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NodeTypesType extends AbstractType
 {
     /**
-     * @var bool
-     */
-    private $showInvisible;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * NodeTypesType constructor.
-     * @param EntityManager $entityManager
-     * @param bool $showInvisible
-     */
-    public function __construct(EntityManager $entityManager, $showInvisible = false)
-    {
-        $this->showInvisible = $showInvisible;
-        $this->entityManager = $entityManager;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $criteria = [
-            'newsletterType' => false,
-        ];
-
-        if ($this->showInvisible === false) {
-            $criteria['visible'] = true;
-        }
-
-        $nodeTypes = $this->entityManager->getRepository(NodeType::class)->findBy($criteria);
-
-        $choices = [];
-        /** @var NodeType $nodeType */
-        foreach ($nodeTypes as $nodeType) {
-            $choices[$nodeType->getDisplayName()] = $nodeType->getId();
-        }
-
         $resolver->setDefaults([
             'choices_as_values' => true,
-            'choices' => $choices,
+            'showInvisible' => false,
         ]);
+        $resolver->setRequired([
+            'entityManager',
+        ]);
+
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+        $resolver->setAllowedTypes('showInvisible', ['boolean']);
+        $resolver->setNormalizer('choices', function (Options $options, $choices){
+            $criteria = [
+                'newsletterType' => false,
+            ];
+            if ($options['showInvisible'] === false) {
+                $criteria['visible'] = true;
+            }
+            $nodeTypes = $options['entityManager']->getRepository(NodeType::class)->findBy($criteria);
+
+            /** @var NodeType $nodeType */
+            foreach ($nodeTypes as $nodeType) {
+                $choices[$nodeType->getDisplayName()] = $nodeType->getId();
+            }
+
+            return $choices;
+        });
     }
     /**
      * {@inheritdoc}
