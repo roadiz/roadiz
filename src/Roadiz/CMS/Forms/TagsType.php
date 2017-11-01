@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,7 +51,7 @@ class TagsType extends AbstractType
          $resolver->setDefaults([
             'allow_add' => true,
             'allow_delete' => true,
-            'entry_type' => 'hidden',
+            'entry_type' => HiddenType::class,
             'label' => 'list.tags.to_link',
             'attr' => [
                 'data-desc' => 'use.new_or_existing.tags_with_hierarchy',

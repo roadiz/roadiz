@@ -29,7 +29,9 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -100,7 +102,7 @@ class NodeType extends AbstractType
             'compound' => true,
             'label' => false,
             'nodeName' => null,
-            'data_class' => 'RZ\Roadiz\Core\Entities\Node',
+            'data_class' => Node::class,
             'attr' => [
                 'class' => 'uk-form node-form',
             ],
@@ -110,7 +112,7 @@ class NodeType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('nodeName', 'string');
     }
 }

@@ -87,7 +87,7 @@ class NodeSourceBaseType extends AbstractType
     {
         $resolver->setDefaults([
             'label' => false,
-            'virtual' => true,
+            'inherit_data' => true,
             'publishable' => false,
         ]);
 

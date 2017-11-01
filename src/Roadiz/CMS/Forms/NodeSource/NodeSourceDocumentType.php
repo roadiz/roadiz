@@ -50,42 +50,18 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
     private $selectedDocuments;
 
     /**
-     * @var NodesSourcesHandler
-     */
-    private $nodesSourcesHandler;
-
-    /**
-     * NodeSourceDocumentType constructor.
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $nodeTypeField
-     * @param EntityManager $entityManager
-     * @param NodesSourcesHandler $nodesSourcesHandler
-     */
-    public function __construct(
-        NodesSources $nodeSource,
-        NodeTypeField $nodeTypeField,
-        EntityManager $entityManager,
-        NodesSourcesHandler $nodesSourcesHandler
-    ) {
-        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
-
-        $this->nodesSourcesHandler = $nodesSourcesHandler;
-        $this->nodesSourcesHandler->setNodeSource($this->nodeSource);
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            array($this, 'onPreSetData')
-        )
+                FormEvents::PRE_SET_DATA,
+                [$this, 'onPreSetData']
+            )
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
-                array($this, 'onPostSubmit')
+                [$this, 'onPostSubmit']
             )
         ;
     }
@@ -95,14 +71,22 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
-            'class' => '\RZ\Roadiz\Core\Entities\Document',
+            'class' => Document::class,
             'multiple' => true,
             'property' => 'id',
         ]);
+
+        $resolver->setRequired([
+            'label',
+            'nodeSourceHandler'
+        ]);
+
+        $resolver->setAllowedTypes('nodeSourceHandler', [NodesSourcesHandler::class]);
     }
 
     /**
@@ -118,9 +102,18 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
      */
     public function onPreSetData(FormEvent $event)
     {
-        $this->selectedDocuments = $this->entityManager
-            ->getRepository(Document::class)
-            ->findByNodeSourceAndFieldName($this->nodeSource, $this->nodeTypeField->getName());
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
+        /** @var NodeTypeField $nodeTypeField */
+        $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
+        /** @var EntityManager $entityManager */
+        $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
+
+        $this->selectedDocuments = $entityManager->getRepository(Document::class)
+                                                 ->findByNodeSourceAndFieldName(
+                                                     $nodeSource,
+                                                     $nodeTypeField->getName()
+                                                 );
         $event->setData($this->selectedDocuments);
     }
 
@@ -129,15 +122,21 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $this->nodesSourcesHandler->cleanDocumentsFromField($this->nodeTypeField, false);
+        /** @var NodesSourcesHandler $nodesSourcesHandler */
+        $nodesSourcesHandler = $event->getForm()->getConfig()->getOption('nodeSourceHandler');
+        /** @var NodeTypeField $nodeTypeField */
+        $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
+        /** @var EntityManager $entityManager */
+        $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
+
+        $nodesSourcesHandler->cleanDocumentsFromField($nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
             foreach ($event->getData() as $documentId) {
-                $tempDoc = $this->entityManager
-                    ->find(Document::class, (int) $documentId);
+                $tempDoc = $entityManager->find(Document::class, (int) $documentId);
                 if ($tempDoc !== null) {
-                    $this->nodesSourcesHandler->addDocumentForField($tempDoc, $this->nodeTypeField, false, $position);
+                    $nodesSourcesHandler->addDocumentForField($tempDoc, $nodeTypeField, false, $position);
                     $position++;
                 } else {
                     throw new \RuntimeException('Document #'.$documentId.' was not found during relationship creation.');

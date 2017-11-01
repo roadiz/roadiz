@@ -44,6 +44,7 @@ use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -403,8 +404,9 @@ class UrlAliasesController extends RozierApp
                         ->add('alias',  TextType::class, [
                             'label' => 'urlAlias',
                         ])
-                        ->add('translationId', new TranslationsType($this->get('em')), [
+                        ->add('translationId', TranslationsType::class, [
                             'label' => 'translation',
+                            'entityManager' => $this->get('em'),
                         ]);
 
         return $builder->getForm();
@@ -469,7 +471,7 @@ class UrlAliasesController extends RozierApp
                             'label' => 'metaKeywords',
                             'required' => false,
                         ])
-                        ->add('metaDescription', 'textarea', [
+                        ->add('metaDescription', TextareaType::class, [
                             'label' => 'metaDescription',
                             'required' => false,
                         ]);

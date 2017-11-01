@@ -38,6 +38,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -76,9 +77,9 @@ class CustomFormsType extends AbstractType
                 $this->addSingleField($builder, $field);
             } elseif (is_array($field)) {
                 $groupCanonical = StringHandler::slugify($group);
-                $subBuilder = $builder->create($groupCanonical, 'form', [
+                $subBuilder = $builder->create($groupCanonical, FormType::class, [
                     'label' => $group,
-                    'virtual' => true,
+                    'inherit_data' => true,
                     'attr' => [
                         'data-group-wrapper' => $groupCanonical,
                     ]

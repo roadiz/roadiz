@@ -70,7 +70,7 @@ class NodeSourceType extends AbstractType
                 $builder->add(
                     $field->getName(),
                     $this->getFormTypeFromFieldType($builder->getData(), $field, $options),
-                    $this->getFormOptionsFromFieldType($field)
+                    $this->getFormOptionsFromFieldType($builder->getData(), $field, $options)
                 );
             }
         }
@@ -174,7 +174,7 @@ class NodeSourceType extends AbstractType
      * @param array $options
      * @return AbstractType|string
      */
-    public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array $options)
+    public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array &$options)
     {
         switch ($field->getType()) {
             case NodeTypeField::MULTI_PROVIDER_T:
@@ -184,12 +184,7 @@ class NodeSourceType extends AbstractType
             case NodeTypeField::MANY_TO_MANY_T:
                 return new NodeSourceJoinType($nodeSource, $field, $options['entityManager']);
             case NodeTypeField::DOCUMENTS_T:
-                return new NodeSourceDocumentType(
-                    $nodeSource,
-                    $field,
-                    $options['entityManager'],
-                    $options['container']->offsetGet('nodes_sources.handler')
-                );
+                return NodeSourceDocumentType::class;
             case NodeTypeField::NODES_T:
                 return new NodeSourceNodeType(
                     $nodeSource,
@@ -209,11 +204,7 @@ class NodeSourceType extends AbstractType
                  * NodeTreeType is a virtual type which is only available
                  * with Rozier backend theme.
                  */
-                return new NodeTreeType(
-                    $nodeSource,
-                    $field,
-                    $options['controller']
-                );
+                return NodeTreeType::class;
             case NodeTypeField::JSON_T:
                 return JsonType::class;
             case NodeTypeField::CSS_T:
@@ -234,11 +225,12 @@ class NodeSourceType extends AbstractType
     /**
      * Get common options for your node-type field form components.
      *
-     * @param  NodeTypeField $field
-     *
+     * @param NodesSources $nodeSource
+     * @param NodeTypeField $field
+     * @param array $formOptions
      * @return array
      */
-    public function getDefaultOptions(NodeTypeField $field)
+    public function getDefaultOptions(NodesSources $nodeSource, NodeTypeField $field, array &$formOptions)
     {
         $label = $field->getLabel();
         $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
@@ -272,6 +264,20 @@ class NodeSourceType extends AbstractType
             $options['mapped'] = false;
         }
 
+        if (in_array($field->getType(), [
+            NodeTypeField::MANY_TO_ONE_T,
+            NodeTypeField::MANY_TO_MANY_T,
+            NodeTypeField::DOCUMENTS_T,
+            NodeTypeField::NODES_T,
+            NodeTypeField::CUSTOM_FORMS_T,
+            NodeTypeField::MULTI_PROVIDER_T,
+            NodeTypeField::SINGLE_PROVIDER_T,
+        ])) {
+            $options['nodeTypeField'] = $field;
+            $options['entityManager'] = $formOptions['entityManager'];
+            $options['nodeSource'] = $nodeSource;
+        }
+
         return $options;
     }
 
@@ -279,13 +285,14 @@ class NodeSourceType extends AbstractType
      * Returns an option array for creating a Symfony Form
      * according to a node-type field.
      *
-     * @param  NodeTypeField $field
-     *
+     * @param NodesSources $nodeSource
+     * @param NodeTypeField $field
+     * @param array $formOptions
      * @return array
      */
-    public function getFormOptionsFromFieldType(NodeTypeField $field)
+    public function getFormOptionsFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array &$formOptions)
     {
-        $options = $this->getDefaultOptions($field);
+        $options = $this->getDefaultOptions($nodeSource, $field, $formOptions);
 
         switch ($field->getType()) {
             case NodeTypeField::MANY_TO_ONE_T:
@@ -301,6 +308,12 @@ class NodeSourceType extends AbstractType
                     'attr' => [
                         'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues()))
                     ],
+                ]);
+                break;
+
+            case NodeTypeField::DOCUMENTS_T:
+                $options = array_merge_recursive($options, [
+                    'nodeSourceHandler' => $formOptions['container']->offsetGet('nodes_sources.handler'),
                 ]);
                 break;
             case NodeTypeField::DATETIME_T:
@@ -373,6 +386,13 @@ class NodeSourceType extends AbstractType
                     'attr' => [
                         'class' => 'markdown_textarea',
                     ],
+                ]);
+                break;
+            case NodeTypeField::CHILDREN_T:
+                $options = array_merge_recursive($options, [
+                    'nodeSource' => $nodeSource,
+                    'nodeTypeField' => $field,
+                    'controller' => $formOptions['controller']
                 ]);
                 break;
             case NodeTypeField::COUNTRY_T:

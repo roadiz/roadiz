@@ -36,38 +36,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractNodeSourceFieldType extends AbstractType
 {
-    /**
-     * @var NodesSources
-     */
-    protected $nodeSource;
-    /**
-     * @var NodeTypeField
-     */
-    protected $nodeTypeField;
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * NodeSourceDocumentType constructor.
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $nodeTypeField
-     * @param EntityManager $entityManager
-     */
-    public function __construct(
-        NodesSources $nodeSource,
-        NodeTypeField $nodeTypeField,
-        EntityManager $entityManager
-    ) {
-        $this->nodeSource = $nodeSource;
-        $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
-    }
-
     /**
      * Pass nodeSource to form twig template.
      *
@@ -79,9 +51,28 @@ abstract class AbstractNodeSourceFieldType extends AbstractType
     {
         parent::buildView($view, $form, $options);
 
-        $view->vars['nodeSource'] = $this->nodeSource;
-        $view->vars['nodeTypeField'] = $this->nodeTypeField;
+        $view->vars['nodeSource'] = $options['nodeSource'];
+        $view->vars['nodeTypeField'] = $options['nodeTypeField'];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setRequired([
+            'nodeSource',
+            'nodeTypeField',
+            'entityManager',
+        ]);
+
+        $resolver->setAllowedTypes('nodeSource', [NodesSources::class]);
+        $resolver->setAllowedTypes('nodeTypeField', [NodeTypeField::class]);
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+    }
+
 
     /**
      * {@inheritdoc}
