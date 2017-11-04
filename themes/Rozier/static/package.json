@@ -1,5 +1,7 @@
 {
   "scripts": {
+    "install": "bower install",
+    "postinstall": "bower install && npm run vue-build && NODE_ENV=production grunt",
     "build": "npm run vue-build && NODE_ENV=production grunt",
     "vue-dev": "NODE_ENV=development ./node_modules/webpack/bin/webpack.js",
     "vue-build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js",
@@ -40,6 +42,7 @@
     "vue-loader": "^11.1.4",
     "vue-style-loader": "^2.0.5",
     "vue-template-compiler": "^2.2.2",
+    "bower": "^1.8.2",
     "webpack": "^2.2.1"
   },
   "dependencies": {
