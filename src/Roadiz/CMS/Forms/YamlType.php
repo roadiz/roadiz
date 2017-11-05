@@ -46,10 +46,19 @@ class YamlType extends AbstractType
     {
         return TextareaType::class;
     }
+
     /**
      * {@inheritdoc}
      */
     public function getName()
+    {
+        return 'yaml';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'yaml';
     }

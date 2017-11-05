@@ -81,6 +81,7 @@ class NodeTypeFieldType extends AbstractType
             'required' => true,
             'choices' => array_flip(NodeTypeField::$typeToHuman),
             'choices_as_values' => true,
+            'placeholder' => 'choose.a.type',
         ])
         ->add('description', TextType::class, [
             'label' => 'description',
@@ -136,22 +137,14 @@ class NodeTypeFieldType extends AbstractType
                 'data-desc' => 'for_children_node_and_node_references_enter_node_type_names_comma_separated'
             ],
         ])
-        ->add(
-            'minLength',
-            IntegerType::class,
-            [
-                'label' => 'nodeTypeField.minLength',
-                'required' => false,
-            ]
-        )
-        ->add(
-            'maxLength',
-            IntegerType::class,
-            [
-                'label' => 'nodeTypeField.maxLength',
-                'required' => false,
-            ]
-        );
+        ->add('minLength', IntegerType::class, [
+            'label' => 'nodeTypeField.minLength',
+            'required' => false,
+        ])
+        ->add('maxLength', IntegerType::class, [
+            'label' => 'nodeTypeField.maxLength',
+            'required' => false,
+        ]);
     }
 
     public function getName()

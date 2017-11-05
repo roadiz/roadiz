@@ -93,6 +93,14 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'nodes';
+    }
+
+    /**
      * @param FormEvent $event
      */
     public function onPreSetData(FormEvent $event)
@@ -121,6 +129,9 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
      */
     public function onPostSubmit(FormEvent $event)
     {
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
+
         /** @var EntityManager $entityManager */
         $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
 
@@ -130,6 +141,7 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
+        $nodeHandler->setNode($nodeSource->getNode());
         $nodeHandler->cleanNodesFromField($nodeTypeField, false);
 
         if (is_array($event->getData())) {

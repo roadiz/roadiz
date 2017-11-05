@@ -70,6 +70,8 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'required' => false,
             'mapped' => false,
@@ -89,6 +91,15 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
     {
         return 'custom_forms';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'custom_forms';
+    }
+
 
     /**
      * @param FormEvent $event
@@ -115,6 +126,9 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
      */
     public function onPostSubmit(FormEvent $event)
     {
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
+
         /** @var EntityManager $entityManager */
         $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
 
@@ -124,14 +138,14 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
         /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
+        $nodeHandler->setNode($nodeSource->getNode());
         $nodeHandler->cleanCustomFormsFromField($nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
             foreach ($event->getData() as $customFormId) {
                 /** @var CustomForm|null $tempCForm */
-                $tempCForm = $entityManager
-                    ->find(CustomForm::class, (int) $customFormId);
+                $tempCForm = $entityManager->find(CustomForm::class, (int) $customFormId);
                 if ($tempCForm !== null) {
                     $nodeHandler->addCustomFormForField($tempCForm, $nodeTypeField, false, $position);
                     $position++;

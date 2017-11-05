@@ -206,8 +206,12 @@ class UsersRolesController extends RozierApp
                         )
                         ->add(
                             'roleId',
-                            new RolesType($this->get('em'), $user->getRolesEntities()),
-                            ['label' => 'Role']
+                            RolesType::class,
+                            [
+                                'label' => 'Role',
+                                'entityManager' => $this->get('em'),
+                                'roles' => $user->getRolesEntities(),
+                            ]
                         );
 
         return $builder->getForm();

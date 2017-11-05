@@ -72,10 +72,15 @@ class NodeTagsType extends AbstractType
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function getName()
+    {
+        return 'node_tags';
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'node_tags';
     }

@@ -30,10 +30,12 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -41,40 +43,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class UsersType extends AbstractType
 {
-    protected $users;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @param EntityManager $entityManager
-     * @param ArrayCollection $users
-     */
-    public function __construct(EntityManager $entityManager, $users = null)
-    {
-        $this->users = $users;
-        $this->entityManager = $entityManager;
-    }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $users = $this->entityManager->getRepository(User::class)->findAll();
-
-        $choices = [];
-        /** @var User $user */
-        foreach ($users as $user) {
-            if (!$this->users->contains($user)) {
-                $choices[$user->getUserName()] = $user->getId();
-            }
-        }
-
         $resolver->setDefaults([
-            'choices' => $choices,
             'choices_as_values' => true,
+            'users' => new ArrayCollection(),
         ]);
+        $resolver->setRequired('entityManager');
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+        $resolver->setAllowedTypes('users', [Collection::class]);
+
+        /*
+         * Use normalizer to populate choices from ChoiceType
+         */
+        $resolver->setNormalizer('choices', function (Options $options, $choices) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $options['entityManager'];
+            $users = $entityManager->getRepository(User::class)->findAll();
+
+            /** @var User $user */
+            foreach ($users as $user) {
+                if (!$options['users']->contains($user)) {
+                    $choices[$user->getUserName()] = $user->getId();
+                }
+            }
+            return $choices;
+        });
     }
     /**
      * {@inheritdoc}
@@ -87,6 +84,13 @@ class UsersType extends AbstractType
      * {@inheritdoc}
      */
     public function getName()
+    {
+        return 'users';
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'users';
     }

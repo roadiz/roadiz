@@ -428,34 +428,30 @@ class InstallApp extends AppController
                 'choices' => $timeZoneList,
                 'label' => 'timezone',
                 'required' => true,
-            ]);
+            ])
+            ->add('separator_1', SeparatorType::class, [
+                'label' => $this->getTranslator()->trans('themes.frontend.description'),
+            ])
+            ->add('install_theme', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->getTranslator()->trans('install_theme'),
+                'data' => true,
+            ])
+            ->add(
+                'className',
+                ThemesType::class,
+                [
+                    'label' => $this->getTranslator()->trans('theme.selector'),
+                    'required' => true,
+                    'constraints' => [
+                        new NotNull(),
+                        new Type('string'),
+                    ],
+                    'entityManager' => $this->get('em'),
+                ]
+            )
+        ;
 
-        $themesType = new ThemesType($this->get('em'));
-
-        if ($themesType->getSize() > 0) {
-            $builder
-                ->add('separator_1', SeparatorType::class, [
-                    'label' => $this->getTranslator()->trans('themes.frontend.description'),
-                ])
-                ->add('install_theme', CheckboxType::class, [
-                    'required' => false,
-                    'label' => $this->getTranslator()->trans('install_theme'),
-                    'data' => true,
-                ])
-                ->add(
-                    'className',
-                    $themesType,
-                    [
-                        'label' => $this->getTranslator()->trans('theme.selector'),
-                        'required' => true,
-                        'constraints' => [
-                            new NotNull(),
-                            new Type('string'),
-                        ],
-                    ]
-                )
-            ;
-        }
 
         return $builder->getForm();
     }

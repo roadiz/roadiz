@@ -30,10 +30,12 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Group;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -41,40 +43,36 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GroupsType extends AbstractType
 {
-    /** @var ArrayCollection|null  */
-    protected $groups;
-    /** @var EntityManager  */
-    protected $entityManager;
-
-    /**
-     * GroupsType constructor.
-     * @param EntityManager $em
-     * @param ArrayCollection|null $groups
-     */
-    public function __construct(EntityManager $em, $groups = null)
-    {
-        $this->groups = $groups;
-        $this->entityManager = $em;
-    }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $groups = $this->entityManager->getRepository(Group::class)->findAll();
-
-        $choices = [];
-        /** @var Group $group */
-        foreach ($groups as $group) {
-            if (!$this->groups->contains($group)) {
-                $choices[$group->getName()] = $group->getId();
-            }
-        }
-
         $resolver->setDefaults([
-            'choices' => $choices,
             'choices_as_values' => true,
+            'groups' => new ArrayCollection(),
         ]);
+
+        $resolver->setRequired('entityManager');
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+        $resolver->setAllowedTypes('groups', [Collection::class]);
+
+        /*
+         * Use normalizer to populate choices from ChoiceType
+         */
+        $resolver->setNormalizer('choices', function (Options $options, $choices) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $options['entityManager'];
+            $groups = $entityManager->getRepository(Group::class)->findAll();
+
+            /** @var Group $group */
+            foreach ($groups as $group) {
+                if (!$options['groups']->contains($group)) {
+                    $choices[$group->getName()] = $group->getId();
+                }
+            }
+            return $choices;
+        });
     }
     /**
      * {@inheritdoc}
@@ -87,6 +85,14 @@ class GroupsType extends AbstractType
      * {@inheritdoc}
      */
     public function getName()
+    {
+        return 'groups';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
     {
         return 'groups';
     }

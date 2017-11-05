@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
@@ -82,14 +81,12 @@ class SettingType extends AbstractType
                     'choices' => array_flip(Setting::$typeToHuman),
                     'choices_as_values' => true,
                 ])
-                ->add('settingGroup', ChoiceType::class,
-                    [
-                        'label' => 'setting.group',
-                        'choices_as_values' => true,
-                        'choices' => $choices,
-                        'placeholder' => '---------',
-                    ]
-                )
+                ->add('settingGroup', ChoiceType::class, [
+                    'label' => 'setting.group',
+                    'choices_as_values' => true,
+                    'choices' => $choices,
+                    'placeholder' => '---------',
+                ])
             ;
 
             $builder->get('settingGroup')->addModelTransformer(new CallbackTransformer(

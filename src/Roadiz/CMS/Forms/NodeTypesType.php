@@ -85,6 +85,14 @@ class NodeTypesType extends AbstractType
      */
     public function getName()
     {
-        return 'NodeTypes';
+        return 'node_types';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'node_types';
     }
 }

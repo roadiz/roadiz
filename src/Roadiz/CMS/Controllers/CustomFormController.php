@@ -214,10 +214,12 @@ class CustomFormController extends CmsController
         $forceExpanded = false
     ) {
         $defaults = $request->query->all();
-        return $this->createForm(new CustomFormsType($customForm, $forceExpanded), $defaults, [
+        return $this->createForm(CustomFormsType::class, $defaults, [
             'recaptcha_public_key' => $this->get('settingsBag')->get('recaptcha_public_key'),
             'recaptcha_private_key' => $this->get('settingsBag')->get('recaptcha_private_key'),
             'request' => $request,
+            'customForm' => $customForm,
+            'forceExpanded' => $forceExpanded,
         ]);
     }
 

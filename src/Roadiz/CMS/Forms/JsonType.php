@@ -53,6 +53,14 @@ class JsonType extends AbstractType
         return 'json';
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'json';
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

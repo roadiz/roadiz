@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -81,17 +82,12 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Theme'
-        );
+        $listManager = $this->createEntityListManager(Theme::class);
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['themes'] = $listManager->getEntities();
-
-        $themeType = new ThemesType($this->get('em'));
-        $this->assignation['availableThemesCount'] = $themeType->getSize();
 
         return $this->render('themes/list.html.twig', $this->assignation);
     }
@@ -278,15 +274,15 @@ class ThemesController extends RozierApp
      */
     protected function buildAddForm(Theme $theme)
     {
-        $builder = $this->get('formFactory')
-            ->createNamedBuilder('source', FormType::class, []);
+        /** @var FormBuilder $builder */
+        $builder = $this->get('formFactory')->createNamedBuilder('source', FormType::class, []);
 
         /*
          * See if its possible to prepend field instead of adding it
          */
         $builder->add(
             'className',
-            new ThemesType($this->get('em')),
+            ThemesType::class,
             [
                 'label' => 'themeClass',
                 'required' => true,
@@ -294,6 +290,7 @@ class ThemesController extends RozierApp
                     new NotNull(),
                     new Type('string'),
                 ],
+                'entityManager' => $this->get('em'),
             ]
         );
 

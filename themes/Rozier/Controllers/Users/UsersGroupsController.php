@@ -207,8 +207,12 @@ class UsersGroupsController extends RozierApp
                         )
                         ->add(
                             'group',
-                            new GroupsType($this->get('em'), $user->getGroups()),
-                            ['label' => 'Group']
+                            GroupsType::class,
+                            [
+                                'label' => 'Group',
+                                'entityManager' => $this->get('em'),
+                                'groups' => $user->getGroups(),
+                            ]
                         );
 
         return $builder->getForm();

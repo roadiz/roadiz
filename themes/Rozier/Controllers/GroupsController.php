@@ -458,8 +458,12 @@ class GroupsController extends RozierApp
                         ])
                         ->add(
                             'roleId',
-                            new RolesType($this->get('em'), $group->getRolesEntities()),
-                            ['label' => 'choose.role']
+                            RolesType::class,
+                            [
+                                'label' => 'choose.role',
+                                'entityManager' => $this->get('em'),
+                                'roles' => $group->getRolesEntities()
+                            ]
                         );
 
         return $builder->getForm();
@@ -484,12 +488,14 @@ class GroupsController extends RozierApp
                         ])
                         ->add(
                             'userId',
-                            new UsersType($this->get('em'), $group->getUsers()),
+                            UsersType::class,
                             [
                                 'label' => 'choose.user',
                                 'constraints' => [
                                     new NotBlank(),
                                 ],
+                                'entityManager' => $this->get('em'),
+                                'users' => $group->getUsers(),
                             ]
                         );
 

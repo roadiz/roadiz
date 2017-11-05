@@ -137,4 +137,12 @@ class NodesType extends AbstractType
     {
         return 'nodes';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'nodes';
+    }
 }

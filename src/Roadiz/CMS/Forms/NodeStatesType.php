@@ -70,6 +70,14 @@ class NodeStatesType extends AbstractType
      */
     public function getName()
     {
-        return 'nodeStates';
+        return 'node_statuses';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'node_statuses';
     }
 }

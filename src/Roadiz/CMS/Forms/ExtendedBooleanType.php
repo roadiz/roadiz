@@ -68,4 +68,12 @@ class ExtendedBooleanType extends AbstractType
     {
         return 'extendedboolean';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'extendedboolean';
+    }
 }

@@ -399,13 +399,12 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Creates and returns a Form instance from the type of the form.
      *
-     * @param string|FormTypeInterface $type    The built type of the form
-     * @param mixed                    $data    The initial data for the form
-     * @param array                    $options Options for the form
-     *
+     * @param string $type    The built type of the form
+     * @param mixed $data    The initial data for the form
+     * @param array $options Options for the form
      * @return Form
      */
-    protected function createForm($type, $data = null, array $options = [])
+    protected function createForm($type = FormType::class, $data = null, array $options = [])
     {
         return $this->get('formFactory')->create($type, $data, $options);
     }

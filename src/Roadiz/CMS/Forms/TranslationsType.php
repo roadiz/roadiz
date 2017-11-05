@@ -83,4 +83,11 @@ class TranslationsType extends AbstractType
     {
         return 'translations';
     }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'translations';
+    }
 }

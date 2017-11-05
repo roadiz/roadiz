@@ -87,6 +87,13 @@ class SettingGroupType extends AbstractType
      */
     public function getName()
     {
-        return 'settingGroups';
+        return 'setting_groups';
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'setting_groups';
     }
 }

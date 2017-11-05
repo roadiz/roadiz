@@ -46,35 +46,21 @@ use Themes\Rozier\Explorer\ExplorerProviderInterface;
 class ExplorerProviderItemType extends AbstractType
 {
     /**
-     * @var ExplorerProviderInterface
-     */
-    protected $explorerProvider;
-
-    /**
-     * ExplorerProviderItemType constructor.
-     * @param ExplorerProviderInterface $explorerProvider
-     */
-    public function __construct(ExplorerProviderInterface $explorerProvider)
-    {
-        $this->explorerProvider = $explorerProvider;
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) {
-                if (!empty($entitiesToForm) && $this->explorerProvider->supports($entitiesToForm)) {
-                    $item = $this->explorerProvider->toExplorerItem($entitiesToForm);
+            function ($entitiesToForm) use ($options) {
+                if (!empty($entitiesToForm) && $options['explorerProvider']->supports($entitiesToForm)) {
+                    $item = $options['explorerProvider']->toExplorerItem($entitiesToForm);
                     return [$item];
                 } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
                     $idArray = [];
                     foreach ($entitiesToForm as $entity) {
-                        if ($this->explorerProvider->supports($entity)) {
-                            $item = $this->explorerProvider->toExplorerItem($entity);
+                        if ($options['explorerProvider']->supports($entity)) {
+                            $item = $options['explorerProvider']->toExplorerItem($entity);
                             $idArray[] = $item;
                         }
                     }
@@ -82,8 +68,8 @@ class ExplorerProviderItemType extends AbstractType
                 }
                 return '';
             },
-            function ($formToEntities) {
-                $items = $this->explorerProvider->getItemsById($formToEntities);
+            function ($formToEntities) use ($options) {
+                $items = $options['explorerProvider']->getItemsById($formToEntities);
                 $originals = [];
                 /** @var ExplorerItemInterface $item */
                 foreach ($items as $item) {
@@ -112,7 +98,7 @@ class ExplorerProviderItemType extends AbstractType
             $view->vars['attr']['data-min-length'] = $options['min_length'];
         }
 
-        $view->vars['provider_class'] = get_class($this->explorerProvider);
+        $view->vars['provider_class'] = get_class($options['explorerProvider']);
     }
 
     /**
@@ -126,9 +112,20 @@ class ExplorerProviderItemType extends AbstractType
     /**
      * @inheritDoc
      */
+    public function getBlockPrefix()
+    {
+        return 'explorer_provider';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+
+        $resolver->setRequired('explorerProvider');
+        $resolver->setAllowedTypes('explorerProvider', [ExplorerProviderInterface::class]);
 
         $resolver->setDefault('max_length', 0);
         $resolver->setDefault('min_length', 0);

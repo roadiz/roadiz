@@ -147,4 +147,12 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
     {
         return 'provider';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'provider';
+    }
 }

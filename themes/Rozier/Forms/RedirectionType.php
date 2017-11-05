@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -45,20 +46,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class RedirectionType extends AbstractType
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * RedirectionType constructor.
-     * @param EntityManager $entityManager
-     */
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('query', TextType::class, [
@@ -93,12 +80,25 @@ class RedirectionType extends AbstractType
             'attr' => [
                 'class' => 'uk-form redirection-form',
             ],
-            'constraints' => [
-                new UniqueEntity([
-                    'fields' => 'query',
-                    'entityManager' => $this->entityManager
-                ])
-            ]
+            'constraints' => []
         ]);
+
+        $resolver->setRequired('entityManager');
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+
+        /*
+         * Use normalizer to populate choices from ChoiceType
+         */
+        $resolver->setNormalizer('constraints', function (Options $options, $constraints) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $options['entityManager'];
+
+            $constraints[] = new UniqueEntity([
+                'fields' => 'query',
+                'entityManager' => $entityManager,
+            ]);
+
+            return $constraints;
+        });
     }
 }
