@@ -6,7 +6,19 @@
 /*
  * Global vars
  */
+/*
+ * Global vars
+ */
+@screen-lg-min: 1280px;
 
+@screen-md-min: 960px;
+@screen-md-max: (@screen-lg-min - 1);
+
+@screen-sm-min: 768px;
+@screen-sm-max: (@screen-md-min - 1);
+
+@screen-xs-min: 480px;
+@screen-xs-max: (@screen-sm-min - 1);
 
 /* -------- COLORS -------- */
 
@@ -82,46 +94,37 @@
 /* -------- FONTS -------- */
 @font-face {
     font-family: 'Roadiz';
-    src: url('../fonts/roadiz-sans/roadizsans-light-webfont.eot');
-    src: url('../fonts/roadiz-sans/roadizsans-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/roadiz-sans/roadizsans-light-webfont.woff2') format('woff2'),
-         url('../fonts/roadiz-sans/roadizsans-light-webfont.woff') format('woff'),
-         url('../fonts/roadiz-sans/roadizsans-light-webfont.ttf') format('truetype'),
-         url('../fonts/roadiz-sans/roadizsans-light-webfont.svg#roadiz_sanslight') format('svg');
+    src: url('../fonts/roadiz-sans/RoadizSans-Light.eot');
+    src: url('../fonts/roadiz-sans/RoadizSans-Light.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/roadiz-sans/RoadizSans-Light.woff2') format('woff2'),
+    url('../fonts/roadiz-sans/RoadizSans-Light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
 }
 @font-face {
     font-family: 'Roadiz';
-    src: url('../fonts/roadiz-sans/roadizsans-regular-webfont.eot');
-    src: url('../fonts/roadiz-sans/roadizsans-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/roadiz-sans/roadizsans-regular-webfont.woff2') format('woff2'),
-         url('../fonts/roadiz-sans/roadizsans-regular-webfont.woff') format('woff'),
-         url('../fonts/roadiz-sans/roadizsans-regular-webfont.ttf') format('truetype'),
-         url('../fonts/roadiz-sans/roadizsans-regular-webfont.svg#roadiz_sansregular') format('svg');
+    src: url('../fonts/roadiz-sans/RoadizSans-Regular.eot');
+    src: url('../fonts/roadiz-sans/RoadizSans-Regular.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/roadiz-sans/RoadizSans-Regular.woff2') format('woff2'),
+    url('../fonts/roadiz-sans/RoadizSans-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'Roadiz';
-    src: url('../fonts/roadiz-sans/roadizsans-medium-webfont.eot');
-    src: url('../fonts/roadiz-sans/roadizsans-medium-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/roadiz-sans/roadizsans-medium-webfont.woff2') format('woff2'),
-         url('../fonts/roadiz-sans/roadizsans-medium-webfont.woff') format('woff'),
-         url('../fonts/roadiz-sans/roadizsans-medium-webfont.ttf') format('truetype'),
-         url('../fonts/roadiz-sans/roadizsans-medium-webfont.svg#roadiz_sansregular') format('svg');
+    src: url('../fonts/roadiz-sans/RoadizSans-Medium.eot');
+    src: url('../fonts/roadiz-sans/RoadizSans-Medium.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/roadiz-sans/RoadizSans-Medium.woff2') format('woff2'),
+    url('../fonts/roadiz-sans/RoadizSans-Medium.woff') format('woff');
     font-weight: bold;
     font-style: normal;
 }
 @font-face {
     font-family: 'Roadiz Mono';
-    src: url('../fonts/roadiz-sans/roadizsans-mono-webfont.eot');
-    src: url('../fonts/roadiz-sans/roadizsans-mono-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/roadiz-sans/roadizsans-mono-webfont.woff2') format('woff2'),
-         url('../fonts/roadiz-sans/roadizsans-mono-webfont.woff') format('woff'),
-         url('../fonts/roadiz-sans/roadizsans-mono-webfont.ttf') format('truetype'),
-         url('../fonts/roadiz-sans/roadizsans-mono-webfont.svg#roadiz_sansmono') format('svg');
+    src: url('../fonts/roadiz-sans/RoadizSans-Mono.eot');
+    src: url('../fonts/roadiz-sans/RoadizSans-Mono.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/roadiz-sans/RoadizSans-Mono.woff2') format('woff2'),
+    url('../fonts/roadiz-sans/RoadizSans-Mono.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
-

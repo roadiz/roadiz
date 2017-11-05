@@ -3,12 +3,12 @@ return array(
     'staticAssets' => array(
         'global' => array(
             'css' => array(
-                '/vendor.5c6b2574.css',
-                '/style.8ce8e324.css',
+                '/vendor.bb41d2c2.css',
+                '/style.2f0d3453.css',
             ),
             'js' => array(
-                '/rozier-backend-theme.a7808e4a.min.js',
-                '/rozier-backend-theme-vendor.1f9059c5.min.js',
+                '/rozier-backend-theme.96a1a092.min.js',
+                '/rozier-backend-theme-vendor.d579858d.min.js',
                 '/vue-bundle.649d8d8a.min.js',
             ),
         ),
@@ -16,16 +16,16 @@ return array(
             'css' => array(
             ),
             'js' => array(
-                '/rozier-backend-theme-simple.7c3082e3.min.js',
+                '/rozier-backend-theme-simple.3065d9c8.min.js',
             ),
         ),
         'custom-forms' => array(
             'css' => array(
-                '/vendor.5c6b2574.css',
-                '/custom-forms-front.7455d1eb.css',
+                '/vendor.bb41d2c2.css',
+                '/custom-forms-front.5f8c4e16.css',
             ),
             'js' => array(
-                '/rozier-backend-theme-cforms.4d2ee6df.min.js',
+                '/rozier-backend-theme-cforms.7f194e44.min.js',
             ),
         ),
     )
