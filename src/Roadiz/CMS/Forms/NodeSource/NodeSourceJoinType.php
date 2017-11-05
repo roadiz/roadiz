@@ -29,10 +29,8 @@
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Proxy\Proxy;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,31 +51,20 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
     private $displayableMethod;
 
     /**
-     * NodeSourceDocumentType constructor.
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $nodeTypeField
-     * @param EntityManager $entityManager
-     */
-    public function __construct(NodesSources $nodeSource, NodeTypeField $nodeTypeField, EntityManager $entityManager)
-    {
-        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
-
-        if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_MANY_T ||
-            $this->nodeTypeField->getType() === NodeTypeField::MANY_TO_ONE_T) {
-            $configuration = Yaml::parse($this->nodeTypeField->getDefaultValues());
-            $this->classname = $configuration['classname'];
-            $this->displayableMethod = $configuration['displayable'];
-        }
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_MANY_T ||
+            $options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_ONE_T) {
+            $configuration = Yaml::parse($options['nodeTypeField']->getDefaultValues());
+            $this->classname = $configuration['classname'];
+            $this->displayableMethod = $configuration['displayable'];
+        }
+
         $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) {
+            function ($entitiesToForm) use ($options) {
                 /*
                  * If model is already an AbstractEntity
                  */
@@ -100,14 +87,14 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
                 }
                 return '';
             },
-            function ($formToEntities) {
-                if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_MANY_T) {
-                    return $this->entityManager->getRepository($this->classname)->findBy([
+            function ($formToEntities) use ($options) {
+                if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_MANY_T) {
+                    return $options['entityManager']->getRepository($this->classname)->findBy([
                         'id' => $formToEntities,
                     ]);
                 }
-                if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_ONE_T) {
-                    return $this->entityManager->getRepository($this->classname)->findOneBy([
+                if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_ONE_T) {
+                    return $options['entityManager']->getRepository($this->classname)->findOneBy([
                         'id' => $formToEntities,
                     ]);
                 }
@@ -129,7 +116,7 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
 
         $displayableData = [];
 
-        $entities = call_user_func([$this->nodeSource, $this->nodeTypeField->getGetterName()]);
+        $entities = call_user_func([$options['nodeSource'], $options['nodeTypeField']->getGetterName()]);
 
         if ($entities instanceof \Traversable) {
             /** @var AbstractEntity $entity */

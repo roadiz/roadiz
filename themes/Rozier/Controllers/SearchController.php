@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 use RZ\Roadiz\CMS\Forms\CompareDateType;
 use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
@@ -42,6 +43,7 @@ use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
@@ -299,11 +301,13 @@ class SearchController extends RozierApp
                                 );
         $builderNodeType->add(
             "nodetype",
-            new NodeTypesType($this->get('em'), true),
+            NodeTypesType::class,
             [
                 'placeholder' => "ignore",
                 'required' => false,
                 'data' => $nodetypeId,
+                'entityManager' => $this->get('em'),
+                'showInvisible' => true,
             ]
         );
 
@@ -466,41 +470,41 @@ class SearchController extends RozierApp
     {
         /** @var FormBuilder $builder */
         $builder = $this->createFormBuilder([], ["method" => "get"])
-                        ->add($prefix . 'status', new NodeStatesType(), [
+                        ->add($prefix . 'status', NodeStatesType::class, [
                             'label' => 'node.status',
                             'required' => false,
                         ])
-                        ->add($prefix . 'visible', new ExtendedBooleanType(), [
+                        ->add($prefix . 'visible', ExtendedBooleanType::class, [
                             'label' => 'visible',
                         ])
-                        ->add($prefix . 'locked', new ExtendedBooleanType(), [
+                        ->add($prefix . 'locked', ExtendedBooleanType::class, [
                             'label' => 'locked',
                         ])
-                        ->add($prefix . 'sterile', new ExtendedBooleanType(), [
+                        ->add($prefix . 'sterile', ExtendedBooleanType::class, [
                             'label' => 'sterile-status',
                         ])
-                        ->add($prefix . 'hideChildren', new ExtendedBooleanType(), [
+                        ->add($prefix . 'hideChildren', ExtendedBooleanType::class, [
                             'label' => 'hiding-children',
                         ])
-                        ->add($prefix . 'nodeName', 'text', [
+                        ->add($prefix . 'nodeName', TextType::class, [
                             'label' => 'nodeName',
                             'required' => false,
                         ])
-                        ->add($prefix . 'parent', 'text', [
+                        ->add($prefix . 'parent', TextType::class, [
                             'label' => 'node.id.parent',
                             'required' => false,
                         ])
-                        ->add($prefix . "createdAt", new CompareDatetimeType(), [
+                        ->add($prefix . "createdAt", CompareDatetimeType::class, [
                             'label' => 'created.at',
                             'inherit_data' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "updatedAt", new CompareDatetimeType(), [
+                        ->add($prefix . "updatedAt", CompareDatetimeType::class, [
                             'label' => 'updated.at',
                             'inherit_data' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "limitResult", "number", [
+                        ->add($prefix . "limitResult", NumberType::class, [
                             'label' => 'node.limit.result',
                             'required' => false,
                             'constraints' => [
@@ -533,7 +537,7 @@ class SearchController extends RozierApp
 
         $builder->add(
             "nodetypefield",
-            new SeparatorType(),
+            SeparatorType::class,
             [
                 'label' => 'nodetypefield',
                 'attr' => ["class" => "label-separator"],
@@ -574,19 +578,11 @@ class SearchController extends RozierApp
                     $option["expanded"] = true;
                 }
             } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
-                $type = new CompareDatetimeType();
+                $type = CompareDatetimeType::class;
             } elseif ($field->getType() === NodeTypeField::DATE_T) {
-                $type = new CompareDateType();
+                $type = CompareDateType::class;
             } else {
-                $type = NodeTypeField::$typeToForm[$field->getType()];
-            }
-
-            if ($field->getType() === NodeTypeField::MARKDOWN_T ||
-                $field->getType() === NodeTypeField::STRING_T ||
-                $field->getType() === NodeTypeField::TEXT_T ||
-                $field->getType() === NodeTypeField::EMAIL_T
-            ) {
-                $type = "text";
+                $type = NodeSourceType::getFormTypeFromFieldType($field);
             }
 
             $builder->add($field->getName(), $type, $option);

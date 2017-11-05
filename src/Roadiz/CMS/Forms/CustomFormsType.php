@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
@@ -160,20 +161,17 @@ class CustomFormsType extends AbstractType
         switch ($field->getType()) {
             case AbstractField::ENUM_T:
             case AbstractField::MULTIPLE_T:
-                $type = ChoiceType::class;
+                return ChoiceType::class;
                 break;
             case AbstractField::DOCUMENTS_T:
-                $type = FileType::class;
+                return FileType::class;
                 break;
             case AbstractField::MARKDOWN_T:
-                $type = MarkdownType::class;
+                return MarkdownType::class;
                 break;
             default:
-                $type = CustomFormField::$typeToForm[$field->getType()];
-                break;
+                return NodeSourceType::getFormTypeFromFieldType($field);
         }
-
-        return $type;
     }
 
     /**
