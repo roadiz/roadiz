@@ -291,13 +291,26 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             ];
         };
 
-        /*
-         *
+        /**
+         * @param Container $c
+         * @return CacheProvider
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            if (null !== $c['em'] && $c['kernel']->getEnvironment() != 'test') {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            /** @var EntityManager $entityManager */
+            $entityManager = $c['em'];
+
+            /*
+             * Use node source url cache only if not Test, nor Preview, nor
+             * Debug environments.
+             */
+            if (null !== $entityManager &&
+                $kernel->getEnvironment() !== 'test' &&
+                !$kernel->isPreview() &&
+                !$kernel->isDebug()) {
                 // clone existing cache to be able to vary namespace
-                $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
+                $cache = clone $entityManager->getConfiguration()->getMetadataCacheImpl();
                 if ($cache instanceof CacheProvider) {
                     $cache->setNamespace($cache->getNamespace() . "nsurls_"); // to avoid collisions
                 }
