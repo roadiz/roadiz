@@ -108,11 +108,11 @@ class RoadizRouteCollection extends DeferredRouteCollection
                     $assets->setHost($staticDomain);
                 }
                 /*
-                 * Use same scheme as static domain.
+                 * ~~Use same scheme as static domain.~~
+                 *
+                 * DO NOT use setSchemes method as it need a special UrlMatcher
+                 * only available on Symfony full-stack
                  */
-                if (false !== $scheme && null !== $scheme) {
-                    $assets->setSchemes($scheme);
-                }
             }
             $this->addCollection($assets);
 
