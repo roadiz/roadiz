@@ -29,9 +29,14 @@
  */
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 
 class NonRootPackagesTest extends DefaultThemeDependentCase
 {
@@ -69,7 +74,17 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $documentUrlGenerator = $this->get('document.url_generator');
+        $kernel = new Kernel('test', true, false);
+        $kernel->boot();
+
+        $request = static::getMockRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestStack')->push($request);
+
+        $requestContext = new RequestContext();
+        $requestContext->fromRequest($request);
+
+        $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
 
@@ -77,17 +92,64 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
     }
 
-    public function testGetUrl()
+    public function testBasePath()
     {
-        $this->assertEquals(
-            '/test/files/some-custom-file',
-            $this->get('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
-        );
+        $request = static::getMockRequest();
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $requestStackContext = new RequestStackContext($requestStack);
+
+        $this->assertEquals('/test', $requestStackContext->getBasePath());
+    }
+
+    /**
+     * @dataProvider getUrlProvider
+     * @param $relativePath
+     * @param $expected
+     */
+    public function testGetUrl($relativePath, $expected)
+    {
+        $kernel = new Kernel('test', true, false);
+        $kernel->boot();
+
+        $request = static::getMockRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestStack')->push($request);
+
+        $requestContext = new RequestContext();
+        $requestContext->fromRequest($request);
+
+        /** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator */
+        $urlGenerator = $kernel->get('urlGenerator');
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $urlGenerator->setContext($requestContext);
+
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
+
 
         $this->assertEquals(
-            '/test/files/folder/some-custom-file',
-            $this->get('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
+            $expected,
+            $packages->getUrl($relativePath, Packages::DOCUMENTS)
         );
+    }
+
+    public function getUrlProvider()
+    {
+        return [
+            [
+                'some-custom-file.jpg',
+                '/test/files/some-custom-file.jpg',
+            ],
+            [
+                'folder/some-custom-file.jpg',
+                '/test/files/folder/some-custom-file.jpg',
+            ],
+            [
+                'folder/folder2/some-custom-file.jpg',
+                '/test/files/folder/folder2/some-custom-file.jpg',
+            ]
+        ];
     }
 
     /**

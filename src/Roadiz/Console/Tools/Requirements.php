@@ -168,7 +168,7 @@ class Requirements
             'status' => $this->testPHPIntValue('memory_limit', '64M'),
             'value_minimum' => '64M',
             'found' => ini_get('memory_limit'),
-            'message' => 'Your PHP configuration has a too low value for “upload_max_filesize”',
+            'message' => 'Your PHP configuration has a too low value for “memory_limit”',
         ];
 
         if ($checks['memory_limit']['status']) {
@@ -227,9 +227,9 @@ class Requirements
         $actual = $this->parseSuffixedAmount(ini_get($name));
 
         /*
-         * 0 value means no limitations
+         * 0 or -1 value means no limitations
          */
-        if ($actual === 0) {
+        if ($actual === 0 || $actual === -1) {
             return true;
         } elseif ($actual < $expected) {
             return false;

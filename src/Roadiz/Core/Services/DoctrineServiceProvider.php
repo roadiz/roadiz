@@ -65,14 +65,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
      * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
      *
      * @param array $cacheConfig
-     * @param string $namespace
      * @param Kernel $kernel
+     * @param string $namespace
      * @return Cache
      */
     protected function getManuallyDefinedCache(
         array $cacheConfig,
-        $namespace = 'dc2',
-        Kernel $kernel
+        Kernel $kernel,
+        $namespace = 'dc2'
     ) {
         if ($kernel->isProdMode()) {
             if (extension_loaded('apcu') &&
@@ -180,8 +180,8 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 if ($c['config']['cacheDriver']['type'] !== null) {
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
-                        $c['config']["appNamespace"],
-                        $kernel
+                        $kernel,
+                        $c['config']["appNamespace"]
                     );
                 }
 
@@ -291,13 +291,26 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             ];
         };
 
-        /*
-         *
+        /**
+         * @param Container $c
+         * @return CacheProvider
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            if (null !== $c['em'] && $c['kernel']->getEnvironment() != 'test') {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            /** @var EntityManager $entityManager */
+            $entityManager = $c['em'];
+
+            /*
+             * Use node source url cache only if not Test, nor Preview, nor
+             * Debug environments.
+             */
+            if (null !== $entityManager &&
+                $kernel->getEnvironment() !== 'test' &&
+                !$kernel->isPreview() &&
+                !$kernel->isDebug()) {
                 // clone existing cache to be able to vary namespace
-                $cache = clone $c['em']->getConfiguration()->getMetadataCacheImpl();
+                $cache = clone $entityManager->getConfiguration()->getMetadataCacheImpl();
                 if ($cache instanceof CacheProvider) {
                     $cache->setNamespace($cache->getNamespace() . "nsurls_"); // to avoid collisions
                 }
