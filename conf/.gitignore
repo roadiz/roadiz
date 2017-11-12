@@ -2,6 +2,7 @@
 *
 # Except this file
 !.gitignore
+!router.php
 !*.default.yml
 !services.yml
 !*.travis.yml

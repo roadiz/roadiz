@@ -76,6 +76,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Themes\Install\InstallApp;
 
 /**
  *
@@ -84,10 +85,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 {
     const CMS_VERSION = 'beta';
     const SECURITY_DOMAIN = 'roadiz_domain';
-    const INSTALL_CLASSNAME = '\\Themes\\Install\\InstallApp';
+    const INSTALL_CLASSNAME = InstallApp::class;
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.20.8";
+    public static $cmsVersion = "0.20.9";
 
     /**
      * @var Container|null

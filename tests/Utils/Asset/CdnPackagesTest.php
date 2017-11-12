@@ -39,6 +39,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CdnPackagesTest extends DefaultThemeDependentCase
 {
     /**
+     * @return string
+     */
+    public static function getStaticDomain()
+    {
+        return 'https://static.localhost';
+    }
+
+    /**
      * @return Request
      */
     public function getRequest()
@@ -63,19 +71,24 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         ]);
     }
 
+    public function setUp()
+    {
+        /** @var Setting $setting */
+        $setting = static::getManager()
+            ->getRepository(Setting::class)
+            ->findOneByName('static_domain_name');
+        $setting->setValue(static::getStaticDomain());
+        static::getManager()->flush();
+    }
+
+
     public function testUseStaticDomain()
     {
         $request = $this->getRequest();
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
-        $kernel->boot();
-        $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
-        $kernel->get('settingsBag')->set('static_domain_name', 'static.localhost');
-        $kernel->handle($request);
-
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, 'static.localhost');
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, static::getStaticDomain());
 
         $this->assertEquals(true, $packages->useStaticDomain());
     }
@@ -85,32 +98,25 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         $request = $this->getRequest();
         $requestStack = new RequestStack();
         $requestStack->push($request);
-
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
-        $kernel->boot();
-        $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
-        $kernel->get('settingsBag')->set('static_domain_name', 'static.localhost');
-        $kernel->handle($request);
-
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, 'static.localhost');
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, static::getStaticDomain());
 
         $this->assertEquals(
-            'https://static.localhost/files/some-custom-file',
+            static::getStaticDomain().'/files/some-custom-file',
             $packages->getUrl('/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $this->assertEquals(
-            'https://static.localhost/files/some-custom-file',
+            static::getStaticDomain().'/files/some-custom-file',
             $packages->getUrl('some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $this->assertEquals(
-            'https://static.localhost/files/folder/some-custom-file',
+            static::getStaticDomain().'/files/folder/some-custom-file',
             $packages->getUrl('/folder/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $this->assertEquals(
-            'https://static.localhost/files/folder/some-custom-file',
+            static::getStaticDomain().'/files/folder/some-custom-file',
             $packages->getUrl('folder/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
     }
@@ -136,6 +142,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
 
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, $domainName);
         $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $kernel->get('urlGenerator'));
+
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
@@ -181,13 +188,13 @@ class CdnPackagesTest extends DefaultThemeDependentCase
                 '//static.localhost/files/folder/file.jpg',
             ],
             [
-                'https://static.localhost',
+                static::getStaticDomain(),
                 $document1,
                 [
                     'noProcess' => true,
                 ],
                 false,
-                'https://static.localhost/files/folder/file.jpg',
+                static::getStaticDomain().'/files/folder/file.jpg',
             ],
             [
                 'http://static.localhost',
@@ -205,7 +212,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
                     'noProcess' => true,
                 ],
                 false,
-                'https://static.localhost/files/folder/file.jpg',
+                static::getStaticDomain().'/files/folder/file.jpg',
             ]
         ];
     }
