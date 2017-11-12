@@ -30,14 +30,25 @@
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 
 class CdnPackagesTest extends DefaultThemeDependentCase
 {
+    /**
+     * @return string
+     */
+    public static function getStaticDomain()
+    {
+        return 'https://static.localhost';
+    }
+
     /**
      * @return Request
      */
@@ -67,9 +78,9 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     {
         /** @var Setting $setting */
         $setting = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+            ->getRepository(Setting::class)
             ->findOneByName('static_domain_name');
-        $setting->setValue('static.localhost');
+        $setting->setValue(static::getStaticDomain());
         static::getManager()->flush();
     }
 
@@ -77,7 +88,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     {
         $requestStack = new RequestStack();
         $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, static::getStaticDomain());
 
         $this->assertEquals(true, $packages->useStaticDomain());
     }
@@ -86,25 +97,25 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     {
         $requestStack = new RequestStack();
         $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, static::getStaticDomain());
 
         $this->assertEquals(
-            'https://static.localhost/files/some-custom-file',
+            static::getStaticDomain().'/files/some-custom-file',
             $packages->getUrl('/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $this->assertEquals(
-            'https://static.localhost/files/some-custom-file',
+            static::getStaticDomain().'/files/some-custom-file',
             $packages->getUrl('some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $this->assertEquals(
-            'https://static.localhost/files/folder/some-custom-file',
+            static::getStaticDomain().'/files/folder/some-custom-file',
             $packages->getUrl('/folder/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $this->assertEquals(
-            'https://static.localhost/files/folder/some-custom-file',
+            static::getStaticDomain().'/files/folder/some-custom-file',
             $packages->getUrl('folder/some-custom-file', Packages::ABSOLUTE_DOCUMENTS)
         );
     }
@@ -118,10 +129,24 @@ class CdnPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
+        $kernel = new Kernel('test', true, false);
+        $kernel->boot();
+
+        $request = static::getMockRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestStack')->push($request);
+
+        $requestContext = new RequestContext();
+        $requestContext->fromRequest($request);
+
+        /** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator */
+        $urlGenerator = $kernel->get('urlGenerator');
         $requestStack = new RequestStack();
-        $requestStack->push(static::getMockRequest());
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, 'static.localhost');
-        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $this->get('urlGenerator'));
+        $requestStack->push($request);
+        $urlGenerator->setContext($requestContext);
+
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, static::getStaticDomain());
+        $documentUrlGenerator = new DocumentUrlGenerator($requestStack, $packages, $urlGenerator);
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
@@ -144,7 +169,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
                     'quality' => 80
                 ],
                 false,
-                'https://static.localhost/assets/q80/folder/file.jpg',
+                static::getStaticDomain().'/assets/q80/folder/file.jpg',
             ],
             [
                 $document1,
@@ -153,7 +178,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
                     'width' => 600,
                 ],
                 true,
-                'https://static.localhost/assets/w600-q90/folder/file.jpg',
+                static::getStaticDomain().'/assets/w600-q90/folder/file.jpg',
             ],
             [
                 $document1,
@@ -161,7 +186,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
                     'noProcess' => true,
                 ],
                 true,
-                'https://static.localhost/files/folder/file.jpg',
+                static::getStaticDomain().'/files/folder/file.jpg',
             ],
             [
                 $document1,
@@ -169,7 +194,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
                     'noProcess' => true,
                 ],
                 false,
-                'https://static.localhost/files/folder/file.jpg',
+                static::getStaticDomain().'/files/folder/file.jpg',
             ]
         ];
     }

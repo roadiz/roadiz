@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
-use RZ\Roadiz\Core\Kernel;
 
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.

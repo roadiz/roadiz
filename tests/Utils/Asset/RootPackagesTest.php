@@ -29,6 +29,7 @@
  */
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,14 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $documentUrlGenerator = $this->get('document.url_generator');
+        $kernel = new Kernel('test', true, false);
+        $kernel->boot();
+
+        $request = static::getMockRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestStack')->push($request);
+
+        $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
 

@@ -100,11 +100,18 @@ class RoadizRouteCollection extends DeferredRouteCollection
                  * Only use CDN if no preview mode and CDN domain is well set
                  * Remove protocol (https, http and protocol-less) information from domain.
                  */
-                $components = parse_url($staticDomain, PHP_URL_HOST);
-                if (false !== $components && null !== $components) {
-                    $assets->setHost($components);
+                $host = parse_url($staticDomain, PHP_URL_HOST);
+                $scheme = parse_url($staticDomain, PHP_URL_SCHEME);
+                if (false !== $host && null !== $host) {
+                    $assets->setHost($host);
                 } else {
                     $assets->setHost($staticDomain);
+                }
+                /*
+                 * Use same scheme as static domain.
+                 */
+                if (false !== $scheme && null !== $scheme) {
+                    $assets->setSchemes($scheme);
                 }
             }
             $this->addCollection($assets);
