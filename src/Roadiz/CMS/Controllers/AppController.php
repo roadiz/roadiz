@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormError;
@@ -274,7 +275,14 @@ abstract class AppController extends Controller
      */
     public function getStaticResourcesUrl()
     {
-        return $this->get('assetPackages')->getUrl('/themes/' . static::$themeDir . '/static/');
+        return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/');
+    }
+    /**
+     * @return string
+     */
+    public function getAbsoluteStaticResourceUrl()
+    {
+        return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/', Packages::ABSOLUTE);
     }
 
     /**
@@ -371,7 +379,7 @@ abstract class AppController extends Controller
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
-                'absoluteResourcesUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath() . $this->getStaticResourcesUrl(),
+                'absoluteResourcesUrl' => $this->getAbsoluteStaticResourceUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
@@ -387,7 +395,6 @@ abstract class AppController extends Controller
         ];
 
         if ('' != $this->get('settingsBag')->get('static_domain_name')) {
-            $this->assignation['head']['absoluteResourcesUrl'] = $this->getStaticResourcesUrl();
             $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->get('static_domain_name');
         }
 
