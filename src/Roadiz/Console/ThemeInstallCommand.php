@@ -141,7 +141,7 @@ class ThemeInstallCommand extends Command
                             $this->getHelper('handlerFactory')->getHandlerFactory()
                         );
                     }
-                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $text .= '* Theme groups file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['roles'])) {
@@ -153,7 +153,7 @@ class ThemeInstallCommand extends Command
                             $this->getHelper('handlerFactory')->getHandlerFactory()
                         );
                     }
-                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $text .= '* Theme roles file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['settings'])) {
@@ -165,7 +165,7 @@ class ThemeInstallCommand extends Command
                             $this->getHelper('handlerFactory')->getHandlerFactory()
                         );
                     }
-                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $text .= '* Theme settings file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['nodetypes'])) {
@@ -177,7 +177,7 @@ class ThemeInstallCommand extends Command
                             $this->getHelper('handlerFactory')->getHandlerFactory()
                         );
                     }
-                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $text .= '* Theme node-type file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['tags'])) {
@@ -189,14 +189,14 @@ class ThemeInstallCommand extends Command
                             $this->getHelper('handlerFactory')->getHandlerFactory()
                         );
                     }
-                    $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $text .= '* Theme tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.' . PHP_EOL;
                 }
             }
             $text .= PHP_EOL;
             $text .= 'You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.' . PHP_EOL;
             $text .= 'And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.' . PHP_EOL;
         } else {
-            $text .= '<info>Theme class “' . $classname . '” has no data to import.</info>' . PHP_EOL;
+            $text .= 'Theme class <info>' . $classname . '</info> has no data to import.' . PHP_EOL;
         }
     }
 
@@ -215,16 +215,16 @@ class ThemeInstallCommand extends Command
                                 $this->getHelper('handlerFactory')->getHandlerFactory()
                             );
                         }
-                        $text .= '     — <info>Theme file “' . $this->themeRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                        $text .= '— Theme file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.' . PHP_EOL;
                     } catch (EntityAlreadyExistsException $e) {
-                        $text .= '     — <error>' . $e->getMessage() . '</error>' . PHP_EOL;
+                        $text .= '* <error>' . $e->getMessage() . '</error>' . PHP_EOL;
                     } catch (EntityNotFoundException $e) {
-                        $text .= '     — <error>' . $e->getMessage() . '</error>' . PHP_EOL;
+                        $text .= '* <error>' . $e->getMessage() . '</error>' . PHP_EOL;
                     }
                 }
             }
         } else {
-            $text .= '<info>Theme class “' . $classname . '” has no nodes to import.</info>' . PHP_EOL;
+            $text .= 'Theme class <info>' . $classname . '</info> has no nodes to import.' . PHP_EOL;
         }
     }
 
@@ -240,28 +240,17 @@ class ThemeInstallCommand extends Command
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-        $themeFile = $classname;
-        $themeFile = str_replace('\\', '/', $themeFile);
-        $themeFile = str_replace('Themes', 'themes', $themeFile);
-        $themeFile .= ".php";
-        $themeFile = $this->themeRoot . $themeFile;
 
         if (!$this->dryRun) {
-            if (file_exists($themeFile)) {
-                $fixtures = new Fixtures(
-                    $this->entityManager,
-                    $kernel->getCacheDir(),
-                    $kernel->getRootDir() . '/conf/config.yml',
-                    $kernel->getRootDir(),
-                    $kernel->isDebug()
-                );
-                $fixtures->installFrontendTheme($classname);
-                $text .= '<info>Theme class “' . $classname . '” has been registered into database.</info>' . PHP_EOL;
-            } else {
-                $text .= '<error>Theme class “' . $classname . '” does not exist.</error>' . PHP_EOL;
-            }
-        } else {
-            $text .= '<info>Theme class “' . $classname . '” should be registered into database…</info>' . PHP_EOL;
+            $fixtures = new Fixtures(
+                $this->entityManager,
+                $kernel->getCacheDir(),
+                $kernel->getRootDir() . '/conf/config.yml',
+                $kernel->getRootDir(),
+                $kernel->isDebug()
+            );
+            $fixtures->installFrontendTheme($classname);
         }
+        $text .= 'Theme class <info>' . $classname . '</info> has been registered into database.' . PHP_EOL;
     }
 }
