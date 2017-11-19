@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Console\Tools;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -40,6 +41,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Themes\Rozier\RozierApp;
 
 /**
  * Fixtures class
@@ -123,12 +125,12 @@ class Fixtures
     protected function installBackofficeTheme()
     {
         $existing = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                         ->getRepository(Theme::class)
                          ->findOneBy(['backendTheme' => true, 'available' => true]);
 
         if (null === $existing) {
             $beTheme = new Theme();
-            $beTheme->setClassName('\Themes\Rozier\RozierApp');
+            $beTheme->setClassName(RozierApp::class);
             $beTheme->setAvailable(true);
             $beTheme->setBackendTheme(true);
 
@@ -142,7 +144,7 @@ class Fixtures
     protected function installDefaultTranslation()
     {
         $existing = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                         ->getRepository(Translation::class)
                          ->findOneBy(['defaultTranslation' => true, 'available' => true]);
 
         if (null === $existing) {
@@ -174,7 +176,7 @@ class Fixtures
     public function createDefaultUser($data)
     {
         $existing = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\User')
+                         ->getRepository(User::class)
                          ->findOneBy(['username' => $data['username'], 'email' => $data['email']]);
 
         if ($existing === null) {
@@ -185,7 +187,7 @@ class Fixtures
             $user->setPictureUrl($user->getGravatarUrl());
 
             $existingGroup = $this->entityManager
-                                  ->getRepository('RZ\Roadiz\Core\Entities\Group')
+                                  ->getRepository(Group::class)
                                   ->findOneByName('Admin');
             $user->addGroup($existingGroup);
 
@@ -205,7 +207,7 @@ class Fixtures
     protected function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
         $role = $this->entityManager
-                     ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                     ->getRepository(Role::class)
                      ->findOneBy(['name' => $roleName]);
 
         if ($role === null) {
@@ -225,7 +227,7 @@ class Fixtures
     protected function getSetting($name)
     {
         $setting = $this->entityManager
-                        ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                        ->getRepository(Setting::class)
                         ->findOneBy(['name' => $name]);
 
         if (null === $setting) {
@@ -307,7 +309,7 @@ class Fixtures
     {
         /** @var Theme|null $existing */
         $existing = $this->entityManager
-                         ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                         ->getRepository(Theme::class)
                          ->findOneByClassName($classname);
 
         if (null === $existing) {
