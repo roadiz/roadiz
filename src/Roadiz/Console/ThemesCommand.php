@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,6 +42,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ThemesCommand extends Command
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     protected function configure()
@@ -68,7 +73,7 @@ class ThemesCommand extends Command
              * Replace slash by anti-slashes
              */
             $name = str_replace('/', '\\', $name);
-            $theme = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')
+            $theme = $this->entityManager->getRepository(Theme::class)
                 ->findOneBy(['className' => $name]);
             $tableContent[] = [
                 str_replace('\\', '/', $theme->getClassName()),
@@ -77,7 +82,7 @@ class ThemesCommand extends Command
             ];
         } else {
             $themes = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->getRepository(Theme::class)
                 ->findAll();
 
             if (count($themes) > 0) {
