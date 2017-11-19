@@ -41,6 +41,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Install\InstallApp;
+use Themes\Rozier\RozierApp;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
@@ -80,7 +81,7 @@ class InstallCommand extends Command
                 $theme = new Theme();
                 $theme->setAvailable(true)
                     ->setBackendTheme(true)
-                    ->setClassName('Themes\Rozier\RozierApp');
+                    ->setClassName(RozierApp::class);
 
                 $this->entityManager->persist($theme);
                 $this->entityManager->flush();
@@ -158,7 +159,7 @@ class InstallCommand extends Command
     private function hasDefaultBackend()
     {
         $default = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+            ->getRepository(Theme::class)
             ->findOneBy(["backendTheme" => true]);
 
         return $default !== null ? true : false;
@@ -172,7 +173,7 @@ class InstallCommand extends Command
     public function hasDefaultTranslation()
     {
         $default = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneBy([]);
 
         return $default !== null ? true : false;
