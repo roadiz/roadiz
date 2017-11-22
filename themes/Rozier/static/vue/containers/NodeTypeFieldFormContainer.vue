@@ -97,6 +97,18 @@
                         view: CodeMirror,
                         mode: 'yaml'
                     }
+                },
+                29: { // multiple-provider.type
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
+                    }
+                },
+                30: { // single-provider.type
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
+                    }
                 }
             }
         },

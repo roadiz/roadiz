@@ -36,10 +36,12 @@ use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
+use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
@@ -47,7 +49,9 @@ use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
- * Class FirewallEntry
+ * FirewallEntry automatize firewall and access-map configuration with
+ * a classic form entry-point.
+ *
  * @package RZ\Roadiz\Utils\Security
  */
 class FirewallEntry
@@ -55,67 +59,67 @@ class FirewallEntry
     /**
      * @var string
      */
-    private $firewallBasePattern;
+    protected $firewallBasePattern;
     /**
      * @var string
      */
-    private $firewallBasePath;
+    protected $firewallBasePath;
     /**
      * @var string
      */
-    private $firewallLogin;
+    protected $firewallLogin;
     /**
      * @var string
      */
-    private $firewallLogout;
+    protected $firewallLogout;
     /**
      * @var string
      */
-    private $firewallLoginCheck;
+    protected $firewallLoginCheck;
     /**
      * @var string
      */
-    private $firewallBaseRole;
+    protected $firewallBaseRole;
     /**
      * @var Container
      */
-    private $container;
+    protected $container;
     /**
      * @var AuthenticationSuccessHandler
      */
-    private $authenticationSuccessHandler;
+    protected $authenticationSuccessHandler;
     /**
      * @var AuthenticationFailureHandler
      */
-    private $authenticationFailureHandler;
+    protected $authenticationFailureHandler;
     /**
      * @var array
      */
-    private $listeners;
+    protected $listeners;
     /**
      * @var RequestMatcher
      */
-    private $requestMatcher;
+    protected $requestMatcher;
     /**
      * @var boolean
      */
-    private $useReferer = false;
+    protected $useReferer = false;
     /**
      * @var string
      */
-    private $authenticationSuccessHandlerClass;
+    protected $authenticationSuccessHandlerClass;
     /**
      * @var string
      */
-    private $authenticationFailureHandlerClass;
+    protected $authenticationFailureHandlerClass;
     /**
      * @var AccessDeniedHandlerInterface
      */
-    private $accessDeniedHandler;
+    protected $accessDeniedHandler;
     /**
      * @var boolean
      */
-    private $locked;
+    protected $locked;
 
     /**
      * FirewallEntry constructor.
@@ -147,6 +151,10 @@ class FirewallEntry
         $this->firewallLogout = $firewallLogout;
         $this->firewallLoginCheck = $firewallLoginCheck;
         $this->accessDeniedHandler = null;
+        $this->container = $container;
+        $this->authenticationSuccessHandlerClass = $authenticationSuccessHandlerClass;
+        $this->authenticationFailureHandlerClass = $authenticationFailureHandlerClass;
+        $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
 
         if (is_array($firewallBaseRole)) {
             $this->firewallBaseRole = $firewallBaseRole;
@@ -154,17 +162,11 @@ class FirewallEntry
             $this->firewallBaseRole = [$firewallBaseRole];
         }
 
-        $this->container = $container;
-
-        $this->authenticationSuccessHandlerClass = $authenticationSuccessHandlerClass;
-        $this->authenticationFailureHandlerClass = $authenticationFailureHandlerClass;
-
         /*
          * Add an access map entry only if basePath pattern is valid and
          * not root level.
          */
         if (null !== $this->firewallBasePattern && "" !== $this->firewallBasePattern) {
-            $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
             $this->container['accessMap']->add($this->requestMatcher, $this->firewallBaseRole);
         }
 
@@ -257,7 +259,7 @@ class FirewallEntry
                 // logout users
                 $this->listeners[] = [$this->getLogoutListener(), 1];
 
-                $this->listeners[] = [$this->getAuthentificationListener(), 20];
+                $this->listeners[] = [$this->getAuthenticationListener(), 20];
                 // Warning: this MUST be the last listener to work.
                 $this->listeners[] = [$this->container['securityAccessListener'], 9999];
             }
@@ -277,9 +279,9 @@ class FirewallEntry
     }
 
     /**
-     * @return UsernamePasswordFormAuthenticationListener
+     * @return ListenerInterface
      */
-    protected function getAuthentificationListener()
+    protected function getAuthenticationListener()
     {
         $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
             $this->container['httpUtils'],
@@ -323,25 +325,32 @@ class FirewallEntry
     }
 
     /**
+     * @param bool $useForward
+     * @return AuthenticationEntryPointInterface
+     */
+    protected function getAuthenticationEntryPoint($useForward = false)
+    {
+        return new FormAuthenticationEntryPoint(
+            $this->container['httpKernel'],
+            $this->container['httpUtils'],
+            $this->firewallLogin,
+            $useForward
+        );
+    }
+
+    /**
      * @param bool $useForward Use true to forward request instead of redirecting. Be careful, Token will be set to null
      * in sub-request!
      * @return ExceptionListener
      */
     public function getExceptionListener($useForward = false)
     {
-        $formEntryPoint = new FormAuthenticationEntryPoint(
-            $this->container['httpKernel'],
-            $this->container['httpUtils'],
-            $this->firewallLogin,
-            $useForward
-        );
-
         return new ExceptionListener(
             $this->container['securityTokenStorage'],
             $this->container['securityAuthentificationTrustResolver'],
             $this->container['httpUtils'],
             Kernel::SECURITY_DOMAIN,
-            $formEntryPoint,
+            $this->getAuthenticationEntryPoint($useForward),
             null,
             $this->accessDeniedHandler,
             $this->container['logger']

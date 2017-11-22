@@ -30,14 +30,11 @@
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RequestContext;
 
 class CdnPackagesTest extends DefaultThemeDependentCase
 {
@@ -52,7 +49,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
     /**
      * @return Request
      */
-    public static function getMockRequest()
+    public function getRequest()
     {
         return new Request([], [], [], [], [], [
             'REQUEST_URI' => '/',
@@ -84,10 +81,13 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         static::getManager()->flush();
     }
 
+
     public function testUseStaticDomain()
     {
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
-        $requestStack->push(static::getMockRequest());
+        $requestStack->push($request);
+
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, static::getStaticDomain());
 
         $this->assertEquals(true, $packages->useStaticDomain());
@@ -95,8 +95,9 @@ class CdnPackagesTest extends DefaultThemeDependentCase
 
     public function testGetUrl()
     {
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
-        $requestStack->push(static::getMockRequest());
+        $requestStack->push($request);
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, static::$kernel, static::getStaticDomain());
 
         $this->assertEquals(
@@ -127,26 +128,21 @@ class CdnPackagesTest extends DefaultThemeDependentCase
      * @param $absolute
      * @param $expectedUrl
      */
-    public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
+    public function testDocumentUrlWithBasePath($domainName, Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new Kernel('test', true, false);
-        $kernel->boot();
-
-        $request = static::getMockRequest();
-        $kernel->getContainer()->offsetSet('request', $request);
-        $kernel->get('requestStack')->push($request);
-
-        $requestContext = new RequestContext();
-        $requestContext->fromRequest($request);
-
-        /** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator */
-        $urlGenerator = $kernel->get('urlGenerator');
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
         $requestStack->push($request);
-        $urlGenerator->setContext($requestContext);
 
-        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, static::getStaticDomain());
-        $documentUrlGenerator = new DocumentUrlGenerator($requestStack, $packages, $urlGenerator);
+        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel->boot();
+        $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
+        $kernel->get('settingsBag')->set('static_domain_name', $domainName);
+        $kernel->handle($request);
+
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, $domainName);
+        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $kernel->get('urlGenerator'));
+
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
@@ -164,31 +160,53 @@ class CdnPackagesTest extends DefaultThemeDependentCase
 
         return [
             [
+                'static.localhost',
                 $document1,
                 [
                     'quality' => 80
                 ],
                 false,
-                static::getStaticDomain().'/assets/q80/folder/file.jpg',
+                '//static.localhost/assets/q80/folder/file.jpg',
             ],
             [
+                'http://static.localhost',
                 $document1,
                 [
                     'quality' => 90,
                     'width' => 600,
                 ],
                 true,
-                static::getStaticDomain().'/assets/w600-q90/folder/file.jpg',
+                'http://static.localhost/assets/w600-q90/folder/file.jpg',
             ],
             [
+                '//static.localhost',
                 $document1,
                 [
                     'noProcess' => true,
                 ],
                 true,
+                '//static.localhost/files/folder/file.jpg',
+            ],
+            [
+                static::getStaticDomain(),
+                $document1,
+                [
+                    'noProcess' => true,
+                ],
+                false,
                 static::getStaticDomain().'/files/folder/file.jpg',
             ],
             [
+                'http://static.localhost',
+                $document1,
+                [
+                    'noProcess' => true,
+                ],
+                false,
+                'http://static.localhost/files/folder/file.jpg',
+            ],
+            [
+                'static.localhost',
                 $document1,
                 [
                     'noProcess' => true,

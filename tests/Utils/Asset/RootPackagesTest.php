@@ -39,7 +39,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
     /**
      * @return Request
      */
-    public static function getMockRequest()
+    public function getRequest()
     {
         return new Request([], [], [], [], [], [
             'REQUEST_URI' => '/',
@@ -70,12 +70,9 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new Kernel('test', true, false);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
-
-        $request = static::getMockRequest();
-        $kernel->getContainer()->offsetSet('request', $request);
-        $kernel->get('requestStack')->push($request);
+        $kernel->handle($this->getRequest());
 
         $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
@@ -83,19 +80,28 @@ class RootPackagesTest extends DefaultThemeDependentCase
 
         // Assert
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
+
+        $kernel->shutdown();
     }
 
     public function testGetUrl()
     {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
         $this->assertEquals(
             '/files/some-custom-file',
-            $this->get('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
+            $kernel->get('assetPackages')->getUrl('some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertEquals(
             '/files/folder/some-custom-file',
-            $this->get('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
+            $kernel->get('assetPackages')->getUrl('folder/some-custom-file', Packages::DOCUMENTS)
         );
+
+
+        $kernel->shutdown();
     }
 
     /**
@@ -106,15 +112,21 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrlWithSlash()
     {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
         $this->assertNotEquals(
             '/files/some-custom-file',
-            $this->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
+            $kernel->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertNotEquals(
             '/files/folder/some-custom-file',
-            $this->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
+            $kernel->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
         );
+
+        $kernel->shutdown();
     }
 
     /**

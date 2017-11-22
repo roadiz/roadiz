@@ -55,7 +55,8 @@ class ThemesType extends AbstractType
      */
     public function __construct(EntityManager $entityManager)
     {
-        $themes = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAll();
+        $this->entityManager = $entityManager;
+        $themes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAll();
 
         $existingThemes = [Kernel::INSTALL_CLASSNAME];
         /** @var Theme $theme */
@@ -77,7 +78,6 @@ class ThemesType extends AbstractType
         // And storing it into an array, used in the form
         foreach ($iterator as $file) {
             $data = Yaml::parse(file_get_contents($file->getPathname()));
-
             $classname = '\Themes\\' . $data['themeDir'] . "\\" . $data['themeDir'] . "App";
 
             /*
@@ -89,7 +89,6 @@ class ThemesType extends AbstractType
             }
         }
         $this->choices = $choices;
-        $this->entityManager = $entityManager;
     }
 
     public function getSize()

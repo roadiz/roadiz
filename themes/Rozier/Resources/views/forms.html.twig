@@ -183,6 +183,24 @@
     } %}
 {% endblock join_widget %}
 
+{% block provider_widget %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'explorer-provider',
+        icon: 'uk-icon-chain'
+    } %}
+{% endblock provider_widget %}
+
+{% block explorer_provider_widget %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'explorer-provider',
+        icon: 'uk-icon-chain'
+    } %}
+{% endblock explorer_provider_widget %}
+
 {% block custom_forms_widget %}
     {% include '@Rozier/widgets/drawer.html.twig' with {
         widget_attributes: block('widget_attributes'),

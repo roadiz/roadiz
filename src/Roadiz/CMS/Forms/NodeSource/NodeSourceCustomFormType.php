@@ -43,27 +43,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class NodeSourceCustomFormType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class NodeSourceCustomFormType extends AbstractType
+class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodesSources
-     */
-    private $nodeSource;
-
-    /**
-     * @var NodeTypeField
-     */
-    private $nodeTypeField;
-
     /**
      * @var CustomForm[]
      */
     private $selectedCustomForms;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var NodeHandler
      */
@@ -82,9 +68,8 @@ class NodeSourceCustomFormType extends AbstractType
         EntityManager $entityManager,
         NodeHandler $nodeHandler
     ) {
-        $this->nodeSource = $nodeSource;
-        $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
+        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
+
         $this->nodeHandler = $nodeHandler;
         $this->nodeHandler->setNode($this->nodeSource->getNode());
     }
@@ -127,14 +112,6 @@ class NodeSourceCustomFormType extends AbstractType
     public function getName()
     {
         return 'custom_forms';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'hidden';
     }
 
     /**

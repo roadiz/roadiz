@@ -17,7 +17,7 @@ import {
 
     EXPLORER_CLOSE
 } from '../../types/mutationTypes'
-import api from '../../api'
+import * as DrawerApi from '../../api/DrawerApi'
 import EntityAwareFactory from '../../factories/EntityAwareFactory'
 
 /**
@@ -65,7 +65,7 @@ const actions = {
             commit(DRAWERS_INIT_DATA_REQUEST_EMPTY, { drawer, maxLength, minLength })
         } else {
             // If ids provided, fetch data and fill the Drawer
-            api.getItemsByIds(entity, ids, filters)
+            DrawerApi.getItemsByIds(entity, ids, filters)
                 .then((result) => {
                     commit(DRAWERS_INIT_DATA_REQUEST_SUCCESS, { drawer, result, maxLength, minLength })
                 })
@@ -131,7 +131,9 @@ const mutations = {
             errorMessage: null,
             isLoading: false,
             filters: {
-                nodeTypes: null
+                nodeTypes: null,
+                nodeTypeField: null,
+                providerClass: null,
             },
             isDropzoneEnable: false,
             minLength: 0,

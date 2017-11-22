@@ -1,10 +1,14 @@
 {
   "name": "install-theme",
   "version": "0.17.0",
+  "scripts": {
+      "build": "NODE_ENV=production grunt",
+      "dev": "grunt watch"
+  },
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-jshint": "~0.11.2",
     "grunt-contrib-less": "~0.11.0",
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-watch": "~0.6.1",
