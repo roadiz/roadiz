@@ -973,6 +973,10 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
+bower@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/bower/-/bower-1.8.2.tgz#adf53529c8d4af02ef24fb8d5341c1419d33e2f7"
+
 brace-expansion@^1.0.0:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.6.tgz#7197d7eaa9b87e648390ea61fc66c84427420df9"
@@ -3799,7 +3803,7 @@ onetime@^1.0.0:
   resolved "https://registry.yarnpkg.com/onetime/-/onetime-1.1.0.tgz#a1f7838f8314c516f05ecefcbc4ccfe04b4ed789"
 
 optional@^0.1.0:
-  version v0.1.3
+  version "0.1.3"
   resolved "https://registry.yarnpkg.com/optional/-/optional-0.1.3.tgz#f87537517b59a5e732cfd8f18e4f7eea7ab4761e"
 
 optipng-bin@^3.0.0:
@@ -4659,9 +4663,9 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-sortablejs@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.5.1.tgz#efae13b84c677f3b3d3f4f8e46c7e05fc6acb525"
+sortablejs@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.7.0.tgz#80a2b2370abd568e1cec8c271131ef30a904fa28"
 
 source-list-map@^0.1.7:
   version "0.1.8"
@@ -5342,11 +5346,11 @@ vue@^2.0.0:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.2.6.tgz#451714b394dd6d4eae7b773c40c2034a59621aed"
 
-vuedraggable@^2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.9.0.tgz#d3aa8684049d8b3efd27e2b24b6804c235ba74a9"
+vuedraggable@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.15.0.tgz#3526adee924bd22b478a01b70c0a34dfc9cbbb4f"
   dependencies:
-    sortablejs "^1.5.1"
+    sortablejs "^1.7.0"
 
 ware@^1.2.0:
   version "1.3.0"
