@@ -51,6 +51,6 @@
     "vue-js-modal": "^1.2.3",
     "vue-multiselect": "2.0.0-beta.15",
     "vue2-dropzone": "^2.2.4",
-    "vuedraggable": "^2.9.0"
+    "vuedraggable": "^2.15.0"
   }
 }
