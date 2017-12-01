@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -108,6 +109,14 @@ class TagTranslation extends AbstractEntity
     protected $translation = null;
 
     /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="tagTranslation",
+     *     orphanRemoval=true, cascade={"persist"})
+     * @ORM\OrderBy({"position" = "ASC"})
+     * @var ArrayCollection|null
+     */
+    protected $documents = null;
+
+    /**
      * Create a new TagTranslation with its origin Tag and Translation.
      *
      * @param Tag         $original
@@ -119,6 +128,7 @@ class TagTranslation extends AbstractEntity
         $this->setTranslation($translation);
 
         $this->name = $original->getDirtyTagName() != '' ? $original->getDirtyTagName() : $original->getTagName();
+        $this->documents = new ArrayCollection();
     }
 
     /**
@@ -167,5 +177,46 @@ class TagTranslation extends AbstractEntity
         $this->translation = $translation;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param ArrayCollection|null $documents
+     * @return TagTranslation
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+        return $this;
+    }
+
+    /**
+     * After clone method.
+     *
+     * Be careful not to persist nor flush current entity after
+     * calling clone as it empties its relations.
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $documents = $this->getDocuments();
+            if ($documents !== null) {
+                $this->documents = new ArrayCollection();
+                /** @var TagTranslationDocuments $document */
+                foreach ($documents as $document) {
+                    $cloneDocument = clone $document;
+                    $this->documents->add($cloneDocument);
+                    $cloneDocument->setTagTranslation($this);
+                }
+            }
+        }
     }
 }

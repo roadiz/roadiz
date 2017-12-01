@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,8 +23,8 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesDocuments.php
- * @author Ambroise Maupate
+ * @file TagTranslationDocuments.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 namespace RZ\Roadiz\Core\Entities;
 
@@ -34,80 +33,50 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 
 /**
  * Describes a complex ManyToMany relation
- * between NodesSources, Documents and NodeTypeFields.
+ * between TagTranslation and Documents.
  *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
- * @ORM\Table(name="nodes_sources_documents", indexes={
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagTranslationDocumentsRepository")
+ * @ORM\Table(name="tag_translations_documents", indexes={
  *     @ORM\Index(columns={"position"})
  * })
  */
-class NodesSourcesDocuments extends AbstractPositioned
+class TagTranslationDocuments extends AbstractPositioned
 {
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="documentsByFields", fetch="EAGER", cascade={"persist"})
-     * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodesSources
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\TagTranslation", inversedBy="documents", fetch="EAGER", cascade={"persist"})
+     * @ORM\JoinColumn(name="tag_translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var TagTranslation
      */
-    protected $nodeSource;
+    protected $tagTranslation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields", fetch="EAGER", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="tagTranslations", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Document
      */
     protected $document;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
-     * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodeTypeField
-     */
-    protected $field;
-
-    /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
-     * @param mixed                                $nodeSource NodesSources and inherited types
-     * @param \RZ\Roadiz\Core\Entities\Document      $document   Document to link
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field      NodeTypeField
+     * @param TagTranslation $tagTranslation
+     * @param Document $document
      */
-    public function __construct(NodesSources $nodeSource, Document $document, NodeTypeField $field)
+    public function __construct(TagTranslation $tagTranslation, Document $document)
     {
-        $this->nodeSource = $nodeSource;
         $this->document = $document;
-        $this->field = $field;
+        $this->tagTranslation = $tagTranslation;
     }
 
+    /**
+     *
+     */
     public function __clone()
     {
         if ($this->id) {
             $this->id = null;
-            $this->nodeSource = null;
+            $this->tagTranslation = null;
         }
-    }
-
-    /**
-     * Gets the value of nodeSource.
-     *
-     * @return NodesSources
-     */
-    public function getNodeSource()
-    {
-        return $this->nodeSource;
-    }
-
-    /**
-     * Sets the value of nodeSource.
-     *
-     * @param NodesSources $nodeSource the node source
-     *
-     * @return self
-     */
-    public function setNodeSource(NodesSources $nodeSource)
-    {
-        $this->nodeSource = $nodeSource;
-
-        return $this;
     }
 
     /**
@@ -135,26 +104,20 @@ class NodesSourcesDocuments extends AbstractPositioned
     }
 
     /**
-     * Gets the value of field.
-     *
-     * @return NodeTypeField
+     * @return TagTranslation
      */
-    public function getField()
+    public function getTagTranslation()
     {
-        return $this->field;
+        return $this->tagTranslation;
     }
 
     /**
-     * Sets the value of field.
-     *
-     * @param NodeTypeField $field the field
-     *
-     * @return self
+     * @param TagTranslation $tagTranslation
+     * @return TagTranslationDocuments
      */
-    public function setField(NodeTypeField $field)
+    public function setTagTranslation(TagTranslation $tagTranslation)
     {
-        $this->field = $field;
-
+        $this->tagTranslation = $tagTranslation;
         return $this;
     }
 }
