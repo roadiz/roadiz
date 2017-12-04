@@ -58,9 +58,8 @@ class TagTranslationType extends AbstractType
                 'label' => 'description',
                 'required' => false,
             ])
-            ->add('documents', TagTranslationDocumentType::class, [
+            ->add('tagTranslationDocuments', TagTranslationDocumentType::class, [
                 'label' => 'documents',
-                'virtual' => true,
                 'required' => false,
                 'tagTranslation' => $builder->getForm()->getData(),
                 'entityManager' => $options['em'],

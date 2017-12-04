@@ -61,21 +61,24 @@ class TagTranslationDocumentsTransformer implements DataTransformerInterface
     }
 
     /**
+     * Transform TagTranslationDocuments join entities
+     * to Document entities for displaying in document VueJS component.
+     *
      * @param TagTranslationDocuments[] $tagTranslationDocuments
-     * @return array
+     * @return Document[]
      */
     public function transform($tagTranslationDocuments)
     {
         if (null === $tagTranslationDocuments || empty($tagTranslationDocuments)) {
             return [];
         }
-        $ids = [];
-        /** @var Document $tagTranslationDocument */
+        $documents = [];
+        /** @var TagTranslationDocuments $tagTranslationDocument */
         foreach ($tagTranslationDocuments as $tagTranslationDocument) {
-            $ids[] = $tagTranslationDocument->getDocument()->getId();
+            $documents[] = $tagTranslationDocument->getDocument();
         }
 
-        return $ids;
+        return $documents;
     }
 
     /**

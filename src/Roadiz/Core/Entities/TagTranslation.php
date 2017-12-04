@@ -114,7 +114,7 @@ class TagTranslation extends AbstractEntity
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection|null
      */
-    protected $documents = null;
+    protected $tagTranslationDocuments = null;
 
     /**
      * Create a new TagTranslation with its origin Tag and Translation.
@@ -182,19 +182,29 @@ class TagTranslation extends AbstractEntity
     /**
      * @return ArrayCollection|null
      */
-    public function getDocuments()
+    public function getTagTranslationDocuments()
     {
-        return $this->documents;
+        return $this->tagTranslationDocuments;
     }
 
     /**
-     * @param ArrayCollection|null $documents
+     * @param ArrayCollection|null $tagTranslationDocuments
      * @return TagTranslation
      */
-    public function setDocuments($documents)
+    public function setTagTranslationDocuments($tagTranslationDocuments)
     {
-        $this->documents = $documents;
+        $this->tagTranslationDocuments = $tagTranslationDocuments;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDocuments()
+    {
+        return array_map(function(TagTranslationDocuments $tagTranslationDocument) {
+            return $tagTranslationDocument->getDocument();
+        }, $this->getTagTranslationDocuments()->toArray());
     }
 
     /**

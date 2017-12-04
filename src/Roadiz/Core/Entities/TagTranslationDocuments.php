@@ -36,14 +36,14 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
  * between TagTranslation and Documents.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagTranslationDocumentsRepository")
- * @ORM\Table(name="tag_translations_documents", indexes={
+ * @ORM\Table(name="tags_translations_documents", indexes={
  *     @ORM\Index(columns={"position"})
  * })
  */
 class TagTranslationDocuments extends AbstractPositioned
 {
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\TagTranslation", inversedBy="documents", fetch="EAGER", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\TagTranslation", inversedBy="tagTranslationDocuments", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="tag_translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var TagTranslation
      */
