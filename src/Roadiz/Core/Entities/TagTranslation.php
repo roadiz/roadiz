@@ -202,7 +202,7 @@ class TagTranslation extends AbstractEntity
      */
     public function getDocuments()
     {
-        return array_map(function(TagTranslationDocuments $tagTranslationDocument) {
+        return array_map(function (TagTranslationDocuments $tagTranslationDocument) {
             return $tagTranslationDocument->getDocument();
         }, $this->getTagTranslationDocuments()->toArray());
     }
