@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
