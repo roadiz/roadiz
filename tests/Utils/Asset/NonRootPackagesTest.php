@@ -77,6 +77,8 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         $kernel->boot();
         $kernel->handle($this->getRequest());
 
+        $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
+
         /** @var \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
@@ -137,6 +139,16 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         $this->assertEquals(
             '/test/themes/DefaultTheme/static/css/styles.css',
             $packages->getUrl('themes/DefaultTheme/static/css/styles.css')
+        );
+
+        $this->assertEquals(
+            '/test/files/folder/document.jpg',
+            $packages->getUrl('folder/document.jpg', Packages::DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            'http://localhost/test/files/folder/document.jpg',
+            $packages->getUrl('folder/document.jpg', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $kernel->shutdown();

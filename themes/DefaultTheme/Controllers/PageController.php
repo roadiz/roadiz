@@ -45,11 +45,12 @@ class PageController extends DefaultThemeApp
     /**
      * Default action for any Page node.
      *
-     * @param Request     $request
-     * @param Node        $node
+     * @param Request $request
+     * @param Node $node
      * @param Translation $translation
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,

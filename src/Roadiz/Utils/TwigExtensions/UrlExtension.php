@@ -178,6 +178,7 @@ class UrlExtension extends \Twig_Extension
      */
     public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
     {
+        trigger_error('url filter is deprecated for NodesSources. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}', E_USER_DEPRECATED);
         $absolute = false;
         $canonicalScheme = '';
 

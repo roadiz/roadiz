@@ -34,9 +34,9 @@
                 {# Only add preview/see button for Reachable node-types #}
                 {% if node.nodeType.reachable %}
                     {% if source and node.published %}
-                        <a class="uk-button public-url-link" target="_blank" href="{{ source|url }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                        <a class="uk-button public-url-link" target="_blank" href="{{ path(source) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
                     {% elseif source %}
-                        <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ source|url|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
+                        <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ path(source)|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
                     {% endif %}
                 {% endif %}
                 <a class="uk-button rz-no-ajax-link" href="{{ path('nodesDuplicatePage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
