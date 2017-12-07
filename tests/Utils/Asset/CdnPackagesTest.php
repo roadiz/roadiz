@@ -30,8 +30,10 @@
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -134,14 +136,14 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
         $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
         $kernel->get('settingsBag')->set('static_domain_name', $domainName);
         $kernel->handle($request);
 
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, $domainName);
-        $documentUrlGenerator = new \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator($requestStack, $packages, $kernel->get('urlGenerator'));
+        $documentUrlGenerator = new DocumentUrlGenerator($requestStack, $packages, $kernel->get('urlGenerator'));
 
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
