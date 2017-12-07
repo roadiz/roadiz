@@ -75,9 +75,14 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
     {
         $kernel = new Kernel('test', true);
         $kernel->boot();
-        $kernel->handle($this->getRequest());
+        $kernel->get('requestStack')->push($this->getRequest());
+        $kernel->container->offsetSet('request', $this->getRequest());
 
         $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
+        $this->assertEquals(
+            '/test/files/folder/document.jpg',
+            $kernel->get('assetPackages')->getUrl('folder/document.jpg', Packages::DOCUMENTS)
+        );
 
         /** @var \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $kernel->get('document.url_generator');

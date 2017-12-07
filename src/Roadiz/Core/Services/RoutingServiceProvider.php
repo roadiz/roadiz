@@ -61,8 +61,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['requestStack'] = function () {
-            $stack = new RequestStack();
-            return $stack;
+            return new RequestStack();
         };
 
         $container['requestContext'] = function ($c) {
