@@ -65,13 +65,13 @@ class SettingType extends AbstractType
 
         if ($options['shortEdit'] === false) {
             $builder
-                ->add('name',  TextType::class, [
+                ->add('name', TextType::class, [
                     'label' => 'name',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
-                ->add('visible',  CheckboxType::class, [
+                ->add('visible', CheckboxType::class, [
                     'label' => 'visible',
                     'required' => false,
                 ])

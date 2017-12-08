@@ -213,7 +213,7 @@ class RolesController extends RozierApp
     protected function buildAddForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('name',  TextType::class, [
+                        ->add('name', TextType::class, [
                             'label' => 'name',
                             'constraints' => [
                                 new Regex([
@@ -236,7 +236,7 @@ class RolesController extends RozierApp
     protected function buildDeleteForm(Role $role)
     {
         $builder = $this->createFormBuilder()
-                        ->add('roleId',  HiddenType::class, [
+                        ->add('roleId', HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -259,13 +259,13 @@ class RolesController extends RozierApp
             'name' => $role->getName(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('roleId',  HiddenType::class, [
+                        ->add('roleId', HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('name',  TextType::class, [
+                        ->add('name', TextType::class, [
                             'data' => $role->getName(),
                             'label' => 'name',
                             'constraints' => [

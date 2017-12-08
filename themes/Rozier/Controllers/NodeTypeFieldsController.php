@@ -284,7 +284,7 @@ class NodeTypeFieldsController extends RozierApp
     private function buildDeleteForm(NodeTypeField $field)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeTypeFieldId',  HiddenType::class, [
+                        ->add('nodeTypeFieldId', HiddenType::class, [
                             'data' => $field->getId(),
                             'constraints' => [
                                 new NotBlank(),

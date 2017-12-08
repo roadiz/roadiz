@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\CMS\Forms;
 
-
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -104,5 +103,4 @@ class SettingDocumentType extends AbstractType
     {
         return FileType::class;
     }
-
 }

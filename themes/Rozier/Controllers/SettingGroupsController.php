@@ -309,13 +309,13 @@ class SettingGroupsController extends RozierApp
             'inMenu' => $settingGroup->isInMenu(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('name',  TextType::class, [
+                        ->add('name', TextType::class, [
                             'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('inMenu',  CheckboxType::class, [
+                        ->add('inMenu', CheckboxType::class, [
                             'label' => 'settingGroup.in.menu',
                             'required' => false,
                         ])
@@ -337,13 +337,17 @@ class SettingGroupsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('name', TextType::class,
+                        ->add(
+                            'name',
+                            TextType::class,
                             [
                                 'label' => 'name',
                                 'constraints' => [new NotBlank()],
                             ]
                         )
-                        ->add('inMenu', CheckboxType::class,
+                        ->add(
+                            'inMenu',
+                            CheckboxType::class,
                             [
                                 'label' => 'settingGroup.in.menu',
                                 'required' => false,
@@ -361,7 +365,7 @@ class SettingGroupsController extends RozierApp
     private function buildDeleteForm(SettingGroup $settingGroup)
     {
         $builder = $this->createFormBuilder()
-                        ->add('settingGroupId',  HiddenType::class, [
+                        ->add('settingGroupId', HiddenType::class, [
                             'data' => $settingGroup->getId(),
                             'constraints' => [
                                 new NotBlank(),

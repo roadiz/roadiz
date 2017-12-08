@@ -290,7 +290,9 @@ class UsersController extends RozierApp
     private function buildDeleteForm(User $user)
     {
         $builder = $this->createFormBuilder()
-                        ->add('userId',  HiddenType::class,
+                        ->add(
+                            'userId',
+                            HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [

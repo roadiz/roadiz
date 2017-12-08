@@ -395,13 +395,13 @@ class UrlAliasesController extends RozierApp
             'nodeId' => $node->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('nodeId',  HiddenType::class, [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('alias',  TextType::class, [
+                        ->add('alias', TextType::class, [
                             'label' => 'urlAlias',
                         ])
                         ->add('translationId', TranslationsType::class, [
@@ -424,13 +424,13 @@ class UrlAliasesController extends RozierApp
             'alias' => $ua->getAlias(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('urlaliasId',  HiddenType::class, [
+                        ->add('urlaliasId', HiddenType::class, [
                             'data' => $ua->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('alias',  TextType::class, [
+                        ->add('alias', TextType::class, [
                             'label' => false,
                             'constraints' => [
                                 new NotBlank(),
@@ -454,20 +454,20 @@ class UrlAliasesController extends RozierApp
             'metaDescription' => $ns->getMetaDescription(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('id',  HiddenType::class, [
+                        ->add('id', HiddenType::class, [
                             'data' => $ns->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('metaTitle',  TextType::class, [
+                        ->add('metaTitle', TextType::class, [
                             'label' => 'metaTitle',
                             'required' => false,
                             'attr' => [
                                 'data-max-length' => 55,
                             ],
                         ])
-                        ->add('metaKeywords',  TextType::class, [
+                        ->add('metaKeywords', TextType::class, [
                             'label' => 'metaKeywords',
                             'required' => false,
                         ])
@@ -490,7 +490,7 @@ class UrlAliasesController extends RozierApp
             'urlaliasId' => $ua->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('urlaliasId',  HiddenType::class, [
+                        ->add('urlaliasId', HiddenType::class, [
                             'data' => $ua->getId(),
                             'constraints' => [
                                 new NotBlank(),

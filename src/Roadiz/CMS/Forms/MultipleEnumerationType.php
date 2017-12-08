@@ -54,14 +54,14 @@ class MultipleEnumerationType extends AbstractType
         $resolver->setRequired(['nodeTypeField']);
         $resolver->setAllowedTypes('nodeTypeField', [NodeTypeField::class]);
 
-        $resolver->setNormalizer('placeholder', function (Options $options, $placeholder){
+        $resolver->setNormalizer('placeholder', function (Options $options, $placeholder) {
             if ('' !== $options['nodeTypeField']->getPlaceholder()) {
                 $placeholder = $options['nodeTypeField']->getPlaceholder();
             }
             return $placeholder;
         });
 
-        $resolver->setNormalizer('choices', function (Options $options, $choices){
+        $resolver->setNormalizer('choices', function (Options $options, $choices) {
             $values = explode(',', $options['nodeTypeField']->getDefaultValues());
 
             foreach ($values as $value) {
@@ -71,7 +71,7 @@ class MultipleEnumerationType extends AbstractType
             return $choices;
         });
 
-        $resolver->setNormalizer('expanded', function (Options $options, $expanded){
+        $resolver->setNormalizer('expanded', function (Options $options, $expanded) {
             return $options['nodeTypeField']->isExpanded();
         });
     }

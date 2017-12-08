@@ -196,7 +196,9 @@ class UsersRolesController extends RozierApp
             'userId' => $user->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('userId',  HiddenType::class,
+                        ->add(
+                            'userId',
+                            HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -226,7 +228,9 @@ class UsersRolesController extends RozierApp
     private function buildRemoveRoleForm(User $user, Role $role)
     {
         $builder = $this->createFormBuilder()
-                        ->add('userId',  HiddenType::class,
+                        ->add(
+                            'userId',
+                            HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -234,7 +238,9 @@ class UsersRolesController extends RozierApp
                                 ],
                             ]
                         )
-                        ->add('roleId',  HiddenType::class,
+                        ->add(
+                            'roleId',
+                            HiddenType::class,
                             [
                                 'data' => $role->getId(),
                                 'constraints' => [

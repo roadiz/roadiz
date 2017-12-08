@@ -762,7 +762,7 @@ class DocumentsController extends RozierApp
             'documentId' => $doc->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-            ->add('documentId',  HiddenType::class, [
+            ->add('documentId', HiddenType::class, [
                 'data' => $doc->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -780,7 +780,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-            ->add('checksum',  HiddenType::class, [
+            ->add('checksum', HiddenType::class, [
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
@@ -799,7 +799,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-            ->add('checksum',  HiddenType::class, [
+            ->add('checksum', HiddenType::class, [
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
@@ -844,11 +844,11 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-            ->add('referer',  HiddenType::class, [
+            ->add('referer', HiddenType::class, [
                 'data' => $this->get('request')->get('referer'),
                 'mapped' => false,
             ])
-            ->add('filename',  TextType::class, [
+            ->add('filename', TextType::class, [
                 'label' => 'filename',
                 'required' => false,
                 'constraints' => [
@@ -864,7 +864,7 @@ class DocumentsController extends RozierApp
                     ]),
                 ],
             ])
-            ->add('private',  CheckboxType::class, [
+            ->add('private', CheckboxType::class, [
                 'label' => 'private',
                 'required' => false,
             ])
@@ -898,7 +898,7 @@ class DocumentsController extends RozierApp
 
         if (null !== $folderId &&
             $folderId > 0) {
-            $builder->add('folderId',  HiddenType::class, [
+            $builder->add('folderId', HiddenType::class, [
                 'data' => $folderId,
             ]);
         }
@@ -917,7 +917,7 @@ class DocumentsController extends RozierApp
         }
 
         $builder = $this->createFormBuilder()
-            ->add('embedId',  TextType::class, [
+            ->add('embedId', TextType::class, [
                 'label' => 'document.embedId',
             ])
             ->add('embedPlatform', 'choice', [

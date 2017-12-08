@@ -221,7 +221,7 @@ class DocumentTranslationsController extends RozierApp
             'documentTranslationId' => $doc->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('documentTranslationId',  HiddenType::class, [
+                        ->add('documentTranslationId', HiddenType::class, [
                             'data' => $doc->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -244,11 +244,11 @@ class DocumentTranslationsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('referer',  HiddenType::class, [
+                        ->add('referer', HiddenType::class, [
                             'data' => $this->get('request')->get('referer'),
                             'mapped' => false,
                         ])
-                        ->add('name',  TextType::class, [
+                        ->add('name', TextType::class, [
                             'label' => 'name',
                             'required' => false,
                         ])
@@ -256,7 +256,7 @@ class DocumentTranslationsController extends RozierApp
                             'label' => 'description',
                             'required' => false,
                         ])
-                        ->add('copyright',  TextType::class, [
+                        ->add('copyright', TextType::class, [
                             'label' => 'copyright',
                             'required' => false,
                         ]);

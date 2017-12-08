@@ -106,7 +106,7 @@ class NewslettersController extends RozierApp
             /** @var Form $form */
             $form = $this->get('formFactory')
                          ->createBuilder()
-                         ->add('title',  TextType::class, [
+                         ->add('title', TextType::class, [
                              'label' => 'title',
                              'constraints' => [
                                  new NotBlank(),

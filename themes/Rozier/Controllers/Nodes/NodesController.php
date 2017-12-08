@@ -662,7 +662,7 @@ class NodesController extends RozierApp
 
         if (null !== $node) {
             $form = $this->createFormBuilder()
-                ->add('nodeId',  HiddenType::class, [
+                ->add('nodeId', HiddenType::class, [
                     'data' => $node->getId(),
                     'constraints' => [
                         new NotBlank(),

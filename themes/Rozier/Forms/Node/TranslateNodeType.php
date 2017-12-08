@@ -71,7 +71,7 @@ class TranslateNodeType extends AbstractType
             'required' => true,
             'multiple' => false,
         ])
-        ->add('translate_offspring',  CheckboxType::class, [
+        ->add('translate_offspring', CheckboxType::class, [
             'label' => 'translate_offspring',
             'required' => false,
         ]);

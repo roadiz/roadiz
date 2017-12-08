@@ -196,7 +196,7 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
         $builder = $this->createFormBuilder()
-                        ->add('nodeId',  HiddenType::class, [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $nodeSourceId,
                             'constraints' => [
                                 new NotBlank(),

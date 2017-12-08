@@ -118,7 +118,7 @@ trait NodesTrait
             $defaults = [];
 
             $builder = $this->createFormBuilder($defaults)
-                            ->add('nodeId',  HiddenType::class, [
+                            ->add('nodeId', HiddenType::class, [
                                 'data' => (int) $node->getId(),
                             ])
                             ->add('nodeTypeId', new NodeTypesType($this->get('em'), true), [
@@ -144,7 +144,7 @@ trait NodesTrait
         $defaults = [];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('nodeName',  TextType::class, [
+                        ->add('nodeName', TextType::class, [
                             'label' => 'nodeName',
                             'constraints' => [
                                 new NotBlank(),
@@ -161,7 +161,7 @@ trait NodesTrait
             ]);
 
         if (null !== $parentNode) {
-            $builder->add('parentId',  HiddenType::class, [
+            $builder->add('parentId', HiddenType::class, [
                 'data' => (int) $parentNode->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -180,7 +180,7 @@ trait NodesTrait
     protected function buildDeleteForm(Node $node)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeId',  HiddenType::class, [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
                                 new NotBlank(),

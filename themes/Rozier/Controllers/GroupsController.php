@@ -511,13 +511,13 @@ class GroupsController extends RozierApp
     private function buildRemoveRoleForm(Group $group, Role $role)
     {
         $builder = $this->createFormBuilder()
-                        ->add('groupId',  HiddenType::class, [
+                        ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('roleId',  HiddenType::class, [
+                        ->add('roleId', HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -536,13 +536,13 @@ class GroupsController extends RozierApp
     private function buildRemoveUserForm(Group $group, User $user)
     {
         $builder = $this->createFormBuilder()
-                        ->add('groupId',  HiddenType::class, [
+                        ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('userId',  HiddenType::class, [
+                        ->add('userId', HiddenType::class, [
                             'data' => $user->getId(),
                             'constraints' => [
                                 new NotBlank(),

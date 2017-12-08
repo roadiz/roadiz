@@ -291,7 +291,9 @@ class TranslationsController extends RozierApp
     private function buildDeleteForm(Translation $translation)
     {
         $builder = $this->createFormBuilder()
-                        ->add('translationId',  HiddenType::class,
+                        ->add(
+                            'translationId',
+                            HiddenType::class,
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [
@@ -311,7 +313,9 @@ class TranslationsController extends RozierApp
     private function buildMakeDefaultForm(Translation $translation)
     {
         $builder = $this->createFormBuilder()
-                        ->add('translationId',  HiddenType::class,
+                        ->add(
+                            'translationId',
+                            HiddenType::class,
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [

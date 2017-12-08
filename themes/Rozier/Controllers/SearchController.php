@@ -512,13 +512,13 @@ class SearchController extends RozierApp
                             ],
                         ])
                         // No need to prefix tags
-                        ->add('tags',  TextType::class, [
+                        ->add('tags', TextType::class, [
                             'label' => 'node.tags',
                             'required' => false,
                             'attr' => ["class" => "rz-tag-autocomplete"],
                         ])
                         // No need to prefix tags
-                        ->add('tagExclusive',  CheckboxType::class, [
+                        ->add('tagExclusive', CheckboxType::class, [
                             'label' => 'node.tag.exclusive',
                             'required' => false,
                         ]);
