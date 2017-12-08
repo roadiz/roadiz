@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,32 +23,29 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesDocumentsRepository.php
- * @author Ambroise Maupate
+ * @file TagTranslationDocumentsRepository.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\TagTranslation;
 
 /**
  * {@inheritdoc}
  */
-class NodesSourcesDocumentsRepository extends EntityRepository
+class TagTranslationDocumentsRepository extends EntityRepository
 {
     /**
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $field
+     * @param TagTranslation $tagTranslation
      * @return integer
      */
-    public function getLatestPosition(NodesSources $nodeSource, NodeTypeField $field)
+    public function getLatestPosition($tagTranslation)
     {
-        $query = $this->_em->createQuery('
-            SELECT MAX(nsd.position) FROM RZ\Roadiz\Core\Entities\NodesSourcesDocuments nsd
-            WHERE nsd.nodeSource = :nodeSource AND nsd.field = :field')
-                    ->setParameter('nodeSource', $nodeSource)
-                    ->setParameter('field', $field);
+        $query = $this->_em->createQuery('SELECT MAX(ttd.position) 
+FROM RZ\Roadiz\Core\Entities\TagTranslationDocuments ttd 
+WHERE ttd.tagTranslation = :tagTranslation')
+                    ->setParameter('tagTranslation', $tagTranslation);
 
         try {
             return (int) $query->getSingleScalarResult();

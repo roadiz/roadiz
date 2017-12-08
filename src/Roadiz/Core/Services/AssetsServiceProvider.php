@@ -71,7 +71,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
             return new Packages(
                 $c['versionStrategy'],
                 $c['requestStack'],
-                $c['kernel'],
+                $kernel,
                 $c['settingsBag']->get('static_domain_name'),
                 $kernel->isPreview()
             );

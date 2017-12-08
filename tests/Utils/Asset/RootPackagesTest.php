@@ -29,9 +29,9 @@
  */
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use Symfony\Component\HttpFoundation\Request;
 
 class RootPackagesTest extends DefaultThemeDependentCase
@@ -70,7 +70,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
         $kernel->handle($this->getRequest());
 
@@ -86,7 +86,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
 
     public function testGetUrl()
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
         $kernel->handle($this->getRequest());
 
@@ -112,7 +112,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrlWithSlash()
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
         $kernel->handle($this->getRequest());
 

@@ -29,9 +29,13 @@
  */
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class NonRootPackagesTest extends DefaultThemeDependentCase
 {
@@ -69,10 +73,18 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
-        $kernel->handle($this->getRequest());
+        $kernel->get('requestStack')->push($this->getRequest());
+        $kernel->container->offsetSet('request', $this->getRequest());
 
+        $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
+        $this->assertEquals(
+            '/test/files/folder/document.jpg',
+            $kernel->get('assetPackages')->getUrl('folder/document.jpg', Packages::DOCUMENTS)
+        );
+
+        /** @var \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
@@ -88,7 +100,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testBaseUrl()
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
         $kernel->handle($this->getRequest());
 
@@ -100,36 +112,69 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         $kernel->shutdown();
     }
 
-    /**
-     *
-     */
-    public function testGetUrl()
+    public function testBasePath()
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $request = $this->getRequest();
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $requestStackContext = new RequestStackContext($requestStack);
+
+        $this->assertEquals('/test', $requestStackContext->getBasePath());
+    }
+
+    /**
+     * @dataProvider getUrlProvider
+     * @param $relativePath
+     * @param $expected
+     */
+    public function testGetUrl($relativePath, $expected)
+    {
+        $kernel = new Kernel('test', true);
         $kernel->boot();
-        $kernel->handle($this->getRequest());
+
+        $requestStack = new RequestStack();
+        $requestStack->push($this->getRequest());
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
 
         $this->assertEquals(
-            '/test/files/some-custom-file.txt',
-            $kernel->get('assetPackages')->getUrl('some-custom-file.txt', Packages::DOCUMENTS)
-        );
-
-        $this->assertEquals(
-            '/test/files/folder/some-custom-file.txt',
-            $kernel->get('assetPackages')->getUrl('folder/some-custom-file.txt', Packages::DOCUMENTS)
-        );
-
-        $this->assertEquals(
-            'http://localhost/test/files/folder/some-custom-file.txt',
-            $kernel->get('assetPackages')->getUrl('folder/some-custom-file.txt', Packages::ABSOLUTE_DOCUMENTS)
+            $expected,
+            $packages->getUrl($relativePath, Packages::DOCUMENTS)
         );
 
         $this->assertEquals(
             '/test/themes/DefaultTheme/static/css/styles.css',
-            $kernel->get('assetPackages')->getUrl('themes/DefaultTheme/static/css/styles.css')
+            $packages->getUrl('themes/DefaultTheme/static/css/styles.css')
+        );
+
+        $this->assertEquals(
+            '/test/files/folder/document.jpg',
+            $packages->getUrl('folder/document.jpg', Packages::DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            'http://localhost/test/files/folder/document.jpg',
+            $packages->getUrl('folder/document.jpg', Packages::ABSOLUTE_DOCUMENTS)
         );
 
         $kernel->shutdown();
+    }
+
+    public function getUrlProvider()
+    {
+        return [
+            [
+                'some-custom-file.jpg',
+                '/test/files/some-custom-file.jpg',
+            ],
+            [
+                'folder/some-custom-file.jpg',
+                '/test/files/folder/some-custom-file.jpg',
+            ],
+            [
+                'folder/folder2/some-custom-file.jpg',
+                '/test/files/folder/folder2/some-custom-file.jpg',
+            ]
+        ];
     }
 
     /**
@@ -140,18 +185,21 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrlWithSlash()
     {
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
-        $kernel->handle($this->getRequest());
+
+        $requestStack = new RequestStack();
+        $requestStack->push($this->getRequest());
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
 
         $this->assertNotEquals(
             '/test/files/some-custom-file',
-            $kernel->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
+            $packages->getUrl('/some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertNotEquals(
             '/test/files/folder/some-custom-file',
-            $kernel->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
+            $packages->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
         );
 
         $kernel->shutdown();

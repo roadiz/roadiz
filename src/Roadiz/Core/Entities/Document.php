@@ -184,7 +184,6 @@ class Document extends AbstractDocument
         return $this;
     }
 
-
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
@@ -221,6 +220,20 @@ class Document extends AbstractDocument
     public function getNodesSourcesByFields()
     {
         return $this->nodesSourcesByFields;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="document")
+     * @var ArrayCollection
+     */
+    protected $tagTranslations = null;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTagTranslations()
+    {
+        return $this->tagTranslations;
     }
 
     /**
@@ -320,6 +333,7 @@ class Document extends AbstractDocument
         $this->folders = new ArrayCollection();
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
+        $this->tagTranslations = new ArrayCollection();
     }
 
     /**

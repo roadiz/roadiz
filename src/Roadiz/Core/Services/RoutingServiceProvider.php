@@ -61,8 +61,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['requestStack'] = function () {
-            $stack = new RequestStack();
-            return $stack;
+            return new RequestStack();
         };
 
         $container['requestContext'] = function ($c) {
@@ -92,14 +91,19 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $container['staticRouter'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            return new StaticRouter(
-                $c['routeCollection'],
-                [
+            $config = [
+                'debug' => $kernel->isDebug(),
+            ];
+            if ($kernel->getEnvironment() === 'prod') {
+                $config = array_merge($config, [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
-                    'debug' => $kernel->isDebug(),
                     'generator_cache_class' => 'StaticUrlGenerator',
                     'matcher_cache_class' => 'StaticUrlMatcher',
-                ],
+                ]);
+            }
+            return new StaticRouter(
+                $c['routeCollection'],
+                $config,
                 $c['requestContext'],
                 $c['logger']
             );
@@ -114,8 +118,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
-                    'generator_cache_class' => 'NodeUrlGenerator',
-                    'matcher_cache_class' => 'NodeUrlMatcher',
                 ],
                 $c['requestContext'],
                 $c['logger'],
@@ -125,6 +127,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             $router->setNodeSourceUrlCacheProvider($c['nodesSourcesUrlCacheProvider']);
             return $router;
         };
+
         $container['redirectionRouter'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -133,8 +136,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
-                    'generator_cache_class' => 'RedirectionUrlGenerator',
-                    'matcher_cache_class' => 'RedirectionUrlMatcher',
                 ],
                 $c['requestContext'],
                 $c['logger'],

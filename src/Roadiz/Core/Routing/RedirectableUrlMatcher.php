@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,37 +23,35 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodesSourcesDocumentsRepository.php
- * @author Ambroise Maupate
+ * @file RedirectableUrlMatcher.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+namespace RZ\Roadiz\Core\Routing;
 
-/**
- * {@inheritdoc}
- */
-class NodesSourcesDocumentsRepository extends EntityRepository
+use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseMatcher;
+
+class RedirectableUrlMatcher extends BaseMatcher
 {
     /**
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $field
-     * @return integer
+     * Redirects the user to another URL.
+     *
+     * @param string $path   The path info to redirect to
+     * @param string $route  The route that matched
+     * @param string $scheme The URL scheme (null to keep the current one)
+     *
+     * @return array An array of parameters
      */
-    public function getLatestPosition(NodesSources $nodeSource, NodeTypeField $field)
+    public function redirect($path, $route, $scheme = null)
     {
-        $query = $this->_em->createQuery('
-            SELECT MAX(nsd.position) FROM RZ\Roadiz\Core\Entities\NodesSourcesDocuments nsd
-            WHERE nsd.nodeSource = :nodeSource AND nsd.field = :field')
-                    ->setParameter('nodeSource', $nodeSource)
-                    ->setParameter('field', $field);
-
-        try {
-            return (int) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return array(
+            '_controller' => 'RZ\\Roadiz\\CMS\\Controllers\\RedirectionController::redirectToRouteAction',
+            'path' => $path,
+            'permanent' => true,
+            'scheme' => $scheme,
+            'httpPort' => $this->context->getHttpPort(),
+            'httpsPort' => $this->context->getHttpsPort(),
+            '_route' => $route,
+        );
     }
 }
