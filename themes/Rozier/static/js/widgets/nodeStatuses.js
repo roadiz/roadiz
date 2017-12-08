@@ -1,7 +1,7 @@
 var NodeStatuses = function () {
     var _this = this;
 
-    _this.$containers = $(".node-statuses");
+    _this.$containers = $('.node-statuses, .node-actions');
     _this.$icon = $('.node-status header i');
     _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
     _this.$item = _this.$containers.find('.node-statuses-item');
@@ -16,6 +16,9 @@ NodeStatuses.prototype.init = function() {
     _this.$item.off('click', $.proxy(_this.itemClick, _this));
     _this.$item.on('click', $.proxy(_this.itemClick, _this));
 
+    _this.$containers.on('mouseenter', $.proxy(_this.containerEnter, _this));
+    _this.$containers.on('mouseleave', $.proxy(_this.containerLeave, _this));
+
     _this.$inputs.off('change', $.proxy(_this.onChange, _this));
     _this.$inputs.on('change', $.proxy(_this.onChange, _this));
 
@@ -23,6 +26,29 @@ NodeStatuses.prototype.init = function() {
         size: 'small',
         "onSwitchChange": $.proxy(_this.onChange, _this)
     });
+};
+
+NodeStatuses.prototype.containerEnter = function(event) {
+    event.stopPropagation();
+
+    var $container = $(event.currentTarget);
+    var $list = $container.find('ul, nav').eq(0);
+    var containerHeight = $container.height();
+    var listHeight = $list.height();
+    var containerOffsetTop = $container.offset().top;
+    var windowHeight = window.innerHeight;
+    var fullHeight = containerOffsetTop + listHeight + containerHeight;
+
+    if (windowHeight < fullHeight) {
+        $container.addClass('reverse');
+    }
+};
+
+NodeStatuses.prototype.containerLeave = function(event) {
+    event.stopPropagation();
+
+    var $container = $(event.currentTarget);
+    $container.removeClass('reverse');
 };
 
 NodeStatuses.prototype.itemClick = function(event) {
