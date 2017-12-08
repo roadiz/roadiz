@@ -1,0 +1,64 @@
+/*------------------------------------*\
+   THEMES
+\*------------------------------------*/
+
+
+
+/* -------- VARS -------- */
+
+
+/* -------- STYLES -------- */
+
+.content-table{
+    .informations{
+        padding: 4px 15px;
+        p {
+            margin: 6px 0;
+            &:before{
+                font-family: 'FontAwesome';
+                font-size: 14px;
+                display: inline-block;
+                float: left;
+                height: 22px;
+                padding: 0px 6px 0px 0;
+            }
+
+            &.name{
+                font-size: 16px;
+                color: #4c4c4c;
+                border-bottom: 1px solid #CCC;
+                padding-bottom: 9px;
+                line-height: 18px;
+                margin-top: 12px;
+            }
+            &.author{
+                border-bottom: 1px solid #CCC;
+                padding-bottom: 4px;
+                &:before{
+                    font-family: 'FontAwesome';
+                    content: '\F007';
+                }
+            }
+            &.copyright{
+                border-bottom: 1px solid #CCC;
+                padding-bottom: 4px;
+                &:before{
+                    font-family: 'FontAwesome';
+                    content: '\F02E';
+                }
+            }
+            &.dir{
+                &:before{
+                    font-family: 'FontAwesome';
+                    content: '\F07C';
+                }
+            }
+        }
+    }
+    // buggy
+    /*.uk-icon-suitcase {
+        font-size: 14px;
+        padding: 0;
+        vertical-align: middle;
+    }*/
+}

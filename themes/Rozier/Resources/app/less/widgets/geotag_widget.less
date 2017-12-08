@@ -1,0 +1,124 @@
+/*------------------------------------*\
+    GEOTAG WIDGET
+\*------------------------------------*/
+
+
+/* -------- VARS -------- */
+@geotag-widget-border :         #cbcbcb;
+@geotag-widget-btn-bg :         #ededed;
+@geotag-widget-btn-border :     #bfbfbf;
+@geotag-widget-btn-color :      #2d2d2d;
+
+
+/* -------- STYLES -------- */
+
+.geotag-widget{
+    position: relative;
+}
+
+
+.geotag-label{
+    position: absolute;
+    left:66px;
+    height:55px;
+    line-height:59px;
+    font-size:12px;
+    color:#555;
+}
+
+.geotag-widget-nav{
+    position: relative;
+    height:55px;
+    border:1px solid @geotag-widget-border;
+    border-bottom:1px dashed @geotag-widget-border;
+
+    .uk-navbar-brand{
+        .widgetNavBarBrand();
+    }
+
+    .uk-icon-rz-map-marker,
+    .uk-icon-rz-map-multi-marker{
+        font-size: 28px;
+        line-height:55px;
+    }
+
+    .geotag-widget-quick-creation{
+        margin:11px 0;
+    }
+
+    .uk-navbar-content {
+        padding: 0 10px;
+    }
+
+}
+
+.rz-geotag-meta{
+
+    input[type="text"]{
+        width:280px;
+    }
+}
+
+.rz-geotag-canvas{
+    border:1px solid @geotag-widget-border;
+    border-top:none;
+    .box-sizing();
+}
+
+.multi-geotag-group {
+
+    position: relative;
+
+    &:after {
+        .clearfloat();
+    }
+
+    .rz-geotag-canvas {
+        width: 80%;
+        height: 400px;
+        float: left;
+        box-sizing: border-box;
+    }
+}
+
+.multi-geotag-list-markers {
+    display: block;
+    overflow: hidden;
+    overflow-y: auto;
+
+    width: 20%;
+    height: 400px;
+    float: left;
+    margin: 0px;
+
+    box-sizing: border-box;
+    border-left:1px solid @geotag-widget-border;
+    border-bottom:1px solid @geotag-widget-border;
+
+    padding: 0px;
+
+    li {
+        list-style: none;
+        display: block;
+        border-bottom:1px solid lighten(@geotag-widget-border, 10%);
+        font-size: 12px;
+        padding: 5px 8px;
+
+        .button {
+            float: right;
+            display: block;
+            width: 20px;
+            height: 18px;
+            color: darken(@geotag-widget-border, 20%);
+
+            &:hover {
+                color: darken(@geotag-widget-border, 50%);
+            }
+        }
+
+        &:after {
+            .clearfloat();
+        }
+    }
+}
+

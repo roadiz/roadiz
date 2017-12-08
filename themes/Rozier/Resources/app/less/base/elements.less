@@ -1,0 +1,182 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+
+    REZO ZERO fork
+  ---------------------------------------------------*/
+
+/*
+ * Emulate display none but keep in render to enable transitions
+ */
+
+.fake-display-none(){
+  display: block;
+  pointer-events: none;
+  .opacity(0);
+}
+
+.fake-display-block(){
+  display: block;
+  pointer-events: auto;
+  .opacity(1);
+}
+
+.text-ellipsis(){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.bordered(@top-color: #EEE, @right-color: #EEE, @bottom-color: #EEE, @left-color: #EEE) {
+  border-top:    solid 1px @top-color;
+  border-left:   solid 1px @left-color;
+  border-right:  solid 1px @right-color;
+  border-bottom: solid 1px @bottom-color;
+}
+
+.drop-shadow(...) {
+    box-shadow: @arguments;
+}
+
+.rounded(@radius: 2px) {
+  border-radius: @radius;
+}
+
+.border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+  border-top-right-radius:            @topright;
+  border-bottom-right-radius:         @bottomright;
+  border-bottom-left-radius:          @bottomleft;
+  border-top-left-radius:             @topleft;
+  .background-clip(padding-box);
+}
+
+.opacity(@opacity: 0.5) {
+  opacity: @opacity;
+}
+
+
+.transform(...) {
+  transform:         @arguments;
+}
+
+.rotation(@deg:5deg){
+  .transform(rotate(@deg));
+}
+
+.scale(@ratio:1.5){
+  .transform(scale(@ratio));
+}
+
+.transform-style(@style:preserve-3d){
+  transform-style: @style;
+}
+
+.backface-visibility(@value:hidden){
+  backface-visibility:@value;
+}
+
+
+/*
+ * Transitions
+ */
+.transition(...) {
+  transition:         @arguments;
+}
+
+.transition-duration(@duration: 0.2s) {
+  transition-duration:         @duration;
+}
+
+.transition-delay(@delay: 0s) {
+  transition-delay:         @delay;
+}
+
+.transition-property(@property: all) {
+  transition-property:         @property;
+}
+
+.transition-timing-function(@ease: ease-in){
+  transition-timing-function:         @ease;
+}
+
+// Enable transitions on transforms for each vendor
+.transform-transition(...) {
+  transition :         transform @arguments;
+}
+
+.transform-origin( @x, @y ) {
+  transform-origin :         @x @y;
+}
+
+.inner-shadow(@horizontal:0, @vertical:1px, @blur:2px, @alpha: 0.4) {
+  box-shadow:         inset @horizontal @vertical @blur rgba(0, 0, 0, @alpha);
+}
+
+.box-shadow(@arguments) {
+  box-shadow:         @arguments;
+}
+
+.box-sizing(@sizing: border-box) {
+  box-sizing:         @sizing;
+}
+
+.user-select(@argument: none) {
+  user-select:         @argument;
+}
+
+.columns(@colwidth: 250px, @colcount: 0, @colgap: 50px, @columnRuleColor: #EEE, @columnRuleStyle: solid, @columnRuleWidth: 1px) {
+  column-width: @colwidth;
+  column-count: @colcount;
+  column-gap:   @colgap;
+  column-rule-color: @columnRuleColor;
+  column-rule-style: @columnRuleStyle;
+  column-rule-width: @columnRuleWidth;
+}
+
+.translate(@x:0, @y:0) {
+  .transform(translate(@x, @y));
+}
+
+.background-clip(@argument: padding-box) {
+  background-clip:         @argument;
+}
+
+.background-size(@type:cover){
+  background-size: @type;
+}
+
+.default-appearence() {
+  appearance:         none;
+}
+
+.keep-image-aspect(){
+  image-rendering:       optimizeSpeed;             /* Legal fallback                 */
+  image-rendering:       pixellated;                /* Firefox                        */
+  image-rendering:       -o-crisp-edges;            /* Opera                          */
+  image-rendering:       -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+  image-rendering:       optimize-contrast;         /* CSS3 Proposed                  */
+  -ms-interpolation-mode:nearest-neighbor;          /* IE8+ */
+}
+
+.color-placeholder(@color) {
+  &::placeholder {
+      color:@color;
+  }
+}
+
+.touch-scroll(){
+  -webkit-overflow-scrolling: touch;
+}
+
+.clearfloat() {
+  &:after {
+    display:    block;
+    content:    '.';
+    height:     0;
+    visibility: hidden;
+    float:      none;
+    clear:      both;
+  }
+}

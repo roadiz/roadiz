@@ -1,0 +1,160 @@
+/*------------------------------------*\
+   BULK
+\*------------------------------------*/
+
+
+/*
+ * Styles for bulk actions sections
+ */
+
+
+/* -------- STYLES -------- */
+
+.bulk-actions{
+    text-align: center;
+    padding: 20px 0 10px 0;
+
+    .uk-form{
+
+        input[type="text"],
+        input[type="password"],
+        input[type="search"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            min-width: 230px;
+            height: 32px;
+            padding: 9px 8px 5px 8px;
+        }
+
+        .uk-button-bulk-primary{
+            [class*=uk-icon-rz-] {
+                color:#fff;
+            }
+        }
+
+
+        .rz-select {
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+    }
+}
+
+.bulk-actions-title-cont{
+    position: relative;
+    height:9px;
+    margin:0 100px 30px;
+    border-bottom:1px solid #cbcbcb;
+
+    &:before{
+        position: absolute;
+        content:'';
+        width:1px;
+        top: 5px; bottom:-5px; left: 0;
+        background:  #cbcbcb;
+    }
+
+    &:after{
+        position: absolute;
+        content:'';
+        width:1px;
+        top: 5px; right: 0;  bottom:-5px;
+        background:  #cbcbcb;
+    }
+
+}
+
+.bulk-actions-title{
+    display: inline-block;
+    margin:-2px 0 0 0;
+    padding:0 10px;
+    font-size:12px;
+    color: #333;
+    background: #EFEFEF;
+}
+.tags-bulk-folder-cont,
+.documents-bulk-folder-cont,
+.nodes-bulk-status-cont,
+.nodes-bulk-folder-cont {
+    display: none;
+    margin:10px 100px 0;
+    padding:10px 0 0 0;
+    border-top:1px dashed #c3c3c3;
+
+    .uk-form .data-uk-margin>div{
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom:0;
+    }
+
+    .tag-editor {
+        max-width: 400px;
+    }
+}
+
+
+#tagForm_submitTag,
+#statusForm_submitStatus,
+#tagForm_submitUntag,
+#folderForm_submitFolder,
+#folderForm_submitUnfolder {
+    position: relative;
+    width:32px;
+    height:32px;
+    padding:0;
+    overflow: hidden;
+
+    &:before{
+        position: relative;
+        display: block;
+        width:32px; height:32px;
+        content:@plus;
+        font-size:16px;
+        line-height:32px;
+        font-weight: normal;
+        font-family: 'rz-icons';
+        text-align: center;
+    }
+
+
+    .button-text {
+        display: none;
+    }
+}
+
+#tagForm_submitTag,
+#folderForm_submitFolder{
+    margin-left:4px;
+}
+
+#tagForm_submitUntag,
+#folderForm_submitUnfolder{
+
+    &:before{
+        content:@minus;
+    }
+}
+
+
+#statusForm_submitStatus {
+    &:before{
+        content:@save;
+        color: rgba(0, 0, 0, 0.69);
+    }
+}
+
+#tags-bulk-delete-form,
+#documents-bulk-delete-form,
+#documents-bulk-download-form,
+#nodes-bulk-delete-form{
+    position: relative;
+    margin-bottom:30px; padding-bottom:30px;
+
+    &:after{
+        position: absolute;
+        content:'';
+        right:50px; bottom:0; left:50px;
+        border-bottom:1px dashed #cbcbcb;
+    }
+}

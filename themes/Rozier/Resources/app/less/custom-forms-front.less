@@ -1,0 +1,107 @@
+/*------------------------------------*\
+   CUSTOM FORMS FRONT
+\*------------------------------------*/
+
+
+/*
+ * Entry point for custom form front styles
+ */
+
+
+/* -------- VARS -------- */
+
+@import "vars.less";
+
+
+/* -------- VENDORS -------- */
+
+@import "vendor/jquery-ui.less";
+@import "vendor/dropzone.less";
+
+
+/* -------- BASE -------- */
+
+@import "base/elements.less";
+@import "base/normalize.less";
+@import "base/boilerplate.less";
+@import "base/easing.less";
+
+
+/* -------- DROPZONE -------- */
+
+@import "dropzone/dropzone.less";
+
+/* -------- ICONS -------- */
+
+@import "icons/icons.less";
+
+
+/* -------- COMMON (styles for all pages : font face, etc.) -------- */
+
+@import "common.less";
+
+/* -------- BUTTONS -------- */
+
+@import "buttons/buttons.less";
+@import "dropdown/dropdown.less";
+
+
+/* -------- FORMS -------- */
+
+@import "forms/forms.less";
+
+
+#custom-form-front{
+    font-family: @main-font;
+    em {
+        color: #555555;
+    }
+
+    #main-content{
+        max-width:720px;
+        margin: 2em auto;
+        padding: 0px 1em;
+
+    }
+
+    .content-desc{
+        color: #555555;
+    }
+
+    textarea{
+        font-weight: normal;
+        min-height:120px;
+    }
+    .uk-form-label {
+         font-size:16px;
+    }
+    .uk-form-description{
+        font-size:12px;
+        line-height: 16px;
+
+        p {
+            margin:5px 0;
+            color: #555555;
+        }
+    }
+
+    .custom-form-group {
+        border-left: 1px solid #e8e7e7;
+        padding-left: 1.5em;
+
+        .uk-form-label {
+            font-size:14px;
+        }
+    }
+
+    .form-col-choice {
+        div {
+            .uk-form-label {
+                font-size:12px;
+                &:before {
+                    content: '';
+                }
+            }
+        }
+    }
+}

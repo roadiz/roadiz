@@ -1,0 +1,75 @@
+/*------------------------------------*\
+   NAVBARS - FILTER BAR
+\*------------------------------------*/
+
+
+
+/* -------- STYLES -------- */
+
+#uk-navbar-filter{
+    background: #EFEFEF;
+    padding: 20px 0;
+
+    .uk-navbar-content-cont{
+        float: none;
+        text-align: center;
+    }
+
+    .uk-navbar-content{
+        float: none;
+        display: inline-block;
+    }
+}
+
+// Count
+#uk-navbar-filter-count{
+    position: absolute;
+    width:100%; height:22px;
+    vertical-align: bottom;
+    font-size:12px; line-height:23px;
+    background:@maincontent-header-bg;
+    color:@icon-simple;
+
+    span{
+        color:@grey-interface;
+        font-size:17px;
+        font-weight: bold;
+    }
+}
+
+// Search, Pagination
+#uk-navbar-filter-search,
+#uk-navbar-filter-pagination{
+    height:32px;
+
+    .uk-icon-search{
+        margin-left:2px;
+    }
+}
+
+#uk-form-filter-input-search{
+    height:32px;
+    // padding:9px 8px 5px 35px;
+
+    &:before{
+        font-family:'FontAwesome';
+        content:"\f002";
+    }
+}
+
+#uk-form-filter-input-page{
+    height:26px;
+    line-height:27px;
+    padding: 0 2px;
+    text-align: center;
+}
+
+.filter-form-text{
+    font-size:12px;
+}
+
+.item-per-page-label {
+    font-size: 12px;
+    display: inline-block;
+    margin-right: 5px;
+}
