@@ -101,8 +101,8 @@ class ThemeAssetsCommand extends ThemesCommand
             }
 
             $this->generateThemeSymlink($themeName, $expectedMethod);
+        } else {
+            throw new \RuntimeException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
         }
-
-        throw new \RuntimeException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
     }
 }

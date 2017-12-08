@@ -80,8 +80,8 @@ class ThemeGenerateCommand extends ThemesCommand
             throw new \RuntimeException('Theme already exists.');
         }
 
-        if (in_array($name, ['Default', 'Base', 'Install', 'Rozier'])) {
-            throw new \RuntimeException('You cannot name your theme after system themes (Default, Install, Base, Rozier).');
+        if (in_array($name, ['Default', 'Debug', 'Base', 'Install', 'Rozier'])) {
+            throw new \RuntimeException('You cannot name your theme after system themes (Default, Install, Base, Rozier or Debug).');
         }
 
         return $name;
