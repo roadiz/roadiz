@@ -5,7 +5,9 @@ import debug from 'debug'
 import WebpackNotifierPlugin from 'webpack-notifier'
 import path from 'path'
 import CleanWebpackPlugin from 'clean-webpack-plugin'
+import BundleAnalyzer from 'webpack-bundle-analyzer'
 
+const BundleAnalyzerPlugin = BundleAnalyzer.BundleAnalyzerPlugin
 const dbg = debug('Roadiz-front:webpack-config:base  ')
 dbg.color = debug.colors[3]
 
@@ -121,8 +123,7 @@ const getWebpackConfigBase = (config) => {
                 options: {
                     name: config.assets_name_font
                 }
-            },
-            {
+            }, {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: {
@@ -152,6 +153,7 @@ const getWebpackConfigBase = (config) => {
             child_process: 'empty'
         },
         plugins: [
+            // new BundleAnalyzerPlugin(),
             new CleanWebpackPlugin(['css', 'img', 'js', 'fonts', 'vendors'], {
                 root: config.utils_paths.dist(),
                 verbose: false
@@ -177,7 +179,8 @@ const getWebpackConfigBase = (config) => {
                 $: 'jquery',
                 jQuery: 'jquery',
                 'window.jQuery': 'jquery'
-            })
+            }),
+            new webpack.IgnorePlugin(/^\.\/locale$/)
         ],
         resolve: {
             extensions: ['.js', '.vue', '.json'],

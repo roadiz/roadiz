@@ -26,7 +26,9 @@
  * @author Adrien Scholaert <adrien@rezo-zero.com>
  */
 
-import _ from 'lodash'
+import {
+    remove
+} from 'lodash'
 import {
     DRAWERS_ADD_INSTANCE,
     DRAWERS_REMOVE_INSTANCE,
@@ -169,7 +171,7 @@ const mutations = {
         })
     },
     [DRAWERS_REMOVE_INSTANCE] (state, { drawerToRemove }) {
-        state.list = _.remove(state.list, (drawer) => {
+        state.list = remove(state.list, (drawer) => {
             return drawer._uid === drawerToRemove._uid
         })
     },

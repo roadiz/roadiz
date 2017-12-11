@@ -78,7 +78,7 @@
 
 <script>
     import { mapState, mapActions } from 'vuex'
-    import _ from 'lodash'
+    import { debounce } from 'lodash'
 
     // Components
     import LoadMoreButton from '../components/LoadMoreButton.vue'
@@ -113,7 +113,7 @@
                 get () {
                     return this.$store.getters.getExplorerSearchTerms
                 },
-                set: _.debounce(function (searchTerms) {
+                set: debounce(function (searchTerms) {
                     this.$store.dispatch('explorerUpdateSearch', { searchTerms })
                 }, 450)
             }

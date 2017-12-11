@@ -2,7 +2,7 @@
 <!-- Template: widgets/nodesSourcesSearch.html.twig -->
 <script>
     import { mapState, mapActions } from 'vuex'
-    import _ from 'lodash'
+    import { debounce } from 'lodash'
 
     // Components
     import AjaxLink from '../components/AjaxLink.vue'
@@ -26,15 +26,15 @@
                 'nodeSourceSearchEnableFocus',
                 'nodeSourceSearchDisableFocus'
             ]),
-            enableFocus: _.debounce(function () {
+            enableFocus: debounce(function () {
                 this.nodeSourceSearchEnableFocus()
             }, 50),
-            disableFocus: _.debounce(function () {
+            disableFocus: debounce(function () {
                 this.nodeSourceSearchDisableFocus()
             }, 50)
         },
         watch: {
-            searchTerms: _.debounce(function (newValue, oldValue) {
+            searchTerms: debounce(function (newValue, oldValue) {
                 this.nodesSourceSearchUpdate(newValue, oldValue)
             }, 350),
             isFocus: function () {

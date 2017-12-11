@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import Dropzone from 'dropzone'
 import {
     isset
 } from '../plugins'
@@ -50,7 +51,7 @@ DocumentUploader.prototype.init = function () {
         _this.options.url = window.Rozier.routes.documentsUploadPage + '/' + parseInt(form.attr('data-folder-id'))
     }
 
-    window.Dropzone.options.uploadDropzoneDocument = {
+    Dropzone.options.uploadDropzoneDocument = {
         url: _this.options.url,
         method: 'post',
         headers: _this.options.headers,
@@ -98,13 +99,11 @@ DocumentUploader.prototype.init = function () {
             })
         }
     }
-    window.Dropzone.autoDiscover = _this.options.autoDiscover
+
+    Dropzone.autoDiscover = _this.options.autoDiscover
 
     /* eslint-disable no-new */
-    new window.Dropzone(
-        _this.options.selector,
-        window.Dropzone.options.uploadDropzoneDocument
-    )
+    new Dropzone(_this.options.selector, Dropzone.options.uploadDropzoneDocument)
 
     var $dzMessage = $(_this.options.selector).find('.dz-message')
 

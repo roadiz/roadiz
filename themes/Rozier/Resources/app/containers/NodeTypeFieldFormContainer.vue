@@ -30,11 +30,13 @@
             this.$formSelectOption = $(this.$el).find('#nodetypefield_type option')
 
             // Trigger selected value
-            for (let el of this.$formSelectOption) {
-                if ($(el).attr('selected')) {
-                    this.selected = $(el).val()
+            this.$formSelectOption.each((i, el) => {
+                const $el = $(el)
+
+                if ($el.attr('selected')) {
+                    this.selected = $el.val()
                 }
-            }
+            })
 
             // Merge elements into a single array
             this.$formElements = {
