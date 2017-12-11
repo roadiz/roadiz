@@ -3057,132 +3057,6 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ "../Resources/app/components/auto-update/auto-update.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = AutoUpdate;
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function AutoUpdate() {
-    var _this = this;
-
-    _this.$section = (0, _jquery2.default)('#auto-update');
-
-    if (_this.$section.length) {
-        _this.init();
-    }
-};
-
-AutoUpdate.prototype.init = function () {
-    // TODO Don't understant this method
-    // var _this = this
-    // if (typeof (nextStep) !== 'undefined' &&
-    //    typeof (nextStepDescription) !== 'undefined' &&
-    //    nextStep !== null &&
-    //    nextStepDescription !== null) {
-    //     _this.$button = _this.$section.find('#update-done-button')
-    //     _this.$buttonIcon = _this.$button.find('i')
-    //     _this.$buttonText = _this.$button.find('.text')
-    //     _this.$progressBar = $('#update-progress-bar')
-    //     _this.$progressBarInner = _this.$progressBar.find('.uk-progress-bar')
-    //     _this.$progressMessage = _this.$section.find('#update-progress-message')
-    //
-    //     // disable back button
-    //     _this.$button.on('click', function (event) {
-    //         event.preventDefault()
-    //         return false
-    //     })
-    //
-    //     _this.loadStep(5, nextStep, nextStepDescription)
-    // }
-};
-
-AutoUpdate.prototype.loadStep = function (progress, url, description) {
-    var _this = this;
-
-    _this.displayProgress(progress, description);
-
-    _jquery2.default.ajax({
-        url: url,
-        type: 'get',
-        dataType: 'json',
-        cache: false
-    }).done(function (data) {
-        // console.log(data);
-        if (typeof data.progress !== 'undefined') {
-            if (typeof data.complete !== 'undefined' && data.complete === true) {
-                _this.finish(data.progress, data.nextStepDescription);
-            } else {
-                _this.loadStep(data.progress, data.nextStepRoute, data.nextStepDescription);
-            }
-        }
-    }).fail(function (data) {
-        // console.log(data);
-
-        if (typeof data.responseJSON !== 'undefined') {
-            _this.$progressBarInner.html(data.responseJSON.message);
-        }
-        _this.buttonFail();
-        _this.$progressBar.removeClass('uk-progress-striped uk-active');
-        _this.$progressBar.addClass('uk-progress-danger');
-    });
-};
-
-AutoUpdate.prototype.displayProgress = function (progress, description) {
-    var _this = this;
-
-    _this.$progressBarInner.width(progress + '%');
-    _this.$progressMessage.html(description);
-};
-
-AutoUpdate.prototype.finish = function (progress, description) {
-    var _this = this;
-
-    _this.displayProgress(progress, description);
-
-    _this.buttonOK();
-
-    _this.$progressBar.removeClass('uk-progress-striped uk-active');
-    _this.$progressBar.addClass('uk-progress-success');
-};
-
-AutoUpdate.prototype.buttonOK = function () {
-    var _this = this;
-
-    _this.$buttonIcon.removeClass('uk-icon-spin');
-    _this.$buttonIcon.removeClass('uk-icon-refresh');
-    _this.$buttonIcon.addClass('uk-icon-check');
-    _this.$button.addClass('uk-button-primary');
-    _this.$button.off('click');
-    var doneText = _this.$button.attr('data-done-text');
-    _this.$buttonText.html(doneText);
-};
-
-AutoUpdate.prototype.buttonFail = function () {
-    var _this = this;
-
-    _this.$buttonIcon.removeClass('uk-icon-spin');
-    _this.$buttonIcon.removeClass('uk-icon-refresh');
-    _this.$buttonIcon.addClass('uk-icon-warning');
-    _this.$button.addClass('uk-button-danger');
-    _this.$button.off('click');
-    var doneText = _this.$button.attr('data-done-text');
-    _this.$buttonText.html(doneText);
-};
-
-/***/ }),
-
 /***/ "../Resources/app/components/bulk-edits/documentsBulk.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6169,10 +6043,6 @@ var _tagsBulk = __webpack_require__("../Resources/app/components/bulk-edits/tags
 
 var _tagsBulk2 = _interopRequireDefault(_tagsBulk);
 
-var _autoUpdate = __webpack_require__("../Resources/app/components/auto-update/auto-update.js");
-
-var _autoUpdate2 = _interopRequireDefault(_autoUpdate);
-
 var _documentUploader = __webpack_require__("../Resources/app/components/documents/documentUploader.js");
 
 var _documentUploader2 = _interopRequireDefault(_documentUploader);
@@ -6272,34 +6142,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Lazyload
  */
-/*
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file lazyload.js
- * @author Adrien Scholaert <adrien@rezo-zero.com>
- */
-
 function Lazyload() {
     var _this = this;
 
@@ -6337,6 +6179,34 @@ function Lazyload() {
  * Init loader
  * @return {[type]} [description]
  */
+/*
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file lazyload.js
+ * @author Adrien Scholaert <adrien@rezo-zero.com>
+ */
+
 Lazyload.prototype.initLoader = function () {
     var _this = this;
 
@@ -6512,7 +6382,6 @@ Lazyload.prototype.generalBind = function () {
 
     /* eslint-disable no-new */
     new _documentsBulk2.default();
-    new _autoUpdate2.default();
     new _nodesBulk2.default();
     new _tagsBulk2.default();
     new _inputLengthWatcher2.default();
@@ -7172,7 +7041,8 @@ Rozier.onSubmitSearchNodesSources = function (e) {
 /**
  *
  * @param event
- * @param element
+ * @param rootEl
+ * @param el
  * @param status
  * @returns {boolean}
  */

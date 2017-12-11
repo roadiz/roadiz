@@ -452,7 +452,8 @@ Rozier.onSubmitSearchNodesSources = function (e) {
 /**
  *
  * @param event
- * @param element
+ * @param rootEl
+ * @param el
  * @param status
  * @returns {boolean}
  */

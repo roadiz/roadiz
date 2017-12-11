@@ -34,7 +34,6 @@ import {
 import DocumentsBulk from './components/bulk-edits/documentsBulk'
 import NodesBulk from './components/bulk-edits/nodesBulk'
 import TagsBulk from './components/bulk-edits/tagsBulk'
-import AutoUpdate from './components/auto-update/auto-update'
 import DocumentUploader from './components/documents/documentUploader'
 import NodeTypeFieldsPosition from './components/node-type-fields/nodeTypeFieldsPosition'
 import NodeTypeFieldEdit from './components/node-type-fields/nodeTypeFieldEdit'
@@ -283,7 +282,6 @@ Lazyload.prototype.generalBind = function () {
 
     /* eslint-disable no-new */
     new DocumentsBulk()
-    new AutoUpdate()
     new NodesBulk()
     new TagsBulk()
     new InputLengthWatcher()
