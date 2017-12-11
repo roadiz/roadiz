@@ -1,43 +1,51 @@
 import $ from 'jquery'
 
-export default function InputLengthWatcher () {
-    var _this = this
+export default class InputLengthWatcher {
+    constructor () {
+        this.$maxLengthed = $('input[data-max-length]')
+        this.$minLengthed = $('input[data-min-length]')
 
-    _this.$maxLengthed = $('input[data-max-length]')
-    _this.$minLengthed = $('input[data-min-length]')
+        this.onMaxKeyUp = this.onMaxKeyUp.bind(this)
+        this.onMinKeyUp = this.onMinKeyUp.bind(this)
 
-    if (_this.$maxLengthed.length) {
-        var proxyMax = $.proxy(_this.onMaxKeyUp, _this)
-        _this.$maxLengthed.off('keyup', proxyMax)
-        _this.$maxLengthed.on('keyup', proxyMax)
+        if (this.$maxLengthed.length) {
+            this.$maxLengthed.off('keyup', this.onMaxKeyUp)
+            this.$maxLengthed.on('keyup', this.onMaxKeyUp)
+        }
+
+        if (this.$minLengthed.length) {
+            this.$minLengthed.off('keyup', this.onMinKeyUp)
+            this.$minLengthed.on('keyup', this.onMinKeyUp)
+        }
     }
-    if (_this.$minLengthed.length) {
-        var proxyMin = $.proxy(_this.onMinKeyUp, _this)
-        _this.$minLengthed.off('keyup', proxyMin)
-        _this.$minLengthed.on('keyup', proxyMin)
+
+    /**
+     * @param {Event} event
+     */
+    onMaxKeyUp (event) {
+        let input = $(event.currentTarget)
+        let maxLength = Math.round(event.currentTarget.getAttribute('data-max-length'))
+        let currentLength = event.currentTarget.value.length
+
+        if (currentLength > maxLength) {
+            input.addClass('uk-form-danger')
+        } else {
+            input.removeClass('uk-form-danger')
+        }
     }
-}
 
-InputLengthWatcher.prototype.onMaxKeyUp = function (event) {
-    var input = $(event.currentTarget)
-    var maxLength = Math.round(event.currentTarget.getAttribute('data-max-length'))
-    var currentLength = event.currentTarget.value.length
+    /**
+     * @param {Event} event
+     */
+    onMinKeyUp (event) {
+        let input = $(event.currentTarget)
+        let maxLength = Math.round(event.currentTarget.getAttribute('data-min-length'))
+        let currentLength = event.currentTarget.value.length
 
-    if (currentLength > maxLength) {
-        input.addClass('uk-form-danger')
-    } else {
-        input.removeClass('uk-form-danger')
-    }
-}
-
-InputLengthWatcher.prototype.onMinKeyUp = function (event) {
-    var input = $(event.currentTarget)
-    var maxLength = Math.round(event.currentTarget.getAttribute('data-min-length'))
-    var currentLength = event.currentTarget.value.length
-
-    if (currentLength <= maxLength) {
-        input.addClass('uk-form-danger')
-    } else {
-        input.removeClass('uk-form-danger')
+        if (currentLength <= maxLength) {
+            input.addClass('uk-form-danger')
+        } else {
+            input.removeClass('uk-form-danger')
+        }
     }
 }

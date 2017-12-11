@@ -2,42 +2,42 @@ import $ from 'jquery'
 
 // is mobile
 export const isMobile = {
-    Android: function () {
+    Android: () => {
         return navigator.userAgent.match(/Android/i)
     },
-    BlackBerry: function () {
+    BlackBerry: () => {
         return navigator.userAgent.match(/BlackBerry/i)
     },
-    iOS: function () {
+    iOS: () => {
         return navigator.userAgent.match(/iPhone|iPad|iPod/i)
     },
-    Opera: function () {
+    Opera: () => {
         return navigator.userAgent.match(/Opera Mini/i)
     },
-    Windows: function () {
+    Windows: () => {
         return navigator.userAgent.match(/IEMobile/i)
     },
-    any: function () {
+    any: () => {
         return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows())
     }
 }
 
-export const toType = function (obj) {
+export const toType = obj => {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
 };
 
 // Avoid `console` errors in browsers that lack a console.
 (function () {
-    var method
-    var noop = function () {}
-    var methods = [
+    let method
+    let noop = () => {}
+    let methods = [
         'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
         'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
         'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
         'timeStamp', 'trace', 'warn'
     ]
-    var length = methods.length
-    var console = (window.console = window.console || {})
+    let length = methods.length
+    let console = (window.console = window.console || {})
 
     while (length--) {
         method = methods[length]
@@ -50,7 +50,7 @@ export const toType = function (obj) {
 }())
 
 // Strip tags
-export const stripTags = function (input, allowed) {
+export const stripTags = (input, allowed) => {
   //  discuss at: http://phpjs.org/functions/strip_tags/
   // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
   // improved by: Luke Godfrey
@@ -91,34 +91,35 @@ export const stripTags = function (input, allowed) {
     let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
     let commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi
     return input.replace(commentsAndPhpTags, '')
-    .replace(tags, function ($0, $1) {
+    .replace(tags, ($0, $1) => {
         return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : ''
     })
 }
 
-// Isset
-export const isset = function (element) {
-    if (element) return true
-    else return false
-}
-
 // Add class
-export const addClass = function (el, classToAdd) {
+export const addClass = (el, classToAdd) => {
     if (el) {
-        if (el.classList) el.classList.add(classToAdd)
-        else el.className += ' ' + classToAdd
+        if (el.classList) {
+            el.classList.add(classToAdd)
+        } else {
+            el.className += ' ' + classToAdd
+        }
     }
 }
 
 // Remove class
-export const removeClass = function (el, classToRemove) {
+export const removeClass = (el, classToRemove) => {
     if (el) {
-        if (el.classList) el.classList.remove(classToRemove)
-        else {
+        if (el.classList) {
+            el.classList.remove(classToRemove)
+        } else {
             el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '')
 
-            var posLastCar = el.className.length - 1
-            if (el.className[posLastCar] === ' ') el.className = el.className.substring(0, posLastCar)
+            let posLastCar = el.className.length - 1
+
+            if (el.className[posLastCar] === ' ') {
+                el.className = el.className.substring(0, posLastCar)
+            }
         }
     }
 }
@@ -128,60 +129,69 @@ export const removeClass = function (el, classToRemove) {
  * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
  */
 // constructor
-export const PointerEventsPolyfill = function (options) {
-    // set defaults
-    this.options = {
-        selector: '*',
-        mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
-        usePolyfillIf: function () {
-            if (navigator.appName === 'Microsoft Internet Explorer') {
-                var agent = navigator.userAgent
-                if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
-                    var version = parseFloat(RegExp.$1)
-                    if (version < 11) { return true }
+export class PointerEventsPolyfill {
+    constructor (options) {
+        // set defaults
+        this.options = {
+            selector: '*',
+            mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
+            usePolyfillIf: () => {
+                if (navigator.appName === 'Microsoft Internet Explorer') {
+                    let agent = navigator.userAgent
+                    if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
+                        let version = parseFloat(RegExp.$1)
+                        if (version < 11) { return true }
+                    }
                 }
+                return false
             }
-            return false
+        }
+
+        if (options) {
+            let obj = this
+            $.each(options, (k, v) => {
+                obj.options[k] = v
+            })
+        }
+
+        if (this.options.usePolyfillIf()) {
+            this.registerMouseEvents()
         }
     }
-    if (options) {
-        var obj = this
-        $.each(options, function (k, v) {
-            obj.options[k] = v
+
+    // singleton initializer
+    initialize (options) {
+        if (!PointerEventsPolyfill.singleton) {
+            PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options)
+        }
+
+        return PointerEventsPolyfill.singleton
+    }
+
+    // handle mouse events w/ support for pointer-events: none
+    registerMouseEvents () {
+        // register on all elements (and all future elements) matching the selector
+        $(document).on(this.options.mouseEvents.join(' '), this.options.selector, (e) => {
+            if ($(this).css('pointer-events') === 'none') {
+                // peak at the element below
+                let origDisplayAttribute = $(this).css('display')
+                $(this).css('display', 'none')
+
+                let underneathElem = document.elementFromPoint(e.clientX, e.clientY)
+
+                if (origDisplayAttribute) {
+                    $(this)
+                        .css('display', origDisplayAttribute)
+                } else { $(this).css('display', '') }
+
+                // fire the mouse event on the element below
+                e.target = underneathElem
+                $(underneathElem).trigger(e)
+
+                return false
+            }
+
+            return true
         })
     }
-
-    if (this.options.usePolyfillIf()) { this.register_mouse_events() }
-}
-
-// singleton initializer
-PointerEventsPolyfill.initialize = function (options) {
-    if (PointerEventsPolyfill.singleton == null) { PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options) }
-    return PointerEventsPolyfill.singleton
-}
-
-// handle mouse events w/ support for pointer-events: none
-PointerEventsPolyfill.prototype.register_mouse_events = function () {
-    // register on all elements (and all future elements) matching the selector
-    $(document).on(this.options.mouseEvents.join(' '), this.options.selector, function (e) {
-        if ($(this).css('pointer-events') === 'none') {
-             // peak at the element below
-            var origDisplayAttribute = $(this).css('display')
-            $(this).css('display', 'none')
-
-            var underneathElem = document.elementFromPoint(e.clientX, e.clientY)
-
-            if (origDisplayAttribute) {
-                $(this)
-                    .css('display', origDisplayAttribute)
-            } else { $(this).css('display', '') }
-
-             // fire the mouse event on the element below
-            e.target = underneathElem
-            $(underneathElem).trigger(e)
-
-            return false
-        }
-        return true
-    })
 }

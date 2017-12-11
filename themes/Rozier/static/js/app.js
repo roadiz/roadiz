@@ -3057,7 +3057,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ "../Resources/app/components/bulk-edits/documentsBulk.js":
+/***/ "../Resources/app/components/bulk-edits/DocumentsBulk.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3066,7 +3066,14 @@ if (false) {(function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = DocumentsBulk;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -3075,186 +3082,191 @@ var _jquery2 = _interopRequireDefault(_jquery);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Documents bulk
+ * Documents Bulk
+ * @class
  */
-function DocumentsBulk() {
-    var _this = this;
+var DocumentsBulk = function () {
+    /**
+     * Create a documents bulk
+     */
+    function DocumentsBulk() {
+        (0, _classCallCheck3.default)(this, DocumentsBulk);
 
-    _this.$documentsCheckboxes = (0, _jquery2.default)('input.document-checkbox');
-    _this.$documentsIdBulkFolders = (0, _jquery2.default)('input.document-id-bulk-folder');
-    _this.$actionsMenu = (0, _jquery2.default)('.documents-bulk-actions');
-    _this.$documentsFolderButton = (0, _jquery2.default)('.uk-button-bulk-folder-documents');
-    _this.$documentsFolderCont = (0, _jquery2.default)('.documents-bulk-folder-cont');
-    _this.$documentsSelectAll = (0, _jquery2.default)('.uk-button-select-all');
-    _this.$documentsDeselectAll = (0, _jquery2.default)('.uk-button-bulk-deselect');
+        this.$documentsCheckboxes = (0, _jquery2.default)('input.document-checkbox');
+        this.$documentsIdBulkFolders = (0, _jquery2.default)('input.document-id-bulk-folder');
+        this.$actionsMenu = (0, _jquery2.default)('.documents-bulk-actions');
+        this.$documentsFolderButton = (0, _jquery2.default)('.uk-button-bulk-folder-documents');
+        this.$documentsFolderCont = (0, _jquery2.default)('.documents-bulk-folder-cont');
+        this.$documentsSelectAll = (0, _jquery2.default)('.uk-button-select-all');
+        this.$documentsDeselectAll = (0, _jquery2.default)('.uk-button-bulk-deselect');
+        this.documentsFolderOpen = false;
+        this.documentsIds = null;
 
-    _this.documentsFolderOpen = false;
-    _this.documentsIds = null;
+        this.onCheckboxChange = this.onCheckboxChange.bind(this);
+        this.onBulkDelete = this.onBulkDelete.bind(this);
+        this.documentsFolderButtonClick = this.documentsFolderButtonClick.bind(this);
+        this.onBulkDownload = this.onBulkDownload.bind(this);
+        this.onSelectAll = this.onSelectAll.bind(this);
+        this.onDeselectAll = this.onDeselectAll.bind(this);
 
-    if (_this.$documentsCheckboxes.length) {
-        _this.init();
-    }
-};
-
-/**
- * Init
- * @return {[type]} [description]
- */
-DocumentsBulk.prototype.init = function () {
-    var _this = this;
-
-    var proxy = _jquery2.default.proxy(_this.onCheckboxChange, _this);
-    _this.$documentsCheckboxes.off('change', proxy);
-    _this.$documentsCheckboxes.on('change', proxy);
-
-    var $bulkDeleteButton = _this.$actionsMenu.find('.uk-button-bulk-delete-documents');
-    var deleteProxy = _jquery2.default.proxy(_this.onBulkDelete, _this);
-    $bulkDeleteButton.off('click', deleteProxy);
-    $bulkDeleteButton.on('click', deleteProxy);
-
-    _this.$documentsFolderButton.on('click', _jquery2.default.proxy(_this.documentsFolderButtonClick, _this));
-
-    var $bulkDownloadButton = _this.$actionsMenu.find('.uk-button-bulk-download-documents');
-    var downloadProxy = _jquery2.default.proxy(_this.onBulkDownload, _this);
-    $bulkDownloadButton.off('click', downloadProxy);
-    $bulkDownloadButton.on('click', downloadProxy);
-
-    var selectAllProxy = _jquery2.default.proxy(_this.onSelectAll, _this);
-    var deselectAllProxy = _jquery2.default.proxy(_this.onDeselectAll, _this);
-
-    _this.$documentsSelectAll.off('click', selectAllProxy);
-    _this.$documentsSelectAll.on('click', selectAllProxy);
-    _this.$documentsDeselectAll.off('click', deselectAllProxy);
-    _this.$documentsDeselectAll.on('click', deselectAllProxy);
-};
-
-DocumentsBulk.prototype.onSelectAll = function (event) {
-    var _this = this;
-
-    _this.$documentsCheckboxes.prop('checked', true);
-    _this.onCheckboxChange(null);
-
-    return false;
-};
-
-DocumentsBulk.prototype.onDeselectAll = function (event) {
-    var _this = this;
-
-    _this.$documentsCheckboxes.prop('checked', false);
-    _this.onCheckboxChange(null);
-
-    return false;
-};
-
-/**
- * On checkbox change
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-DocumentsBulk.prototype.onCheckboxChange = function (event) {
-    var _this = this;
-
-    _this.documentsIds = [];
-    (0, _jquery2.default)('input.document-checkbox:checked').each(function (index, domElement) {
-        _this.documentsIds.push((0, _jquery2.default)(domElement).val());
-    });
-
-    if (_this.$documentsIdBulkFolders.length) {
-        _this.$documentsIdBulkFolders.val(_this.documentsIds.join(','));
+        if (this.$documentsCheckboxes.length) {
+            this.init();
+        }
     }
 
-    if (_this.documentsIds.length > 0) {
-        _this.showActions();
-    } else {
-        _this.hideActions();
-    }
-};
+    (0, _createClass3.default)(DocumentsBulk, [{
+        key: 'init',
+        value: function init() {
+            this.$documentsCheckboxes.off('change', this.onCheckboxChange);
+            this.$documentsCheckboxes.on('change', this.onCheckboxChange);
 
-/**
- * On bulk delete
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-DocumentsBulk.prototype.onBulkDelete = function (event) {
-    var _this = this;
+            var $bulkDeleteButton = this.$actionsMenu.find('.uk-button-bulk-delete-documents');
+            $bulkDeleteButton.off('click', this.onBulkDelete);
+            $bulkDeleteButton.on('click', this.onBulkDelete);
 
-    if (_this.documentsIds.length > 0) {
-        history.pushState({
-            'headerData': {
-                'documents': _this.documentsIds
+            this.$documentsFolderButton.on('click', this.documentsFolderButtonClick);
+
+            var $bulkDownloadButton = this.$actionsMenu.find('.uk-button-bulk-download-documents');
+            $bulkDownloadButton.off('click', this.onBulkDownload);
+            $bulkDownloadButton.on('click', this.onBulkDownload);
+
+            this.$documentsSelectAll.off('click', this.onSelectAll);
+            this.$documentsSelectAll.on('click', this.onSelectAll);
+            this.$documentsDeselectAll.off('click', this.onDeselectAll);
+            this.$documentsDeselectAll.on('click', this.onDeselectAll);
+        }
+    }, {
+        key: 'onSelectAll',
+        value: function onSelectAll() {
+            this.$documentsCheckboxes.prop('checked', true);
+            this.onCheckboxChange(null);
+            return false;
+        }
+    }, {
+        key: 'onDeselectAll',
+        value: function onDeselectAll() {
+            this.$documentsCheckboxes.prop('checked', false);
+            this.onCheckboxChange(null);
+            return false;
+        }
+
+        /**
+         * On checkbox change
+         */
+
+    }, {
+        key: 'onCheckboxChange',
+        value: function onCheckboxChange() {
+            var _this = this;
+
+            this.documentsIds = [];
+
+            (0, _jquery2.default)('input.document-checkbox:checked').each(function (index, domElement) {
+                _this.documentsIds.push((0, _jquery2.default)(domElement).val());
+            });
+
+            if (this.$documentsIdBulkFolders.length) {
+                this.$documentsIdBulkFolders.val(this.documentsIds.join(','));
             }
-        }, null, window.Rozier.routes.documentsBulkDeletePage);
 
-        window.Rozier.lazyload.onPopState(null);
-    }
-
-    return false;
-};
-
-/**
- * On bulk Download
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-DocumentsBulk.prototype.onBulkDownload = function (event) {
-    var _this = this;
-
-    if (_this.documentsIds.length > 0) {
-        history.pushState({
-            'headerData': {
-                'documents': _this.documentsIds
+            if (this.documentsIds.length > 0) {
+                this.showActions();
+            } else {
+                this.hideActions();
             }
-        }, null, window.Rozier.routes.documentsBulkDownloadPage);
+        }
 
-        window.Rozier.lazyload.onPopState(null);
-    }
+        /**
+         * On bulk delete
+         * @returns {boolean}
+         */
 
-    return false;
-};
+    }, {
+        key: 'onBulkDelete',
+        value: function onBulkDelete() {
+            if (this.documentsIds.length > 0) {
+                history.pushState({
+                    'headerData': {
+                        'documents': this.documentsIds
+                    }
+                }, null, window.Rozier.routes.documentsBulkDeletePage);
 
-/**
- * Show actions
- * @return {[type]} [description]
- */
-DocumentsBulk.prototype.showActions = function () {
-    var _this = this;
+                window.Rozier.lazyload.onPopState(null);
+            }
 
-    _this.$actionsMenu.stop();
-    _this.$actionsMenu.slideDown();
-};
+            return false;
+        }
 
-/**
- * Hide actions
- * @return {[type]} [description]
- */
-DocumentsBulk.prototype.hideActions = function () {
-    var _this = this;
+        /**
+         * On bulk Download
+         * @returns {boolean}
+         */
 
-    _this.$actionsMenu.stop();
-    _this.$actionsMenu.slideUp();
-};
+    }, {
+        key: 'onBulkDownload',
+        value: function onBulkDownload() {
+            if (this.documentsIds.length > 0) {
+                history.pushState({
+                    'headerData': {
+                        'documents': this.documentsIds
+                    }
+                }, null, window.Rozier.routes.documentsBulkDownloadPage);
 
-/**
- * Documents folder button click
- * @return {[type]} [description]
- */
-DocumentsBulk.prototype.documentsFolderButtonClick = function (e) {
-    var _this = this;
+                window.Rozier.lazyload.onPopState(null);
+            }
 
-    if (!_this.documentsFolderOpen) {
-        _this.$documentsFolderCont.slideDown();
-        _this.documentsFolderOpen = true;
-    } else {
-        _this.$documentsFolderCont.slideUp();
-        _this.documentsFolderOpen = false;
-    }
+            return false;
+        }
 
-    return false;
-};
+        /**
+         * Show actions
+         */
+
+    }, {
+        key: 'showActions',
+        value: function showActions() {
+            this.$actionsMenu.stop();
+            this.$actionsMenu.slideDown();
+        }
+
+        /**
+         * Hide actions
+         */
+
+    }, {
+        key: 'hideActions',
+        value: function hideActions() {
+            this.$actionsMenu.stop();
+            this.$actionsMenu.slideUp();
+        }
+
+        /**
+         * Documents folder button click
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'documentsFolderButtonClick',
+        value: function documentsFolderButtonClick() {
+            if (!this.documentsFolderOpen) {
+                this.$documentsFolderCont.slideDown();
+                this.documentsFolderOpen = true;
+            } else {
+                this.$documentsFolderCont.slideUp();
+                this.documentsFolderOpen = false;
+            }
+
+            return false;
+        }
+    }]);
+    return DocumentsBulk;
+}();
+
+exports.default = DocumentsBulk;
 
 /***/ }),
 
-/***/ "../Resources/app/components/bulk-edits/nodesBulk.js":
+/***/ "../Resources/app/components/bulk-edits/NodesBulk.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3263,7 +3275,14 @@ DocumentsBulk.prototype.documentsFolderButtonClick = function (e) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = NodesBulk;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -3274,191 +3293,194 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Nodes bulk
  */
-function NodesBulk() {
-    var _this = this;
+var NodesBulk = function () {
+    function NodesBulk() {
+        (0, _classCallCheck3.default)(this, NodesBulk);
 
-    _this.$nodesCheckboxes = (0, _jquery2.default)('input.node-checkbox');
-    _this.$nodesIdBulkTags = (0, _jquery2.default)('input.nodes-id-bulk-tags');
-    _this.$nodesIdBulkStatus = (0, _jquery2.default)('input.nodes-id-bulk-status');
-    _this.$actionsMenu = (0, _jquery2.default)('.nodes-bulk-actions');
+        this.$nodesCheckboxes = (0, _jquery2.default)('input.node-checkbox');
+        this.$nodesIdBulkTags = (0, _jquery2.default)('input.nodes-id-bulk-tags');
+        this.$nodesIdBulkStatus = (0, _jquery2.default)('input.nodes-id-bulk-status');
+        this.$actionsMenu = (0, _jquery2.default)('.nodes-bulk-actions');
 
-    _this.$nodesFolderButton = (0, _jquery2.default)('.uk-button-bulk-folder-nodes');
-    _this.$nodesFolderCont = (0, _jquery2.default)('.nodes-bulk-folder-cont');
+        this.$nodesFolderButton = (0, _jquery2.default)('.uk-button-bulk-folder-nodes');
+        this.$nodesFolderCont = (0, _jquery2.default)('.nodes-bulk-folder-cont');
 
-    _this.$nodesStatusButton = (0, _jquery2.default)('.uk-button-bulk-status-nodes');
-    _this.$nodesStatusCont = (0, _jquery2.default)('.nodes-bulk-status-cont');
+        this.$nodesStatusButton = (0, _jquery2.default)('.uk-button-bulk-status-nodes');
+        this.$nodesStatusCont = (0, _jquery2.default)('.nodes-bulk-status-cont');
 
-    _this.$nodesSelectAll = (0, _jquery2.default)('.uk-button-select-all');
-    _this.$nodesDeselectAll = (0, _jquery2.default)('.uk-button-bulk-deselect');
+        this.$nodesSelectAll = (0, _jquery2.default)('.uk-button-select-all');
+        this.$nodesDeselectAll = (0, _jquery2.default)('.uk-button-bulk-deselect');
 
-    _this.nodesFolderOpen = false;
-    _this.nodesStatusOpen = false;
-    _this.nodesIds = null;
+        this.nodesFolderOpen = false;
+        this.nodesStatusOpen = false;
+        this.nodesIds = null;
 
-    if (_this.$nodesCheckboxes.length) {
-        _this.init();
-    }
-};
+        this.onCheckboxChange = this.onCheckboxChange.bind(this);
+        this.nodesFolderButtonClick = this.nodesFolderButtonClick.bind(this);
+        this.onSelectAll = this.onSelectAll.bind(this);
 
-/**
- * Init
- * @return {[type]} [description]
- */
-NodesBulk.prototype.init = function () {
-    var _this = this;
-
-    var proxy = _jquery2.default.proxy(_this.onCheckboxChange, _this);
-    _this.$nodesCheckboxes.off('change', proxy);
-    _this.$nodesCheckboxes.on('change', proxy);
-
-    _this.$nodesFolderButton.on('click', _jquery2.default.proxy(_this.nodesFolderButtonClick, _this));
-    _this.$nodesStatusButton.on('click', _jquery2.default.proxy(_this.nodesStatusButtonClick, _this));
-
-    var selectAllProxy = _jquery2.default.proxy(_this.onSelectAll, _this);
-    var deselectAllProxy = _jquery2.default.proxy(_this.onDeselectAll, _this);
-
-    _this.$nodesSelectAll.off('click', selectAllProxy);
-    _this.$nodesSelectAll.on('click', selectAllProxy);
-    _this.$nodesDeselectAll.off('click', deselectAllProxy);
-    _this.$nodesDeselectAll.on('click', deselectAllProxy);
-};
-
-NodesBulk.prototype.onSelectAll = function (event) {
-    var _this = this;
-
-    _this.$nodesCheckboxes.prop('checked', true);
-    _this.onCheckboxChange(null);
-
-    return false;
-};
-
-NodesBulk.prototype.onDeselectAll = function (event) {
-    var _this = this;
-
-    _this.$nodesCheckboxes.prop('checked', false);
-    _this.onCheckboxChange(null);
-
-    return false;
-};
-
-/**
- * On checkbox change
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-NodesBulk.prototype.onCheckboxChange = function (event) {
-    var _this = this;
-
-    _this.nodesIds = [];
-    (0, _jquery2.default)('input.node-checkbox:checked').each(function (index, domElement) {
-        _this.nodesIds.push((0, _jquery2.default)(domElement).val());
-    });
-
-    if (_this.$nodesIdBulkTags.length) {
-        _this.$nodesIdBulkTags.val(_this.nodesIds.join(','));
-    }
-    if (_this.$nodesIdBulkStatus.length) {
-        _this.$nodesIdBulkStatus.val(_this.nodesIds.join(','));
+        if (this.$nodesCheckboxes.length) {
+            this.init();
+        }
     }
 
-    // console.log(_this.nodesIds);
+    /**
+     * Init
+     */
 
-    if (_this.nodesIds.length > 0) {
-        _this.showActions();
-    } else {
-        _this.hideActions();
-    }
 
-    return false;
-};
+    (0, _createClass3.default)(NodesBulk, [{
+        key: 'init',
+        value: function init() {
+            this.$nodesCheckboxes.off('change', this.onCheckboxChange);
+            this.$nodesCheckboxes.on('change', this.onCheckboxChange);
 
-/**
- * On bulk delete
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-NodesBulk.prototype.onBulkDelete = function (event) {
-    var _this = this;
+            this.$nodesFolderButton.on('click', this.nodesFolderButtonClick);
+            this.$nodesStatusButton.on('click', this.nodesStatusButtonClick);
 
-    if (_this.nodesIds.length > 0) {
-        history.pushState({
-            'headerData': {
-                'nodes': _this.nodesIds
+            this.$nodesSelectAll.off('click', this.onSelectAll);
+            this.$nodesSelectAll.on('click', this.onSelectAll);
+
+            this.$nodesDeselectAll.off('click', this.onDeselectAll);
+            this.$nodesDeselectAll.on('click', this.onDeselectAll);
+        }
+    }, {
+        key: 'onSelectAll',
+        value: function onSelectAll() {
+            this.$nodesCheckboxes.prop('checked', true);
+            this.onCheckboxChange(null);
+            return false;
+        }
+    }, {
+        key: 'onDeselectAll',
+        value: function onDeselectAll() {
+            this.$nodesCheckboxes.prop('checked', false);
+            this.onCheckboxChange(null);
+            return false;
+        }
+
+        /**
+         * On checkbox change
+         */
+
+    }, {
+        key: 'onCheckboxChange',
+        value: function onCheckboxChange() {
+            var _this = this;
+
+            this.nodesIds = [];
+
+            (0, _jquery2.default)('input.node-checkbox:checked').each(function (index, domElement) {
+                _this.nodesIds.push((0, _jquery2.default)(domElement).val());
+            });
+
+            if (this.$nodesIdBulkTags.length) {
+                this.$nodesIdBulkTags.val(this.nodesIds.join(','));
             }
-        }, null, window.Rozier.routes.nodesBulkDeletePage);
 
-        window.Rozier.lazyload.onPopState(null);
-    }
+            if (this.$nodesIdBulkStatus.length) {
+                this.$nodesIdBulkStatus.val(this.nodesIds.join(','));
+            }
 
-    return false;
-};
+            if (this.nodesIds.length > 0) {
+                this.showActions();
+            } else {
+                this.hideActions();
+            }
 
-/**
- * Show actions
- * @return {[type]} [description]
- */
-NodesBulk.prototype.showActions = function () {
-    var _this = this;
+            return false;
+        }
 
-    _this.$actionsMenu.slideDown();
-    // _this.$actionsMenu.addClass('visible');
-};
+        /**
+         * On bulk delete
+         */
 
-/**
- * Hide actions
- * @return {[type]} [description]
- */
-NodesBulk.prototype.hideActions = function () {
-    var _this = this;
+    }, {
+        key: 'onBulkDelete',
+        value: function onBulkDelete() {
+            if (this.nodesIds.length > 0) {
+                history.pushState({
+                    'headerData': {
+                        'nodes': this.nodesIds
+                    }
+                }, null, window.Rozier.routes.nodesBulkDeletePage);
 
-    _this.$actionsMenu.slideUp();
-    // _this.$actionsMenu.removeClass('visible');
-};
+                window.Rozier.lazyload.onPopState(null);
+            }
 
-/**
- * Nodes folder button click
- * @return {[type]} [description]
- */
-NodesBulk.prototype.nodesFolderButtonClick = function (e) {
-    var _this = this;
+            return false;
+        }
 
-    if (!_this.nodesFolderOpen) {
-        _this.$nodesStatusCont.slideUp();
-        _this.nodesStatusOpen = false;
+        /**
+         * Show actions
+         */
 
-        _this.$nodesFolderCont.slideDown();
-        _this.nodesFolderOpen = true;
-    } else {
-        _this.$nodesFolderCont.slideUp();
-        _this.nodesFolderOpen = false;
-    }
+    }, {
+        key: 'showActions',
+        value: function showActions() {
+            this.$actionsMenu.slideDown();
+        }
 
-    return false;
-};
-/**
- * Nodes status button click
- * @return {[type]} [description]
- */
-NodesBulk.prototype.nodesStatusButtonClick = function (e) {
-    var _this = this;
+        /**
+         * Hide actions
+         */
 
-    if (!_this.nodesStatusOpen) {
-        _this.$nodesFolderCont.slideUp();
-        _this.nodesFolderOpen = false;
+    }, {
+        key: 'hideActions',
+        value: function hideActions() {
+            this.$actionsMenu.slideUp();
+        }
 
-        _this.$nodesStatusCont.slideDown();
-        _this.nodesStatusOpen = true;
-    } else {
-        _this.$nodesStatusCont.slideUp();
-        _this.nodesStatusOpen = false;
-    }
+        /**
+         * Nodes folder button click
+         */
 
-    return false;
-};
+    }, {
+        key: 'nodesFolderButtonClick',
+        value: function nodesFolderButtonClick() {
+            if (!this.nodesFolderOpen) {
+                this.$nodesStatusCont.slideUp();
+                this.nodesStatusOpen = false;
+
+                this.$nodesFolderCont.slideDown();
+                this.nodesFolderOpen = true;
+            } else {
+                this.$nodesFolderCont.slideUp();
+                this.nodesFolderOpen = false;
+            }
+
+            return false;
+        }
+
+        /**
+         * Nodes status button click
+         */
+
+    }, {
+        key: 'nodesStatusButtonClick',
+        value: function nodesStatusButtonClick() {
+            if (!this.nodesStatusOpen) {
+                this.$nodesFolderCont.slideUp();
+                this.nodesFolderOpen = false;
+
+                this.$nodesStatusCont.slideDown();
+                this.nodesStatusOpen = true;
+            } else {
+                this.$nodesStatusCont.slideUp();
+                this.nodesStatusOpen = false;
+            }
+
+            return false;
+        }
+    }]);
+    return NodesBulk;
+}();
+
+exports.default = NodesBulk;
 
 /***/ }),
 
-/***/ "../Resources/app/components/bulk-edits/tagsBulk.js":
+/***/ "../Resources/app/components/bulk-edits/TagsBulk.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3467,7 +3489,14 @@ NodesBulk.prototype.nodesStatusButtonClick = function (e) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = TagsBulk;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -3478,191 +3507,200 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Tags bulk
  */
-function TagsBulk() {
-    var _this = this;
+var TagsBulk = function () {
+    /**
+     * Create Tags bulk
+     */
+    function TagsBulk() {
+        (0, _classCallCheck3.default)(this, TagsBulk);
 
-    _this.$tagsCheckboxes = (0, _jquery2.default)('input.tag-checkbox');
-    _this.$tagsIdBulkTags = (0, _jquery2.default)('input.tags-id-bulk-tags');
-    _this.$tagsIdBulkStatus = (0, _jquery2.default)('input.tags-id-bulk-status');
-    _this.$actionsMenu = (0, _jquery2.default)('.tags-bulk-actions');
+        this.$tagsCheckboxes = (0, _jquery2.default)('input.tag-checkbox');
+        this.$tagsIdBulkTags = (0, _jquery2.default)('input.tags-id-bulk-tags');
+        this.$tagsIdBulkStatus = (0, _jquery2.default)('input.tags-id-bulk-status');
+        this.$actionsMenu = (0, _jquery2.default)('.tags-bulk-actions');
 
-    _this.$tagsFolderButton = (0, _jquery2.default)('.uk-button-bulk-folder-tags');
-    _this.$tagsFolderCont = (0, _jquery2.default)('.tags-bulk-folder-cont');
+        this.$tagsFolderButton = (0, _jquery2.default)('.uk-button-bulk-folder-tags');
+        this.$tagsFolderCont = (0, _jquery2.default)('.tags-bulk-folder-cont');
 
-    _this.$tagsStatusButton = (0, _jquery2.default)('.uk-button-bulk-status-tags');
-    _this.$tagsStatusCont = (0, _jquery2.default)('.tags-bulk-status-cont');
+        this.$tagsStatusButton = (0, _jquery2.default)('.uk-button-bulk-status-tags');
+        this.$tagsStatusCont = (0, _jquery2.default)('.tags-bulk-status-cont');
 
-    _this.$tagsSelectAll = (0, _jquery2.default)('.uk-button-select-all');
-    _this.$tagsDeselectAll = (0, _jquery2.default)('.uk-button-bulk-deselect');
+        this.$tagsSelectAll = (0, _jquery2.default)('.uk-button-select-all');
+        this.$tagsDeselectAll = (0, _jquery2.default)('.uk-button-bulk-deselect');
 
-    _this.tagsFolderOpen = false;
-    _this.tagsStatusOpen = false;
-    _this.tagsIds = null;
+        this.tagsFolderOpen = false;
+        this.tagsStatusOpen = false;
+        this.tagsIds = null;
 
-    if (_this.$tagsCheckboxes.length) {
-        _this.init();
-    }
-};
+        this.onCheckboxChange = this.onCheckboxChange.bind(this);
+        this.tagsFolderButtonClick = this.tagsFolderButtonClick.bind(this);
+        this.tagsStatusButtonClick = this.tagsStatusButtonClick.bind(this);
+        this.onSelectAll = this.onSelectAll.bind(this);
+        this.onDeselectAll = this.onDeselectAll.bind(this);
 
-/**
- * Init
- * @return {[type]} [description]
- */
-TagsBulk.prototype.init = function () {
-    var _this = this;
-
-    var proxy = _jquery2.default.proxy(_this.onCheckboxChange, _this);
-    _this.$tagsCheckboxes.off('change', proxy);
-    _this.$tagsCheckboxes.on('change', proxy);
-
-    _this.$tagsFolderButton.on('click', _jquery2.default.proxy(_this.tagsFolderButtonClick, _this));
-    _this.$tagsStatusButton.on('click', _jquery2.default.proxy(_this.tagsStatusButtonClick, _this));
-
-    var selectAllProxy = _jquery2.default.proxy(_this.onSelectAll, _this);
-    var deselectAllProxy = _jquery2.default.proxy(_this.onDeselectAll, _this);
-
-    _this.$tagsSelectAll.off('click', selectAllProxy);
-    _this.$tagsSelectAll.on('click', selectAllProxy);
-    _this.$tagsDeselectAll.off('click', deselectAllProxy);
-    _this.$tagsDeselectAll.on('click', deselectAllProxy);
-};
-
-TagsBulk.prototype.onSelectAll = function (event) {
-    var _this = this;
-
-    _this.$tagsCheckboxes.prop('checked', true);
-    _this.onCheckboxChange(null);
-
-    return false;
-};
-
-TagsBulk.prototype.onDeselectAll = function (event) {
-    var _this = this;
-
-    _this.$tagsCheckboxes.prop('checked', false);
-    _this.onCheckboxChange(null);
-
-    return false;
-};
-
-/**
- * On checkbox change
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-TagsBulk.prototype.onCheckboxChange = function (event) {
-    var _this = this;
-
-    _this.tagsIds = [];
-    (0, _jquery2.default)('input.tag-checkbox:checked').each(function (index, domElement) {
-        _this.tagsIds.push((0, _jquery2.default)(domElement).val());
-    });
-
-    if (_this.$tagsIdBulkTags.length) {
-        _this.$tagsIdBulkTags.val(_this.tagsIds.join(','));
-    }
-    if (_this.$tagsIdBulkStatus.length) {
-        _this.$tagsIdBulkStatus.val(_this.tagsIds.join(','));
+        if (this.$tagsCheckboxes.length) {
+            this.init();
+        }
     }
 
-    // console.log(_this.tagsIds);
+    /**
+     * Init
+     */
 
-    if (_this.tagsIds.length > 0) {
-        _this.showActions();
-    } else {
-        _this.hideActions();
-    }
 
-    return false;
-};
+    (0, _createClass3.default)(TagsBulk, [{
+        key: 'init',
+        value: function init() {
+            this.$tagsCheckboxes.off('change', this.onCheckboxChange);
+            this.$tagsCheckboxes.on('change', this.onCheckboxChange);
 
-/**
- * On bulk delete
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-TagsBulk.prototype.onBulkDelete = function (event) {
-    var _this = this;
+            this.$tagsFolderButton.on('click', this.tagsFolderButtonClick);
+            this.$tagsStatusButton.on('click', this.tagsStatusButtonClick);
 
-    if (_this.tagsIds.length > 0) {
-        history.pushState({
-            'headerData': {
-                'tags': _this.tagsIds
+            this.$tagsSelectAll.off('click', this.onSelectAll);
+            this.$tagsSelectAll.on('click', this.onSelectAll);
+            this.$tagsDeselectAll.off('click', this.onDeselectAll);
+            this.$tagsDeselectAll.on('click', this.onDeselectAll);
+        }
+    }, {
+        key: 'onSelectAll',
+        value: function onSelectAll() {
+            this.$tagsCheckboxes.prop('checked', true);
+            this.onCheckboxChange(null);
+
+            return false;
+        }
+    }, {
+        key: 'onDeselectAll',
+        value: function onDeselectAll() {
+            this.$tagsCheckboxes.prop('checked', false);
+            this.onCheckboxChange(null);
+
+            return false;
+        }
+
+        /**
+         * On checkbox change
+         */
+
+    }, {
+        key: 'onCheckboxChange',
+        value: function onCheckboxChange() {
+            var _this = this;
+
+            this.tagsIds = [];
+
+            (0, _jquery2.default)('input.tag-checkbox:checked').each(function (index, domElement) {
+                _this.tagsIds.push((0, _jquery2.default)(domElement).val());
+            });
+
+            if (this.$tagsIdBulkTags.length) {
+                this.$tagsIdBulkTags.val(this.tagsIds.join(','));
             }
-        }, null, window.Rozier.routes.tagsBulkDeletePage);
+            if (this.$tagsIdBulkStatus.length) {
+                this.$tagsIdBulkStatus.val(this.tagsIds.join(','));
+            }
 
-        window.Rozier.lazyload.onPopState(null);
-    }
+            if (this.tagsIds.length > 0) {
+                this.showActions();
+            } else {
+                this.hideActions();
+            }
 
-    return false;
-};
+            return false;
+        }
 
-/**
- * Show actions
- * @return {[type]} [description]
- */
-TagsBulk.prototype.showActions = function () {
-    var _this = this;
+        /**
+         * On bulk delete
+         */
 
-    _this.$actionsMenu.slideDown();
-    // _this.$actionsMenu.addClass('visible');
-};
+    }, {
+        key: 'onBulkDelete',
+        value: function onBulkDelete() {
+            if (this.tagsIds.length > 0) {
+                history.pushState({
+                    'headerData': {
+                        'tags': this.tagsIds
+                    }
+                }, null, window.Rozier.routes.tagsBulkDeletePage);
 
-/**
- * Hide actions
- * @return {[type]} [description]
- */
-TagsBulk.prototype.hideActions = function () {
-    var _this = this;
+                window.Rozier.lazyload.onPopState(null);
+            }
 
-    _this.$actionsMenu.slideUp();
-    // _this.$actionsMenu.removeClass('visible');
-};
+            return false;
+        }
 
-/**
- * Tags folder button click
- * @return {[type]} [description]
- */
-TagsBulk.prototype.tagsFolderButtonClick = function (e) {
-    var _this = this;
+        /**
+         * Show actions
+         * @return {[type]} [description]
+         */
 
-    if (!_this.tagsFolderOpen) {
-        _this.$tagsStatusCont.slideUp();
-        _this.tagsStatusOpen = false;
+    }, {
+        key: 'showActions',
+        value: function showActions() {
+            this.$actionsMenu.slideDown();
+        }
 
-        _this.$tagsFolderCont.slideDown();
-        _this.tagsFolderOpen = true;
-    } else {
-        _this.$tagsFolderCont.slideUp();
-        _this.tagsFolderOpen = false;
-    }
+        /**
+         * Hide actions
+         */
 
-    return false;
-};
-/**
- * Tags status button click
- * @return {[type]} [description]
- */
-TagsBulk.prototype.tagsStatusButtonClick = function (e) {
-    var _this = this;
+    }, {
+        key: 'hideActions',
+        value: function hideActions() {
+            this.$actionsMenu.slideUp();
+        }
 
-    if (!_this.tagsStatusOpen) {
-        _this.$tagsFolderCont.slideUp();
-        _this.tagsFolderOpen = false;
+        /**
+         * Tags folder button click
+         */
 
-        _this.$tagsStatusCont.slideDown();
-        _this.tagsStatusOpen = true;
-    } else {
-        _this.$tagsStatusCont.slideUp();
-        _this.tagsStatusOpen = false;
-    }
+    }, {
+        key: 'tagsFolderButtonClick',
+        value: function tagsFolderButtonClick() {
+            if (!this.tagsFolderOpen) {
+                this.$tagsStatusCont.slideUp();
+                this.tagsStatusOpen = false;
 
-    return false;
-};
+                this.$tagsFolderCont.slideDown();
+                this.tagsFolderOpen = true;
+            } else {
+                this.$tagsFolderCont.slideUp();
+                this.tagsFolderOpen = false;
+            }
+
+            return false;
+        }
+
+        /**
+         * Tags status button click
+         */
+
+    }, {
+        key: 'tagsStatusButtonClick',
+        value: function tagsStatusButtonClick() {
+            if (!this.tagsStatusOpen) {
+                this.$tagsFolderCont.slideUp();
+                this.tagsFolderOpen = false;
+
+                this.$tagsStatusCont.slideDown();
+                this.tagsStatusOpen = true;
+            } else {
+                this.$tagsStatusCont.slideUp();
+                this.tagsStatusOpen = false;
+            }
+
+            return false;
+        }
+    }]);
+    return TagsBulk;
+}();
+
+exports.default = TagsBulk;
 
 /***/ }),
 
-/***/ "../Resources/app/components/custom-form-fields/customFormFieldEdit.js":
+/***/ "../Resources/app/components/custom-form-fields/CustomFormFieldEdit.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3671,7 +3709,14 @@ TagsBulk.prototype.tagsStatusButtonClick = function (e) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = CustomFormFieldEdit;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -3682,147 +3727,178 @@ var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * CUSTOM FORM FIELD EDIT
+ * Custom form field edit
  */
-function CustomFormFieldEdit() {
-    var _this = this;
+var CustomFormFieldEdit = function () {
+    function CustomFormFieldEdit() {
+        (0, _classCallCheck3.default)(this, CustomFormFieldEdit);
 
-    // Selectors
-    _this.$btn = (0, _jquery2.default)('.custom-form-field-edit-button');
-    if (_this.$btn.length) {
-        _this.$formFieldRow = (0, _jquery2.default)('.custom-form-field-row');
-        _this.$formFieldCol = (0, _jquery2.default)('.custom-form-field-col');
-        _this.indexOpen = null;
-        _this.openFormDelay = 0;
-        _this.$formCont = null;
-        _this.$form = null;
-        _this.$formIcon = null;
-        _this.$formContHeight = null;
+        // Selectors
+        this.$btn = (0, _jquery2.default)('.custom-form-field-edit-button');
 
-        // Methods
-        _this.init();
-    }
-};
+        this.btnClick = this.btnClick.bind(this);
 
-/**
- * Init
- * @return {[type]} [description]
- */
-CustomFormFieldEdit.prototype.init = function () {
-    var _this = this;
+        if (this.$btn.length) {
+            this.$formFieldRow = (0, _jquery2.default)('.custom-form-field-row');
+            this.$formFieldCol = (0, _jquery2.default)('.custom-form-field-col');
+            this.indexOpen = null;
+            this.openFormDelay = 0;
+            this.$formCont = null;
+            this.$form = null;
+            this.$formIcon = null;
+            this.$formContHeight = null;
 
-    // Events
-    var proxy = _jquery2.default.proxy(_this.btnClick, _this);
-    _this.$btn.off('click', proxy);
-    _this.$btn.on('click', proxy);
-};
-
-/**
- * Btn click
- * @return {[type]} [description]
- */
-CustomFormFieldEdit.prototype.btnClick = function (e) {
-    var _this = this;
-
-    e.preventDefault();
-
-    if (_this.indexOpen !== null) {
-        _this.closeForm();
-        _this.openFormDelay = 500;
-    } else _this.openFormDelay = 0;
-
-    if (_this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index'))) {
-        if (_this.openTimeout) {
-            clearTimeout(_this.openTimeout);
+            // Methods
+            this.init();
         }
-        _this.openTimeout = setTimeout(function () {
-            _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
-            _jquery2.default.ajax({
-                url: e.currentTarget.href,
-                type: 'get',
-                cache: false,
-                dataType: 'html'
-            }).done(function (data) {
-                _this.applyContent(e.currentTarget, data, e.currentTarget.href);
-            }).fail(function () {
-                // console.log("error");
-                window.UIkit.notify({
-                    message: window.Rozier.messages.forbiddenPage,
-                    status: 'danger',
-                    timeout: 3000,
-                    pos: 'top-center'
-                });
-            });
-        }, _this.openFormDelay);
     }
 
-    return false;
-};
+    /**
+     * Init
+     * @return {[type]} [description]
+     */
 
-/**
- * Apply content
- * @return {[type]} [description]
- */
-CustomFormFieldEdit.prototype.applyContent = function (target, data, url) {
-    var _this = this;
 
-    var dataWrapped = ['<tr class="custom-form-field-edit-form-row">', '<td colspan="4">', '<div class="custom-form-field-edit-form-cont">', data, '</div>', '</td>', '</tr>'].join('');
+    (0, _createClass3.default)(CustomFormFieldEdit, [{
+        key: 'init',
+        value: function init() {
+            // Events
+            this.$btn.off('click', this.btnClick);
+            this.$btn.on('click', this.btnClick);
+        }
 
-    (0, _jquery2.default)(target).parent().parent().after(dataWrapped);
+        /**
+         * Btn click
+         */
 
-    // Remove class to pause sortable actions
-    _this.$formFieldCol.removeClass('custom-form-field-col');
+    }, {
+        key: 'btnClick',
+        value: function btnClick(e) {
+            var _this = this;
 
-    // Switch checkboxes
-    (0, _jquery2.default)('.rz-boolean-checkbox').bootstrapSwitch({
-        size: 'small'
-    });
-    window.Rozier.lazyload.initMarkdownEditors();
+            e.preventDefault();
 
-    setTimeout(function () {
-        _this.$formCont = (0, _jquery2.default)('.custom-form-field-edit-form-cont');
-        _this.formContHeight = _this.$formCont.actual('height');
-        _this.$formRow = (0, _jquery2.default)('.custom-form-field-edit-form-row');
-        _this.$form = (0, _jquery2.default)('#edit-custom-form-field-form');
-        _this.$formIcon = (0, _jquery2.default)(_this.$formFieldRow[_this.indexOpen]).find('.custom-form-field-col-1 i');
+            if (this.indexOpen !== null) {
+                this.closeForm();
+                this.openFormDelay = 500;
+            } else {
+                this.openFormDelay = 0;
+            }
 
-        _this.$form.attr('action', url);
-        _this.$formIcon[0].className = 'uk-icon-chevron-down';
+            if (this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index'))) {
+                if (this.openTimeout) {
+                    window.clearTimeout(this.openTimeout);
+                }
+                this.openTimeout = window.setTimeout(function () {
+                    _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+                    _jquery2.default.ajax({
+                        url: e.currentTarget.href,
+                        type: 'get',
+                        cache: false,
+                        dataType: 'html'
+                    }).done(function (data) {
+                        _this.applyContent(e.currentTarget, data, e.currentTarget.href);
+                    }).fail(function () {
+                        window.UIkit.notify({
+                            message: window.Rozier.messages.forbiddenPage,
+                            status: 'danger',
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    });
+                }, this.openFormDelay);
+            }
 
-        _this.$formCont[0].style.height = '0px';
-        _this.$formCont[0].style.display = 'block';
-        _gsap.TweenLite.to(_this.$form, 0.6, { height: _this.formContHeight, ease: _gsap.Expo.easeOut });
-        _gsap.TweenLite.to(_this.$formCont, 0.6, { height: _this.formContHeight, ease: _gsap.Expo.easeOut });
-    }, 200);
-};
+            return false;
+        }
 
-/**
- * Close form
- * @return {[type]} [description]
- */
-CustomFormFieldEdit.prototype.closeForm = function () {
-    var _this = this;
+        /**
+         * Apply content
+         */
 
-    _this.$formIcon[0].className = 'uk-icon-chevron-right';
+    }, {
+        key: 'applyContent',
+        value: function applyContent(target, data, url) {
+            var _this2 = this;
 
-    _gsap.TweenLite.to(_this.$formCont, 0.4, { height: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$formRow.remove();
-            _this.indexOpen = null;
-            _this.$formFieldCol.addClass('custom-form-field-col');
-        } });
-};
+            var dataWrapped = ['<tr class="custom-form-field-edit-form-row">', '<td colspan="4">', '<div class="custom-form-field-edit-form-cont">', data, '</div>', '</td>', '</tr>'].join('');
 
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-CustomFormFieldEdit.prototype.resize = function () {};
+            (0, _jquery2.default)(target).parent().parent().after(dataWrapped);
+
+            // Remove class to pause sortable actions
+            this.$formFieldCol.removeClass('custom-form-field-col');
+
+            // Switch checkboxes
+            (0, _jquery2.default)('.rz-boolean-checkbox').bootstrapSwitch({
+                size: 'small'
+            });
+
+            window.Rozier.lazyload.initMarkdownEditors();
+
+            window.setTimeout(function () {
+                _this2.$formCont = (0, _jquery2.default)('.custom-form-field-edit-form-cont');
+                _this2.formContHeight = _this2.$formCont.actual('height');
+                _this2.$formRow = (0, _jquery2.default)('.custom-form-field-edit-form-row');
+                _this2.$form = (0, _jquery2.default)('#edit-custom-form-field-form');
+                _this2.$formIcon = (0, _jquery2.default)(_this2.$formFieldRow[_this2.indexOpen]).find('.custom-form-field-col-1 i');
+
+                _this2.$form.attr('action', url);
+                _this2.$formIcon[0].className = 'uk-icon-chevron-down';
+
+                _this2.$formCont[0].style.height = '0px';
+                _this2.$formCont[0].style.display = 'block';
+
+                _gsap.TweenLite.to(_this2.$form, 0.6, {
+                    height: _this2.formContHeight,
+                    ease: _gsap.Expo.easeOut
+                });
+
+                _gsap.TweenLite.to(_this2.$formCont, 0.6, {
+                    height: _this2.formContHeight,
+                    ease: _gsap.Expo.easeOut
+                });
+            }, 200);
+        }
+
+        /**
+         * Close form
+         */
+
+    }, {
+        key: 'closeForm',
+        value: function closeForm() {
+            var _this3 = this;
+
+            this.$formIcon[0].className = 'uk-icon-chevron-right';
+
+            _gsap.TweenLite.to(this.$formCont, 0.4, {
+                height: 0,
+                ease: _gsap.Expo.easeOut,
+                onComplete: function onComplete() {
+                    _this3.$formRow.remove();
+                    _this3.indexOpen = null;
+                    _this3.$formFieldCol.addClass('custom-form-field-col');
+                }
+            });
+        }
+
+        /**
+         * Window resize callback
+         * @return {[type]} [description]
+         */
+
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return CustomFormFieldEdit;
+}();
+
+exports.default = CustomFormFieldEdit;
 
 /***/ }),
 
-/***/ "../Resources/app/components/custom-form-fields/customFormFieldsPosition.js":
+/***/ "../Resources/app/components/custom-form-fields/CustomFormFieldsPosition.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3831,7 +3907,14 @@ CustomFormFieldEdit.prototype.resize = function () {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = CustomFormFieldsPosition;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -3839,68 +3922,74 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function CustomFormFieldsPosition() {
-    var _this = this;
+/**
+ * Custom form fields position
+ */
+var CustomFormFieldsPosition = function () {
+    function CustomFormFieldsPosition() {
+        (0, _classCallCheck3.default)(this, CustomFormFieldsPosition);
 
-    _this.$list = (0, _jquery2.default)('.custom-form-fields > .uk-sortable');
-
-    _this.init();
-};
-
-CustomFormFieldsPosition.prototype.init = function () {
-    var _this = this;
-
-    if (_this.$list.length && _this.$list.children().length > 1) {
-        var onChange = _jquery2.default.proxy(_this.onSortableChange, _this);
-        _this.$list.off('change.uk.sortable', onChange);
-        _this.$list.on('change.uk.sortable', onChange);
-    }
-};
-
-CustomFormFieldsPosition.prototype.onSortableChange = function (event, list, element) {
-    var $element = (0, _jquery2.default)(element);
-    var customFormFieldId = parseInt($element.data('field-id'));
-    var $sibling = $element.prev();
-    var newPosition = 0.0;
-
-    if ($sibling.length === 0) {
-        $sibling = $element.next();
-        newPosition = parseInt($sibling.data('position')) - 0.5;
-    } else {
-        newPosition = parseInt($sibling.data('position')) + 0.5;
+        this.$list = (0, _jquery2.default)('.custom-form-fields > .uk-sortable');
+        this.onSortableChange = this.onSortableChange.bind(this);
+        this.init();
     }
 
-    console.log('customFormFieldId=' + customFormFieldId + '; newPosition=' + newPosition);
+    (0, _createClass3.default)(CustomFormFieldsPosition, [{
+        key: 'init',
+        value: function init() {
+            if (this.$list.length && this.$list.children().length > 1) {
+                this.$list.off('change.uk.sortable', this.onSortableChange);
+                this.$list.on('change.uk.sortable', this.onSortableChange);
+            }
+        }
+    }, {
+        key: 'onSortableChange',
+        value: function onSortableChange(event, list, element) {
+            var $element = (0, _jquery2.default)(element);
+            var customFormFieldId = parseInt($element.data('field-id'));
+            var $sibling = $element.prev();
+            var newPosition = 0.0;
 
-    var postData = {
-        '_token': window.Rozier.ajaxToken,
-        '_action': 'updatePosition',
-        'customFormFieldId': customFormFieldId,
-        'newPosition': newPosition
-    };
+            if ($sibling.length === 0) {
+                $sibling = $element.next();
+                newPosition = parseInt($sibling.data('position')) - 0.5;
+            } else {
+                newPosition = parseInt($sibling.data('position')) + 0.5;
+            }
 
-    _jquery2.default.ajax({
-        url: window.Rozier.routes.customFormsFieldAjaxEdit.replace('%customFormFieldId%', customFormFieldId),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    }).done(function (data) {
-        // console.log(data);
-        $element.attr('data-position', newPosition);
-        window.UIkit.notify({
-            message: data.responseText,
-            status: data.status,
-            timeout: 3000,
-            pos: 'top-center'
-        });
-    }).fail(function (data) {
-        console.log(data);
-    });
-};
+            var postData = {
+                '_token': window.Rozier.ajaxToken,
+                '_action': 'updatePosition',
+                'customFormFieldId': customFormFieldId,
+                'newPosition': newPosition
+            };
+
+            _jquery2.default.ajax({
+                url: window.Rozier.routes.customFormsFieldAjaxEdit.replace('%customFormFieldId%', customFormFieldId),
+                type: 'POST',
+                dataType: 'json',
+                data: postData
+            }).done(function (data) {
+                $element.attr('data-position', newPosition);
+                window.UIkit.notify({
+                    message: data.responseText,
+                    status: data.status,
+                    timeout: 3000,
+                    pos: 'top-center'
+                });
+            }).fail(function (data) {
+                console.log(data);
+            });
+        }
+    }]);
+    return CustomFormFieldsPosition;
+}();
+
+exports.default = CustomFormFieldsPosition;
 
 /***/ }),
 
-/***/ "../Resources/app/components/documents/documentUploader.js":
+/***/ "../Resources/app/components/documents/DocumentUploader.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3909,7 +3998,14 @@ CustomFormFieldsPosition.prototype.onSortableChange = function (event, list, ele
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = DocumentUploader;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -3919,118 +4015,133 @@ var _dropzone = __webpack_require__("../node_modules/dropzone/dist/dropzone.js")
 
 var _dropzone2 = _interopRequireDefault(_dropzone);
 
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function DocumentUploader(options) {
-    var _this = this;
-
-    _this.options = {
-        'onSuccess': function onSuccess(data) {},
-        'onError': function onError(data) {},
-        'onAdded': function onAdded(file) {},
-        'url': window.Rozier.routes.documentsUploadPage,
-        'selector': '#upload-dropzone-document',
-        'paramName': 'form[attachment]',
-        'uploadMultiple': false,
-        'maxFilesize': 64,
-        'autoDiscover': false,
-        'headers': { '_token': window.Rozier.ajaxToken },
-        'dictDefaultMessage': 'Drop files here to upload or click to open your explorer',
-        'dictFallbackMessage': "Your browser does not support drag'n'drop file uploads.",
-        'dictFallbackText': 'Please use the fallback form below to upload your files like in the olden days.',
-        'dictFileTooBig': 'File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.',
-        'dictInvalidFileType': "You can't upload files of this type.",
-        'dictResponseError': 'Server responded with {{statusCode}} code.',
-        'dictCancelUpload': 'Cancel upload',
-        'dictCancelUploadConfirmation': 'Are you sure you want to cancel this upload?',
-        'dictRemoveFile': 'Remove file',
-        'dictRemoveFileConfirmation': null,
-        'dictMaxFilesExceeded': 'You can not upload any more files.'
-    };
-
-    if (typeof options !== 'undefined') {
-        _jquery2.default.extend(_this.options, options);
-    }
-    if ((0, _jquery2.default)(_this.options.selector).length) {
-        _this.init();
-    }
-};
-DocumentUploader.prototype.init = function () {
-    var _this = this;
-
-    /*
-     * Get folder id
+/**
+ * Document uploader
+ */
+var DocumentUploader = function () {
+    /**
+     * Constructor
+     * @param {Object} options
      */
-    var form = (0, _jquery2.default)('#upload-dropzone-document');
-    if ((0, _plugins.isset)(form.attr('data-folder-id')) && form.attr('data-folder-id') > 0) {
-        _this.options.headers.folderId = parseInt(form.attr('data-folder-id'));
-        _this.options.url = window.Rozier.routes.documentsUploadPage + '/' + parseInt(form.attr('data-folder-id'));
+    function DocumentUploader(options) {
+        (0, _classCallCheck3.default)(this, DocumentUploader);
+
+        this.options = {
+            'onSuccess': function onSuccess(data) {},
+            'onError': function onError(data) {},
+            'onAdded': function onAdded(file) {},
+            'url': window.Rozier.routes.documentsUploadPage,
+            'selector': '#upload-dropzone-document',
+            'paramName': 'form[attachment]',
+            'uploadMultiple': false,
+            'maxFilesize': 64,
+            'autoDiscover': false,
+            'headers': { '_token': window.Rozier.ajaxToken },
+            'dictDefaultMessage': 'Drop files here to upload or click to open your explorer',
+            'dictFallbackMessage': "Your browser does not support drag'n'drop file uploads.",
+            'dictFallbackText': 'Please use the fallback form below to upload your files like in the olden days.',
+            'dictFileTooBig': 'File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.',
+            'dictInvalidFileType': "You can't upload files of this type.",
+            'dictResponseError': 'Server responded with {{statusCode}} code.',
+            'dictCancelUpload': 'Cancel upload',
+            'dictCancelUploadConfirmation': 'Are you sure you want to cancel this upload?',
+            'dictRemoveFile': 'Remove file',
+            'dictRemoveFileConfirmation': null,
+            'dictMaxFilesExceeded': 'You can not upload any more files.'
+        };
+
+        if (typeof options !== 'undefined') {
+            _jquery2.default.extend(this.options, options);
+        }
+
+        if ((0, _jquery2.default)(this.options.selector).length) {
+            this.init();
+        }
     }
 
-    _dropzone2.default.options.uploadDropzoneDocument = {
-        url: _this.options.url,
-        method: 'post',
-        headers: _this.options.headers,
-        paramName: _this.options.paramName,
-        uploadMultiple: _this.options.uploadMultiple,
-        maxFilesize: _this.options.maxFilesize,
-        dictDefaultMessage: _this.options.dictDefaultMessage,
-        dictFallbackMessage: _this.options.dictFallbackMessage,
-        dictFallbackText: _this.options.dictFallbackText,
-        dictFileTooBig: _this.options.dictFileTooBig,
-        dictInvalidFileType: _this.options.dictInvalidFileType,
-        dictResponseError: _this.options.dictResponseError,
-        dictCancelUpload: _this.options.dictCancelUpload,
-        dictCancelUploadConfirmation: _this.options.dictCancelUploadConfirmation,
-        dictRemoveFile: _this.options.dictRemoveFile,
-        dictRemoveFileConfirmation: _this.options.dictRemoveFileConfirmation,
-        dictMaxFilesExceeded: _this.options.dictMaxFilesExceeded,
-        init: function init() {
-            this.on('addedfile', function (file, data) {
-                _this.options.onAdded(file);
-            });
-            this.on('success', function (file, data) {
-                /*
-                 * Remove previews after 3 sec not
-                 * to bloat the dropzone when dragging more than
-                 * 20 files…
-                 */
-                if (file.previewElement) {
-                    var $preview = (0, _jquery2.default)(file.previewElement);
-                    setTimeout(function () {
-                        $preview.fadeOut(500, function () {
-                            $preview.remove();
-                        });
-                    }, 3000);
+    (0, _createClass3.default)(DocumentUploader, [{
+        key: 'init',
+        value: function init() {
+            // Get folder id
+            var form = (0, _jquery2.default)('#upload-dropzone-document');
+
+            if (form.attr('data-folder-id') && form.attr('data-folder-id') > 0) {
+                this.options.headers.folderId = parseInt(form.attr('data-folder-id'));
+                this.options.url = window.Rozier.routes.documentsUploadPage + '/' + parseInt(form.attr('data-folder-id'));
+            }
+
+            _dropzone2.default.options.uploadDropzoneDocument = {
+                url: this.options.url,
+                method: 'post',
+                headers: this.options.headers,
+                paramName: this.options.paramName,
+                uploadMultiple: this.options.uploadMultiple,
+                maxFilesize: this.options.maxFilesize,
+                dictDefaultMessage: this.options.dictDefaultMessage,
+                dictFallbackMessage: this.options.dictFallbackMessage,
+                dictFallbackText: this.options.dictFallbackText,
+                dictFileTooBig: this.options.dictFileTooBig,
+                dictInvalidFileType: this.options.dictInvalidFileType,
+                dictResponseError: this.options.dictResponseError,
+                dictCancelUpload: this.options.dictCancelUpload,
+                dictCancelUploadConfirmation: this.options.dictCancelUploadConfirmation,
+                dictRemoveFile: this.options.dictRemoveFile,
+                dictRemoveFileConfirmation: this.options.dictRemoveFileConfirmation,
+                dictMaxFilesExceeded: this.options.dictMaxFilesExceeded,
+                init: function init() {
+                    this.on('addedfile', function (file, data) {
+                        this.options.onAdded(file);
+                    });
+
+                    this.on('success', function (file, data) {
+                        /*
+                         * Remove previews after 3 sec not
+                         * to bloat the dropzone when dragging more than
+                         * 20 files…
+                         */
+                        if (file.previewElement) {
+                            var $preview = (0, _jquery2.default)(file.previewElement);
+                            window.setTimeout(function () {
+                                $preview.fadeOut(500, function () {
+                                    $preview.remove();
+                                });
+                            }, 3000);
+                        }
+                        this.options.onSuccess(data);
+                        window.Rozier.getMessages();
+                    });
+
+                    this.on('canceled', function (file, data) {
+                        this.options.onError(JSON.parse(data));
+                        window.Rozier.getMessages();
+                    });
+
+                    this.on('error', function (file, errorMessage, xhr) {
+                        console.log(errorMessage);
+                    });
                 }
-                _this.options.onSuccess(data);
-                window.Rozier.getMessages();
-            });
-            this.on('canceled', function (file, data) {
-                _this.options.onError(JSON.parse(data));
-                window.Rozier.getMessages();
-            });
-            this.on('error', function (file, errorMessage, xhr) {
-                console.log(errorMessage);
-            });
+            };
+
+            _dropzone2.default.autoDiscover = this.options.autoDiscover;
+
+            /* eslint-disable no-new */
+            new _dropzone2.default(this.options.selector, _dropzone2.default.options.uploadDropzoneDocument);
+
+            var $dzMessage = (0, _jquery2.default)(this.options.selector).find('.dz-message');
+
+            $dzMessage.append('\n        <div class="circles-icons">\n            <div class="circle circle-1"></div>\n            <div class="circle circle-2"></div>\n            <div class="circle circle-3"></div>\n            <div class="circle circle-4"></div>\n            <div class="circle circle-5"></div>\n            <i class="uk-icon-rz-file"></i>\n        </div>');
         }
-    };
+    }]);
+    return DocumentUploader;
+}();
 
-    _dropzone2.default.autoDiscover = _this.options.autoDiscover;
-
-    /* eslint-disable no-new */
-    new _dropzone2.default(_this.options.selector, _dropzone2.default.options.uploadDropzoneDocument);
-
-    var $dzMessage = (0, _jquery2.default)(_this.options.selector).find('.dz-message');
-
-    $dzMessage.append('\n        <div class="circles-icons">\n            <div class="circle circle-1"></div>\n            <div class="circle circle-2"></div>\n            <div class="circle circle-3"></div>\n            <div class="circle circle-4"></div>\n            <div class="circle circle-5"></div>\n            <i class="uk-icon-rz-file"></i>\n        </div>');
-};
+exports.default = DocumentUploader;
 
 /***/ }),
 
-/***/ "../Resources/app/components/import/import.js":
+/***/ "../Resources/app/components/import/Import.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4039,7 +4150,14 @@ DocumentUploader.prototype.init = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = Import;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -4047,114 +4165,125 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function Import(routesArray) {
-    var _this = this;
+/**
+ * Import
+ */
+var Import = function () {
+    /**
+     * Constructor
+     * @param {Array} routesArray
+     */
+    function Import(routesArray) {
+        (0, _classCallCheck3.default)(this, Import);
 
-    _this.routes = routesArray;
-    _this.always(0);
-    _this.$nextStepButton = (0, _jquery2.default)('#next-step-button');
-};
-
-Import.prototype.routes = null;
-Import.prototype.score = 0;
-Import.prototype.always = function (index) {
-    var _this = this;
-    if (_this.routes.length > index) {
-        if (typeof _this.routes[index].update !== 'undefined') {
-            _jquery2.default.ajax({
-                url: _this.routes[index].update,
-                type: 'POST',
-                dataType: 'json',
-                complete: function complete() {
-                    _this.callSingleImport(index);
-                }
-            });
-        } else {
-            _this.callSingleImport(index);
-        }
-    } else {
-        if (_this.$nextStepButton.length) {
-            _this.$nextStepButton.removeClass('uk-button-disabled');
-        }
+        this.routes = routesArray;
+        this.always(0);
+        this.$nextStepButton = (0, _jquery2.default)('#next-step-button');
+        this.routes = null;
+        this.score = 0;
     }
-};
 
-Import.prototype.callSingleImport = function (index) {
-    var _this = this;
-    var $row = (0, _jquery2.default)('#' + _this.routes[index].id);
-    var $icon = $row.find('i');
-    $icon.removeClass('uk-icon-circle-o');
-    $icon.addClass('uk-icon-spin');
-    $icon.addClass('uk-icon-spinner');
+    (0, _createClass3.default)(Import, [{
+        key: 'always',
+        value: function always(index) {
+            var _this = this;
 
-    var postData = {
-        'filename': _this.routes[index].filename
-    };
-
-    _jquery2.default.ajax({
-        url: _this.routes[index].url,
-        type: 'POST',
-        dataType: 'json',
-        data: postData,
-        success: function success(data) {
-            $icon.removeClass('uk-icon-spinner');
-            $icon.addClass('uk-icon-check');
-            $row.addClass('uk-badge-success');
-
-            /*
-             * Call post-update route
-             */
-            if (_this.routes[index].postUpdate) {
-                if (_this.routes[index].postUpdate instanceof Array && _this.routes[index].postUpdate.length > 1) {
-                    /*
-                     * Call clear cache before updating schema
-                     */
+            if (this.routes.length > index) {
+                if (typeof this.routes[index].update !== 'undefined') {
                     _jquery2.default.ajax({
-                        url: _this.routes[index].postUpdate[0],
+                        url: this.routes[index].update,
                         type: 'POST',
                         dataType: 'json',
                         complete: function complete() {
-                            /*
-                             * Update schema
-                             */
-                            console.log('Calling: ' + _this.routes[index].postUpdate[0]);
-                            _jquery2.default.ajax({
-                                url: _this.routes[index].postUpdate[1],
-                                type: 'POST',
-                                dataType: 'json',
-                                complete: function complete() {
-                                    _this.always(index + 1);
-                                }
-                            });
+                            _this.callSingleImport(index);
                         }
                     });
                 } else {
-                    _jquery2.default.ajax({
-                        url: _this.routes[index].postUpdate,
-                        type: 'POST',
-                        dataType: 'json',
-                        complete: function complete() {
-                            _this.always(index + 1);
-                        }
-                    });
+                    this.callSingleImport(index);
                 }
-            } else {
-                _this.always(index + 1);
+            } else if (this.$nextStepButton.length) {
+                this.$nextStepButton.removeClass('uk-button-disabled');
             }
-        },
-        error: function error(data) {
-            $icon.removeClass('uk-icon-spinner');
-            $icon.addClass('uk-icon-warning');
-            $row.addClass('uk-badge-danger');
-            if (data.responseJSON && data.responseJSON.error) {
-                $row.parent().parent().after('<tr><td class="uk-alert uk-alert-danger" colspan="3">' + data.responseJSON.error + '</td></tr>');
-            }
-        },
-        complete: function complete(data) {
-            $icon.removeClass('uk-icon-spin');
         }
-    });
-};
+    }, {
+        key: 'callSingleImport',
+        value: function callSingleImport(index) {
+            var _this2 = this;
+
+            var $row = (0, _jquery2.default)('#' + this.routes[index].id);
+            var $icon = $row.find('i');
+            $icon.removeClass('uk-icon-circle-o');
+            $icon.addClass('uk-icon-spin');
+            $icon.addClass('uk-icon-spinner');
+
+            var postData = {
+                'filename': this.routes[index].filename
+            };
+
+            _jquery2.default.ajax({
+                url: this.routes[index].url,
+                type: 'POST',
+                dataType: 'json',
+                data: postData,
+                success: function success() {
+                    $icon.removeClass('uk-icon-spinner');
+                    $icon.addClass('uk-icon-check');
+                    $row.addClass('uk-badge-success');
+
+                    // Call post-update route
+                    if (_this2.routes[index].postUpdate) {
+                        if (_this2.routes[index].postUpdate instanceof Array && _this2.routes[index].postUpdate.length > 1) {
+                            // Call clear cache before updating schema
+                            _jquery2.default.ajax({
+                                url: _this2.routes[index].postUpdate[0],
+                                type: 'POST',
+                                dataType: 'json',
+                                complete: function complete() {
+                                    // Update schema
+                                    console.log('Calling: ' + _this2.routes[index].postUpdate[0]);
+                                    _jquery2.default.ajax({
+                                        url: _this2.routes[index].postUpdate[1],
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        complete: function complete() {
+                                            _this2.always(index + 1);
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            _jquery2.default.ajax({
+                                url: _this2.routes[index].postUpdate,
+                                type: 'POST',
+                                dataType: 'json',
+                                complete: function complete() {
+                                    _this2.always(index + 1);
+                                }
+                            });
+                        }
+                    } else {
+                        _this2.always(index + 1);
+                    }
+                },
+                error: function error(data) {
+                    $icon.removeClass('uk-icon-spinner');
+                    $icon.addClass('uk-icon-warning');
+                    $row.addClass('uk-badge-danger');
+
+                    if (data.responseJSON && data.responseJSON.error) {
+                        $row.parent().parent().after('<tr><td class="uk-alert uk-alert-danger" colspan="3">' + data.responseJSON.error + '</td></tr>');
+                    }
+                },
+                complete: function complete() {
+                    $icon.removeClass('uk-icon-spin');
+                }
+            });
+        }
+    }]);
+    return Import;
+}();
+
+exports.default = Import;
 
 /***/ }),
 
@@ -4203,7 +4332,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /***/ }),
 
-/***/ "../Resources/app/components/node-type-fields/nodeTypeFieldEdit.js":
+/***/ "../Resources/app/components/node-type-fields/NodeTypeFieldEdit.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4212,7 +4341,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = NodeTypeFieldEdit;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -4225,160 +4361,185 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * NODE TYPE FIELD EDIT
  */
-function NodeTypeFieldEdit() {
-    var _this = this;
+var NodeTypeFieldEdit = function () {
+    function NodeTypeFieldEdit() {
+        (0, _classCallCheck3.default)(this, NodeTypeFieldEdit);
 
-    // Selectors
-    _this.$btn = (0, _jquery2.default)('.node-type-field-edit-button');
-    _this.currentRequest = null;
-    if (_this.$btn.length) {
-        _this.$formFieldRow = (0, _jquery2.default)('.node-type-field-row');
-        _this.$formFieldCol = (0, _jquery2.default)('.node-type-field-col');
+        // Selectors
+        this.$btn = (0, _jquery2.default)('.node-type-field-edit-button');
+        this.currentRequest = null;
+        if (this.$btn.length) {
+            this.$formFieldRow = (0, _jquery2.default)('.node-type-field-row');
+            this.$formFieldCol = (0, _jquery2.default)('.node-type-field-col');
 
-        _this.indexOpen = null;
-        _this.openFormDelay = 0;
-        _this.$formCont = null;
-        _this.$form = null;
-        _this.$formIcon = null;
-        _this.$formContHeight = null;
+            this.indexOpen = null;
+            this.openFormDelay = 0;
+            this.$formCont = null;
+            this.$form = null;
+            this.$formIcon = null;
+            this.$formContHeight = null;
 
-        // Methods
-        _this.init();
+            // Methods
+            this.init();
+        }
     }
-};
 
-/**
- * Init
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.init = function () {}
-// Events
-// var proxy = $.proxy(_this.btnClick, _this);
-// _this.$btn.off('click');
-// _this.$btn.on('click', proxy);
+    /**
+     * Init
+     */
 
 
-/**
- * Btn click
- * @return {[type]} [description]
- */
-;NodeTypeFieldEdit.prototype.btnClick = function (e) {
-    var _this = this;
-    e.preventDefault();
+    (0, _createClass3.default)(NodeTypeFieldEdit, [{
+        key: 'init',
+        value: function init() {}
 
-    if (_this.indexOpen !== null) {
-        _this.closeForm();
-        _this.openFormDelay = 400;
-    } else _this.openFormDelay = 0;
+        /**
+         * Btn click
+         * @param {Event} e
+         * @returns {boolean}
+         */
 
-    if (_this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index'))) {
-        if (_this.currentRequest && _this.currentRequest.readyState !== 4) {
-            _this.currentRequest.abort();
+    }, {
+        key: 'btnClick',
+        value: function btnClick(e) {
+            var _this = this;
+
+            e.preventDefault();
+
+            if (this.indexOpen !== null) {
+                this.closeForm();
+                this.openFormDelay = 400;
+            } else this.openFormDelay = 0;
+
+            if (this.indexOpen !== parseInt(e.currentTarget.getAttribute('data-index'))) {
+                if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                    this.currentRequest.abort();
+                }
+                window.Rozier.lazyload.canvasLoader.show();
+
+                if (this.openTimeout) {
+                    clearTimeout(this.openTimeout);
+                }
+
+                this.openTimeout = setTimeout(function () {
+                    // Trigger event on window to notify open
+                    // widgets to close.
+                    var pageChangeEvent = new CustomEvent('pagechange');
+                    window.dispatchEvent(pageChangeEvent);
+
+                    _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+
+                    _this.currentRequest = _jquery2.default.ajax({
+                        url: e.currentTarget.href,
+                        type: 'get',
+                        cache: false,
+                        dataType: 'html'
+                    }).done(function (data) {
+                        _this.applyContent(e.currentTarget, data, e.currentTarget.href);
+                    }).fail(function () {
+                        // console.log("error");
+                        window.UIkit.notify({
+                            message: window.Rozier.messages.forbiddenPage,
+                            status: 'danger',
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }).always(function () {
+                        window.Rozier.lazyload.canvasLoader.hide();
+                    });
+                }, this.openFormDelay);
+            }
+
+            return false;
         }
-        window.Rozier.lazyload.canvasLoader.show();
 
-        if (_this.openTimeout) {
-            clearTimeout(_this.openTimeout);
-        }
+        /**
+         * Apply content
+         * @param target
+         * @param data
+         * @param url
+         */
 
-        _this.openTimeout = setTimeout(function () {
-            /*
-             * Trigger event on window to notify open
-             * widgets to close.
-             */
-            var pageChangeEvent = new CustomEvent('pagechange');
-            window.dispatchEvent(pageChangeEvent);
+    }, {
+        key: 'applyContent',
+        value: function applyContent(target, data, url) {
+            var _this2 = this;
 
-            _this.indexOpen = parseInt(e.currentTarget.getAttribute('data-index'));
+            var dataWrapped = ['<tr class="node-type-field-edit-form-row">', '<td colspan="5">', '<div class="node-type-field-edit-form-cont">', data, '</div>', '</td>', '</tr>'].join('');
 
-            _this.currentRequest = _jquery2.default.ajax({
-                url: e.currentTarget.href,
-                type: 'get',
-                cache: false,
-                dataType: 'html'
-            }).done(function (data) {
-                _this.applyContent(e.currentTarget, data, e.currentTarget.href);
-            }).fail(function () {
-                // console.log("error");
-                window.UIkit.notify({
-                    message: window.Rozier.messages.forbiddenPage,
-                    status: 'danger',
-                    timeout: 3000,
-                    pos: 'top-center'
-                });
-            }).always(function () {
-                window.Rozier.lazyload.canvasLoader.hide();
+            (0, _jquery2.default)(target).parent().parent().after(dataWrapped);
+
+            // Remove class to pause sortable actions
+            this.$formFieldCol.removeClass('node-type-field-col');
+
+            // Switch checkboxes
+            (0, _jquery2.default)('.rz-boolean-checkbox').bootstrapSwitch({
+                size: 'small'
             });
-        }, _this.openFormDelay);
-    }
 
-    return false;
-};
+            window.Rozier.lazyload.initMarkdownEditors();
 
-/**
- * Apply content
- */
-NodeTypeFieldEdit.prototype.applyContent = function (target, data, url) {
-    var _this = this;
+            window.setTimeout(function () {
+                _this2.$formCont = (0, _jquery2.default)('.node-type-field-edit-form-cont');
+                _this2.formContHeight = _this2.$formCont.actual('height');
+                _this2.$formRow = (0, _jquery2.default)('.node-type-field-edit-form-row');
+                _this2.$form = (0, _jquery2.default)('#edit-node-type-field-form');
+                _this2.$formIcon = (0, _jquery2.default)(_this2.$formFieldRow[_this2.indexOpen]).find('.node-type-field-col-1 i');
 
-    var dataWrapped = ['<tr class="node-type-field-edit-form-row">', '<td colspan="5">', '<div class="node-type-field-edit-form-cont">', data, '</div>', '</td>', '</tr>'].join('');
+                _this2.$form.attr('action', url);
+                _this2.$formIcon[0].className = 'uk-icon-chevron-down';
 
-    (0, _jquery2.default)(target).parent().parent().after(dataWrapped);
+                _this2.$formCont[0].style.height = '0px';
+                _this2.$formCont[0].style.display = 'block';
 
-    // Remove class to pause sortable actions
-    _this.$formFieldCol.removeClass('node-type-field-col');
+                _gsap.TweenLite.to(_this2.$form, 0.6, {
+                    height: _this2.formContHeight,
+                    ease: _gsap.Expo.easeOut
+                });
 
-    // Switch checkboxes
-    (0, _jquery2.default)('.rz-boolean-checkbox').bootstrapSwitch({
-        size: 'small'
-    });
+                _gsap.TweenLite.to(_this2.$formCont, 0.6, {
+                    height: _this2.formContHeight,
+                    ease: _gsap.Expo.easeOut
+                });
+            }, 200);
+        }
 
-    window.Rozier.lazyload.initMarkdownEditors();
+        /**
+         * Close form
+         */
 
-    setTimeout(function () {
-        _this.$formCont = (0, _jquery2.default)('.node-type-field-edit-form-cont');
-        _this.formContHeight = _this.$formCont.actual('height');
-        _this.$formRow = (0, _jquery2.default)('.node-type-field-edit-form-row');
-        _this.$form = (0, _jquery2.default)('#edit-node-type-field-form');
-        _this.$formIcon = (0, _jquery2.default)(_this.$formFieldRow[_this.indexOpen]).find('.node-type-field-col-1 i');
+    }, {
+        key: 'closeForm',
+        value: function closeForm() {
+            var _this3 = this;
 
-        _this.$form.attr('action', url);
-        _this.$formIcon[0].className = 'uk-icon-chevron-down';
+            this.$formIcon[0].className = 'uk-icon-chevron-right';
 
-        _this.$formCont[0].style.height = '0px';
-        _this.$formCont[0].style.display = 'block';
-        _gsap.TweenLite.to(_this.$form, 0.6, { height: _this.formContHeight, ease: _gsap.Expo.easeOut });
-        _gsap.TweenLite.to(_this.$formCont, 0.6, { height: _this.formContHeight, ease: _gsap.Expo.easeOut });
-    }, 200);
-};
+            _gsap.TweenLite.to(this.$formCont, 0.4, { height: 0,
+                ease: _gsap.Expo.easeOut,
+                onComplete: function onComplete() {
+                    _this3.$formRow.remove();
+                    _this3.indexOpen = null;
+                    _this3.$formFieldCol.addClass('node-type-field-col');
+                } });
+        }
 
-/**
- * Close form
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.closeForm = function () {
-    var _this = this;
+        /**
+         * Window resize callback
+         */
 
-    _this.$formIcon[0].className = 'uk-icon-chevron-right';
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return NodeTypeFieldEdit;
+}();
 
-    _gsap.TweenLite.to(_this.$formCont, 0.4, { height: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$formRow.remove();
-            _this.indexOpen = null;
-            _this.$formFieldCol.addClass('node-type-field-col');
-        } });
-};
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-NodeTypeFieldEdit.prototype.resize = function () {};
+exports.default = NodeTypeFieldEdit;
 
 /***/ }),
 
-/***/ "../Resources/app/components/node-type-fields/nodeTypeFieldsPosition.js":
+/***/ "../Resources/app/components/node-type-fields/NodeTypeFieldsPosition.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4387,7 +4548,14 @@ NodeTypeFieldEdit.prototype.resize = function () {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = NodeTypeFieldsPosition;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -4395,74 +4563,123 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function NodeTypeFieldsPosition() {
-    var _this = this;
+/**
+ * Node type fields position
+ */
+var NodeTypeFieldsPosition = function () {
+    /**
+     * Constructor
+     */
+    function NodeTypeFieldsPosition() {
+        (0, _classCallCheck3.default)(this, NodeTypeFieldsPosition);
 
-    _this.$list = (0, _jquery2.default)('.node-type-fields > .uk-sortable');
-    _this.currentRequest = null;
-    _this.init();
-};
+        this.$list = (0, _jquery2.default)('.node-type-fields > .uk-sortable');
+        this.currentRequest = null;
 
-NodeTypeFieldsPosition.prototype.init = function () {
-    var _this = this;
+        this.onSortableChange = this.onSortableChange.bind(this);
 
-    if (_this.$list.length && _this.$list.children().length > 1) {
-        var onChange = _jquery2.default.proxy(_this.onSortableChange, _this);
-        _this.$list.off('change.uk.sortable', onChange);
-        _this.$list.on('change.uk.sortable', onChange);
-    }
-};
-
-NodeTypeFieldsPosition.prototype.onSortableChange = function (event, list, element) {
-    var _this = this;
-
-    if (_this.currentRequest && _this.currentRequest.readyState !== 4) {
-        _this.currentRequest.abort();
+        this.init();
     }
 
-    var $element = (0, _jquery2.default)(element);
-    var nodeTypeFieldId = parseInt($element.data('field-id'));
-    var $sibling = $element.prev();
-    var newPosition = 0.0;
+    /**
+     * Init
+     */
 
-    if ($sibling.length === 0) {
-        $sibling = $element.next();
-        newPosition = parseInt($sibling.data('position')) - 0.5;
-    } else {
-        newPosition = parseInt($sibling.data('position')) + 0.5;
-    }
 
-    console.log('nodeTypeFieldId=' + nodeTypeFieldId + '; newPosition=' + newPosition);
+    (0, _createClass3.default)(NodeTypeFieldsPosition, [{
+        key: 'init',
+        value: function init() {
+            if (this.$list.length && this.$list.children().length > 1) {
+                this.$list.off('change.uk.sortable', this.onSortableChange);
+                this.$list.on('change.uk.sortable', this.onSortableChange);
+            }
+        }
 
-    var postData = {
-        '_token': window.Rozier.ajaxToken,
-        '_action': 'updatePosition',
-        'nodeTypeFieldId': nodeTypeFieldId,
-        'newPosition': newPosition
-    };
+        /**
+         * @param event
+         * @param list
+         * @param element
+         */
 
-    _this.currentRequest = _jquery2.default.ajax({
-        url: window.Rozier.routes.nodeTypesFieldAjaxEdit.replace('%nodeTypeFieldId%', nodeTypeFieldId),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    }).done(function (data) {
-        // console.log(data);
-        $element.attr('data-position', newPosition);
-        window.UIkit.notify({
-            message: data.responseText,
-            status: data.status,
-            timeout: 3000,
-            pos: 'top-center'
-        });
-    }).fail(function (data) {
-        console.log(data);
-    });
-};
+    }, {
+        key: 'onSortableChange',
+        value: function onSortableChange(event, list, element) {
+            if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                this.currentRequest.abort();
+            }
+
+            var $element = (0, _jquery2.default)(element);
+            var nodeTypeFieldId = parseInt($element.data('field-id'));
+            var $sibling = $element.prev();
+            var newPosition = 0.0;
+
+            if ($sibling.length === 0) {
+                $sibling = $element.next();
+                newPosition = parseInt($sibling.data('position')) - 0.5;
+            } else {
+                newPosition = parseInt($sibling.data('position')) + 0.5;
+            }
+
+            var postData = {
+                '_token': window.Rozier.ajaxToken,
+                '_action': 'updatePosition',
+                'nodeTypeFieldId': nodeTypeFieldId,
+                'newPosition': newPosition
+            };
+
+            this.currentRequest = _jquery2.default.ajax({
+                url: window.Rozier.routes.nodeTypesFieldAjaxEdit.replace('%nodeTypeFieldId%', nodeTypeFieldId),
+                type: 'POST',
+                dataType: 'json',
+                data: postData
+            }).done(function (data) {
+                $element.attr('data-position', newPosition);
+                window.UIkit.notify({
+                    message: data.responseText,
+                    status: data.status,
+                    timeout: 3000,
+                    pos: 'top-center'
+                });
+            }).fail(function (data) {
+                console.log(data);
+            });
+        }
+    }]);
+    return NodeTypeFieldsPosition;
+}(); /*
+      * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+      *
+      * Permission is hereby granted, free of charge, to any person obtaining a copy
+      * of this software and associated documentation files (the "Software"), to deal
+      * in the Software without restriction, including without limitation the rights
+      * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      * copies of the Software, and to permit persons to whom the Software is furnished
+      * to do so, subject to the following conditions:
+      * The above copyright notice and this permission notice shall be included in all
+      * copies or substantial portions of the Software.
+      *
+      * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+      * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+      * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+      * IN THE SOFTWARE.
+      *
+      * Except as contained in this notice, the name of the ROADIZ shall not
+      * be used in advertising or otherwise to promote the sale, use or other dealings
+      * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+      *
+      * @file nodeTypeFieldsPosition.js
+      * @author Adrien Scholaert <adrien@rezo-zero.com>
+      * @author Ambroise Maupate <ambroise@rezo-zero.com>
+      */
+
+exports.default = NodeTypeFieldsPosition;
 
 /***/ }),
 
-/***/ "../Resources/app/components/node/nodeEditSource.js":
+/***/ "../Resources/app/components/node/NodeEditSource.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4476,7 +4693,13 @@ var _keys = __webpack_require__("../node_modules/babel-runtime/core-js/object/ke
 
 var _keys2 = _interopRequireDefault(_keys);
 
-exports.default = NodeEditSource;
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -4487,296 +4710,322 @@ var _plugins = __webpack_require__("../Resources/app/plugins.js");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * NODE EDIT SOURCE
+ * Node edit source
  */
-function NodeEditSource() {
-    var _this = this;
+var NodeEditSource = function () {
+    function NodeEditSource() {
+        (0, _classCallCheck3.default)(this, NodeEditSource);
 
-    // Selectors
-    _this.$content = (0, _jquery2.default)('.content-node-edit-source').eq(0);
-    _this.$form = (0, _jquery2.default)('#edit-node-source-form');
-    _this.$formRow = null;
-    _this.$dropdown = null;
-    _this.$input = null;
+        // Selectors
+        this.$content = (0, _jquery2.default)('.content-node-edit-source').eq(0);
+        this.$form = (0, _jquery2.default)('#edit-node-source-form');
+        this.$formRow = null;
+        this.$dropdown = null;
+        this.$input = null;
 
-    // Methods
-    if (_this.$content.length) {
-        _this.$formRow = _this.$content.find('.uk-form-row');
-        _this.wrapInTabs();
-        _this.init();
-        _this.initEvents();
-    }
-};
+        this.onInputKeyDown = this.onInputKeyDown.bind(this);
+        this.inputFocus = this.inputFocus.bind(this);
+        this.inputFocusOut = this.inputFocusOut.bind(this);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
 
-NodeEditSource.prototype.wrapInTabs = function () {
-    var _this = this;
-    var fieldGroups = {};
-    var $fields = _this.$content.find('.uk-form-row[data-field-group]');
-    var fieldsLength = $fields.length;
-    var fieldsGroupsLength = 0;
-
-    if (fieldsLength > 1) {
-        for (var i = 0; i < fieldsLength; i++) {
-            var groupName = $fields[i].getAttribute('data-field-group');
-
-            if (typeof fieldGroups[groupName] === 'undefined') {
-                fieldGroups[groupName] = [];
-                fieldsGroupsLength++;
-            }
-            fieldGroups[groupName].push($fields[i]);
-        }
-
-        if (fieldsGroupsLength > 1) {
-            _this.$form.append('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', swiping:false}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
-            var $formSwitcher = _this.$form.find('.uk-switcher');
-            var $formSwitcherNav = _this.$form.find('#node-source-form-switcher-nav');
-
-            /*
-             * Sort tab name and put default in first
-             */
-            var keysSorted = (0, _keys2.default)(fieldGroups).sort(function (a, b) {
-                if (a === 'default') {
-                    return -1;
-                }
-                if (b === 'default') {
-                    return 1;
-                }
-                return +(a.toLowerCase() > b.toLowerCase()) || +(a.toLowerCase() === b.toLowerCase()) - 1;
-            });
-
-            for (var keyIndex in keysSorted) {
-                var groupName2 = keysSorted[keyIndex];
-                var groupName2Safe = groupName2.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-
-                var groupId = 'group-' + groupName2Safe;
-                $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>');
-
-                if (groupName2 === 'default') {
-                    $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#"><i class="uk-icon-star"></i></a></li>');
-                } else {
-                    $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#">' + groupName2 + '</a></li>');
-                }
-                var $group = $formSwitcher.find('#' + groupId);
-
-                for (var index = 0; index < fieldGroups[groupName2].length; index++) {
-                    $group.append((0, _jquery2.default)(fieldGroups[groupName2][index]));
-                }
-            }
-
-            $formSwitcherNav.on('show.uk.switcher', function (event, area) {
-                window.Rozier.$window.trigger('resize');
-            });
+        // Methods
+        if (this.$content.length) {
+            this.$formRow = this.$content.find('.uk-form-row');
+            this.wrapInTabs();
+            this.init();
+            this.initEvents();
         }
     }
-};
-/**
- * Init
- * @return {[type]} [description]
- */
-NodeEditSource.prototype.init = function () {
-    var _this = this;
 
-    // Inputs - add form help
-    _this.$input = _this.$content.find('input, select');
-    _this.$devNames = _this.$content.find('[data-dev-name]');
+    (0, _createClass3.default)(NodeEditSource, [{
+        key: 'wrapInTabs',
+        value: function wrapInTabs() {
+            var fieldGroups = {};
+            var $fields = this.$content.find('.uk-form-row[data-field-group]');
+            var fieldsLength = $fields.length;
+            var fieldsGroupsLength = 0;
 
-    /* for (var i = _this.$input.length - 1; i >= 0; i--) {
-        if(_this.$input[i].getAttribute('data-desc') &&
-            null !== _this.$input[i].getAttribute('data-desc') &&
-            _this.$input[i].getAttribute('data-desc') !== ''){
-            $(_this.$input[i]).after('<div class="form-help uk-alert uk-alert-large">'+_this.$input[i].getAttribute('data-desc')+'</div>');
-        }
-    } */
+            if (fieldsLength > 1) {
+                for (var i = 0; i < fieldsLength; i++) {
+                    var groupName = $fields[i].getAttribute('data-field-group');
 
-    for (var j = _this.$devNames.length - 1; j >= 0; j--) {
-        var input = _this.$devNames[j];
-        var $input = (0, _jquery2.default)(input);
-        if (input.getAttribute('data-dev-name') !== '') {
-            var $label = $input.parents('.uk-form-row').find('label');
-            var $barLabel = $input.find('.uk-navbar-brand.label');
+                    if (typeof fieldGroups[groupName] === 'undefined') {
+                        fieldGroups[groupName] = [];
+                        fieldsGroupsLength++;
+                    }
+                    fieldGroups[groupName].push($fields[i]);
+                }
 
-            if ($label.length) {
-                $label.append('<span class="field-dev-name">' + input.getAttribute('data-dev-name') + '</span>');
-            } else if ($barLabel.length) {
-                $barLabel.append('<span class="field-dev-name">' + input.getAttribute('data-dev-name') + '</span>');
+                if (fieldsGroupsLength > 1) {
+                    this.$form.append('<div id="node-source-form-switcher-nav-cont"><ul id="node-source-form-switcher-nav" class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:\'#node-source-form-switcher\', swiping:false}"></ul></div><ul id="node-source-form-switcher" class="uk-switcher"></ul>');
+                    var $formSwitcher = this.$form.find('.uk-switcher');
+                    var $formSwitcherNav = this.$form.find('#node-source-form-switcher-nav');
+
+                    /*
+                     * Sort tab name and put default in first
+                     */
+                    var keysSorted = (0, _keys2.default)(fieldGroups).sort(function (a, b) {
+                        if (a === 'default') {
+                            return -1;
+                        }
+                        if (b === 'default') {
+                            return 1;
+                        }
+                        return +(a.toLowerCase() > b.toLowerCase()) || +(a.toLowerCase() === b.toLowerCase()) - 1;
+                    });
+
+                    for (var keyIndex in keysSorted) {
+                        var groupName2 = keysSorted[keyIndex];
+                        var groupName2Safe = groupName2.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+
+                        var groupId = 'group-' + groupName2Safe;
+                        $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>');
+
+                        if (groupName2 === 'default') {
+                            $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#"><i class="uk-icon-star"></i></a></li>');
+                        } else {
+                            $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#">' + groupName2 + '</a></li>');
+                        }
+                        var $group = $formSwitcher.find('#' + groupId);
+
+                        for (var index = 0; index < fieldGroups[groupName2].length; index++) {
+                            $group.append((0, _jquery2.default)(fieldGroups[groupName2][index]));
+                        }
+                    }
+
+                    $formSwitcherNav.on('show.uk.switcher', function () {
+                        window.Rozier.$window.trigger('resize');
+                    });
+                }
             }
         }
-    }
 
-    // Check if children node widget needs his dropdowns to be flipped up
-    for (var k = _this.$formRow.length - 1; k >= 0; k--) {
-        if (_this.$formRow[k].className.indexOf('children-nodes-widget') >= 0) {
-            _this.childrenNodeWidgetFlip(k);
-            break;
-        }
-    }
-};
-
-NodeEditSource.prototype.initEvents = function () {
-    var _this = this;
-
-    window.Rozier.$window.off('keydown', _jquery2.default.proxy(_this.onInputKeyDown, _this));
-    window.Rozier.$window.on('keydown', _jquery2.default.proxy(_this.onInputKeyDown, _this));
-    window.Rozier.$window.off('keyup', _jquery2.default.proxy(_this.onInputKeyUp, _this));
-    window.Rozier.$window.on('keyup', _jquery2.default.proxy(_this.onInputKeyUp, _this));
-
-    _this.$input.off('focus', _jquery2.default.proxy(_this.inputFocus, _this));
-    _this.$input.on('focus', _jquery2.default.proxy(_this.inputFocus, _this));
-    _this.$input.off('focusout', _jquery2.default.proxy(_this.inputFocusOut, _this));
-    _this.$input.on('focusout', _jquery2.default.proxy(_this.inputFocusOut, _this));
-
-    _this.$form.off('submit');
-    _this.$form.on('submit', _jquery2.default.proxy(_this.onFormSubmit, _this));
-};
-
-NodeEditSource.prototype.onFormSubmit = function (event) {
-    var _this = this;
-
-    window.Rozier.lazyload.canvasLoader.show();
-
-    if (_this.currentTimeout) {
-        clearTimeout(_this.currentTimeout);
-    }
-
-    _this.currentTimeout = setTimeout(function () {
-        /*
-         * Trigger event on window to notify open
-         * widgets to close.
+        /**
+         * Init
          */
-        var pageChangeEvent = new CustomEvent('pagechange');
-        window.dispatchEvent(pageChangeEvent);
 
-        var formData = new FormData(_this.$form.get(0));
-        _jquery2.default.ajax({
-            url: window.location.href,
-            type: 'post',
-            data: formData,
-            processData: false,
-            cache: false,
-            contentType: false
-        }).done(function (data) {
-            _this.cleanErrors();
+    }, {
+        key: 'init',
+        value: function init() {
+            // Inputs - add form help
+            this.$input = this.$content.find('input, select');
+            this.$devNames = this.$content.find('[data-dev-name]');
 
-            /*
-             * Update preview or view url
-             */
-            if (data.public_url) {
-                var $publicUrlLinks = (0, _jquery2.default)('a.public-url-link');
-                if ($publicUrlLinks.length) {
-                    $publicUrlLinks.attr('href', data.public_url);
+            for (var j = this.$devNames.length - 1; j >= 0; j--) {
+                var input = this.$devNames[j];
+                var $input = (0, _jquery2.default)(input);
+                if (input.getAttribute('data-dev-name') !== '') {
+                    var $label = $input.parents('.uk-form-row').find('label');
+                    var $barLabel = $input.find('.uk-navbar-brand.label');
+
+                    if ($label.length) {
+                        $label.append('<span class="field-dev-name">' + input.getAttribute('data-dev-name') + '</span>');
+                    } else if ($barLabel.length) {
+                        $barLabel.append('<span class="field-dev-name">' + input.getAttribute('data-dev-name') + '</span>');
+                    }
                 }
             }
-        }).fail(function (data) {
-            _this.displayErrors(data.responseJSON.errors);
-            // console.log(data.responseJSON);
-            window.UIkit.notify({
-                message: data.responseJSON.message,
-                status: 'danger',
-                timeout: 2000,
-                pos: 'top-center'
-            });
-        }).always(function () {
-            window.Rozier.lazyload.canvasLoader.hide();
-            window.Rozier.getMessages();
-            window.Rozier.refreshAllNodeTrees();
-        });
-    }, 300);
 
-    return false;
-};
-
-NodeEditSource.prototype.cleanErrors = function () {
-    var $previousErrors = (0, _jquery2.default)('.form-errored');
-    $previousErrors.each(function (index) {
-        $previousErrors.eq(index).removeClass('form-errored');
-        $previousErrors.eq(index).find('.error-message').remove();
-    });
-};
-
-/**
- *
- * @param errors
- * @param keepExisting Keep existing errors.
- */
-NodeEditSource.prototype.displayErrors = function (errors, keepExisting) {
-    var _this = this;
-
-    /*
-     * First clean fields
-     */
-    if (!keepExisting || keepExisting === false) {
-        _this.cleanErrors();
-    }
-
-    for (var key in errors) {
-        var classKey = null;
-        var errorMessage = null;
-        if ((0, _plugins.toType)(errors[key]) === 'object') {
-            _this.displayErrors(errors[key], true);
-        } else {
-            classKey = key.replace('_', '-');
-            errorMessage = errors[key][0];
-            var $field = (0, _jquery2.default)('.form-col-' + classKey);
-            if ($field.length) {
-                $field.addClass('form-errored');
-                $field.append('<p class="error-message uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> ' + errorMessage + '</p>');
+            // Check if children node widget needs his dropdowns to be flipped up
+            for (var k = this.$formRow.length - 1; k >= 0; k--) {
+                if (this.$formRow[k].className.indexOf('children-nodes-widget') >= 0) {
+                    this.childrenNodeWidgetFlip(k);
+                    break;
+                }
             }
         }
-    }
-};
+    }, {
+        key: 'initEvents',
+        value: function initEvents() {
+            window.Rozier.$window.off('keydown', this.onInputKeyDown);
+            window.Rozier.$window.on('keydown', this.onInputKeyDown);
+            window.Rozier.$window.off('keyup', this.onInputKeyUp);
+            window.Rozier.$window.on('keyup', this.onInputKeyUp);
 
-NodeEditSource.prototype.onInputKeyDown = function (event) {
-    // ALT key
-    if (event.keyCode === 18) {
-        window.Rozier.$body.toggleClass('dev-name-visible');
-    }
-};
-NodeEditSource.prototype.onInputKeyUp = function (event) {
-    // ALT key
-    if (event.keyCode === 18) {
-        window.Rozier.$body.toggleClass('dev-name-visible');
-    }
-};
+            this.$input.off('focus', this.inputFocus);
+            this.$input.on('focus', this.inputFocus);
+            this.$input.off('focusout', this.inputFocusOut);
+            this.$input.on('focusout', this.inputFocusOut);
 
-/**
- * Flip children node widget
- * @param  {[type]} index [description]
- * @return {[type]}       [description]
- */
-NodeEditSource.prototype.childrenNodeWidgetFlip = function (index) {
-    var _this = this;
+            this.$form.off('submit', this.onFormSubmit);
+            this.$form.on('submit', this.onFormSubmit);
+        }
+    }, {
+        key: 'onFormSubmit',
+        value: function onFormSubmit() {
+            var _this = this;
 
-    if (index >= _this.$formRow.length - 2) {
-        _this.$dropdown = (0, _jquery2.default)(_this.$formRow[index]).find('.uk-dropdown-small');
-        _this.$dropdown.addClass('uk-dropdown-up');
-    }
-};
+            window.Rozier.lazyload.canvasLoader.show();
 
-/**
- * Input focus
- * @return {[type]} [description]
- */
-NodeEditSource.prototype.inputFocus = function (e) {
-    (0, _jquery2.default)(e.currentTarget).parent().addClass('form-col-focus');
-};
+            if (this.currentTimeout) {
+                clearTimeout(this.currentTimeout);
+            }
 
-/**
- * Input focus out
- * @return {[type]} [description]
- */
-NodeEditSource.prototype.inputFocusOut = function (e) {
-    (0, _jquery2.default)(e.currentTarget).parent().removeClass('form-col-focus');
-};
+            this.currentTimeout = setTimeout(function () {
+                /*
+                 * Trigger event on window to notify open
+                 * widgets to close.
+                 */
+                var pageChangeEvent = new CustomEvent('pagechange');
+                window.dispatchEvent(pageChangeEvent);
 
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-NodeEditSource.prototype.resize = function () {};
+                var formData = new FormData(_this.$form.get(0));
+
+                _jquery2.default.ajax({
+                    url: window.location.href,
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    cache: false,
+                    contentType: false
+                }).done(function (data) {
+                    _this.cleanErrors();
+
+                    // Update preview or view url
+                    if (data.public_url) {
+                        var $publicUrlLinks = (0, _jquery2.default)('a.public-url-link');
+                        if ($publicUrlLinks.length) {
+                            $publicUrlLinks.attr('href', data.public_url);
+                        }
+                    }
+                }).fail(function (data) {
+                    _this.displayErrors(data.responseJSON.errors);
+                    window.UIkit.notify({
+                        message: data.responseJSON.message,
+                        status: 'danger',
+                        timeout: 2000,
+                        pos: 'top-center'
+                    });
+                }).always(function () {
+                    window.Rozier.lazyload.canvasLoader.hide();
+                    window.Rozier.getMessages();
+                    window.Rozier.refreshAllNodeTrees();
+                });
+            }, 300);
+
+            return false;
+        }
+    }, {
+        key: 'cleanErrors',
+        value: function cleanErrors() {
+            var $previousErrors = (0, _jquery2.default)('.form-errored');
+            $previousErrors.each(function (index) {
+                $previousErrors.eq(index).removeClass('form-errored');
+                $previousErrors.eq(index).find('.error-message').remove();
+            });
+        }
+
+        /**
+         *
+         * @param {Array} errors
+         * @param {Boolean} keepExisting Keep existing errors.
+         */
+
+    }, {
+        key: 'displayErrors',
+        value: function displayErrors(errors, keepExisting) {
+            // First clean fields
+            if (!keepExisting || keepExisting === false) {
+                this.cleanErrors();
+            }
+
+            for (var key in errors) {
+                var classKey = null;
+                var errorMessage = null;
+                if ((0, _plugins.toType)(errors[key]) === 'object') {
+                    this.displayErrors(errors[key], true);
+                } else {
+                    classKey = key.replace('_', '-');
+                    errorMessage = errors[key][0];
+                    var $field = (0, _jquery2.default)('.form-col-' + classKey);
+                    if ($field.length) {
+                        $field.addClass('form-errored');
+                        $field.append('<p class="error-message uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> ' + errorMessage + '</p>');
+                    }
+                }
+            }
+        }
+
+        /**
+         * On keyboard key down
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onInputKeyDown',
+        value: function onInputKeyDown(event) {
+            // ALT key
+            if (event.keyCode === 18) {
+                window.Rozier.$body.toggleClass('dev-name-visible');
+            }
+        }
+
+        /**
+         * On keyboard key up
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onInputKeyUp',
+        value: function onInputKeyUp(event) {
+            // ALT key
+            if (event.keyCode === 18) {
+                window.Rozier.$body.toggleClass('dev-name-visible');
+            }
+        }
+
+        /**
+         * Flip children node widget
+         * @param  {Number} index
+         */
+
+    }, {
+        key: 'childrenNodeWidgetFlip',
+        value: function childrenNodeWidgetFlip(index) {
+            if (index >= this.$formRow.length - 2) {
+                this.$dropdown = (0, _jquery2.default)(this.$formRow[index]).find('.uk-dropdown-small');
+                this.$dropdown.addClass('uk-dropdown-up');
+            }
+        }
+
+        /**
+         * Input focus
+         * @param {Event} e
+         */
+
+    }, {
+        key: 'inputFocus',
+        value: function inputFocus(e) {
+            (0, _jquery2.default)(e.currentTarget).parent().addClass('form-col-focus');
+        }
+
+        /**
+         * Input focus out
+         * @param {Event} e
+         */
+
+    }, {
+        key: 'inputFocusOut',
+        value: function inputFocusOut(e) {
+            (0, _jquery2.default)(e.currentTarget).parent().removeClass('form-col-focus');
+        }
+
+        /**
+         * Window resize callback
+         */
+
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return NodeEditSource;
+}();
+
+exports.default = NodeEditSource;
 
 /***/ }),
 
-/***/ "../Resources/app/components/panels/entriesPanel.js":
+/***/ "../Resources/app/components/panels/EntriesPanel.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4785,42 +5034,59 @@ NodeEditSource.prototype.resize = function () {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Entries panel
+ */
+var EntriesPanel = function () {
+    function EntriesPanel() {
+        (0, _classCallCheck3.default)(this, EntriesPanel);
+
+        this.$adminMenuNav = (0, _jquery2.default)('#admin-menu-nav');
+        this.replaceSubNavs();
+    }
+
+    (0, _createClass3.default)(EntriesPanel, [{
+        key: 'replaceSubNavs',
+        value: function replaceSubNavs() {
+            this.$adminMenuNav.find('.uk-nav-sub').each(function (index, element) {
+                var subMenu = (0, _jquery2.default)(element);
+
+                subMenu.attr('style', 'display:block;');
+
+                var top = subMenu.offset().top;
+                var height = subMenu.height();
+
+                subMenu.removeAttr('style');
+
+                if (top + height + 20 > (0, _jquery2.default)(window).height()) {
+                    subMenu.parent().addClass('reversed-nav');
+                }
+            });
+        }
+    }]);
+    return EntriesPanel;
+}();
+
 exports.default = EntriesPanel;
 
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function EntriesPanel() {
-    var _this = this;
-
-    _this.$adminMenuNav = (0, _jquery2.default)('#admin-menu-nav');
-
-    _this.replaceSubNavs();
-};
-
-EntriesPanel.prototype.replaceSubNavs = function () {
-    var _this = this;
-
-    _this.$adminMenuNav.find('.uk-nav-sub').each(function (index, element) {
-        var subMenu = (0, _jquery2.default)(element);
-
-        subMenu.attr('style', 'display:block;');
-        var top = subMenu.offset().top;
-        var height = subMenu.height();
-        subMenu.removeAttr('style');
-
-        if (top + height + 20 > (0, _jquery2.default)(window).height()) {
-            subMenu.parent().addClass('reversed-nav');
-        }
-    });
-};
-
 /***/ }),
 
-/***/ "../Resources/app/components/trees/nodeTreeContextActions.js":
+/***/ "../Resources/app/components/trees/NodeTreeContextActions.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4829,7 +5095,14 @@ EntriesPanel.prototype.replaceSubNavs = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = NodeTreeContextActions;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -4837,201 +5110,212 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function NodeTreeContextActions() {
-    var _this = this;
+var NodeTreeContextActions = function () {
+    function NodeTreeContextActions() {
+        (0, _classCallCheck3.default)(this, NodeTreeContextActions);
 
-    var $contextualMenus = (0, _jquery2.default)('.tree-contextualmenu');
-    _this.$links = $contextualMenus.find('.node-actions a');
-    _this.$nodeMoveFirstLinks = $contextualMenus.find('a.move-node-first-position');
-    _this.$nodeMoveLastLinks = $contextualMenus.find('a.move-node-last-position');
+        this.$contextualMenus = (0, _jquery2.default)('.tree-contextualmenu');
+        this.$links = this.$contextualMenus.find('.node-actions a');
+        this.$nodeMoveFirstLinks = this.$contextualMenus.find('a.move-node-first-position');
+        this.$nodeMoveLastLinks = this.$contextualMenus.find('a.move-node-last-position');
 
-    if (_this.$links.length) {
-        _this.bind();
-    }
-};
+        this.onClick = this.onClick.bind(this);
+        this.moveNodeToPosition = this.moveNodeToPosition.bind(this);
 
-NodeTreeContextActions.prototype.bind = function () {
-    var _this = this;
-
-    var proxy = _jquery2.default.proxy(_this.onClick, _this);
-    _this.$links.off('click', proxy);
-    _this.$links.on('click', proxy);
-
-    var moveFirstProxy = _jquery2.default.proxy(_this.moveNodeToPosition, _this, 'first');
-    _this.$nodeMoveFirstLinks.off('click');
-    _this.$nodeMoveFirstLinks.on('click', moveFirstProxy);
-
-    var moveLastProxy = _jquery2.default.proxy(_this.moveNodeToPosition, _this, 'last');
-    _this.$nodeMoveLastLinks.off('click');
-    _this.$nodeMoveLastLinks.on('click', moveLastProxy);
-};
-
-NodeTreeContextActions.prototype.onClick = function (event) {
-    var _this = this;
-
-    event.preventDefault();
-
-    var $link = (0, _jquery2.default)(event.currentTarget);
-    var $element = (0, _jquery2.default)($link.parents('.nodetree-element')[0]);
-    var nodeId = parseInt($element.data('node-id'));
-
-    // console.log('Clicked on '+linkClass);
-
-    var statusName = $link.attr('data-status');
-    var statusValue = $link.attr('data-value');
-    var action = $link.attr('data-action');
-
-    if (typeof action !== 'undefined') {
-        window.Rozier.lazyload.canvasLoader.show();
-
-        if (typeof statusName !== 'undefined' && typeof statusValue !== 'undefined' && !isNaN(statusValue)) {
-            /*
-             * Change node status
-             */
-            _this.changeStatus(nodeId, statusName, parseInt(statusValue));
-        } else {
-            /*
-             * Other actions
-             */
-            if (action === 'duplicate') {
-                _this.duplicateNode(nodeId);
-            }
+        if (this.$links.length) {
+            this.bind();
         }
     }
-};
 
-NodeTreeContextActions.prototype.changeStatus = function (nodeId, statusName, statusValue) {
-    var _this = this;
+    (0, _createClass3.default)(NodeTreeContextActions, [{
+        key: 'bind',
+        value: function bind() {
+            var _this = this;
 
-    if (_this.ajaxTimeout) {
-        clearTimeout(_this.ajaxTimeout);
-    }
-    _this.ajaxTimeout = window.setTimeout(function () {
-        var postData = {
-            '_token': window.Rozier.ajaxToken,
-            '_action': 'nodeChangeStatus',
-            'nodeId': nodeId,
-            'statusName': statusName,
-            'statusValue': statusValue
-        };
+            this.$links.off('click', this.onClick);
+            this.$links.on('click', this.onClick);
 
-        _jquery2.default.ajax({
-            url: window.Rozier.routes.nodesStatusesAjax,
-            type: 'post',
-            dataType: 'json',
-            data: postData
-        }).done(function (data) {
-            window.Rozier.refreshAllNodeTrees();
-            window.UIkit.notify({
-                message: data.responseText,
-                status: data.status,
-                timeout: 3000,
-                pos: 'top-center'
+            this.$nodeMoveFirstLinks.off('click');
+            this.$nodeMoveFirstLinks.on('click', function (e) {
+                return _this.moveNodeToPosition('first', e);
             });
-        }).fail(function (data) {
-            data = JSON.parse(data.responseText);
-            window.UIkit.notify({
-                message: data.responseText,
-                status: data.status,
-                timeout: 3000,
-                pos: 'top-center'
+
+            this.$nodeMoveLastLinks.off('click');
+            this.$nodeMoveLastLinks.on('click', function (e) {
+                return _this.moveNodeToPosition('last', e);
             });
-        }).always(function () {
-            window.Rozier.lazyload.canvasLoader.hide();
-        });
-    }, 100);
-};
+        }
+    }, {
+        key: 'onClick',
+        value: function onClick(event) {
+            event.preventDefault();
 
-/**
- * Move a node to the position.
- *
- * @param nodeId
- */
-NodeTreeContextActions.prototype.duplicateNode = function (nodeId) {
-    var _this = this;
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var $element = (0, _jquery2.default)($link.parents('.nodetree-element')[0]);
+            var nodeId = parseInt($element.data('node-id'));
+            var statusName = $link.attr('data-status');
+            var statusValue = $link.attr('data-value');
+            var action = $link.attr('data-action');
 
-    if (_this.ajaxTimeout) {
-        clearTimeout(_this.ajaxTimeout);
-    }
-    _this.ajaxTimeout = window.setTimeout(function () {
-        var postData = {
-            _token: window.Rozier.ajaxToken,
-            _action: 'duplicate',
-            nodeId: nodeId
-        };
-        _jquery2.default.ajax({
-            url: window.Rozier.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
-            type: 'POST',
-            dataType: 'json',
-            data: postData
-        }).done(function (data) {
-            window.Rozier.refreshAllNodeTrees();
-            window.UIkit.notify({
-                message: data.responseText,
-                status: data.status,
-                timeout: 3000,
-                pos: 'top-center'
-            });
-        }).fail(function (data) {
-            console.log(data);
-        }).always(function () {
-            window.Rozier.lazyload.canvasLoader.hide();
-        });
-    }, 100);
-};
+            if (typeof action !== 'undefined') {
+                window.Rozier.lazyload.canvasLoader.show();
 
-/**
- * Move a node to the position.
- *
- * @param  Event event
- */
-NodeTreeContextActions.prototype.moveNodeToPosition = function (position, event) {
-    window.Rozier.lazyload.canvasLoader.show();
+                if (typeof statusName !== 'undefined' && typeof statusValue !== 'undefined' && !isNaN(statusValue)) {
+                    // Change node status
+                    this.changeStatus(nodeId, statusName, parseInt(statusValue));
+                } else {
+                    // Other actions
+                    if (action === 'duplicate') {
+                        this.duplicateNode(nodeId);
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'changeStatus',
+        value: function changeStatus(nodeId, statusName, statusValue) {
+            if (this.ajaxTimeout) {
+                window.clearTimeout(this.ajaxTimeout);
+            }
 
-    var element = (0, _jquery2.default)((0, _jquery2.default)(event.currentTarget).parents('.nodetree-element')[0]);
-    var nodeId = parseInt(element.data('node-id'));
-    var parentNodeId = parseInt(element.parents('ul').first().data('parent-node-id'));
+            this.ajaxTimeout = window.setTimeout(function () {
+                var postData = {
+                    '_token': window.Rozier.ajaxToken,
+                    '_action': 'nodeChangeStatus',
+                    'nodeId': nodeId,
+                    'statusName': statusName,
+                    'statusValue': statusValue
+                };
 
-    var postData = {
-        _token: window.Rozier.ajaxToken,
-        _action: 'updatePosition',
-        nodeId: nodeId
+                _jquery2.default.ajax({
+                    url: window.Rozier.routes.nodesStatusesAjax,
+                    type: 'post',
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    window.Rozier.refreshAllNodeTrees();
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).fail(function (data) {
+                    data = JSON.parse(data.responseText);
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).always(function () {
+                    window.Rozier.lazyload.canvasLoader.hide();
+                });
+            }, 100);
+        }
 
-        /*
-         * Force to first position
+        /**
+         * Move a node to the position.
+         *
+         * @param nodeId
          */
-    };if (typeof position !== 'undefined' && position === 'first') {
-        postData.firstPosition = true;
-    } else if (typeof position !== 'undefined' && position === 'last') {
-        postData.lastPosition = true;
-    }
 
-    /*
-     * When dropping to root
-     * set parentNodeId to NULL
-     */
-    if (isNaN(parentNodeId)) {
-        parentNodeId = null;
-    }
-    postData.newParent = parentNodeId;
+    }, {
+        key: 'duplicateNode',
+        value: function duplicateNode(nodeId) {
+            if (this.ajaxTimeout) {
+                window.clearTimeout(this.ajaxTimeout);
+            }
 
-    _jquery2.default.ajax({
-        url: window.Rozier.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    }).done(function (data) {
-        window.Rozier.refreshAllNodeTrees();
-        window.UIkit.notify({
-            message: data.responseText,
-            status: data.status,
-            timeout: 3000,
-            pos: 'top-center'
-        });
-    }).always(function () {
-        window.Rozier.lazyload.canvasLoader.hide();
-    });
-};
+            this.ajaxTimeout = window.setTimeout(function () {
+                var postData = {
+                    _token: window.Rozier.ajaxToken,
+                    _action: 'duplicate',
+                    nodeId: nodeId
+                };
+
+                _jquery2.default.ajax({
+                    url: window.Rozier.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
+                    type: 'POST',
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    window.Rozier.refreshAllNodeTrees();
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).fail(function (data) {
+                    console.log(data);
+                }).always(function () {
+                    window.Rozier.lazyload.canvasLoader.hide();
+                });
+            }, 100);
+        }
+
+        /**
+         * Move a node to the position.
+         *
+         * @param {String} position
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'moveNodeToPosition',
+        value: function moveNodeToPosition(position, event) {
+            window.Rozier.lazyload.canvasLoader.show();
+
+            var element = (0, _jquery2.default)((0, _jquery2.default)(event.currentTarget).parents('.nodetree-element')[0]);
+            var nodeId = parseInt(element.data('node-id'));
+            var parentNodeId = parseInt(element.parents('ul').first().data('parent-node-id'));
+            var postData = {
+                _token: window.Rozier.ajaxToken,
+                _action: 'updatePosition',
+                nodeId: nodeId
+
+                /*
+                 * Force to first position
+                 */
+            };if (typeof position !== 'undefined' && position === 'first') {
+                postData.firstPosition = true;
+            } else if (typeof position !== 'undefined' && position === 'last') {
+                postData.lastPosition = true;
+            }
+
+            /*
+             * When dropping to root
+             * set parentNodeId to NULL
+             */
+            if (isNaN(parentNodeId)) {
+                parentNodeId = null;
+            }
+
+            postData.newParent = parentNodeId;
+
+            _jquery2.default.ajax({
+                url: window.Rozier.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
+                type: 'POST',
+                dataType: 'json',
+                data: postData
+            }).done(function (data) {
+                window.Rozier.refreshAllNodeTrees();
+                window.UIkit.notify({
+                    message: data.responseText,
+                    status: data.status,
+                    timeout: 3000,
+                    pos: 'top-center'
+                });
+            }).always(function () {
+                window.Rozier.lazyload.canvasLoader.hide();
+            });
+        }
+    }]);
+    return NodeTreeContextActions;
+}();
+
+exports.default = NodeTreeContextActions;
 
 /***/ }),
 
@@ -6023,7 +6307,14 @@ function truncate(object, length) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = Lazyload;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -6031,69 +6322,69 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
 
-var _documentsBulk = __webpack_require__("../Resources/app/components/bulk-edits/documentsBulk.js");
+var _DocumentsBulk = __webpack_require__("../Resources/app/components/bulk-edits/DocumentsBulk.js");
 
-var _documentsBulk2 = _interopRequireDefault(_documentsBulk);
+var _DocumentsBulk2 = _interopRequireDefault(_DocumentsBulk);
 
-var _nodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/nodesBulk.js");
+var _NodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/NodesBulk.js");
 
-var _nodesBulk2 = _interopRequireDefault(_nodesBulk);
+var _NodesBulk2 = _interopRequireDefault(_NodesBulk);
 
-var _tagsBulk = __webpack_require__("../Resources/app/components/bulk-edits/tagsBulk.js");
+var _TagsBulk = __webpack_require__("../Resources/app/components/bulk-edits/TagsBulk.js");
 
-var _tagsBulk2 = _interopRequireDefault(_tagsBulk);
+var _TagsBulk2 = _interopRequireDefault(_TagsBulk);
 
-var _documentUploader = __webpack_require__("../Resources/app/components/documents/documentUploader.js");
+var _DocumentUploader = __webpack_require__("../Resources/app/components/documents/DocumentUploader.js");
 
-var _documentUploader2 = _interopRequireDefault(_documentUploader);
+var _DocumentUploader2 = _interopRequireDefault(_DocumentUploader);
 
-var _nodeTypeFieldsPosition = __webpack_require__("../Resources/app/components/node-type-fields/nodeTypeFieldsPosition.js");
+var _NodeTypeFieldsPosition = __webpack_require__("../Resources/app/components/node-type-fields/NodeTypeFieldsPosition.js");
 
-var _nodeTypeFieldsPosition2 = _interopRequireDefault(_nodeTypeFieldsPosition);
+var _NodeTypeFieldsPosition2 = _interopRequireDefault(_NodeTypeFieldsPosition);
 
-var _nodeTypeFieldEdit = __webpack_require__("../Resources/app/components/node-type-fields/nodeTypeFieldEdit.js");
+var _NodeTypeFieldEdit = __webpack_require__("../Resources/app/components/node-type-fields/NodeTypeFieldEdit.js");
 
-var _nodeTypeFieldEdit2 = _interopRequireDefault(_nodeTypeFieldEdit);
+var _NodeTypeFieldEdit2 = _interopRequireDefault(_NodeTypeFieldEdit);
 
-var _customFormFieldsPosition = __webpack_require__("../Resources/app/components/custom-form-fields/customFormFieldsPosition.js");
+var _CustomFormFieldsPosition = __webpack_require__("../Resources/app/components/custom-form-fields/CustomFormFieldsPosition.js");
 
-var _customFormFieldsPosition2 = _interopRequireDefault(_customFormFieldsPosition);
+var _CustomFormFieldsPosition2 = _interopRequireDefault(_CustomFormFieldsPosition);
 
-var _customFormFieldEdit = __webpack_require__("../Resources/app/components/custom-form-fields/customFormFieldEdit.js");
+var _CustomFormFieldEdit = __webpack_require__("../Resources/app/components/custom-form-fields/CustomFormFieldEdit.js");
 
-var _customFormFieldEdit2 = _interopRequireDefault(_customFormFieldEdit);
+var _CustomFormFieldEdit2 = _interopRequireDefault(_CustomFormFieldEdit);
 
-var _nodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/nodeTreeContextActions.js");
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
 
-var _nodeTreeContextActions2 = _interopRequireDefault(_nodeTreeContextActions);
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
 
-var _import = __webpack_require__("../Resources/app/components/import/import.js");
+var _Import = __webpack_require__("../Resources/app/components/import/Import.js");
 
-var _import2 = _interopRequireDefault(_import);
+var _Import2 = _interopRequireDefault(_Import);
 
-var _nodeEditSource = __webpack_require__("../Resources/app/components/node/nodeEditSource.js");
+var _NodeEditSource = __webpack_require__("../Resources/app/components/node/NodeEditSource.js");
 
-var _nodeEditSource2 = _interopRequireDefault(_nodeEditSource);
+var _NodeEditSource2 = _interopRequireDefault(_NodeEditSource);
 
 var _inputLengthWatcher = __webpack_require__("../Resources/app/widgets/inputLengthWatcher.js");
 
 var _inputLengthWatcher2 = _interopRequireDefault(_inputLengthWatcher);
 
-var _childrenNodesField = __webpack_require__("../Resources/app/widgets/childrenNodesField.js");
+var _ChildrenNodesField = __webpack_require__("../Resources/app/widgets/ChildrenNodesField.js");
 
-var _childrenNodesField2 = _interopRequireDefault(_childrenNodesField);
+var _ChildrenNodesField2 = _interopRequireDefault(_ChildrenNodesField);
 
-var _geotagField = __webpack_require__("../Resources/app/widgets/geotagField.js");
+var _GeotagField = __webpack_require__("../Resources/app/widgets/GeotagField.js");
 
-var _geotagField2 = _interopRequireDefault(_geotagField);
+var _GeotagField2 = _interopRequireDefault(_GeotagField);
 
-var _multiGeotagField = __webpack_require__("../Resources/app/widgets/multiGeotagField.js");
+var _MultiGeotagField = __webpack_require__("../Resources/app/widgets/MultiGeotagField.js");
 
-var _multiGeotagField2 = _interopRequireDefault(_multiGeotagField);
+var _MultiGeotagField2 = _interopRequireDefault(_MultiGeotagField);
 
-var _stackNodeTree = __webpack_require__("../Resources/app/widgets/stackNodeTree.js");
+var _StackNodeTree = __webpack_require__("../Resources/app/widgets/StackNodeTree.js");
 
-var _stackNodeTree2 = _interopRequireDefault(_stackNodeTree);
+var _StackNodeTree2 = _interopRequireDefault(_StackNodeTree);
 
 var _saveButtons = __webpack_require__("../Resources/app/widgets/saveButtons.js");
 
@@ -6103,9 +6394,9 @@ var _tagAutocomplete = __webpack_require__("../Resources/app/widgets/tagAutocomp
 
 var _tagAutocomplete2 = _interopRequireDefault(_tagAutocomplete);
 
-var _folderAutocomplete = __webpack_require__("../Resources/app/widgets/folderAutocomplete.js");
+var _FolderAutocomplete = __webpack_require__("../Resources/app/widgets/FolderAutocomplete.js");
 
-var _folderAutocomplete2 = _interopRequireDefault(_folderAutocomplete);
+var _FolderAutocomplete2 = _interopRequireDefault(_FolderAutocomplete);
 
 var _settingsSaveButtons = __webpack_require__("../Resources/app/widgets/settingsSaveButtons.js");
 
@@ -6127,13 +6418,13 @@ var _markdownEditor = __webpack_require__("../Resources/app/widgets/markdownEdit
 
 var _markdownEditor2 = _interopRequireDefault(_markdownEditor);
 
-var _jsonEditor = __webpack_require__("../Resources/app/widgets/jsonEditor.js");
+var _JsonEditor = __webpack_require__("../Resources/app/widgets/JsonEditor.js");
 
-var _jsonEditor2 = _interopRequireDefault(_jsonEditor);
+var _JsonEditor2 = _interopRequireDefault(_JsonEditor);
 
-var _cssEditor = __webpack_require__("../Resources/app/widgets/cssEditor.js");
+var _CssEditor = __webpack_require__("../Resources/app/widgets/CssEditor.js");
 
-var _cssEditor2 = _interopRequireDefault(_cssEditor);
+var _CssEditor2 = _interopRequireDefault(_CssEditor);
 
 var _plugins = __webpack_require__("../Resources/app/plugins.js");
 
@@ -6142,398 +6433,421 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Lazyload
  */
-function Lazyload() {
-    var _this = this;
+var Lazyload = function () {
+    function Lazyload() {
+        var _this = this;
 
-    _this.$linksSelector = null;
-    _this.$textareasMarkdown = null;
-    _this.documentsList = null;
-    _this.mainColor = null;
-    _this.$canvasLoaderContainer = null;
-    _this.currentRequest = null;
+        (0, _classCallCheck3.default)(this, Lazyload);
 
-    var onStateChangeProxy = _jquery2.default.proxy(_this.onPopState, _this);
+        this.$linksSelector = null;
+        this.$textareasMarkdown = null;
+        this.documentsList = null;
+        this.mainColor = null;
+        this.$canvasLoaderContainer = null;
+        this.currentRequest = null;
 
-    _this.parseLinks();
+        this.onPopState = this.onPopState.bind(this);
+        this.onClick = this.onClick.bind(this);
 
-    // this hack resolves safari triggering popstate
-    // at initial load.
-    window.addEventListener('load', function () {
-        setTimeout(function () {
-            (0, _jquery2.default)(window).off('popstate', onStateChangeProxy);
-            (0, _jquery2.default)(window).on('popstate', onStateChangeProxy);
-        }, 0);
-    });
+        this.parseLinks();
 
-    _this.$canvasLoaderContainer = (0, _jquery2.default)('#canvasloader-container');
-    _this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff';
-    _this.initLoader();
+        // this hack resolves safari triggering popstate
+        // at initial load.
+        window.addEventListener('load', function () {
+            window.setTimeout(function () {
+                (0, _jquery2.default)(window).off('popstate', _this.onPopState);
+                (0, _jquery2.default)(window).on('popstate', _this.onPopState);
+            }, 0);
+        });
 
-    /*
-     * Start history with first hard loaded page
-     */
-    history.pushState({}, null, window.location.href);
-}
+        this.$canvasLoaderContainer = (0, _jquery2.default)('#canvasloader-container');
+        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff';
+        this.initLoader();
 
-/**
- * Init loader
- * @return {[type]} [description]
- */
-/*
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file lazyload.js
- * @author Adrien Scholaert <adrien@rezo-zero.com>
- */
-
-Lazyload.prototype.initLoader = function () {
-    var _this = this;
-
-    _this.canvasLoader = new window.CanvasLoader('canvasloader-container');
-    _this.canvasLoader.setColor(_this.mainColor);
-    _this.canvasLoader.setShape('square');
-    _this.canvasLoader.setDensity(90);
-    _this.canvasLoader.setRange(0.8);
-    _this.canvasLoader.setSpeed(4);
-    _this.canvasLoader.setFPS(30);
-};
-
-Lazyload.prototype.parseLinks = function () {
-    var _this = this;
-    _this.$linksSelector = (0, _jquery2.default)("a:not('[target=_blank]')").not('.rz-no-ajax-link');
-};
-
-/**
- * Bind links to load pages
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-Lazyload.prototype.onClick = function (event) {
-    var _this = this;
-    var $link = (0, _jquery2.default)(event.currentTarget);
-    var href = $link.attr('href');
-
-    if (typeof href !== 'undefined' && !$link.hasClass('rz-no-ajax-link') && href !== '' && href !== '#' && (href.indexOf(window.Rozier.baseUrl) >= 0 || href.charAt(0) === '/' || href.charAt(0) === '?')) {
-        event.preventDefault();
-
-        if (_this.clickTimeout) {
-            clearTimeout(_this.clickTimeout);
-        }
-        _this.clickTimeout = window.setTimeout(function () {
-            history.pushState({}, null, $link.attr('href'));
-            _this.onPopState(null);
-        }, 50);
-
-        return false;
-    }
-};
-
-/**
- * On pop state
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-Lazyload.prototype.onPopState = function (event) {
-    var _this = this;
-    var state = null;
-
-    if (event !== null) {
-        state = event.originalEvent.state;
-    }
-
-    if (typeof state === 'undefined' || state === null) {
-        state = window.history.state;
-    }
-
-    if (state !== null) {
-        _this.canvasLoader.show();
-        _this.loadContent(state, window.location);
-    }
-};
-
-/**
- * Load content (ajax)
- * @param  {[type]} state    [description]
- * @param  {[type]} location [description]
- * @return {[type]}          [description]
- */
-Lazyload.prototype.loadContent = function (state, location) {
-    var _this = this;
-
-    /*
-     * Delay loading if user is click like devil
-     */
-    if (_this.currentTimeout) {
-        clearTimeout(_this.currentTimeout);
-    }
-
-    _this.currentTimeout = window.setTimeout(function () {
         /*
-         * Trigger event on window to notify open
-         * widgets to close.
+         * Start history with first hard loaded page
          */
-        var pageChangeEvent = new CustomEvent('pagechange');
-        window.dispatchEvent(pageChangeEvent);
+        history.pushState({}, null, window.location.href);
+    }
 
-        _this.currentRequest = _jquery2.default.ajax({
-            url: location.href,
-            type: 'get',
-            dataType: 'html',
-            cache: false,
-            data: state.headerData
-        }).done(function (data) {
-            _this.applyContent(data);
-            _this.canvasLoader.hide();
-            var pageLoadEvent = new CustomEvent('pageload', { 'detail': data });
-            window.dispatchEvent(pageLoadEvent);
-        }).fail(function (data) {
-            console.log(data);
-            if (typeof data.responseText !== 'undefined') {
-                try {
-                    var exception = JSON.parse(data.responseText);
-                    window.UIkit.notify({
-                        message: exception.message,
-                        status: 'danger',
-                        timeout: 3000,
-                        pos: 'top-center'
-                    });
-                } catch (e) {
-                    // No valid JsonResponse, need to refresh page
-                    window.location.href = location.href;
+    /**
+     * Init loader
+     */
+
+
+    (0, _createClass3.default)(Lazyload, [{
+        key: 'initLoader',
+        value: function initLoader() {
+            this.canvasLoader = new window.CanvasLoader('canvasloader-container');
+            this.canvasLoader.setColor(this.mainColor);
+            this.canvasLoader.setShape('square');
+            this.canvasLoader.setDensity(90);
+            this.canvasLoader.setRange(0.8);
+            this.canvasLoader.setSpeed(4);
+            this.canvasLoader.setFPS(30);
+        }
+    }, {
+        key: 'parseLinks',
+        value: function parseLinks() {
+            this.$linksSelector = (0, _jquery2.default)("a:not('[target=_blank]')").not('.rz-no-ajax-link');
+        }
+
+        /**
+         * Bind links to load pages
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onClick',
+        value: function onClick(event) {
+            var _this2 = this;
+
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var href = $link.attr('href');
+
+            if (typeof href !== 'undefined' && !$link.hasClass('rz-no-ajax-link') && href !== '' && href !== '#' && (href.indexOf(window.Rozier.baseUrl) >= 0 || href.charAt(0) === '/' || href.charAt(0) === '?')) {
+                event.preventDefault();
+
+                if (this.clickTimeout) {
+                    clearTimeout(this.clickTimeout);
                 }
-            } else {
-                window.UIkit.notify({
-                    message: window.Rozier.messages.forbiddenPage,
-                    status: 'danger',
-                    timeout: 3000,
-                    pos: 'top-center'
+
+                this.clickTimeout = window.setTimeout(function () {
+                    history.pushState({}, null, $link.attr('href'));
+                    _this2.onPopState(null);
+                }, 50);
+
+                return false;
+            }
+        }
+
+        /**
+         * On pop state
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onPopState',
+        value: function onPopState(event) {
+            var state = null;
+
+            if (event !== null) {
+                state = event.originalEvent.state;
+            }
+
+            if (typeof state === 'undefined' || state === null) {
+                state = window.history.state;
+            }
+
+            if (state !== null) {
+                this.canvasLoader.show();
+                this.loadContent(state, window.location);
+            }
+        }
+
+        /**
+         * Load content (ajax)
+         * @param {Object} state
+         * @param {Object} location
+         */
+
+    }, {
+        key: 'loadContent',
+        value: function loadContent(state, location) {
+            var _this3 = this;
+
+            /*
+             * Delay loading if user is click like devil
+             */
+            if (this.currentTimeout) {
+                clearTimeout(this.currentTimeout);
+            }
+
+            this.currentTimeout = window.setTimeout(function () {
+                /*
+                 * Trigger event on window to notify open
+                 * widgets to close.
+                 */
+                var pageChangeEvent = new CustomEvent('pagechange');
+                window.dispatchEvent(pageChangeEvent);
+
+                _this3.currentRequest = _jquery2.default.ajax({
+                    url: location.href,
+                    type: 'get',
+                    dataType: 'html',
+                    cache: false,
+                    data: state.headerData
+                }).done(function (data) {
+                    _this3.applyContent(data);
+                    _this3.canvasLoader.hide();
+                    var pageLoadEvent = new CustomEvent('pageload', { 'detail': data });
+                    window.dispatchEvent(pageLoadEvent);
+                }).fail(function (data) {
+                    if (typeof data.responseText !== 'undefined') {
+                        try {
+                            var exception = JSON.parse(data.responseText);
+                            window.UIkit.notify({
+                                message: exception.message,
+                                status: 'danger',
+                                timeout: 3000,
+                                pos: 'top-center'
+                            });
+                        } catch (e) {
+                            // No valid JsonResponse, need to refresh page
+                            window.location.href = location.href;
+                        }
+                    } else {
+                        window.UIkit.notify({
+                            message: window.Rozier.messages.forbiddenPage,
+                            status: 'danger',
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }
+
+                    _this3.canvasLoader.hide();
+                });
+            }, 100);
+        }
+
+        /**
+         * Apply content to main content
+         * @param {[type]} data [description]
+         * @return {[type]}      [description]
+         */
+
+    }, {
+        key: 'applyContent',
+        value: function applyContent(data) {
+            var _this4 = this;
+
+            var $container = (0, _jquery2.default)('#main-content-scrollable');
+            var $old = $container.find('.content-global');
+
+            var $tempData = (0, _jquery2.default)(data);
+            $tempData.addClass('new-content-global');
+            $container.append($tempData);
+            $tempData = $container.find('.new-content-global');
+
+            $old.fadeOut(100, function () {
+                $old.remove();
+
+                _this4.generalBind();
+                $tempData.fadeIn(200, function () {
+                    $tempData.removeClass('new-content-global');
+                });
+            });
+        }
+    }, {
+        key: 'bindAjaxLink',
+        value: function bindAjaxLink() {
+            this.parseLinks();
+            this.$linksSelector.off('click', this.onClick);
+            this.$linksSelector.on('click', this.onClick);
+        }
+
+        /**
+         * General bind on page load
+         * @return {[type]} [description]
+         */
+
+    }, {
+        key: 'generalBind',
+        value: function generalBind() {
+            this.bindAjaxLink();
+
+            /* eslint-disable no-new */
+            new _DocumentsBulk2.default();
+            new _NodesBulk2.default();
+            new _TagsBulk2.default();
+            new _inputLengthWatcher2.default();
+            new _DocumentUploader2.default(window.Rozier.messages.dropzone);
+            this.childrenNodesFields = new _ChildrenNodesField2.default();
+            new _GeotagField2.default();
+            new _MultiGeotagField2.default();
+            this.stackNodeTrees = new _StackNodeTree2.default();
+
+            if (_plugins.isMobile.any() === null) {
+                new _saveButtons2.default();
+            }
+
+            new _tagAutocomplete2.default();
+            new _FolderAutocomplete2.default();
+            new _NodeTypeFieldsPosition2.default();
+            new _CustomFormFieldsPosition2.default();
+            new _NodeTreeContextActions2.default();
+            new _settingsSaveButtons2.default();
+            new _NodeTypeFieldEdit2.default();
+            new _NodeEditSource2.default();
+            this.nodeTree = new _nodeTree2.default();
+            new _CustomFormFieldEdit2.default();
+
+            /*
+             * Codemirror
+             */
+            this.initMarkdownEditors();
+            this.initJsonEditors();
+            this.initCssEditors();
+            this.initYamlEditors();
+            this.initFilterBars();
+
+            var $colorPickerInput = (0, _jquery2.default)('.colorpicker-input');
+
+            // Init colorpicker
+            if ($colorPickerInput.length) {
+                $colorPickerInput.minicolors();
+            }
+
+            // Animate actions menu
+            if ((0, _jquery2.default)('.actions-menu').length && _plugins.isMobile.any() === null) {
+                _gsap.TweenLite.to('.actions-menu', 0.5, { right: 0, delay: 0.4, ease: _gsap.Expo.easeOut });
+            }
+
+            window.Rozier.initNestables();
+            window.Rozier.bindMainTrees();
+            window.Rozier.nodeStatuses = new _nodeStatuses2.default();
+
+            // Switch checkboxes
+            this.initBootstrapSwitches();
+
+            window.Rozier.getMessages();
+
+            if (typeof window.Rozier.importRoutes !== 'undefined' && window.Rozier.importRoutes !== null) {
+                window.Rozier.import = new _Import2.default(window.Rozier.importRoutes);
+                window.Rozier.importRoutes = null;
+            }
+        }
+    }, {
+        key: 'initBootstrapSwitches',
+        value: function initBootstrapSwitches() {
+            var $checkboxes = (0, _jquery2.default)('.rz-boolean-checkbox');
+
+            // Switch checkboxes
+            $checkboxes.bootstrapSwitch({
+                size: 'small'
+            });
+        }
+    }, {
+        key: 'initMarkdownEditors',
+        value: function initMarkdownEditors() {
+            var _this5 = this;
+
+            // Init markdown-preview
+            this.$textareasMarkdown = (0, _jquery2.default)('textarea[data-rz-markdowneditor]');
+            var editorCount = this.$textareasMarkdown.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _markdownEditor2.default(_this5.$textareasMarkdown.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initJsonEditors',
+        value: function initJsonEditors() {
+            var _this6 = this;
+
+            // Init markdown-preview
+            this.$textareasJson = (0, _jquery2.default)('textarea[data-rz-jsoneditor]');
+            var editorCount = this.$textareasJson.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _JsonEditor2.default(_this6.$textareasJson.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initCssEditors',
+        value: function initCssEditors() {
+            var _this7 = this;
+
+            // Init markdown-preview
+            this.$textareasCss = (0, _jquery2.default)('textarea[data-rz-csseditor]');
+            var editorCount = this.$textareasCss.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _CssEditor2.default(_this7.$textareasCss.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initYamlEditors',
+        value: function initYamlEditors() {
+            var _this8 = this;
+
+            // Init markdown-preview
+            this.$textareasYaml = (0, _jquery2.default)('textarea[data-rz-yamleditor]');
+            var editorCount = this.$textareasYaml.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _yamlEditor2.default(_this8.$textareasYaml.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initFilterBars',
+        value: function initFilterBars() {
+            var $selectItemPerPage = (0, _jquery2.default)('select.item-per-page');
+
+            if ($selectItemPerPage.length) {
+                $selectItemPerPage.off('change');
+                $selectItemPerPage.on('change', function (event) {
+                    (0, _jquery2.default)(event.currentTarget).parents('form').submit();
                 });
             }
+        }
 
-            _this.canvasLoader.hide();
-        });
-    }, 100);
-};
+        /**
+         * Resize
+         */
 
-/**
- * Apply content to main content
- * @param  {[type]} data [description]
- * @return {[type]}      [description]
- */
-Lazyload.prototype.applyContent = function (data) {
-    var _this = this;
+    }, {
+        key: 'resize',
+        value: function resize() {
+            this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + window.Rozier.mainContentScrollableWidth / 2 + 'px';
+        }
+    }]);
+    return Lazyload;
+}(); /*
+      * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+      *
+      * Permission is hereby granted, free of charge, to any person obtaining a copy
+      * of this software and associated documentation files (the "Software"), to deal
+      * in the Software without restriction, including without limitation the rights
+      * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      * copies of the Software, and to permit persons to whom the Software is furnished
+      * to do so, subject to the following conditions:
+      * The above copyright notice and this permission notice shall be included in all
+      * copies or substantial portions of the Software.
+      *
+      * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+      * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+      * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+      * IN THE SOFTWARE.
+      *
+      * Except as contained in this notice, the name of the ROADIZ shall not
+      * be used in advertising or otherwise to promote the sale, use or other dealings
+      * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+      *
+      * @file lazyload.js
+      * @author Adrien Scholaert <adrien@rezo-zero.com>
+      */
 
-    var $container = (0, _jquery2.default)('#main-content-scrollable');
-    var $old = $container.find('.content-global');
-
-    var $tempData = (0, _jquery2.default)(data);
-    $tempData.addClass('new-content-global');
-    $container.append($tempData);
-    $tempData = $container.find('.new-content-global');
-
-    $old.fadeOut(100, function () {
-        $old.remove();
-
-        _this.generalBind();
-        $tempData.fadeIn(200, function () {
-            $tempData.removeClass('new-content-global');
-        });
-    });
-};
-
-Lazyload.prototype.bindAjaxLink = function () {
-    var _this = this;
-    _this.parseLinks();
-
-    var onClickProxy = _jquery2.default.proxy(_this.onClick, _this);
-    _this.$linksSelector.off('click', onClickProxy);
-    _this.$linksSelector.on('click', onClickProxy);
-};
-
-/**
- * General bind on page load
- * @return {[type]} [description]
- */
-Lazyload.prototype.generalBind = function () {
-    var _this = this;
-
-    _this.bindAjaxLink();
-
-    /* eslint-disable no-new */
-    new _documentsBulk2.default();
-    new _nodesBulk2.default();
-    new _tagsBulk2.default();
-    new _inputLengthWatcher2.default();
-    new _documentUploader2.default(window.Rozier.messages.dropzone);
-    _this.childrenNodesFields = new _childrenNodesField2.default();
-    new _geotagField2.default();
-    new _multiGeotagField2.default();
-    _this.stackNodeTrees = new _stackNodeTree2.default();
-    if (_plugins.isMobile.any() === null) new _saveButtons2.default();
-    new _tagAutocomplete2.default();
-    new _folderAutocomplete2.default();
-    new _nodeTypeFieldsPosition2.default();
-    new _customFormFieldsPosition2.default();
-    _this.nodeTreeContextActions = new _nodeTreeContextActions2.default();
-
-    // _this.documentsList = new DocumentsList();
-    _this.settingsSaveButtons = new _settingsSaveButtons2.default();
-    _this.nodeTypeFieldEdit = new _nodeTypeFieldEdit2.default();
-    _this.nodeEditSource = new _nodeEditSource2.default();
-    _this.nodeTree = new _nodeTree2.default();
-    _this.customFormFieldEdit = new _customFormFieldEdit2.default();
-
-    /*
-     * Codemirror
-     */
-    _this.initMarkdownEditors();
-    _this.initJsonEditors();
-    _this.initCssEditors();
-    _this.initYamlEditors();
-
-    _this.initFilterBars();
-
-    var $colorPickerInput = (0, _jquery2.default)('.colorpicker-input');
-
-    // Init colorpicker
-    if ($colorPickerInput.length) {
-        $colorPickerInput.minicolors();
-    }
-
-    // Animate actions menu
-    if ((0, _jquery2.default)('.actions-menu').length && _plugins.isMobile.any() === null) {
-        _gsap.TweenLite.to('.actions-menu', 0.5, { right: 0, delay: 0.4, ease: _gsap.Expo.easeOut });
-    }
-
-    window.Rozier.initNestables();
-    window.Rozier.bindMainTrees();
-    window.Rozier.nodeStatuses = new _nodeStatuses2.default();
-
-    // Switch checkboxes
-    _this.initBootstrapSwitches();
-
-    window.Rozier.getMessages();
-
-    if (typeof window.Rozier.importRoutes !== 'undefined' && window.Rozier.importRoutes !== null) {
-        window.Rozier.import = new _import2.default(window.Rozier.importRoutes);
-        window.Rozier.importRoutes = null;
-    }
-};
-
-Lazyload.prototype.initBootstrapSwitches = function () {
-    var $checkboxes = (0, _jquery2.default)('.rz-boolean-checkbox');
-
-    // Switch checkboxes
-    $checkboxes.bootstrapSwitch({
-        size: 'small'
-    });
-};
-
-Lazyload.prototype.initMarkdownEditors = function () {
-    var _this = this;
-
-    // Init markdown-preview
-    _this.$textareasMarkdown = (0, _jquery2.default)('textarea[data-rz-markdowneditor]');
-    var editorCount = _this.$textareasMarkdown.length;
-
-    if (editorCount) {
-        setTimeout(function () {
-            for (var i = 0; i < editorCount; i++) {
-                new _markdownEditor2.default(_this.$textareasMarkdown.eq(i), i);
-            }
-        }, 100);
-    }
-};
-
-Lazyload.prototype.initJsonEditors = function () {
-    var _this = this;
-
-    // Init markdown-preview
-    _this.$textareasJson = (0, _jquery2.default)('textarea[data-rz-jsoneditor]');
-    var editorCount = _this.$textareasJson.length;
-
-    if (editorCount) {
-        setTimeout(function () {
-            for (var i = 0; i < editorCount; i++) {
-                new _jsonEditor2.default(_this.$textareasJson.eq(i), i);
-            }
-        }, 100);
-    }
-};
-
-Lazyload.prototype.initCssEditors = function () {
-    var _this = this;
-
-    // Init markdown-preview
-    _this.$textareasCss = (0, _jquery2.default)('textarea[data-rz-csseditor]');
-    var editorCount = _this.$textareasCss.length;
-
-    if (editorCount) {
-        setTimeout(function () {
-            for (var i = 0; i < editorCount; i++) {
-                new _cssEditor2.default(_this.$textareasCss.eq(i), i);
-            }
-        }, 100);
-    }
-};
-
-Lazyload.prototype.initYamlEditors = function () {
-    var _this = this;
-
-    // Init markdown-preview
-    _this.$textareasYaml = (0, _jquery2.default)('textarea[data-rz-yamleditor]');
-    var editorCount = _this.$textareasYaml.length;
-
-    if (editorCount) {
-        setTimeout(function () {
-            for (var i = 0; i < editorCount; i++) {
-                new _yamlEditor2.default(_this.$textareasYaml.eq(i), i);
-            }
-        }, 100);
-    }
-};
-
-Lazyload.prototype.initFilterBars = function () {
-    var $selectItemPerPage = (0, _jquery2.default)('select.item-per-page');
-
-    if ($selectItemPerPage.length) {
-        $selectItemPerPage.off('change');
-        $selectItemPerPage.on('change', function (event) {
-            (0, _jquery2.default)(event.currentTarget).parents('form').submit();
-        });
-    }
-};
-
-/**
- * Resize
- * @return {[type]} [description]
- */
-Lazyload.prototype.resize = function () {
-    var _this = this;
-
-    _this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + window.Rozier.mainContentScrollableWidth / 2 + 'px';
-};
+exports.default = Lazyload;
 
 /***/ }),
 
@@ -6621,13 +6935,13 @@ var _lazyload = __webpack_require__("../Resources/app/lazyload.js");
 
 var _lazyload2 = _interopRequireDefault(_lazyload);
 
-var _entriesPanel = __webpack_require__("../Resources/app/components/panels/entriesPanel.js");
+var _EntriesPanel = __webpack_require__("../Resources/app/components/panels/EntriesPanel.js");
 
-var _entriesPanel2 = _interopRequireDefault(_entriesPanel);
+var _EntriesPanel2 = _interopRequireDefault(_EntriesPanel);
 
-var _nodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/nodeTreeContextActions.js");
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
 
-var _nodeTreeContextActions2 = _interopRequireDefault(_nodeTreeContextActions);
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
 
 var _rozierMobile = __webpack_require__("../Resources/app/rozierMobile.js");
 
@@ -6645,6 +6959,14 @@ var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
 
 var _plugins = __webpack_require__("../Resources/app/plugins.js");
 
+var _GeotagField = __webpack_require__("../Resources/app/widgets/GeotagField.js");
+
+var _GeotagField2 = _interopRequireDefault(_GeotagField);
+
+var _MultiGeotagField = __webpack_require__("../Resources/app/widgets/MultiGeotagField.js");
+
+var _MultiGeotagField2 = _interopRequireDefault(_MultiGeotagField);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.CodeMirror = _codemirror2.default;
@@ -6652,6 +6974,16 @@ window.CodeMirror = _codemirror2.default;
 // Include bower dependencies
 
 window.UIkit = _uikit2.default;
+
+// eslint-disable-next-line
+window.initializeGeotagFields = function () {
+    window.Rozier.gMapLoaded = true;
+    window.Rozier.gMapLoading = false;
+
+    /* eslint-disable no-new */
+    new _GeotagField2.default();
+    new _MultiGeotagField2.default();
+};
 
 /*
  * ============================================================================
@@ -6697,7 +7029,7 @@ Rozier.$backTopBtn = null;
 
 Rozier.entriesPanel = null;
 
-Rozier.onDocumentReady = function (event) {
+Rozier.onDocumentReady = function () {
     /*
      * Store Rozier configuration
      */
@@ -6706,7 +7038,7 @@ Rozier.onDocumentReady = function (event) {
     }
 
     Rozier.lazyload = new _lazyload2.default();
-    Rozier.entriesPanel = new _entriesPanel2.default();
+    Rozier.entriesPanel = new _EntriesPanel2.default();
     Rozier.vueApp = new _App2.default();
 
     Rozier.$window = (0, _jquery2.default)(window);
@@ -6941,7 +7273,7 @@ Rozier.refreshMainNodeTree = function (translationId) {
                     Rozier.bindMainTrees();
                     Rozier.resize();
                     Rozier.lazyload.bindAjaxLink();
-                    _this.lazyload.nodeTreeContextActions = new _nodeTreeContextActions2.default();
+                    _this.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
                 });
             }
         }).fail(function (data) {
@@ -6959,10 +7291,10 @@ Rozier.refreshMainNodeTree = function (translationId) {
  * @param  {[type]} event [description]
  * @return {[type]}       [description]
  */
-Rozier.toggleTreesPanel = function (event) {
+Rozier.toggleTreesPanel = function () {
     (0, _jquery2.default)('#main-trees').toggleClass('minified');
     (0, _jquery2.default)('#main-content').toggleClass('maximized');
-    (0, _jquery2.default)('#minify-tree-panel-button i').toggleClass('uk-icon-rz-panel-tree-open');
+    (0, _jquery2.default)('#minify-tree-panel-button').find('i').toggleClass('uk-icon-rz-panel-tree-open');
     (0, _jquery2.default)('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
 
     return false;
@@ -7361,7 +7693,15 @@ Rozier.resize = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.PointerEventsPolyfill = exports.removeClass = exports.addClass = exports.isset = exports.stripTags = exports.toType = exports.isMobile = undefined;
+exports.PointerEventsPolyfill = exports.removeClass = exports.addClass = exports.stripTags = exports.toType = exports.isMobile = undefined;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -7397,7 +7737,7 @@ var toType = exports.toType = function toType(obj) {
 
 // Avoid `console` errors in browsers that lack a console.
 (function () {
-    var method;
+    var method = void 0;
     var noop = function noop() {};
     var methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn'];
     var length = methods.length;
@@ -7456,26 +7796,30 @@ var stripTags = exports.stripTags = function stripTags(input, allowed) {
     });
 };
 
-// Isset
-var isset = exports.isset = function isset(element) {
-    if (element) return true;else return false;
-};
-
 // Add class
 var addClass = exports.addClass = function addClass(el, classToAdd) {
     if (el) {
-        if (el.classList) el.classList.add(classToAdd);else el.className += ' ' + classToAdd;
+        if (el.classList) {
+            el.classList.add(classToAdd);
+        } else {
+            el.className += ' ' + classToAdd;
+        }
     }
 };
 
 // Remove class
 var removeClass = exports.removeClass = function removeClass(el, classToRemove) {
     if (el) {
-        if (el.classList) el.classList.remove(classToRemove);else {
+        if (el.classList) {
+            el.classList.remove(classToRemove);
+        } else {
             el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
 
             var posLastCar = el.className.length - 1;
-            if (el.className[posLastCar] === ' ') el.className = el.className.substring(0, posLastCar);
+
+            if (el.className[posLastCar] === ' ') {
+                el.className = el.className.substring(0, posLastCar);
+            }
         }
     }
 };
@@ -7485,70 +7829,89 @@ var removeClass = exports.removeClass = function removeClass(el, classToRemove) 
  * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
  */
 // constructor
-var PointerEventsPolyfill = exports.PointerEventsPolyfill = function PointerEventsPolyfill(options) {
-    // set defaults
-    this.options = {
-        selector: '*',
-        mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
-        usePolyfillIf: function usePolyfillIf() {
-            if (navigator.appName === 'Microsoft Internet Explorer') {
-                var agent = navigator.userAgent;
-                if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
-                    var version = parseFloat(RegExp.$1);
-                    if (version < 11) {
-                        return true;
+
+var PointerEventsPolyfill = exports.PointerEventsPolyfill = function () {
+    function PointerEventsPolyfill(options) {
+        (0, _classCallCheck3.default)(this, PointerEventsPolyfill);
+
+        // set defaults
+        this.options = {
+            selector: '*',
+            mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
+            usePolyfillIf: function usePolyfillIf() {
+                if (navigator.appName === 'Microsoft Internet Explorer') {
+                    var agent = navigator.userAgent;
+                    if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
+                        var version = parseFloat(RegExp.$1);
+                        if (version < 11) {
+                            return true;
+                        }
                     }
                 }
+                return false;
             }
-            return false;
+        };
+
+        if (options) {
+            var obj = this;
+            _jquery2.default.each(options, function (k, v) {
+                obj.options[k] = v;
+            });
         }
-    };
-    if (options) {
-        var obj = this;
-        _jquery2.default.each(options, function (k, v) {
-            obj.options[k] = v;
-        });
+
+        if (this.options.usePolyfillIf()) {
+            this.registerMouseEvents();
+        }
     }
 
-    if (this.options.usePolyfillIf()) {
-        this.register_mouse_events();
-    }
-};
+    // singleton initializer
 
-// singleton initializer
-PointerEventsPolyfill.initialize = function (options) {
-    if (PointerEventsPolyfill.singleton == null) {
-        PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options);
-    }
-    return PointerEventsPolyfill.singleton;
-};
 
-// handle mouse events w/ support for pointer-events: none
-PointerEventsPolyfill.prototype.register_mouse_events = function () {
-    // register on all elements (and all future elements) matching the selector
-    (0, _jquery2.default)(document).on(this.options.mouseEvents.join(' '), this.options.selector, function (e) {
-        if ((0, _jquery2.default)(this).css('pointer-events') === 'none') {
-            // peak at the element below
-            var origDisplayAttribute = (0, _jquery2.default)(this).css('display');
-            (0, _jquery2.default)(this).css('display', 'none');
-
-            var underneathElem = document.elementFromPoint(e.clientX, e.clientY);
-
-            if (origDisplayAttribute) {
-                (0, _jquery2.default)(this).css('display', origDisplayAttribute);
-            } else {
-                (0, _jquery2.default)(this).css('display', '');
+    (0, _createClass3.default)(PointerEventsPolyfill, [{
+        key: 'initialize',
+        value: function initialize(options) {
+            if (!PointerEventsPolyfill.singleton) {
+                PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options);
             }
 
-            // fire the mouse event on the element below
-            e.target = underneathElem;
-            (0, _jquery2.default)(underneathElem).trigger(e);
-
-            return false;
+            return PointerEventsPolyfill.singleton;
         }
-        return true;
-    });
-};
+
+        // handle mouse events w/ support for pointer-events: none
+
+    }, {
+        key: 'registerMouseEvents',
+        value: function registerMouseEvents() {
+            var _this = this;
+
+            // register on all elements (and all future elements) matching the selector
+            (0, _jquery2.default)(document).on(this.options.mouseEvents.join(' '), this.options.selector, function (e) {
+                if ((0, _jquery2.default)(_this).css('pointer-events') === 'none') {
+                    // peak at the element below
+                    var origDisplayAttribute = (0, _jquery2.default)(_this).css('display');
+                    (0, _jquery2.default)(_this).css('display', 'none');
+
+                    var underneathElem = document.elementFromPoint(e.clientX, e.clientY);
+
+                    if (origDisplayAttribute) {
+                        (0, _jquery2.default)(_this).css('display', origDisplayAttribute);
+                    } else {
+                        (0, _jquery2.default)(_this).css('display', '');
+                    }
+
+                    // fire the mouse event on the element below
+                    e.target = underneathElem;
+                    (0, _jquery2.default)(underneathElem).trigger(e);
+
+                    return false;
+                }
+
+                return true;
+            });
+        }
+    }]);
+    return PointerEventsPolyfill;
+}();
 
 /***/ }),
 
@@ -9816,7 +10179,7 @@ function dataURItoBlob(dataURI) {
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/childrenNodesField.js":
+/***/ "../Resources/app/widgets/ChildrenNodesField.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9825,172 +10188,198 @@ function dataURItoBlob(dataURI) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = ChildrenNodesField;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
 
-var _nodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/nodeTreeContextActions.js");
-
-var _nodeTreeContextActions2 = _interopRequireDefault(_nodeTreeContextActions);
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function ChildrenNodesField() {
-    var _this = this;
-    _this.currentRequest = null;
+/**
+ * Children nodes field
+ */
+var ChildrenNodesField = function () {
+    function ChildrenNodesField() {
+        (0, _classCallCheck3.default)(this, ChildrenNodesField);
 
-    _this.init();
-}
+        this.currentRequest = null;
 
-ChildrenNodesField.prototype.init = function () {
-    var _this = this;
+        // Bind methods
+        this.onQuickAddClick = this.onQuickAddClick.bind(this);
 
-    _this.$fields = (0, _jquery2.default)('[data-children-nodes-widget]');
-    _this.$nodeTrees = _this.$fields.find('.nodetree-widget');
-    _this.$quickAddNodeButtons = _this.$fields.find('.children-nodes-quick-creation a');
-
-    if (_this.$quickAddNodeButtons.length) {
-        var proxiedClick = _jquery2.default.proxy(_this.onQuickAddClick, _this);
-        _this.$quickAddNodeButtons.off('click', proxiedClick);
-        _this.$quickAddNodeButtons.on('click', proxiedClick);
+        this.init();
     }
 
-    _this.$fields.find('.nodetree-langs').remove();
-};
+    (0, _createClass3.default)(ChildrenNodesField, [{
+        key: 'init',
+        value: function init() {
+            this.$fields = (0, _jquery2.default)('[data-children-nodes-widget]');
+            this.$nodeTrees = this.$fields.find('.nodetree-widget');
+            this.$quickAddNodeButtons = this.$fields.find('.children-nodes-quick-creation a');
 
-ChildrenNodesField.prototype.treeAvailable = function () {
-    var _this = this;
-
-    var $nodeTree = _this.$fields.find('.nodetree-widget');
-
-    if ($nodeTree.length) {
-        return true;
-    } else {
-        return false;
-    }
-};
-
-ChildrenNodesField.prototype.onQuickAddClick = function (event) {
-    var _this = this;
-
-    if (_this.ajaxTimeout) {
-        clearTimeout(_this.ajaxTimeout);
-    }
-    _this.ajaxTimeout = window.setTimeout(function () {
-        var $link = (0, _jquery2.default)(event.currentTarget);
-        var nodeTypeId = parseInt($link.attr('data-children-node-type'));
-        var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-        var translationId = parseInt($link.attr('data-translation-id'));
-
-        if (nodeTypeId > 0 && parentNodeId > 0) {
-            var postData = {
-                '_token': window.Rozier.ajaxToken,
-                '_action': 'quickAddNode',
-                'nodeTypeId': nodeTypeId,
-                'parentNodeId': parentNodeId,
-                'translationId': translationId
-            };
-            _jquery2.default.ajax({
-                url: window.Rozier.routes.nodesQuickAddAjax,
-                type: 'post',
-                dataType: 'json',
-                data: postData
-            }).done(function (data) {
-                window.Rozier.refreshMainNodeTree();
-                var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
-                _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
-
-                window.UIkit.notify({
-                    message: data.responseText,
-                    status: data.status,
-                    timeout: 3000,
-                    pos: 'top-center'
-                });
-            }).fail(function (data) {
-                console.log('error');
-                console.log(data);
-
-                data = JSON.parse(data.responseText);
-
-                window.UIkit.notify({
-                    message: data.responseText,
-                    status: data.status,
-                    timeout: 3000,
-                    pos: 'top-center'
-                });
-            }).always(function () {
-                // console.log("complete");
-            });
-        }
-    }, 200);
-
-    return false;
-};
-
-ChildrenNodesField.prototype.refreshNodeTree = function ($nodeTree, rootNodeId, translationId) {
-    var _this = this;
-
-    if ($nodeTree.length) {
-        if (_this.currentRequest && _this.currentRequest.readyState !== 4) {
-            _this.currentRequest.abort();
-        }
-
-        if (typeof rootNodeId === 'undefined') {
-            var $rootTree = (0, _jquery2.default)($nodeTree.find('.root-tree')[0]);
-            rootNodeId = parseInt($rootTree.attr('data-parent-node-id'));
-            translationId = parseInt($rootTree.attr('data-translation-id'));
-        }
-        window.Rozier.lazyload.canvasLoader.show();
-        var postData = {
-            '_token': window.Rozier.ajaxToken,
-            '_action': 'requestNodeTree',
-            'parentNodeId': parseInt(rootNodeId)
-        };
-
-        var url = window.Rozier.routes.nodesTreeAjax;
-        if ((0, _plugins.isset)(translationId) && translationId > 0) {
-            url += '/' + translationId;
-        }
-
-        _this.currentRequest = _jquery2.default.ajax({
-            url: url,
-            type: 'get',
-            dataType: 'json',
-            cache: false,
-            data: postData
-        }).done(function (data) {
-            if ($nodeTree.length && typeof data.nodeTree !== 'undefined') {
-                $nodeTree.fadeOut('slow', function () {
-                    var $tempContainer = $nodeTree.parents('.children-nodes-widget');
-                    $nodeTree.replaceWith(data.nodeTree);
-
-                    $nodeTree = $tempContainer.find('.nodetree-widget');
-                    window.Rozier.initNestables();
-                    window.Rozier.bindMainTrees();
-                    window.Rozier.lazyload.bindAjaxLink();
-                    $nodeTree.fadeIn();
-
-                    _this.init();
-
-                    window.Rozier.lazyload.canvasLoader.hide();
-                    window.Rozier.lazyload.nodeTreeContextActions = new _nodeTreeContextActions2.default();
-                });
+            if (this.$quickAddNodeButtons.length) {
+                this.$quickAddNodeButtons.off('click', this.onQuickAddClick);
+                this.$quickAddNodeButtons.on('click', this.onQuickAddClick);
             }
-        }).fail(function (data) {
-            console.log(data.responseJSON);
-        });
-    } else {
-        console.error('No node-tree available.');
-    }
-};
+
+            this.$fields.find('.nodetree-langs').remove();
+        }
+    }, {
+        key: 'treeAvailable',
+        value: function treeAvailable() {
+            var $nodeTree = this.$fields.find('.nodetree-widget');
+
+            if ($nodeTree.length) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }, {
+        key: 'onQuickAddClick',
+        value: function onQuickAddClick(event) {
+            var _this = this;
+
+            if (this.ajaxTimeout) {
+                clearTimeout(this.ajaxTimeout);
+            }
+
+            this.ajaxTimeout = window.setTimeout(function () {
+                var $link = (0, _jquery2.default)(event.currentTarget);
+                var nodeTypeId = parseInt($link.attr('data-children-node-type'));
+                var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+                var translationId = parseInt($link.attr('data-translation-id'));
+
+                if (nodeTypeId > 0 && parentNodeId > 0) {
+                    var postData = {
+                        '_token': window.Rozier.ajaxToken,
+                        '_action': 'quickAddNode',
+                        'nodeTypeId': nodeTypeId,
+                        'parentNodeId': parentNodeId,
+                        'translationId': translationId
+                    };
+                    _jquery2.default.ajax({
+                        url: window.Rozier.routes.nodesQuickAddAjax,
+                        type: 'post',
+                        dataType: 'json',
+                        data: postData
+                    }).done(function (data) {
+                        window.Rozier.refreshMainNodeTree();
+                        var $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget');
+                        _this.refreshNodeTree($nodeTree, parentNodeId, translationId);
+
+                        window.UIkit.notify({
+                            message: data.responseText,
+                            status: data.status,
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }).fail(function (data) {
+                        console.log('error');
+                        console.log(data);
+
+                        data = JSON.parse(data.responseText);
+
+                        window.UIkit.notify({
+                            message: data.responseText,
+                            status: data.status,
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }).always(function () {
+                        // console.log("complete");
+                    });
+                }
+            }, 200);
+
+            return false;
+        }
+
+        /**
+         * @param $nodeTree
+         * @param rootNodeId
+         * @param translationId
+         */
+
+    }, {
+        key: 'refreshNodeTree',
+        value: function refreshNodeTree($nodeTree, rootNodeId, translationId) {
+            var _this2 = this;
+
+            if ($nodeTree.length) {
+                if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                    this.currentRequest.abort();
+                }
+
+                if (typeof rootNodeId === 'undefined') {
+                    var $rootTree = (0, _jquery2.default)($nodeTree.find('.root-tree')[0]);
+                    rootNodeId = parseInt($rootTree.attr('data-parent-node-id'));
+                    translationId = parseInt($rootTree.attr('data-translation-id'));
+                }
+                window.Rozier.lazyload.canvasLoader.show();
+                var postData = {
+                    '_token': window.Rozier.ajaxToken,
+                    '_action': 'requestNodeTree',
+                    'parentNodeId': parseInt(rootNodeId)
+                };
+
+                var url = window.Rozier.routes.nodesTreeAjax;
+                if (translationId && translationId > 0) {
+                    url += '/' + translationId;
+                }
+
+                this.currentRequest = _jquery2.default.ajax({
+                    url: url,
+                    type: 'get',
+                    dataType: 'json',
+                    cache: false,
+                    data: postData
+                }).done(function (data) {
+                    if ($nodeTree.length && typeof data.nodeTree !== 'undefined') {
+                        $nodeTree.fadeOut('slow', function () {
+                            var $tempContainer = $nodeTree.parents('.children-nodes-widget');
+                            $nodeTree.replaceWith(data.nodeTree);
+
+                            $nodeTree = $tempContainer.find('.nodetree-widget');
+                            window.Rozier.initNestables();
+                            window.Rozier.bindMainTrees();
+                            window.Rozier.lazyload.bindAjaxLink();
+                            $nodeTree.fadeIn();
+
+                            _this2.init();
+
+                            window.Rozier.lazyload.canvasLoader.hide();
+                            window.Rozier.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
+                        });
+                    }
+                }).fail(function (data) {
+                    console.error(data.responseJSON);
+                });
+            } else {
+                console.error('No node-tree available.');
+            }
+        }
+    }]);
+    return ChildrenNodesField;
+}();
+
+exports.default = ChildrenNodesField;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/cssEditor.js":
+/***/ "../Resources/app/widgets/CssEditor.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9999,7 +10388,14 @@ ChildrenNodesField.prototype.refreshNodeTree = function ($nodeTree, rootNodeId, 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = CssEditor;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -10010,106 +10406,122 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Css Editor
  */
-function CssEditor($textarea, index) {
-    var _this = this;
+var CssEditor = function () {
+    /**
+     * @param $textarea
+     * @param index
+     */
+    function CssEditor($textarea, index) {
+        (0, _classCallCheck3.default)(this, CssEditor);
 
-    _this.$textarea = $textarea;
-    _this.textarea = _this.$textarea[0];
-    _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0);
-    _this.$settingRow = _this.$textarea.parents('.setting-row').eq(0);
+        this.$textarea = $textarea;
+        this.textarea = this.$textarea[0];
+        this.$cont = this.$textarea.parents('.uk-form-row').eq(0);
+        this.$settingRow = this.$textarea.parents('.setting-row').eq(0);
 
-    var options = {
-        lineNumbers: true,
-        mode: 'css',
-        theme: 'mbo',
-        tabSize: 2,
-        lineWrapping: true,
-        dragDrop: false
-    };
+        var options = {
+            lineNumbers: true,
+            mode: 'css',
+            theme: 'mbo',
+            tabSize: 2,
+            lineWrapping: true,
+            dragDrop: false
+        };
 
-    if (_this.$settingRow.length) {
-        options.lineNumbers = false;
+        if (this.$settingRow.length) {
+            options.lineNumbers = false;
+        }
+
+        this.editor = window.CodeMirror.fromTextArea(this.textarea, options);
+
+        this.forceEditorUpdate = this.forceEditorUpdate.bind(this);
+        this.textareaChange = this.textareaChange.bind(this);
+        this.textareaFocus = this.textareaFocus.bind(this);
+        this.textareaBlur = this.textareaBlur.bind(this);
+
+        // Methods
+        this.init();
     }
 
-    _this.editor = window.CodeMirror.fromTextArea(_this.textarea, options);
+    /**
+     * Init
+     */
 
-    // Methods
-    _this.init();
-};
 
-/**
- * Init
- * @return {[type]} [description]
- */
-CssEditor.prototype.init = function () {
-    var _this = this;
+    (0, _createClass3.default)(CssEditor, [{
+        key: 'init',
+        value: function init() {
+            if (this.$textarea.length) {
+                this.editor.on('change', this.textareaChange);
+                this.editor.on('focus', this.textareaFocus);
+                this.editor.on('blur', this.textareaBlur);
 
-    if (_this.$textarea.length) {
-        _this.editor.on('change', _jquery2.default.proxy(_this.textareaChange, _this));
-        _this.editor.on('focus', _jquery2.default.proxy(_this.textareaFocus, _this));
-        _this.editor.on('blur', _jquery2.default.proxy(_this.textareaBlur, _this));
+                setTimeout(function () {
+                    (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', this.forceEditorUpdate);
+                    this.forceEditorUpdate();
+                }, 300);
+            }
+        }
+    }, {
+        key: 'forceEditorUpdate',
+        value: function forceEditorUpdate() {
+            this.editor.refresh();
+        }
 
-        var forceEditorUpdateProxy = _jquery2.default.proxy(_this.forceEditorUpdate, _this);
-        setTimeout(function () {
-            (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy);
-            _this.forceEditorUpdate();
-        }, 300);
-    }
-};
+        /**
+         * Textarea change
+         */
 
-CssEditor.prototype.forceEditorUpdate = function (event) {
-    var _this = this;
-    // console.log('Refresh Css editor');
-    _this.editor.refresh();
-};
+    }, {
+        key: 'textareaChange',
+        value: function textareaChange() {
+            this.editor.save();
 
-/**
- * Textarea change
- * @return {[type]} [description]
- */
-CssEditor.prototype.textareaChange = function (e) {
-    var _this = this;
+            // if (this.limit) {
+            //     setTimeout(function () {
+            //         let textareaVal = this.editor.getValue()
+            //         let textareaValStripped = stripTags(textareaVal)
+            //         let textareaValLength = textareaValStripped.length
+            //     }, 100)
+            // }
+        }
 
-    _this.editor.save();
+        /**
+         * Textarea focus
+         */
 
-    // if (_this.limit) {
-    //     setTimeout(function () {
-    //         var textareaVal = _this.editor.getValue()
-    //         var textareaValStripped = stripTags(textareaVal)
-    //         var textareaValLength = textareaValStripped.length
-    //     }, 100)
-    // }
-};
+    }, {
+        key: 'textareaFocus',
+        value: function textareaFocus() {
+            this.$cont.addClass('form-col-focus');
+        }
 
-/**
- * Textarea focus
- * @return {[type]} [description]
- */
-CssEditor.prototype.textareaFocus = function () {
-    var _this = this;
+        /**
+         * Textarea focus out
+         */
 
-    _this.$cont.addClass('form-col-focus');
-};
+    }, {
+        key: 'textareaBlur',
+        value: function textareaBlur() {
+            this.$cont.removeClass('form-col-focus');
+        }
 
-/**
- * Textarea focus out
- * @return {[type]} [description]
- */
-CssEditor.prototype.textareaBlur = function () {
-    var _this = this;
+        /**
+         * Window resize callback
+         */
 
-    _this.$cont.removeClass('form-col-focus');
-};
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return CssEditor;
+}();
 
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-CssEditor.prototype.resize = function () {};
+exports.default = CssEditor;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/folderAutocomplete.js":
+/***/ "../Resources/app/widgets/FolderAutocomplete.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10118,7 +10530,14 @@ CssEditor.prototype.resize = function () {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = FolderAutocomplete;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -10126,57 +10545,70 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function FolderAutocomplete() {
-    function split(val) {
-        return val.split(/,\s*/);
-    }
+var FolderAutocomplete = function () {
+    function FolderAutocomplete() {
+        (0, _classCallCheck3.default)(this, FolderAutocomplete);
 
-    function extractLast(term) {
-        return split(term).pop();
-    }
+        var _this = this;
 
-    (0, _jquery2.default)('.rz-folder-autocomplete')
-    // don't navigate away from the field on tab when selecting an item
-    .bind('keydown', function (event) {
-        if (event.keyCode === _jquery2.default.ui.keyCode.TAB && (0, _jquery2.default)(this).autocomplete('instance').menu.active) {
-            event.preventDefault();
-        }
-    }).autocomplete({
-        source: function source(request, response) {
-            _jquery2.default.getJSON(window.Rozier.routes.foldersAjaxSearch, {
-                '_action': 'folderAutocomplete',
-                '_token': window.Rozier.ajaxToken,
-                'search': extractLast(request.term)
-            }, response);
-        },
-        search: function search() {
-            // custom minLength
-            var term = extractLast(this.value);
-            if (term.length < 2) {
+        (0, _jquery2.default)('.rz-folder-autocomplete')
+        // don't navigate away from the field on tab when selecting an item
+        .bind('keydown', function (event) {
+            if (event.keyCode === _jquery2.default.ui.keyCode.TAB && (0, _jquery2.default)(this).autocomplete('instance').menu.active) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            source: function source(request, response) {
+                _jquery2.default.getJSON(window.Rozier.routes.foldersAjaxSearch, {
+                    '_action': 'folderAutocomplete',
+                    '_token': window.Rozier.ajaxToken,
+                    'search': _this.extractLast(request.term)
+                }, response);
+            },
+            search: function search() {
+                // custom minLength
+                var term = _this.extractLast(this.value);
+                if (term.length < 2) {
+                    return false;
+                }
+            },
+            focus: function focus() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function select(event, ui) {
+                var terms = _this.split(this.value);
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push(ui.item.value);
+                // add placeholder to get the comma-and-space at the end
+                terms.push('');
+                this.value = terms.join(', ');
                 return false;
             }
-        },
-        focus: function focus() {
-            // prevent value inserted on focus
-            return false;
-        },
-        select: function select(event, ui) {
-            var terms = split(this.value);
-            // remove the current input
-            terms.pop();
-            // add the selected item
-            terms.push(ui.item.value);
-            // add placeholder to get the comma-and-space at the end
-            terms.push('');
-            this.value = terms.join(', ');
-            return false;
+        });
+    }
+
+    (0, _createClass3.default)(FolderAutocomplete, [{
+        key: 'split',
+        value: function split(val) {
+            return val.split(/,\s*/);
         }
-    });
-}
+    }, {
+        key: 'extractLast',
+        value: function extractLast(term) {
+            return this.split(term).pop();
+        }
+    }]);
+    return FolderAutocomplete;
+}();
+
+exports.default = FolderAutocomplete;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/geotagField.js":
+/***/ "../Resources/app/widgets/GeotagField.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10185,264 +10617,1042 @@ function FolderAutocomplete() {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.initializeGeotagFields = undefined;
 
 var _stringify = __webpack_require__("../node_modules/babel-runtime/core-js/json/stringify.js");
 
 var _stringify2 = _interopRequireDefault(_stringify);
 
-exports.default = GeotagField;
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _multiGeotagField = __webpack_require__("../Resources/app/widgets/multiGeotagField.js");
-
-var _multiGeotagField2 = _interopRequireDefault(_multiGeotagField);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function GeotagField() {
-    var _this = this;
+var GeotagField = function () {
+    function GeotagField() {
+        (0, _classCallCheck3.default)(this, GeotagField);
 
-    _this.$fields = (0, _jquery2.default)('input.rz-geotag-field');
-    _this.geocoder = null;
+        this.$fields = (0, _jquery2.default)('input.rz-geotag-field');
+        this.geocoder = null;
 
-    if (_this.$fields.length && window.Rozier.googleClientId !== '') {
-        _this.init();
-    }
-}
-
-GeotagField.prototype.init = function () {
-    var _this = this;
-
-    if (!window.Rozier.gMapLoaded && !window.Rozier.gMapLoading) {
-        window.Rozier.gMapLoading = true;
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = '//maps.googleapis.com/maps/api/js?key=' + window.Rozier.googleClientId + '&callback=initializeGeotagFields';
-        document.body.appendChild(script);
-    } else if (window.Rozier.gMapLoaded && !window.Rozier.gMapLoading) {
-        _this.bindFields();
-    }
-};
-
-GeotagField.prototype.bindFields = function () {
-    var _this = this;
-
-    _this.geocoder = new window.google.maps.Geocoder();
-
-    _this.$fields.each(function (index, element) {
-        _this.bindSingleField(element);
-    });
-};
-
-GeotagField.prototype.bindSingleField = function (element) {
-    var _this = this;
-    var $input = (0, _jquery2.default)(element);
-    var $label = $input.parent().find('.uk-form-label');
-    var labelText = $label[0].innerHTML;
-    var jsonCode = null;
-
-    if (window.Rozier.defaultMapLocation) {
-        jsonCode = window.Rozier.defaultMapLocation;
-    } else {
-        jsonCode = { 'lat': 45.769785, 'lng': 4.833967, 'zoom': 14 // default location
-        };
+        if (this.$fields.length && window.Rozier.googleClientId !== '') {
+            this.init();
+        }
     }
 
-    var fieldId = 'geotag-canvas-' + GeotagField.uniqid();
-    var fieldAddressId = fieldId + '-address';
-    var resetButtonId = fieldId + '-reset';
+    (0, _createClass3.default)(GeotagField, [{
+        key: 'init',
+        value: function init() {
+            if (!window.Rozier.gMapLoaded && !window.Rozier.gMapLoading) {
+                window.Rozier.gMapLoading = true;
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = '//maps.googleapis.com/maps/api/js?key=' + window.Rozier.googleClientId + '&callback=initializeGeotagFields';
+                document.body.appendChild(script);
+            } else if (window.Rozier.gMapLoaded && !window.Rozier.gMapLoading && !this.$fields.hasClass('is-enable')) {
+                this.$fields.addClass('is-enable');
+                this.bindFields();
+            }
+        }
+    }, {
+        key: 'bindFields',
+        value: function bindFields() {
+            var _this = this;
 
-    var mapOptions = {
-        center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
-        zoom: jsonCode.zoom,
-        scrollwheel: false,
-        styles: window.Rozier.mapsStyle
+            this.geocoder = new window.google.maps.Geocoder();
+            this.$fields.each(function (index, element) {
+                _this.bindSingleField(element);
+            });
+        }
+    }, {
+        key: 'bindSingleField',
+        value: function bindSingleField(element) {
+            var $input = (0, _jquery2.default)(element);
+            var $label = $input.parent().find('.uk-form-label');
+            var labelText = $label[0].innerHTML;
+            var jsonCode = null;
 
-        /*
-         * prepare DOM
+            if (window.Rozier.defaultMapLocation) {
+                jsonCode = window.Rozier.defaultMapLocation;
+            } else {
+                jsonCode = { 'lat': 45.769785, 'lng': 4.833967, 'zoom': 14 // default location
+                };
+            }
+
+            var fieldId = 'geotag-canvas-' + this.uniqid();
+            var fieldAddressId = fieldId + '-address';
+            var resetButtonId = fieldId + '-reset';
+
+            var mapOptions = {
+                center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
+                zoom: jsonCode.zoom,
+                scrollwheel: false,
+                styles: window.Rozier.mapsStyle
+
+                /*
+                 * prepare DOM
+                 */
+            };$input.hide();
+            $label.hide();
+            $input.attr('data-geotag-canvas', fieldId);
+            $input.after('<div class="rz-geotag-canvas" id="' + fieldId + '" style="width: 100%; height: 400px;"></div>');
+
+            // Geocode input text
+            var metaDOM = ['<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">', '<ul class="uk-navbar-nav">', '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-marker"></i>', '<li class="uk-navbar-brand label">' + labelText + '</li>', '</ul>', '<div class="uk-navbar-content uk-navbar-flip">', '<div class="geotag-widget-quick-creation uk-button-group">', '<input class="rz-geotag-address" id="' + fieldAddressId + '" type="text" value="" />', '<a id="' + resetButtonId + '" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="' + window.Rozier.messages.geotag.resetMarker + '" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>', '</div>', '</div>', '</nav>'].join('');
+
+            $input.after(metaDOM);
+
+            var $geocodeInput = (0, _jquery2.default)('#' + fieldAddressId);
+            $geocodeInput.attr('placeholder', window.Rozier.messages.geotag.typeAnAddress);
+            // Reset button
+            var $geocodeReset = (0, _jquery2.default)('#' + resetButtonId);
+            $geocodeReset.hide();
+
+            /*
+             * Prepare map and marker
+             */
+            var map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions);
+            var marker = null;
+
+            if ($input.val() !== '') {
+                try {
+                    jsonCode = JSON.parse($input.val());
+                    marker = this.createMarker(jsonCode, $input, map);
+                    $geocodeReset.show();
+                } catch (e) {
+                    $input.show();
+                    (0, _jquery2.default)(document.getElementById(fieldId)).hide();
+
+                    return false;
+                }
+            } else {
+                marker = new window.google.maps.Marker({
+                    // map:map,
+                    draggable: true,
+                    position: mapOptions.center,
+                    animation: window.google.maps.Animation.DROP,
+                    icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+                });
+            }
+
+            window.google.maps.event.addListener(marker, 'dragend', _jquery2.default.proxy(this.setMarkerEvent, this, marker, $input, $geocodeReset, map));
+            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.setMarkerEvent, this, marker, $input, $geocodeReset, map));
+
+            $geocodeInput.on('keypress', _jquery2.default.proxy(this.requestGeocode, this, marker, $input, $geocodeReset, map));
+            $geocodeReset.on('click', _jquery2.default.proxy(this.resetMarker, this, marker, $input, $geocodeReset, map));
+
+            window.Rozier.$window.on('resize', _jquery2.default.proxy(this.resetMap, this, map, marker, mapOptions));
+            this.resetMap(map, marker, mapOptions, null);
+        }
+    }, {
+        key: 'resetMap',
+        value: function resetMap(map, marker, mapOptions, event) {
+            window.setTimeout(function () {
+                window.google.maps.event.trigger(map, 'resize');
+
+                if (marker !== null) {
+                    map.panTo(marker.getPosition());
+                } else {
+                    map.panTo(mapOptions.center);
+                }
+            }, 300);
+        }
+
+        /**
+         * @param {Object} marker
+         * @param {jQuery} $input
+         * @param $geocodeReset
+         * @param {Map} map
+         * @param {Event} event
          */
-    };$input.hide();
-    $label.hide();
-    $input.attr('data-geotag-canvas', fieldId);
-    $input.after('<div class="rz-geotag-canvas" id="' + fieldId + '" style="width: 100%; height: 400px;"></div>');
 
-    // Geocode input text
-    var metaDOM = ['<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">', '<ul class="uk-navbar-nav">', '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-marker"></i>', '<li class="uk-navbar-brand label">' + labelText + '</li>', '</ul>', '<div class="uk-navbar-content uk-navbar-flip">', '<div class="geotag-widget-quick-creation uk-button-group">', '<input class="rz-geotag-address" id="' + fieldAddressId + '" type="text" value="" />', '<a id="' + resetButtonId + '" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="' + window.Rozier.messages.geotag.resetMarker + '" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>', '</div>', '</div>', '</nav>'].join('');
+    }, {
+        key: 'resetMarker',
+        value: function resetMarker(marker, $input, $geocodeReset, map, event) {
+            marker.setMap(null);
+            $input.val('');
 
-    $input.after(metaDOM);
-
-    var $geocodeInput = (0, _jquery2.default)('#' + fieldAddressId);
-    $geocodeInput.attr('placeholder', window.Rozier.messages.geotag.typeAnAddress);
-    // Reset button
-    var $geocodeReset = (0, _jquery2.default)('#' + resetButtonId);
-    $geocodeReset.hide();
-
-    /*
-     * Prepare map and marker
-     */
-    var map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions);
-    var marker = null;
-
-    if ($input.val() !== '') {
-        try {
-            jsonCode = JSON.parse($input.val());
-            marker = _this.createMarker(jsonCode, $input, map);
-            $geocodeReset.show();
-        } catch (e) {
-            $input.show();
-            (0, _jquery2.default)(document.getElementById(fieldId)).hide();
+            $geocodeReset.hide();
 
             return false;
         }
-    } else {
-        marker = new window.google.maps.Marker({
-            // map:map,
-            draggable: true,
-            position: mapOptions.center,
-            animation: window.google.maps.Animation.DROP,
-            icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
-        });
-    }
 
-    window.google.maps.event.addListener(marker, 'dragend', _jquery2.default.proxy(_this.setMarkerEvent, _this, marker, $input, $geocodeReset, map));
-    window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(_this.setMarkerEvent, _this, marker, $input, $geocodeReset, map));
+        /**
+         * @param {Object} marker
+         * @param {jQuery} $input
+         * @param $geocodeReset
+         * @param {Map} map
+         * @param {Event} event
+         */
 
-    $geocodeInput.on('keypress', _jquery2.default.proxy(_this.requestGeocode, _this, marker, $input, $geocodeReset, map));
-    $geocodeReset.on('click', _jquery2.default.proxy(_this.resetMarker, _this, marker, $input, $geocodeReset, map));
-
-    window.Rozier.$window.on('resize', _jquery2.default.proxy(_this.resetMap, this, map, marker, mapOptions));
-    _this.resetMap(map, marker, mapOptions, null);
-};
-
-GeotagField.prototype.resetMap = function (map, marker, mapOptions, event) {
-    window.setTimeout(function () {
-        window.google.maps.event.trigger(map, 'resize');
-
-        if (marker !== null) {
-            map.panTo(marker.getPosition());
-        } else {
-            map.panTo(mapOptions.center);
+    }, {
+        key: 'setMarkerEvent',
+        value: function setMarkerEvent(marker, $input, $geocodeReset, map, event) {
+            this.setMarker(marker, $input, $geocodeReset, map, event.latLng);
         }
-    }, 300);
-};
 
-/**
- * @param Marker marker
- * @param jQuery DOM $input
- * @param Map map
- * @param Event event
- */
-GeotagField.prototype.resetMarker = function (marker, $input, $geocodeReset, map, event) {
-    marker.setMap(null);
-    $input.val('');
+        /**
+         * @param {Object} marker
+         * @param $input
+         * @param $geocodeReset
+         * @param {Map} map
+         * @param {Object} latlng
+         */
 
-    $geocodeReset.hide();
+    }, {
+        key: 'setMarker',
+        value: function setMarker(marker, $input, $geocodeReset, map, latlng) {
+            marker.setPosition(latlng);
+            marker.setMap(map);
 
-    return false;
-};
-/**
- * @param Marker marker
- * @param jQuery DOM $input
- * @param Map map
- * @param Event event
- */
-GeotagField.prototype.setMarkerEvent = function (marker, $input, $geocodeReset, map, event) {
-    var _this = this;
+            map.panTo(latlng);
 
-    _this.setMarker(marker, $input, $geocodeReset, map, event.latLng);
-};
+            var geoCode = {
+                'lat': latlng.lat(),
+                'lng': latlng.lng(),
+                'zoom': map.getZoom()
+            };
 
-/**
- * @param Marker marker
- * @param jQuery DOM $input
- * @param Map map
- * @param Event event
- */
-GeotagField.prototype.setMarker = function (marker, $input, $geocodeReset, map, latlng) {
-    marker.setPosition(latlng);
-    marker.setMap(map);
+            $input.val((0, _stringify2.default)(geoCode));
 
-    map.panTo(latlng);
+            $geocodeReset.show();
+        }
 
-    var geoCode = {
-        'lat': latlng.lat(),
-        'lng': latlng.lng(),
-        'zoom': map.getZoom()
-    };
+        /**
+         * @param {Object} geocode
+         * @param {jQuery} $input
+         * @param {Map} map
+         *
+         * @return Marker
+         */
 
-    $input.val((0, _stringify2.default)(geoCode));
+    }, {
+        key: 'createMarker',
+        value: function createMarker(geocode, $input, map) {
+            var latlng = new window.google.maps.LatLng(geocode.lat, geocode.lng);
+            var marker = new window.google.maps.Marker({
+                map: map,
+                draggable: true,
+                animation: window.google.maps.Animation.DROP,
+                position: latlng,
+                icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+            });
 
-    $geocodeReset.show();
-};
+            map.panTo(latlng);
+            map.setZoom(geocode.zoom);
 
-/**
- * @param  Object geocode
- * @param  jQuery DOM $input
- * @param  Map map
- *
- * @return Marker
- */
-GeotagField.prototype.createMarker = function (geocode, $input, map) {
-    var latlng = new window.google.maps.LatLng(geocode.lat, geocode.lng);
-    var marker = new window.google.maps.Marker({
-        map: map,
-        draggable: true,
-        animation: window.google.maps.Animation.DROP,
-        position: latlng,
-        icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
-    });
-
-    map.panTo(latlng);
-    map.setZoom(geocode.zoom);
-
-    /*
-     * Add custom fields to markers
-     */
-    marker.zoom = geocode.zoom;
-    if (typeof geocode.name !== 'undefined') {
-        marker.name = geocode.name;
-    }
-
-    return marker;
-};
-
-GeotagField.prototype.requestGeocode = function (marker, $input, $geocodeReset, map, event) {
-    var _this = this;
-
-    var address = event.currentTarget.value;
-
-    if (event.which === 13) {
-        event.preventDefault();
-
-        _this.geocoder.geocode({ 'address': address }, function (results, status) {
-            if (status === window.google.maps.GeocoderStatus.OK) {
-                _this.setMarker(marker, $input, $geocodeReset, map, results[0].geometry.location);
-            } else {
-                console.err('Geocode was not successful for the following reason: ' + status);
+            /*
+             * Add custom fields to markers
+             */
+            marker.zoom = geocode.zoom;
+            if (typeof geocode.name !== 'undefined') {
+                marker.name = geocode.name;
             }
-        });
 
-        return false;
+            return marker;
+        }
+    }, {
+        key: 'requestGeocode',
+        value: function requestGeocode(marker, $input, $geocodeReset, map, event) {
+            var _this2 = this;
+
+            var address = event.currentTarget.value;
+
+            if (event.which === 13) {
+                event.preventDefault();
+
+                this.geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status === window.google.maps.GeocoderStatus.OK) {
+                        _this2.setMarker(marker, $input, $geocodeReset, map, results[0].geometry.location);
+                    } else {
+                        console.err('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+
+                return false;
+            }
+        }
+    }, {
+        key: 'uniqid',
+        value: function uniqid() {
+            var n = new Date();
+            return n.getTime();
+        }
+    }]);
+    return GeotagField;
+}();
+
+exports.default = GeotagField;
+
+/***/ }),
+
+/***/ "../Resources/app/widgets/JsonEditor.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Json Editor
+ */
+var JsonEditor = function () {
+    function JsonEditor($textarea, index) {
+        (0, _classCallCheck3.default)(this, JsonEditor);
+
+        this.$textarea = $textarea;
+        this.textarea = this.$textarea[0];
+        this.$cont = this.$textarea.parents('.uk-form-row').eq(0);
+        this.$settingRow = this.$textarea.parents('.setting-row').eq(0);
+
+        var options = {
+            lineNumbers: true,
+            mode: { name: 'javascript', json: true },
+            theme: 'mbo',
+            tabSize: 2,
+            lineWrapping: true,
+            dragDrop: false
+        };
+
+        if (this.$settingRow.length) {
+            options.lineNumbers = false;
+        }
+
+        this.editor = window.CodeMirror.fromTextArea(this.textarea, options);
+
+        this.textareaChange = this.textareaChange.bind(this);
+        this.textareaFocus = this.textareaFocus.bind(this);
+        this.textareaBlur = this.textareaBlur.bind(this);
+        this.forceEditorUpdate = this.forceEditorUpdate.bind(this);
+
+        // Methods
+        this.init();
     }
-};
 
-var initializeGeotagFields = exports.initializeGeotagFields = function initializeGeotagFields() {
-    window.Rozier.gMapLoaded = true;
-    window.Rozier.gMapLoading = false;
+    /**
+     * Init
+     */
 
-    /* eslint-disable no-new */
-    new GeotagField();
-    new _multiGeotagField2.default();
-};
 
-GeotagField.uniqid = function () {
-    var n = new Date();
-    return n.getTime();
-};
+    (0, _createClass3.default)(JsonEditor, [{
+        key: 'init',
+        value: function init() {
+            var _this = this;
+
+            if (this.$textarea.length) {
+                this.editor.on('change', this.textareaChange);
+                this.editor.on('focus', this.textareaFocus);
+                this.editor.on('blur', this.textareaBlur);
+
+                window.setTimeout(function () {
+                    (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', _this.forceEditorUpdate);
+                    _this.forceEditorUpdate();
+                }, 300);
+            }
+        }
+    }, {
+        key: 'forceEditorUpdate',
+        value: function forceEditorUpdate() {
+            this.editor.refresh();
+        }
+
+        /**
+         * Textarea change
+         */
+
+    }, {
+        key: 'textareaChange',
+        value: function textareaChange() {
+            this.editor.save();
+
+            // if (this.limit) {
+            //     setTimeout(function () {
+            //         let textareaVal = this.editor.getValue()
+            //         let textareaValStripped = stripTags(textareaVal)
+            //         let textareaValLength = textareaValStripped.length
+            //     }, 100)
+            // }
+        }
+
+        /**
+         * Textarea focus
+         */
+
+    }, {
+        key: 'textareaFocus',
+        value: function textareaFocus() {
+            this.$cont.addClass('form-col-focus');
+        }
+
+        /**
+         * Textarea focus out
+         */
+
+    }, {
+        key: 'textareaBlur',
+        value: function textareaBlur() {
+            this.$cont.removeClass('form-col-focus');
+        }
+
+        /**
+         * Window resize callback
+         */
+
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return JsonEditor;
+}();
+
+exports.default = JsonEditor;
+
+/***/ }),
+
+/***/ "../Resources/app/widgets/MultiGeotagField.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _stringify = __webpack_require__("../node_modules/babel-runtime/core-js/json/stringify.js");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _getPrototypeOf = __webpack_require__("../node_modules/babel-runtime/core-js/object/get-prototype-of.js");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__("../node_modules/babel-runtime/helpers/possibleConstructorReturn.js");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__("../node_modules/babel-runtime/helpers/inherits.js");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _GeotagField2 = __webpack_require__("../Resources/app/widgets/GeotagField.js");
+
+var _GeotagField3 = _interopRequireDefault(_GeotagField2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MultiGeotagField = function (_GeotagField) {
+    (0, _inherits3.default)(MultiGeotagField, _GeotagField);
+
+    function MultiGeotagField() {
+        (0, _classCallCheck3.default)(this, MultiGeotagField);
+
+        var _this2 = (0, _possibleConstructorReturn3.default)(this, (MultiGeotagField.__proto__ || (0, _getPrototypeOf2.default)(MultiGeotagField)).call(this));
+
+        _this2.$fields = (0, _jquery2.default)('.rz-multi-geotag-field');
+        _this2.geocoder = null;
+
+        if (_this2.$fields.length && window.Rozier.googleClientId !== '') {
+            _this2.init();
+        }
+        return _this2;
+    }
+
+    /**
+     * @param markers
+     * @param $input
+     * @param $geocodeReset
+     * @param map
+     * @param $selector
+     * @param event
+     * @returns {boolean}
+     */
+
+
+    (0, _createClass3.default)(MultiGeotagField, [{
+        key: 'resetMarker',
+        value: function resetMarker(markers, $input, $geocodeReset, map, $selector, event) {
+            $input.val('');
+            for (var i = markers.length - 1; i >= 0; i--) {
+                markers[i].setMap(null);
+                markers[i] = null;
+            }
+            markers = [];
+
+            $geocodeReset.hide();
+            this.syncSelector($selector, markers, map, $input);
+
+            return false;
+        }
+    }, {
+        key: 'bindSingleField',
+        value: function bindSingleField(element) {
+            var $input = (0, _jquery2.default)(element);
+            var $label = $input.parent().find('.uk-form-label');
+            var labelText = $label[0].innerHTML;
+            var jsonCode = { 'lat': 45.769785, 'lng': 4.833967, 'zoom': 14 // default location
+            };var fieldId = 'geotag-canvas-' + this.uniqid();
+            var fieldAddressId = fieldId + '-address';
+            var resetButtonId = fieldId + '-reset';
+            var mapOptions = {
+                center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
+                zoom: jsonCode.zoom,
+                scrollwheel: false,
+                styles: window.Rozier.mapsStyle
+
+                // Prepare DOM
+            };$input.hide();
+            $label.hide();
+            $input.attr('data-geotag-canvas', fieldId);
+
+            // Geocode input text
+            var metaDOM = ['<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">', '<ul class="uk-navbar-nav">', '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-multi-marker"></i>', '<li class="uk-navbar-brand label">' + labelText + '</li>', '</ul>', '<div class="uk-navbar-content uk-navbar-flip">', '<div class="geotag-widget-quick-creation uk-button-group">', '<input class="rz-geotag-address" id="' + fieldAddressId + '" type="text" value="" />', '<a id="' + resetButtonId + '" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="' + window.Rozier.messages.geotag.resetMarker + '" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>', '</div>', '</div>', '</nav>', '<div class="multi-geotag-group">', '<ul class="multi-geotag-list-markers">', '</ul>', '<div class="rz-geotag-canvas" id="' + fieldId + '"></div>', '</div>'].join('');
+
+            $input.after(metaDOM);
+
+            var $geocodeInput = (0, _jquery2.default)('#' + fieldAddressId);
+            $geocodeInput.attr('placeholder', window.Rozier.messages.geotag.typeAnAddress);
+            // Reset button
+            var $geocodeReset = (0, _jquery2.default)('#' + resetButtonId);
+            $geocodeReset.hide();
+
+            /*
+             * Prepare map and marker
+             */
+            var map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions);
+            var markers = [];
+            var $selector = $input.parent().find('.multi-geotag-list-markers');
+
+            if ($input.val() !== '') {
+                try {
+                    var geocodes = JSON.parse($input.val());
+                    var geocodeslength = geocodes.length;
+                    for (var i = 0; i < geocodeslength; i++) {
+                        markers[i] = this.createMarker(geocodes[i], $input, map);
+                        window.google.maps.event.addListener(markers[i], 'dragend', _jquery2.default.proxy(this.setMarkerEvent, this, markers[i], markers, $input, $geocodeReset, map));
+                    }
+                    $geocodeReset.show();
+                } catch (e) {
+                    $input.show();
+                    (0, _jquery2.default)(document.getElementById(fieldId)).hide();
+
+                    return false;
+                }
+            }
+
+            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.setMarkerEvent, this, null, markers, $input, $geocodeReset, map));
+            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.syncSelector, this, $selector, markers, map, $input));
+
+            $geocodeInput.on('keypress', _jquery2.default.proxy(this.requestGeocode, this, markers, $input, $geocodeReset, map, $selector));
+            $geocodeReset.on('click', _jquery2.default.proxy(this.resetMarker, this, markers, $input, $geocodeReset, map, $selector));
+            $geocodeReset.on('click', _jquery2.default.proxy(this.syncSelector, this, $selector, markers, map, $input));
+
+            window.Rozier.$window.on('resize', _jquery2.default.proxy(this.resetMap, this, map, markers, mapOptions));
+            this.resetMap(map, markers, mapOptions, null);
+            this.syncSelector($selector, markers, map, $input);
+        }
+    }, {
+        key: 'syncSelector',
+        value: function syncSelector($selector, markers, map, $input) {
+            var _this = this;
+
+            $selector.empty();
+            var markersLength = markers.length;
+            for (var i = 0; i < markersLength; i++) {
+                if (markers[i] !== null) {
+                    var geocode = this.getGeocodeFromMarker(markers[i]);
+
+                    $selector.append(['<li>', '<span class="multi-geotag-marker-name">', geocode.name ? geocode.name : '#' + i, '</span>', '<a class="button rz-multi-geotag-center" data-geocode-id="' + i + '" data-geocode="' + (0, _stringify2.default)(geocode) + '"><i class="uk-icon-rz-marker"></i></a>', '<a class="button rz-multi-geotag-remove" data-geocode-id="' + i + '"><i class="uk-icon-rz-trash-o"></i></a>', '</li>'].join(''));
+
+                    var $centerBtn = $selector.find('.rz-multi-geotag-center[data-geocode-id="' + i + '"]');
+                    var $removeBtn = $selector.find('.rz-multi-geotag-remove[data-geocode-id="' + i + '"]');
+
+                    $centerBtn.on('click', _jquery2.default.proxy(this.centerMap, _this, map, markers[i]));
+                    $removeBtn.on('click', _jquery2.default.proxy(this.removeMarker, _this, map, markers, i, $selector, $input));
+                }
+            }
+        }
+    }, {
+        key: 'removeMarker',
+        value: function removeMarker(map, markers, index, $selector, $input, event) {
+            markers[index].setMap(null);
+            markers[index] = null;
+
+            this.syncSelector($selector, markers, map, $input);
+            this.writeMarkers(markers, $input);
+
+            return false;
+        }
+    }, {
+        key: 'getGeocodeFromMarker',
+        value: function getGeocodeFromMarker(marker) {
+            return {
+                'lat': marker.getPosition().lat(),
+                'lng': marker.getPosition().lng(),
+                'zoom': marker.zoom,
+                'name': marker.name
+            };
+        }
+    }, {
+        key: 'resetMap',
+        value: function resetMap(map, markers, mapOptions, event) {
+            var _this3 = this;
+
+            window.setTimeout(function () {
+                window.google.maps.event.trigger(map, 'resize');
+
+                if (typeof markers !== 'undefined' && markers.length > 0) {
+                    map.fitBounds(_this3.getMediumLatLng(markers));
+                } else {
+                    map.panTo(mapOptions.center);
+                }
+            }, 300);
+        }
+    }, {
+        key: 'centerMap',
+        value: function centerMap(map, marker, event) {
+            window.setTimeout(function () {
+                window.google.maps.event.trigger(map, 'resize');
+
+                if (typeof marker !== 'undefined') {
+                    map.panTo(marker.getPosition());
+                }
+                if (typeof marker.zoom !== 'undefined') {
+                    map.setZoom(marker.zoom);
+                }
+            }, 300);
+
+            return false;
+        }
+    }, {
+        key: 'getMediumLatLng',
+        value: function getMediumLatLng(markers) {
+            var bounds = new window.google.maps.LatLngBounds();
+            for (var index in markers) {
+                bounds.extend(markers[index].getPosition());
+            }
+
+            return bounds;
+        }
+
+        /**
+         * @param marker
+         * @param markers
+         * @param $input
+         * @param $geocodeReset
+         * @param map
+         * @param event
+         */
+
+    }, {
+        key: 'setMarkerEvent',
+        value: function setMarkerEvent(marker, markers, $input, $geocodeReset, map, event) {
+            this.setMarker(marker, markers, $input, $geocodeReset, map, event.latLng);
+        }
+
+        /**
+         * @param marker
+         * @param markers
+         * @param $input
+         * @param $geocodeReset
+         * @param map
+         * @param latlng
+         * @param name
+         * @returns {Object}
+         */
+
+    }, {
+        key: 'setMarker',
+        value: function setMarker(marker, markers, $input, $geocodeReset, map, latlng, name) {
+            if (marker === null) {
+                marker = new window.google.maps.Marker({
+                    map: map,
+                    draggable: true,
+                    animation: window.google.maps.Animation.DROP,
+                    position: latlng,
+                    icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+                });
+            }
+
+            marker.setPosition(latlng);
+            marker.setMap(map);
+            marker.zoom = map.getZoom();
+            marker.name = name;
+            map.panTo(latlng);
+            markers.push(marker);
+
+            this.writeMarkers(markers, $input);
+
+            $geocodeReset.show();
+
+            return marker;
+        }
+    }, {
+        key: 'writeMarkers',
+        value: function writeMarkers(markers, $input) {
+            var geocodes = [];
+
+            for (var i = markers.length - 1; i >= 0; i--) {
+                if (markers[i] !== null) {
+                    geocodes.push(this.getGeocodeFromMarker(markers[i]));
+                }
+            }
+
+            $input.val((0, _stringify2.default)(geocodes));
+        }
+    }, {
+        key: 'requestGeocode',
+        value: function requestGeocode(markers, $input, $geocodeReset, map, $selector, event) {
+            var _this4 = this;
+
+            var address = event.currentTarget.value;
+
+            if (event.which === 13) {
+                event.preventDefault();
+
+                this.geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status === window.google.maps.GeocoderStatus.OK) {
+                        _this4.setMarker(null, markers, $input, $geocodeReset, map, results[0].geometry.location, address);
+                        _this4.syncSelector($selector, markers, map, $input);
+                    } else {
+                        console.err('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+
+                return false;
+            }
+        }
+    }]);
+    return MultiGeotagField;
+}(_GeotagField3.default);
+
+exports.default = MultiGeotagField;
+
+/***/ }),
+
+/***/ "../Resources/app/widgets/StackNodeTree.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _NodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/NodesBulk.js");
+
+var _NodesBulk2 = _interopRequireDefault(_NodesBulk);
+
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
+
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StackNodeTree = function () {
+    function StackNodeTree() {
+        (0, _classCallCheck3.default)(this, StackNodeTree);
+
+        this.$page = (0, _jquery2.default)('.stack-tree').eq(0);
+        this.currentRequest = null;
+        this.$quickAddNodeButtons = this.$page.find('.stack-tree-quick-creation a');
+        this.$switchLangButtons = this.$page.find('.nodetree-langs a');
+        this.$nodeTree = this.$page.find('.root-tree').eq(0);
+
+        this.onQuickAddClick = this.onQuickAddClick.bind(this);
+        this.onChangeLangClick = this.onChangeLangClick.bind(this);
+
+        this.init();
+    }
+
+    /**
+     * @return {Number}
+     */
+
+
+    (0, _createClass3.default)(StackNodeTree, [{
+        key: 'getCurrentPage',
+        value: function getCurrentPage() {
+            this.$nodeTree = this.$page.find('.root-tree').eq(0);
+            var currentPage = parseInt(this.$nodeTree.attr('data-page'));
+            if (isNaN(currentPage)) {
+                return 1;
+            }
+
+            return currentPage;
+        }
+
+        /**
+         * @return {Number|null}
+         */
+
+    }, {
+        key: 'getTranslationId',
+        value: function getTranslationId() {
+            this.$nodeTree = this.$page.find('.root-tree').eq(0);
+            var currentTranslationId = parseInt(this.$nodeTree.attr('data-translation-id'));
+            if (isNaN(currentTranslationId)) {
+                return null;
+            }
+
+            return currentTranslationId;
+        }
+    }, {
+        key: 'init',
+        value: function init() {
+            if (this.$quickAddNodeButtons.length) {
+                this.$quickAddNodeButtons.off('click', this.onQuickAddClick);
+                this.$quickAddNodeButtons.on('click', this.onQuickAddClick);
+            }
+            if (this.$switchLangButtons.length) {
+                this.$switchLangButtons.off('click', this.onChangeLangClick);
+                this.$switchLangButtons.on('click', this.onChangeLangClick);
+            }
+        }
+    }, {
+        key: 'onChangeLangClick',
+        value: function onChangeLangClick(event) {
+            event.preventDefault();
+
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+            var translationId = parseInt($link.attr('data-translation-id'));
+            var tagId = $link.attr('data-filter-tag');
+            this.refreshNodeTree(parentNodeId, translationId, tagId);
+            return false;
+        }
+
+        /**
+         * @param {Event} event
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'onQuickAddClick',
+        value: function onQuickAddClick(event) {
+            var _this = this;
+
+            if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                this.currentRequest.abort();
+            }
+
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var nodeTypeId = parseInt($link.attr('data-children-node-type'));
+            var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+
+            if (nodeTypeId > 0 && parentNodeId > 0) {
+                var postData = {
+                    '_token': window.Rozier.ajaxToken,
+                    '_action': 'quickAddNode',
+                    'nodeTypeId': nodeTypeId,
+                    'parentNodeId': parentNodeId,
+                    'pushTop': 1
+                };
+
+                if ($link.attr('data-filter-tag')) {
+                    postData.tagId = parseInt($link.attr('data-filter-tag'));
+                }
+
+                this.currentRequest = _jquery2.default.ajax({
+                    url: window.Rozier.routes.nodesQuickAddAjax,
+                    type: 'post',
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    window.Rozier.refreshMainNodeTree();
+                    _this.refreshNodeTree(parentNodeId, null, postData.tagId, 1);
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).fail(function (data) {
+                    console.log('error');
+                    console.log(data);
+
+                    data = JSON.parse(data.responseText);
+
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).always(function () {
+                    console.log('complete');
+                });
+            }
+
+            return false;
+        }
+    }, {
+        key: 'treeAvailable',
+        value: function treeAvailable() {
+            var $nodeTree = this.$page.find('.nodetree-widget');
+            return !!$nodeTree.length;
+        }
+
+        /**
+         *
+         * @param rootNodeId
+         * @param translationId
+         * @param tagId
+         * @param page
+         */
+
+    }, {
+        key: 'refreshNodeTree',
+        value: function refreshNodeTree(rootNodeId, translationId, tagId, page) {
+            var _this2 = this;
+
+            if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                this.currentRequest.abort();
+            }
+
+            var $nodeTree = this.$page.find('.nodetree-widget');
+
+            if ($nodeTree.length) {
+                var $rootTree = $nodeTree.find('.root-tree').eq(0);
+
+                if (typeof rootNodeId === 'undefined') {
+                    if (!$rootTree.attr('data-parent-node-id')) {
+                        rootNodeId = null;
+                    } else {
+                        rootNodeId = parseInt($rootTree.attr('data-parent-node-id'));
+                    }
+                } else {
+                    rootNodeId = parseInt(rootNodeId);
+                }
+
+                window.Rozier.lazyload.canvasLoader.show();
+                var postData = {
+                    '_token': window.Rozier.ajaxToken,
+                    '_action': 'requestNodeTree',
+                    'stackTree': true,
+                    'parentNodeId': rootNodeId,
+                    'page': this.getCurrentPage(),
+                    'translationId': this.getTranslationId()
+                };
+
+                var url = window.Rozier.routes.nodesTreeAjax;
+                if (translationId && translationId > 0) {
+                    postData.translationId = parseInt(translationId);
+                }
+
+                /*
+                 * Add translation id route param manually
+                 */
+                if (postData.translationId) {
+                    url += '/' + postData.translationId;
+                }
+
+                if (page) {
+                    postData.page = parseInt(page);
+                }
+
+                // data-filter-tag
+                if (tagId) {
+                    postData.tagId = parseInt(tagId);
+                }
+
+                console.log('refresh stackNodeTree', postData);
+
+                this.currentRequest = _jquery2.default.ajax({
+                    url: url,
+                    type: 'get',
+                    cache: false,
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    if ($nodeTree.length && typeof data.nodeTree !== 'undefined') {
+                        $nodeTree.fadeOut('slow', function () {
+                            $nodeTree.replaceWith(data.nodeTree);
+                            $nodeTree = _this2.$page.find('.nodetree-widget');
+
+                            window.Rozier.initNestables();
+                            window.Rozier.bindMainTrees();
+                            window.Rozier.lazyload.bindAjaxLink();
+                            $nodeTree.fadeIn();
+                            window.Rozier.resize();
+
+                            /* eslint-disable no-new */
+                            new _NodesBulk2.default();
+
+                            _this2.$switchLangButtons = _this2.$page.find('.nodetree-langs a');
+                            _this2.$nodeTree = _this2.$page.find('.root-tree').eq(0);
+
+                            if (_this2.$switchLangButtons.length) {
+                                _this2.$switchLangButtons.off('click', _this2.onChangeLangClick);
+                                _this2.$switchLangButtons.on('click', _this2.onChangeLangClick);
+                            }
+
+                            window.Rozier.lazyload.canvasLoader.hide();
+                            window.Rozier.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
+                        });
+                    }
+                }).fail(function (data) {
+                    console.error(data.responseJSON);
+                });
+            } else {
+                console.error('No node-tree available.');
+            }
+        }
+    }]);
+    return StackNodeTree;
+}();
+
+exports.default = StackNodeTree;
 
 /***/ }),
 
@@ -10455,174 +11665,83 @@ GeotagField.uniqid = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var InputLengthWatcher = function () {
+    function InputLengthWatcher() {
+        (0, _classCallCheck3.default)(this, InputLengthWatcher);
+
+        this.$maxLengthed = (0, _jquery2.default)('input[data-max-length]');
+        this.$minLengthed = (0, _jquery2.default)('input[data-min-length]');
+
+        this.onMaxKeyUp = this.onMaxKeyUp.bind(this);
+        this.onMinKeyUp = this.onMinKeyUp.bind(this);
+
+        if (this.$maxLengthed.length) {
+            this.$maxLengthed.off('keyup', this.onMaxKeyUp);
+            this.$maxLengthed.on('keyup', this.onMaxKeyUp);
+        }
+
+        if (this.$minLengthed.length) {
+            this.$minLengthed.off('keyup', this.onMinKeyUp);
+            this.$minLengthed.on('keyup', this.onMinKeyUp);
+        }
+    }
+
+    /**
+     * @param {Event} event
+     */
+
+
+    (0, _createClass3.default)(InputLengthWatcher, [{
+        key: 'onMaxKeyUp',
+        value: function onMaxKeyUp(event) {
+            var input = (0, _jquery2.default)(event.currentTarget);
+            var maxLength = Math.round(event.currentTarget.getAttribute('data-max-length'));
+            var currentLength = event.currentTarget.value.length;
+
+            if (currentLength > maxLength) {
+                input.addClass('uk-form-danger');
+            } else {
+                input.removeClass('uk-form-danger');
+            }
+        }
+
+        /**
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onMinKeyUp',
+        value: function onMinKeyUp(event) {
+            var input = (0, _jquery2.default)(event.currentTarget);
+            var maxLength = Math.round(event.currentTarget.getAttribute('data-min-length'));
+            var currentLength = event.currentTarget.value.length;
+
+            if (currentLength <= maxLength) {
+                input.addClass('uk-form-danger');
+            } else {
+                input.removeClass('uk-form-danger');
+            }
+        }
+    }]);
+    return InputLengthWatcher;
+}();
+
 exports.default = InputLengthWatcher;
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function InputLengthWatcher() {
-    var _this = this;
-
-    _this.$maxLengthed = (0, _jquery2.default)('input[data-max-length]');
-    _this.$minLengthed = (0, _jquery2.default)('input[data-min-length]');
-
-    if (_this.$maxLengthed.length) {
-        var proxyMax = _jquery2.default.proxy(_this.onMaxKeyUp, _this);
-        _this.$maxLengthed.off('keyup', proxyMax);
-        _this.$maxLengthed.on('keyup', proxyMax);
-    }
-    if (_this.$minLengthed.length) {
-        var proxyMin = _jquery2.default.proxy(_this.onMinKeyUp, _this);
-        _this.$minLengthed.off('keyup', proxyMin);
-        _this.$minLengthed.on('keyup', proxyMin);
-    }
-}
-
-InputLengthWatcher.prototype.onMaxKeyUp = function (event) {
-    var input = (0, _jquery2.default)(event.currentTarget);
-    var maxLength = Math.round(event.currentTarget.getAttribute('data-max-length'));
-    var currentLength = event.currentTarget.value.length;
-
-    if (currentLength > maxLength) {
-        input.addClass('uk-form-danger');
-    } else {
-        input.removeClass('uk-form-danger');
-    }
-};
-
-InputLengthWatcher.prototype.onMinKeyUp = function (event) {
-    var input = (0, _jquery2.default)(event.currentTarget);
-    var maxLength = Math.round(event.currentTarget.getAttribute('data-min-length'));
-    var currentLength = event.currentTarget.value.length;
-
-    if (currentLength <= maxLength) {
-        input.addClass('uk-form-danger');
-    } else {
-        input.removeClass('uk-form-danger');
-    }
-};
-
-/***/ }),
-
-/***/ "../Resources/app/widgets/jsonEditor.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = JsonEditor;
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Json Editor
- */
-function JsonEditor($textarea, index) {
-    var _this = this;
-
-    _this.$textarea = $textarea;
-    _this.textarea = _this.$textarea[0];
-    _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0);
-    _this.$settingRow = _this.$textarea.parents('.setting-row').eq(0);
-
-    var options = {
-        lineNumbers: true,
-        mode: { name: 'javascript', json: true },
-        theme: 'mbo',
-        tabSize: 2,
-        lineWrapping: true,
-        dragDrop: false
-    };
-
-    if (_this.$settingRow.length) {
-        options.lineNumbers = false;
-    }
-
-    _this.editor = window.CodeMirror.fromTextArea(_this.textarea, options);
-
-    // Methods
-    _this.init();
-}
-
-/**
- * Init
- * @return {[type]} [description]
- */
-JsonEditor.prototype.init = function () {
-    var _this = this;
-
-    if (_this.$textarea.length) {
-        _this.editor.on('change', _jquery2.default.proxy(_this.textareaChange, _this));
-        _this.editor.on('focus', _jquery2.default.proxy(_this.textareaFocus, _this));
-        _this.editor.on('blur', _jquery2.default.proxy(_this.textareaBlur, _this));
-
-        var forceEditorUpdateProxy = _jquery2.default.proxy(_this.forceEditorUpdate, _this);
-        window.setTimeout(function () {
-            (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy);
-            _this.forceEditorUpdate();
-        }, 300);
-    }
-};
-
-JsonEditor.prototype.forceEditorUpdate = function (event) {
-    var _this = this;
-    // console.log('Refresh Json editor');
-    _this.editor.refresh();
-};
-
-/**
- * Textarea change
- * @return {[type]} [description]
- */
-JsonEditor.prototype.textareaChange = function (e) {
-    var _this = this;
-
-    _this.editor.save();
-
-    // if (_this.limit) {
-    //     setTimeout(function () {
-    //         var textareaVal = _this.editor.getValue()
-    //         var textareaValStripped = stripTags(textareaVal)
-    //         var textareaValLength = textareaValStripped.length
-    //     }, 100)
-    // }
-};
-
-/**
- * Textarea focus
- * @return {[type]} [description]
- */
-JsonEditor.prototype.textareaFocus = function (e) {
-    var _this = this;
-
-    _this.$cont.addClass('form-col-focus');
-};
-
-/**
- * Textarea focus out
- * @return {[type]} [description]
- */
-JsonEditor.prototype.textareaBlur = function (e) {
-    var _this = this;
-
-    _this.$cont.removeClass('form-col-focus');
-};
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-JsonEditor.prototype.resize = function () {};
 
 /***/ }),
 
@@ -10635,7 +11754,14 @@ JsonEditor.prototype.resize = function () {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = MarkdownEditor;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -10658,775 +11784,549 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Markdown Editor
  */
-function MarkdownEditor($textarea, index) {
-    var _this = this;
+var MarkdownEditor = function () {
+    function MarkdownEditor($textarea, index) {
+        var _this2 = this;
 
-    _this.markdownit = new _markdownIt2.default();
-    _this.markdownit.use(_markdownItFootnote2.default);
+        (0, _classCallCheck3.default)(this, MarkdownEditor);
 
-    _this.$textarea = $textarea;
-    _this.textarea = _this.$textarea[0];
-    _this.usePreview = false;
+        this.markdownit = new _markdownIt2.default();
+        this.markdownit.use(_markdownItFootnote2.default);
 
-    _this.editor = window.CodeMirror.fromTextArea(_this.textarea, {
-        mode: 'gfm',
-        lineNumbers: false,
-        tabSize: 4,
-        styleActiveLine: true,
-        indentWithTabs: false,
-        lineWrapping: true,
-        viewportMargin: Infinity,
-        enterMode: 'keep'
-    });
+        this.$textarea = $textarea;
+        this.textarea = this.$textarea[0];
+        this.usePreview = false;
 
-    _this.editor.addKeyMap({
-        'Ctrl-B': function CtrlB(cm) {
-            cm.replaceSelections(_this.boldSelections());
-        },
-        'Ctrl-I': function CtrlI(cm) {
-            cm.replaceSelections(_this.italicSelections());
-        },
-        'Cmd-B': function CmdB(cm) {
-            cm.replaceSelections(_this.boldSelections());
-        },
-        'Cmd-I': function CmdI(cm) {
-            cm.replaceSelections(_this.italicSelections());
-        }
-    });
+        this.editor = window.CodeMirror.fromTextArea(this.textarea, {
+            mode: 'gfm',
+            lineNumbers: false,
+            tabSize: 4,
+            styleActiveLine: true,
+            indentWithTabs: false,
+            lineWrapping: true,
+            viewportMargin: Infinity,
+            enterMode: 'keep'
+        });
 
-    // Selectors
-    _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0);
-    _this.index = index;
-    _this.$buttonCode = null;
-    _this.$buttonPreview = null;
-    _this.$buttonFullscreen = null;
-    _this.$count = null;
-    _this.$countCurrent = null;
-    _this.limit = 0;
-    _this.countMinLimit = 0;
-    _this.countMaxLimit = 0;
-    _this.$countMaxLimitText = null;
-    _this.countAlertActive = false;
-    _this.fullscreenActive = false;
+        this.editor.addKeyMap({
+            'Ctrl-B': function CtrlB(cm) {
+                cm.replaceSelections(_this2.boldSelections());
+            },
+            'Ctrl-I': function CtrlI(cm) {
+                cm.replaceSelections(_this2.italicSelections());
+            },
+            'Cmd-B': function CmdB(cm) {
+                cm.replaceSelections(_this2.boldSelections());
+            },
+            'Cmd-I': function CmdI(cm) {
+                cm.replaceSelections(_this2.italicSelections());
+            }
+        });
 
-    _this.$parentForm = _this.$textarea.parents('form').eq(0);
-    _this.closePreviewProxy = _jquery2.default.proxy(_this.closePreview, _this);
-
-    // Methods
-    _this.init();
-}
-
-/**
- * Init
- * @return {[type]} [description]
- */
-MarkdownEditor.prototype.init = function () {
-    var _this = this;
-
-    _this.editor.on('change', _jquery2.default.proxy(_this.textareaChange, _this));
-
-    if (_this.$cont.length && _this.$textarea.length) {
-        _this.$editor = _this.$cont.find('.CodeMirror').eq(0);
-
-        _this.$cont.addClass('markdown-editor');
-        _this.$buttons = _this.$cont.find('[data-markdowneditor-button]');
         // Selectors
-        _this.$content = _this.$cont.find('.markdown-editor-content');
-        _this.$buttonCode = _this.$cont.find('.markdown-editor-button-code');
-        _this.$buttonPreview = _this.$cont.find('.markdown-editor-button-preview');
-        _this.$buttonFullscreen = _this.$cont.find('.markdown-editor-button-fullscreen');
-        _this.$count = _this.$cont.find('.markdown-editor-count');
-        _this.$countCurrent = _this.$cont.find('.count-current');
-        _this.$countMaxLimitText = _this.$cont.find('.count-limit');
+        this.$cont = this.$textarea.parents('.uk-form-row').eq(0);
+        this.$parentForm = this.$textarea.parents('form').eq(0);
+        this.index = index;
+        this.$buttonCode = null;
+        this.$buttonPreview = null;
+        this.$buttonFullscreen = null;
+        this.$count = null;
+        this.$countCurrent = null;
+        this.limit = 0;
+        this.countMinLimit = 0;
+        this.countMaxLimit = 0;
+        this.$countMaxLimitText = null;
+        this.countAlertActive = false;
+        this.fullscreenActive = false;
 
-        // Store markdown index into datas
-        _this.$cont.find('.markdown-editor-button-code').attr('data-index', _this.index);
-        _this.$cont.find('.markdown-editor-button-preview').attr('data-index', _this.index);
-        _this.$cont.find('.markdown-editor-button-fullscreen').attr('data-index', _this.index);
-        _this.$cont.find('.markdown_textarea').attr('data-index', _this.index);
-        _this.$editor.attr('data-index', _this.index);
+        this.closePreview = this.closePreview.bind(this);
+        this.textareaChange = this.textareaChange.bind(this);
+        this.textareaFocus = this.textareaFocus.bind(this);
+        this.textareaBlur = this.textareaBlur.bind(this);
+        this.onDropFile = this.onDropFile.bind(this);
+        this.buttonPreviewClick = this.buttonPreviewClick.bind(this);
+        this.buttonClick = this.buttonClick.bind(this);
+        this.forceEditorUpdate = this.forceEditorUpdate.bind(this);
 
-        /*
-         * Create preview tab.
-         */
-        _this.$editor.before('<div class="markdown-editor-tabs">');
-        _this.$tabs = _this.$cont.find('.markdown-editor-tabs').eq(0);
-
-        _this.$editor.after('<div class="markdown-editor-preview">');
-        _this.$preview = _this.$cont.find('.markdown-editor-preview').eq(0);
-
-        _this.$tabs.append(_this.$editor);
-        _this.$tabs.append(_this.$preview);
-        _this.editor.refresh();
-
-        // Check if a max length is defined
-        if (_this.textarea.hasAttribute('data-max-length') && _this.textarea.getAttribute('data-max-length') !== '') {
-            _this.limit = true;
-            _this.countMaxLimit = parseInt(_this.textarea.getAttribute('data-max-length'));
-
-            if (_this.$countCurrent.length && _this.$countMaxLimitText.length && _this.$count.length) {
-                _this.$countCurrent[0].innerHTML = (0, _plugins.stripTags)(_this.editor.getValue()).length;
-                _this.$countMaxLimitText[0].innerHTML = _this.textarea.getAttribute('data-max-length');
-                _this.$count[0].style.display = 'block';
-            }
-        }
-
-        if (_this.textarea.hasAttribute('data-min-length') && _this.textarea.getAttribute('data-min-length') !== '') {
-            _this.limit = true;
-            _this.countMinLimit = parseInt(_this.textarea.getAttribute('data-min-length'));
-        }
-
-        if (_this.textarea.hasAttribute('data-max-length') && _this.textarea.hasAttribute('data-min-length') && _this.textarea.getAttribute('data-min-length') === '' && _this.textarea.getAttribute('data-max-length') === '') {
-            _this.limit = false;
-            _this.countMaxLimit = null;
-            _this.countAlertActive = null;
-        }
-
-        _this.fullscreenActive = false;
-
-        if (_this.limit) {
-            // Check if current length is over limit
-            if ((0, _plugins.stripTags)(_this.editor.getValue()).length > _this.countMaxLimit) {
-                _this.countAlertActive = true;
-                (0, _plugins.addClass)(_this.$cont[0], 'content-limit');
-            } else if ((0, _plugins.stripTags)(_this.editor.getValue()).length < _this.countMinLimit) {
-                _this.countAlertActive = true;
-                (0, _plugins.addClass)(_this.$cont[0], 'content-limit');
-            } else _this.countAlertActive = false;
-        }
-
-        _this.editor.on('change', _jquery2.default.proxy(_this.textareaChange, _this));
-        _this.editor.on('focus', _jquery2.default.proxy(_this.textareaFocus, _this));
-        _this.editor.on('blur', _jquery2.default.proxy(_this.textareaBlur, _this));
-
-        _this.editor.on('drop', _jquery2.default.proxy(_this.onDropFile, _this));
-        _this.$buttonPreview.on('click', _jquery2.default.proxy(_this.buttonPreviewClick, _this));
-
-        _this.$buttons.on('click', _jquery2.default.proxy(_this.buttonClick, _this));
-        window.Rozier.$window.on('keyup', _jquery2.default.proxy(_this.echapKey, _this));
-
-        var forceEditorUpdateProxy = _jquery2.default.proxy(_this.forceEditorUpdate, _this);
-        setTimeout(function () {
-            (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy);
-            _this.forceEditorUpdate();
-        }, 300);
-    }
-};
-
-MarkdownEditor.prototype.onDropFile = function (editor, event) {
-    var _this = this;
-
-    event.preventDefault(event);
-
-    for (var i = 0; i < event.dataTransfer.files.length; i++) {
-        window.Rozier.lazyload.canvasLoader.show();
-        var file = event.dataTransfer.files[i];
-        var formData = new FormData();
-        formData.append('_token', window.Rozier.ajaxToken);
-        formData.append('form[attachment]', file);
-
-        _jquery2.default.ajax({
-            url: window.Rozier.routes.documentsUploadPage,
-            type: 'post',
-            dataType: 'json',
-            cache: false,
-            data: formData,
-            processData: false,
-            contentType: false
-        }).always(_jquery2.default.proxy(_this.onDropFileUploaded, _this, editor));
-    }
-};
-
-MarkdownEditor.prototype.onDropFileUploaded = function (editor, data) {
-    window.Rozier.lazyload.canvasLoader.hide();
-
-    if (data.success === true) {
-        var mark = '![' + data.thumbnail.filename + '](' + data.thumbnail.large + ')';
-
-        editor.replaceSelection(mark);
-    }
-};
-
-MarkdownEditor.prototype.forceEditorUpdate = function (event) {
-    var _this = this;
-    _this.editor.refresh();
-
-    if (_this.usePreview) {
-        _this.$preview.html(_this.markdownit.render(_this.editor.getValue()));
-    }
-};
-
-MarkdownEditor.prototype.buttonClick = function (event) {
-    var _this = this;
-    var $button = (0, _jquery2.default)(event.currentTarget);
-    var sel = _this.editor.getSelections();
-
-    if (sel.length > 0) {
-        switch ($button.attr('data-markdowneditor-button')) {
-            case 'nbsp':
-                _this.editor.replaceSelections(_this.nbspSelections(sel));
-                break;
-            case 'listUl':
-                _this.editor.replaceSelections(_this.listUlSelections(sel));
-                break;
-            case 'link':
-                _this.editor.replaceSelections(_this.linkSelections(sel));
-                break;
-            case 'image':
-                _this.editor.replaceSelections(_this.imageSelections(sel));
-                break;
-            case 'bold':
-                _this.editor.replaceSelections(_this.boldSelections(sel));
-                break;
-            case 'italic':
-                _this.editor.replaceSelections(_this.italicSelections(sel));
-                break;
-            case 'blockquote':
-                _this.editor.replaceSelections(_this.blockquoteSelections(sel));
-                break;
-            case 'h2':
-                _this.editor.replaceSelections(_this.h2Selections(sel));
-                break;
-            case 'h3':
-                _this.editor.replaceSelections(_this.h3Selections(sel));
-                break;
-            case 'h4':
-                _this.editor.replaceSelections(_this.h4Selections(sel));
-                break;
-            case 'h5':
-                _this.editor.replaceSelections(_this.h5Selections(sel));
-                break;
-            case 'h6':
-                _this.editor.replaceSelections(_this.h6Selections(sel));
-                break;
-            case 'back':
-                _this.editor.replaceSelections(_this.backSelections(sel));
-                break;
-            case 'hr':
-                _this.editor.replaceSelections(_this.hrSelections(sel));
-                break;
-        }
-
-        /*
-         * Pos cursor after last selection
-         */
-        _this.editor.focus();
-    }
-};
-MarkdownEditor.prototype.backSelections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '   \n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.hrSelections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n\n---\n\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.nbspSelections = function (selections) {
-    for (var i in selections) {
-        selections[i] = ' ';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.listUlSelections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n\n* ' + selections[i] + '\n\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.linkSelections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '[' + selections[i] + '](http://)';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.imageSelections = function (selections) {
-    var _this = this;
-    if (!selections) {
-        selections = _this.editor.getSelections();
-    }
-    for (var i in selections) {
-        selections[i] = '![' + selections[i] + '](/files/)';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.boldSelections = function (selections) {
-    var _this = this;
-    if (!selections) {
-        selections = _this.editor.getSelections();
-    }
-    for (var i in selections) {
-        selections[i] = '**' + selections[i] + '**';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.italicSelections = function (selections) {
-    var _this = this;
-    if (!selections) {
-        selections = _this.editor.getSelections();
-    }
-    for (var i in selections) {
-        selections[i] = '*' + selections[i] + '*';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.h2Selections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n## ' + selections[i] + '\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.h3Selections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n### ' + selections[i] + '\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.h4Selections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n#### ' + selections[i] + '\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.h5Selections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n##### ' + selections[i] + '\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.h6Selections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n###### ' + selections[i] + '\n';
-    }
-    return selections;
-};
-MarkdownEditor.prototype.blockquoteSelections = function (selections) {
-    for (var i in selections) {
-        selections[i] = '\n> ' + selections[i] + '\n';
-    }
-    return selections;
-};
-
-/**
- * Textarea change
- * @return {[type]} [description]
- */
-MarkdownEditor.prototype.textareaChange = function (e) {
-    var _this = this;
-
-    _this.editor.save();
-
-    if (_this.usePreview) {
-        clearTimeout(_this.refreshPreviewTimeout);
-        _this.refreshPreviewTimeout = setTimeout(function () {
-            _this.$preview.html(_this.markdownit.render(_this.editor.getValue()));
-        }, 100);
+        // Methods
+        this.init();
     }
 
-    if (_this.limit) {
-        window.setTimeout(function () {
-            var textareaVal = _this.editor.getValue();
-            var textareaValStripped = (0, _plugins.stripTags)(textareaVal);
-            var textareaValLength = textareaValStripped.length;
-
-            _this.$countCurrent.html(textareaValLength);
-
-            if (textareaValLength > _this.countMaxLimit) {
-                if (!_this.countAlertActive) {
-                    _this.$cont.addClass('content-limit');
-                    _this.countAlertActive = true;
-                }
-            } else if (textareaValLength < _this.countMinLimit) {
-                if (!_this.countAlertActive) {
-                    _this.$cont.addClass('content-limit');
-                    _this.countAlertActive = true;
-                }
-            } else {
-                if (_this.countAlertActive) {
-                    _this.$cont.removeClass('content-limit');
-                    _this.countAlertActive = false;
-                }
-            }
-        }, 100);
-    }
-};
-
-/**
- * Textarea focus
- * @return {[type]} [description]
- */
-MarkdownEditor.prototype.textareaFocus = function (e) {
-    var _this = this;
-
-    _this.$cont.addClass('form-col-focus');
-};
-
-/**
- * Textarea focus out
- * @return {[type]} [description]
- */
-MarkdownEditor.prototype.textareaBlur = function (e) {
-    var _this = this;
-
-    _this.$cont.removeClass('form-col-focus');
-};
-
-/**
- * Button preview click
- * @return {[type]} [description]
- */
-MarkdownEditor.prototype.buttonPreviewClick = function (e) {
-    var _this = this;
-    e.preventDefault();
-
-    var width = _this.$preview.outerWidth();
-
-    if (_this.usePreview) {
-        _this.closePreview();
-    } else {
-        _this.usePreview = true;
-        _this.$buttonPreview.addClass('uk-active active');
-        _this.$preview.addClass('active');
-        _this.forceEditorUpdate();
-        _gsap.TweenLite.fromTo(_this.$preview, 1, { x: width * -1, opacity: 0 }, { x: 0, ease: _gsap.Expo.easeOut, opacity: 1 });
-        window.Rozier.$window.on('keyup', _this.closePreviewProxy);
-
-        var openPreview = new CustomEvent('markdownPreviewOpen', {
-            'detail': this
-        });
-        document.body.dispatchEvent(openPreview);
-    }
-};
-
-/**
- *
- */
-MarkdownEditor.prototype.closePreview = function (e) {
-    var _this = this;
-
-    if (e) {
-        if (e.keyCode === 27) {
-            e.preventDefault();
-        } else {
-            return;
-        }
-    }
-    var width = _this.$preview.outerWidth();
-    window.Rozier.$window.off('keyup', _this.closePreviewProxy);
-    _this.usePreview = false;
-    _this.$buttonPreview.removeClass('uk-active active');
-    _gsap.TweenLite.fromTo(_this.$preview, 1, { x: 0, opacity: 1 }, { x: width * -1,
-        opacity: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$preview.removeClass('active');
-        } });
-};
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-MarkdownEditor.prototype.resize = function () {};
-
-/***/ }),
-
-/***/ "../Resources/app/widgets/multiGeotagField.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _stringify = __webpack_require__("../node_modules/babel-runtime/core-js/json/stringify.js");
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
-exports.default = MultiGeotagField;
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _geotagField = __webpack_require__("../Resources/app/widgets/geotagField.js");
-
-var _geotagField2 = _interopRequireDefault(_geotagField);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function MultiGeotagField() {
-    var _this = this;
-
-    _this.$fields = (0, _jquery2.default)('.rz-multi-geotag-field');
-    _this.geocoder = null;
-
-    if (_this.$fields.length && window.Rozier.googleClientId !== '') {
-        _this.init();
-    }
-}
-
-_jquery2.default.extend(MultiGeotagField.prototype, _geotagField2.default.prototype);
-
-/**
- * @param markers
- * @param $input
- * @param $geocodeReset
- * @param map
- * @param $selector
- * @param event
- */
-MultiGeotagField.prototype.resetMarker = function (markers, $input, $geocodeReset, map, $selector, event) {
-    var _this = this;
-
-    $input.val('');
-    for (var i = markers.length - 1; i >= 0; i--) {
-        markers[i].setMap(null);
-        markers[i] = null;
-    }
-    markers = [];
-
-    $geocodeReset.hide();
-    _this.syncSelector($selector, markers, map, $input);
-
-    return false;
-};
-
-MultiGeotagField.prototype.bindSingleField = function (element) {
-    var _this = this;
-
-    var $input = (0, _jquery2.default)(element);
-    var $label = $input.parent().find('.uk-form-label');
-    var labelText = $label[0].innerHTML;
-
-    var jsonCode = { 'lat': 45.769785, 'lng': 4.833967, 'zoom': 14 // default location
-    };var fieldId = 'geotag-canvas-' + _geotagField2.default.uniqid();
-    var fieldAddressId = fieldId + '-address';
-    var resetButtonId = fieldId + '-reset';
-
-    var mapOptions = {
-        center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
-        zoom: jsonCode.zoom,
-        scrollwheel: false,
-        styles: window.Rozier.mapsStyle
-
-        /*
-         * prepare DOM
-         */
-    };$input.hide();
-    $label.hide();
-    $input.attr('data-geotag-canvas', fieldId);
-
-    // Geocode input text
-    var metaDOM = ['<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">', '<ul class="uk-navbar-nav">', '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-multi-marker"></i>', '<li class="uk-navbar-brand label">' + labelText + '</li>', '</ul>', '<div class="uk-navbar-content uk-navbar-flip">', '<div class="geotag-widget-quick-creation uk-button-group">', '<input class="rz-geotag-address" id="' + fieldAddressId + '" type="text" value="" />', '<a id="' + resetButtonId + '" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="' + window.Rozier.messages.geotag.resetMarker + '" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>', '</div>', '</div>', '</nav>', '<div class="multi-geotag-group">', '<ul class="multi-geotag-list-markers">', '</ul>', '<div class="rz-geotag-canvas" id="' + fieldId + '"></div>', '</div>'].join('');
-
-    $input.after(metaDOM);
-
-    var $geocodeInput = (0, _jquery2.default)('#' + fieldAddressId);
-    $geocodeInput.attr('placeholder', window.Rozier.messages.geotag.typeAnAddress);
-    // Reset button
-    var $geocodeReset = (0, _jquery2.default)('#' + resetButtonId);
-    $geocodeReset.hide();
-
-    /*
-     * Prepare map and marker
+    /**
+     * Init
+     * @return {[type]} [description]
      */
-    var map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions);
-    var markers = [];
-    var $selector = $input.parent().find('.multi-geotag-list-markers');
 
-    if ($input.val() !== '') {
-        try {
-            var geocodes = JSON.parse($input.val());
-            var geocodeslength = geocodes.length;
-            for (var i = 0; i < geocodeslength; i++) {
-                markers[i] = _this.createMarker(geocodes[i], $input, map);
-                window.google.maps.event.addListener(markers[i], 'dragend', _jquery2.default.proxy(_this.setMarkerEvent, _this, markers[i], markers, $input, $geocodeReset, map));
+
+    (0, _createClass3.default)(MarkdownEditor, [{
+        key: 'init',
+        value: function init() {
+            var _this3 = this;
+
+            this.editor.on('change', this.textareaChange);
+
+            if (this.$cont.length && this.$textarea.length) {
+                this.$editor = this.$cont.find('.CodeMirror').eq(0);
+
+                this.$cont.addClass('markdown-editor');
+                this.$buttons = this.$cont.find('[data-markdowneditor-button]');
+                // Selectors
+                this.$content = this.$cont.find('.markdown-editor-content');
+                this.$buttonCode = this.$cont.find('.markdown-editor-button-code');
+                this.$buttonPreview = this.$cont.find('.markdown-editor-button-preview');
+                this.$buttonFullscreen = this.$cont.find('.markdown-editor-button-fullscreen');
+                this.$count = this.$cont.find('.markdown-editor-count');
+                this.$countCurrent = this.$cont.find('.count-current');
+                this.$countMaxLimitText = this.$cont.find('.count-limit');
+
+                // Store markdown index into datas
+                this.$cont.find('.markdown-editor-button-code').attr('data-index', this.index);
+                this.$cont.find('.markdown-editor-button-preview').attr('data-index', this.index);
+                this.$cont.find('.markdown-editor-button-fullscreen').attr('data-index', this.index);
+                this.$cont.find('.markdown_textarea').attr('data-index', this.index);
+                this.$editor.attr('data-index', this.index);
+
+                /*
+                 * Create preview tab.
+                 */
+                this.$editor.before('<div class="markdown-editor-tabs">');
+                this.$tabs = this.$cont.find('.markdown-editor-tabs').eq(0);
+
+                this.$editor.after('<div class="markdown-editor-preview">');
+                this.$preview = this.$cont.find('.markdown-editor-preview').eq(0);
+
+                this.$tabs.append(this.$editor);
+                this.$tabs.append(this.$preview);
+                this.editor.refresh();
+
+                // Check if a max length is defined
+                if (this.textarea.hasAttribute('data-max-length') && this.textarea.getAttribute('data-max-length') !== '') {
+                    this.limit = true;
+                    this.countMaxLimit = parseInt(this.textarea.getAttribute('data-max-length'));
+
+                    if (this.$countCurrent.length && this.$countMaxLimitText.length && this.$count.length) {
+                        this.$countCurrent[0].innerHTML = (0, _plugins.stripTags)(this.editor.getValue()).length;
+                        this.$countMaxLimitText[0].innerHTML = this.textarea.getAttribute('data-max-length');
+                        this.$count[0].style.display = 'block';
+                    }
+                }
+
+                if (this.textarea.hasAttribute('data-min-length') && this.textarea.getAttribute('data-min-length') !== '') {
+                    this.limit = true;
+                    this.countMinLimit = parseInt(this.textarea.getAttribute('data-min-length'));
+                }
+
+                if (this.textarea.hasAttribute('data-max-length') && this.textarea.hasAttribute('data-min-length') && this.textarea.getAttribute('data-min-length') === '' && this.textarea.getAttribute('data-max-length') === '') {
+                    this.limit = false;
+                    this.countMaxLimit = null;
+                    this.countAlertActive = null;
+                }
+
+                this.fullscreenActive = false;
+
+                if (this.limit) {
+                    // Check if current length is over limit
+                    if ((0, _plugins.stripTags)(this.editor.getValue()).length > this.countMaxLimit) {
+                        this.countAlertActive = true;
+                        (0, _plugins.addClass)(this.$cont[0], 'content-limit');
+                    } else if ((0, _plugins.stripTags)(this.editor.getValue()).length < this.countMinLimit) {
+                        this.countAlertActive = true;
+                        (0, _plugins.addClass)(this.$cont[0], 'content-limit');
+                    } else this.countAlertActive = false;
+                }
+
+                this.editor.on('change', this.textareaChange);
+                this.editor.on('focus', this.textareaFocus);
+                this.editor.on('blur', this.textareaBlur);
+
+                this.editor.on('drop', this.onDropFile);
+                this.$buttonPreview.on('click', this.buttonPreviewClick);
+
+                this.$buttons.on('click', this.buttonClick);
+
+                window.setTimeout(function () {
+                    (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', _this3.forceEditorUpdate);
+                    _this3.forceEditorUpdate();
+                }, 300);
             }
-            $geocodeReset.show();
-        } catch (e) {
-            $input.show();
-            (0, _jquery2.default)(document.getElementById(fieldId)).hide();
-
-            return false;
         }
-    }
+    }, {
+        key: 'onDropFile',
+        value: function onDropFile(editor, event) {
+            var _this = this;
 
-    window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(_this.setMarkerEvent, _this, null, markers, $input, $geocodeReset, map));
-    window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(_this.syncSelector, _this, $selector, markers, map, $input));
+            event.preventDefault(event);
 
-    $geocodeInput.on('keypress', _jquery2.default.proxy(_this.requestGeocode, _this, markers, $input, $geocodeReset, map, $selector));
-    $geocodeReset.on('click', _jquery2.default.proxy(_this.resetMarker, _this, markers, $input, $geocodeReset, map, $selector));
-    $geocodeReset.on('click', _jquery2.default.proxy(_this.syncSelector, _this, $selector, markers, map, $input));
+            for (var i = 0; i < event.dataTransfer.files.length; i++) {
+                window.Rozier.lazyload.canvasLoader.show();
+                var file = event.dataTransfer.files[i];
+                var formData = new FormData();
+                formData.append('_token', window.Rozier.ajaxToken);
+                formData.append('form[attachment]', file);
 
-    window.Rozier.$window.on('resize', _jquery2.default.proxy(_this.resetMap, _this, map, markers, mapOptions));
-    _this.resetMap(map, markers, mapOptions, null);
-    _this.syncSelector($selector, markers, map, $input);
-};
-
-MultiGeotagField.prototype.syncSelector = function ($selector, markers, map, $input) {
-    var _this = this;
-
-    $selector.empty();
-    var markersLength = markers.length;
-    for (var i = 0; i < markersLength; i++) {
-        if (markers[i] !== null) {
-            var geocode = _this.getGeocodeFromMarker(markers[i]);
-
-            $selector.append(['<li>', '<span class="multi-geotag-marker-name">', geocode.name ? geocode.name : '#' + i, '</span>', '<a class="button rz-multi-geotag-center" data-geocode-id="' + i + '" data-geocode="' + (0, _stringify2.default)(geocode) + '"><i class="uk-icon-rz-marker"></i></a>', '<a class="button rz-multi-geotag-remove" data-geocode-id="' + i + '"><i class="uk-icon-rz-trash-o"></i></a>', '</li>'].join(''));
-
-            var $centerBtn = $selector.find('.rz-multi-geotag-center[data-geocode-id="' + i + '"]');
-            var $removeBtn = $selector.find('.rz-multi-geotag-remove[data-geocode-id="' + i + '"]');
-
-            $centerBtn.on('click', _jquery2.default.proxy(_this.centerMap, _this, map, markers[i]));
-            $removeBtn.on('click', _jquery2.default.proxy(_this.removeMarker, _this, map, markers, i, $selector, $input));
+                _jquery2.default.ajax({
+                    url: window.Rozier.routes.documentsUploadPage,
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                }).always(_jquery2.default.proxy(this.onDropFileUploaded, _this, editor));
+            }
         }
-    }
-};
+    }, {
+        key: 'onDropFileUploaded',
+        value: function onDropFileUploaded(editor, data) {
+            window.Rozier.lazyload.canvasLoader.hide();
 
-MultiGeotagField.prototype.removeMarker = function (map, markers, index, $selector, $input, event) {
-    var _this = this;
+            if (data.success === true) {
+                var mark = '![' + data.thumbnail.filename + '](' + data.thumbnail.large + ')';
 
-    markers[index].setMap(null);
-    markers[index] = null;
-
-    _this.syncSelector($selector, markers, map, $input);
-    _this.writeMarkers(markers, $input);
-
-    return false;
-};
-
-MultiGeotagField.prototype.getGeocodeFromMarker = function (marker) {
-    return {
-        'lat': marker.getPosition().lat(),
-        'lng': marker.getPosition().lng(),
-        'zoom': marker.zoom,
-        'name': marker.name
-    };
-};
-
-MultiGeotagField.prototype.resetMap = function (map, markers, mapOptions, event) {
-    var _this = this;
-
-    window.setTimeout(function () {
-        window.google.maps.event.trigger(map, 'resize');
-
-        if (typeof markers !== 'undefined' && markers.length > 0) {
-            map.fitBounds(_this.getMediumLatLng(markers));
-        } else {
-            map.panTo(mapOptions.center);
+                editor.replaceSelection(mark);
+            }
         }
-    }, 300);
-};
+    }, {
+        key: 'forceEditorUpdate',
+        value: function forceEditorUpdate() {
+            this.editor.refresh();
 
-MultiGeotagField.prototype.centerMap = function (map, marker, event) {
-    window.setTimeout(function () {
-        window.google.maps.event.trigger(map, 'resize');
-
-        if (typeof marker !== 'undefined') {
-            map.panTo(marker.getPosition());
+            if (this.usePreview) {
+                this.$preview.html(this.markdownit.render(this.editor.getValue()));
+            }
         }
-        if (typeof marker.zoom !== 'undefined') {
-            map.setZoom(marker.zoom);
+
+        /**
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'buttonClick',
+        value: function buttonClick(event) {
+            var $button = (0, _jquery2.default)(event.currentTarget);
+            var sel = this.editor.getSelections();
+
+            if (sel.length > 0) {
+                switch ($button.attr('data-markdowneditor-button')) {
+                    case 'nbsp':
+                        this.editor.replaceSelections(this.nbspSelections(sel));
+                        break;
+                    case 'listUl':
+                        this.editor.replaceSelections(this.listUlSelections(sel));
+                        break;
+                    case 'link':
+                        this.editor.replaceSelections(this.linkSelections(sel));
+                        break;
+                    case 'image':
+                        this.editor.replaceSelections(this.imageSelections(sel));
+                        break;
+                    case 'bold':
+                        this.editor.replaceSelections(this.boldSelections(sel));
+                        break;
+                    case 'italic':
+                        this.editor.replaceSelections(this.italicSelections(sel));
+                        break;
+                    case 'blockquote':
+                        this.editor.replaceSelections(this.blockquoteSelections(sel));
+                        break;
+                    case 'h2':
+                        this.editor.replaceSelections(this.h2Selections(sel));
+                        break;
+                    case 'h3':
+                        this.editor.replaceSelections(this.h3Selections(sel));
+                        break;
+                    case 'h4':
+                        this.editor.replaceSelections(this.h4Selections(sel));
+                        break;
+                    case 'h5':
+                        this.editor.replaceSelections(this.h5Selections(sel));
+                        break;
+                    case 'h6':
+                        this.editor.replaceSelections(this.h6Selections(sel));
+                        break;
+                    case 'back':
+                        this.editor.replaceSelections(this.backSelections(sel));
+                        break;
+                    case 'hr':
+                        this.editor.replaceSelections(this.hrSelections(sel));
+                        break;
+                }
+
+                /*
+                 * Pos cursor after last selection
+                 */
+                this.editor.focus();
+            }
         }
-    }, 300);
-
-    return false;
-};
-
-MultiGeotagField.prototype.getMediumLatLng = function (markers) {
-    var bounds = new window.google.maps.LatLngBounds();
-    for (var index in markers) {
-        bounds.extend(markers[index].getPosition());
-    }
-
-    return bounds;
-};
-
-/**
- * @param Marker marker
- * @param jQuery DOM $input
- * @param Map map
- * @param Event event
- */
-MultiGeotagField.prototype.setMarkerEvent = function (marker, markers, $input, $geocodeReset, map, event) {
-    var _this = this;
-
-    _this.setMarker(marker, markers, $input, $geocodeReset, map, event.latLng);
-};
-
-/**
- * @param Marker marker
- * @param jQuery DOM $input
- * @param Map map
- * @param Event event
- */
-MultiGeotagField.prototype.setMarker = function (marker, markers, $input, $geocodeReset, map, latlng, name) {
-    var _this = this;
-
-    if (marker === null) {
-        marker = new window.google.maps.Marker({
-            map: map,
-            draggable: true,
-            animation: window.google.maps.Animation.DROP,
-            position: latlng,
-            icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
-        });
-    }
-    marker.setPosition(latlng);
-    marker.setMap(map);
-    marker.zoom = map.getZoom();
-    marker.name = name;
-
-    map.panTo(latlng);
-
-    markers.push(marker);
-
-    _this.writeMarkers(markers, $input);
-
-    $geocodeReset.show();
-
-    return marker;
-};
-
-MultiGeotagField.prototype.writeMarkers = function (markers, $input) {
-    var _this = this;
-
-    var geocodes = [];
-    for (var i = markers.length - 1; i >= 0; i--) {
-        if (markers[i] !== null) {
-            geocodes.push(_this.getGeocodeFromMarker(markers[i]));
+    }, {
+        key: 'backSelections',
+        value: function backSelections(selections) {
+            for (var i in selections) {
+                selections[i] = '   \n';
+            }
+            return selections;
         }
-    }
+    }, {
+        key: 'hrSelections',
+        value: function hrSelections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n\n---\n\n';
+            }
+            return selections;
+        }
+    }, {
+        key: 'nbspSelections',
+        value: function nbspSelections(selections) {
+            for (var i in selections) {
+                selections[i] = ' ';
+            }
+            return selections;
+        }
+    }, {
+        key: 'listUlSelections',
+        value: function listUlSelections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n\n* ' + selections[i] + '\n\n';
+            }
+            return selections;
+        }
+    }, {
+        key: 'linkSelections',
+        value: function linkSelections(selections) {
+            for (var i in selections) {
+                selections[i] = '[' + selections[i] + '](http://)';
+            }
+            return selections;
+        }
+    }, {
+        key: 'imageSelections',
+        value: function imageSelections(selections) {
+            if (!selections) {
+                selections = this.editor.getSelections();
+            }
+            for (var i in selections) {
+                selections[i] = '![' + selections[i] + '](/files/)';
+            }
+            return selections;
+        }
+    }, {
+        key: 'boldSelections',
+        value: function boldSelections(selections) {
+            if (!selections) {
+                selections = this.editor.getSelections();
+            }
 
-    $input.val((0, _stringify2.default)(geocodes));
-};
+            for (var i in selections) {
+                selections[i] = '**' + selections[i] + '**';
+            }
 
-MultiGeotagField.prototype.requestGeocode = function (markers, $input, $geocodeReset, map, $selector, event) {
-    var _this = this;
+            return selections;
+        }
+    }, {
+        key: 'italicSelections',
+        value: function italicSelections(selections) {
+            if (!selections) {
+                selections = this.editor.getSelections();
+            }
 
-    var address = event.currentTarget.value;
+            for (var i in selections) {
+                selections[i] = '*' + selections[i] + '*';
+            }
 
-    if (event.which === 13) {
-        event.preventDefault();
+            return selections;
+        }
+    }, {
+        key: 'h2Selections',
+        value: function h2Selections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n## ' + selections[i] + '\n';
+            }
 
-        _this.geocoder.geocode({ 'address': address }, function (results, status) {
-            if (status === window.google.maps.GeocoderStatus.OK) {
-                _this.setMarker(null, markers, $input, $geocodeReset, map, results[0].geometry.location, address);
-                _this.syncSelector($selector, markers, map, $input);
+            return selections;
+        }
+    }, {
+        key: 'h3Selections',
+        value: function h3Selections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n### ' + selections[i] + '\n';
+            }
+
+            return selections;
+        }
+    }, {
+        key: 'h4Selections',
+        value: function h4Selections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n#### ' + selections[i] + '\n';
+            }
+
+            return selections;
+        }
+    }, {
+        key: 'h5Selections',
+        value: function h5Selections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n##### ' + selections[i] + '\n';
+            }
+
+            return selections;
+        }
+    }, {
+        key: 'h6Selections',
+        value: function h6Selections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n###### ' + selections[i] + '\n';
+            }
+
+            return selections;
+        }
+    }, {
+        key: 'blockquoteSelections',
+        value: function blockquoteSelections(selections) {
+            for (var i in selections) {
+                selections[i] = '\n> ' + selections[i] + '\n';
+            }
+
+            return selections;
+        }
+
+        /**
+         * Textarea change
+         */
+
+    }, {
+        key: 'textareaChange',
+        value: function textareaChange() {
+            var _this4 = this;
+
+            this.editor.save();
+
+            if (this.usePreview) {
+                clearTimeout(this.refreshPreviewTimeout);
+                this.refreshPreviewTimeout = window.setTimeout(function () {
+                    _this4.$preview.html(_this4.markdownit.render(_this4.editor.getValue()));
+                }, 100);
+            }
+
+            if (this.limit) {
+                window.setTimeout(function () {
+                    var textareaVal = _this4.editor.getValue();
+                    var textareaValStripped = (0, _plugins.stripTags)(textareaVal);
+                    var textareaValLength = textareaValStripped.length;
+
+                    _this4.$countCurrent.html(textareaValLength);
+
+                    if (textareaValLength > _this4.countMaxLimit) {
+                        if (!_this4.countAlertActive) {
+                            _this4.$cont.addClass('content-limit');
+                            _this4.countAlertActive = true;
+                        }
+                    } else if (textareaValLength < _this4.countMinLimit) {
+                        if (!_this4.countAlertActive) {
+                            _this4.$cont.addClass('content-limit');
+                            _this4.countAlertActive = true;
+                        }
+                    } else {
+                        if (_this4.countAlertActive) {
+                            _this4.$cont.removeClass('content-limit');
+                            _this4.countAlertActive = false;
+                        }
+                    }
+                }, 100);
+            }
+        }
+
+        /**
+         * Textarea focus
+         */
+
+    }, {
+        key: 'textareaFocus',
+        value: function textareaFocus() {
+            this.$cont.addClass('form-col-focus');
+        }
+
+        /**
+         * Textarea focus out
+         */
+
+    }, {
+        key: 'textareaBlur',
+        value: function textareaBlur() {
+            this.$cont.removeClass('form-col-focus');
+        }
+
+        /**
+         * Button preview click
+         */
+
+    }, {
+        key: 'buttonPreviewClick',
+        value: function buttonPreviewClick(e) {
+            e.preventDefault();
+
+            var width = this.$preview.outerWidth();
+
+            if (this.usePreview) {
+                this.closePreview();
             } else {
-                console.err('Geocode was not successful for the following reason: ' + status);
-            }
-        });
+                this.usePreview = true;
+                this.$buttonPreview.addClass('uk-active active');
+                this.$preview.addClass('active');
+                this.forceEditorUpdate();
+                _gsap.TweenLite.fromTo(this.$preview, 1, { x: width * -1, opacity: 0 }, { x: 0, ease: _gsap.Expo.easeOut, opacity: 1 });
+                window.Rozier.$window.on('keyup', this.closePreview);
 
-        return false;
-    }
-};
+                var openPreview = new CustomEvent('markdownPreviewOpen', {
+                    'detail': this
+                });
+
+                document.body.dispatchEvent(openPreview);
+            }
+        }
+
+        /**
+         *
+         */
+
+    }, {
+        key: 'closePreview',
+        value: function closePreview(e) {
+            var _this5 = this;
+
+            if (e) {
+                if (e.keyCode === 27) {
+                    e.preventDefault();
+                } else {
+                    return;
+                }
+            }
+
+            var width = this.$preview.outerWidth();
+            window.Rozier.$window.off('keyup', this.closePreview);
+            this.usePreview = false;
+            this.$buttonPreview.removeClass('uk-active active');
+            _gsap.TweenLite.fromTo(this.$preview, 1, { x: 0, opacity: 1 }, { x: width * -1,
+                opacity: 0,
+                ease: _gsap.Expo.easeOut,
+                onComplete: function onComplete() {
+                    _this5.$preview.removeClass('active');
+                } });
+        }
+
+        /**
+         * Window resize callback
+         * @return {[type]} [description]
+         */
+
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return MarkdownEditor;
+}();
+
+exports.default = MarkdownEditor;
 
 /***/ }),
 
@@ -11788,273 +12688,6 @@ SettingsSaveButtons.prototype.buttonClick = function (e) {
  * @return {[type]} [description]
  */
 SettingsSaveButtons.prototype.resize = function () {};
-
-/***/ }),
-
-/***/ "../Resources/app/widgets/stackNodeTree.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = StackNodeTree;
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _nodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/nodesBulk.js");
-
-var _nodesBulk2 = _interopRequireDefault(_nodesBulk);
-
-var _nodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/nodeTreeContextActions.js");
-
-var _nodeTreeContextActions2 = _interopRequireDefault(_nodeTreeContextActions);
-
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function StackNodeTree() {
-    var _this = this;
-    _this.$page = (0, _jquery2.default)('.stack-tree').eq(0);
-    _this.currentRequest = null;
-    _this.$quickAddNodeButtons = _this.$page.find('.stack-tree-quick-creation a');
-    _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
-    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
-
-    _this.init();
-}
-
-/**
- * @return {Number}
- */
-StackNodeTree.prototype.getCurrentPage = function () {
-    var _this = this;
-
-    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
-    var currentPage = parseInt(_this.$nodeTree.attr('data-page'));
-    if (isNaN(currentPage)) {
-        return 1;
-    }
-
-    return currentPage;
-};
-
-/**
- * @return {Number|null}
- */
-StackNodeTree.prototype.getTranslationId = function () {
-    var _this = this;
-
-    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
-    var currentTranslationId = parseInt(_this.$nodeTree.attr('data-translation-id'));
-    if (isNaN(currentTranslationId)) {
-        return null;
-    }
-
-    return currentTranslationId;
-};
-
-StackNodeTree.prototype.init = function () {
-    var _this = this;
-
-    if (_this.$quickAddNodeButtons.length) {
-        var proxiedClick = _jquery2.default.proxy(_this.onQuickAddClick, _this);
-        _this.$quickAddNodeButtons.off('click', proxiedClick);
-        _this.$quickAddNodeButtons.on('click', proxiedClick);
-    }
-    if (_this.$switchLangButtons.length) {
-        var proxiedChangeLang = _jquery2.default.proxy(_this.onChangeLangClick, _this);
-        _this.$switchLangButtons.off('click', proxiedChangeLang);
-        _this.$switchLangButtons.on('click', proxiedChangeLang);
-    }
-};
-
-StackNodeTree.prototype.onChangeLangClick = function (event) {
-    var _this = this;
-    event.preventDefault();
-
-    var $link = (0, _jquery2.default)(event.currentTarget);
-    var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-    var translationId = parseInt($link.attr('data-translation-id'));
-    var tagId = $link.attr('data-filter-tag');
-    _this.refreshNodeTree(parentNodeId, translationId, tagId);
-    return false;
-};
-
-StackNodeTree.prototype.onQuickAddClick = function (event) {
-    var _this = this;
-
-    if (_this.currentRequest && _this.currentRequest.readyState !== 4) {
-        _this.currentRequest.abort();
-    }
-
-    var $link = (0, _jquery2.default)(event.currentTarget);
-    var nodeTypeId = parseInt($link.attr('data-children-node-type'));
-    var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-
-    if (nodeTypeId > 0 && parentNodeId > 0) {
-        var postData = {
-            '_token': window.Rozier.ajaxToken,
-            '_action': 'quickAddNode',
-            'nodeTypeId': nodeTypeId,
-            'parentNodeId': parentNodeId,
-            'pushTop': 1
-        };
-        if ($link.attr('data-filter-tag')) {
-            postData.tagId = parseInt($link.attr('data-filter-tag'));
-        }
-        _this.currentRequest = _jquery2.default.ajax({
-            url: window.Rozier.routes.nodesQuickAddAjax,
-            type: 'post',
-            dataType: 'json',
-            data: postData
-        }).done(function (data) {
-            window.Rozier.refreshMainNodeTree();
-            _this.refreshNodeTree(parentNodeId, null, postData.tagId, 1);
-            window.UIkit.notify({
-                message: data.responseText,
-                status: data.status,
-                timeout: 3000,
-                pos: 'top-center'
-            });
-        }).fail(function (data) {
-            console.log('error');
-            console.log(data);
-
-            data = JSON.parse(data.responseText);
-
-            window.UIkit.notify({
-                message: data.responseText,
-                status: data.status,
-                timeout: 3000,
-                pos: 'top-center'
-            });
-        }).always(function () {
-            console.log('complete');
-        });
-    }
-
-    return false;
-};
-
-StackNodeTree.prototype.treeAvailable = function () {
-    var _this = this;
-    var $nodeTree = _this.$page.find('.nodetree-widget');
-    if ($nodeTree.length) {
-        return true;
-    } else {
-        return false;
-    }
-};
-
-/**
- *
- * @param rootNodeId
- * @param translationId
- * @param tagId
- * @param page
- */
-StackNodeTree.prototype.refreshNodeTree = function (rootNodeId, translationId, tagId, page) {
-    var _this = this;
-
-    if (_this.currentRequest && _this.currentRequest.readyState !== 4) {
-        _this.currentRequest.abort();
-    }
-
-    var $nodeTree = _this.$page.find('.nodetree-widget');
-
-    if ($nodeTree.length) {
-        var $rootTree = $nodeTree.find('.root-tree').eq(0);
-
-        if (typeof rootNodeId === 'undefined') {
-            if (!$rootTree.attr('data-parent-node-id')) {
-                rootNodeId = null;
-            } else {
-                rootNodeId = parseInt($rootTree.attr('data-parent-node-id'));
-            }
-        } else {
-            rootNodeId = parseInt(rootNodeId);
-        }
-
-        window.Rozier.lazyload.canvasLoader.show();
-        var postData = {
-            '_token': window.Rozier.ajaxToken,
-            '_action': 'requestNodeTree',
-            'stackTree': true,
-            'parentNodeId': rootNodeId,
-            'page': _this.getCurrentPage(),
-            'translationId': _this.getTranslationId()
-        };
-
-        var url = window.Rozier.routes.nodesTreeAjax;
-        if (translationId && translationId > 0) {
-            postData.translationId = parseInt(translationId);
-        }
-
-        /*
-         * Add translation id route param manually
-         */
-        if ((0, _plugins.isset)(postData.translationId) && postData.translationId !== null) {
-            url += '/' + postData.translationId;
-        }
-
-        if ((0, _plugins.isset)(page)) {
-            postData.page = parseInt(page);
-        }
-
-        // data-filter-tag
-        if ((0, _plugins.isset)(tagId)) {
-            postData.tagId = parseInt(tagId);
-        }
-
-        console.log('refresh stackNodeTree', postData);
-
-        _this.currentRequest = _jquery2.default.ajax({
-            url: url,
-            type: 'get',
-            cache: false,
-            dataType: 'json',
-            data: postData
-        }).done(function (data) {
-            if ($nodeTree.length && typeof data.nodeTree !== 'undefined') {
-                $nodeTree.fadeOut('slow', function () {
-                    $nodeTree.replaceWith(data.nodeTree);
-                    $nodeTree = _this.$page.find('.nodetree-widget');
-
-                    window.Rozier.initNestables();
-                    window.Rozier.bindMainTrees();
-                    window.Rozier.lazyload.bindAjaxLink();
-                    $nodeTree.fadeIn();
-                    window.Rozier.resize();
-
-                    /* eslint-disable no-new */
-                    new _nodesBulk2.default();
-
-                    _this.$switchLangButtons = _this.$page.find('.nodetree-langs a');
-                    _this.$nodeTree = _this.$page.find('.root-tree').eq(0);
-
-                    if (_this.$switchLangButtons.length) {
-                        var proxiedChangeLang = _jquery2.default.proxy(_this.onChangeLangClick, _this);
-                        _this.$switchLangButtons.off('click', proxiedChangeLang);
-                        _this.$switchLangButtons.on('click', proxiedChangeLang);
-                    }
-
-                    window.Rozier.lazyload.canvasLoader.hide();
-                    window.Rozier.lazyload.nodeTreeContextActions = new _nodeTreeContextActions2.default();
-                });
-            }
-        }).fail(function (data) {
-            console.log(data.responseJSON);
-        });
-    } else {
-        console.error('No node-tree available.');
-    }
-};
 
 /***/ }),
 
@@ -47446,6 +48079,13 @@ module.exports = { "default": __webpack_require__("../node_modules/core-js/libra
 
 /***/ }),
 
+/***/ "../node_modules/babel-runtime/core-js/object/create.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__("../node_modules/core-js/library/fn/object/create.js"), __esModule: true };
+
+/***/ }),
+
 /***/ "../node_modules/babel-runtime/core-js/object/define-property.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47453,10 +48093,24 @@ module.exports = { "default": __webpack_require__("../node_modules/core-js/libra
 
 /***/ }),
 
+/***/ "../node_modules/babel-runtime/core-js/object/get-prototype-of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__("../node_modules/core-js/library/fn/object/get-prototype-of.js"), __esModule: true };
+
+/***/ }),
+
 /***/ "../node_modules/babel-runtime/core-js/object/keys.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = { "default": __webpack_require__("../node_modules/core-js/library/fn/object/keys.js"), __esModule: true };
+
+/***/ }),
+
+/***/ "../node_modules/babel-runtime/core-js/object/set-prototype-of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__("../node_modules/core-js/library/fn/object/set-prototype-of.js"), __esModule: true };
 
 /***/ }),
 
@@ -47633,6 +48287,70 @@ exports.default = _assign2.default || function (target) {
   }
 
   return target;
+};
+
+/***/ }),
+
+/***/ "../node_modules/babel-runtime/helpers/inherits.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _setPrototypeOf = __webpack_require__("../node_modules/babel-runtime/core-js/object/set-prototype-of.js");
+
+var _setPrototypeOf2 = _interopRequireDefault(_setPrototypeOf);
+
+var _create = __webpack_require__("../node_modules/babel-runtime/core-js/object/create.js");
+
+var _create2 = _interopRequireDefault(_create);
+
+var _typeof2 = __webpack_require__("../node_modules/babel-runtime/helpers/typeof.js");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : (0, _typeof3.default)(superClass)));
+  }
+
+  subClass.prototype = (0, _create2.default)(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf2.default ? (0, _setPrototypeOf2.default)(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+/***/ }),
+
+/***/ "../node_modules/babel-runtime/helpers/possibleConstructorReturn.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _typeof2 = __webpack_require__("../node_modules/babel-runtime/helpers/typeof.js");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
 };
 
 /***/ }),
@@ -60992,6 +61710,18 @@ module.exports = __webpack_require__("../node_modules/core-js/library/modules/_c
 
 /***/ }),
 
+/***/ "../node_modules/core-js/library/fn/object/create.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__("../node_modules/core-js/library/modules/es6.object.create.js");
+var $Object = __webpack_require__("../node_modules/core-js/library/modules/_core.js").Object;
+module.exports = function create(P, D) {
+  return $Object.create(P, D);
+};
+
+
+/***/ }),
+
 /***/ "../node_modules/core-js/library/fn/object/define-property.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -61004,11 +61734,29 @@ module.exports = function defineProperty(it, key, desc) {
 
 /***/ }),
 
+/***/ "../node_modules/core-js/library/fn/object/get-prototype-of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__("../node_modules/core-js/library/modules/es6.object.get-prototype-of.js");
+module.exports = __webpack_require__("../node_modules/core-js/library/modules/_core.js").Object.getPrototypeOf;
+
+
+/***/ }),
+
 /***/ "../node_modules/core-js/library/fn/object/keys.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__("../node_modules/core-js/library/modules/es6.object.keys.js");
 module.exports = __webpack_require__("../node_modules/core-js/library/modules/_core.js").Object.keys;
+
+
+/***/ }),
+
+/***/ "../node_modules/core-js/library/fn/object/set-prototype-of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__("../node_modules/core-js/library/modules/es6.object.set-prototype-of.js");
+module.exports = __webpack_require__("../node_modules/core-js/library/modules/_core.js").Object.setPrototypeOf;
 
 
 /***/ }),
@@ -62222,6 +62970,38 @@ module.exports = __webpack_require__("../node_modules/core-js/library/modules/_h
 
 /***/ }),
 
+/***/ "../node_modules/core-js/library/modules/_set-proto.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var isObject = __webpack_require__("../node_modules/core-js/library/modules/_is-object.js");
+var anObject = __webpack_require__("../node_modules/core-js/library/modules/_an-object.js");
+var check = function (O, proto) {
+  anObject(O);
+  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
+};
+module.exports = {
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+    function (test, buggy, set) {
+      try {
+        set = __webpack_require__("../node_modules/core-js/library/modules/_ctx.js")(Function.call, __webpack_require__("../node_modules/core-js/library/modules/_object-gopd.js").f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch (e) { buggy = true; }
+      return function setPrototypeOf(O, proto) {
+        check(O, proto);
+        if (buggy) O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+  check: check
+};
+
+
+/***/ }),
+
 /***/ "../node_modules/core-js/library/modules/_set-species.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -62679,12 +63459,38 @@ $export($export.S + $export.F, 'Object', { assign: __webpack_require__("../node_
 
 /***/ }),
 
+/***/ "../node_modules/core-js/library/modules/es6.object.create.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__("../node_modules/core-js/library/modules/_export.js");
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+$export($export.S, 'Object', { create: __webpack_require__("../node_modules/core-js/library/modules/_object-create.js") });
+
+
+/***/ }),
+
 /***/ "../node_modules/core-js/library/modules/es6.object.define-property.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__("../node_modules/core-js/library/modules/_export.js");
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
 $export($export.S + $export.F * !__webpack_require__("../node_modules/core-js/library/modules/_descriptors.js"), 'Object', { defineProperty: __webpack_require__("../node_modules/core-js/library/modules/_object-dp.js").f });
+
+
+/***/ }),
+
+/***/ "../node_modules/core-js/library/modules/es6.object.get-prototype-of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.9 Object.getPrototypeOf(O)
+var toObject = __webpack_require__("../node_modules/core-js/library/modules/_to-object.js");
+var $getPrototypeOf = __webpack_require__("../node_modules/core-js/library/modules/_object-gpo.js");
+
+__webpack_require__("../node_modules/core-js/library/modules/_object-sap.js")('getPrototypeOf', function () {
+  return function getPrototypeOf(it) {
+    return $getPrototypeOf(toObject(it));
+  };
+});
 
 
 /***/ }),
@@ -62701,6 +63507,16 @@ __webpack_require__("../node_modules/core-js/library/modules/_object-sap.js")('k
     return $keys(toObject(it));
   };
 });
+
+
+/***/ }),
+
+/***/ "../node_modules/core-js/library/modules/es6.object.set-prototype-of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.3.19 Object.setPrototypeOf(O, proto)
+var $export = __webpack_require__("../node_modules/core-js/library/modules/_export.js");
+$export($export.S, 'Object', { setPrototypeOf: __webpack_require__("../node_modules/core-js/library/modules/_set-proto.js").set });
 
 
 /***/ }),

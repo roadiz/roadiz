@@ -33,8 +33,8 @@ import 'jquery-ui/ui/widgets/autocomplete'
 import './components/login/login'
 
 import Lazyload from './lazyload'
-import EntriesPanel from './components/panels/entriesPanel'
-import NodeTreeContextActions from './components/trees/nodeTreeContextActions'
+import EntriesPanel from './components/panels/EntriesPanel'
+import NodeTreeContextActions from './components/trees/NodeTreeContextActions'
 import RozierMobile from './rozierMobile'
 import VueApp from './App'
 import $ from 'jquery'
@@ -46,9 +46,21 @@ import {
     PointerEventsPolyfill,
     isMobile
 } from './plugins'
+import GeotagField from './widgets/GeotagField'
+import MultiGeotagField from './widgets/MultiGeotagField'
 
 window.CodeMirror = CodeMirror
 window.UIkit = UIkit
+
+// eslint-disable-next-line
+window.initializeGeotagFields = () => {
+    window.Rozier.gMapLoaded = true
+    window.Rozier.gMapLoading = false
+
+    /* eslint-disable no-new */
+    new GeotagField()
+    new MultiGeotagField()
+}
 
 /*
  * ============================================================================
@@ -94,7 +106,7 @@ Rozier.$backTopBtn = null
 
 Rozier.entriesPanel = null
 
-Rozier.onDocumentReady = function (event) {
+Rozier.onDocumentReady = function () {
     /*
      * Store Rozier configuration
      */
@@ -364,10 +376,10 @@ Rozier.refreshMainNodeTree = function (translationId) {
  * @param  {[type]} event [description]
  * @return {[type]}       [description]
  */
-Rozier.toggleTreesPanel = function (event) {
+Rozier.toggleTreesPanel = function () {
     $('#main-trees').toggleClass('minified')
     $('#main-content').toggleClass('maximized')
-    $('#minify-tree-panel-button i').toggleClass('uk-icon-rz-panel-tree-open')
+    $('#minify-tree-panel-button').find('i').toggleClass('uk-icon-rz-panel-tree-open')
     $('#minify-tree-panel-area').toggleClass('tree-panel-hidden')
 
     return false

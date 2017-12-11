@@ -1,7 +1,7 @@
 import $ from 'jquery'
 
 (function () {
-    var onLoad = function (data) {
+    const onLoad = function (data) {
         const $splashContainer = $('#splash-container')
         $splashContainer.css({
             'background-image': 'url(' + data.url + ')'
@@ -9,7 +9,7 @@ import $ from 'jquery'
         $splashContainer.addClass('visible')
     }
 
-    var requestImage = function () {
+    const requestImage = function () {
         $.ajax({
             url: window.RozierRoot.routes.splashRequest,
             type: 'GET',
