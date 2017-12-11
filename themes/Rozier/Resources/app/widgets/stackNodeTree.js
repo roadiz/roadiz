@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import NodesBulk from '../bulk-edits/nodesBulk'
-import NodeTreeContextActions from '../trees/nodeTreeContextActions'
+import NodesBulk from '../components/bulk-edits/nodesBulk'
+import NodeTreeContextActions from '../components/trees/nodeTreeContextActions'
 import {
     isset
 } from '../plugins'

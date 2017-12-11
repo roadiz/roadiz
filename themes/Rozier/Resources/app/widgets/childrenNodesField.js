@@ -2,7 +2,7 @@ import $ from 'jquery'
 import {
     isset
 } from '../plugins'
-import NodeTreeContextActions from '../trees/nodeTreeContextActions'
+import NodeTreeContextActions from '../components/trees/nodeTreeContextActions'
 
 export default function ChildrenNodesField () {
     var _this = this

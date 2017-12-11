@@ -3,13 +3,11 @@ import './less/vendor.less'
 import './less/style.less'
 
 // Include bower dependencies
-/* eslint-disable */
 import '../../bower_components/CanvasLoader/js/heartcode-canvasloader'
 import '../../bower_components/jquery.actual/jquery.actual'
 import '../../bower_components/jquery-tag-editor/jquery.tag-editor'
 import '../../bower_components/bootstrap-switch/dist/js/bootstrap-switch'
 import '../../bower_components/mousetrap/mousetrap'
-// import '../../bower_components/dropzone/dist/dropzone.js'
 import '../../bower_components/caret/jquery.caret.js'
 import '../../bower_components/jquery-minicolors/jquery.minicolors.js'
 
@@ -30,13 +28,13 @@ import 'codemirror/mode/xml/xml.js'
 import 'codemirror/mode/yaml/yaml.js'
 import 'codemirror/mode/gfm/gfm.js'
 
-/* eslint-enable */
-
 import 'jquery-ui'
 import 'jquery-ui/ui/widgets/autocomplete'
+import './components/login/login'
+
 import Lazyload from './lazyload'
-import EntriesPanel from './panels/entriesPanel'
-import NodeTreeContextActions from './trees/nodeTreeContextActions'
+import EntriesPanel from './components/panels/entriesPanel'
+import NodeTreeContextActions from './components/trees/nodeTreeContextActions'
 import RozierMobile from './rozierMobile'
 import VueApp from './App'
 import $ from 'jquery'
