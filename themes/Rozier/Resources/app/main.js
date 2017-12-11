@@ -2,12 +2,54 @@ import './scss/styles.scss'
 import './less/vendor.less'
 import './less/style.less'
 
-import './plugins'
+// Include bower dependencies
+/* eslint-disable */
+import '../../bower_components/CanvasLoader/js/heartcode-canvasloader'
+import '../../bower_components/jquery.actual/jquery.actual'
+import '../../bower_components/jquery-tag-editor/jquery.tag-editor'
+import '../../bower_components/jquery-ui/jquery-ui'
+import '../../bower_components/bootstrap-switch/dist/js/bootstrap-switch'
+import '../../bower_components/mousetrap/mousetrap'
+import '../../bower_components/dropzone/dist/dropzone.js'
+import '../../bower_components/caret/jquery.caret.js'
+import '../../bower_components/jquery-minicolors/jquery.minicolors.js'
+
+import UIkit from '../../bower_components/uikit/js/uikit'
+import '../../bower_components/uikit/js/components/nestable'
+import '../../bower_components/uikit/js/components/sortable.js'
+import '../../bower_components/uikit/js/components/datepicker.js'
+import '../../bower_components/uikit/js/components/pagination.js'
+import '../../bower_components/uikit/js/components/notify.js'
+import '../../bower_components/uikit/js/components/tooltip.js'
+
+import CodeMirror from '../../bower_components/codemirror/lib/codemirror'
+import '../../bower_components/codemirror/mode/markdown/markdown.js'
+import '../../bower_components/codemirror/mode/javascript/javascript.js'
+import '../../bower_components/codemirror/mode/css/css.js'
+import '../../bower_components/codemirror/addon/mode/overlay.js'
+import '../../bower_components/codemirror/mode/xml/xml.js'
+import '../../bower_components/codemirror/mode/yaml/yaml.js'
+import '../../bower_components/codemirror/mode/gfm/gfm.js'
+
+/* eslint-enable */
+
 import Lazyload from './lazyload'
+import EntriesPanel from './panels/entriesPanel'
+import NodeTreeContextActions from './trees/nodeTreeContextActions'
+import RozierMobile from './rozierMobile'
+import VueApp from './App'
 import $ from 'jquery'
 import {
-    TweenLite
+    TweenLite,
+    Expo
 } from 'gsap'
+import {
+    PointerEventsPolyfill,
+    isMobile
+} from './plugins'
+
+window.CodeMirror = CodeMirror
+window.UIkit = UIkit
 
 /*
  * ============================================================================
@@ -16,6 +58,8 @@ import {
  */
 
 const Rozier = {}
+
+window.Rozier = Rozier
 
 Rozier.$window = null
 Rozier.$body = null
@@ -61,6 +105,7 @@ Rozier.onDocumentReady = function (event) {
 
     Rozier.lazyload = new Lazyload()
     Rozier.entriesPanel = new EntriesPanel()
+    Rozier.vueApp = new VueApp()
 
     Rozier.$window = $(window)
     Rozier.$body = $('body')
@@ -119,7 +164,7 @@ Rozier.initNestables = function () {
             options.group = 'folderTree'
         }
 
-        UIkit.nestable(element, options)
+        window.UIkit.nestable(element, options)
     })
 }
 
@@ -157,7 +202,7 @@ Rozier.bindMainTrees = function () {
 Rozier.maintreeElementNameRightClick = function (e) {
     let $contextualMenu = $(e.currentTarget).parent().find('.tree-contextualmenu')
     if ($contextualMenu.length) {
-        if ($contextualMenu[0].className.indexOf('uk-open') == -1) {
+        if ($contextualMenu[0].className.indexOf('uk-open') === -1) {
             $contextualMenu.addClass('uk-open')
         } else $contextualMenu.removeClass('uk-open')
     }
@@ -202,7 +247,7 @@ Rozier.getMessages = function () {
                 if (typeof data.messages.confirm !== 'undefined' &&
                     data.messages.confirm.length > 0) {
                     for (let i = data.messages.confirm.length - 1; i >= 0; i--) {
-                        UIkit.notify({
+                        window.UIkit.notify({
                             message: data.messages.confirm[i],
                             status: 'success',
                             timeout: 2000,
@@ -214,7 +259,7 @@ Rozier.getMessages = function () {
                 if (typeof data.messages.error !== 'undefined' &&
                     data.messages.error.length > 0) {
                     for (let j = data.messages.error.length - 1; j >= 0; j--) {
-                        UIkit.notify({
+                        window.UIkit.notify({
                             message: data.messages.error[j],
                             status: 'error',
                             timeout: 2000,
@@ -273,12 +318,12 @@ Rozier.refreshMainNodeTree = function (translationId) {
             '_action': 'requestMainNodeTree'
         }
 
-        if ($currentRootTree.length && !isset(translationId)) {
+        if ($currentRootTree.length && !translationId) {
             translationId = parseInt($currentRootTree.attr('data-translation-id'))
         }
 
         let url = Rozier.routes.nodesTreeAjax
-        if (isset(translationId) && translationId > 0) {
+        if (translationId && translationId > 0) {
             url += '/' + translationId
         }
 
@@ -355,7 +400,7 @@ Rozier.toggleUserPanel = function (event) {
 Rozier.onSearchNodesSources = function (event) {
     let $input = $(event.currentTarget)
 
-    if (event.keyCode == 27) {
+    if (event.keyCode === 27) {
         $input.blur()
     }
 
@@ -420,29 +465,29 @@ Rozier.onNestableNodeTreeChange = function (event, rootEl, el, status) {
     if (status === 'removed') {
         return false
     }
-    let node_id = parseInt(element.attr('data-node-id'))
-    let parent_node_id = null
+    let nodeId = parseInt(element.attr('data-node-id'))
+    let parentNodeId = null
     if (element.parents('.nodetree-element').length) {
-        parent_node_id = parseInt(element.parents('.nodetree-element').eq(0).attr('data-node-id'))
+        parentNodeId = parseInt(element.parents('.nodetree-element').eq(0).attr('data-node-id'))
     } else if (element.parents('.stack-tree-widget').length) {
-        parent_node_id = parseInt(element.parents('.stack-tree-widget').eq(0).attr('data-parent-node-id'))
+        parentNodeId = parseInt(element.parents('.stack-tree-widget').eq(0).attr('data-parent-node-id'))
     } else if (element.parents('.children-node-widget').length) {
-        parent_node_id = parseInt(element.parents('.children-node-widget').eq(0).attr('data-parent-node-id'))
+        parentNodeId = parseInt(element.parents('.children-node-widget').eq(0).attr('data-parent-node-id'))
     }
 
     /*
      * When dropping to route
      * set parentNodeId to NULL
      */
-    if (isNaN(parent_node_id)) {
-        parent_node_id = null
+    if (isNaN(parentNodeId)) {
+        parentNodeId = null
     }
 
     /*
      * User dragged node inside itself
      * It will destroy the Internet !
      */
-    if (node_id === parent_node_id) {
+    if (nodeId === parentNodeId) {
         console.log('You cannot move a node inside itself!')
         window.location.reload()
         return false
@@ -451,8 +496,8 @@ Rozier.onNestableNodeTreeChange = function (event, rootEl, el, status) {
     let postData = {
         _token: Rozier.ajaxToken,
         _action: 'updatePosition',
-        nodeId: node_id,
-        newParent: parent_node_id
+        nodeId: nodeId,
+        newParent: parentNodeId
     }
 
     /*
@@ -467,13 +512,13 @@ Rozier.onNestableNodeTreeChange = function (event, rootEl, el, status) {
     console.log(postData)
 
     $.ajax({
-        url: Rozier.routes.nodeAjaxEdit.replace('%nodeId%', node_id),
+        url: Rozier.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
         type: 'POST',
         dataType: 'json',
         data: postData
     })
         .done(function (data) {
-            UIkit.notify({
+            window.UIkit.notify({
                 message: data.responseText,
                 status: data.status,
                 timeout: 3000,
@@ -502,26 +547,26 @@ Rozier.onNestableTagTreeChange = function (event, rootEl, el, status) {
         return false
     }
 
-    let tag_id = parseInt(element.attr('data-tag-id'))
-    let parent_tag_id = null
+    let tagId = parseInt(element.attr('data-tag-id'))
+    let parentTagId = null
     if (element.parents('.tagtree-element').length) {
-        parent_tag_id = parseInt(element.parents('.tagtree-element').eq(0).attr('data-tag-id'))
+        parentTagId = parseInt(element.parents('.tagtree-element').eq(0).attr('data-tag-id'))
     } else if (element.parents('.root-tree').length) {
-        parent_tag_id = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-tag-id'))
+        parentTagId = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-tag-id'))
     }
     /*
      * When dropping to route
      * set parentTagId to NULL
      */
-    if (isNaN(parent_tag_id)) {
-        parent_tag_id = null
+    if (isNaN(parentTagId)) {
+        parentTagId = null
     }
 
     /*
      * User dragged tag inside itself
      * It will destroy the Internet !
      */
-    if (tag_id === parent_tag_id) {
+    if (tagId === parentTagId) {
         console.log('You cannot move a tag inside itself!')
         alert('You cannot move a tag inside itself!')
         window.location.reload()
@@ -531,8 +576,8 @@ Rozier.onNestableTagTreeChange = function (event, rootEl, el, status) {
     let postData = {
         _token: Rozier.ajaxToken,
         _action: 'updatePosition',
-        tagId: tag_id,
-        newParent: parent_tag_id
+        tagId: tagId,
+        newParent: parentTagId
     }
 
     /*
@@ -547,13 +592,13 @@ Rozier.onNestableTagTreeChange = function (event, rootEl, el, status) {
     console.log(postData)
 
     $.ajax({
-        url: Rozier.routes.tagAjaxEdit.replace('%tagId%', tag_id),
+        url: Rozier.routes.tagAjaxEdit.replace('%tagId%', tagId),
         type: 'POST',
         dataType: 'json',
         data: postData
     })
         .done(function (data) {
-            UIkit.notify({
+            window.UIkit.notify({
                 message: data.responseText,
                 status: data.status,
                 timeout: 3000,
@@ -577,32 +622,32 @@ Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
     /*
      * If folder removed, do not do anything, the other folderTree will be triggered
      */
-    if (status == 'removed') {
+    if (status === 'removed') {
         return false
     }
 
-    let folder_id = parseInt(element.attr('data-folder-id'))
-    let parent_folder_id = null
+    let folderId = parseInt(element.attr('data-folder-id'))
+    let parentFolderId = null
 
     if (element.parents('.foldertree-element').length) {
-        parent_folder_id = parseInt(element.parents('.foldertree-element').eq(0).attr('data-folder-id'))
+        parentFolderId = parseInt(element.parents('.foldertree-element').eq(0).attr('data-folder-id'))
     } else if (element.parents('.root-tree').length) {
-        parent_folder_id = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-folder-id'))
+        parentFolderId = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-folder-id'))
     }
 
     /*
      * When dropping to route
      * set parentFolderId to NULL
      */
-    if (isNaN(parent_folder_id)) {
-        parent_folder_id = null
+    if (isNaN(parentFolderId)) {
+        parentFolderId = null
     }
 
     /*
      * User dragged folder inside itself
      * It will destroy the Internet !
      */
-    if (folder_id === parent_folder_id) {
+    if (folderId === parentFolderId) {
         console.log('You cannot move a folder inside itself!')
         alert('You cannot move a folder inside itself!')
         window.location.reload()
@@ -612,8 +657,8 @@ Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
     let postData = {
         _token: Rozier.ajaxToken,
         _action: 'updatePosition',
-        folderId: folder_id,
-        newParent: parent_folder_id
+        folderId: folderId,
+        newParent: parentFolderId
     }
 
     /*
@@ -626,13 +671,13 @@ Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
     }
 
     $.ajax({
-        url: Rozier.routes.folderAjaxEdit.replace('%folderId%', folder_id),
+        url: Rozier.routes.folderAjaxEdit.replace('%folderId%', folderId),
         type: 'POST',
         dataType: 'json',
         data: postData
     })
         .done(function (data) {
-            UIkit.notify({
+            window.UIkit.notify({
                 message: data.responseText,
                 status: data.status,
                 timeout: 3000,
@@ -646,9 +691,9 @@ Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
 
 /**
  * Back top click
- * @return {[type]} [description]
+ * @return {boolean} [description]
  */
-Rozier.backTopBtnClick = function (e) {
+Rozier.backTopBtnClick = function () {
     let _this = this
 
     TweenLite.to(_this.$mainContentScrollable, 0.6, {scrollTo: {y: 0}, ease: Expo.easeOut})

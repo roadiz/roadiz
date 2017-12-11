@@ -1,7 +1,71 @@
+/*
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file lazyload.js
+ * @author Adrien Scholaert <adrien@rezo-zero.com>
+ */
+
+import $ from 'jquery'
+import {
+    TweenLite,
+    Expo
+} from 'gsap'
+import DocumentsBulk from './bulk-edits/documentsBulk'
+import NodesBulk from './bulk-edits/nodesBulk'
+import TagsBulk from './bulk-edits/tagsBulk'
+import AutoUpdate from './auto-update/auto-update'
+import DocumentUploader from './documents/documentUploader'
+import NodeTypeFieldsPosition from './node-type-fields/nodeTypeFieldsPosition'
+import NodeTypeFieldEdit from './node-type-fields/nodeTypeFieldEdit'
+import CustomFormFieldsPosition from './custom-form-fields/customFormFieldsPosition'
+import CustomFormFieldEdit from './custom-form-fields/customFormFieldEdit'
+import NodeTreeContextActions from './trees/nodeTreeContextActions'
+import NodeEditSource from './node/nodeEditSource'
+import Import from './import/import'
+import InputLengthWatcher from './widgets/inputLengthWatcher'
+import ChildrenNodesField from './widgets/childrenNodesField'
+import GeotagField from './widgets/geotagField'
+import MultiGeotagField from './widgets/multiGeotagField'
+import StackNodeTree from './widgets/stackNodeTree'
+import SaveButtons from './widgets/saveButtons'
+import TagAutocomplete from './widgets/tagAutocomplete'
+import FolderAutocomplete from './widgets/folderAutocomplete'
+import SettingsSaveButtons from './widgets/settingsSaveButtons'
+import NodeTree from './widgets/nodeTree'
+import NodeStatuses from './widgets/nodeStatuses'
+import YamlEditor from './widgets/yamlEditor'
+import MarkdownEditor from './widgets/markdownEditor'
+import JsonEditor from './widgets/jsonEditor'
+import CssEditor from './widgets/cssEditor'
+import {
+    isMobile
+} from './plugins'
+
 /**
  * Lazyload
  */
-var Lazyload = function () {
+export default function Lazyload () {
     var _this = this
 
     _this.$linksSelector = null
@@ -25,7 +89,7 @@ var Lazyload = function () {
     })
 
     _this.$canvasLoaderContainer = $('#canvasloader-container')
-    _this.mainColor = isset(Rozier.mainColor) ? Rozier.mainColor : '#ffffff'
+    _this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff'
     _this.initLoader()
 
     /*
@@ -41,7 +105,7 @@ var Lazyload = function () {
 Lazyload.prototype.initLoader = function () {
     var _this = this
 
-    _this.canvasLoader = new CanvasLoader('canvasloader-container')
+    _this.canvasLoader = new window.CanvasLoader('canvasloader-container')
     _this.canvasLoader.setColor(_this.mainColor)
     _this.canvasLoader.setShape('square')
     _this.canvasLoader.setDensity(90)
@@ -61,16 +125,15 @@ Lazyload.prototype.parseLinks = function () {
  * @return {[type]}       [description]
  */
 Lazyload.prototype.onClick = function (event) {
-    var _this = this
-
-    var $link = $(event.currentTarget),
-        href = $link.attr('href')
+    let _this = this
+    let $link = $(event.currentTarget)
+    let href = $link.attr('href')
 
     if (typeof href !== 'undefined' &&
         !$link.hasClass('rz-no-ajax-link') &&
         href !== '' &&
-        href != '#' &&
-        (href.indexOf(Rozier.baseUrl) >= 0 || href.charAt(0) == '/' || href.charAt(0) == '?')) {
+        href !== '#' &&
+        (href.indexOf(window.Rozier.baseUrl) >= 0 || href.charAt(0) === '/' || href.charAt(0) === '?')) {
         event.preventDefault()
 
         if (_this.clickTimeout) {
@@ -150,7 +213,7 @@ Lazyload.prototype.loadContent = function (state, location) {
                 if (typeof data.responseText !== 'undefined') {
                     try {
                         var exception = JSON.parse(data.responseText)
-                        UIkit.notify({
+                        window.UIkit.notify({
                             message: exception.message,
                             status: 'danger',
                             timeout: 3000,
@@ -161,8 +224,8 @@ Lazyload.prototype.loadContent = function (state, location) {
                         window.location.href = location.href
                     }
                 } else {
-                    UIkit.notify({
-                        message: Rozier.messages.forbiddenPage,
+                    window.UIkit.notify({
+                        message: window.Rozier.messages.forbiddenPage,
                         status: 'danger',
                         timeout: 3000,
                         pos: 'top-center'
@@ -218,12 +281,13 @@ Lazyload.prototype.generalBind = function () {
 
     _this.bindAjaxLink()
 
+    /* eslint-disable no-new */
     new DocumentsBulk()
     new AutoUpdate()
     new NodesBulk()
     new TagsBulk()
     new InputLengthWatcher()
-    new DocumentUploader(Rozier.messages.dropzone)
+    new DocumentUploader(window.Rozier.messages.dropzone)
     _this.childrenNodesFields = new ChildrenNodesField()
     new GeotagField()
     new MultiGeotagField()
@@ -252,9 +316,11 @@ Lazyload.prototype.generalBind = function () {
 
     _this.initFilterBars()
 
+    const $colorPickerInput = $('.colorpicker-input')
+
     // Init colorpicker
-    if ($('.colorpicker-input').length) {
-        $('.colorpicker-input').minicolors()
+    if ($colorPickerInput.length) {
+        $colorPickerInput.minicolors()
     }
 
     // Animate actions menu
@@ -262,26 +328,25 @@ Lazyload.prototype.generalBind = function () {
         TweenLite.to('.actions-menu', 0.5, {right: 0, delay: 0.4, ease: Expo.easeOut})
     }
 
-    Rozier.initNestables()
-    Rozier.bindMainTrees()
-    Rozier.nodeStatuses = new NodeStatuses()
+    window.Rozier.initNestables()
+    window.Rozier.bindMainTrees()
+    window.Rozier.nodeStatuses = new NodeStatuses()
 
     // Switch checkboxes
     _this.initBootstrapSwitches()
 
-    Rozier.getMessages()
+    window.Rozier.getMessages()
 
-    if (typeof Rozier.importRoutes !== 'undefined' &&
-        Rozier.importRoutes !== null) {
-        Rozier.import = new Import(Rozier.importRoutes)
-        Rozier.importRoutes = null
+    if (typeof window.Rozier.importRoutes !== 'undefined' &&
+        window.Rozier.importRoutes !== null) {
+        window.Rozier.import = new Import(window.Rozier.importRoutes)
+        window.Rozier.importRoutes = null
     }
 }
 
 Lazyload.prototype.initBootstrapSwitches = function () {
-    var _this = this
-
     var $checkboxes = $('.rz-boolean-checkbox')
+
     // Switch checkboxes
     $checkboxes.bootstrapSwitch({
         size: 'small'
@@ -353,14 +418,12 @@ Lazyload.prototype.initYamlEditors = function () {
 }
 
 Lazyload.prototype.initFilterBars = function () {
-    var _this = this
-
-    var $selectItemPerPage = $('select.item-per-page')
+    const $selectItemPerPage = $('select.item-per-page')
 
     if ($selectItemPerPage.length) {
         $selectItemPerPage.off('change')
         $selectItemPerPage.on('change', function (event) {
-            var $form = $(event.currentTarget).parents('form').submit()
+            $(event.currentTarget).parents('form').submit()
         })
     }
 }
@@ -372,5 +435,5 @@ Lazyload.prototype.initFilterBars = function () {
 Lazyload.prototype.resize = function () {
     var _this = this
 
-    _this.$canvasLoaderContainer[0].style.left = Rozier.mainContentScrollableOffsetLeft + (Rozier.mainContentScrollableWidth / 2) + 'px'
+    _this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + (window.Rozier.mainContentScrollableWidth / 2) + 'px'
 }

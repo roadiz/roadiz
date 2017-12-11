@@ -84,7 +84,7 @@ const getWebpackConfigBase = (config) => {
                     }]
                 })
             }, {
-                test: /\.less?$/,
+                test: /\.less|.css?$/,
                 loader: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: [{
@@ -172,6 +172,11 @@ const getWebpackConfigBase = (config) => {
             new webpack.NoEmitOnErrorsPlugin(),
             new WebpackNotifierPlugin({
                 alwaysNotify: true
+            }),
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery'
             })
         ],
         resolve: {

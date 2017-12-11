@@ -1,5 +1,7 @@
+import $ from 'jquery'
+
 // is mobile
-var isMobile = {
+export const isMobile = {
     Android: function () {
         return navigator.userAgent.match(/Android/i)
     },
@@ -20,7 +22,7 @@ var isMobile = {
     }
 }
 
-var toType = function (obj) {
+export const toType = function (obj) {
     return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
 };
 
@@ -48,7 +50,7 @@ var toType = function (obj) {
 }())
 
 // Strip tags
-var stripTags = function (input, allowed) {
+export const stripTags = function (input, allowed) {
   //  discuss at: http://phpjs.org/functions/strip_tags/
   // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
   // improved by: Luke Godfrey
@@ -86,8 +88,8 @@ var stripTags = function (input, allowed) {
       .toLowerCase()
       .match(/<[a-z][a-z0-9]*>/g) || [])
     .join('') // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-        commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi
+    let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
+    let commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi
     return input.replace(commentsAndPhpTags, '')
     .replace(tags, function ($0, $1) {
         return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : ''
@@ -95,13 +97,13 @@ var stripTags = function (input, allowed) {
 }
 
 // Isset
-var isset = function (element) {
+export const isset = function (element) {
     if (element) return true
     else return false
 }
 
 // Add class
-var addClass = function (el, classToAdd) {
+export const addClass = function (el, classToAdd) {
     if (el) {
         if (el.classList) el.classList.add(classToAdd)
         else el.className += ' ' + classToAdd
@@ -109,14 +111,14 @@ var addClass = function (el, classToAdd) {
 }
 
 // Remove class
-var removeClass = function (el, classToRemove) {
+export const removeClass = function (el, classToRemove) {
     if (el) {
         if (el.classList) el.classList.remove(classToRemove)
         else {
             el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '')
 
             var posLastCar = el.className.length - 1
-            if (el.className[posLastCar] == ' ') el.className = el.className.substring(0, posLastCar)
+            if (el.className[posLastCar] === ' ') el.className = el.className.substring(0, posLastCar)
         }
     }
 }
@@ -126,15 +128,15 @@ var removeClass = function (el, classToRemove) {
  * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
  */
 // constructor
-function PointerEventsPolyfill (options) {
+export const PointerEventsPolyfill = function (options) {
     // set defaults
     this.options = {
         selector: '*',
         mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
         usePolyfillIf: function () {
-            if (navigator.appName == 'Microsoft Internet Explorer') {
+            if (navigator.appName === 'Microsoft Internet Explorer') {
                 var agent = navigator.userAgent
-                if (agent.match(/MSIE ([0-9]{1,}[\.0-9]{0,})/) != null) {
+                if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
                     var version = parseFloat(RegExp.$1)
                     if (version < 11) { return true }
                 }
@@ -162,7 +164,7 @@ PointerEventsPolyfill.initialize = function (options) {
 PointerEventsPolyfill.prototype.register_mouse_events = function () {
     // register on all elements (and all future elements) matching the selector
     $(document).on(this.options.mouseEvents.join(' '), this.options.selector, function (e) {
-        if ($(this).css('pointer-events') == 'none') {
+        if ($(this).css('pointer-events') === 'none') {
              // peak at the element below
             var origDisplayAttribute = $(this).css('display')
             $(this).css('display', 'none')

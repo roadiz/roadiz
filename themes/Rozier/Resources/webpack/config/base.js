@@ -75,17 +75,9 @@ const getConfig = () => {
         // Externals
         // ----------------------------------
         externals: {
-            TweenLite: 'TweenLite',
-            TweenMax: 'TweenMax',
-            TimelineMax: 'TimelineMax',
-            ScrollToPlugin: 'ScrollToPlugin',
-            Expo: 'Expo',
-            Linear: 'Linear',
-            Power4: 'Power4',
-            CSSPlugin: 'CSSPlugin',
-            jQuery: 'jQuery',
-            jquery: 'jQuery',
-            $: '$'
+            uikit: 'UIkit',
+            vue: 'Vue',
+            vuex: 'Vuex'
         },
 
         // ----------------------------------
