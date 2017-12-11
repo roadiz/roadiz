@@ -42,7 +42,7 @@ import CustomFormFieldEdit from './components/custom-form-fields/CustomFormField
 import NodeTreeContextActions from './components/trees/NodeTreeContextActions'
 import Import from './components/import/Import'
 import NodeEditSource from './components/node/NodeEditSource'
-import InputLengthWatcher from './widgets/inputLengthWatcher'
+import InputLengthWatcher from './widgets/InputLengthWatcher'
 import ChildrenNodesField from './widgets/ChildrenNodesField'
 import GeotagField from './widgets/GeotagField'
 import MultiGeotagField from './widgets/MultiGeotagField'

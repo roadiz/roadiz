@@ -6366,9 +6366,9 @@ var _NodeEditSource = __webpack_require__("../Resources/app/components/node/Node
 
 var _NodeEditSource2 = _interopRequireDefault(_NodeEditSource);
 
-var _inputLengthWatcher = __webpack_require__("../Resources/app/widgets/inputLengthWatcher.js");
+var _InputLengthWatcher = __webpack_require__("../Resources/app/widgets/InputLengthWatcher.js");
 
-var _inputLengthWatcher2 = _interopRequireDefault(_inputLengthWatcher);
+var _InputLengthWatcher2 = _interopRequireDefault(_InputLengthWatcher);
 
 var _ChildrenNodesField = __webpack_require__("../Resources/app/widgets/ChildrenNodesField.js");
 
@@ -6660,7 +6660,7 @@ var Lazyload = function () {
             new _DocumentsBulk2.default();
             new _NodesBulk2.default();
             new _TagsBulk2.default();
-            new _inputLengthWatcher2.default();
+            new _InputLengthWatcher2.default();
             new _DocumentUploader2.default(window.Rozier.messages.dropzone);
             this.childrenNodesFields = new _ChildrenNodesField2.default();
             new _GeotagField2.default();
@@ -10894,6 +10894,95 @@ exports.default = GeotagField;
 
 /***/ }),
 
+/***/ "../Resources/app/widgets/InputLengthWatcher.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var InputLengthWatcher = function () {
+    function InputLengthWatcher() {
+        (0, _classCallCheck3.default)(this, InputLengthWatcher);
+
+        this.$maxLengthed = (0, _jquery2.default)('input[data-max-length]');
+        this.$minLengthed = (0, _jquery2.default)('input[data-min-length]');
+
+        this.onMaxKeyUp = this.onMaxKeyUp.bind(this);
+        this.onMinKeyUp = this.onMinKeyUp.bind(this);
+
+        if (this.$maxLengthed.length) {
+            this.$maxLengthed.off('keyup', this.onMaxKeyUp);
+            this.$maxLengthed.on('keyup', this.onMaxKeyUp);
+        }
+
+        if (this.$minLengthed.length) {
+            this.$minLengthed.off('keyup', this.onMinKeyUp);
+            this.$minLengthed.on('keyup', this.onMinKeyUp);
+        }
+    }
+
+    /**
+     * @param {Event} event
+     */
+
+
+    (0, _createClass3.default)(InputLengthWatcher, [{
+        key: 'onMaxKeyUp',
+        value: function onMaxKeyUp(event) {
+            var input = (0, _jquery2.default)(event.currentTarget);
+            var maxLength = Math.round(event.currentTarget.getAttribute('data-max-length'));
+            var currentLength = event.currentTarget.value.length;
+
+            if (currentLength > maxLength) {
+                input.addClass('uk-form-danger');
+            } else {
+                input.removeClass('uk-form-danger');
+            }
+        }
+
+        /**
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onMinKeyUp',
+        value: function onMinKeyUp(event) {
+            var input = (0, _jquery2.default)(event.currentTarget);
+            var maxLength = Math.round(event.currentTarget.getAttribute('data-min-length'));
+            var currentLength = event.currentTarget.value.length;
+
+            if (currentLength <= maxLength) {
+                input.addClass('uk-form-danger');
+            } else {
+                input.removeClass('uk-form-danger');
+            }
+        }
+    }]);
+    return InputLengthWatcher;
+}();
+
+exports.default = InputLengthWatcher;
+
+/***/ }),
+
 /***/ "../Resources/app/widgets/JsonEditor.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11653,95 +11742,6 @@ var StackNodeTree = function () {
 }();
 
 exports.default = StackNodeTree;
-
-/***/ }),
-
-/***/ "../Resources/app/widgets/inputLengthWatcher.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var InputLengthWatcher = function () {
-    function InputLengthWatcher() {
-        (0, _classCallCheck3.default)(this, InputLengthWatcher);
-
-        this.$maxLengthed = (0, _jquery2.default)('input[data-max-length]');
-        this.$minLengthed = (0, _jquery2.default)('input[data-min-length]');
-
-        this.onMaxKeyUp = this.onMaxKeyUp.bind(this);
-        this.onMinKeyUp = this.onMinKeyUp.bind(this);
-
-        if (this.$maxLengthed.length) {
-            this.$maxLengthed.off('keyup', this.onMaxKeyUp);
-            this.$maxLengthed.on('keyup', this.onMaxKeyUp);
-        }
-
-        if (this.$minLengthed.length) {
-            this.$minLengthed.off('keyup', this.onMinKeyUp);
-            this.$minLengthed.on('keyup', this.onMinKeyUp);
-        }
-    }
-
-    /**
-     * @param {Event} event
-     */
-
-
-    (0, _createClass3.default)(InputLengthWatcher, [{
-        key: 'onMaxKeyUp',
-        value: function onMaxKeyUp(event) {
-            var input = (0, _jquery2.default)(event.currentTarget);
-            var maxLength = Math.round(event.currentTarget.getAttribute('data-max-length'));
-            var currentLength = event.currentTarget.value.length;
-
-            if (currentLength > maxLength) {
-                input.addClass('uk-form-danger');
-            } else {
-                input.removeClass('uk-form-danger');
-            }
-        }
-
-        /**
-         * @param {Event} event
-         */
-
-    }, {
-        key: 'onMinKeyUp',
-        value: function onMinKeyUp(event) {
-            var input = (0, _jquery2.default)(event.currentTarget);
-            var maxLength = Math.round(event.currentTarget.getAttribute('data-min-length'));
-            var currentLength = event.currentTarget.value.length;
-
-            if (currentLength <= maxLength) {
-                input.addClass('uk-form-danger');
-            } else {
-                input.removeClass('uk-form-danger');
-            }
-        }
-    }]);
-    return InputLengthWatcher;
-}();
-
-exports.default = InputLengthWatcher;
 
 /***/ }),
 
