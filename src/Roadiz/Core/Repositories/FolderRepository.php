@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * {@inheritdoc}
@@ -50,6 +51,8 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return \RZ\Roadiz\Core\Entities\Folder
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOrCreateByPath($folderPath)
     {
@@ -63,12 +66,10 @@ class FolderRepository extends EntityRepository
 
         if (count($folders) > 1) {
             $parentName = $folders[count($folders) - 2];
-
             $parentFolder = $this->findOneByFolderName($parentName);
         }
 
         $folder = $this->findOneByFolderName($folderName);
-
 
         if (null === $folder) {
             /*
@@ -86,9 +87,9 @@ class FolderRepository extends EntityRepository
              * Add folder translation
              * with given name
              */
-            $translation = $this->_em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                     ->findDefault();
+            $translation = $this->_em->getRepository(Translation::class)->findDefault();
             $folderTranslation = new FolderTranslation($folder, $translation);
+            $folderTranslation->setName($folderName);
 
             $this->_em->persist($folder);
             $this->_em->persist($folderTranslation);
@@ -104,6 +105,7 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return \RZ\Roadiz\Core\Entities\Folder|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByPath($folderPath)
     {
@@ -111,7 +113,6 @@ class FolderRepository extends EntityRepository
 
         $folders = explode('/', $folderPath);
         $folders = array_filter($folders);
-
         $folderName = $folders[count($folders) - 1];
 
         return $this->findOneByFolderName($folderName);
@@ -159,7 +160,7 @@ class FolderRepository extends EntityRepository
         $qb->addSelect('f')
             ->andWhere($qb->expr()->in('f.folderName', ':name'))
             ->setMaxResults(1)
-            ->setParameter(':name', $folderName);
+            ->setParameter(':name', StringHandler::slugify($folderName));
 
         if (null !== $translation) {
             $qb->addSelect('tf')
