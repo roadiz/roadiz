@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\StringHandler;
 
 /**
  * {@inheritdoc}
@@ -621,6 +622,7 @@ class TagRepository extends EntityRepository
      * @param string $tagPath
      *
      * @return \RZ\Roadiz\Core\Entities\Tag
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOrCreateByPath($tagPath)
     {
@@ -634,25 +636,20 @@ class TagRepository extends EntityRepository
 
         if (count($tags) > 1) {
             $parentName = $tags[count($tags) - 2];
-
-            $parentTag = $this->findOneByTagName($parentName);
+            $parentTag = $this->findOneByTagName(StringHandler::slugify($parentName));
 
             if (null === $parentTag) {
-                $ttagParent = $this->_em
-                    ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                    ->findOneByName($parentName);
+                $ttagParent = $this->_em->getRepository(TagTranslation::class)->findOneByName($parentName);
                 if (null !== $ttagParent) {
                     $parentTag = $ttagParent->getTag();
                 }
             }
         }
 
-        $tag = $this->findOneByTagName($tagName);
+        $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
 
         if (null === $tag) {
-            $ttag = $this->_em
-                ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                ->findOneByName($tagName);
+            $ttag = $this->_em->getRepository(TagTranslation::class)->findOneByName($tagName);
             if (null !== $ttag) {
                 $tag = $ttag->getTag();
             }
@@ -663,9 +660,7 @@ class TagRepository extends EntityRepository
              * Creation of a new tag
              * before linking it to the node
              */
-            $trans = $this->_em
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                ->findDefault();
+            $trans = $this->_em->getRepository(Translation::class)->findDefault();
 
             $tag = new Tag();
             $tag->setTagName($tagName);
@@ -697,35 +692,16 @@ class TagRepository extends EntityRepository
         $tagPath = trim($tagPath);
         $tags = explode('/', $tagPath);
         $tags = array_filter($tags);
-
         $lastToken = count($tags) - 1;
 
         $tagName = count($tags) > 0 ? $tags[$lastToken] : $tagPath;
 
         $parentName = null;
-        $parentTag = null;
 
-        if (count($tags) > 1) {
-            $parentName = $tags[count($tags) - 2];
-
-            $parentTag = $this->findOneByTagName($parentName);
-
-            if (null === $parentTag) {
-                $ttagParent = $this->_em
-                    ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                    ->findOneByName($parentName);
-                if (null !== $ttagParent) {
-                    $ttagParent->getTag();
-                }
-            }
-        }
-
-        $tag = $this->findOneByTagName($tagName);
+        $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
 
         if (null === $tag) {
-            $ttag = $this->_em
-                ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
-                ->findOneByName($tagName);
+            $ttag = $this->_em->getRepository(TagTranslation::class)->findOneByName($tagName);
             if (null !== $ttag) {
                 $tag = $ttag->getTag();
             }

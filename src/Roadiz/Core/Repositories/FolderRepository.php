@@ -257,6 +257,7 @@ class FolderRepository extends EntityRepository
      * @param string $pattern
      * @param array $criteria
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
