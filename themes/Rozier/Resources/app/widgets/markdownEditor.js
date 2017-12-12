@@ -2,7 +2,7 @@ import $ from 'jquery'
 import {
     stripTags,
     addClass
-} from '../plugins'
+} from '../utils/plugins'
 import {
     TweenLite,
     Expo

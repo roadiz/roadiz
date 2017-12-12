@@ -1,101 +1,96 @@
 import $ from 'jquery'
 
 /**
- * Css Editor
+ * Yaml editor
  */
-export default function YamlEditor ($textarea, index) {
-    var _this = this
+export default class YamlEditor {
+    /**
+     * Yaml editor constructor
+     * @param $textarea
+     * @param index
+     */
+    constructor ($textarea, index) {
+        this.$textarea = $textarea
+        this.textarea = this.$textarea[0]
+        this.$cont = this.$textarea.parents('.uk-form-row').eq(0)
+        this.$settingRow = this.$textarea.parents('.setting-row').eq(0)
 
-    _this.$textarea = $textarea
-    _this.textarea = _this.$textarea[0]
-    _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0)
-    _this.$settingRow = _this.$textarea.parents('.setting-row').eq(0)
+        let options = {
+            lineNumbers: true,
+            mode: 'yaml',
+            theme: 'mbo',
+            tabSize: 2,
+            lineWrapping: true,
+            dragDrop: false
+        }
 
-    var options = {
-        lineNumbers: true,
-        mode: 'yaml',
-        theme: 'mbo',
-        tabSize: 2,
-        lineWrapping: true,
-        dragDrop: false
+        if (this.$settingRow.length) {
+            options.lineNumbers = false
+        }
+
+        this.editor = window.CodeMirror.fromTextArea(this.textarea, options)
+
+        // Bind methods
+        this.textareaChange = this.textareaChange.bind(this)
+        this.textareaFocus = this.textareaFocus.bind(this)
+        this.textareaBlur = this.textareaBlur.bind(this)
+        this.forceEditorUpdate = this.forceEditorUpdate.bind(this)
+
+        // Init
+        this.init()
     }
 
-    if (_this.$settingRow.length) {
-        options.lineNumbers = false
+    /**
+     * Init
+     */
+    init () {
+        if (this.$textarea.length) {
+            this.editor.on('change', this.textareaChange)
+            this.editor.on('focus', this.textareaFocus)
+            this.editor.on('blur', this.textareaBlur)
+
+            window.setTimeout(() => {
+                $('[data-uk-switcher]').on('show.uk.switcher', this.forceEditorUpdate)
+                this.forceEditorUpdate()
+            }, 300)
+        }
     }
 
-    _this.editor = window.CodeMirror.fromTextArea(_this.textarea, options)
-
-    // Methods
-    _this.init()
-}
-
-/**
- * Init
- * @return {[type]} [description]
- */
-YamlEditor.prototype.init = function () {
-    var _this = this
-
-    if (_this.$textarea.length) {
-        _this.editor.on('change', $.proxy(_this.textareaChange, _this))
-        _this.editor.on('focus', $.proxy(_this.textareaFocus, _this))
-        _this.editor.on('blur', $.proxy(_this.textareaBlur, _this))
-
-        var forceEditorUpdateProxy = $.proxy(_this.forceEditorUpdate, _this)
-        setTimeout(function () {
-            $('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy)
-            _this.forceEditorUpdate()
-        }, 300)
+    forceEditorUpdate () {
+        this.editor.refresh()
     }
+
+    /**
+     * Textarea change
+     */
+    textareaChange () {
+        this.editor.save()
+
+        // if (this.limit) {
+        //     setTimeout(function () {
+        //         let textareaVal = this.editor.getValue()
+        //         let textareaValStripped = stripTags(textareaVal)
+        //         let textareaValLength = textareaValStripped.length
+        //     }, 100)
+        // }
+    }
+
+    /**
+     * Textarea focus
+     */
+    textareaFocus () {
+        this.$cont.addClass('form-col-focus')
+    }
+
+    /**
+     * Textarea focus out
+     */
+    textareaBlur () {
+        this.$cont.removeClass('form-col-focus')
+    }
+
+    /**
+     * Window resize callback
+     */
+    resize () {}
 }
-
-YamlEditor.prototype.forceEditorUpdate = function (event) {
-    var _this = this
-    // console.log('Refresh Css editor');
-    _this.editor.refresh()
-}
-
-/**
- * Textarea change
- * @return {[type]} [description]
- */
-YamlEditor.prototype.textareaChange = function (e) {
-    var _this = this
-
-    _this.editor.save()
-
-    // if (_this.limit) {
-    //     setTimeout(function () {
-    //         var textareaVal = _this.editor.getValue()
-    //         var textareaValStripped = stripTags(textareaVal)
-    //         var textareaValLength = textareaValStripped.length
-    //     }, 100)
-    // }
-}
-
-/**
- * Textarea focus
- * @return {[type]} [description]
- */
-YamlEditor.prototype.textareaFocus = function (e) {
-    var _this = this
-
-    _this.$cont.addClass('form-col-focus')
-}
-
-/**
- * Textarea focus out
- * @return {[type]} [description]
- */
-YamlEditor.prototype.textareaBlur = function (e) {
-    var _this = this
-
-    _this.$cont.removeClass('form-col-focus')
-}
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-YamlEditor.prototype.resize = function () {}

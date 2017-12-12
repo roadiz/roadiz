@@ -47,19 +47,19 @@ import ChildrenNodesField from './widgets/ChildrenNodesField'
 import GeotagField from './widgets/GeotagField'
 import MultiGeotagField from './widgets/MultiGeotagField'
 import StackNodeTree from './widgets/StackNodeTree'
-import SaveButtons from './widgets/saveButtons'
-import TagAutocomplete from './widgets/tagAutocomplete'
+import SaveButtons from './widgets/SaveButtons'
+import TagAutocomplete from './widgets/TagAutocomplete'
 import FolderAutocomplete from './widgets/FolderAutocomplete'
-import SettingsSaveButtons from './widgets/settingsSaveButtons'
-import NodeTree from './widgets/nodeTree'
-import NodeStatuses from './widgets/nodeStatuses'
-import YamlEditor from './widgets/yamlEditor'
-import MarkdownEditor from './widgets/markdownEditor'
+import SettingsSaveButtons from './widgets/SettingsSaveButtons'
+import NodeTree from './widgets/NodeTree'
+import NodeStatuses from './widgets/NodeStatuses'
+import YamlEditor from './widgets/YamlEditor'
+import MarkdownEditor from './widgets/MarkdownEditor'
 import JsonEditor from './widgets/JsonEditor'
 import CssEditor from './widgets/CssEditor'
 import {
     isMobile
-} from './plugins'
+} from './utils/plugins'
 
 /**
  * Lazyload

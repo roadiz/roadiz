@@ -314,6 +314,1754 @@ exports.default = AppVue;
 
 /***/ }),
 
+/***/ "../Resources/app/Lazyload.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
+
+var _DocumentsBulk = __webpack_require__("../Resources/app/components/bulk-edits/DocumentsBulk.js");
+
+var _DocumentsBulk2 = _interopRequireDefault(_DocumentsBulk);
+
+var _NodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/NodesBulk.js");
+
+var _NodesBulk2 = _interopRequireDefault(_NodesBulk);
+
+var _TagsBulk = __webpack_require__("../Resources/app/components/bulk-edits/TagsBulk.js");
+
+var _TagsBulk2 = _interopRequireDefault(_TagsBulk);
+
+var _DocumentUploader = __webpack_require__("../Resources/app/components/documents/DocumentUploader.js");
+
+var _DocumentUploader2 = _interopRequireDefault(_DocumentUploader);
+
+var _NodeTypeFieldsPosition = __webpack_require__("../Resources/app/components/node-type-fields/NodeTypeFieldsPosition.js");
+
+var _NodeTypeFieldsPosition2 = _interopRequireDefault(_NodeTypeFieldsPosition);
+
+var _NodeTypeFieldEdit = __webpack_require__("../Resources/app/components/node-type-fields/NodeTypeFieldEdit.js");
+
+var _NodeTypeFieldEdit2 = _interopRequireDefault(_NodeTypeFieldEdit);
+
+var _CustomFormFieldsPosition = __webpack_require__("../Resources/app/components/custom-form-fields/CustomFormFieldsPosition.js");
+
+var _CustomFormFieldsPosition2 = _interopRequireDefault(_CustomFormFieldsPosition);
+
+var _CustomFormFieldEdit = __webpack_require__("../Resources/app/components/custom-form-fields/CustomFormFieldEdit.js");
+
+var _CustomFormFieldEdit2 = _interopRequireDefault(_CustomFormFieldEdit);
+
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
+
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
+
+var _Import = __webpack_require__("../Resources/app/components/import/Import.js");
+
+var _Import2 = _interopRequireDefault(_Import);
+
+var _NodeEditSource = __webpack_require__("../Resources/app/components/node/NodeEditSource.js");
+
+var _NodeEditSource2 = _interopRequireDefault(_NodeEditSource);
+
+var _InputLengthWatcher = __webpack_require__("../Resources/app/widgets/InputLengthWatcher.js");
+
+var _InputLengthWatcher2 = _interopRequireDefault(_InputLengthWatcher);
+
+var _ChildrenNodesField = __webpack_require__("../Resources/app/widgets/ChildrenNodesField.js");
+
+var _ChildrenNodesField2 = _interopRequireDefault(_ChildrenNodesField);
+
+var _GeotagField = __webpack_require__("../Resources/app/widgets/GeotagField.js");
+
+var _GeotagField2 = _interopRequireDefault(_GeotagField);
+
+var _MultiGeotagField = __webpack_require__("../Resources/app/widgets/MultiGeotagField.js");
+
+var _MultiGeotagField2 = _interopRequireDefault(_MultiGeotagField);
+
+var _StackNodeTree = __webpack_require__("../Resources/app/widgets/StackNodeTree.js");
+
+var _StackNodeTree2 = _interopRequireDefault(_StackNodeTree);
+
+var _SaveButtons = __webpack_require__("../Resources/app/widgets/SaveButtons.js");
+
+var _SaveButtons2 = _interopRequireDefault(_SaveButtons);
+
+var _TagAutocomplete = __webpack_require__("../Resources/app/widgets/TagAutocomplete.js");
+
+var _TagAutocomplete2 = _interopRequireDefault(_TagAutocomplete);
+
+var _FolderAutocomplete = __webpack_require__("../Resources/app/widgets/FolderAutocomplete.js");
+
+var _FolderAutocomplete2 = _interopRequireDefault(_FolderAutocomplete);
+
+var _SettingsSaveButtons = __webpack_require__("../Resources/app/widgets/SettingsSaveButtons.js");
+
+var _SettingsSaveButtons2 = _interopRequireDefault(_SettingsSaveButtons);
+
+var _NodeTree = __webpack_require__("../Resources/app/widgets/NodeTree.js");
+
+var _NodeTree2 = _interopRequireDefault(_NodeTree);
+
+var _NodeStatuses = __webpack_require__("../Resources/app/widgets/NodeStatuses.js");
+
+var _NodeStatuses2 = _interopRequireDefault(_NodeStatuses);
+
+var _YamlEditor = __webpack_require__("../Resources/app/widgets/YamlEditor.js");
+
+var _YamlEditor2 = _interopRequireDefault(_YamlEditor);
+
+var _MarkdownEditor = __webpack_require__("../Resources/app/widgets/MarkdownEditor.js");
+
+var _MarkdownEditor2 = _interopRequireDefault(_MarkdownEditor);
+
+var _JsonEditor = __webpack_require__("../Resources/app/widgets/JsonEditor.js");
+
+var _JsonEditor2 = _interopRequireDefault(_JsonEditor);
+
+var _CssEditor = __webpack_require__("../Resources/app/widgets/CssEditor.js");
+
+var _CssEditor2 = _interopRequireDefault(_CssEditor);
+
+var _plugins = __webpack_require__("../Resources/app/utils/plugins.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Lazyload
+ */
+var Lazyload = function () {
+    function Lazyload() {
+        var _this = this;
+
+        (0, _classCallCheck3.default)(this, Lazyload);
+
+        this.$linksSelector = null;
+        this.$textareasMarkdown = null;
+        this.documentsList = null;
+        this.mainColor = null;
+        this.$canvasLoaderContainer = null;
+        this.currentRequest = null;
+
+        this.onPopState = this.onPopState.bind(this);
+        this.onClick = this.onClick.bind(this);
+
+        this.parseLinks();
+
+        // this hack resolves safari triggering popstate
+        // at initial load.
+        window.addEventListener('load', function () {
+            window.setTimeout(function () {
+                (0, _jquery2.default)(window).off('popstate', _this.onPopState);
+                (0, _jquery2.default)(window).on('popstate', _this.onPopState);
+            }, 0);
+        });
+
+        this.$canvasLoaderContainer = (0, _jquery2.default)('#canvasloader-container');
+        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff';
+        this.initLoader();
+
+        /*
+         * Start history with first hard loaded page
+         */
+        history.pushState({}, null, window.location.href);
+    }
+
+    /**
+     * Init loader
+     */
+
+
+    (0, _createClass3.default)(Lazyload, [{
+        key: 'initLoader',
+        value: function initLoader() {
+            this.canvasLoader = new window.CanvasLoader('canvasloader-container');
+            this.canvasLoader.setColor(this.mainColor);
+            this.canvasLoader.setShape('square');
+            this.canvasLoader.setDensity(90);
+            this.canvasLoader.setRange(0.8);
+            this.canvasLoader.setSpeed(4);
+            this.canvasLoader.setFPS(30);
+        }
+    }, {
+        key: 'parseLinks',
+        value: function parseLinks() {
+            this.$linksSelector = (0, _jquery2.default)("a:not('[target=_blank]')").not('.rz-no-ajax-link');
+        }
+
+        /**
+         * Bind links to load pages
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onClick',
+        value: function onClick(event) {
+            var _this2 = this;
+
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var href = $link.attr('href');
+
+            if (typeof href !== 'undefined' && !$link.hasClass('rz-no-ajax-link') && href !== '' && href !== '#' && (href.indexOf(window.Rozier.baseUrl) >= 0 || href.charAt(0) === '/' || href.charAt(0) === '?')) {
+                event.preventDefault();
+
+                if (this.clickTimeout) {
+                    clearTimeout(this.clickTimeout);
+                }
+
+                this.clickTimeout = window.setTimeout(function () {
+                    history.pushState({}, null, $link.attr('href'));
+                    _this2.onPopState(null);
+                }, 50);
+
+                return false;
+            }
+        }
+
+        /**
+         * On pop state
+         * @param {Event} event
+         */
+
+    }, {
+        key: 'onPopState',
+        value: function onPopState(event) {
+            var state = null;
+
+            if (event !== null) {
+                state = event.originalEvent.state;
+            }
+
+            if (typeof state === 'undefined' || state === null) {
+                state = window.history.state;
+            }
+
+            if (state !== null) {
+                this.canvasLoader.show();
+                this.loadContent(state, window.location);
+            }
+        }
+
+        /**
+         * Load content (ajax)
+         * @param {Object} state
+         * @param {Object} location
+         */
+
+    }, {
+        key: 'loadContent',
+        value: function loadContent(state, location) {
+            var _this3 = this;
+
+            /*
+             * Delay loading if user is click like devil
+             */
+            if (this.currentTimeout) {
+                clearTimeout(this.currentTimeout);
+            }
+
+            this.currentTimeout = window.setTimeout(function () {
+                /*
+                 * Trigger event on window to notify open
+                 * widgets to close.
+                 */
+                var pageChangeEvent = new CustomEvent('pagechange');
+                window.dispatchEvent(pageChangeEvent);
+
+                _this3.currentRequest = _jquery2.default.ajax({
+                    url: location.href,
+                    type: 'get',
+                    dataType: 'html',
+                    cache: false,
+                    data: state.headerData
+                }).done(function (data) {
+                    _this3.applyContent(data);
+                    _this3.canvasLoader.hide();
+                    var pageLoadEvent = new CustomEvent('pageload', { 'detail': data });
+                    window.dispatchEvent(pageLoadEvent);
+                }).fail(function (data) {
+                    if (typeof data.responseText !== 'undefined') {
+                        try {
+                            var exception = JSON.parse(data.responseText);
+                            window.UIkit.notify({
+                                message: exception.message,
+                                status: 'danger',
+                                timeout: 3000,
+                                pos: 'top-center'
+                            });
+                        } catch (e) {
+                            // No valid JsonResponse, need to refresh page
+                            window.location.href = location.href;
+                        }
+                    } else {
+                        window.UIkit.notify({
+                            message: window.Rozier.messages.forbiddenPage,
+                            status: 'danger',
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }
+
+                    _this3.canvasLoader.hide();
+                });
+            }, 100);
+        }
+
+        /**
+         * Apply content to main content
+         * @param {[type]} data [description]
+         * @return {[type]}      [description]
+         */
+
+    }, {
+        key: 'applyContent',
+        value: function applyContent(data) {
+            var _this4 = this;
+
+            var $container = (0, _jquery2.default)('#main-content-scrollable');
+            var $old = $container.find('.content-global');
+
+            var $tempData = (0, _jquery2.default)(data);
+            $tempData.addClass('new-content-global');
+            $container.append($tempData);
+            $tempData = $container.find('.new-content-global');
+
+            $old.fadeOut(100, function () {
+                $old.remove();
+
+                _this4.generalBind();
+                $tempData.fadeIn(200, function () {
+                    $tempData.removeClass('new-content-global');
+                });
+            });
+        }
+    }, {
+        key: 'bindAjaxLink',
+        value: function bindAjaxLink() {
+            this.parseLinks();
+            this.$linksSelector.off('click', this.onClick);
+            this.$linksSelector.on('click', this.onClick);
+        }
+
+        /**
+         * General bind on page load
+         * @return {[type]} [description]
+         */
+
+    }, {
+        key: 'generalBind',
+        value: function generalBind() {
+            this.bindAjaxLink();
+
+            /* eslint-disable no-new */
+            new _DocumentsBulk2.default();
+            new _NodesBulk2.default();
+            new _TagsBulk2.default();
+            new _InputLengthWatcher2.default();
+            new _DocumentUploader2.default(window.Rozier.messages.dropzone);
+            this.childrenNodesFields = new _ChildrenNodesField2.default();
+            new _GeotagField2.default();
+            new _MultiGeotagField2.default();
+            this.stackNodeTrees = new _StackNodeTree2.default();
+
+            if (_plugins.isMobile.any() === null) {
+                new _SaveButtons2.default();
+            }
+
+            new _TagAutocomplete2.default();
+            new _FolderAutocomplete2.default();
+            new _NodeTypeFieldsPosition2.default();
+            new _CustomFormFieldsPosition2.default();
+            new _NodeTreeContextActions2.default();
+            new _SettingsSaveButtons2.default();
+            new _NodeTypeFieldEdit2.default();
+            new _NodeEditSource2.default();
+            this.nodeTree = new _NodeTree2.default();
+            new _CustomFormFieldEdit2.default();
+
+            /*
+             * Codemirror
+             */
+            this.initMarkdownEditors();
+            this.initJsonEditors();
+            this.initCssEditors();
+            this.initYamlEditors();
+            this.initFilterBars();
+
+            var $colorPickerInput = (0, _jquery2.default)('.colorpicker-input');
+
+            // Init colorpicker
+            if ($colorPickerInput.length) {
+                $colorPickerInput.minicolors();
+            }
+
+            // Animate actions menu
+            if ((0, _jquery2.default)('.actions-menu').length && _plugins.isMobile.any() === null) {
+                _gsap.TweenLite.to('.actions-menu', 0.5, { right: 0, delay: 0.4, ease: _gsap.Expo.easeOut });
+            }
+
+            window.Rozier.initNestables();
+            window.Rozier.bindMainTrees();
+            window.Rozier.nodeStatuses = new _NodeStatuses2.default();
+
+            // Switch checkboxes
+            this.initBootstrapSwitches();
+
+            window.Rozier.getMessages();
+
+            if (typeof window.Rozier.importRoutes !== 'undefined' && window.Rozier.importRoutes !== null) {
+                window.Rozier.import = new _Import2.default(window.Rozier.importRoutes);
+                window.Rozier.importRoutes = null;
+            }
+        }
+    }, {
+        key: 'initBootstrapSwitches',
+        value: function initBootstrapSwitches() {
+            var $checkboxes = (0, _jquery2.default)('.rz-boolean-checkbox');
+
+            // Switch checkboxes
+            $checkboxes.bootstrapSwitch({
+                size: 'small'
+            });
+        }
+    }, {
+        key: 'initMarkdownEditors',
+        value: function initMarkdownEditors() {
+            var _this5 = this;
+
+            // Init markdown-preview
+            this.$textareasMarkdown = (0, _jquery2.default)('textarea[data-rz-markdowneditor]');
+            var editorCount = this.$textareasMarkdown.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _MarkdownEditor2.default(_this5.$textareasMarkdown.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initJsonEditors',
+        value: function initJsonEditors() {
+            var _this6 = this;
+
+            // Init markdown-preview
+            this.$textareasJson = (0, _jquery2.default)('textarea[data-rz-jsoneditor]');
+            var editorCount = this.$textareasJson.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _JsonEditor2.default(_this6.$textareasJson.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initCssEditors',
+        value: function initCssEditors() {
+            var _this7 = this;
+
+            // Init markdown-preview
+            this.$textareasCss = (0, _jquery2.default)('textarea[data-rz-csseditor]');
+            var editorCount = this.$textareasCss.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _CssEditor2.default(_this7.$textareasCss.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initYamlEditors',
+        value: function initYamlEditors() {
+            var _this8 = this;
+
+            // Init markdown-preview
+            this.$textareasYaml = (0, _jquery2.default)('textarea[data-rz-yamleditor]');
+            var editorCount = this.$textareasYaml.length;
+
+            if (editorCount) {
+                window.setTimeout(function () {
+                    for (var i = 0; i < editorCount; i++) {
+                        new _YamlEditor2.default(_this8.$textareasYaml.eq(i), i);
+                    }
+                }, 100);
+            }
+        }
+    }, {
+        key: 'initFilterBars',
+        value: function initFilterBars() {
+            var $selectItemPerPage = (0, _jquery2.default)('select.item-per-page');
+
+            if ($selectItemPerPage.length) {
+                $selectItemPerPage.off('change');
+                $selectItemPerPage.on('change', function (event) {
+                    (0, _jquery2.default)(event.currentTarget).parents('form').submit();
+                });
+            }
+        }
+
+        /**
+         * Resize
+         */
+
+    }, {
+        key: 'resize',
+        value: function resize() {
+            this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + window.Rozier.mainContentScrollableWidth / 2 + 'px';
+        }
+    }]);
+    return Lazyload;
+}(); /*
+      * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+      *
+      * Permission is hereby granted, free of charge, to any person obtaining a copy
+      * of this software and associated documentation files (the "Software"), to deal
+      * in the Software without restriction, including without limitation the rights
+      * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      * copies of the Software, and to permit persons to whom the Software is furnished
+      * to do so, subject to the following conditions:
+      * The above copyright notice and this permission notice shall be included in all
+      * copies or substantial portions of the Software.
+      *
+      * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+      * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+      * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+      * IN THE SOFTWARE.
+      *
+      * Except as contained in this notice, the name of the ROADIZ shall not
+      * be used in advertising or otherwise to promote the sale, use or other dealings
+      * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+      *
+      * @file lazyload.js
+      * @author Adrien Scholaert <adrien@rezo-zero.com>
+      */
+
+exports.default = Lazyload;
+
+/***/ }),
+
+/***/ "../Resources/app/Rozier.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _Lazyload = __webpack_require__("../Resources/app/Lazyload.js");
+
+var _Lazyload2 = _interopRequireDefault(_Lazyload);
+
+var _EntriesPanel = __webpack_require__("../Resources/app/components/panels/EntriesPanel.js");
+
+var _EntriesPanel2 = _interopRequireDefault(_EntriesPanel);
+
+var _App = __webpack_require__("../Resources/app/App.js");
+
+var _App2 = _interopRequireDefault(_App);
+
+var _plugins = __webpack_require__("../Resources/app/utils/plugins.js");
+
+var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
+
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
+
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
+
+var _RozierMobile = __webpack_require__("../Resources/app/RozierMobile.js");
+
+var _RozierMobile2 = _interopRequireDefault(_RozierMobile);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Rozier root entry
+ */
+/*
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the ROADIZ shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file Rozier.js
+ * @author Adrien Scholaert <adrien@rezo-zero.com>
+ */
+
+var Rozier = function () {
+    function Rozier() {
+        (0, _classCallCheck3.default)(this, Rozier);
+
+        this.$window = null;
+        this.$body = null;
+
+        this.windowWidth = null;
+        this.windowHeight = null;
+        this.resizeFirst = true;
+        this.gMapLoading = false;
+        this.gMapLoaded = false;
+
+        this.searchNodesSourcesDelay = null;
+        this.nodeTrees = [];
+        this.treeTrees = [];
+
+        this.$userPanelContainer = null;
+        this.$minifyTreePanelButton = null;
+        this.$mainTrees = null;
+        this.$mainTreesContainer = null;
+        this.$mainTreeElementName = null;
+        this.$treeContextualButton = null;
+        this.$nodesSourcesSearch = null;
+        this.nodesSourcesSearchHeight = null;
+        this.$nodeTreeHead = null;
+        this.nodeTreeHeadHeight = null;
+        this.$treeScrollCont = null;
+        this.$treeScroll = null;
+        this.treeScrollHeight = null;
+
+        this.$mainContentScrollable = null;
+        this.mainContentScrollableWidth = null;
+        this.mainContentScrollableOffsetLeft = null;
+        this.$backTopBtn = null;
+
+        this.entriesPanel = null;
+
+        this.maintreeElementNameRightClick = this.maintreeElementNameRightClick.bind(this);
+        this.onNestableNodeTreeChange = this.onNestableNodeTreeChange.bind(this);
+        this.onNestableTagTreeChange = this.onNestableTagTreeChange.bind(this);
+        this.onNestableFolderTreeChange = this.onNestableFolderTreeChange.bind(this);
+        this.backTopBtnClick = this.backTopBtnClick.bind(this);
+        this.resize = this.resize.bind(this);
+    }
+
+    (0, _createClass3.default)(Rozier, [{
+        key: 'onDocumentReady',
+        value: function onDocumentReady() {
+            /*
+             * Store Rozier configuration
+             */
+            for (var index in window.temp) {
+                window.Rozier[index] = window.temp[index];
+            }
+
+            this.lazyload = new _Lazyload2.default();
+            this.entriesPanel = new _EntriesPanel2.default();
+            this.vueApp = new _App2.default();
+
+            this.$window = (0, _jquery2.default)(window);
+            this.$body = (0, _jquery2.default)('body');
+
+            // --- Selectors --- //
+            this.$userPanelContainer = (0, _jquery2.default)('#user-panel-container');
+            this.$minifyTreePanelButton = (0, _jquery2.default)('#minify-tree-panel-button');
+            this.$mainTrees = (0, _jquery2.default)('#main-trees');
+            this.$mainTreesContainer = (0, _jquery2.default)('#main-trees-container');
+            this.$nodesSourcesSearch = (0, _jquery2.default)('#nodes-sources-search');
+            this.$mainContentScrollable = (0, _jquery2.default)('#main-content-scrollable');
+            this.$backTopBtn = (0, _jquery2.default)('#back-top-button');
+
+            // Pointer events polyfill
+            if (!window.Modernizr.testProp('pointerEvents')) {
+                _plugins.PointerEventsPolyfill.initialize({ 'selector': '#main-trees-overlay' });
+            }
+
+            // Minify trees panel toggle button
+            this.$minifyTreePanelButton.on('click', this.toggleTreesPanel);
+
+            // this.$body.on('markdownPreviewOpen', '.markdown-editor-preview', this.toggleTreesPanel);
+            document.body.addEventListener('markdownPreviewOpen', this.openTreesPanel, false);
+
+            // Back top btn
+            this.$backTopBtn.on('click', this.backTopBtnClick);
+
+            this.$window.on('resize', this.resize);
+            this.$window.trigger('resize');
+
+            this.lazyload.generalBind();
+            this.bindMainNodeTreeLangs();
+        }
+
+        /**
+         * init nestable for ajax
+         * @return {[type]} [description]
+         */
+
+    }, {
+        key: 'initNestables',
+        value: function initNestables() {
+            (0, _jquery2.default)('.uk-nestable').each(function (index, element) {
+                var $tree = (0, _jquery2.default)(element);
+                /*
+                 * make drag&drop only available on handle
+                 * very important for Touch based device which need to
+                 * scroll on trees.
+                 */
+                var options = {
+                    handleClass: 'uk-nestable-handle'
+                };
+
+                if ($tree.hasClass('nodetree')) {
+                    options.group = 'nodeTree';
+                } else if ($tree.hasClass('tagtree')) {
+                    options.group = 'tagTree';
+                } else if ($tree.hasClass('foldertree')) {
+                    options.group = 'folderTree';
+                }
+
+                window.UIkit.nestable(element, options);
+            });
+        }
+
+        /**
+         * Bind main trees
+         */
+
+    }, {
+        key: 'bindMainTrees',
+        value: function bindMainTrees() {
+            // TREES
+            var $nodeTree = (0, _jquery2.default)('.nodetree-widget .root-tree');
+            $nodeTree.off('change.uk.nestable');
+            $nodeTree.on('change.uk.nestable', this.onNestableNodeTreeChange);
+
+            var $tagTree = (0, _jquery2.default)('.tagtree-widget .root-tree');
+            $tagTree.off('change.uk.nestable');
+            $tagTree.on('change.uk.nestable', this.onNestableTagTreeChange);
+
+            var $folderTree = (0, _jquery2.default)('.foldertree-widget .root-tree');
+            $folderTree.off('change.uk.nestable');
+            $folderTree.on('change.uk.nestable', this.onNestableFolderTreeChange);
+
+            // Tree element name
+            this.$mainTreeElementName = this.$mainTrees.find('.tree-element-name');
+            this.$mainTreeElementName.off('contextmenu', this.maintreeElementNameRightClick);
+            this.$mainTreeElementName.on('contextmenu', this.maintreeElementNameRightClick);
+        }
+
+        /**
+         * Main tree element name right click.
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'maintreeElementNameRightClick',
+        value: function maintreeElementNameRightClick(e) {
+            var $contextualMenu = (0, _jquery2.default)(e.currentTarget).parent().find('.tree-contextualmenu');
+            if ($contextualMenu.length) {
+                if ($contextualMenu[0].className.indexOf('uk-open') === -1) {
+                    $contextualMenu.addClass('uk-open');
+                } else $contextualMenu.removeClass('uk-open');
+            }
+
+            return false;
+        }
+
+        /**
+         * Bind main node tree langs.
+         *
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'bindMainNodeTreeLangs',
+        value: function bindMainNodeTreeLangs() {
+            var _this = this;
+
+            (0, _jquery2.default)('body').on('click', '#tree-container .nodetree-langs a', function (event) {
+                _this.lazyload.canvasLoader.show();
+                var $link = (0, _jquery2.default)(event.currentTarget);
+                var translationId = parseInt($link.attr('data-translation-id'));
+
+                _this.refreshMainNodeTree(translationId);
+                return false;
+            });
+        }
+
+        /**
+         * Get messages.
+         */
+
+    }, {
+        key: 'getMessages',
+        value: function getMessages() {
+            _jquery2.default.ajax({
+                url: this.routes.ajaxSessionMessages,
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                data: {
+                    '_action': 'messages',
+                    '_token': this.ajaxToken
+                }
+            }).done(function (data) {
+                if (typeof data.messages !== 'undefined') {
+                    if (typeof data.messages.confirm !== 'undefined' && data.messages.confirm.length > 0) {
+                        for (var i = data.messages.confirm.length - 1; i >= 0; i--) {
+                            window.UIkit.notify({
+                                message: data.messages.confirm[i],
+                                status: 'success',
+                                timeout: 2000,
+                                pos: 'top-center'
+                            });
+                        }
+                    }
+
+                    if (typeof data.messages.error !== 'undefined' && data.messages.error.length > 0) {
+                        for (var j = data.messages.error.length - 1; j >= 0; j--) {
+                            window.UIkit.notify({
+                                message: data.messages.error[j],
+                                status: 'error',
+                                timeout: 2000,
+                                pos: 'top-center'
+                            });
+                        }
+                    }
+                }
+            }).fail(function () {
+                console.log('[Rozier.getMessages] error');
+            });
+        }
+
+        /**
+         * @param translationId
+         */
+
+    }, {
+        key: 'refreshAllNodeTrees',
+        value: function refreshAllNodeTrees(translationId) {
+            this.refreshMainNodeTree(translationId);
+
+            /*
+             * Stack trees
+             */
+            if (this.lazyload.stackNodeTrees.treeAvailable()) {
+                this.lazyload.stackNodeTrees.refreshNodeTree();
+            }
+
+            /*
+             * Children node fields widgets;
+             */
+            if (this.lazyload.childrenNodesFields.treeAvailable()) {
+                for (var i = this.lazyload.childrenNodesFields.$nodeTrees.length - 1; i >= 0; i--) {
+                    var $nodeTree = this.lazyload.childrenNodesFields.$nodeTrees.eq(i);
+                    this.lazyload.childrenNodesFields.refreshNodeTree($nodeTree);
+                }
+            }
+        }
+
+        /**
+         * Refresh only main nodeTree.
+         *
+         * @param translationId
+         */
+
+    }, {
+        key: 'refreshMainNodeTree',
+        value: function refreshMainNodeTree(translationId) {
+            var _this2 = this;
+
+            var $currentNodeTree = (0, _jquery2.default)('#tree-container').find('.nodetree-widget');
+            var $currentRootTree = $currentNodeTree.find('.root-tree').eq(0);
+
+            if ($currentNodeTree.length) {
+                var postData = {
+                    '_token': this.ajaxToken,
+                    '_action': 'requestMainNodeTree'
+                };
+
+                if ($currentRootTree.length && !translationId) {
+                    translationId = parseInt($currentRootTree.attr('data-translation-id'));
+                }
+
+                var url = this.routes.nodesTreeAjax;
+                if (translationId && translationId > 0) {
+                    url += '/' + translationId;
+                }
+
+                _jquery2.default.ajax({
+                    url: url,
+                    type: 'get',
+                    cache: false,
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    if ($currentNodeTree.length && typeof data.nodeTree !== 'undefined') {
+                        $currentNodeTree.fadeOut('slow', function () {
+                            $currentNodeTree.replaceWith(data.nodeTree);
+                            $currentNodeTree = (0, _jquery2.default)('#tree-container').find('.nodetree-widget');
+                            $currentNodeTree.fadeIn();
+                            _this2.initNestables();
+                            _this2.bindMainTrees();
+                            _this2.resize();
+                            _this2.lazyload.bindAjaxLink();
+                            _this2.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
+                        });
+                    }
+                }).fail(function (data) {
+                    console.log(data.responseJSON);
+                }).always(function () {
+                    _this2.lazyload.canvasLoader.hide();
+                });
+            } else {
+                console.error('No main node-tree available.');
+            }
+        }
+
+        /**
+         * Toggle trees panel
+         * @param  {[type]} event [description]
+         * @return {[type]}       [description]
+         */
+
+    }, {
+        key: 'toggleTreesPanel',
+        value: function toggleTreesPanel() {
+            (0, _jquery2.default)('#main-trees').toggleClass('minified');
+            (0, _jquery2.default)('#main-content').toggleClass('maximized');
+            (0, _jquery2.default)('#minify-tree-panel-button').find('i').toggleClass('uk-icon-rz-panel-tree-open');
+            (0, _jquery2.default)('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
+
+            return false;
+        }
+    }, {
+        key: 'openTreesPanel',
+        value: function openTreesPanel() {
+            if ((0, _jquery2.default)('#main-trees').hasClass('minified')) {
+                this.toggleTreesPanel(null);
+            }
+
+            return false;
+        }
+
+        /**
+         * Toggle user panel
+         * @param  {[type]} event [description]
+         * @return {[type]}       [description]
+         */
+
+    }, {
+        key: 'toggleUserPanel',
+        value: function toggleUserPanel() {
+            (0, _jquery2.default)('#user-panel').toggleClass('minified');
+            return false;
+        }
+
+        /**
+         * Handle ajax search node source.
+         * @param event
+         */
+
+    }, {
+        key: 'onSearchNodesSources',
+        value: function onSearchNodesSources(event) {
+            var _this3 = this;
+
+            var $input = (0, _jquery2.default)(event.currentTarget);
+
+            if (event.keyCode === 27) {
+                $input.blur();
+            }
+
+            if ($input.val().length > 1) {
+                clearTimeout(this.searchNodesSourcesDelay);
+                this.searchNodesSourcesDelay = window.setTimeout(function () {
+                    var postData = {
+                        _token: _this3.ajaxToken,
+                        _action: 'searchNodesSources',
+                        searchTerms: $input.val()
+                    };
+                    console.log(postData);
+                    _jquery2.default.ajax({
+                        url: _this3.routes.searchNodesSourcesAjax,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: postData
+                    }).done(function (data) {
+                        var $results = (0, _jquery2.default)('#nodes-sources-search-results');
+                        if (typeof data.data !== 'undefined' && data.data.length > 0) {
+                            $results.empty();
+                            for (var i in data.data) {
+                                $results.append('<li><a href="' + data.data[i].url + '" style="border-left-color:' + data.data[i].typeColor + '"><span class="title">' + data.data[i].title + '</span> <span class="type">' + data.data[i].typeName + '</span></a></li>');
+                            }
+                        } else {
+                            $results.empty();
+                        }
+                    }).fail(function () {
+                        var $results = (0, _jquery2.default)('#nodes-sources-search-results');
+                        $results.empty();
+                    });
+                }, 200);
+            }
+        }
+
+        /**
+         * On submit search nodes sources
+         * @return {boolean}
+         */
+
+    }, {
+        key: 'onSubmitSearchNodesSources',
+        value: function onSubmitSearchNodesSources() {
+            return false;
+        }
+
+        /**
+         * @param event
+         * @param rootEl
+         * @param el
+         * @param status
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'onNestableNodeTreeChange',
+        value: function onNestableNodeTreeChange(event, rootEl, el, status) {
+            var element = (0, _jquery2.default)(el);
+            /*
+             * If node removed, do not do anything, the other change.uk.nestable nodeTree will be triggered
+             */
+            if (status === 'removed') {
+                return false;
+            }
+            var nodeId = parseInt(element.attr('data-node-id'));
+            var parentNodeId = null;
+            if (element.parents('.nodetree-element').length) {
+                parentNodeId = parseInt(element.parents('.nodetree-element').eq(0).attr('data-node-id'));
+            } else if (element.parents('.stack-tree-widget').length) {
+                parentNodeId = parseInt(element.parents('.stack-tree-widget').eq(0).attr('data-parent-node-id'));
+            } else if (element.parents('.children-node-widget').length) {
+                parentNodeId = parseInt(element.parents('.children-node-widget').eq(0).attr('data-parent-node-id'));
+            }
+
+            /*
+             * When dropping to route
+             * set parentNodeId to NULL
+             */
+            if (isNaN(parentNodeId)) {
+                parentNodeId = null;
+            }
+
+            /*
+             * User dragged node inside itself
+             * It will destroy the Internet !
+             */
+            if (nodeId === parentNodeId) {
+                console.log('You cannot move a node inside itself!');
+                window.location.reload();
+                return false;
+            }
+
+            var postData = {
+                _token: this.ajaxToken,
+                _action: 'updatePosition',
+                nodeId: nodeId,
+                newParent: parentNodeId
+
+                /*
+                 * Get node siblings id to compute new position
+                 */
+            };if (element.next().length && typeof element.next().attr('data-node-id') !== 'undefined') {
+                postData.nextNodeId = parseInt(element.next().attr('data-node-id'));
+            } else if (element.prev().length && typeof element.prev().attr('data-node-id') !== 'undefined') {
+                postData.prevNodeId = parseInt(element.prev().attr('data-node-id'));
+            }
+
+            console.log(postData);
+
+            _jquery2.default.ajax({
+                url: this.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
+                type: 'POST',
+                dataType: 'json',
+                data: postData
+            }).done(function (data) {
+                window.UIkit.notify({
+                    message: data.responseText,
+                    status: data.status,
+                    timeout: 3000,
+                    pos: 'top-center'
+                });
+            }).fail(function (data) {
+                console.err(data);
+            });
+        }
+
+        /**
+         * @param event
+         * @param rootEl
+         * @param el
+         * @param status
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'onNestableTagTreeChange',
+        value: function onNestableTagTreeChange(event, rootEl, el, status) {
+            var element = (0, _jquery2.default)(el);
+
+            /*
+             * If tag removed, do not do anything, the other tagTree will be triggered
+             */
+            if (status === 'removed') {
+                return false;
+            }
+
+            var tagId = parseInt(element.attr('data-tag-id'));
+            var parentTagId = null;
+            if (element.parents('.tagtree-element').length) {
+                parentTagId = parseInt(element.parents('.tagtree-element').eq(0).attr('data-tag-id'));
+            } else if (element.parents('.root-tree').length) {
+                parentTagId = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-tag-id'));
+            }
+            /*
+             * When dropping to route
+             * set parentTagId to NULL
+             */
+            if (isNaN(parentTagId)) {
+                parentTagId = null;
+            }
+
+            /*
+             * User dragged tag inside itself
+             * It will destroy the Internet !
+             */
+            if (tagId === parentTagId) {
+                console.log('You cannot move a tag inside itself!');
+                alert('You cannot move a tag inside itself!');
+                window.location.reload();
+                return false;
+            }
+
+            var postData = {
+                _token: this.ajaxToken,
+                _action: 'updatePosition',
+                tagId: tagId,
+                newParent: parentTagId
+
+                /*
+                 * Get tag siblings id to compute new position
+                 */
+            };if (element.next().length && typeof element.next().attr('data-tag-id') !== 'undefined') {
+                postData.nextTagId = parseInt(element.next().attr('data-tag-id'));
+            } else if (element.prev().length && typeof element.prev().attr('data-tag-id') !== 'undefined') {
+                postData.prevTagId = parseInt(element.prev().attr('data-tag-id'));
+            }
+
+            console.log(postData);
+
+            _jquery2.default.ajax({
+                url: this.routes.tagAjaxEdit.replace('%tagId%', tagId),
+                type: 'POST',
+                dataType: 'json',
+                data: postData
+            }).done(function (data) {
+                window.UIkit.notify({
+                    message: data.responseText,
+                    status: data.status,
+                    timeout: 3000,
+                    pos: 'top-center'
+                });
+            }).fail(function (data) {
+                console.err(data);
+            });
+        }
+
+        /**
+         *
+         * @param event
+         * @param element
+         * @param status
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'onNestableFolderTreeChange',
+        value: function onNestableFolderTreeChange(event, rootEl, el, status) {
+            var element = (0, _jquery2.default)(el);
+            /*
+             * If folder removed, do not do anything, the other folderTree will be triggered
+             */
+            if (status === 'removed') {
+                return false;
+            }
+
+            var folderId = parseInt(element.attr('data-folder-id'));
+            var parentFolderId = null;
+
+            if (element.parents('.foldertree-element').length) {
+                parentFolderId = parseInt(element.parents('.foldertree-element').eq(0).attr('data-folder-id'));
+            } else if (element.parents('.root-tree').length) {
+                parentFolderId = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-folder-id'));
+            }
+
+            /*
+             * When dropping to route
+             * set parentFolderId to NULL
+             */
+            if (isNaN(parentFolderId)) {
+                parentFolderId = null;
+            }
+
+            /*
+             * User dragged folder inside itself
+             * It will destroy the Internet !
+             */
+            if (folderId === parentFolderId) {
+                console.log('You cannot move a folder inside itself!');
+                alert('You cannot move a folder inside itself!');
+                window.location.reload();
+                return false;
+            }
+
+            var postData = {
+                _token: this.ajaxToken,
+                _action: 'updatePosition',
+                folderId: folderId,
+                newParent: parentFolderId
+
+                /*
+                 * Get folder siblings id to compute new position
+                 */
+            };if (element.next().length && typeof element.next().attr('data-folder-id') !== 'undefined') {
+                postData.nextFolderId = parseInt(element.next().attr('data-folder-id'));
+            } else if (element.prev().length && typeof element.prev().attr('data-folder-id') !== 'undefined') {
+                postData.prevFolderId = parseInt(element.prev().attr('data-folder-id'));
+            }
+
+            _jquery2.default.ajax({
+                url: this.routes.folderAjaxEdit.replace('%folderId%', folderId),
+                type: 'POST',
+                dataType: 'json',
+                data: postData
+            }).done(function (data) {
+                window.UIkit.notify({
+                    message: data.responseText,
+                    status: data.status,
+                    timeout: 3000,
+                    pos: 'top-center'
+                });
+            }).fail(function (data) {
+                console.err(data);
+            });
+        }
+
+        /**
+         * Back top click
+         * @return {boolean} [description]
+         */
+
+    }, {
+        key: 'backTopBtnClick',
+        value: function backTopBtnClick() {
+            _gsap.TweenLite.to(this.$mainContentScrollable, 0.6, { scrollTo: { y: 0 }, ease: _gsap.Expo.easeOut });
+
+            return false;
+        }
+
+        /**
+         * Resize
+         * @return {[type]} [description]
+         */
+
+    }, {
+        key: 'resize',
+        value: function resize() {
+            var _this4 = this;
+
+            this.windowWidth = this.$window.width();
+            this.windowHeight = this.$window.height();
+
+            // Close tree panel if small screen & first resize
+            if (this.windowWidth >= 768 && this.windowWidth <= 1200 && this.resizeFirst) {
+                this.$mainTrees[0].style.display = 'none';
+                this.$minifyTreePanelButton.trigger('click');
+                window.setTimeout(function () {
+                    _this4.$mainTrees[0].style.display = 'table-cell';
+                }, 1000);
+            }
+
+            // Check if mobile
+            if (this.windowWidth <= 768 && this.resizeFirst) this.mobile = new _RozierMobile2.default(); // && isMobile.any() !== null
+
+            if (this.windowWidth >= 768) {
+                this.$mainContentScrollable.height(this.windowHeight);
+                this.$mainTreesContainer[0].style.height = '';
+            } else {
+                this.$mainContentScrollable[0].style.height = '';
+                this.$mainTreesContainer.height(this.windowHeight);
+            }
+
+            // Tree scroll height
+            this.$nodeTreeHead = this.$mainTrees.find('.nodetree-head');
+            this.$treeScrollCont = this.$mainTrees.find('.tree-scroll-cont');
+            this.$treeScroll = this.$mainTrees.find('.tree-scroll');
+
+            /*
+             * need actual to get tree height even when they are hidden.
+             */
+            this.nodesSourcesSearchHeight = this.$nodesSourcesSearch.actual('outerHeight');
+            this.nodeTreeHeadHeight = this.$nodeTreeHead.actual('outerHeight');
+            this.treeScrollHeight = this.windowHeight - (this.nodesSourcesSearchHeight + this.nodeTreeHeadHeight);
+
+            if (_plugins.isMobile.any() !== null) this.treeScrollHeight = this.windowHeight - (50 + 50 + this.nodeTreeHeadHeight); // Menu + tree menu + tree head
+
+            for (var i = 0; i < this.$treeScrollCont.length; i++) {
+                this.$treeScrollCont[i].style.height = this.treeScrollHeight + 'px';
+            }
+
+            // Main content
+            this.mainContentScrollableWidth = this.$mainContentScrollable.width();
+            this.mainContentScrollableOffsetLeft = this.windowWidth - this.mainContentScrollableWidth;
+
+            this.lazyload.resize();
+            this.entriesPanel.replaceSubNavs();
+
+            // Documents list
+            // if(this.lazyload !== null && !this.resizeFirst) this.lazyload.documentsList.resize();
+
+            // Set resize first to false
+            if (this.resizeFirst) this.resizeFirst = false;
+        }
+    }]);
+    return Rozier;
+}();
+
+exports.default = Rozier;
+
+/***/ }),
+
+/***/ "../Resources/app/RozierMobile.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = RozierMobile;
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
+
+var _plugins = __webpack_require__("../Resources/app/utils/plugins.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Rozier Mobile
+ */
+function RozierMobile() {
+    var _this = this;
+
+    // Selectors
+    _this.$menu = (0, _jquery2.default)('#menu-mobile');
+    _this.$adminMenu = (0, _jquery2.default)('#admin-menu');
+    _this.$adminMenuLink = _this.$adminMenu.find('a');
+    _this.$adminMenuNavParent = _this.$adminMenu.find('.uk-parent');
+
+    _this.$searchButton = (0, _jquery2.default)('#search-button');
+    _this.$searchPanel = (0, _jquery2.default)('#nodes-sources-search');
+
+    _this.$treeButton = (0, _jquery2.default)('#tree-button');
+    _this.$treeWrapper = (0, _jquery2.default)('#tree-wrapper');
+    _this.$treeWrapperLink = _this.$treeWrapper.find('a');
+
+    _this.$userPicture = (0, _jquery2.default)('#user-picture');
+    _this.$userActions = (0, _jquery2.default)('.user-actions');
+    _this.$userActionsLink = _this.$userActions.find('a');
+
+    _this.$mainContentOverlay = (0, _jquery2.default)('#main-content-overlay');
+
+    _this.menuOpen = false;
+    _this.searchOpen = false;
+    _this.treeOpen = false;
+    _this.adminOpen = false;
+
+    // Methods
+    _this.init();
+}
+
+/**
+ * Init
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.init = function () {
+    var _this = this;
+
+    if (_this.$userPicture.length) {
+        // Add class on user picture link to unbind default event
+        (0, _plugins.addClass)(_this.$userPicture[0], 'rz-no-ajax-link');
+    }
+
+    // Events
+    _this.$menu.on('click', _jquery2.default.proxy(_this.menuClick, _this));
+    _this.$adminMenuLink.on('click', _jquery2.default.proxy(_this.adminMenuLinkClick, _this));
+    _this.$adminMenuNavParent.on('click', _jquery2.default.proxy(_this.adminMenuNavParentClick, _this));
+
+    _this.$searchButton.on('click', _jquery2.default.proxy(_this.searchButtonClick, _this));
+
+    _this.$treeButton.on('click', _jquery2.default.proxy(_this.treeButtonClick, _this));
+    _this.$treeWrapperLink.on('click', _jquery2.default.proxy(_this.treeWrapperLinkClick, _this));
+
+    _this.$userPicture.on('click', _jquery2.default.proxy(_this.userPictureClick, _this));
+    _this.$userActionsLink.on('click', _jquery2.default.proxy(_this.userActionsLinkClick, _this));
+
+    _this.$mainContentOverlay.on('click', _jquery2.default.proxy(_this.mainContentOverlayClick, _this));
+};
+
+/**
+ * Menu click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.menuClick = function (e) {
+    var _this = this;
+
+    if (!_this.menuOpen) _this.openMenu();else _this.closeMenu();
+};
+
+/**
+ * Admin menu nav parent click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.adminMenuNavParentClick = function (e) {
+    var $target = (0, _jquery2.default)(e.currentTarget);
+    var $ukNavSub = (0, _jquery2.default)(e.currentTarget).find('.uk-nav-sub');
+
+    // Open
+    if (!$target.hasClass('nav-open')) {
+        var $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item');
+        var ukNavSubHeight = $ukNavSubItem.length * 41 - 3;
+
+        $ukNavSub[0].style.display = 'block';
+        _gsap.TweenLite.to($ukNavSub, 0.6, { height: ukNavSubHeight,
+            ease: _gsap.Expo.easeOut,
+            onComplete: function onComplete() {} });
+
+        $target.addClass('nav-open');
+    } else {
+        // Close
+        _gsap.TweenLite.to($ukNavSub, 0.6, { height: 0,
+            ease: _gsap.Expo.easeOut,
+            onComplete: function onComplete() {
+                $ukNavSub[0].style.display = 'none';
+            } });
+
+        $target.removeClass('nav-open');
+    }
+};
+
+/**
+ * Admin menu link click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.adminMenuLinkClick = function (e) {
+    var _this = this;
+
+    if (_this.menuOpen) _this.closeMenu();
+};
+
+/**
+ * Open menu
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.openMenu = function () {
+    var _this = this;
+
+    // Close panel if open
+    if (_this.searchOpen) _this.closeSearch();else if (_this.treeOpen) _this.closeTree();else if (_this.userOpen) _this.closeUser();
+
+    // Translate menu panel
+    _gsap.TweenLite.to(_this.$adminMenu, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
+
+    _this.$mainContentOverlay[0].style.display = 'block';
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
+
+    _this.menuOpen = true;
+};
+
+/**
+ * Close menu
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.closeMenu = function () {
+    var _this = this;
+
+    var adminMenuX = -window.Rozier.windowWidth * 0.8;
+
+    _gsap.TweenLite.to(_this.$adminMenu, 0.6, { x: adminMenuX, ease: _gsap.Expo.easeOut });
+
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
+        ease: _gsap.Expo.easeOut,
+        onComplete: function onComplete() {
+            _this.$mainContentOverlay[0].style.display = 'none';
+        } });
+
+    _this.menuOpen = false;
+};
+
+/**
+ * Search button click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.searchButtonClick = function (e) {
+    var _this = this;
+
+    if (!_this.searchOpen) _this.openSearch();else _this.closeSearch();
+};
+
+/**
+ * Open search
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.openSearch = function () {
+    var _this = this;
+
+    // Close panel if open
+    if (_this.menuOpen) _this.closeMenu();else if (_this.treeOpen) _this.closeTree();else if (_this.userOpen) _this.closeUser();
+
+    // Translate search panel
+    _gsap.TweenLite.to(_this.$searchPanel, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
+
+    _this.$mainContentOverlay[0].style.display = 'block';
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
+
+    // Add active class
+    _this.$searchButton.addClass('active');
+    _this.searchOpen = true;
+};
+
+/**
+ * Close search
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.closeSearch = function () {
+    var _this = this;
+    var searchPanelX = -window.Rozier.windowWidth * 0.8;
+    _gsap.TweenLite.to(_this.$searchPanel, 0.6, { x: searchPanelX, ease: _gsap.Expo.easeOut });
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
+        ease: _gsap.Expo.easeOut,
+        onComplete: function onComplete() {
+            _this.$mainContentOverlay[0].style.display = 'none';
+        } });
+
+    // Remove active class
+    _this.$searchButton.removeClass('active');
+    _this.searchOpen = false;
+};
+
+/**
+ * Tree button click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.treeButtonClick = function (e) {
+    var _this = this;
+
+    if (!_this.treeOpen) _this.openTree();else _this.closeTree();
+};
+
+/**
+ * Tree wrapper link click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.treeWrapperLinkClick = function (e) {
+    var _this = this;
+
+    if (e.currentTarget.className.indexOf('tab-link') === -1 && _this.treeOpen) {
+        _this.closeTree();
+    }
+};
+
+/**
+ * Open tree
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.openTree = function () {
+    var _this = this;
+
+    // Close panel if open
+    if (_this.menuOpen) _this.closeMenu();else if (_this.searchOpen) _this.closeSearch();else if (_this.userOpen) _this.closeUser();
+
+    // Translate tree panel
+    _gsap.TweenLite.to(_this.$treeWrapper, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
+
+    _this.$mainContentOverlay[0].style.display = 'block';
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
+
+    // Add active class
+    _this.$treeButton.addClass('active');
+
+    _this.treeOpen = true;
+};
+
+/**
+ * Close tree
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.closeTree = function () {
+    var _this = this;
+
+    var treeWrapperX = -window.Rozier.windowWidth * 0.8;
+
+    _gsap.TweenLite.to(_this.$treeWrapper, 0.6, { x: treeWrapperX, ease: _gsap.Expo.easeOut });
+
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
+        ease: _gsap.Expo.easeOut,
+        onComplete: function onComplete() {
+            _this.$mainContentOverlay[0].style.display = 'none';
+        } });
+
+    // Remove active class
+    (0, _plugins.removeClass)(_this.$treeButton[0], 'active');
+
+    _this.treeOpen = false;
+};
+
+/**
+ * User picture click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.userPictureClick = function (e) {
+    var _this = this;
+
+    if (!_this.userOpen) _this.openUser();else _this.closeUser();
+
+    return false;
+};
+
+/**
+ * User actions link click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.userActionsLinkClick = function (e) {
+    var _this = this;
+
+    if (_this.userOpen) {
+        _this.closeUser();
+    }
+};
+
+/**
+ * Open user
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.openUser = function () {
+    var _this = this;
+
+    // Close panel if open
+    if (_this.menuOpen) _this.closeMenu();else if (_this.searchOpen) _this.closeSearch();else if (_this.treeOpen) _this.closeTree();
+
+    // Translate user panel
+    _gsap.TweenLite.to(_this.$userActions, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
+
+    if (_this.$mainContentOverlay.length) {
+        _this.$mainContentOverlay[0].style.display = 'block';
+        _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
+    }
+
+    // Add active class
+    _this.$userPicture.addClass('active');
+    _this.userOpen = true;
+};
+
+/**
+ * Close user
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.closeUser = function () {
+    var _this = this;
+    var userActionsX = window.Rozier.windowWidth * 0.8;
+
+    _gsap.TweenLite.to(_this.$userActions, 0.6, { x: userActionsX, ease: _gsap.Expo.easeOut });
+    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
+        ease: _gsap.Expo.easeOut,
+        onComplete: function onComplete() {
+            _this.$mainContentOverlay[0].style.display = 'none';
+        } });
+
+    // Remove active class
+    _this.$userPicture.removeClass('active');
+    _this.userOpen = false;
+};
+
+/**
+ * Main content overlay click
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.mainContentOverlayClick = function (e) {
+    var _this = this;
+
+    if (_this.menuOpen) _this.closeMenu();else if (_this.treeOpen) _this.closeTree();else if (_this.userOpen) _this.closeUser();
+};
+
+/**
+ * Window resize callback
+ * @return {[type]} [description]
+ */
+RozierMobile.prototype.resize = function () {};
+
+/***/ }),
+
 /***/ "../Resources/app/api/CustomFormApi.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4705,7 +6453,7 @@ var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
+var _plugins = __webpack_require__("../Resources/app/utils/plugins.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6298,559 +8046,6 @@ function truncate(object, length) {
 
 /***/ }),
 
-/***/ "../Resources/app/lazyload.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
-
-var _DocumentsBulk = __webpack_require__("../Resources/app/components/bulk-edits/DocumentsBulk.js");
-
-var _DocumentsBulk2 = _interopRequireDefault(_DocumentsBulk);
-
-var _NodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/NodesBulk.js");
-
-var _NodesBulk2 = _interopRequireDefault(_NodesBulk);
-
-var _TagsBulk = __webpack_require__("../Resources/app/components/bulk-edits/TagsBulk.js");
-
-var _TagsBulk2 = _interopRequireDefault(_TagsBulk);
-
-var _DocumentUploader = __webpack_require__("../Resources/app/components/documents/DocumentUploader.js");
-
-var _DocumentUploader2 = _interopRequireDefault(_DocumentUploader);
-
-var _NodeTypeFieldsPosition = __webpack_require__("../Resources/app/components/node-type-fields/NodeTypeFieldsPosition.js");
-
-var _NodeTypeFieldsPosition2 = _interopRequireDefault(_NodeTypeFieldsPosition);
-
-var _NodeTypeFieldEdit = __webpack_require__("../Resources/app/components/node-type-fields/NodeTypeFieldEdit.js");
-
-var _NodeTypeFieldEdit2 = _interopRequireDefault(_NodeTypeFieldEdit);
-
-var _CustomFormFieldsPosition = __webpack_require__("../Resources/app/components/custom-form-fields/CustomFormFieldsPosition.js");
-
-var _CustomFormFieldsPosition2 = _interopRequireDefault(_CustomFormFieldsPosition);
-
-var _CustomFormFieldEdit = __webpack_require__("../Resources/app/components/custom-form-fields/CustomFormFieldEdit.js");
-
-var _CustomFormFieldEdit2 = _interopRequireDefault(_CustomFormFieldEdit);
-
-var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
-
-var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
-
-var _Import = __webpack_require__("../Resources/app/components/import/Import.js");
-
-var _Import2 = _interopRequireDefault(_Import);
-
-var _NodeEditSource = __webpack_require__("../Resources/app/components/node/NodeEditSource.js");
-
-var _NodeEditSource2 = _interopRequireDefault(_NodeEditSource);
-
-var _InputLengthWatcher = __webpack_require__("../Resources/app/widgets/InputLengthWatcher.js");
-
-var _InputLengthWatcher2 = _interopRequireDefault(_InputLengthWatcher);
-
-var _ChildrenNodesField = __webpack_require__("../Resources/app/widgets/ChildrenNodesField.js");
-
-var _ChildrenNodesField2 = _interopRequireDefault(_ChildrenNodesField);
-
-var _GeotagField = __webpack_require__("../Resources/app/widgets/GeotagField.js");
-
-var _GeotagField2 = _interopRequireDefault(_GeotagField);
-
-var _MultiGeotagField = __webpack_require__("../Resources/app/widgets/MultiGeotagField.js");
-
-var _MultiGeotagField2 = _interopRequireDefault(_MultiGeotagField);
-
-var _StackNodeTree = __webpack_require__("../Resources/app/widgets/StackNodeTree.js");
-
-var _StackNodeTree2 = _interopRequireDefault(_StackNodeTree);
-
-var _saveButtons = __webpack_require__("../Resources/app/widgets/saveButtons.js");
-
-var _saveButtons2 = _interopRequireDefault(_saveButtons);
-
-var _tagAutocomplete = __webpack_require__("../Resources/app/widgets/tagAutocomplete.js");
-
-var _tagAutocomplete2 = _interopRequireDefault(_tagAutocomplete);
-
-var _FolderAutocomplete = __webpack_require__("../Resources/app/widgets/FolderAutocomplete.js");
-
-var _FolderAutocomplete2 = _interopRequireDefault(_FolderAutocomplete);
-
-var _settingsSaveButtons = __webpack_require__("../Resources/app/widgets/settingsSaveButtons.js");
-
-var _settingsSaveButtons2 = _interopRequireDefault(_settingsSaveButtons);
-
-var _nodeTree = __webpack_require__("../Resources/app/widgets/nodeTree.js");
-
-var _nodeTree2 = _interopRequireDefault(_nodeTree);
-
-var _nodeStatuses = __webpack_require__("../Resources/app/widgets/nodeStatuses.js");
-
-var _nodeStatuses2 = _interopRequireDefault(_nodeStatuses);
-
-var _yamlEditor = __webpack_require__("../Resources/app/widgets/yamlEditor.js");
-
-var _yamlEditor2 = _interopRequireDefault(_yamlEditor);
-
-var _markdownEditor = __webpack_require__("../Resources/app/widgets/markdownEditor.js");
-
-var _markdownEditor2 = _interopRequireDefault(_markdownEditor);
-
-var _JsonEditor = __webpack_require__("../Resources/app/widgets/JsonEditor.js");
-
-var _JsonEditor2 = _interopRequireDefault(_JsonEditor);
-
-var _CssEditor = __webpack_require__("../Resources/app/widgets/CssEditor.js");
-
-var _CssEditor2 = _interopRequireDefault(_CssEditor);
-
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Lazyload
- */
-var Lazyload = function () {
-    function Lazyload() {
-        var _this = this;
-
-        (0, _classCallCheck3.default)(this, Lazyload);
-
-        this.$linksSelector = null;
-        this.$textareasMarkdown = null;
-        this.documentsList = null;
-        this.mainColor = null;
-        this.$canvasLoaderContainer = null;
-        this.currentRequest = null;
-
-        this.onPopState = this.onPopState.bind(this);
-        this.onClick = this.onClick.bind(this);
-
-        this.parseLinks();
-
-        // this hack resolves safari triggering popstate
-        // at initial load.
-        window.addEventListener('load', function () {
-            window.setTimeout(function () {
-                (0, _jquery2.default)(window).off('popstate', _this.onPopState);
-                (0, _jquery2.default)(window).on('popstate', _this.onPopState);
-            }, 0);
-        });
-
-        this.$canvasLoaderContainer = (0, _jquery2.default)('#canvasloader-container');
-        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff';
-        this.initLoader();
-
-        /*
-         * Start history with first hard loaded page
-         */
-        history.pushState({}, null, window.location.href);
-    }
-
-    /**
-     * Init loader
-     */
-
-
-    (0, _createClass3.default)(Lazyload, [{
-        key: 'initLoader',
-        value: function initLoader() {
-            this.canvasLoader = new window.CanvasLoader('canvasloader-container');
-            this.canvasLoader.setColor(this.mainColor);
-            this.canvasLoader.setShape('square');
-            this.canvasLoader.setDensity(90);
-            this.canvasLoader.setRange(0.8);
-            this.canvasLoader.setSpeed(4);
-            this.canvasLoader.setFPS(30);
-        }
-    }, {
-        key: 'parseLinks',
-        value: function parseLinks() {
-            this.$linksSelector = (0, _jquery2.default)("a:not('[target=_blank]')").not('.rz-no-ajax-link');
-        }
-
-        /**
-         * Bind links to load pages
-         * @param {Event} event
-         */
-
-    }, {
-        key: 'onClick',
-        value: function onClick(event) {
-            var _this2 = this;
-
-            var $link = (0, _jquery2.default)(event.currentTarget);
-            var href = $link.attr('href');
-
-            if (typeof href !== 'undefined' && !$link.hasClass('rz-no-ajax-link') && href !== '' && href !== '#' && (href.indexOf(window.Rozier.baseUrl) >= 0 || href.charAt(0) === '/' || href.charAt(0) === '?')) {
-                event.preventDefault();
-
-                if (this.clickTimeout) {
-                    clearTimeout(this.clickTimeout);
-                }
-
-                this.clickTimeout = window.setTimeout(function () {
-                    history.pushState({}, null, $link.attr('href'));
-                    _this2.onPopState(null);
-                }, 50);
-
-                return false;
-            }
-        }
-
-        /**
-         * On pop state
-         * @param {Event} event
-         */
-
-    }, {
-        key: 'onPopState',
-        value: function onPopState(event) {
-            var state = null;
-
-            if (event !== null) {
-                state = event.originalEvent.state;
-            }
-
-            if (typeof state === 'undefined' || state === null) {
-                state = window.history.state;
-            }
-
-            if (state !== null) {
-                this.canvasLoader.show();
-                this.loadContent(state, window.location);
-            }
-        }
-
-        /**
-         * Load content (ajax)
-         * @param {Object} state
-         * @param {Object} location
-         */
-
-    }, {
-        key: 'loadContent',
-        value: function loadContent(state, location) {
-            var _this3 = this;
-
-            /*
-             * Delay loading if user is click like devil
-             */
-            if (this.currentTimeout) {
-                clearTimeout(this.currentTimeout);
-            }
-
-            this.currentTimeout = window.setTimeout(function () {
-                /*
-                 * Trigger event on window to notify open
-                 * widgets to close.
-                 */
-                var pageChangeEvent = new CustomEvent('pagechange');
-                window.dispatchEvent(pageChangeEvent);
-
-                _this3.currentRequest = _jquery2.default.ajax({
-                    url: location.href,
-                    type: 'get',
-                    dataType: 'html',
-                    cache: false,
-                    data: state.headerData
-                }).done(function (data) {
-                    _this3.applyContent(data);
-                    _this3.canvasLoader.hide();
-                    var pageLoadEvent = new CustomEvent('pageload', { 'detail': data });
-                    window.dispatchEvent(pageLoadEvent);
-                }).fail(function (data) {
-                    if (typeof data.responseText !== 'undefined') {
-                        try {
-                            var exception = JSON.parse(data.responseText);
-                            window.UIkit.notify({
-                                message: exception.message,
-                                status: 'danger',
-                                timeout: 3000,
-                                pos: 'top-center'
-                            });
-                        } catch (e) {
-                            // No valid JsonResponse, need to refresh page
-                            window.location.href = location.href;
-                        }
-                    } else {
-                        window.UIkit.notify({
-                            message: window.Rozier.messages.forbiddenPage,
-                            status: 'danger',
-                            timeout: 3000,
-                            pos: 'top-center'
-                        });
-                    }
-
-                    _this3.canvasLoader.hide();
-                });
-            }, 100);
-        }
-
-        /**
-         * Apply content to main content
-         * @param {[type]} data [description]
-         * @return {[type]}      [description]
-         */
-
-    }, {
-        key: 'applyContent',
-        value: function applyContent(data) {
-            var _this4 = this;
-
-            var $container = (0, _jquery2.default)('#main-content-scrollable');
-            var $old = $container.find('.content-global');
-
-            var $tempData = (0, _jquery2.default)(data);
-            $tempData.addClass('new-content-global');
-            $container.append($tempData);
-            $tempData = $container.find('.new-content-global');
-
-            $old.fadeOut(100, function () {
-                $old.remove();
-
-                _this4.generalBind();
-                $tempData.fadeIn(200, function () {
-                    $tempData.removeClass('new-content-global');
-                });
-            });
-        }
-    }, {
-        key: 'bindAjaxLink',
-        value: function bindAjaxLink() {
-            this.parseLinks();
-            this.$linksSelector.off('click', this.onClick);
-            this.$linksSelector.on('click', this.onClick);
-        }
-
-        /**
-         * General bind on page load
-         * @return {[type]} [description]
-         */
-
-    }, {
-        key: 'generalBind',
-        value: function generalBind() {
-            this.bindAjaxLink();
-
-            /* eslint-disable no-new */
-            new _DocumentsBulk2.default();
-            new _NodesBulk2.default();
-            new _TagsBulk2.default();
-            new _InputLengthWatcher2.default();
-            new _DocumentUploader2.default(window.Rozier.messages.dropzone);
-            this.childrenNodesFields = new _ChildrenNodesField2.default();
-            new _GeotagField2.default();
-            new _MultiGeotagField2.default();
-            this.stackNodeTrees = new _StackNodeTree2.default();
-
-            if (_plugins.isMobile.any() === null) {
-                new _saveButtons2.default();
-            }
-
-            new _tagAutocomplete2.default();
-            new _FolderAutocomplete2.default();
-            new _NodeTypeFieldsPosition2.default();
-            new _CustomFormFieldsPosition2.default();
-            new _NodeTreeContextActions2.default();
-            new _settingsSaveButtons2.default();
-            new _NodeTypeFieldEdit2.default();
-            new _NodeEditSource2.default();
-            this.nodeTree = new _nodeTree2.default();
-            new _CustomFormFieldEdit2.default();
-
-            /*
-             * Codemirror
-             */
-            this.initMarkdownEditors();
-            this.initJsonEditors();
-            this.initCssEditors();
-            this.initYamlEditors();
-            this.initFilterBars();
-
-            var $colorPickerInput = (0, _jquery2.default)('.colorpicker-input');
-
-            // Init colorpicker
-            if ($colorPickerInput.length) {
-                $colorPickerInput.minicolors();
-            }
-
-            // Animate actions menu
-            if ((0, _jquery2.default)('.actions-menu').length && _plugins.isMobile.any() === null) {
-                _gsap.TweenLite.to('.actions-menu', 0.5, { right: 0, delay: 0.4, ease: _gsap.Expo.easeOut });
-            }
-
-            window.Rozier.initNestables();
-            window.Rozier.bindMainTrees();
-            window.Rozier.nodeStatuses = new _nodeStatuses2.default();
-
-            // Switch checkboxes
-            this.initBootstrapSwitches();
-
-            window.Rozier.getMessages();
-
-            if (typeof window.Rozier.importRoutes !== 'undefined' && window.Rozier.importRoutes !== null) {
-                window.Rozier.import = new _Import2.default(window.Rozier.importRoutes);
-                window.Rozier.importRoutes = null;
-            }
-        }
-    }, {
-        key: 'initBootstrapSwitches',
-        value: function initBootstrapSwitches() {
-            var $checkboxes = (0, _jquery2.default)('.rz-boolean-checkbox');
-
-            // Switch checkboxes
-            $checkboxes.bootstrapSwitch({
-                size: 'small'
-            });
-        }
-    }, {
-        key: 'initMarkdownEditors',
-        value: function initMarkdownEditors() {
-            var _this5 = this;
-
-            // Init markdown-preview
-            this.$textareasMarkdown = (0, _jquery2.default)('textarea[data-rz-markdowneditor]');
-            var editorCount = this.$textareasMarkdown.length;
-
-            if (editorCount) {
-                window.setTimeout(function () {
-                    for (var i = 0; i < editorCount; i++) {
-                        new _markdownEditor2.default(_this5.$textareasMarkdown.eq(i), i);
-                    }
-                }, 100);
-            }
-        }
-    }, {
-        key: 'initJsonEditors',
-        value: function initJsonEditors() {
-            var _this6 = this;
-
-            // Init markdown-preview
-            this.$textareasJson = (0, _jquery2.default)('textarea[data-rz-jsoneditor]');
-            var editorCount = this.$textareasJson.length;
-
-            if (editorCount) {
-                window.setTimeout(function () {
-                    for (var i = 0; i < editorCount; i++) {
-                        new _JsonEditor2.default(_this6.$textareasJson.eq(i), i);
-                    }
-                }, 100);
-            }
-        }
-    }, {
-        key: 'initCssEditors',
-        value: function initCssEditors() {
-            var _this7 = this;
-
-            // Init markdown-preview
-            this.$textareasCss = (0, _jquery2.default)('textarea[data-rz-csseditor]');
-            var editorCount = this.$textareasCss.length;
-
-            if (editorCount) {
-                window.setTimeout(function () {
-                    for (var i = 0; i < editorCount; i++) {
-                        new _CssEditor2.default(_this7.$textareasCss.eq(i), i);
-                    }
-                }, 100);
-            }
-        }
-    }, {
-        key: 'initYamlEditors',
-        value: function initYamlEditors() {
-            var _this8 = this;
-
-            // Init markdown-preview
-            this.$textareasYaml = (0, _jquery2.default)('textarea[data-rz-yamleditor]');
-            var editorCount = this.$textareasYaml.length;
-
-            if (editorCount) {
-                window.setTimeout(function () {
-                    for (var i = 0; i < editorCount; i++) {
-                        new _yamlEditor2.default(_this8.$textareasYaml.eq(i), i);
-                    }
-                }, 100);
-            }
-        }
-    }, {
-        key: 'initFilterBars',
-        value: function initFilterBars() {
-            var $selectItemPerPage = (0, _jquery2.default)('select.item-per-page');
-
-            if ($selectItemPerPage.length) {
-                $selectItemPerPage.off('change');
-                $selectItemPerPage.on('change', function (event) {
-                    (0, _jquery2.default)(event.currentTarget).parents('form').submit();
-                });
-            }
-        }
-
-        /**
-         * Resize
-         */
-
-    }, {
-        key: 'resize',
-        value: function resize() {
-            this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + window.Rozier.mainContentScrollableWidth / 2 + 'px';
-        }
-    }]);
-    return Lazyload;
-}(); /*
-      * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
-      *
-      * Permission is hereby granted, free of charge, to any person obtaining a copy
-      * of this software and associated documentation files (the "Software"), to deal
-      * in the Software without restriction, including without limitation the rights
-      * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-      * copies of the Software, and to permit persons to whom the Software is furnished
-      * to do so, subject to the following conditions:
-      * The above copyright notice and this permission notice shall be included in all
-      * copies or substantial portions of the Software.
-      *
-      * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-      * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-      * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-      * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-      * IN THE SOFTWARE.
-      *
-      * Except as contained in this notice, the name of the ROADIZ shall not
-      * be used in advertising or otherwise to promote the sale, use or other dealings
-      * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
-      *
-      * @file lazyload.js
-      * @author Adrien Scholaert <adrien@rezo-zero.com>
-      */
-
-exports.default = Lazyload;
-
-/***/ }),
-
 /***/ "../Resources/app/less/style.less":
 /***/ (function(module, exports) {
 
@@ -6931,33 +8126,13 @@ __webpack_require__("../node_modules/jquery-ui/ui/widgets/autocomplete.js");
 
 __webpack_require__("../Resources/app/components/login/login.js");
 
-var _lazyload = __webpack_require__("../Resources/app/lazyload.js");
-
-var _lazyload2 = _interopRequireDefault(_lazyload);
-
-var _EntriesPanel = __webpack_require__("../Resources/app/components/panels/EntriesPanel.js");
-
-var _EntriesPanel2 = _interopRequireDefault(_EntriesPanel);
-
-var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
-
-var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
-
-var _rozierMobile = __webpack_require__("../Resources/app/rozierMobile.js");
-
-var _rozierMobile2 = _interopRequireDefault(_rozierMobile);
-
-var _App = __webpack_require__("../Resources/app/App.js");
-
-var _App2 = _interopRequireDefault(_App);
-
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
+var _Rozier = __webpack_require__("../Resources/app/Rozier.js");
 
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
+var _Rozier2 = _interopRequireDefault(_Rozier);
 
 var _GeotagField = __webpack_require__("../Resources/app/widgets/GeotagField.js");
 
@@ -6977,12 +8152,12 @@ window.UIkit = _uikit2.default;
 
 // eslint-disable-next-line
 window.initializeGeotagFields = function () {
-    window.Rozier.gMapLoaded = true;
-    window.Rozier.gMapLoading = false;
+  window.Rozier.gMapLoaded = true;
+  window.Rozier.gMapLoading = false;
 
-    /* eslint-disable no-new */
-    new _GeotagField2.default();
-    new _MultiGeotagField2.default();
+  /* eslint-disable no-new */
+  new _GeotagField2.default();
+  new _MultiGeotagField2.default();
 };
 
 /*
@@ -6991,1302 +8166,16 @@ window.initializeGeotagFields = function () {
  * ============================================================================
  */
 
-var Rozier = {};
-
-window.Rozier = Rozier;
-
-Rozier.$window = null;
-Rozier.$body = null;
-
-Rozier.windowWidth = null;
-Rozier.windowHeight = null;
-Rozier.resizeFirst = true;
-Rozier.gMapLoading = false;
-Rozier.gMapLoaded = false;
-
-Rozier.searchNodesSourcesDelay = null;
-Rozier.nodeTrees = [];
-Rozier.treeTrees = [];
-
-Rozier.$userPanelContainer = null;
-Rozier.$minifyTreePanelButton = null;
-Rozier.$mainTrees = null;
-Rozier.$mainTreesContainer = null;
-Rozier.$mainTreeElementName = null;
-Rozier.$treeContextualButton = null;
-Rozier.$nodesSourcesSearch = null;
-Rozier.nodesSourcesSearchHeight = null;
-Rozier.$nodeTreeHead = null;
-Rozier.nodeTreeHeadHeight = null;
-Rozier.$treeScrollCont = null;
-Rozier.$treeScroll = null;
-Rozier.treeScrollHeight = null;
-
-Rozier.$mainContentScrollable = null;
-Rozier.mainContentScrollableWidth = null;
-Rozier.mainContentScrollableOffsetLeft = null;
-Rozier.$backTopBtn = null;
-
-Rozier.entriesPanel = null;
-
-Rozier.onDocumentReady = function () {
-    /*
-     * Store Rozier configuration
-     */
-    for (var index in window.temp) {
-        Rozier[index] = window.temp[index];
-    }
-
-    Rozier.lazyload = new _lazyload2.default();
-    Rozier.entriesPanel = new _EntriesPanel2.default();
-    Rozier.vueApp = new _App2.default();
-
-    Rozier.$window = (0, _jquery2.default)(window);
-    Rozier.$body = (0, _jquery2.default)('body');
-
-    // --- Selectors --- //
-    Rozier.$userPanelContainer = (0, _jquery2.default)('#user-panel-container');
-    Rozier.$minifyTreePanelButton = (0, _jquery2.default)('#minify-tree-panel-button');
-    Rozier.$mainTrees = (0, _jquery2.default)('#main-trees');
-    Rozier.$mainTreesContainer = (0, _jquery2.default)('#main-trees-container');
-    Rozier.$nodesSourcesSearch = (0, _jquery2.default)('#nodes-sources-search');
-    Rozier.$mainContentScrollable = (0, _jquery2.default)('#main-content-scrollable');
-    Rozier.$backTopBtn = (0, _jquery2.default)('#back-top-button');
-
-    // Pointer events polyfill
-    if (!window.Modernizr.testProp('pointerEvents')) {
-        _plugins.PointerEventsPolyfill.initialize({ 'selector': '#main-trees-overlay' });
-    }
-
-    // Minify trees panel toggle button
-    Rozier.$minifyTreePanelButton.on('click', Rozier.toggleTreesPanel);
-
-    // Rozier.$body.on('markdownPreviewOpen', '.markdown-editor-preview', Rozier.toggleTreesPanel);
-    document.body.addEventListener('markdownPreviewOpen', Rozier.openTreesPanel, false);
-
-    // Back top btn
-    Rozier.$backTopBtn.on('click', _jquery2.default.proxy(Rozier.backTopBtnClick, Rozier));
-
-    Rozier.$window.on('resize', _jquery2.default.proxy(Rozier.resize, Rozier));
-    Rozier.$window.trigger('resize');
-
-    Rozier.lazyload.generalBind();
-    Rozier.bindMainNodeTreeLangs();
-};
-
-/**
- * init nestable for ajax
- * @return {[type]} [description]
- */
-Rozier.initNestables = function () {
-    (0, _jquery2.default)('.uk-nestable').each(function (index, element) {
-        var $tree = (0, _jquery2.default)(element);
-        /*
-         * make drag&drop only available on handle
-         * very important for Touch based device which need to
-         * scroll on trees.
-         */
-        var options = {
-            handleClass: 'uk-nestable-handle'
-        };
-
-        if ($tree.hasClass('nodetree')) {
-            options.group = 'nodeTree';
-        } else if ($tree.hasClass('tagtree')) {
-            options.group = 'tagTree';
-        } else if ($tree.hasClass('foldertree')) {
-            options.group = 'folderTree';
-        }
-
-        window.UIkit.nestable(element, options);
-    });
-};
-
-/**
- * Bind main trees
- * @return {[type]} [description]
- */
-Rozier.bindMainTrees = function () {
-    var _this = this;
-
-    // TREES
-    var $nodeTree = (0, _jquery2.default)('.nodetree-widget .root-tree');
-    $nodeTree.off('change.uk.nestable');
-    $nodeTree.on('change.uk.nestable', Rozier.onNestableNodeTreeChange);
-
-    var $tagTree = (0, _jquery2.default)('.tagtree-widget .root-tree');
-    $tagTree.off('change.uk.nestable');
-    $tagTree.on('change.uk.nestable', Rozier.onNestableTagTreeChange);
-
-    var $folderTree = (0, _jquery2.default)('.foldertree-widget .root-tree');
-    $folderTree.off('change.uk.nestable');
-    $folderTree.on('change.uk.nestable', Rozier.onNestableFolderTreeChange);
-
-    // Tree element name
-    _this.$mainTreeElementName = _this.$mainTrees.find('.tree-element-name');
-    _this.$mainTreeElementName.off('contextmenu', _jquery2.default.proxy(_this.maintreeElementNameRightClick, _this));
-    _this.$mainTreeElementName.on('contextmenu', _jquery2.default.proxy(_this.maintreeElementNameRightClick, _this));
-};
-
-/**
- * Main tree element name right click.
- *
- * @return {[type]}
- */
-Rozier.maintreeElementNameRightClick = function (e) {
-    var $contextualMenu = (0, _jquery2.default)(e.currentTarget).parent().find('.tree-contextualmenu');
-    if ($contextualMenu.length) {
-        if ($contextualMenu[0].className.indexOf('uk-open') === -1) {
-            $contextualMenu.addClass('uk-open');
-        } else $contextualMenu.removeClass('uk-open');
-    }
-
-    return false;
-};
-
-/**
- * Bind main node tree langs.
- *
- * @return {[type]}
- */
-Rozier.bindMainNodeTreeLangs = function () {
-    (0, _jquery2.default)('body').on('click', '#tree-container .nodetree-langs a', function (event) {
-        Rozier.lazyload.canvasLoader.show();
-        var $link = (0, _jquery2.default)(event.currentTarget);
-        var translationId = parseInt($link.attr('data-translation-id'));
-
-        Rozier.refreshMainNodeTree(translationId);
-        return false;
-    });
-};
-
-/**
- * Get messages.
- *
- * @return {[type]} [description]
- */
-Rozier.getMessages = function () {
-    _jquery2.default.ajax({
-        url: Rozier.routes.ajaxSessionMessages,
-        type: 'GET',
-        dataType: 'json',
-        cache: false,
-        data: {
-            '_action': 'messages',
-            '_token': Rozier.ajaxToken
-        }
-    }).done(function (data) {
-        if (typeof data.messages !== 'undefined') {
-            if (typeof data.messages.confirm !== 'undefined' && data.messages.confirm.length > 0) {
-                for (var i = data.messages.confirm.length - 1; i >= 0; i--) {
-                    window.UIkit.notify({
-                        message: data.messages.confirm[i],
-                        status: 'success',
-                        timeout: 2000,
-                        pos: 'top-center'
-                    });
-                }
-            }
-
-            if (typeof data.messages.error !== 'undefined' && data.messages.error.length > 0) {
-                for (var j = data.messages.error.length - 1; j >= 0; j--) {
-                    window.UIkit.notify({
-                        message: data.messages.error[j],
-                        status: 'error',
-                        timeout: 2000,
-                        pos: 'top-center'
-                    });
-                }
-            }
-        }
-    }).fail(function () {
-        console.log('[Rozier.getMessages] error');
-    });
-};
-
-/**
- *
- * @param translationId
- */
-Rozier.refreshAllNodeTrees = function (translationId) {
-    var _this = this;
-
-    _this.refreshMainNodeTree(translationId);
-
-    /*
-     * Stack trees
-     */
-    if (_this.lazyload.stackNodeTrees.treeAvailable()) {
-        _this.lazyload.stackNodeTrees.refreshNodeTree();
-    }
-
-    /*
-     * Children node fields widgets;
-     */
-    if (_this.lazyload.childrenNodesFields.treeAvailable()) {
-        for (var i = _this.lazyload.childrenNodesFields.$nodeTrees.length - 1; i >= 0; i--) {
-            var $nodeTree = _this.lazyload.childrenNodesFields.$nodeTrees.eq(i);
-            _this.lazyload.childrenNodesFields.refreshNodeTree($nodeTree);
-        }
-    }
-};
-
-/**
- * Refresh only main nodeTree.
- *
- * @param translationId
- */
-Rozier.refreshMainNodeTree = function (translationId) {
-    var _this = this;
-
-    var $currentNodeTree = (0, _jquery2.default)('#tree-container').find('.nodetree-widget');
-    var $currentRootTree = $currentNodeTree.find('.root-tree').eq(0);
-
-    if ($currentNodeTree.length) {
-        var postData = {
-            '_token': Rozier.ajaxToken,
-            '_action': 'requestMainNodeTree'
-        };
-
-        if ($currentRootTree.length && !translationId) {
-            translationId = parseInt($currentRootTree.attr('data-translation-id'));
-        }
-
-        var url = Rozier.routes.nodesTreeAjax;
-        if (translationId && translationId > 0) {
-            url += '/' + translationId;
-        }
-
-        _jquery2.default.ajax({
-            url: url,
-            type: 'get',
-            cache: false,
-            dataType: 'json',
-            data: postData
-        }).done(function (data) {
-            if ($currentNodeTree.length && typeof data.nodeTree !== 'undefined') {
-                $currentNodeTree.fadeOut('slow', function () {
-                    $currentNodeTree.replaceWith(data.nodeTree);
-                    $currentNodeTree = (0, _jquery2.default)('#tree-container').find('.nodetree-widget');
-                    $currentNodeTree.fadeIn();
-                    Rozier.initNestables();
-                    Rozier.bindMainTrees();
-                    Rozier.resize();
-                    Rozier.lazyload.bindAjaxLink();
-                    _this.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
-                });
-            }
-        }).fail(function (data) {
-            console.log(data.responseJSON);
-        }).always(function () {
-            Rozier.lazyload.canvasLoader.hide();
-        });
-    } else {
-        console.error('No main node-tree available.');
-    }
-};
-
-/**
- * Toggle trees panel
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-Rozier.toggleTreesPanel = function () {
-    (0, _jquery2.default)('#main-trees').toggleClass('minified');
-    (0, _jquery2.default)('#main-content').toggleClass('maximized');
-    (0, _jquery2.default)('#minify-tree-panel-button').find('i').toggleClass('uk-icon-rz-panel-tree-open');
-    (0, _jquery2.default)('#minify-tree-panel-area').toggleClass('tree-panel-hidden');
-
-    return false;
-};
-
-Rozier.openTreesPanel = function (event) {
-    if ((0, _jquery2.default)('#main-trees').hasClass('minified')) {
-        Rozier.toggleTreesPanel(null);
-    }
-
-    return false;
-};
-
-/**
- * Toggle user panel
- * @param  {[type]} event [description]
- * @return {[type]}       [description]
- */
-Rozier.toggleUserPanel = function (event) {
-    (0, _jquery2.default)('#user-panel').toggleClass('minified');
-
-    return false;
-};
-
-/**
- * Handle ajax search node source.
- * @param event
- */
-Rozier.onSearchNodesSources = function (event) {
-    var $input = (0, _jquery2.default)(event.currentTarget);
-
-    if (event.keyCode === 27) {
-        $input.blur();
-    }
-
-    if ($input.val().length > 1) {
-        clearTimeout(Rozier.searchNodesSourcesDelay);
-        Rozier.searchNodesSourcesDelay = setTimeout(function () {
-            var postData = {
-                _token: Rozier.ajaxToken,
-                _action: 'searchNodesSources',
-                searchTerms: $input.val()
-            };
-            console.log(postData);
-            _jquery2.default.ajax({
-                url: Rozier.routes.searchNodesSourcesAjax,
-                type: 'GET',
-                dataType: 'json',
-                data: postData
-            }).done(function (data) {
-                var $results = (0, _jquery2.default)('#nodes-sources-search-results');
-                if (typeof data.data !== 'undefined' && data.data.length > 0) {
-                    $results.empty();
-                    for (var i in data.data) {
-                        $results.append('<li><a href="' + data.data[i].url + '" style="border-left-color:' + data.data[i].typeColor + '"><span class="title">' + data.data[i].title + '</span> <span class="type">' + data.data[i].typeName + '</span></a></li>');
-                    }
-                } else {
-                    $results.empty();
-                }
-            }).fail(function (data) {
-                var $results = (0, _jquery2.default)('#nodes-sources-search-results');
-                $results.empty();
-            });
-        }, 200);
-    }
-};
-
-/**
- * On submit search nodes sources
- * @return {[type]} [description]
- */
-Rozier.onSubmitSearchNodesSources = function (e) {
-    return false;
-};
-
-/**
- *
- * @param event
- * @param rootEl
- * @param el
- * @param status
- * @returns {boolean}
- */
-Rozier.onNestableNodeTreeChange = function (event, rootEl, el, status) {
-    var element = (0, _jquery2.default)(el);
-    /*
-     * If node removed, do not do anything, the other change.uk.nestable nodeTree will be triggered
-     */
-    if (status === 'removed') {
-        return false;
-    }
-    var nodeId = parseInt(element.attr('data-node-id'));
-    var parentNodeId = null;
-    if (element.parents('.nodetree-element').length) {
-        parentNodeId = parseInt(element.parents('.nodetree-element').eq(0).attr('data-node-id'));
-    } else if (element.parents('.stack-tree-widget').length) {
-        parentNodeId = parseInt(element.parents('.stack-tree-widget').eq(0).attr('data-parent-node-id'));
-    } else if (element.parents('.children-node-widget').length) {
-        parentNodeId = parseInt(element.parents('.children-node-widget').eq(0).attr('data-parent-node-id'));
-    }
-
-    /*
-     * When dropping to route
-     * set parentNodeId to NULL
-     */
-    if (isNaN(parentNodeId)) {
-        parentNodeId = null;
-    }
-
-    /*
-     * User dragged node inside itself
-     * It will destroy the Internet !
-     */
-    if (nodeId === parentNodeId) {
-        console.log('You cannot move a node inside itself!');
-        window.location.reload();
-        return false;
-    }
-
-    var postData = {
-        _token: Rozier.ajaxToken,
-        _action: 'updatePosition',
-        nodeId: nodeId,
-        newParent: parentNodeId
-
-        /*
-         * Get node siblings id to compute new position
-         */
-    };if (element.next().length && typeof element.next().attr('data-node-id') !== 'undefined') {
-        postData.nextNodeId = parseInt(element.next().attr('data-node-id'));
-    } else if (element.prev().length && typeof element.prev().attr('data-node-id') !== 'undefined') {
-        postData.prevNodeId = parseInt(element.prev().attr('data-node-id'));
-    }
-
-    console.log(postData);
-
-    _jquery2.default.ajax({
-        url: Rozier.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    }).done(function (data) {
-        window.UIkit.notify({
-            message: data.responseText,
-            status: data.status,
-            timeout: 3000,
-            pos: 'top-center'
-        });
-    }).fail(function (data) {
-        console.err(data);
-    });
-};
-
-/**
- *
- * @param event
- * @param rootEl
- * @param el
- * @param status
- * @returns {boolean}
- */
-Rozier.onNestableTagTreeChange = function (event, rootEl, el, status) {
-    var element = (0, _jquery2.default)(el);
-    /*
-     * If tag removed, do not do anything, the other tagTree will be triggered
-     */
-    if (status === 'removed') {
-        return false;
-    }
-
-    var tagId = parseInt(element.attr('data-tag-id'));
-    var parentTagId = null;
-    if (element.parents('.tagtree-element').length) {
-        parentTagId = parseInt(element.parents('.tagtree-element').eq(0).attr('data-tag-id'));
-    } else if (element.parents('.root-tree').length) {
-        parentTagId = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-tag-id'));
-    }
-    /*
-     * When dropping to route
-     * set parentTagId to NULL
-     */
-    if (isNaN(parentTagId)) {
-        parentTagId = null;
-    }
-
-    /*
-     * User dragged tag inside itself
-     * It will destroy the Internet !
-     */
-    if (tagId === parentTagId) {
-        console.log('You cannot move a tag inside itself!');
-        alert('You cannot move a tag inside itself!');
-        window.location.reload();
-        return false;
-    }
-
-    var postData = {
-        _token: Rozier.ajaxToken,
-        _action: 'updatePosition',
-        tagId: tagId,
-        newParent: parentTagId
-
-        /*
-         * Get tag siblings id to compute new position
-         */
-    };if (element.next().length && typeof element.next().attr('data-tag-id') !== 'undefined') {
-        postData.nextTagId = parseInt(element.next().attr('data-tag-id'));
-    } else if (element.prev().length && typeof element.prev().attr('data-tag-id') !== 'undefined') {
-        postData.prevTagId = parseInt(element.prev().attr('data-tag-id'));
-    }
-
-    console.log(postData);
-
-    _jquery2.default.ajax({
-        url: Rozier.routes.tagAjaxEdit.replace('%tagId%', tagId),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    }).done(function (data) {
-        window.UIkit.notify({
-            message: data.responseText,
-            status: data.status,
-            timeout: 3000,
-            pos: 'top-center'
-        });
-    }).fail(function (data) {
-        console.err(data);
-    });
-};
-
-/**
- *
- * @param event
- * @param element
- * @param status
- * @returns {boolean}
- */
-Rozier.onNestableFolderTreeChange = function (event, rootEl, el, status) {
-    var element = (0, _jquery2.default)(el);
-    /*
-     * If folder removed, do not do anything, the other folderTree will be triggered
-     */
-    if (status === 'removed') {
-        return false;
-    }
-
-    var folderId = parseInt(element.attr('data-folder-id'));
-    var parentFolderId = null;
-
-    if (element.parents('.foldertree-element').length) {
-        parentFolderId = parseInt(element.parents('.foldertree-element').eq(0).attr('data-folder-id'));
-    } else if (element.parents('.root-tree').length) {
-        parentFolderId = parseInt(element.parents('.root-tree').eq(0).attr('data-parent-folder-id'));
-    }
-
-    /*
-     * When dropping to route
-     * set parentFolderId to NULL
-     */
-    if (isNaN(parentFolderId)) {
-        parentFolderId = null;
-    }
-
-    /*
-     * User dragged folder inside itself
-     * It will destroy the Internet !
-     */
-    if (folderId === parentFolderId) {
-        console.log('You cannot move a folder inside itself!');
-        alert('You cannot move a folder inside itself!');
-        window.location.reload();
-        return false;
-    }
-
-    var postData = {
-        _token: Rozier.ajaxToken,
-        _action: 'updatePosition',
-        folderId: folderId,
-        newParent: parentFolderId
-
-        /*
-         * Get folder siblings id to compute new position
-         */
-    };if (element.next().length && typeof element.next().attr('data-folder-id') !== 'undefined') {
-        postData.nextFolderId = parseInt(element.next().attr('data-folder-id'));
-    } else if (element.prev().length && typeof element.prev().attr('data-folder-id') !== 'undefined') {
-        postData.prevFolderId = parseInt(element.prev().attr('data-folder-id'));
-    }
-
-    _jquery2.default.ajax({
-        url: Rozier.routes.folderAjaxEdit.replace('%folderId%', folderId),
-        type: 'POST',
-        dataType: 'json',
-        data: postData
-    }).done(function (data) {
-        window.UIkit.notify({
-            message: data.responseText,
-            status: data.status,
-            timeout: 3000,
-            pos: 'top-center'
-        });
-    }).fail(function (data) {
-        console.err(data);
-    });
-};
-
-/**
- * Back top click
- * @return {boolean} [description]
- */
-Rozier.backTopBtnClick = function () {
-    var _this = this;
-
-    _gsap.TweenLite.to(_this.$mainContentScrollable, 0.6, { scrollTo: { y: 0 }, ease: _gsap.Expo.easeOut });
-
-    return false;
-};
-
-/**
- * Resize
- * @return {[type]} [description]
- */
-Rozier.resize = function () {
-    var _this = this;
-
-    _this.windowWidth = _this.$window.width();
-    _this.windowHeight = _this.$window.height();
-
-    // Close tree panel if small screen & first resize
-    if (_this.windowWidth >= 768 && _this.windowWidth <= 1200 && _this.resizeFirst) {
-        _this.$mainTrees[0].style.display = 'none';
-        _this.$minifyTreePanelButton.trigger('click');
-        setTimeout(function () {
-            _this.$mainTrees[0].style.display = 'table-cell';
-        }, 1000);
-    }
-
-    // Check if mobile
-    if (_this.windowWidth <= 768 && _this.resizeFirst) _this.mobile = new _rozierMobile2.default(); // && isMobile.any() !== null
-
-    if (_this.windowWidth >= 768) {
-        _this.$mainContentScrollable.height(_this.windowHeight);
-        _this.$mainTreesContainer[0].style.height = '';
-    } else {
-        _this.$mainContentScrollable[0].style.height = '';
-        _this.$mainTreesContainer.height(_this.windowHeight);
-    }
-
-    // Tree scroll height
-    _this.$nodeTreeHead = _this.$mainTrees.find('.nodetree-head');
-    _this.$treeScrollCont = _this.$mainTrees.find('.tree-scroll-cont');
-    _this.$treeScroll = _this.$mainTrees.find('.tree-scroll');
-
-    /*
-     * need actual to get tree height even when they are hidden.
-     */
-    _this.nodesSourcesSearchHeight = _this.$nodesSourcesSearch.actual('outerHeight');
-    _this.nodeTreeHeadHeight = _this.$nodeTreeHead.actual('outerHeight');
-    _this.treeScrollHeight = _this.windowHeight - (_this.nodesSourcesSearchHeight + _this.nodeTreeHeadHeight);
-
-    if (_plugins.isMobile.any() !== null) _this.treeScrollHeight = _this.windowHeight - (50 + 50 + _this.nodeTreeHeadHeight); // Menu + tree menu + tree head
-
-    for (var i = 0; i < _this.$treeScrollCont.length; i++) {
-        _this.$treeScrollCont[i].style.height = _this.treeScrollHeight + 'px';
-    }
-
-    // Main content
-    _this.mainContentScrollableWidth = _this.$mainContentScrollable.width();
-    _this.mainContentScrollableOffsetLeft = _this.windowWidth - _this.mainContentScrollableWidth;
-
-    _this.lazyload.resize();
-    _this.entriesPanel.replaceSubNavs();
-
-    // Documents list
-    // if(_this.lazyload !== null && !_this.resizeFirst) _this.lazyload.documentsList.resize();
-
-    // Set resize first to false
-    if (_this.resizeFirst) _this.resizeFirst = false;
-};
+window.Rozier = new _Rozier2.default();
 
 /*
  * ============================================================================
  * Plug into jQuery standard events
  * ============================================================================
  */
-(0, _jquery2.default)(document).ready(Rozier.onDocumentReady);
-
-/***/ }),
-
-/***/ "../Resources/app/plugins.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
+(0, _jquery2.default)(document).ready(function () {
+  window.Rozier.onDocumentReady();
 });
-exports.PointerEventsPolyfill = exports.removeClass = exports.addClass = exports.stripTags = exports.toType = exports.isMobile = undefined;
-
-var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// is mobile
-var isMobile = exports.isMobile = {
-    Android: function Android() {
-        return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function BlackBerry() {
-        return navigator.userAgent.match(/BlackBerry/i);
-    },
-    iOS: function iOS() {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function Opera() {
-        return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function Windows() {
-        return navigator.userAgent.match(/IEMobile/i);
-    },
-    any: function any() {
-        return isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows();
-    }
-};
-
-var toType = exports.toType = function toType(obj) {
-    return {}.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
-};
-
-// Avoid `console` errors in browsers that lack a console.
-(function () {
-    var method = void 0;
-    var noop = function noop() {};
-    var methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn'];
-    var length = methods.length;
-    var console = window.console = window.console || {};
-
-    while (length--) {
-        method = methods[length];
-
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
-        }
-    }
-})();
-
-// Strip tags
-var stripTags = exports.stripTags = function stripTags(input, allowed) {
-    //  discuss at: http://phpjs.org/functions/strip_tags/
-    // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // improved by: Luke Godfrey
-    // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    //    input by: Pul
-    //    input by: Alex
-    //    input by: Marc Palau
-    //    input by: Brett Zamir (http://brett-zamir.me)
-    //    input by: Bobby Drake
-    //    input by: Evertjan Garretsen
-    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // bugfixed by: Onno Marsman
-    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // bugfixed by: Eric Nagel
-    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // bugfixed by: Tomasz Wesolowski
-    //  revised by: Rafał Kukawski (http://blog.kukawski.pl/)
-    //   example 1: strip_tags('<p>Kevin</p> <br /><b>van</b> <i>Zonneveld</i>', '<i><b>');
-    //   returns 1: 'Kevin <b>van</b> <i>Zonneveld</i>'
-    //   example 2: strip_tags('<p>Kevin <img src="someimage.png" onmouseover="someFunction()">van <i>Zonneveld</i></p>', '<p>');
-    //   returns 2: '<p>Kevin van Zonneveld</p>'
-    //   example 3: strip_tags("<a href='http://kevin.vanzonneveld.net'>Kevin van Zonneveld</a>", "<a>");
-    //   returns 3: "<a href='http://kevin.vanzonneveld.net'>Kevin van Zonneveld</a>"
-    //   example 4: strip_tags('1 < 5 5 > 1');
-    //   returns 4: '1 < 5 5 > 1'
-    //   example 5: strip_tags('1 <br/> 1');
-    //   returns 5: '1  1'
-    //   example 6: strip_tags('1 <br/> 1', '<br>');
-    //   returns 6: '1 <br/> 1'
-    //   example 7: strip_tags('1 <br/> 1', '<br><br/>');
-    //   returns 7: '1 <br/> 1'
-
-    allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
-    var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-    return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
-        return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-    });
-};
-
-// Add class
-var addClass = exports.addClass = function addClass(el, classToAdd) {
-    if (el) {
-        if (el.classList) {
-            el.classList.add(classToAdd);
-        } else {
-            el.className += ' ' + classToAdd;
-        }
-    }
-};
-
-// Remove class
-var removeClass = exports.removeClass = function removeClass(el, classToRemove) {
-    if (el) {
-        if (el.classList) {
-            el.classList.remove(classToRemove);
-        } else {
-            el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
-
-            var posLastCar = el.className.length - 1;
-
-            if (el.className[posLastCar] === ' ') {
-                el.className = el.className.substring(0, posLastCar);
-            }
-        }
-    }
-};
-
-/*
- * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
- * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
- */
-// constructor
-
-var PointerEventsPolyfill = exports.PointerEventsPolyfill = function () {
-    function PointerEventsPolyfill(options) {
-        (0, _classCallCheck3.default)(this, PointerEventsPolyfill);
-
-        // set defaults
-        this.options = {
-            selector: '*',
-            mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
-            usePolyfillIf: function usePolyfillIf() {
-                if (navigator.appName === 'Microsoft Internet Explorer') {
-                    var agent = navigator.userAgent;
-                    if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
-                        var version = parseFloat(RegExp.$1);
-                        if (version < 11) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        };
-
-        if (options) {
-            var obj = this;
-            _jquery2.default.each(options, function (k, v) {
-                obj.options[k] = v;
-            });
-        }
-
-        if (this.options.usePolyfillIf()) {
-            this.registerMouseEvents();
-        }
-    }
-
-    // singleton initializer
-
-
-    (0, _createClass3.default)(PointerEventsPolyfill, [{
-        key: 'initialize',
-        value: function initialize(options) {
-            if (!PointerEventsPolyfill.singleton) {
-                PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options);
-            }
-
-            return PointerEventsPolyfill.singleton;
-        }
-
-        // handle mouse events w/ support for pointer-events: none
-
-    }, {
-        key: 'registerMouseEvents',
-        value: function registerMouseEvents() {
-            var _this = this;
-
-            // register on all elements (and all future elements) matching the selector
-            (0, _jquery2.default)(document).on(this.options.mouseEvents.join(' '), this.options.selector, function (e) {
-                if ((0, _jquery2.default)(_this).css('pointer-events') === 'none') {
-                    // peak at the element below
-                    var origDisplayAttribute = (0, _jquery2.default)(_this).css('display');
-                    (0, _jquery2.default)(_this).css('display', 'none');
-
-                    var underneathElem = document.elementFromPoint(e.clientX, e.clientY);
-
-                    if (origDisplayAttribute) {
-                        (0, _jquery2.default)(_this).css('display', origDisplayAttribute);
-                    } else {
-                        (0, _jquery2.default)(_this).css('display', '');
-                    }
-
-                    // fire the mouse event on the element below
-                    e.target = underneathElem;
-                    (0, _jquery2.default)(underneathElem).trigger(e);
-
-                    return false;
-                }
-
-                return true;
-            });
-        }
-    }]);
-    return PointerEventsPolyfill;
-}();
-
-/***/ }),
-
-/***/ "../Resources/app/rozierMobile.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = RozierMobile;
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
-
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Rozier Mobile
- */
-function RozierMobile() {
-    var _this = this;
-
-    // Selectors
-    _this.$menu = (0, _jquery2.default)('#menu-mobile');
-    _this.$adminMenu = (0, _jquery2.default)('#admin-menu');
-    _this.$adminMenuLink = _this.$adminMenu.find('a');
-    _this.$adminMenuNavParent = _this.$adminMenu.find('.uk-parent');
-
-    _this.$searchButton = (0, _jquery2.default)('#search-button');
-    _this.$searchPanel = (0, _jquery2.default)('#nodes-sources-search');
-
-    _this.$treeButton = (0, _jquery2.default)('#tree-button');
-    _this.$treeWrapper = (0, _jquery2.default)('#tree-wrapper');
-    _this.$treeWrapperLink = _this.$treeWrapper.find('a');
-
-    _this.$userPicture = (0, _jquery2.default)('#user-picture');
-    _this.$userActions = (0, _jquery2.default)('.user-actions');
-    _this.$userActionsLink = _this.$userActions.find('a');
-
-    _this.$mainContentOverlay = (0, _jquery2.default)('#main-content-overlay');
-
-    _this.menuOpen = false;
-    _this.searchOpen = false;
-    _this.treeOpen = false;
-    _this.adminOpen = false;
-
-    // Methods
-    _this.init();
-}
-
-/**
- * Init
- * @return {[type]} [description]
- */
-RozierMobile.prototype.init = function () {
-    var _this = this;
-
-    if (_this.$userPicture.length) {
-        // Add class on user picture link to unbind default event
-        (0, _plugins.addClass)(_this.$userPicture[0], 'rz-no-ajax-link');
-    }
-
-    // Events
-    _this.$menu.on('click', _jquery2.default.proxy(_this.menuClick, _this));
-    _this.$adminMenuLink.on('click', _jquery2.default.proxy(_this.adminMenuLinkClick, _this));
-    _this.$adminMenuNavParent.on('click', _jquery2.default.proxy(_this.adminMenuNavParentClick, _this));
-
-    _this.$searchButton.on('click', _jquery2.default.proxy(_this.searchButtonClick, _this));
-
-    _this.$treeButton.on('click', _jquery2.default.proxy(_this.treeButtonClick, _this));
-    _this.$treeWrapperLink.on('click', _jquery2.default.proxy(_this.treeWrapperLinkClick, _this));
-
-    _this.$userPicture.on('click', _jquery2.default.proxy(_this.userPictureClick, _this));
-    _this.$userActionsLink.on('click', _jquery2.default.proxy(_this.userActionsLinkClick, _this));
-
-    _this.$mainContentOverlay.on('click', _jquery2.default.proxy(_this.mainContentOverlayClick, _this));
-};
-
-/**
- * Menu click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.menuClick = function (e) {
-    var _this = this;
-
-    if (!_this.menuOpen) _this.openMenu();else _this.closeMenu();
-};
-
-/**
- * Admin menu nav parent click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.adminMenuNavParentClick = function (e) {
-    var $target = (0, _jquery2.default)(e.currentTarget);
-    var $ukNavSub = (0, _jquery2.default)(e.currentTarget).find('.uk-nav-sub');
-
-    // Open
-    if (!$target.hasClass('nav-open')) {
-        var $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item');
-        var ukNavSubHeight = $ukNavSubItem.length * 41 - 3;
-
-        $ukNavSub[0].style.display = 'block';
-        _gsap.TweenLite.to($ukNavSub, 0.6, { height: ukNavSubHeight,
-            ease: _gsap.Expo.easeOut,
-            onComplete: function onComplete() {} });
-
-        $target.addClass('nav-open');
-    } else {
-        // Close
-        _gsap.TweenLite.to($ukNavSub, 0.6, { height: 0,
-            ease: _gsap.Expo.easeOut,
-            onComplete: function onComplete() {
-                $ukNavSub[0].style.display = 'none';
-            } });
-
-        $target.removeClass('nav-open');
-    }
-};
-
-/**
- * Admin menu link click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.adminMenuLinkClick = function (e) {
-    var _this = this;
-
-    if (_this.menuOpen) _this.closeMenu();
-};
-
-/**
- * Open menu
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openMenu = function () {
-    var _this = this;
-
-    // Close panel if open
-    if (_this.searchOpen) _this.closeSearch();else if (_this.treeOpen) _this.closeTree();else if (_this.userOpen) _this.closeUser();
-
-    // Translate menu panel
-    _gsap.TweenLite.to(_this.$adminMenu, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
-
-    _this.$mainContentOverlay[0].style.display = 'block';
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
-
-    _this.menuOpen = true;
-};
-
-/**
- * Close menu
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeMenu = function () {
-    var _this = this;
-
-    var adminMenuX = -window.Rozier.windowWidth * 0.8;
-
-    _gsap.TweenLite.to(_this.$adminMenu, 0.6, { x: adminMenuX, ease: _gsap.Expo.easeOut });
-
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$mainContentOverlay[0].style.display = 'none';
-        } });
-
-    _this.menuOpen = false;
-};
-
-/**
- * Search button click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.searchButtonClick = function (e) {
-    var _this = this;
-
-    if (!_this.searchOpen) _this.openSearch();else _this.closeSearch();
-};
-
-/**
- * Open search
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openSearch = function () {
-    var _this = this;
-
-    // Close panel if open
-    if (_this.menuOpen) _this.closeMenu();else if (_this.treeOpen) _this.closeTree();else if (_this.userOpen) _this.closeUser();
-
-    // Translate search panel
-    _gsap.TweenLite.to(_this.$searchPanel, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
-
-    _this.$mainContentOverlay[0].style.display = 'block';
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
-
-    // Add active class
-    _this.$searchButton.addClass('active');
-    _this.searchOpen = true;
-};
-
-/**
- * Close search
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeSearch = function () {
-    var _this = this;
-    var searchPanelX = -window.Rozier.windowWidth * 0.8;
-    _gsap.TweenLite.to(_this.$searchPanel, 0.6, { x: searchPanelX, ease: _gsap.Expo.easeOut });
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$mainContentOverlay[0].style.display = 'none';
-        } });
-
-    // Remove active class
-    _this.$searchButton.removeClass('active');
-    _this.searchOpen = false;
-};
-
-/**
- * Tree button click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.treeButtonClick = function (e) {
-    var _this = this;
-
-    if (!_this.treeOpen) _this.openTree();else _this.closeTree();
-};
-
-/**
- * Tree wrapper link click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.treeWrapperLinkClick = function (e) {
-    var _this = this;
-
-    if (e.currentTarget.className.indexOf('tab-link') === -1 && _this.treeOpen) {
-        _this.closeTree();
-    }
-};
-
-/**
- * Open tree
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openTree = function () {
-    var _this = this;
-
-    // Close panel if open
-    if (_this.menuOpen) _this.closeMenu();else if (_this.searchOpen) _this.closeSearch();else if (_this.userOpen) _this.closeUser();
-
-    // Translate tree panel
-    _gsap.TweenLite.to(_this.$treeWrapper, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
-
-    _this.$mainContentOverlay[0].style.display = 'block';
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
-
-    // Add active class
-    _this.$treeButton.addClass('active');
-
-    _this.treeOpen = true;
-};
-
-/**
- * Close tree
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeTree = function () {
-    var _this = this;
-
-    var treeWrapperX = -window.Rozier.windowWidth * 0.8;
-
-    _gsap.TweenLite.to(_this.$treeWrapper, 0.6, { x: treeWrapperX, ease: _gsap.Expo.easeOut });
-
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$mainContentOverlay[0].style.display = 'none';
-        } });
-
-    // Remove active class
-    (0, _plugins.removeClass)(_this.$treeButton[0], 'active');
-
-    _this.treeOpen = false;
-};
-
-/**
- * User picture click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.userPictureClick = function (e) {
-    var _this = this;
-
-    if (!_this.userOpen) _this.openUser();else _this.closeUser();
-
-    return false;
-};
-
-/**
- * User actions link click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.userActionsLinkClick = function (e) {
-    var _this = this;
-
-    if (_this.userOpen) {
-        _this.closeUser();
-    }
-};
-
-/**
- * Open user
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openUser = function () {
-    var _this = this;
-
-    // Close panel if open
-    if (_this.menuOpen) _this.closeMenu();else if (_this.searchOpen) _this.closeSearch();else if (_this.treeOpen) _this.closeTree();
-
-    // Translate user panel
-    _gsap.TweenLite.to(_this.$userActions, 0.6, { x: 0, ease: _gsap.Expo.easeOut });
-
-    if (_this.$mainContentOverlay.length) {
-        _this.$mainContentOverlay[0].style.display = 'block';
-        _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0.5, ease: _gsap.Expo.easeOut });
-    }
-
-    // Add active class
-    _this.$userPicture.addClass('active');
-    _this.userOpen = true;
-};
-
-/**
- * Close user
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeUser = function () {
-    var _this = this;
-    var userActionsX = window.Rozier.windowWidth * 0.8;
-
-    _gsap.TweenLite.to(_this.$userActions, 0.6, { x: userActionsX, ease: _gsap.Expo.easeOut });
-    _gsap.TweenLite.to(_this.$mainContentOverlay, 0.6, { opacity: 0,
-        ease: _gsap.Expo.easeOut,
-        onComplete: function onComplete() {
-            _this.$mainContentOverlay[0].style.display = 'none';
-        } });
-
-    // Remove active class
-    _this.$userPicture.removeClass('active');
-    _this.userOpen = false;
-};
-
-/**
- * Main content overlay click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.mainContentOverlayClick = function (e) {
-    var _this = this;
-
-    if (_this.menuOpen) _this.closeMenu();else if (_this.treeOpen) _this.closeTree();else if (_this.userOpen) _this.closeUser();
-};
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-RozierMobile.prototype.resize = function () {};
 
 /***/ }),
 
@@ -10179,6 +10068,237 @@ function dataURItoBlob(dataURI) {
 
 /***/ }),
 
+/***/ "../Resources/app/utils/plugins.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.PointerEventsPolyfill = exports.removeClass = exports.addClass = exports.stripTags = exports.toType = exports.isMobile = undefined;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// is mobile
+var isMobile = exports.isMobile = {
+    Android: function Android() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function BlackBerry() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function iOS() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function Opera() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function Windows() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function any() {
+        return isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows();
+    }
+};
+
+var toType = exports.toType = function toType(obj) {
+    return {}.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+};
+
+// Avoid `console` errors in browsers that lack a console.
+(function () {
+    var method = void 0;
+    var noop = function noop() {};
+    var methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn'];
+    var length = methods.length;
+    var console = window.console = window.console || {};
+
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+})();
+
+// Strip tags
+var stripTags = exports.stripTags = function stripTags(input, allowed) {
+    //  discuss at: http://phpjs.org/functions/strip_tags/
+    // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // improved by: Luke Godfrey
+    // improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    //    input by: Pul
+    //    input by: Alex
+    //    input by: Marc Palau
+    //    input by: Brett Zamir (http://brett-zamir.me)
+    //    input by: Bobby Drake
+    //    input by: Evertjan Garretsen
+    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // bugfixed by: Onno Marsman
+    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // bugfixed by: Eric Nagel
+    // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // bugfixed by: Tomasz Wesolowski
+    //  revised by: Rafał Kukawski (http://blog.kukawski.pl/)
+    //   example 1: strip_tags('<p>Kevin</p> <br /><b>van</b> <i>Zonneveld</i>', '<i><b>');
+    //   returns 1: 'Kevin <b>van</b> <i>Zonneveld</i>'
+    //   example 2: strip_tags('<p>Kevin <img src="someimage.png" onmouseover="someFunction()">van <i>Zonneveld</i></p>', '<p>');
+    //   returns 2: '<p>Kevin van Zonneveld</p>'
+    //   example 3: strip_tags("<a href='http://kevin.vanzonneveld.net'>Kevin van Zonneveld</a>", "<a>");
+    //   returns 3: "<a href='http://kevin.vanzonneveld.net'>Kevin van Zonneveld</a>"
+    //   example 4: strip_tags('1 < 5 5 > 1');
+    //   returns 4: '1 < 5 5 > 1'
+    //   example 5: strip_tags('1 <br/> 1');
+    //   returns 5: '1  1'
+    //   example 6: strip_tags('1 <br/> 1', '<br>');
+    //   returns 6: '1 <br/> 1'
+    //   example 7: strip_tags('1 <br/> 1', '<br><br/>');
+    //   returns 7: '1 <br/> 1'
+
+    allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+    var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+        return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+    });
+};
+
+// Add class
+var addClass = exports.addClass = function addClass(el, classToAdd) {
+    if (el) {
+        if (el.classList) {
+            el.classList.add(classToAdd);
+        } else {
+            el.className += ' ' + classToAdd;
+        }
+    }
+};
+
+// Remove class
+var removeClass = exports.removeClass = function removeClass(el, classToRemove) {
+    if (el) {
+        if (el.classList) {
+            el.classList.remove(classToRemove);
+        } else {
+            el.className = el.className.replace(new RegExp('(^|\\b)' + classToRemove.split(' ').join('|') + '(\\b|$)', 'gi'), '');
+
+            var posLastCar = el.className.length - 1;
+
+            if (el.className[posLastCar] === ' ') {
+                el.className = el.className.substring(0, posLastCar);
+            }
+        }
+    }
+};
+
+/*
+ * Pointer Events Polyfill: Adds support for the style attribute "pointer-events: none" to browsers without this feature (namely, IE).
+ * (c) 2013, Kent Mewhort, licensed under BSD. See LICENSE.txt for details.
+ */
+// constructor
+
+var PointerEventsPolyfill = exports.PointerEventsPolyfill = function () {
+    function PointerEventsPolyfill(options) {
+        (0, _classCallCheck3.default)(this, PointerEventsPolyfill);
+
+        // set defaults
+        this.options = {
+            selector: '*',
+            mouseEvents: ['click', 'dblclick', 'mousedown', 'mouseup'],
+            usePolyfillIf: function usePolyfillIf() {
+                if (navigator.appName === 'Microsoft Internet Explorer') {
+                    var agent = navigator.userAgent;
+                    if (agent.match(/MSIE ([0-9]{1,}[.0-9]{0,})/) !== null) {
+                        var version = parseFloat(RegExp.$1);
+                        if (version < 11) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        };
+
+        if (options) {
+            var obj = this;
+            _jquery2.default.each(options, function (k, v) {
+                obj.options[k] = v;
+            });
+        }
+
+        if (this.options.usePolyfillIf()) {
+            this.registerMouseEvents();
+        }
+    }
+
+    // singleton initializer
+
+
+    (0, _createClass3.default)(PointerEventsPolyfill, [{
+        key: 'initialize',
+        value: function initialize(options) {
+            if (!PointerEventsPolyfill.singleton) {
+                PointerEventsPolyfill.singleton = new PointerEventsPolyfill(options);
+            }
+
+            return PointerEventsPolyfill.singleton;
+        }
+
+        // handle mouse events w/ support for pointer-events: none
+
+    }, {
+        key: 'registerMouseEvents',
+        value: function registerMouseEvents() {
+            var _this = this;
+
+            // register on all elements (and all future elements) matching the selector
+            (0, _jquery2.default)(document).on(this.options.mouseEvents.join(' '), this.options.selector, function (e) {
+                if ((0, _jquery2.default)(_this).css('pointer-events') === 'none') {
+                    // peak at the element below
+                    var origDisplayAttribute = (0, _jquery2.default)(_this).css('display');
+                    (0, _jquery2.default)(_this).css('display', 'none');
+
+                    var underneathElem = document.elementFromPoint(e.clientX, e.clientY);
+
+                    if (origDisplayAttribute) {
+                        (0, _jquery2.default)(_this).css('display', origDisplayAttribute);
+                    } else {
+                        (0, _jquery2.default)(_this).css('display', '');
+                    }
+
+                    // fire the mouse event on the element below
+                    e.target = underneathElem;
+                    (0, _jquery2.default)(underneathElem).trigger(e);
+
+                    return false;
+                }
+
+                return true;
+            });
+        }
+    }]);
+    return PointerEventsPolyfill;
+}();
+
+/***/ }),
+
 /***/ "../Resources/app/widgets/ChildrenNodesField.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11123,340 +11243,7 @@ exports.default = JsonEditor;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/MultiGeotagField.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _stringify = __webpack_require__("../node_modules/babel-runtime/core-js/json/stringify.js");
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
-var _getPrototypeOf = __webpack_require__("../node_modules/babel-runtime/core-js/object/get-prototype-of.js");
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__("../node_modules/babel-runtime/helpers/possibleConstructorReturn.js");
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__("../node_modules/babel-runtime/helpers/inherits.js");
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _GeotagField2 = __webpack_require__("../Resources/app/widgets/GeotagField.js");
-
-var _GeotagField3 = _interopRequireDefault(_GeotagField2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var MultiGeotagField = function (_GeotagField) {
-    (0, _inherits3.default)(MultiGeotagField, _GeotagField);
-
-    function MultiGeotagField() {
-        (0, _classCallCheck3.default)(this, MultiGeotagField);
-
-        var _this2 = (0, _possibleConstructorReturn3.default)(this, (MultiGeotagField.__proto__ || (0, _getPrototypeOf2.default)(MultiGeotagField)).call(this));
-
-        _this2.$fields = (0, _jquery2.default)('.rz-multi-geotag-field');
-        _this2.geocoder = null;
-
-        if (_this2.$fields.length && window.Rozier.googleClientId !== '') {
-            _this2.init();
-        }
-        return _this2;
-    }
-
-    /**
-     * @param markers
-     * @param $input
-     * @param $geocodeReset
-     * @param map
-     * @param $selector
-     * @param event
-     * @returns {boolean}
-     */
-
-
-    (0, _createClass3.default)(MultiGeotagField, [{
-        key: 'resetMarker',
-        value: function resetMarker(markers, $input, $geocodeReset, map, $selector, event) {
-            $input.val('');
-            for (var i = markers.length - 1; i >= 0; i--) {
-                markers[i].setMap(null);
-                markers[i] = null;
-            }
-            markers = [];
-
-            $geocodeReset.hide();
-            this.syncSelector($selector, markers, map, $input);
-
-            return false;
-        }
-    }, {
-        key: 'bindSingleField',
-        value: function bindSingleField(element) {
-            var $input = (0, _jquery2.default)(element);
-            var $label = $input.parent().find('.uk-form-label');
-            var labelText = $label[0].innerHTML;
-            var jsonCode = { 'lat': 45.769785, 'lng': 4.833967, 'zoom': 14 // default location
-            };var fieldId = 'geotag-canvas-' + this.uniqid();
-            var fieldAddressId = fieldId + '-address';
-            var resetButtonId = fieldId + '-reset';
-            var mapOptions = {
-                center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
-                zoom: jsonCode.zoom,
-                scrollwheel: false,
-                styles: window.Rozier.mapsStyle
-
-                // Prepare DOM
-            };$input.hide();
-            $label.hide();
-            $input.attr('data-geotag-canvas', fieldId);
-
-            // Geocode input text
-            var metaDOM = ['<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">', '<ul class="uk-navbar-nav">', '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-multi-marker"></i>', '<li class="uk-navbar-brand label">' + labelText + '</li>', '</ul>', '<div class="uk-navbar-content uk-navbar-flip">', '<div class="geotag-widget-quick-creation uk-button-group">', '<input class="rz-geotag-address" id="' + fieldAddressId + '" type="text" value="" />', '<a id="' + resetButtonId + '" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="' + window.Rozier.messages.geotag.resetMarker + '" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>', '</div>', '</div>', '</nav>', '<div class="multi-geotag-group">', '<ul class="multi-geotag-list-markers">', '</ul>', '<div class="rz-geotag-canvas" id="' + fieldId + '"></div>', '</div>'].join('');
-
-            $input.after(metaDOM);
-
-            var $geocodeInput = (0, _jquery2.default)('#' + fieldAddressId);
-            $geocodeInput.attr('placeholder', window.Rozier.messages.geotag.typeAnAddress);
-            // Reset button
-            var $geocodeReset = (0, _jquery2.default)('#' + resetButtonId);
-            $geocodeReset.hide();
-
-            /*
-             * Prepare map and marker
-             */
-            var map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions);
-            var markers = [];
-            var $selector = $input.parent().find('.multi-geotag-list-markers');
-
-            if ($input.val() !== '') {
-                try {
-                    var geocodes = JSON.parse($input.val());
-                    var geocodeslength = geocodes.length;
-                    for (var i = 0; i < geocodeslength; i++) {
-                        markers[i] = this.createMarker(geocodes[i], $input, map);
-                        window.google.maps.event.addListener(markers[i], 'dragend', _jquery2.default.proxy(this.setMarkerEvent, this, markers[i], markers, $input, $geocodeReset, map));
-                    }
-                    $geocodeReset.show();
-                } catch (e) {
-                    $input.show();
-                    (0, _jquery2.default)(document.getElementById(fieldId)).hide();
-
-                    return false;
-                }
-            }
-
-            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.setMarkerEvent, this, null, markers, $input, $geocodeReset, map));
-            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.syncSelector, this, $selector, markers, map, $input));
-
-            $geocodeInput.on('keypress', _jquery2.default.proxy(this.requestGeocode, this, markers, $input, $geocodeReset, map, $selector));
-            $geocodeReset.on('click', _jquery2.default.proxy(this.resetMarker, this, markers, $input, $geocodeReset, map, $selector));
-            $geocodeReset.on('click', _jquery2.default.proxy(this.syncSelector, this, $selector, markers, map, $input));
-
-            window.Rozier.$window.on('resize', _jquery2.default.proxy(this.resetMap, this, map, markers, mapOptions));
-            this.resetMap(map, markers, mapOptions, null);
-            this.syncSelector($selector, markers, map, $input);
-        }
-    }, {
-        key: 'syncSelector',
-        value: function syncSelector($selector, markers, map, $input) {
-            var _this = this;
-
-            $selector.empty();
-            var markersLength = markers.length;
-            for (var i = 0; i < markersLength; i++) {
-                if (markers[i] !== null) {
-                    var geocode = this.getGeocodeFromMarker(markers[i]);
-
-                    $selector.append(['<li>', '<span class="multi-geotag-marker-name">', geocode.name ? geocode.name : '#' + i, '</span>', '<a class="button rz-multi-geotag-center" data-geocode-id="' + i + '" data-geocode="' + (0, _stringify2.default)(geocode) + '"><i class="uk-icon-rz-marker"></i></a>', '<a class="button rz-multi-geotag-remove" data-geocode-id="' + i + '"><i class="uk-icon-rz-trash-o"></i></a>', '</li>'].join(''));
-
-                    var $centerBtn = $selector.find('.rz-multi-geotag-center[data-geocode-id="' + i + '"]');
-                    var $removeBtn = $selector.find('.rz-multi-geotag-remove[data-geocode-id="' + i + '"]');
-
-                    $centerBtn.on('click', _jquery2.default.proxy(this.centerMap, _this, map, markers[i]));
-                    $removeBtn.on('click', _jquery2.default.proxy(this.removeMarker, _this, map, markers, i, $selector, $input));
-                }
-            }
-        }
-    }, {
-        key: 'removeMarker',
-        value: function removeMarker(map, markers, index, $selector, $input, event) {
-            markers[index].setMap(null);
-            markers[index] = null;
-
-            this.syncSelector($selector, markers, map, $input);
-            this.writeMarkers(markers, $input);
-
-            return false;
-        }
-    }, {
-        key: 'getGeocodeFromMarker',
-        value: function getGeocodeFromMarker(marker) {
-            return {
-                'lat': marker.getPosition().lat(),
-                'lng': marker.getPosition().lng(),
-                'zoom': marker.zoom,
-                'name': marker.name
-            };
-        }
-    }, {
-        key: 'resetMap',
-        value: function resetMap(map, markers, mapOptions, event) {
-            var _this3 = this;
-
-            window.setTimeout(function () {
-                window.google.maps.event.trigger(map, 'resize');
-
-                if (typeof markers !== 'undefined' && markers.length > 0) {
-                    map.fitBounds(_this3.getMediumLatLng(markers));
-                } else {
-                    map.panTo(mapOptions.center);
-                }
-            }, 300);
-        }
-    }, {
-        key: 'centerMap',
-        value: function centerMap(map, marker, event) {
-            window.setTimeout(function () {
-                window.google.maps.event.trigger(map, 'resize');
-
-                if (typeof marker !== 'undefined') {
-                    map.panTo(marker.getPosition());
-                }
-                if (typeof marker.zoom !== 'undefined') {
-                    map.setZoom(marker.zoom);
-                }
-            }, 300);
-
-            return false;
-        }
-    }, {
-        key: 'getMediumLatLng',
-        value: function getMediumLatLng(markers) {
-            var bounds = new window.google.maps.LatLngBounds();
-            for (var index in markers) {
-                bounds.extend(markers[index].getPosition());
-            }
-
-            return bounds;
-        }
-
-        /**
-         * @param marker
-         * @param markers
-         * @param $input
-         * @param $geocodeReset
-         * @param map
-         * @param event
-         */
-
-    }, {
-        key: 'setMarkerEvent',
-        value: function setMarkerEvent(marker, markers, $input, $geocodeReset, map, event) {
-            this.setMarker(marker, markers, $input, $geocodeReset, map, event.latLng);
-        }
-
-        /**
-         * @param marker
-         * @param markers
-         * @param $input
-         * @param $geocodeReset
-         * @param map
-         * @param latlng
-         * @param name
-         * @returns {Object}
-         */
-
-    }, {
-        key: 'setMarker',
-        value: function setMarker(marker, markers, $input, $geocodeReset, map, latlng, name) {
-            if (marker === null) {
-                marker = new window.google.maps.Marker({
-                    map: map,
-                    draggable: true,
-                    animation: window.google.maps.Animation.DROP,
-                    position: latlng,
-                    icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
-                });
-            }
-
-            marker.setPosition(latlng);
-            marker.setMap(map);
-            marker.zoom = map.getZoom();
-            marker.name = name;
-            map.panTo(latlng);
-            markers.push(marker);
-
-            this.writeMarkers(markers, $input);
-
-            $geocodeReset.show();
-
-            return marker;
-        }
-    }, {
-        key: 'writeMarkers',
-        value: function writeMarkers(markers, $input) {
-            var geocodes = [];
-
-            for (var i = markers.length - 1; i >= 0; i--) {
-                if (markers[i] !== null) {
-                    geocodes.push(this.getGeocodeFromMarker(markers[i]));
-                }
-            }
-
-            $input.val((0, _stringify2.default)(geocodes));
-        }
-    }, {
-        key: 'requestGeocode',
-        value: function requestGeocode(markers, $input, $geocodeReset, map, $selector, event) {
-            var _this4 = this;
-
-            var address = event.currentTarget.value;
-
-            if (event.which === 13) {
-                event.preventDefault();
-
-                this.geocoder.geocode({ 'address': address }, function (results, status) {
-                    if (status === window.google.maps.GeocoderStatus.OK) {
-                        _this4.setMarker(null, markers, $input, $geocodeReset, map, results[0].geometry.location, address);
-                        _this4.syncSelector($selector, markers, map, $input);
-                    } else {
-                        console.err('Geocode was not successful for the following reason: ' + status);
-                    }
-                });
-
-                return false;
-            }
-        }
-    }]);
-    return MultiGeotagField;
-}(_GeotagField3.default);
-
-exports.default = MultiGeotagField;
-
-/***/ }),
-
-/***/ "../Resources/app/widgets/StackNodeTree.js":
+/***/ "../Resources/app/widgets/MarkdownEditor.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11478,296 +11265,7 @@ var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _NodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/NodesBulk.js");
-
-var _NodesBulk2 = _interopRequireDefault(_NodesBulk);
-
-var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
-
-var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var StackNodeTree = function () {
-    function StackNodeTree() {
-        (0, _classCallCheck3.default)(this, StackNodeTree);
-
-        this.$page = (0, _jquery2.default)('.stack-tree').eq(0);
-        this.currentRequest = null;
-        this.$quickAddNodeButtons = this.$page.find('.stack-tree-quick-creation a');
-        this.$switchLangButtons = this.$page.find('.nodetree-langs a');
-        this.$nodeTree = this.$page.find('.root-tree').eq(0);
-
-        this.onQuickAddClick = this.onQuickAddClick.bind(this);
-        this.onChangeLangClick = this.onChangeLangClick.bind(this);
-
-        this.init();
-    }
-
-    /**
-     * @return {Number}
-     */
-
-
-    (0, _createClass3.default)(StackNodeTree, [{
-        key: 'getCurrentPage',
-        value: function getCurrentPage() {
-            this.$nodeTree = this.$page.find('.root-tree').eq(0);
-            var currentPage = parseInt(this.$nodeTree.attr('data-page'));
-            if (isNaN(currentPage)) {
-                return 1;
-            }
-
-            return currentPage;
-        }
-
-        /**
-         * @return {Number|null}
-         */
-
-    }, {
-        key: 'getTranslationId',
-        value: function getTranslationId() {
-            this.$nodeTree = this.$page.find('.root-tree').eq(0);
-            var currentTranslationId = parseInt(this.$nodeTree.attr('data-translation-id'));
-            if (isNaN(currentTranslationId)) {
-                return null;
-            }
-
-            return currentTranslationId;
-        }
-    }, {
-        key: 'init',
-        value: function init() {
-            if (this.$quickAddNodeButtons.length) {
-                this.$quickAddNodeButtons.off('click', this.onQuickAddClick);
-                this.$quickAddNodeButtons.on('click', this.onQuickAddClick);
-            }
-            if (this.$switchLangButtons.length) {
-                this.$switchLangButtons.off('click', this.onChangeLangClick);
-                this.$switchLangButtons.on('click', this.onChangeLangClick);
-            }
-        }
-    }, {
-        key: 'onChangeLangClick',
-        value: function onChangeLangClick(event) {
-            event.preventDefault();
-
-            var $link = (0, _jquery2.default)(event.currentTarget);
-            var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-            var translationId = parseInt($link.attr('data-translation-id'));
-            var tagId = $link.attr('data-filter-tag');
-            this.refreshNodeTree(parentNodeId, translationId, tagId);
-            return false;
-        }
-
-        /**
-         * @param {Event} event
-         * @returns {boolean}
-         */
-
-    }, {
-        key: 'onQuickAddClick',
-        value: function onQuickAddClick(event) {
-            var _this = this;
-
-            if (this.currentRequest && this.currentRequest.readyState !== 4) {
-                this.currentRequest.abort();
-            }
-
-            var $link = (0, _jquery2.default)(event.currentTarget);
-            var nodeTypeId = parseInt($link.attr('data-children-node-type'));
-            var parentNodeId = parseInt($link.attr('data-children-parent-node'));
-
-            if (nodeTypeId > 0 && parentNodeId > 0) {
-                var postData = {
-                    '_token': window.Rozier.ajaxToken,
-                    '_action': 'quickAddNode',
-                    'nodeTypeId': nodeTypeId,
-                    'parentNodeId': parentNodeId,
-                    'pushTop': 1
-                };
-
-                if ($link.attr('data-filter-tag')) {
-                    postData.tagId = parseInt($link.attr('data-filter-tag'));
-                }
-
-                this.currentRequest = _jquery2.default.ajax({
-                    url: window.Rozier.routes.nodesQuickAddAjax,
-                    type: 'post',
-                    dataType: 'json',
-                    data: postData
-                }).done(function (data) {
-                    window.Rozier.refreshMainNodeTree();
-                    _this.refreshNodeTree(parentNodeId, null, postData.tagId, 1);
-                    window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
-                        timeout: 3000,
-                        pos: 'top-center'
-                    });
-                }).fail(function (data) {
-                    console.log('error');
-                    console.log(data);
-
-                    data = JSON.parse(data.responseText);
-
-                    window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
-                        timeout: 3000,
-                        pos: 'top-center'
-                    });
-                }).always(function () {
-                    console.log('complete');
-                });
-            }
-
-            return false;
-        }
-    }, {
-        key: 'treeAvailable',
-        value: function treeAvailable() {
-            var $nodeTree = this.$page.find('.nodetree-widget');
-            return !!$nodeTree.length;
-        }
-
-        /**
-         *
-         * @param rootNodeId
-         * @param translationId
-         * @param tagId
-         * @param page
-         */
-
-    }, {
-        key: 'refreshNodeTree',
-        value: function refreshNodeTree(rootNodeId, translationId, tagId, page) {
-            var _this2 = this;
-
-            if (this.currentRequest && this.currentRequest.readyState !== 4) {
-                this.currentRequest.abort();
-            }
-
-            var $nodeTree = this.$page.find('.nodetree-widget');
-
-            if ($nodeTree.length) {
-                var $rootTree = $nodeTree.find('.root-tree').eq(0);
-
-                if (typeof rootNodeId === 'undefined') {
-                    if (!$rootTree.attr('data-parent-node-id')) {
-                        rootNodeId = null;
-                    } else {
-                        rootNodeId = parseInt($rootTree.attr('data-parent-node-id'));
-                    }
-                } else {
-                    rootNodeId = parseInt(rootNodeId);
-                }
-
-                window.Rozier.lazyload.canvasLoader.show();
-                var postData = {
-                    '_token': window.Rozier.ajaxToken,
-                    '_action': 'requestNodeTree',
-                    'stackTree': true,
-                    'parentNodeId': rootNodeId,
-                    'page': this.getCurrentPage(),
-                    'translationId': this.getTranslationId()
-                };
-
-                var url = window.Rozier.routes.nodesTreeAjax;
-                if (translationId && translationId > 0) {
-                    postData.translationId = parseInt(translationId);
-                }
-
-                /*
-                 * Add translation id route param manually
-                 */
-                if (postData.translationId) {
-                    url += '/' + postData.translationId;
-                }
-
-                if (page) {
-                    postData.page = parseInt(page);
-                }
-
-                // data-filter-tag
-                if (tagId) {
-                    postData.tagId = parseInt(tagId);
-                }
-
-                console.log('refresh stackNodeTree', postData);
-
-                this.currentRequest = _jquery2.default.ajax({
-                    url: url,
-                    type: 'get',
-                    cache: false,
-                    dataType: 'json',
-                    data: postData
-                }).done(function (data) {
-                    if ($nodeTree.length && typeof data.nodeTree !== 'undefined') {
-                        $nodeTree.fadeOut('slow', function () {
-                            $nodeTree.replaceWith(data.nodeTree);
-                            $nodeTree = _this2.$page.find('.nodetree-widget');
-
-                            window.Rozier.initNestables();
-                            window.Rozier.bindMainTrees();
-                            window.Rozier.lazyload.bindAjaxLink();
-                            $nodeTree.fadeIn();
-                            window.Rozier.resize();
-
-                            /* eslint-disable no-new */
-                            new _NodesBulk2.default();
-
-                            _this2.$switchLangButtons = _this2.$page.find('.nodetree-langs a');
-                            _this2.$nodeTree = _this2.$page.find('.root-tree').eq(0);
-
-                            if (_this2.$switchLangButtons.length) {
-                                _this2.$switchLangButtons.off('click', _this2.onChangeLangClick);
-                                _this2.$switchLangButtons.on('click', _this2.onChangeLangClick);
-                            }
-
-                            window.Rozier.lazyload.canvasLoader.hide();
-                            window.Rozier.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
-                        });
-                    }
-                }).fail(function (data) {
-                    console.error(data.responseJSON);
-                });
-            } else {
-                console.error('No node-tree available.');
-            }
-        }
-    }]);
-    return StackNodeTree;
-}();
-
-exports.default = StackNodeTree;
-
-/***/ }),
-
-/***/ "../Resources/app/widgets/markdownEditor.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
+var _plugins = __webpack_require__("../Resources/app/utils/plugins.js");
 
 var _gsap = __webpack_require__("../node_modules/gsap/TweenMax.js");
 
@@ -12330,7 +11828,7 @@ exports.default = MarkdownEditor;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/nodeStatuses.js":
+/***/ "../Resources/app/widgets/MultiGeotagField.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12339,138 +11837,331 @@ exports.default = MarkdownEditor;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = NodeStatuses;
+
+var _stringify = __webpack_require__("../node_modules/babel-runtime/core-js/json/stringify.js");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _getPrototypeOf = __webpack_require__("../node_modules/babel-runtime/core-js/object/get-prototype-of.js");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = __webpack_require__("../node_modules/babel-runtime/helpers/possibleConstructorReturn.js");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = __webpack_require__("../node_modules/babel-runtime/helpers/inherits.js");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
+var _GeotagField2 = __webpack_require__("../Resources/app/widgets/GeotagField.js");
+
+var _GeotagField3 = _interopRequireDefault(_GeotagField2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function NodeStatuses() {
-    var _this = this;
+var MultiGeotagField = function (_GeotagField) {
+    (0, _inherits3.default)(MultiGeotagField, _GeotagField);
 
-    _this.$containers = (0, _jquery2.default)('.node-statuses, .node-actions');
-    _this.$icon = (0, _jquery2.default)('.node-status header i');
-    _this.$inputs = _this.$containers.find('input[type="checkbox"], input[type="radio"]');
-    _this.$item = _this.$containers.find('.node-statuses-item');
-    _this.locked = false;
+    function MultiGeotagField() {
+        (0, _classCallCheck3.default)(this, MultiGeotagField);
 
-    _this.init();
-}
+        var _this2 = (0, _possibleConstructorReturn3.default)(this, (MultiGeotagField.__proto__ || (0, _getPrototypeOf2.default)(MultiGeotagField)).call(this));
 
-NodeStatuses.prototype.init = function () {
-    var _this = this;
+        _this2.$fields = (0, _jquery2.default)('.rz-multi-geotag-field');
+        _this2.geocoder = null;
 
-    _this.$item.off('click', _jquery2.default.proxy(_this.itemClick, _this));
-    _this.$item.on('click', _jquery2.default.proxy(_this.itemClick, _this));
-
-    _this.$containers.on('mouseenter', _jquery2.default.proxy(_this.containerEnter, _this));
-    _this.$containers.on('mouseleave', _jquery2.default.proxy(_this.containerLeave, _this));
-
-    _this.$inputs.off('change', _jquery2.default.proxy(_this.onChange, _this));
-    _this.$inputs.on('change', _jquery2.default.proxy(_this.onChange, _this));
-
-    _this.$containers.find('.rz-boolean-checkbox').bootstrapSwitch({
-        size: 'small',
-        'onSwitchChange': _jquery2.default.proxy(_this.onChange, _this)
-    });
-};
-
-NodeStatuses.prototype.containerEnter = function (event) {
-    event.stopPropagation();
-
-    var $container = (0, _jquery2.default)(event.currentTarget);
-    var $list = $container.find('ul, nav').eq(0);
-    var containerHeight = $container.height();
-    var listHeight = $list.height();
-    var containerOffsetTop = $container.offset().top;
-    var windowHeight = window.innerHeight;
-    var fullHeight = containerOffsetTop + listHeight + containerHeight;
-
-    if (windowHeight < fullHeight) {
-        $container.addClass('reverse');
+        if (_this2.$fields.length && window.Rozier.googleClientId !== '') {
+            _this2.init();
+        }
+        return _this2;
     }
-};
 
-NodeStatuses.prototype.containerLeave = function (event) {
-    event.stopPropagation();
+    /**
+     * @param markers
+     * @param $input
+     * @param $geocodeReset
+     * @param map
+     * @param $selector
+     * @param event
+     * @returns {boolean}
+     */
 
-    var $container = (0, _jquery2.default)(event.currentTarget);
-    $container.removeClass('reverse');
-};
 
-NodeStatuses.prototype.itemClick = function (event) {
-    event.stopPropagation();
+    (0, _createClass3.default)(MultiGeotagField, [{
+        key: 'resetMarker',
+        value: function resetMarker(markers, $input, $geocodeReset, map, $selector, event) {
+            $input.val('');
+            for (var i = markers.length - 1; i >= 0; i--) {
+                markers[i].setMap(null);
+                markers[i] = null;
+            }
+            markers = [];
 
-    var $input = (0, _jquery2.default)(event.currentTarget).find('input[type="radio"]');
+            $geocodeReset.hide();
+            this.syncSelector($selector, markers, map, $input);
 
-    if ($input.length) {
-        $input.prop('checked', true);
-        $input.trigger('change');
-    }
-};
+            return false;
+        }
+    }, {
+        key: 'bindSingleField',
+        value: function bindSingleField(element) {
+            var $input = (0, _jquery2.default)(element);
+            var $label = $input.parent().find('.uk-form-label');
+            var labelText = $label[0].innerHTML;
+            var jsonCode = { 'lat': 45.769785, 'lng': 4.833967, 'zoom': 14 // default location
+            };var fieldId = 'geotag-canvas-' + this.uniqid();
+            var fieldAddressId = fieldId + '-address';
+            var resetButtonId = fieldId + '-reset';
+            var mapOptions = {
+                center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
+                zoom: jsonCode.zoom,
+                scrollwheel: false,
+                styles: window.Rozier.mapsStyle
 
-NodeStatuses.prototype.onChange = function (event) {
-    var _this = this;
+                // Prepare DOM
+            };$input.hide();
+            $label.hide();
+            $input.attr('data-geotag-canvas', fieldId);
 
-    event.stopPropagation();
-    if (_this.locked === false) {
-        _this.locked = true;
+            // Geocode input text
+            var metaDOM = ['<nav class="geotag-widget-nav uk-navbar rz-geotag-meta">', '<ul class="uk-navbar-nav">', '<li class="uk-navbar-brand"><i class="uk-icon-rz-map-multi-marker"></i>', '<li class="uk-navbar-brand label">' + labelText + '</li>', '</ul>', '<div class="uk-navbar-content uk-navbar-flip">', '<div class="geotag-widget-quick-creation uk-button-group">', '<input class="rz-geotag-address" id="' + fieldAddressId + '" type="text" value="" />', '<a id="' + resetButtonId + '" class="uk-button uk-button-content uk-button-table-delete rz-geotag-reset" title="' + window.Rozier.messages.geotag.resetMarker + '" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>', '</div>', '</div>', '</nav>', '<div class="multi-geotag-group">', '<ul class="multi-geotag-list-markers">', '</ul>', '<div class="rz-geotag-canvas" id="' + fieldId + '"></div>', '</div>'].join('');
 
-        var $input = (0, _jquery2.default)(event.currentTarget);
+            $input.after(metaDOM);
 
-        if ($input.length) {
-            var statusName = $input.attr('name');
-            var statusValue = null;
-            if ($input.is('input[type="checkbox"]')) {
-                statusValue = Number($input.is(':checked'));
-            } else if ($input.is('input[type="radio"]')) {
-                _this.$icon[0].className = $input.parent().find('i')[0].className;
-                statusValue = Number($input.val());
+            var $geocodeInput = (0, _jquery2.default)('#' + fieldAddressId);
+            $geocodeInput.attr('placeholder', window.Rozier.messages.geotag.typeAnAddress);
+            // Reset button
+            var $geocodeReset = (0, _jquery2.default)('#' + resetButtonId);
+            $geocodeReset.hide();
+
+            /*
+             * Prepare map and marker
+             */
+            var map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions);
+            var markers = [];
+            var $selector = $input.parent().find('.multi-geotag-list-markers');
+
+            if ($input.val() !== '') {
+                try {
+                    var geocodes = JSON.parse($input.val());
+                    var geocodeslength = geocodes.length;
+                    for (var i = 0; i < geocodeslength; i++) {
+                        markers[i] = this.createMarker(geocodes[i], $input, map);
+                        window.google.maps.event.addListener(markers[i], 'dragend', _jquery2.default.proxy(this.setMarkerEvent, this, markers[i], markers, $input, $geocodeReset, map));
+                    }
+                    $geocodeReset.show();
+                } catch (e) {
+                    $input.show();
+                    (0, _jquery2.default)(document.getElementById(fieldId)).hide();
+
+                    return false;
+                }
             }
 
-            var postData = {
-                '_token': window.Rozier.ajaxToken,
-                '_action': 'nodeChangeStatus',
-                'nodeId': parseInt($input.attr('data-node-id')),
-                'statusName': statusName,
-                'statusValue': statusValue
-            };
-            console.log(postData);
+            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.setMarkerEvent, this, null, markers, $input, $geocodeReset, map));
+            window.google.maps.event.addListener(map, 'click', _jquery2.default.proxy(this.syncSelector, this, $selector, markers, map, $input));
 
-            _jquery2.default.ajax({
-                url: window.Rozier.routes.nodesStatusesAjax,
-                type: 'post',
-                dataType: 'json',
-                cache: false,
-                data: postData
-            }).done(function (data) {
-                window.Rozier.refreshMainNodeTree();
-                window.UIkit.notify({
-                    message: data.responseText,
-                    status: data.status,
-                    timeout: 3000,
-                    pos: 'top-center'
-                });
-            }).fail(function (data) {
-                data = JSON.parse(data.responseText);
-                window.UIkit.notify({
-                    message: data.responseText,
-                    status: data.status,
-                    timeout: 3000,
-                    pos: 'top-center'
-                });
-            }).always(function () {
-                _this.locked = false;
-            });
+            $geocodeInput.on('keypress', _jquery2.default.proxy(this.requestGeocode, this, markers, $input, $geocodeReset, map, $selector));
+            $geocodeReset.on('click', _jquery2.default.proxy(this.resetMarker, this, markers, $input, $geocodeReset, map, $selector));
+            $geocodeReset.on('click', _jquery2.default.proxy(this.syncSelector, this, $selector, markers, map, $input));
+
+            window.Rozier.$window.on('resize', _jquery2.default.proxy(this.resetMap, this, map, markers, mapOptions));
+            this.resetMap(map, markers, mapOptions, null);
+            this.syncSelector($selector, markers, map, $input);
         }
-    }
-};
+    }, {
+        key: 'syncSelector',
+        value: function syncSelector($selector, markers, map, $input) {
+            var _this = this;
+
+            $selector.empty();
+            var markersLength = markers.length;
+            for (var i = 0; i < markersLength; i++) {
+                if (markers[i] !== null) {
+                    var geocode = this.getGeocodeFromMarker(markers[i]);
+
+                    $selector.append(['<li>', '<span class="multi-geotag-marker-name">', geocode.name ? geocode.name : '#' + i, '</span>', '<a class="button rz-multi-geotag-center" data-geocode-id="' + i + '" data-geocode="' + (0, _stringify2.default)(geocode) + '"><i class="uk-icon-rz-marker"></i></a>', '<a class="button rz-multi-geotag-remove" data-geocode-id="' + i + '"><i class="uk-icon-rz-trash-o"></i></a>', '</li>'].join(''));
+
+                    var $centerBtn = $selector.find('.rz-multi-geotag-center[data-geocode-id="' + i + '"]');
+                    var $removeBtn = $selector.find('.rz-multi-geotag-remove[data-geocode-id="' + i + '"]');
+
+                    $centerBtn.on('click', _jquery2.default.proxy(this.centerMap, _this, map, markers[i]));
+                    $removeBtn.on('click', _jquery2.default.proxy(this.removeMarker, _this, map, markers, i, $selector, $input));
+                }
+            }
+        }
+    }, {
+        key: 'removeMarker',
+        value: function removeMarker(map, markers, index, $selector, $input, event) {
+            markers[index].setMap(null);
+            markers[index] = null;
+
+            this.syncSelector($selector, markers, map, $input);
+            this.writeMarkers(markers, $input);
+
+            return false;
+        }
+    }, {
+        key: 'getGeocodeFromMarker',
+        value: function getGeocodeFromMarker(marker) {
+            return {
+                'lat': marker.getPosition().lat(),
+                'lng': marker.getPosition().lng(),
+                'zoom': marker.zoom,
+                'name': marker.name
+            };
+        }
+    }, {
+        key: 'resetMap',
+        value: function resetMap(map, markers, mapOptions, event) {
+            var _this3 = this;
+
+            window.setTimeout(function () {
+                window.google.maps.event.trigger(map, 'resize');
+
+                if (typeof markers !== 'undefined' && markers.length > 0) {
+                    map.fitBounds(_this3.getMediumLatLng(markers));
+                } else {
+                    map.panTo(mapOptions.center);
+                }
+            }, 300);
+        }
+    }, {
+        key: 'centerMap',
+        value: function centerMap(map, marker, event) {
+            window.setTimeout(function () {
+                window.google.maps.event.trigger(map, 'resize');
+
+                if (typeof marker !== 'undefined') {
+                    map.panTo(marker.getPosition());
+                }
+                if (typeof marker.zoom !== 'undefined') {
+                    map.setZoom(marker.zoom);
+                }
+            }, 300);
+
+            return false;
+        }
+    }, {
+        key: 'getMediumLatLng',
+        value: function getMediumLatLng(markers) {
+            var bounds = new window.google.maps.LatLngBounds();
+            for (var index in markers) {
+                bounds.extend(markers[index].getPosition());
+            }
+
+            return bounds;
+        }
+
+        /**
+         * @param marker
+         * @param markers
+         * @param $input
+         * @param $geocodeReset
+         * @param map
+         * @param event
+         */
+
+    }, {
+        key: 'setMarkerEvent',
+        value: function setMarkerEvent(marker, markers, $input, $geocodeReset, map, event) {
+            this.setMarker(marker, markers, $input, $geocodeReset, map, event.latLng);
+        }
+
+        /**
+         * @param marker
+         * @param markers
+         * @param $input
+         * @param $geocodeReset
+         * @param map
+         * @param latlng
+         * @param name
+         * @returns {Object}
+         */
+
+    }, {
+        key: 'setMarker',
+        value: function setMarker(marker, markers, $input, $geocodeReset, map, latlng, name) {
+            if (marker === null) {
+                marker = new window.google.maps.Marker({
+                    map: map,
+                    draggable: true,
+                    animation: window.google.maps.Animation.DROP,
+                    position: latlng,
+                    icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+                });
+            }
+
+            marker.setPosition(latlng);
+            marker.setMap(map);
+            marker.zoom = map.getZoom();
+            marker.name = name;
+            map.panTo(latlng);
+            markers.push(marker);
+
+            this.writeMarkers(markers, $input);
+
+            $geocodeReset.show();
+
+            return marker;
+        }
+    }, {
+        key: 'writeMarkers',
+        value: function writeMarkers(markers, $input) {
+            var geocodes = [];
+
+            for (var i = markers.length - 1; i >= 0; i--) {
+                if (markers[i] !== null) {
+                    geocodes.push(this.getGeocodeFromMarker(markers[i]));
+                }
+            }
+
+            $input.val((0, _stringify2.default)(geocodes));
+        }
+    }, {
+        key: 'requestGeocode',
+        value: function requestGeocode(markers, $input, $geocodeReset, map, $selector, event) {
+            var _this4 = this;
+
+            var address = event.currentTarget.value;
+
+            if (event.which === 13) {
+                event.preventDefault();
+
+                this.geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status === window.google.maps.GeocoderStatus.OK) {
+                        _this4.setMarker(null, markers, $input, $geocodeReset, map, results[0].geometry.location, address);
+                        _this4.syncSelector($selector, markers, map, $input);
+                    } else {
+                        console.err('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+
+                return false;
+            }
+        }
+    }]);
+    return MultiGeotagField;
+}(_GeotagField3.default);
+
+exports.default = MultiGeotagField;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/nodeTree.js":
+/***/ "../Resources/app/widgets/NodeStatuses.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12479,61 +12170,163 @@ NodeStatuses.prototype.onChange = function (event) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = NodeTree;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _plugins = __webpack_require__("../Resources/app/plugins.js");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * NODE TREE
+ * Node Statuses
  */
-function NodeTree() {
-    var _this = this;
+var NodeStatuses = function () {
+    function NodeStatuses() {
+        (0, _classCallCheck3.default)(this, NodeStatuses);
 
-    // Selectors
-    _this.$content = (0, _jquery2.default)('.content-node-tree');
-    _this.$elements = null;
-    _this.$dropdown = null;
+        this.$containers = (0, _jquery2.default)('.node-statuses, .node-actions');
+        this.$icon = (0, _jquery2.default)('.node-status header i');
+        this.$inputs = this.$containers.find('input[type="checkbox"], input[type="radio"]');
+        this.$item = this.$containers.find('.node-statuses-item');
+        this.locked = false;
 
-    // Methods
-    if (_this.$content.length) {
-        _this.$dropdown = _this.$content.find('.uk-dropdown-small');
-        _this.init();
+        this.itemClick = this.itemClick.bind(this);
+        this.containerEnter = this.containerEnter.bind(this);
+        this.containerLeave = this.containerLeave.bind(this);
+        this.onChange = this.onChange.bind(this);
+
+        this.init();
     }
-}
 
-/**
- * Init
- * @return {[type]} [description]
- */
-NodeTree.prototype.init = function () {
-    var _this = this;
+    (0, _createClass3.default)(NodeStatuses, [{
+        key: 'init',
+        value: function init() {
+            this.$item.off('click', this.itemClick);
+            this.$item.on('click', this.itemClick);
 
-    _this.contentHeight = _this.$content.actual('outerHeight');
+            this.$containers.on('mouseenter', this.containerEnter);
+            this.$containers.on('mouseleave', this.containerLeave);
 
-    if (_this.contentHeight >= window.Rozier.windowHeight - 400) _this.dropdownFlip();
-};
+            this.$inputs.off('change', this.onChange);
+            this.$inputs.on('change', this.onChange);
 
-/**
- * Flip dropdown
- * @return {[type]}       [description]
- */
-NodeTree.prototype.dropdownFlip = function () {
-    var _this = this;
+            this.$containers.find('.rz-boolean-checkbox').bootstrapSwitch({
+                size: 'small',
+                onSwitchChange: this.onChange
+            });
+        }
+    }, {
+        key: 'containerEnter',
+        value: function containerEnter(event) {
+            event.stopPropagation();
 
-    for (var i = _this.$dropdown.length - 1; i >= _this.$dropdown.length - 3; i--) {
-        (0, _plugins.addClass)(_this.$dropdown[i], 'uk-dropdown-up');
-    }
-};
+            var $container = (0, _jquery2.default)(event.currentTarget);
+            var $list = $container.find('ul, nav').eq(0);
+            var containerHeight = $container.height();
+            var listHeight = $list.height();
+            var containerOffsetTop = $container.offset().top;
+            var windowHeight = window.innerHeight;
+            var fullHeight = containerOffsetTop + listHeight + containerHeight;
+
+            if (windowHeight < fullHeight) {
+                $container.addClass('reverse');
+            }
+        }
+    }, {
+        key: 'containerLeave',
+        value: function containerLeave(event) {
+            event.stopPropagation();
+
+            var $container = (0, _jquery2.default)(event.currentTarget);
+            $container.removeClass('reverse');
+        }
+    }, {
+        key: 'itemClick',
+        value: function itemClick(event) {
+            event.stopPropagation();
+
+            var $input = (0, _jquery2.default)(event.currentTarget).find('input[type="radio"]');
+
+            if ($input.length) {
+                $input.prop('checked', true);
+                $input.trigger('change');
+            }
+        }
+    }, {
+        key: 'onChange',
+        value: function onChange(event) {
+            var _this = this;
+
+            event.stopPropagation();
+            if (this.locked === false) {
+                this.locked = true;
+
+                var $input = (0, _jquery2.default)(event.currentTarget);
+
+                if ($input.length) {
+                    var statusName = $input.attr('name');
+                    var statusValue = null;
+
+                    if ($input.is('input[type="checkbox"]')) {
+                        statusValue = Number($input.is(':checked'));
+                    } else if ($input.is('input[type="radio"]')) {
+                        this.$icon[0].className = $input.parent().find('i')[0].className;
+                        statusValue = Number($input.val());
+                    }
+
+                    var postData = {
+                        '_token': window.Rozier.ajaxToken,
+                        '_action': 'nodeChangeStatus',
+                        'nodeId': parseInt($input.attr('data-node-id')),
+                        'statusName': statusName,
+                        'statusValue': statusValue
+                    };
+
+                    _jquery2.default.ajax({
+                        url: window.Rozier.routes.nodesStatusesAjax,
+                        type: 'post',
+                        dataType: 'json',
+                        cache: false,
+                        data: postData
+                    }).done(function (data) {
+                        window.Rozier.refreshMainNodeTree();
+                        window.UIkit.notify({
+                            message: data.responseText,
+                            status: data.status,
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }).fail(function (data) {
+                        data = JSON.parse(data.responseText);
+                        window.UIkit.notify({
+                            message: data.responseText,
+                            status: data.status,
+                            timeout: 3000,
+                            pos: 'top-center'
+                        });
+                    }).always(function () {
+                        _this.locked = false;
+                    });
+                }
+            }
+        }
+    }]);
+    return NodeStatuses;
+}();
+
+exports.default = NodeStatuses;
 
 /***/ }),
 
-/***/ "../Resources/app/widgets/saveButtons.js":
+/***/ "../Resources/app/widgets/NodeTree.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12542,7 +12335,91 @@ NodeTree.prototype.dropdownFlip = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = SaveButtons;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _plugins = __webpack_require__("../Resources/app/utils/plugins.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Node Tree
+ */
+var NodeTree = function () {
+    function NodeTree() {
+        (0, _classCallCheck3.default)(this, NodeTree);
+
+        // Selectors
+        this.$content = (0, _jquery2.default)('.content-node-tree');
+        this.$elements = null;
+        this.$dropdown = null;
+
+        // Methods
+        if (this.$content.length) {
+            this.$dropdown = this.$content.find('.uk-dropdown-small');
+            this.init();
+        }
+    }
+
+    /**
+     * Init
+     */
+
+
+    (0, _createClass3.default)(NodeTree, [{
+        key: 'init',
+        value: function init() {
+            this.contentHeight = this.$content.actual('outerHeight');
+
+            if (this.contentHeight >= window.Rozier.windowHeight - 400) this.dropdownFlip();
+        }
+
+        /**
+         * Flip dropdown
+         */
+
+    }, {
+        key: 'dropdownFlip',
+        value: function dropdownFlip() {
+            for (var i = this.$dropdown.length - 1; i >= this.$dropdown.length - 3; i--) {
+                (0, _plugins.addClass)(this.$dropdown[i], 'uk-dropdown-up');
+            }
+        }
+    }]);
+    return NodeTree;
+}();
+
+exports.default = NodeTree;
+
+/***/ }),
+
+/***/ "../Resources/app/widgets/SaveButtons.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -12555,143 +12432,173 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Just add them to the .rz-action-save class and use the data-action-save
  * attribute to point form ID to submit.
  */
-function SaveButtons() {
-    var _this = this;
+var SaveButtons = function () {
+    function SaveButtons() {
+        (0, _classCallCheck3.default)(this, SaveButtons);
 
-    _this.$button = (0, _jquery2.default)((0, _jquery2.default)('.rz-action-save').get(0));
-    _this.$actionMenu = (0, _jquery2.default)((0, _jquery2.default)('.actions-menu').get(0));
-    _this.bindKeyboard();
+        this.$button = (0, _jquery2.default)((0, _jquery2.default)('.rz-action-save').get(0));
+        this.$actionMenu = (0, _jquery2.default)((0, _jquery2.default)('.actions-menu').get(0));
+        this.bindKeyboard();
 
-    if (_this.$button.length && _this.$actionMenu.length) {
-        _this.init();
+        if (this.$button.length && this.$actionMenu.length) {
+            this.init();
+        }
     }
-}
 
-SaveButtons.prototype.init = function () {
-    var _this = this;
+    (0, _createClass3.default)(SaveButtons, [{
+        key: 'init',
+        value: function init() {
+            var formToSave = (0, _jquery2.default)(this.$button.attr('data-action-save'));
 
-    var formToSave = (0, _jquery2.default)(_this.$button.attr('data-action-save'));
+            if (formToSave.length) {
+                this.$button.prependTo(this.$actionMenu);
+                this.$button.on('click', function () {
+                    formToSave.submit();
+                });
 
-    if (formToSave.length) {
-        _this.$button.prependTo(_this.$actionMenu);
-        _this.$button.on('click', function (event) {
-            formToSave.submit();
-        });
-        window.Mousetrap.bind(['mod+s'], function (e) {
-            console.log('Save requested');
-            formToSave.submit();
+                window.Mousetrap.bind(['mod+s'], function () {
+                    console.log('Save requested');
+                    formToSave.submit();
 
-            return false;
-        });
+                    return false;
+                });
+            }
+        }
+    }, {
+        key: 'bindKeyboard',
+        value: function bindKeyboard() {
+            window.Mousetrap.stopCallback = function (e, element) {
+                // if the element has the class "mousetrap" then no need to stop
+                if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
+                    return false;
+                }
+
+                // stop for input, select, and textarea
+                return element.tagName === 'SELECT';
+            };
+        }
+    }]);
+    return SaveButtons;
+}();
+
+exports.default = SaveButtons;
+
+/***/ }),
+
+/***/ "../Resources/app/widgets/SettingsSaveButtons.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Settings save buttons
+ */
+var SettingsSaveButtons = function () {
+    function SettingsSaveButtons() {
+        (0, _classCallCheck3.default)(this, SettingsSaveButtons);
+
+        // Selectors
+        this.$button = (0, _jquery2.default)('.uk-button-settings-save');
+        this.currentRequest = null;
+
+        // Binded methods
+        this.buttonClick = this.buttonClick.bind(this);
+
+        // Methods
+        if (this.$button.length) this.init();
     }
-};
 
-SaveButtons.prototype.bindKeyboard = function () {
-    window.Mousetrap.stopCallback = function (e, element, combo) {
-        // if the element has the class "mousetrap" then no need to stop
-        if ((' ' + element.className + ' ').indexOf(' mousetrap ') > -1) {
+    /**
+     * Init
+     */
+
+
+    (0, _createClass3.default)(SettingsSaveButtons, [{
+        key: 'init',
+        value: function init() {
+            // Events
+            this.$button.off('click', this.buttonClick);
+            this.$button.on('click', this.buttonClick);
+        }
+
+        /**
+         * Button click
+         * @param {Event} e
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'buttonClick',
+        value: function buttonClick(e) {
+            if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                this.currentRequest.abort();
+            }
+
+            var $form = (0, _jquery2.default)(e.currentTarget).parent().parent().find('.uk-form').eq(0);
+
+            if ($form.find('input[type=file]').length) {
+                $form.submit();
+                return false;
+            }
+
+            window.Rozier.lazyload.canvasLoader.show();
+            var formData = new FormData($form[0]);
+            var sendData = {
+                url: window.location.href,
+                type: 'post',
+                data: formData,
+                processData: false,
+                cache: false,
+                contentType: false
+            };
+
+            this.currentRequest = _jquery2.default.ajax(sendData).done(function () {
+                console.log('Saved setting with success.');
+            }).fail(function () {
+                console.error('Error during save.');
+            }).always(function () {
+                window.Rozier.lazyload.canvasLoader.hide();
+                window.Rozier.getMessages();
+            });
+
             return false;
         }
 
-        // stop for input, select, and textarea
-        return element.tagName === 'SELECT';
-    };
-};
+        /**
+         * Window resize callback
+         */
 
-/***/ }),
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return SettingsSaveButtons;
+}();
 
-/***/ "../Resources/app/widgets/settingsSaveButtons.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 exports.default = SettingsSaveButtons;
 
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * SETTINGS SAVE BUTTONS
- */
-function SettingsSaveButtons() {
-    var _this = this;
-
-    // Selectors
-    _this.$button = (0, _jquery2.default)('.uk-button-settings-save');
-    _this.currentRequest = null;
-    // Methods
-    if (_this.$button.length) _this.init();
-}
-
-/**
- * Init
- * @return {[type]} [description]
- */
-SettingsSaveButtons.prototype.init = function () {
-    var _this = this;
-
-    // Events
-    _this.$button.off('click', _jquery2.default.proxy(_this.buttonClick, _this));
-    _this.$button.on('click', _jquery2.default.proxy(_this.buttonClick, _this));
-};
-
-/**
- * Button click
- * @return {[type]} [description]
- */
-SettingsSaveButtons.prototype.buttonClick = function (e) {
-    var _this = this;
-
-    if (_this.currentRequest && _this.currentRequest.readyState !== 4) {
-        _this.currentRequest.abort();
-    }
-
-    var $form = (0, _jquery2.default)(e.currentTarget).parent().parent().find('.uk-form').eq(0);
-
-    if ($form.find('input[type=file]').length) {
-        $form.submit();
-        return false;
-    }
-
-    window.Rozier.lazyload.canvasLoader.show();
-    var formData = new FormData($form[0]);
-    var sendData = {
-        url: window.location.href,
-        type: 'post',
-        data: formData,
-        processData: false,
-        cache: false,
-        contentType: false
-    };
-
-    _this.currentRequest = _jquery2.default.ajax(sendData).done(function () {
-        console.log('Saved setting with success.');
-    }).fail(function () {
-        console.log('Error during save.');
-    }).always(function () {
-        window.Rozier.lazyload.canvasLoader.hide();
-        window.Rozier.getMessages();
-    });
-
-    return false;
-};
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-SettingsSaveButtons.prototype.resize = function () {};
-
 /***/ }),
 
-/***/ "../Resources/app/widgets/tagAutocomplete.js":
+/***/ "../Resources/app/widgets/StackNodeTree.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12700,90 +12607,408 @@ SettingsSaveButtons.prototype.resize = function () {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _NodesBulk = __webpack_require__("../Resources/app/components/bulk-edits/NodesBulk.js");
+
+var _NodesBulk2 = _interopRequireDefault(_NodesBulk);
+
+var _NodeTreeContextActions = __webpack_require__("../Resources/app/components/trees/NodeTreeContextActions.js");
+
+var _NodeTreeContextActions2 = _interopRequireDefault(_NodeTreeContextActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StackNodeTree = function () {
+    function StackNodeTree() {
+        (0, _classCallCheck3.default)(this, StackNodeTree);
+
+        this.$page = (0, _jquery2.default)('.stack-tree').eq(0);
+        this.currentRequest = null;
+        this.$quickAddNodeButtons = this.$page.find('.stack-tree-quick-creation a');
+        this.$switchLangButtons = this.$page.find('.nodetree-langs a');
+        this.$nodeTree = this.$page.find('.root-tree').eq(0);
+
+        this.onQuickAddClick = this.onQuickAddClick.bind(this);
+        this.onChangeLangClick = this.onChangeLangClick.bind(this);
+
+        this.init();
+    }
+
+    /**
+     * @return {Number}
+     */
+
+
+    (0, _createClass3.default)(StackNodeTree, [{
+        key: 'getCurrentPage',
+        value: function getCurrentPage() {
+            this.$nodeTree = this.$page.find('.root-tree').eq(0);
+            var currentPage = parseInt(this.$nodeTree.attr('data-page'));
+            if (isNaN(currentPage)) {
+                return 1;
+            }
+
+            return currentPage;
+        }
+
+        /**
+         * @return {Number|null}
+         */
+
+    }, {
+        key: 'getTranslationId',
+        value: function getTranslationId() {
+            this.$nodeTree = this.$page.find('.root-tree').eq(0);
+            var currentTranslationId = parseInt(this.$nodeTree.attr('data-translation-id'));
+            if (isNaN(currentTranslationId)) {
+                return null;
+            }
+
+            return currentTranslationId;
+        }
+    }, {
+        key: 'init',
+        value: function init() {
+            if (this.$quickAddNodeButtons.length) {
+                this.$quickAddNodeButtons.off('click', this.onQuickAddClick);
+                this.$quickAddNodeButtons.on('click', this.onQuickAddClick);
+            }
+            if (this.$switchLangButtons.length) {
+                this.$switchLangButtons.off('click', this.onChangeLangClick);
+                this.$switchLangButtons.on('click', this.onChangeLangClick);
+            }
+        }
+    }, {
+        key: 'onChangeLangClick',
+        value: function onChangeLangClick(event) {
+            event.preventDefault();
+
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+            var translationId = parseInt($link.attr('data-translation-id'));
+            var tagId = $link.attr('data-filter-tag');
+            this.refreshNodeTree(parentNodeId, translationId, tagId);
+            return false;
+        }
+
+        /**
+         * @param {Event} event
+         * @returns {boolean}
+         */
+
+    }, {
+        key: 'onQuickAddClick',
+        value: function onQuickAddClick(event) {
+            var _this = this;
+
+            if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                this.currentRequest.abort();
+            }
+
+            var $link = (0, _jquery2.default)(event.currentTarget);
+            var nodeTypeId = parseInt($link.attr('data-children-node-type'));
+            var parentNodeId = parseInt($link.attr('data-children-parent-node'));
+
+            if (nodeTypeId > 0 && parentNodeId > 0) {
+                var postData = {
+                    '_token': window.Rozier.ajaxToken,
+                    '_action': 'quickAddNode',
+                    'nodeTypeId': nodeTypeId,
+                    'parentNodeId': parentNodeId,
+                    'pushTop': 1
+                };
+
+                if ($link.attr('data-filter-tag')) {
+                    postData.tagId = parseInt($link.attr('data-filter-tag'));
+                }
+
+                this.currentRequest = _jquery2.default.ajax({
+                    url: window.Rozier.routes.nodesQuickAddAjax,
+                    type: 'post',
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    window.Rozier.refreshMainNodeTree();
+                    _this.refreshNodeTree(parentNodeId, null, postData.tagId, 1);
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).fail(function (data) {
+                    console.log('error');
+                    console.log(data);
+
+                    data = JSON.parse(data.responseText);
+
+                    window.UIkit.notify({
+                        message: data.responseText,
+                        status: data.status,
+                        timeout: 3000,
+                        pos: 'top-center'
+                    });
+                }).always(function () {
+                    console.log('complete');
+                });
+            }
+
+            return false;
+        }
+    }, {
+        key: 'treeAvailable',
+        value: function treeAvailable() {
+            var $nodeTree = this.$page.find('.nodetree-widget');
+            return !!$nodeTree.length;
+        }
+
+        /**
+         *
+         * @param rootNodeId
+         * @param translationId
+         * @param tagId
+         * @param page
+         */
+
+    }, {
+        key: 'refreshNodeTree',
+        value: function refreshNodeTree(rootNodeId, translationId, tagId, page) {
+            var _this2 = this;
+
+            if (this.currentRequest && this.currentRequest.readyState !== 4) {
+                this.currentRequest.abort();
+            }
+
+            var $nodeTree = this.$page.find('.nodetree-widget');
+
+            if ($nodeTree.length) {
+                var $rootTree = $nodeTree.find('.root-tree').eq(0);
+
+                if (typeof rootNodeId === 'undefined') {
+                    if (!$rootTree.attr('data-parent-node-id')) {
+                        rootNodeId = null;
+                    } else {
+                        rootNodeId = parseInt($rootTree.attr('data-parent-node-id'));
+                    }
+                } else {
+                    rootNodeId = parseInt(rootNodeId);
+                }
+
+                window.Rozier.lazyload.canvasLoader.show();
+                var postData = {
+                    '_token': window.Rozier.ajaxToken,
+                    '_action': 'requestNodeTree',
+                    'stackTree': true,
+                    'parentNodeId': rootNodeId,
+                    'page': this.getCurrentPage(),
+                    'translationId': this.getTranslationId()
+                };
+
+                var url = window.Rozier.routes.nodesTreeAjax;
+                if (translationId && translationId > 0) {
+                    postData.translationId = parseInt(translationId);
+                }
+
+                /*
+                 * Add translation id route param manually
+                 */
+                if (postData.translationId) {
+                    url += '/' + postData.translationId;
+                }
+
+                if (page) {
+                    postData.page = parseInt(page);
+                }
+
+                // data-filter-tag
+                if (tagId) {
+                    postData.tagId = parseInt(tagId);
+                }
+
+                console.log('refresh stackNodeTree', postData);
+
+                this.currentRequest = _jquery2.default.ajax({
+                    url: url,
+                    type: 'get',
+                    cache: false,
+                    dataType: 'json',
+                    data: postData
+                }).done(function (data) {
+                    if ($nodeTree.length && typeof data.nodeTree !== 'undefined') {
+                        $nodeTree.fadeOut('slow', function () {
+                            $nodeTree.replaceWith(data.nodeTree);
+                            $nodeTree = _this2.$page.find('.nodetree-widget');
+
+                            window.Rozier.initNestables();
+                            window.Rozier.bindMainTrees();
+                            window.Rozier.lazyload.bindAjaxLink();
+                            $nodeTree.fadeIn();
+                            window.Rozier.resize();
+
+                            /* eslint-disable no-new */
+                            new _NodesBulk2.default();
+
+                            _this2.$switchLangButtons = _this2.$page.find('.nodetree-langs a');
+                            _this2.$nodeTree = _this2.$page.find('.root-tree').eq(0);
+
+                            if (_this2.$switchLangButtons.length) {
+                                _this2.$switchLangButtons.off('click', _this2.onChangeLangClick);
+                                _this2.$switchLangButtons.on('click', _this2.onChangeLangClick);
+                            }
+
+                            window.Rozier.lazyload.canvasLoader.hide();
+                            window.Rozier.lazyload.nodeTreeContextActions = new _NodeTreeContextActions2.default();
+                        });
+                    }
+                }).fail(function (data) {
+                    console.error(data.responseJSON);
+                });
+            } else {
+                console.error('No node-tree available.');
+            }
+        }
+    }]);
+    return StackNodeTree;
+}();
+
+exports.default = StackNodeTree;
+
+/***/ }),
+
+/***/ "../Resources/app/widgets/TagAutocomplete.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TagAutocomplete = function () {
+    function TagAutocomplete() {
+        (0, _classCallCheck3.default)(this, TagAutocomplete);
+
+        this.$input = (0, _jquery2.default)('.rz-tag-autocomplete').eq(0);
+        this.initialUrl = this.$input.attr('data-get-url');
+        this.placeholder = this.$input.attr('placeholder');
+        this.initialTags = [];
+
+        this.init();
+    }
+
+    (0, _createClass3.default)(TagAutocomplete, [{
+        key: 'init',
+        value: function init() {
+            var _this = this;
+
+            if (typeof this.initialUrl !== 'undefined' && this.initialUrl !== '') {
+                _jquery2.default.getJSON(this.initialUrl, {
+                    '_action': 'getNodeTags',
+                    '_token': window.Rozier.ajaxToken
+                }, function (data) {
+                    _this.initialTags = data;
+                    _this.initAutocomplete();
+                });
+            } else {
+                this.initAutocomplete();
+            }
+        }
+    }, {
+        key: 'split',
+        value: function split(val) {
+            return val.split(/,\s*/);
+        }
+    }, {
+        key: 'extractLast',
+        value: function extractLast(term) {
+            return this.split(term).pop();
+        }
+    }, {
+        key: 'initAutocomplete',
+        value: function initAutocomplete() {
+            var _this2 = this;
+
+            this.$input.tagEditor({
+                autocomplete: {
+                    delay: 0.3, // show suggestions immediately
+                    position: {
+                        collision: 'flip' // automatic menu position up/down
+                    },
+                    source: function source(request, response) {
+                        _jquery2.default.getJSON(window.Rozier.routes.tagAjaxSearch, {
+                            '_action': 'tagAutocomplete',
+                            '_token': window.Rozier.ajaxToken,
+                            'search': _this2.extractLast(request.term)
+                        }, response);
+                    }
+                },
+                placeholder: this.placeholder,
+                initialTags: this.initialTags,
+                animateDelete: 0
+            });
+        }
+    }]);
+    return TagAutocomplete;
+}(); /*
+      * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+      *
+      * Permission is hereby granted, free of charge, to any person obtaining a copy
+      * of this software and associated documentation files (the "Software"), to deal
+      * in the Software without restriction, including without limitation the rights
+      * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      * copies of the Software, and to permit persons to whom the Software is furnished
+      * to do so, subject to the following conditions:
+      * The above copyright notice and this permission notice shall be included in all
+      * copies or substantial portions of the Software.
+      *
+      * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+      * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+      * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+      * IN THE SOFTWARE.
+      *
+      * Except as contained in this notice, the name of the ROADIZ shall not
+      * be used in advertising or otherwise to promote the sale, use or other dealings
+      * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+      *
+      * @file tagAutocomplete.js
+      * @author Adrien Scholaert <adrien@rezo-zero.com>
+      */
+
 exports.default = TagAutocomplete;
 
-var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function TagAutocomplete() {
-    var _this = this;
-
-    _this.$input = (0, _jquery2.default)('.rz-tag-autocomplete').eq(0);
-    _this.initialUrl = _this.$input.attr('data-get-url');
-    _this.placeholder = _this.$input.attr('placeholder');
-    _this.initialTags = [];
-
-    function split(val) {
-        return val.split(/,\s*/);
-    }
-    function extractLast(term) {
-        return split(term).pop();
-    }
-
-    function initAutocomplete() {
-        _this.$input.tagEditor({
-            autocomplete: {
-                delay: 0.3, // show suggestions immediately
-                position: { collision: 'flip' }, // automatic menu position up/down
-                source: function source(request, response) {
-                    _jquery2.default.getJSON(window.Rozier.routes.tagAjaxSearch, {
-                        '_action': 'tagAutocomplete',
-                        '_token': window.Rozier.ajaxToken,
-                        'search': extractLast(request.term)
-                    }, response);
-                }
-            },
-            placeholder: _this.placeholder,
-            initialTags: _this.initialTags,
-            animateDelete: 0
-        });
-    }
-
-    if (typeof _this.initialUrl !== 'undefined' && _this.initialUrl !== '') {
-        _jquery2.default.getJSON(_this.initialUrl, {
-            '_action': 'getNodeTags',
-            '_token': window.Rozier.ajaxToken
-        }, function (data) {
-            _this.initialTags = data;
-            initAutocomplete();
-        });
-    } else {
-        initAutocomplete();
-    }
-} /*
-   * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
-   *
-   * Permission is hereby granted, free of charge, to any person obtaining a copy
-   * of this software and associated documentation files (the "Software"), to deal
-   * in the Software without restriction, including without limitation the rights
-   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-   * copies of the Software, and to permit persons to whom the Software is furnished
-   * to do so, subject to the following conditions:
-   * The above copyright notice and this permission notice shall be included in all
-   * copies or substantial portions of the Software.
-   *
-   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-   * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-   * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-   * IN THE SOFTWARE.
-   *
-   * Except as contained in this notice, the name of the ROADIZ shall not
-   * be used in advertising or otherwise to promote the sale, use or other dealings
-   * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
-   *
-   * @file tagAutocomplete.js
-   * @author Adrien Scholaert <adrien@rezo-zero.com>
-   */
-
 /***/ }),
 
-/***/ "../Resources/app/widgets/yamlEditor.js":
+/***/ "../Resources/app/widgets/YamlEditor.js":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12792,7 +13017,14 @@ function TagAutocomplete() {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = YamlEditor;
+
+var _classCallCheck2 = __webpack_require__("../node_modules/babel-runtime/helpers/classCallCheck.js");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = __webpack_require__("../node_modules/babel-runtime/helpers/createClass.js");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _jquery = __webpack_require__("../node_modules/jquery/dist/jquery.js");
 
@@ -12801,104 +13033,124 @@ var _jquery2 = _interopRequireDefault(_jquery);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Css Editor
+ * Yaml editor
  */
-function YamlEditor($textarea, index) {
-    var _this = this;
+var YamlEditor = function () {
+    /**
+     * Yaml editor constructor
+     * @param $textarea
+     * @param index
+     */
+    function YamlEditor($textarea, index) {
+        (0, _classCallCheck3.default)(this, YamlEditor);
 
-    _this.$textarea = $textarea;
-    _this.textarea = _this.$textarea[0];
-    _this.$cont = _this.$textarea.parents('.uk-form-row').eq(0);
-    _this.$settingRow = _this.$textarea.parents('.setting-row').eq(0);
+        this.$textarea = $textarea;
+        this.textarea = this.$textarea[0];
+        this.$cont = this.$textarea.parents('.uk-form-row').eq(0);
+        this.$settingRow = this.$textarea.parents('.setting-row').eq(0);
 
-    var options = {
-        lineNumbers: true,
-        mode: 'yaml',
-        theme: 'mbo',
-        tabSize: 2,
-        lineWrapping: true,
-        dragDrop: false
-    };
+        var options = {
+            lineNumbers: true,
+            mode: 'yaml',
+            theme: 'mbo',
+            tabSize: 2,
+            lineWrapping: true,
+            dragDrop: false
+        };
 
-    if (_this.$settingRow.length) {
-        options.lineNumbers = false;
+        if (this.$settingRow.length) {
+            options.lineNumbers = false;
+        }
+
+        this.editor = window.CodeMirror.fromTextArea(this.textarea, options);
+
+        // Bind methods
+        this.textareaChange = this.textareaChange.bind(this);
+        this.textareaFocus = this.textareaFocus.bind(this);
+        this.textareaBlur = this.textareaBlur.bind(this);
+        this.forceEditorUpdate = this.forceEditorUpdate.bind(this);
+
+        // Init
+        this.init();
     }
 
-    _this.editor = window.CodeMirror.fromTextArea(_this.textarea, options);
+    /**
+     * Init
+     */
 
-    // Methods
-    _this.init();
-}
 
-/**
- * Init
- * @return {[type]} [description]
- */
-YamlEditor.prototype.init = function () {
-    var _this = this;
+    (0, _createClass3.default)(YamlEditor, [{
+        key: 'init',
+        value: function init() {
+            var _this = this;
 
-    if (_this.$textarea.length) {
-        _this.editor.on('change', _jquery2.default.proxy(_this.textareaChange, _this));
-        _this.editor.on('focus', _jquery2.default.proxy(_this.textareaFocus, _this));
-        _this.editor.on('blur', _jquery2.default.proxy(_this.textareaBlur, _this));
+            if (this.$textarea.length) {
+                this.editor.on('change', this.textareaChange);
+                this.editor.on('focus', this.textareaFocus);
+                this.editor.on('blur', this.textareaBlur);
 
-        var forceEditorUpdateProxy = _jquery2.default.proxy(_this.forceEditorUpdate, _this);
-        setTimeout(function () {
-            (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', forceEditorUpdateProxy);
-            _this.forceEditorUpdate();
-        }, 300);
-    }
-};
+                window.setTimeout(function () {
+                    (0, _jquery2.default)('[data-uk-switcher]').on('show.uk.switcher', _this.forceEditorUpdate);
+                    _this.forceEditorUpdate();
+                }, 300);
+            }
+        }
+    }, {
+        key: 'forceEditorUpdate',
+        value: function forceEditorUpdate() {
+            this.editor.refresh();
+        }
 
-YamlEditor.prototype.forceEditorUpdate = function (event) {
-    var _this = this;
-    // console.log('Refresh Css editor');
-    _this.editor.refresh();
-};
+        /**
+         * Textarea change
+         */
 
-/**
- * Textarea change
- * @return {[type]} [description]
- */
-YamlEditor.prototype.textareaChange = function (e) {
-    var _this = this;
+    }, {
+        key: 'textareaChange',
+        value: function textareaChange() {
+            this.editor.save();
 
-    _this.editor.save();
+            // if (this.limit) {
+            //     setTimeout(function () {
+            //         let textareaVal = this.editor.getValue()
+            //         let textareaValStripped = stripTags(textareaVal)
+            //         let textareaValLength = textareaValStripped.length
+            //     }, 100)
+            // }
+        }
 
-    // if (_this.limit) {
-    //     setTimeout(function () {
-    //         var textareaVal = _this.editor.getValue()
-    //         var textareaValStripped = stripTags(textareaVal)
-    //         var textareaValLength = textareaValStripped.length
-    //     }, 100)
-    // }
-};
+        /**
+         * Textarea focus
+         */
 
-/**
- * Textarea focus
- * @return {[type]} [description]
- */
-YamlEditor.prototype.textareaFocus = function (e) {
-    var _this = this;
+    }, {
+        key: 'textareaFocus',
+        value: function textareaFocus() {
+            this.$cont.addClass('form-col-focus');
+        }
 
-    _this.$cont.addClass('form-col-focus');
-};
+        /**
+         * Textarea focus out
+         */
 
-/**
- * Textarea focus out
- * @return {[type]} [description]
- */
-YamlEditor.prototype.textareaBlur = function (e) {
-    var _this = this;
+    }, {
+        key: 'textareaBlur',
+        value: function textareaBlur() {
+            this.$cont.removeClass('form-col-focus');
+        }
 
-    _this.$cont.removeClass('form-col-focus');
-};
+        /**
+         * Window resize callback
+         */
 
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-YamlEditor.prototype.resize = function () {};
+    }, {
+        key: 'resize',
+        value: function resize() {}
+    }]);
+    return YamlEditor;
+}();
+
+exports.default = YamlEditor;
 
 /***/ }),
 

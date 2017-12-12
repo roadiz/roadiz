@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import {
     toType
-} from '../../plugins'
+} from '../../utils/plugins'
 
 /**
  * Node edit source

@@ -1,46 +1,40 @@
 import $ from 'jquery'
 import {
     addClass
-} from '../plugins'
+} from '../utils/plugins'
 
 /**
- * NODE TREE
+ * Node Tree
  */
-export default function NodeTree () {
-    var _this = this
+export default class NodeTree {
+    constructor () {
+        // Selectors
+        this.$content = $('.content-node-tree')
+        this.$elements = null
+        this.$dropdown = null
 
-    // Selectors
-    _this.$content = $('.content-node-tree')
-    _this.$elements = null
-    _this.$dropdown = null
-
-    // Methods
-    if (_this.$content.length) {
-        _this.$dropdown = _this.$content.find('.uk-dropdown-small')
-        _this.init()
+        // Methods
+        if (this.$content.length) {
+            this.$dropdown = this.$content.find('.uk-dropdown-small')
+            this.init()
+        }
     }
-}
 
-/**
- * Init
- * @return {[type]} [description]
- */
-NodeTree.prototype.init = function () {
-    var _this = this
+    /**
+     * Init
+     */
+    init () {
+        this.contentHeight = this.$content.actual('outerHeight')
 
-    _this.contentHeight = _this.$content.actual('outerHeight')
+        if (this.contentHeight >= (window.Rozier.windowHeight - 400)) this.dropdownFlip()
+    }
 
-    if (_this.contentHeight >= (window.Rozier.windowHeight - 400)) _this.dropdownFlip()
-}
-
-/**
- * Flip dropdown
- * @return {[type]}       [description]
- */
-NodeTree.prototype.dropdownFlip = function () {
-    var _this = this
-
-    for (var i = _this.$dropdown.length - 1; i >= _this.$dropdown.length - 3; i--) {
-        addClass(_this.$dropdown[i], 'uk-dropdown-up')
+    /**
+     * Flip dropdown
+     */
+    dropdownFlip () {
+        for (let i = this.$dropdown.length - 1; i >= this.$dropdown.length - 3; i--) {
+            addClass(this.$dropdown[i], 'uk-dropdown-up')
+        }
     }
 }

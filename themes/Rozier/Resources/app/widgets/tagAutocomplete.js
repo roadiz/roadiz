@@ -28,53 +28,57 @@
 
 import $ from 'jquery'
 
-export default function TagAutocomplete () {
-    var _this = this
+export default class TagAutocomplete {
+    constructor () {
+        this.$input = $('.rz-tag-autocomplete').eq(0)
+        this.initialUrl = this.$input.attr('data-get-url')
+        this.placeholder = this.$input.attr('placeholder')
+        this.initialTags = []
 
-    _this.$input = $('.rz-tag-autocomplete').eq(0)
-    _this.initialUrl = _this.$input.attr('data-get-url')
-    _this.placeholder = _this.$input.attr('placeholder')
-    _this.initialTags = []
+        this.init()
+    }
 
-    function split (val) {
+    init () {
+        if (typeof this.initialUrl !== 'undefined' &&
+            this.initialUrl !== '') {
+            $.getJSON(this.initialUrl, {
+                '_action': 'getNodeTags',
+                '_token': window.Rozier.ajaxToken
+            }, data => {
+                this.initialTags = data
+                this.initAutocomplete()
+            })
+        } else {
+            this.initAutocomplete()
+        }
+    }
+
+    split (val) {
         return val.split(/,\s*/)
     }
-    function extractLast (term) {
-        return split(term).pop()
+
+    extractLast (term) {
+        return this.split(term).pop()
     }
 
-    function initAutocomplete () {
-        _this.$input.tagEditor({
+    initAutocomplete () {
+        this.$input.tagEditor({
             autocomplete: {
                 delay: 0.3, // show suggestions immediately
-                position: { collision: 'flip' }, // automatic menu position up/down
-                source: function (request, response) {
+                position: {
+                    collision: 'flip' // automatic menu position up/down
+                },
+                source: (request, response) => {
                     $.getJSON(window.Rozier.routes.tagAjaxSearch, {
                         '_action': 'tagAutocomplete',
                         '_token': window.Rozier.ajaxToken,
-                        'search': extractLast(request.term)
+                        'search': this.extractLast(request.term)
                     }, response)
                 }
             },
-            placeholder: _this.placeholder,
-            initialTags: _this.initialTags,
+            placeholder: this.placeholder,
+            initialTags: this.initialTags,
             animateDelete: 0
         })
-    }
-
-    if (typeof _this.initialUrl !== 'undefined' &&
-        _this.initialUrl !== '') {
-        $.getJSON(
-            _this.initialUrl,
-            {
-                '_action': 'getNodeTags',
-                '_token': window.Rozier.ajaxToken
-            }, function (data) {
-                _this.initialTags = data
-                initAutocomplete()
-            }
-        )
-    } else {
-        initAutocomplete()
     }
 }

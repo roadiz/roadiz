@@ -6,7 +6,7 @@ import {
 import {
     addClass,
     removeClass
-} from './plugins'
+} from './utils/plugins'
 
 /**
  * Rozier Mobile
