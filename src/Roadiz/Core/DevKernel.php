@@ -55,23 +55,7 @@ class DevKernel extends Kernel
 
         $this->appName = $appName;
     }
-
-    /**
-     * @param string $environment
-     * @param bool $debug
-     * @param bool $preview
-     * @param string $appName
-     * @deprecated You should inject Kernel in your logic instead of relying on Kernel singleton.
-     * @return DevKernel
-     */
-    public static function getInstance($environment = 'dev', $debug = true, $preview = false, $appName = "roadiz_dev")
-    {
-        if (static::$instance === null) {
-            static::$instance = new static($environment, $debug, $preview, $appName);
-        }
-        return static::$instance;
-    }
-
+    
     /**
      * It’s important to set cache dir outside of any shared folder. RAM disk is a good idea.
      *
