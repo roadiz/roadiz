@@ -51,6 +51,7 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -60,7 +61,7 @@ class UsersController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\User',
+            User::class,
             [],
             ['username' => 'ASC']
         );
@@ -82,9 +83,10 @@ class UsersController extends RozierApp
      * Return an edition form for requested user.
      *
      * @param Request $request
-     * @param int     $userId
+     * @param int $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $userId)
     {
@@ -139,9 +141,10 @@ class UsersController extends RozierApp
      * Return an edition form for requested user details.
      *
      * @param Request $request
-     * @param int     $userId
+     * @param int $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function editDetailsAction(Request $request, $userId)
     {
@@ -152,8 +155,7 @@ class UsersController extends RozierApp
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
         /** @var User $user */
-        $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+        $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -161,6 +163,13 @@ class UsersController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
+                /*
+                 * If pictureUrl is empty, use default Gravatar image.
+                 */
+                if ($user->getPictureUrl() == '') {
+                    $user->setPictureUrl($user->getGravatarUrl());
+                }
+
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -192,6 +201,7 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -231,17 +241,17 @@ class UsersController extends RozierApp
      * Return a deletion form for requested user.
      *
      * @param Request $request
-     * @param int     $userId
+     * @param int $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $userId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
 
         /** @var User $user */
-        $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+        $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
