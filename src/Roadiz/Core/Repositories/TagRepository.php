@@ -696,8 +696,6 @@ class TagRepository extends EntityRepository
 
         $tagName = count($tags) > 0 ? $tags[$lastToken] : $tagPath;
 
-        $parentName = null;
-
         $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
 
         if (null === $tag) {

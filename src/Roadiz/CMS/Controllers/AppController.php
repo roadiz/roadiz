@@ -33,9 +33,9 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -286,50 +286,27 @@ abstract class AppController extends Controller
     }
 
     /**
+     * Returns a fully qualified view path for Twig rendering.
+     *
      * @param string $view
-     * @param array $parameters
-     * @param Response|null $response
      * @param string $namespace
-     * @return Response
-     * @throws \Twig_Error_Runtime
+     * @return string
      */
-    public function render($view, array $parameters = [], Response $response = null, $namespace = "")
+    protected function getNamespacedView($view, $namespace = '')
     {
-        try {
-            if (!$this->get('stopwatch')->isStarted('twigRender')) {
-                $this->get('stopwatch')->start('twigRender');
-            }
-
-            if (null === $response) {
-                $response = new Response(
-                    '',
-                    Response::HTTP_OK,
-                    ['content-type' => 'text/html']
-                );
-            }
-
-            if ($namespace !== "" && $namespace !== "/") {
-                $view = '@' . $namespace . '/' . $view;
-            } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
-                // when no namespace is used
-                // use current theme directory
-                $view = '@' . static::getThemeDir() . '/' . $view;
-            }
-
-            $response->setContent($this->get('twig.environment')->render($view, $parameters));
-
-            return $response;
-        } catch (\Twig_Error_Runtime $e) {
-            if ($e->getPrevious() instanceof ForceResponseException) {
-                return $e->getPrevious()->getResponse();
-            } else {
-                throw $e;
-            }
+        if ($namespace !== "" && $namespace !== "/") {
+            $view = '@' . $namespace . '/' . $view;
+        } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
+            // when no namespace is used
+            // use current theme directory
+            $view = '@' . static::getThemeDir() . '/' . $view;
         }
+
+        return $view;
     }
 
     /**
-     * Prepare base informations to be rendered in twig templates.
+     * Prepare base information to be rendered in twig templates.
      *
      * ## Available contents
      *
@@ -411,6 +388,9 @@ abstract class AppController extends Controller
      * @param string $message Additionnal message to describe 404 error.
      *
      * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function throw404($message = "")
     {
@@ -427,7 +407,7 @@ abstract class AppController extends Controller
     /**
      * Return the current Theme
      *
-     * @return \RZ\Roadiz\Core\Entities\Theme
+     * @return Theme|null
      */
     public function getTheme()
     {
@@ -445,7 +425,7 @@ abstract class AppController extends Controller
                 }
             }
             $this->theme = $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                ->getRepository(Theme::class)
                 ->findOneByClassName($className);
         }
         $this->container['stopwatch']->stop('getTheme');
@@ -456,6 +436,7 @@ abstract class AppController extends Controller
      * Append objects to the global dependency injection container.
      *
      * @param \Pimple\Container $container
+     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -464,6 +445,7 @@ abstract class AppController extends Controller
 
     /**
      * @param Container $container
+     * @throws \Twig_Error_Loader
      */
     public static function addThemeTemplatesPath(Container $container)
     {
@@ -486,7 +468,7 @@ abstract class AppController extends Controller
         if (null === $this->homeNode) {
             $theme = $this->getTheme();
             /** @var NodeRepository $nodeRepository */
-            $nodeRepository = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Node');
+            $nodeRepository = $this->get('em')->getRepository(Node::class);
 
             if ($theme !== null) {
                 $home = $theme->getHomeNode();
@@ -529,7 +511,9 @@ abstract class AppController extends Controller
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
-        $request->getSession()->getFlashBag()->add($level, $msg);
+        if (null !== $request->getSession()) {
+            $request->getSession()->getFlashBag()->add($level, $msg);
+        }
 
         switch ($level) {
             case 'error':
@@ -568,7 +552,7 @@ abstract class AppController extends Controller
 
     /**
      * Validate a request against a given ROLE_*
-     * and check chroot and newsletter type/accces
+     * and check chroot and newsletter type/access
      * and throws an AccessDeniedException exception.
      *
      * @param string $role
@@ -581,7 +565,8 @@ abstract class AppController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $node = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        /** @var Node $node */
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
 
         if (null !== $node) {
