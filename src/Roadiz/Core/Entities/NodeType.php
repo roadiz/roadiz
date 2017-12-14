@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * NodeTypes describe each node structure family,
+ * NodeType describes each node structure family,
  * They are mandatory before creating any Node.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodeTypeRepository")

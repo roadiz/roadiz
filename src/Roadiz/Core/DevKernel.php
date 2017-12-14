@@ -55,7 +55,7 @@ class DevKernel extends Kernel
 
         $this->appName = $appName;
     }
-    
+
     /**
      * It’s important to set cache dir outside of any shared folder. RAM disk is a good idea.
      *

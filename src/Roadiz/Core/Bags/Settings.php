@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -66,7 +67,7 @@ class Settings extends ParameterBag
     public function getRepository()
     {
         if (null === $this->repository) {
-            $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Setting');
+            $this->repository = $this->entityManager->getRepository(Setting::class);
         }
         return $this->repository;
     }
@@ -104,14 +105,14 @@ class Settings extends ParameterBag
      * Get a document from its setting name.
      *
      * @param string $key
-     * @return \RZ\Roadiz\Core\Entities\Document|null
+     * @return Document|null
      */
     public function getDocument($key)
     {
         if (null !== $this->entityManager) {
             try {
                 $id = $this->getInt($key);
-                return $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', $id);
+                return $this->entityManager->find(Document::class, $id);
             } catch (\Exception $e) {
                 return null;
             }
