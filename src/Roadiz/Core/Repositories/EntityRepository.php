@@ -393,6 +393,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                     case '<':
                     case '>=':
                     case '>':
+                    case 'INSTANCE OF':
                     case 'NOT IN':
                         $finalQuery->setParameter($key, $value[1]);
                         break;
