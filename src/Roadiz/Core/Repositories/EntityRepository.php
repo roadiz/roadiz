@@ -197,6 +197,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                     case 'NOT IN':
                         $res = $qb->expr()->notIn($prefix . $key, ':' . $baseKey);
                         break;
+                    case 'INSTANCE OF':
+                        $res = $qb->expr()->isInstanceOf($prefix . $key, ':' . $baseKey);
+                        break;
                     default:
                         $res = $qb->expr()->in($prefix . $key, ':' . $baseKey);
                         break;
@@ -322,6 +325,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                     case 'LIKE':
                         $fullKey = sprintf('LOWER(%s)', $alias . '.' . $key);
                         $res = $qb->expr()->like($fullKey, $qb->expr()->literal(strtolower($value[1])));
+                        break;
+                    case 'INSTANCE OF':
+                        $res = $qb->expr()->isInstanceOf($alias . '.' . $key, $value[1]);
                         break;
                     default:
                         $res = $this->directExprIn($qb, $alias . '.' . $key, $key, $value);
