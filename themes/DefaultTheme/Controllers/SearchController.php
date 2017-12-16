@@ -28,7 +28,12 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use Doctrine\ORM\QueryBuilder;
+use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
+use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\DefaultTheme\DefaultThemeApp;
@@ -41,6 +46,7 @@ class SearchController extends DefaultThemeApp
      * @param Request $request
      * @param string $_locale
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function defaultAction(
         Request $request,
@@ -52,6 +58,20 @@ class SearchController extends DefaultThemeApp
         if (!$request->query->has('query') || $request->query->get('query') == '') {
             throw new ResourceNotFoundException();
         }
+
+        $callable = function(FilterQueryBuilderEvent $event) {
+            if ($event->supports(NodesSources::class) || $event->supports(NSPage::class)) {
+                $qb = $event->getQueryBuilder();
+                $qb->andWhere($qb->expr()->neq($qb->expr()->lower('ns.title'), ':neq'));
+                $qb->setParameter('neq', 'about');
+            }
+        };
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->get('dispatcher');
+        $eventDispatcher->addListener(
+            QueryBuilderEvents::QUERY_BUILDER_SELECT,
+            $callable
+        );
 
         if (null !== $this->get('solr.search.nodeSource')) {
             /*
@@ -75,13 +95,18 @@ class SearchController extends DefaultThemeApp
                 $request->query->get('query'),
                 10,
                 [
-                    $this->themeContainer['typePage']
+                    $this->get('nodeTypesBag')->get('Page')
                 ]
             );
         }
 
         $this->assignation['nodeSources'] = $nodeSources;
         $this->assignation['query'] = $request->query->get('query');
+
+        $eventDispatcher->removeListener(
+            QueryBuilderEvents::QUERY_BUILDER_SELECT,
+            $callable
+        );
 
         return $this->render('pages/search.html.twig', $this->assignation);
     }

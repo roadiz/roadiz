@@ -38,6 +38,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
@@ -432,6 +433,7 @@ class DocumentRepository extends EntityRepository
             $translation
         );
 
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByFolder($criteria, $finalQuery);
@@ -478,6 +480,7 @@ class DocumentRepository extends EntityRepository
             $translation
         );
 
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByFolder($criteria, $finalQuery);
@@ -507,6 +510,7 @@ class DocumentRepository extends EntityRepository
             $translation
         );
 
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByFolder($criteria, $finalQuery);
@@ -614,7 +618,7 @@ class DocumentRepository extends EntityRepository
          * Get documents used by settings
          */
         $qb2->select('s.value')
-            ->from('RZ\Roadiz\Core\Entities\Setting', 's')
+            ->from(Setting::class, 's')
             ->where($qb2->expr()->eq('s.type', ':type'))
             ->andWhere($qb2->expr()->isNotNull('s.value'))
             ->setParameter('type', AbstractField::DOCUMENTS_T);
@@ -628,7 +632,7 @@ class DocumentRepository extends EntityRepository
         }
 
         /*
-         * Get unsed documents
+         * Get unused documents
          */
         $qb->select('d')
             ->leftJoin('d.nodesSourcesByFields', 'ns')

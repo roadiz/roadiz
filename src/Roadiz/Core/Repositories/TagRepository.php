@@ -334,6 +334,7 @@ class TagRepository extends EntityRepository
             $translation
         );
 
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByNodes($criteria, $finalQuery);
@@ -378,6 +379,7 @@ class TagRepository extends EntityRepository
             $translation
         );
 
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByNodes($criteria, $finalQuery);
@@ -406,6 +408,7 @@ class TagRepository extends EntityRepository
             $translation
         );
 
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByNodes($criteria, $finalQuery);

@@ -59,6 +59,8 @@ class NodeRepository extends StatusAwareRepository
             $criteria,
             $translation
         );
+
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -316,6 +318,7 @@ class NodeRepository extends StatusAwareRepository
         );
 
         $query->setCacheable(true);
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByTag($criteria, $finalQuery);
@@ -436,6 +439,7 @@ class NodeRepository extends StatusAwareRepository
         );
 
         $query->setCacheable(true);
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
 
         $this->applyFilterByTag($criteria, $finalQuery);
