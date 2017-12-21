@@ -30,6 +30,7 @@
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,9 +46,10 @@ class ThemeController extends InstallApp
      * Import theme screen.
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function importThemeAction(Request $request, $id)
     {
@@ -73,7 +75,7 @@ class ThemeController extends InstallApp
     {
         $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->get("em"));
         $theme = $this->get("em")
-                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->getRepository(Theme::class)
                       ->findOneByClassName($request->get("classname"));
         if ($importFile === false) {
             return $this->redirect($this->generateUrl(
@@ -94,6 +96,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function themeSummaryAction(Request $request)
     {
@@ -108,6 +111,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function themesAction(Request $request)
     {
