@@ -1132,8 +1132,11 @@ class DocumentsController extends RozierApp
             in_array($data['embedPlatform'], array_keys($handlers))) {
             $class = $handlers[$data['embedPlatform']];
 
+            /*
+             * Use empty constructor.
+             */
             /** @var AbstractEmbedFinder $finder */
-            $finder = new $class($data['embedId']);
+            $finder = new $class('', false);
 
             if ($finder instanceof YoutubeEmbedFinder) {
                 $finder->setKey($this->get('settingsBag')->get('google_server_id'));
@@ -1141,16 +1144,15 @@ class DocumentsController extends RozierApp
             if ($finder instanceof SoundcloudEmbedFinder) {
                 $finder->setKey($this->get('settingsBag')->get('soundcloud_client_id'));
             }
+            $finder->setEmbedId($data['embedId']);
 
             if ($finder->exists()) {
                 $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
-
                 if (null !== $document &&
                     null !== $folderId &&
                     $folderId > 0) {
                     /** @var Folder $folder */
-                    $folder = $this->get('em')
-                        ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                    $folder = $this->get('em')->find(Folder::class, (int) $folderId);
 
                     $document->addFolder($folder);
                     $folder->addDocument($document);
