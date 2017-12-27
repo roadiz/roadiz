@@ -62,13 +62,16 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         $singleWord = strpos($q, ' ') === false ? true : false;
 
         $titleField = 'title';
+
         /*
          * Use title_txt_LOCALE when search
          * is filtered by translation.
          */
-        if (isset($args['translation']) &&
-            $args['translation'] instanceof Translation) {
-            $titleField = '_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+            $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
         }
 
         /*
@@ -224,11 +227,13 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         }
 
         /*
-         * Filter by translation
+         * Filter by translation or locale
          */
-        if (isset($args['translation']) &&
-            $args['translation'] instanceof Translation) {
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
             $args["fq"][] = "locale_s:" . $args['translation']->getLocale();
+        }
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            $args["fq"][] = "locale_s:" . $args['locale'];
         }
 
         return $args;
