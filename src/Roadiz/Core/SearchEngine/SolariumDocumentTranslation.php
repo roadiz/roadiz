@@ -135,6 +135,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
         }
 
         $assoc['title'] = $this->documentTranslation->getName();
+        $assoc['title'.$suffix] = $this->documentTranslation->getName();
 
         /*
          * Remove ctrl characters
