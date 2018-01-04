@@ -249,6 +249,7 @@ class DatabaseController extends InstallApp
                     'pdo_pgsql' => 'pdo_pgsql',
                     'pdo_sqlite' => 'pdo_sqlite',
                 ],
+                'choices_as_values' => true,
                 'label' => $this->getTranslator()->trans('driver'),
                 'constraints' => [
                     new NotBlank(),

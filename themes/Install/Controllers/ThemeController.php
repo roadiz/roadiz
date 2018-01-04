@@ -53,8 +53,8 @@ class ThemeController extends InstallApp
      */
     public function importThemeAction(Request $request, $id)
     {
-
-        $result = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+        /** @var Theme|null $result */
+        $result = $this->get('em')->find(Theme::class, $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
@@ -74,6 +74,7 @@ class ThemeController extends InstallApp
     public function themeInstallAction(Request $request)
     {
         $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->get("em"));
+        /** @var Theme $theme */
         $theme = $this->get("em")
                       ->getRepository(Theme::class)
                       ->findOneByClassName($request->get("classname"));
@@ -122,7 +123,7 @@ class ThemeController extends InstallApp
 
             if ($infosForm->isValid()) {
                 /*
-                 * Save informations
+                 * Save information
                  */
                 try {
                     /** @var Kernel $kernel */
