@@ -41,12 +41,15 @@
         }
     ],
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "platform": {
+            "php": "5.6.1"
+        }
     },
     "require": {
         "php":                         ">=5.6",
-        "roadiz/models":               "~0.20.0",
-        "roadiz/documents":            "~0.20.0",
+        "roadiz/models":               "0.21.*",
+        "roadiz/documents":            "0.21.*",
         "doctrine/orm":                "2.5.*",
         "doctrine/cache":              "~1.6.2",
         "doctrine/collections":        "1.4.0",

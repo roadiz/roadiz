@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -38,12 +39,11 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class NodesSourcesDocumentsRepository extends EntityRepository
 {
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSourcesDocuments $nodeSource
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField        $field
-     *
+     * @param NodesSources $nodeSource
+     * @param NodeTypeField $field
      * @return integer
      */
-    public function getLatestPosition($nodeSource, NodeTypeField $field)
+    public function getLatestPosition(NodesSources $nodeSource, NodeTypeField $field)
     {
         $query = $this->_em->createQuery('
             SELECT MAX(nsd.position) FROM RZ\Roadiz\Core\Entities\NodesSourcesDocuments nsd

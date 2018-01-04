@@ -32,10 +32,14 @@ namespace RZ\Roadiz\Console;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Console\Command\InfoCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
+use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
@@ -126,11 +130,11 @@ class RoadizApplication extends Application
     protected function addDoctrineCommands()
     {
         $this->addCommands(array(
-            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand(),
-            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand(),
-            new \Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand(),
-            new \Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand(),
-            new \Doctrine\ORM\Tools\Console\Command\InfoCommand(),
+            new CreateCommand(),
+            new UpdateCommand(),
+            new DropCommand(),
+            new ValidateSchemaCommand(),
+            new InfoCommand(),
         ));
     }
 
@@ -159,6 +163,9 @@ class RoadizApplication extends Application
             new NodesCleanNamesCommand(),
             new NodeApplyUniversalFieldsCommand(),
             new ThemesCommand(),
+            new ThemeAssetsCommand(),
+            new ThemeGenerateCommand(),
+            new ThemeInstallCommand(),
             new InstallCommand(),
             new UsersCommand(),
             new UsersCreationCommand(),
@@ -176,7 +183,6 @@ class RoadizApplication extends Application
             new CacheInfosCommand(),
             new CacheFpmCommand(),
             new HtaccessCommand(),
-            new ThemeInstallCommand(),
             new DocumentDownscaleCommand(),
             new NodesOrphansCommand(),
             new DatabaseDumpCommand(),
@@ -185,7 +191,7 @@ class RoadizApplication extends Application
             new ComposerPostCreateProjectCommand(),
             new ComposerPostInstallCommand(),
             new ComposerPostUpdateCommand(),
-            new ThemeGenerateCommand(),
+            new LogsCleanupCommand(),
         );
 
         /*

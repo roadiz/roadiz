@@ -6691,6 +6691,21 @@
             <target xml:lang="en" state="translated">You have been disconnected. Connect you back again.</target>
             <note>Description for login check warning "modal".</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="single-provider.type">
+            <source>single-provider.type</source>
+            <target xml:lang="en" state="translated">Single relationship using a Provider</target>
+            <note>Node-type field type for Provider manual many-to-one relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple-provider.type">
+            <source>multiple-provider.type</source>
+            <target xml:lang="en" state="translated">Multiple relationship using a Provider</target>
+            <note>Node-type field type for Provider manual many-to-many relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target xml:lang="en" state="translated">Avatar picture URL</target>
+            <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

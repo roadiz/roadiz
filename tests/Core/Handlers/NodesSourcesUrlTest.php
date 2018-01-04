@@ -72,13 +72,6 @@ class NodesSourcesUrlTest extends SchemaDependentCase
             $nodeSource = $sourceTuple[0];
             $expectedUrl = $sourceTuple[1];
 
-            $nsUrlGenerator = new NodesSourcesUrlGenerator(null, $nodeSource);
-
-            /*
-             * Test previous syntax
-             */
-            $this->assertEquals($expectedUrl, $nsUrlGenerator->getUrl());
-
             /*
              * Test current syntax
              */
@@ -89,17 +82,18 @@ class NodesSourcesUrlTest extends SchemaDependentCase
 
     /**
      * @return array
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function getUrlProvider()
     {
         $sources = [];
 
         $fr = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneByLocale('fr');
 
         $en = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneByLocale('en');
 
         /*

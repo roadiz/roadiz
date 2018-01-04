@@ -57,12 +57,13 @@ class CustomFormController extends CmsController
      * @param int $customFormId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request, $customFormId)
     {
         /** @var CustomForm $customForm */
         $customForm = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
+            ->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
@@ -93,14 +94,15 @@ class CustomFormController extends CmsController
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int  $customFormId
+     * @param int $customFormId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function sentAction(Request $request, $customFormId)
     {
         $customForm = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
+            ->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -118,6 +120,7 @@ class CustomFormController extends CmsController
      * @param array $assignation
      * @param string $receiver
      * @return bool
+     * @throws \Exception
      */
     public function sendAnswer(
         $assignation,
@@ -149,9 +152,9 @@ class CustomFormController extends CmsController
      * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
      * @param \Doctrine\ORM\EntityManager $em
      *
-     * @deprecated Use \RZ\Roadiz\Utils\CustomForm\CustomFormHelper to transform Form to CustomFormAnswer.
-     *
      * @return array $fieldsData
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @deprecated Use \RZ\Roadiz\Utils\CustomForm\CustomFormHelper to transform Form to CustomFormAnswer.
      */
     public function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManager $em)
     {
@@ -230,13 +233,14 @@ class CustomFormController extends CmsController
      *     * form
      * * If form is validated, **RedirectResponse** will be returned.
      *
-     * @param \Symfony\Component\HttpFoundation\Request          $request
-     * @param \RZ\Roadiz\Core\Entities\CustomForm                $customFormsEntity
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \RZ\Roadiz\Core\Entities\CustomForm $customFormsEntity
      * @param \Symfony\Component\HttpFoundation\RedirectResponse $redirection
-     * @param boolean                                            $forceExpanded
-     * @param string|null                                        $emailSender
+     * @param boolean $forceExpanded
+     * @param string|null $emailSender
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function prepareAndHandleCustomFormAssignation(
         Request $request,
@@ -279,7 +283,9 @@ class CustomFormController extends CmsController
                     ['%name%' => $customFormsEntity->getDisplayName()]
                 );
 
-                $request->getSession()->getFlashBag()->add('confirm', $msg);
+                if (null !== $request->getSession()) {
+                    $request->getSession()->getFlashBag()->add('confirm', $msg);
+                }
 
                 $this->get('logger')->info($msg);
 

@@ -72,12 +72,14 @@
 .drawer-item.type-label {
     border: 1px dashed transparent;
     position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: flex-start;
+    justify-items: center;
     float: left;
-    width: 240px - 15;
-    height: @drawer-item-height - 7 - 6;
+    width: 240px;
+    height: @drawer-item-height;
     margin: 0 10px 10px 0;
-    padding: 7px 0 6px 15px;
+    padding: 0;
     background: #E5E5E5;
     color: #666;
     font-size: 12px;
@@ -87,6 +89,27 @@
     cursor: default;
     .border-radius(3px, 3px, 0, 0);
     .transition(0.4s background @easeOutExpo, 0.4s opacity @easeOutExpo);
+
+    &.has-thumbnail {
+        height: @drawer-item-height*3;
+        flex-wrap: wrap;
+    }
+
+    & > .thumbnail {
+        display: block;
+        overflow: hidden;
+        width: 100%;
+        height: @drawer-item-height*2;
+        position: relative;
+        z-index: 0;
+        background-size: cover;
+        background-position: 50% 50%;
+    }
+
+
+    & > .names {
+        padding: 7px 0 6px 15px;
+    }
 
     &:hover{
         background: darken(#DDD, 3%);
@@ -104,6 +127,7 @@
         left: 0;
         width: 4px;
         background: @contrast-color;
+        z-index: 2;
     }
 
     .links {

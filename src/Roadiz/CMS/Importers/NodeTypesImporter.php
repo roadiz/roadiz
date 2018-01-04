@@ -31,7 +31,9 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 
 /**
@@ -47,6 +49,7 @@ class NodeTypesImporter implements ImporterInterface
      *
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
@@ -54,20 +57,29 @@ class NodeTypesImporter implements ImporterInterface
         $serializer = new NodeTypeJsonSerializer();
         $nodeType = $serializer->deserialize($serializedData);
         /** @var NodeType $existingNodeType */
-        $existingNodeType = $em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+        $existingNodeType = $em->getRepository(NodeType::class)
                                ->findOneByName($nodeType->getName());
+
         if ($existingNodeType === null) {
             $em->persist($nodeType);
             $existingNodeType = $nodeType;
+            /** @var NodeTypeHandler $nodeTypeHandler */
+            $nodeTypeHandler = $handlerFactory->getHandler($existingNodeType);
+            $fieldPosition = 1;
+            /** @var NodeTypeField $field */
             foreach ($nodeType->getFields() as $field) {
                 $em->persist($field);
                 $field->setNodeType($nodeType);
+                $field->setPosition($fieldPosition);
+                $fieldPosition++;
             }
         } else {
-            $handlerFactory->getHandler($existingNodeType)->diff($nodeType);
+            /** @var NodeTypeHandler $nodeTypeHandler */
+            $nodeTypeHandler = $handlerFactory->getHandler($existingNodeType);
+            $nodeTypeHandler->diff($nodeType);
         }
         $em->flush();
-        $handlerFactory->getHandler($existingNodeType)->regenerateEntityClass();
+        $nodeTypeHandler->regenerateEntityClass();
         return $return;
     }
 }

@@ -62,7 +62,7 @@ class Roles extends ParameterBag
     public function getRepository()
     {
         if (null === $this->repository) {
-            $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role');
+            $this->repository = $this->entityManager->getRepository(Role::class);
         }
         return $this->repository;
     }
@@ -88,6 +88,7 @@ class Roles extends ParameterBag
      * @param null $default
      * @param bool $deep
      * @return Role
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function get($key, $default = null, $deep = false)
     {

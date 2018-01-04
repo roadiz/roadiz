@@ -55,4 +55,12 @@ interface ExplorerProviderInterface extends ContainerAwareInterface
      * @return ExplorerItemInterface[]
      */
     public function getItemsById($ids = []);
+
+    /**
+     * Check if object can be handled be current ExplorerProvider.
+     *
+     * @param $item
+     * @return boolean
+     */
+    public function supports($item);
 }

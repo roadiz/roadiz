@@ -101,7 +101,6 @@ class RoadizRouteCollection extends DeferredRouteCollection
                  * Remove protocol (https, http and protocol-less) information from domain.
                  */
                 $host = parse_url($staticDomain, PHP_URL_HOST);
-                $scheme = parse_url($staticDomain, PHP_URL_SCHEME);
                 if (false !== $host && null !== $host) {
                     $assets->setHost($host);
                 } else {

@@ -58,10 +58,7 @@ trait NodesTrait
         /** @var NodeRepository $repository */
         $repository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node');
 
-        if (null !== $repository
-                          ->setDisplayingNotPublishedNodes(true)
-                          ->setDisplayingAllNodesStatuses(true)
-                          ->findOneByNodeName($nodeName)) {
+        if (true === $repository->exists($nodeName)) {
             $nodeName .= '-' . uniqid();
         }
 

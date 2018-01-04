@@ -36,14 +36,13 @@ use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RequestContext;
 
 class NonRootPackagesTest extends DefaultThemeDependentCase
 {
     /**
      * @return Request
      */
-    public static function getMockRequest()
+    public function getRequest()
     {
         return new Request([], [], [], [], [], [
             'REQUEST_URI' => '/test/',
@@ -74,27 +73,48 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new Kernel('test', true, false);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
+        $kernel->get('requestStack')->push($this->getRequest());
+        $kernel->container->offsetSet('request', $this->getRequest());
 
-        $request = static::getMockRequest();
-        $kernel->getContainer()->offsetSet('request', $request);
-        $kernel->get('requestStack')->push($request);
+        $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
+        $this->assertEquals(
+            '/test/files/folder/document.jpg',
+            $kernel->get('assetPackages')->getUrl('folder/document.jpg', Packages::DOCUMENTS)
+        );
 
-        $requestContext = new RequestContext();
-        $requestContext->fromRequest($request);
-
+        /** @var \RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
         $documentUrlGenerator->setOptions($options);
 
         // Assert
         $this->assertEquals($expectedUrl, $documentUrlGenerator->getUrl($absolute));
+
+        $kernel->shutdown();
+    }
+
+    /**
+     *
+     */
+    public function testBaseUrl()
+    {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+        $kernel->handle($this->getRequest());
+
+        $this->assertEquals(
+            '/test',
+            $kernel->get('request')->getBaseUrl()
+        );
+
+        $kernel->shutdown();
     }
 
     public function testBasePath()
     {
-        $request = static::getMockRequest();
+        $request = $this->getRequest();
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $requestStackContext = new RequestStackContext($requestStack);
@@ -109,29 +129,34 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrl($relativePath, $expected)
     {
-        $kernel = new Kernel('test', true, false);
+        $kernel = new Kernel('test', true);
         $kernel->boot();
 
-        $request = static::getMockRequest();
-        $kernel->getContainer()->offsetSet('request', $request);
-        $kernel->get('requestStack')->push($request);
-
-        $requestContext = new RequestContext();
-        $requestContext->fromRequest($request);
-
-        /** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator */
-        $urlGenerator = $kernel->get('urlGenerator');
         $requestStack = new RequestStack();
-        $requestStack->push($request);
-        $urlGenerator->setContext($requestContext);
-
+        $requestStack->push($this->getRequest());
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
-
 
         $this->assertEquals(
             $expected,
             $packages->getUrl($relativePath, Packages::DOCUMENTS)
         );
+
+        $this->assertEquals(
+            '/test/themes/DefaultTheme/static/css/styles.css',
+            $packages->getUrl('themes/DefaultTheme/static/css/styles.css')
+        );
+
+        $this->assertEquals(
+            '/test/files/folder/document.jpg',
+            $packages->getUrl('folder/document.jpg', Packages::DOCUMENTS)
+        );
+
+        $this->assertEquals(
+            'http://localhost/test/files/folder/document.jpg',
+            $packages->getUrl('folder/document.jpg', Packages::ABSOLUTE_DOCUMENTS)
+        );
+
+        $kernel->shutdown();
     }
 
     public function getUrlProvider()
@@ -160,15 +185,24 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrlWithSlash()
     {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+
+        $requestStack = new RequestStack();
+        $requestStack->push($this->getRequest());
+        $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
+
         $this->assertNotEquals(
             '/test/files/some-custom-file',
-            $this->get('assetPackages')->getUrl('/some-custom-file', Packages::DOCUMENTS)
+            $packages->getUrl('/some-custom-file', Packages::DOCUMENTS)
         );
 
         $this->assertNotEquals(
             '/test/files/folder/some-custom-file',
-            $this->get('assetPackages')->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
+            $packages->getUrl('/folder/some-custom-file', Packages::DOCUMENTS)
         );
+
+        $kernel->shutdown();
     }
 
     /**

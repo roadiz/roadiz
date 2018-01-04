@@ -41,6 +41,9 @@ use Pimple\Container;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
+use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements a simple countBy method.
@@ -132,6 +135,18 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     protected $searchableTypes = ['string', 'text'];
 
     /**
+     * @param QueryBuilder $qb
+     * @param string $entityClass
+     */
+    protected function dispatchQueryBuilderEvent(QueryBuilder $qb, $entityClass)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $initialQueryBuilderEvent = new FilterQueryBuilderEvent($qb, $entityClass);
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_SELECT, $initialQueryBuilderEvent);
+    }
+
+    /**
      * Build a query comparison.
      *
      * @param mixed $value
@@ -196,6 +211,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                         break;
                     case 'NOT IN':
                         $res = $qb->expr()->notIn($prefix . $key, ':' . $baseKey);
+                        break;
+                    case 'INSTANCE OF':
+                        $res = $qb->expr()->isInstanceOf($prefix . $key, ':' . $baseKey);
                         break;
                     default:
                         $res = $qb->expr()->in($prefix . $key, ':' . $baseKey);
@@ -323,6 +341,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                         $fullKey = sprintf('LOWER(%s)', $alias . '.' . $key);
                         $res = $qb->expr()->like($fullKey, $qb->expr()->literal(strtolower($value[1])));
                         break;
+                    case 'INSTANCE OF':
+                        $res = $qb->expr()->isInstanceOf($alias . '.' . $key, $value[1]);
+                        break;
                     default:
                         $res = $this->directExprIn($qb, $alias . '.' . $key, $key, $value);
                         break;
@@ -387,6 +408,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                     case '<':
                     case '>=':
                     case '>':
+                    case 'INSTANCE OF':
                     case 'NOT IN':
                         $finalQuery->setParameter($key, $value[1]);
                         break;
@@ -416,15 +438,15 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
-     * @param Criteria|mixed|array $criteria  or array
+     * @param Criteria|mixed|array $criteria or array
      *
      * @return integer
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy($criteria)
     {
         if ($criteria instanceof Criteria) {
             $collection = $this->matching($criteria);
-
             return $collection->count();
         } elseif (is_array($criteria)) {
             $qb = $this->createQueryBuilder('obj');
@@ -432,6 +454,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 
             $qb = $this->prepareComparisons($criteria, $qb, 'obj');
 
+            $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
             $finalQuery = $qb->getQuery();
 
             /*
@@ -508,7 +531,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 
     /**
      * @param string  $pattern  Search pattern
-     * @param array   $criteria Additionnal criteria
+     * @param array   $criteria Additional criteria
      * @param array   $orders
      * @param integer $limit
      * @param integer $offset
@@ -537,6 +560,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
             $qb->setMaxResults($limit);
         }
 
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
         $this->applyComparisons($criteria, $finalQuery);
 
@@ -557,10 +581,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
-     * @param string $pattern  Search pattern
-     * @param array  $criteria Additionnal criteria
+     * @param string $pattern Search pattern
+     * @param array $criteria Additional criteria
      *
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -568,6 +593,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         $qb->select($qb->expr()->countDistinct('obj.id'));
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
         $this->applyComparisons($criteria, $finalQuery);
 

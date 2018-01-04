@@ -313,7 +313,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $query = $this->getCountContextualQueryWithTranslation(
             $criteria
         );
-
+        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
         $finalQuery = $query->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -379,6 +379,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         ;
 
         $qb->setCacheable(true);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -428,6 +429,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         ;
 
         $qb->setCacheable(true);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
         $this->applyFilterByTag($criteria, $finalQuery);
         $this->applyFilterByCriteria($criteria, $finalQuery);
@@ -537,6 +539,8 @@ class NodesSourcesRepository extends StatusAwareRepository
             $qb->andWhere($qb->expr()->eq(static::NODE_ALIAS . '.visible', ':visible'))
                 ->setParameter(':visible', true);
         }
+
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
 
         try {
             return $qb->getQuery()->getResult();

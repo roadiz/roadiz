@@ -11,9 +11,10 @@
              v-if="drawer"
              ref="drawer"
              {{ widget_attributes|raw }}
-             data-accept-entity="{{ entity }}"
+             {% if entity %}data-accept-entity="{{ entity }}"{% endif %}
              data-entity-types="[]"
              data-is-sortable="{{ isSortable }}"
+             {% if provider_class %}data-provider-class="{{ provider_class }}" {% endif %}
              data-initial-items="{{ entityIds|json_encode }}">
             {% if label is empty -%}
                 {% set label = name|humanize %}
@@ -85,7 +86,7 @@
                         {#:options="{ group: { name: '{{ entity }}' }, sort: {{ isSortable }} }"#}
                         :options="getOptions()"
                         >
-                        <transition-group style="display:block; min-height: 80px;">
+                        <transition-group style="display:block; min-height: 80px; display: flex; flex-wrap: wrap;">
                             <component
                                 v-bind:is="drawer.currentListingView"
                                 v-for="(item, index) in items"

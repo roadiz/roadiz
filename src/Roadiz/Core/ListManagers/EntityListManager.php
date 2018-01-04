@@ -31,9 +31,9 @@ namespace RZ\Roadiz\Core\ListManagers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -216,7 +216,7 @@ class EntityListManager
         if (array_key_exists('chroot', $this->filteringArray)) {
             if ($this->filteringArray["chroot"] instanceof Node) {
                 $ids = $this->_em
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
                     ->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses())
                     ->findAllOffspringIdByNode($this->filteringArray["chroot"]); // get all offspringId
@@ -250,7 +250,9 @@ class EntityListManager
         if (false === $disabled) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
-                $this->orderingArray[$this->request->query->get('field')] = $this->request->query->get('ordering');
+                $this->orderingArray = [
+                    $this->request->query->get('field') => $this->request->query->get('ordering')
+                ];
                 $this->queryArray['field'] = $this->request->query->get('field');
                 $this->queryArray['ordering'] = $this->request->query->get('ordering');
             }
@@ -317,7 +319,8 @@ class EntityListManager
 
     protected function createPaginator()
     {
-        if ($this->entityName === 'RZ\Roadiz\Core\Entities\Node' ||
+        if ($this->entityName === Node::class ||
+            $this->entityName === 'RZ\Roadiz\Core\Entities\Node' ||
             $this->entityName === '\RZ\Roadiz\Core\Entities\Node' ||
             $this->entityName === "Node") {
             $this->paginator = new NodePaginator(
@@ -327,7 +330,8 @@ class EntityListManager
                 $this->filteringArray
             );
             $this->paginator->setTranslation($this->translation);
-        } elseif ($this->entityName == 'RZ\Roadiz\Core\Entities\NodesSources' ||
+        } elseif ($this->entityName == NodesSources::class ||
+            $this->entityName == 'RZ\Roadiz\Core\Entities\NodesSources' ||
             $this->entityName == '\RZ\Roadiz\Core\Entities\NodesSources' ||
             $this->entityName == "NodesSources" ||
             strpos($this->entityName, NodeType::getGeneratedEntitiesNamespace()) !== false) {

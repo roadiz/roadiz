@@ -38,6 +38,19 @@ class SettingsProvider extends AbstractExplorerProvider
     /**
      * @inheritDoc
      */
+    public function supports($item)
+    {
+        if ($item instanceof Setting) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function toExplorerItem($item)
     {
         if ($item instanceof Setting) {

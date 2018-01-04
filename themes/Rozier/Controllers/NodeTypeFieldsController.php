@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,7 +32,6 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -57,6 +56,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
+        /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
                          ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
 

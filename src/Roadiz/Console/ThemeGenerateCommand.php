@@ -28,16 +28,13 @@
  */
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\ProcessBuilder;
 
-class ThemeGenerateCommand extends Command
+class ThemeGenerateCommand extends ThemesCommand
 {
     protected function configure()
     {
@@ -59,7 +56,10 @@ class ThemeGenerateCommand extends Command
                 'b',
                 InputOption::VALUE_REQUIRED,
                 'Choose BaseTheme branch.'
-            );
+            )
+            ->addOption('symlink', null, InputOption::VALUE_NONE, 'Symlinks the theme assets instead of copying it')
+            ->addOption('relative', null, InputOption::VALUE_NONE, 'Make relative symlinks')
+        ;
     }
 
     /**
@@ -68,8 +68,6 @@ class ThemeGenerateCommand extends Command
      */
     public function validateThemeName($name)
     {
-        $filesystem = new Filesystem();
-
         if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $name)) {
             throw new \RuntimeException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
         }
@@ -78,12 +76,12 @@ class ThemeGenerateCommand extends Command
             throw new \RuntimeException('Theme name must not contain "Theme" suffix, it will be added automatically.');
         }
 
-        if ($filesystem->exists(ROADIZ_ROOT . '/themes/' . $name . 'Theme')) {
+        if ($this->filesystem->exists(ROADIZ_ROOT . '/themes/' . $name . 'Theme')) {
             throw new \RuntimeException('Theme already exists.');
         }
 
-        if (in_array($name, ['Default', 'Base', 'Install', 'Rozier'])) {
-            throw new \RuntimeException('You cannot name your theme after system themes (Default, Install, Base, Rozier).');
+        if (in_array($name, ['Default', 'Debug', 'Base', 'Install', 'Rozier'])) {
+            throw new \RuntimeException('You cannot name your theme after system themes (Default, Install, Base, Rozier or Debug).');
         }
 
         return $name;
@@ -96,11 +94,11 @@ class ThemeGenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var string $name */
         $name = $this->validateThemeName($input->getArgument('name'));
-        $themeName = $name . 'Theme';
-        $themePath = ROADIZ_ROOT . '/themes/' . $themeName;
+        $themeName = $this->getThemeName($name);
+        $themePath = $this->getNewThemePath($themeName);
         $branch = 'master';
-        $filesystem = new Filesystem();
 
         if ($input->getOption('develop')) {
             $branch = 'develop';
@@ -110,6 +108,17 @@ class ThemeGenerateCommand extends Command
         if ($input->getOption('branch')) {
             $branch = $input->getOption('branch');
             $output->writeln('Using <info>'.$branch.'</info> branch.');
+        }
+
+        if ($input->getOption('relative')) {
+            $expectedMethod = self::METHOD_RELATIVE_SYMLINK;
+            $output->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
+        } elseif ($input->getOption('symlink')) {
+            $expectedMethod = self::METHOD_ABSOLUTE_SYMLINK;
+            $output->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
+        } else {
+            $expectedMethod = self::METHOD_COPY;
+            $output->writeln('Installing theme assets as <info>hard copy</info>.');
         }
 
         /*
@@ -129,13 +138,13 @@ class ThemeGenerateCommand extends Command
         /*
          * Remove existing Git history.
          */
-        $filesystem->remove($themePath . '/.git');
+        $this->filesystem->remove($themePath . '/.git');
         $output->writeln('Remove Git history.');
 
         /*
          * Rename main theme class.
          */
-        $filesystem->rename($themePath . '/BaseThemeApp.php', $themePath . '/' . $name . 'ThemeApp.php');
+        $this->filesystem->rename($themePath . '/BaseThemeApp.php', $themePath . '/' . $name . 'ThemeApp.php');
         $output->writeln('Rename main theme class.');
 
         /*
@@ -144,7 +153,6 @@ class ThemeGenerateCommand extends Command
         $builder = new ProcessBuilder();
         $builder->setEnv('LC_ALL', 'C');
         $builder->setPrefix(['find']);
-
         $builder->setArguments([
             $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
             '-e', 's/BaseTheme/' . $name . 'Theme/g', '{}', ';'
@@ -170,16 +178,7 @@ class ThemeGenerateCommand extends Command
 
         $output->writeln('Rename every occurrences of BaseTheme in your theme.');
 
-        /*
-         * Create a symlink if using standard edition.
-         */
-        /** @var Kernel $kernel */
-        $kernel = $this->getHelper('kernel')->getKernel();
-        if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
-            $filesystem->mkdir($kernel->getPublicDir() . '/themes/' . $themeName);
-            $filesystem->symlink('../../../themes/' . $themeName . '/static', $kernel->getPublicDir() . '/themes/' . $themeName . '/static');
-            $output->writeln('Create a <info>relative</info> symlink in web/ dir.');
-        }
+        $this->generateThemeSymlink($themeName, $expectedMethod);
 
         $output->writeln('<info>Your new theme is ready to install, have fun!</info>');
     }

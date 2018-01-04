@@ -296,6 +296,7 @@ class SearchController extends RozierApp
             "nodetype",
             new NodeTypesType($this->get('em'), true),
             [
+                'label' => 'nodeType',
                 'placeholder' => "ignore",
                 'required' => false,
                 'data' => $nodetypeId,

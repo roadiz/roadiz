@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 
 /**
- * Describes a complexe ManyToMany relation
+ * Describes a complex ManyToMany relation
  * between NodesSources, Documents and NodeTypeFields.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
