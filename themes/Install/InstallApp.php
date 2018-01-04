@@ -37,18 +37,17 @@ use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Installation application
@@ -345,11 +344,12 @@ class InstallApp extends AppController
         $builder = $this->createFormBuilder()
             ->add('language', 'choice', [
                 'choices' => [
-                    'en' => 'English',
-                    'fr' => 'Français',
-                    'ru' => 'Русский язык',
-                    'tr' => 'Türkçe',
+                    'English' => 'en',
+                    'Français' => 'fr',
+                    'Русский язык' => 'ru',
+                    'Türkçe' => 'tr',
                 ],
+                'choices_as_values' => true,
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -454,6 +454,7 @@ class InstallApp extends AppController
             ])
             ->add('timezone', 'choice', [
                 'choices' => $timeZoneList,
+                'choices_as_values' => true,
                 'label' => $this->getTranslator()->trans('timezone'),
                 'required' => true,
             ]);
@@ -476,8 +477,8 @@ class InstallApp extends AppController
                         'label' => $this->getTranslator()->trans('theme.selector'),
                         'required' => true,
                         'constraints' => [
-                            new \Symfony\Component\Validator\Constraints\NotNull(),
-                            new \Symfony\Component\Validator\Constraints\Type('string'),
+                            new NotNull(),
+                            new Type('string'),
                         ],
                     ]
                 );
