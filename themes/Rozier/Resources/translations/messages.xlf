@@ -6834,7 +6834,7 @@
             <target></target>
             <note>Description for login check warning "modal".</note>
         </trans-unit>
-      
+
         <trans-unit xml:space="preserve" id="single-provider.type">
             <source>single-provider.type</source>
             <target></target>
@@ -6844,6 +6844,12 @@
             <source>multiple-provider.type</source>
             <target></target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target></target>
+            <note>User detail form field label for user portrait picture.</note>
         </trans-unit>
     </body>
   </file>

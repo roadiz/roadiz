@@ -216,7 +216,7 @@ class NodeTypeHandler extends AbstractHandler
          * Delete every nodes
          */
         $nodes = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findBy([
                 'nodeType' => $this->getNodeType()
@@ -293,7 +293,7 @@ class NodeTypeHandler extends AbstractHandler
              * make fields diff
              */
             $existingFieldsNames = $this->nodeType->getFieldsNames();
-
+            $position = 1;
             /** @var NodeTypeField $newField */
             foreach ($newNodeType->getFields() as $newField) {
                 if (false === in_array($newField->getName(), $existingFieldsNames)) {
@@ -302,6 +302,7 @@ class NodeTypeHandler extends AbstractHandler
                      * creating it.
                      */
                     $newField->setNodeType($this->nodeType);
+                    $newField->setPosition($position);
                     $this->objectManager->persist($newField);
                 } else {
                     /*
@@ -309,7 +310,8 @@ class NodeTypeHandler extends AbstractHandler
                      * Updating it.
                      */
                     /** @var NodeTypeField $oldField */
-                    $oldField = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                    $oldField = $this->objectManager
+                        ->getRepository(NodeTypeField::class)
                         ->findOneBy([
                             'nodeType' => $this->nodeType,
                             'name' => $newField->getName(),
@@ -321,8 +323,11 @@ class NodeTypeHandler extends AbstractHandler
                         $oldField->setDefaultValues($newField->getDefaultValues());
                         $oldField->setDescription($newField->getDescription());
                         $oldField->setLabel($newField->getLabel());
+                        $oldField->setPosition($position);
                     }
                 }
+
+                $position++;
             }
         } else {
             throw new \RuntimeException("New node-type is null", 1);

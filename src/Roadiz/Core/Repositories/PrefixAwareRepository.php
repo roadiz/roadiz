@@ -204,6 +204,7 @@ class PrefixAwareRepository extends EntityRepository
             $qb->setMaxResults($limit);
         }
 
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
 
         /*
@@ -254,6 +255,7 @@ class PrefixAwareRepository extends EntityRepository
 
         $qb->setMaxResults(1);
 
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
 
         /*
@@ -305,6 +307,7 @@ class PrefixAwareRepository extends EntityRepository
             $qb->setMaxResults($limit);
         }
 
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
         $this->applyComparisons($criteria, $finalQuery);
 
@@ -325,9 +328,10 @@ class PrefixAwareRepository extends EntityRepository
     }
 
     /**
-     * @param string $pattern  Search pattern
-     * @param array  $criteria Additionnal criteria
+     * @param string $pattern Search pattern
+     * @param array $criteria Additionnal criteria
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -335,6 +339,7 @@ class PrefixAwareRepository extends EntityRepository
         $qb->select($qb->expr()->countDistinct($this->getDefaultPrefix().'.id'));
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $finalQuery = $qb->getQuery();
         $this->applyComparisons($criteria, $finalQuery);
 

@@ -29,6 +29,12 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\CMS\Importers\GroupsImporter;
+use RZ\Roadiz\CMS\Importers\NodesImporter;
+use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
+use RZ\Roadiz\CMS\Importers\RolesImporter;
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -70,7 +76,7 @@ class ImportController extends AppController
      */
     protected function getFilename(Request $request)
     {
-        if ($request->getMethod() == 'POST' &&
+        if ($request->getMethod() == Request::METHOD_POST &&
             $request->request->get("filename") != "") {
             return $request->request->get("filename");
         } else {
@@ -89,7 +95,7 @@ class ImportController extends AppController
     public function importSettingsAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\SettingsImporter",
+            SettingsImporter::class,
             $request,
             $themeId
         );
@@ -106,7 +112,7 @@ class ImportController extends AppController
     public function importRolesAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\RolesImporter",
+            RolesImporter::class,
             $request,
             $themeId
         );
@@ -123,7 +129,7 @@ class ImportController extends AppController
     public function importGroupsAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\GroupsImporter",
+            GroupsImporter::class,
             $request,
             $themeId
         );
@@ -140,7 +146,7 @@ class ImportController extends AppController
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\NodeTypesImporter",
+            NodeTypesImporter::class,
             $request,
             $themeId
         );
@@ -157,7 +163,7 @@ class ImportController extends AppController
     public function importTagsAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            "RZ\Roadiz\CMS\Importers\TagsImporter",
+            TagsImporter::class,
             $request,
             $themeId
         );
@@ -174,7 +180,7 @@ class ImportController extends AppController
     public function importNodesAction(Request $request, $themeId = null)
     {
         return $this->genericImportAction(
-            'RZ\Roadiz\CMS\Importers\NodesImporter',
+            NodesImporter::class,
             $request,
             $themeId
         );
@@ -198,7 +204,7 @@ class ImportController extends AppController
                 $path = $pathFile;
             } else {
                 /** @var Theme $theme */
-                $theme = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $themeId);
+                $theme = $this->get('em')->find(Theme::class, $themeId);
 
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');

@@ -30,7 +30,9 @@
 namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -41,48 +43,54 @@ class UserDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstName', 'text', [
-                    'label' => 'firstName',
-                    'required' => false,
-                ])
-                ->add('lastName', 'text', [
-                    'label' => 'lastName',
-                    'required' => false,
-                ])
-                ->add('phone', 'text', [
-                    'label' => 'phone',
-                    'required' => false,
-                ])
-                ->add('facebookName', 'text', [
-                    'label' => 'facebookName',
-                    'required' => false,
-                    'constraints' => [
-                        new ValidFacebookName(),
-                    ],
-                ])
-                ->add('company', 'text', [
-                    'label' => 'company',
-                    'required' => false,
-                ])
-                ->add('job', 'text', [
-                    'label' => 'job',
-                    'required' => false,
-                ])
-                ->add('birthday', 'date', [
-                    'label' => 'birthday',
-                    'empty_value' => [
-                        'year' => 'year',
-                        'month' => 'month',
-                        'day' => 'day'
-                    ],
-                    'required' => false,
-                    'years' => range(1920, date('Y') - 6),
-                    'widget' => 'single_text',
-                    'format' => 'yyyy-MM-dd',
-                    'attr' => [
-                        'class' => 'rz-datetime-field',
-                    ],
-                ]);
+        $builder
+            ->add('firstName', 'text', [
+                'label' => 'firstName',
+                'required' => false,
+            ])
+            ->add('lastName', 'text', [
+                'label' => 'lastName',
+                'required' => false,
+            ])
+            ->add('phone', 'text', [
+                'label' => 'phone',
+                'required' => false,
+            ])
+            ->add('facebookName', 'text', [
+                'label' => 'facebookName',
+                'required' => false,
+                'constraints' => [
+                    new ValidFacebookName(),
+                ],
+            ])
+            ->add('company', 'text', [
+                'label' => 'company',
+                'required' => false,
+            ])
+            ->add('job', 'text', [
+                'label' => 'job',
+                'required' => false,
+            ])
+            ->add('birthday', 'date', [
+                'label' => 'birthday',
+                'empty_value' => [
+                    'year' => 'year',
+                    'month' => 'month',
+                    'day' => 'day'
+                ],
+                'required' => false,
+                'years' => range(1920, date('Y') - 6),
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr' => [
+                    'class' => 'rz-datetime-field',
+                ],
+            ])
+            ->add('pictureUrl', TextType::class, [
+                'label' => 'pictureUrl',
+                'required' => false,
+            ])
+        ;
     }
 
     public function getName()
@@ -95,7 +103,7 @@ class UserDetailsType extends AbstractType
         $resolver->setDefaults([
             'compound' => true,
             'label' => false,
-            'data_class' => 'RZ\Roadiz\Core\Entities\User',
+            'data_class' => User::class,
             'attr' => [
                 'class' => 'uk-form user-form',
             ],

@@ -53,6 +53,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function databaseAction(Request $request)
     {
@@ -125,6 +126,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -174,6 +176,8 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Twig_Error_Runtime
      */
     public function databaseFixturesAction(Request $request)
     {

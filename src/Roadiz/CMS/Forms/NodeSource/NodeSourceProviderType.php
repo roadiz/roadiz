@@ -53,10 +53,6 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
      */
     private $provider;
 
-    /**
-     * @var Container
-     */
-    private $container;
 
     /**
      * NodeSourceDocumentType constructor.
@@ -72,8 +68,6 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
         Container $container
     ) {
         parent::__construct($nodeSource, $nodeTypeField, $entityManager);
-
-        $this->container = $container;
 
         if ($this->nodeTypeField->getType() === NodeTypeField::MULTI_PROVIDER_T ||
             $this->nodeTypeField->getType() === NodeTypeField::SINGLE_PROVIDER_T) {

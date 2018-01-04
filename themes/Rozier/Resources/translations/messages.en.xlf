@@ -6701,6 +6701,11 @@
             <target xml:lang="en" state="translated">Multiple relationship using a Provider</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target xml:lang="en" state="translated">Avatar picture URL</target>
+            <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

@@ -7,7 +7,7 @@
     <div class="page-text">
         <div class="list-group">
             {% for nodeSource in nodeSources %}
-                <a class="list-group-item" href="{{ nodeSource|url }}">
+                <a class="list-group-item" href="{{ path(nodeSource) }}">
                     <h3 class="list-group-item-heading">{{ nodeSource.title }}</h3>
                     <div class="list-group-item-text">{{ nodeSource.content|truncate(50)|inlineMarkdown }}</div>
                 </a>

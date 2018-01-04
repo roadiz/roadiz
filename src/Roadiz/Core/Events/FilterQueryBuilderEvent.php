@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,55 +23,63 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DevKernel.php
- * @author Ambroise Maupate
+ * @file FilterQueryBuilderEvent.phpnt.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core;
 
-/**
- * DevKernel is meant for Vagrant and Docker development env
- * where using file sharing on Roadiz folder.
- *
- * @see http://www.whitewashing.de/2013/08/19/speedup_symfony2_on_vagrant_boxes.html
- * @package RZ\Roadiz\Core
- */
-class DevKernel extends Kernel
+namespace RZ\Roadiz\Core\Events;
+
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\EventDispatcher\Event;
+
+class FilterQueryBuilderEvent extends Event
 {
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
     /**
      * @var string
      */
-    private $appName;
+    private $entityClass;
 
     /**
-     * @param string $environment
-     * @param boolean $debug
-     * @param bool $preview
-     * @param string $appName
+     * FilterQueryBuilderEvent constructor.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $entityClass
      */
-    public function __construct($environment, $debug, $preview = false, $appName = "roadiz_dev")
+    public function __construct(QueryBuilder $queryBuilder, $entityClass)
     {
-        parent::__construct($environment, $debug, $preview);
-
-        $this->appName = $appName;
+        $this->queryBuilder = $queryBuilder;
+        $this->entityClass = $entityClass;
     }
 
     /**
-     * It’s important to set cache dir outside of any shared folder. RAM disk is a good idea.
-     *
-     * @return string
+     * @return QueryBuilder
      */
-    public function getCacheDir()
+    public function getQueryBuilder()
     {
-        return '/dev/shm/' . $this->appName . '/cache/' .  $this->environment;
+        return $this->queryBuilder;
     }
 
     /**
-     * It’s important to set logs dir outside of any shared folder. RAM disk is a good idea.
-     *
-     * @return string
+     * @param QueryBuilder $queryBuilder
+     * @return FilterQueryBuilderEvent
      */
-    public function getLogDir()
+    public function setQueryBuilder(QueryBuilder $queryBuilder)
     {
-        return '/dev/shm/' . $this->appName . '/logs';
+        $this->queryBuilder = $queryBuilder;
+        return $this;
+    }
+
+
+    /**
+     * @param string $entityClass
+     * @return bool
+     */
+    public function supports($entityClass)
+    {
+        return $this->entityClass === $entityClass;
     }
 }

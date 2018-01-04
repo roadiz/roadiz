@@ -32,8 +32,10 @@
 namespace Themes\Rozier\Controllers\NodeTypes;
 
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +60,7 @@ class NodeTypesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
-        $nodeType = $this->get('em')->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
+        $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
 
         $serializer = new NodeTypeJsonSerializer();
 
@@ -118,6 +120,7 @@ class NodeTypesUtilsController extends RozierApp
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {
@@ -139,7 +142,7 @@ class NodeTypesUtilsController extends RozierApp
                     $nodeType = $serializer->deserialize($serializedData);
                     /** @var NodeType $existingNT */
                     $existingNT = $this->get('em')
-                                       ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                                       ->getRepository(NodeType::class)
                                        ->findOneBy(['name' => $nodeType->getName()]);
 
                     if (null === $existingNT) {
@@ -149,16 +152,19 @@ class NodeTypesUtilsController extends RozierApp
                          * First persist node-type
                          */
                         $this->get('em')->persist($nodeType);
-
                         // Flush before creating node-type fields.
                         $this->get('em')->flush();
 
+                        $position = 1;
+                        /** @var NodeTypeField $field */
                         foreach ($nodeType->getFields() as $field) {
                             /*
                              * then persist each field
                              */
                             $field->setNodeType($nodeType);
+                            $field->setPosition($position);
                             $this->get('em')->persist($field);
+                            $position++;
                         }
 
                         $msg = $this->getTranslator()->trans('nodeType.imported.created');
@@ -200,9 +206,7 @@ class NodeTypesUtilsController extends RozierApp
                 $this->publishErrorMessage($request, $msg);
 
                 // redirect even if its null
-                return $this->redirect($this->generateUrl(
-                    'nodeTypesImportPage'
-                ));
+                return $this->redirect($this->generateUrl('nodeTypesImportPage'));
             }
         }
 
@@ -217,7 +221,7 @@ class NodeTypesUtilsController extends RozierApp
     private function buildImportJsonFileForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('node_type_file', 'file', [
+                        ->add('node_type_file', FileType::class, [
                             'label' => 'nodeType.file',
                         ]);
 
