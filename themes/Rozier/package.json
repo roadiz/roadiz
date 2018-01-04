@@ -40,7 +40,6 @@
     "axios": "^0.15.3",
     "codemirror": "^5.25.0",
     "gsap": "^1.20.3",
-    "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "lodash": "^4.17.4",
     "mousetrap": "^1.6.0",

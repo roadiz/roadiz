@@ -39,8 +39,8 @@ const getWebpackConfigBase = (config) => {
         target: 'web',
         context: paths.dist(),
         entry: {
-            app: paths.client('main.js')
-            // vendor: config.js_vendors
+            app: paths.client('main.js'),
+            simple: paths.client('simple.js')
         },
         output: {
             path: paths.dist(),
@@ -175,11 +175,11 @@ const getWebpackConfigBase = (config) => {
             new WebpackNotifierPlugin({
                 alwaysNotify: true
             }),
-            new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery',
-                'window.jQuery': 'jquery'
-            }),
+            // new webpack.ProvidePlugin({
+            //     $: 'jquery',
+            //     jQuery: 'jquery',
+            //     'window.jQuery': 'jquery'
+            // }),
             new webpack.IgnorePlugin(/^\.\/locale$/)
         ],
         resolve: {
@@ -193,6 +193,11 @@ const getWebpackConfigBase = (config) => {
 
     if (config.refreshOnChange) {
         webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
+    }
+
+    if (config.bundleAnalyzerReport) {
+        const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+        webpackConfig.plugins.push(new BundleAnalyzerPlugin())
     }
 
     return webpackConfig

@@ -1,7 +1,7 @@
 <!-- Inline template in 'node-type-fields/add.html.twig' and 'node-type-fields/edit.html.twig' -->
 <script>
     import $ from 'jquery'
-    import Vue from 'Vue'
+    import Vue from 'vue'
     import { mapActions } from 'vuex'
 
     // Containers and Components

@@ -28,6 +28,9 @@ const getConfig = () => {
         dir_root: '../',
         dir_views: 'views',
 
+        /// For analysis only
+        bundleAnalyzerReport: false,
+
         // ----------------------------------
         // Stats
         // ----------------------------------
@@ -77,7 +80,11 @@ const getConfig = () => {
         externals: {
             uikit: 'UIkit',
             vue: 'Vue',
-            vuex: 'Vuex'
+            vuex: 'Vuex',
+            $: '$',
+            jquery: '$',
+            jQuery: '$',
+            'window.jQuery': '$'
         },
 
         // ----------------------------------

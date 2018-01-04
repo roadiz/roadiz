@@ -1,5 +1,4 @@
 import webpack from 'webpack'
-import CleanWebpackPlugin from 'clean-webpack-plugin'
 import cssnano from 'cssnano'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import postcssFixes from 'postcss-fixes'
@@ -45,6 +44,16 @@ export default {
             new HtmlWebpackPlugin({
                 filename: config.utils_paths.views('partials/js-inject.html.twig'),
                 template: config.utils_paths.views('partials/js-inject-src.html.twig'),
+                chunks: ['app', 'vendor'],
+                cache: true,
+                inject: false,
+                alwaysWriteToDisk: true,
+                refreshOnChange: config.refreshOnChange
+            }),
+            new HtmlWebpackPlugin({
+                filename: config.utils_paths.views('partials/simple-js-inject.html.twig'),
+                template: config.utils_paths.views('partials/simple-js-inject-src.html.twig'),
+                chunks: ['simple'],
                 cache: true,
                 inject: false,
                 alwaysWriteToDisk: true,
@@ -142,12 +151,14 @@ export default {
                 // enable scope hoisting
                 new webpack.optimize.ModuleConcatenationPlugin(),
                 new webpack.optimize.CommonsChunkPlugin({
+                    chunks: ['app'],
                     name: 'vendor',
                     minChunks: (module) => {
                         return module.context && module.context.indexOf('node_modules') !== -1
                     }
                 }),
                 new webpack.optimize.CommonsChunkPlugin({
+                    chunks: ['app'],
                     name: 'manifest',
                     minChunks: Infinity
                 }),
@@ -166,6 +177,14 @@ export default {
                 new HtmlWebpackPlugin({
                     filename: config.utils_paths.views('partials/js-inject.html.twig'),
                     template: config.utils_paths.views('partials/js-inject-src.html.twig'),
+                    chunks: ['app', 'vendor', 'manifest'],
+                    cache: true,
+                    inject: false
+                }),
+                new HtmlWebpackPlugin({
+                    filename: config.utils_paths.views('partials/simple-js-inject.html.twig'),
+                    template: config.utils_paths.views('partials/simple-js-inject-src.html.twig'),
+                    chunks: ['simple', 'manifest'],
                     cache: true,
                     inject: false
                 })
