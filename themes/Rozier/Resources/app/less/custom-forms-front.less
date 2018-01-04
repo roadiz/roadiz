@@ -1,0 +1,88 @@
+/*------------------------------------*\
+   CUSTOM FORMS FRONT
+\*------------------------------------*/
+
+#custom-form-front {
+    font-family: @main-font;
+
+    em {
+        color: #555555;
+    }
+
+    .content {
+        max-width: 720px;
+        margin: 2em auto;
+        padding: 0 1em;
+    }
+
+    .content-title,
+    .content-desc {
+        max-width: 720px;
+    }
+
+    .content-title {
+        padding: 0;
+        margin: 0;
+    }
+
+    .content-header {
+        text-align: center;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        flex-direction: column;
+        min-height: 220px;
+        height: auto;
+        padding: 30px 60px;
+    }
+
+    .required-mention {
+        font-size: 11px;
+    }
+
+    .content-desc {
+        color: #555555;
+    }
+
+    textarea{
+        font-weight: normal;
+        min-height: 120px;
+    }
+
+    .uk-form-label {
+         font-size: 16px;
+    }
+
+    .uk-form-description {
+        font-size: 12px;
+        line-height: 16px;
+
+        p {
+            margin:5px 0;
+            color: #555555;
+        }
+    }
+
+    .custom-form-group {
+        border-left: 1px solid #e8e7e7;
+        padding-left: 1.5em;
+
+        .uk-form-label {
+            font-size: 14px;
+        }
+    }
+
+    .form-col-choice {
+        div {
+            .uk-form-label {
+                font-size: 12px;
+
+                &:before {
+                    content: '';
+                }
+            }
+        }
+    }
+}

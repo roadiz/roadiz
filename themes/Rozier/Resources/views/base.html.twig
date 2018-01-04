@@ -22,14 +22,15 @@
         <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-32x32.png" sizes="32x32" />
         <meta name="msapplication-TileImage" content="{{ head.resourcesUrl }}img/mstile-144x144.png" />
 
-        {% for cssMin in themeServices.grunt.staticAssets.global.css %}
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ cssMin }}" />
-        {% endfor %}
+        {# CSS scripts inclusions / Using webpack #}
+        {% include 'partials/css-inject.html.twig' %}
+
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
         {% block customStyles %}{% endblock %}
-        <script src="{{ head.resourcesUrl }}js/vendor/modernizr.custom.50380.js"></script>
+        <script src="{{ head.resourcesUrl }}/vendor/modernizr.custom.50380.js"></script>
     </head>
     <body>
+        <div id="app"></div>
         <div id="main-container" >
             <div id="main-container-inner">
                 <section class="main-container-section" id="user-panel">
@@ -224,23 +225,18 @@
             var RozierRoot = temp;
         </script>
 
-        <!-- ##debug_panel## -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-
         {% if head.devMode %}
-            <script src="https://unpkg.com/vue"></script>
-            <script src="https://unpkg.com/vuex"></script>
+            <script src="{{ head.resourcesUrl }}vendor/vue.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/vuex.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
         {% else %}
-            <script src="https://unpkg.com/vue@2.2.6/dist/vue.min.js"></script>
-            <script src="https://unpkg.com/vuex@2.2.1/dist/vuex.min.js"></script>
+            <script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
+            <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.min.js"></script>
+            <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.js"></script>
         {% endif %}
 
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
-        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.custom.js"></script>
-
-        {% for jsMin in themeServices.grunt.staticAssets.global.js %}
-        <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
-        {% endfor %}
+        {# JS scripts inclusions / Using webpack #}
+        {% include 'partials/js-inject.html.twig' %}
 
         {% block customScripts %}{% endblock %}
     </body>

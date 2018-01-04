@@ -105,10 +105,6 @@ class RozierApp extends BackendController
             return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
         };
 
-        $this->themeContainer['grunt'] = function () {
-            return include dirname(__FILE__) . '/static/public/config/assets.config.php';
-        };
-
         $this->themeContainer['settingGroups'] = function () {
             return $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
                 ->findBy(

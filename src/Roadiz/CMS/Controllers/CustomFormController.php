@@ -83,7 +83,6 @@ class CustomFormController extends CmsController
                 return $mixed->send();
             } else {
                 $this->assignation = array_merge($this->assignation, $mixed);
-                $this->assignation['grunt'] = include RozierApp::getThemeFolder() . '/static/public/config/assets.config.php';
 
                 return $this->render('forms/customForm.html.twig', $this->assignation);
             }
@@ -106,7 +105,6 @@ class CustomFormController extends CmsController
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
-            $this->assignation['grunt'] = include RozierApp::getThemeFolder() . '/static/public/config/assets.config.php';
 
             return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }
