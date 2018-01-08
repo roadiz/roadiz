@@ -28,7 +28,7 @@
 
 
         {# CSS scripts inclusions / Using webpack #}
-        {% include 'partials/css-inject.html.twig' %}
+        {% include '@Rozier/partials/css-inject.html.twig' %}
 
         <style>
             /* Login */
@@ -67,7 +67,7 @@
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}
-        {% include 'partials/simple-js-inject.html.twig' %}
+        {% include '@Rozier/partials/simple-js-inject.html.twig' %}
 
         {% block customScripts %}{% endblock %}
     </body>
