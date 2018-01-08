@@ -37,7 +37,9 @@ use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -240,37 +242,40 @@ class FontsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
+        /** @var Font $font */
         $font = $this->get('em')
                      ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
 
+        /** @var Packages $packages */
+        $packages = $this->get('assetPackages');
+
         if ($font !== null) {
             // Prepare File
-            $file = tempnam("tmp", "zip");
+            $filename = StringHandler::cleanForFilename($font->getName() . ' ' . $font->getReadableVariant()) . '.zip';
+            $file = tempnam(sys_get_temp_dir(), $filename);
             $zip = new \ZipArchive();
             $zip->open($file, \ZipArchive::OVERWRITE);
 
             if ("" != $font->getEOTFilename()) {
-                $zip->addFile($font->getEOTAbsolutePath(), $font->getEOTFilename());
+                $zip->addFile($packages->getFontsPath($font->getEOTRelativeUrl()), $font->getEOTFilename());
             }
             if ("" != $font->getSVGFilename()) {
-                $zip->addFile($font->getSVGAbsolutePath(), $font->getSVGFilename());
+                $zip->addFile($packages->getFontsPath($font->getSVGRelativeUrl()), $font->getSVGFilename());
             }
             if ("" != $font->getWOFFFilename()) {
-                $zip->addFile($font->getWOFFAbsolutePath(), $font->getWOFFFilename());
+                $zip->addFile($packages->getFontsPath($font->getWOFFRelativeUrl()), $font->getWOFFFilename());
             }
             if ("" != $font->getWOFF2Filename()) {
-                $zip->addFile($font->getWOFF2AbsolutePath(), $font->getWOFF2Filename());
+                $zip->addFile($packages->getFontsPath($font->getWOFF2RelativeUrl()), $font->getWOFF2Filename());
             }
             if ("" != $font->getOTFFilename()) {
-                $zip->addFile($font->getOTFAbsolutePath(), $font->getOTFFilename());
+                $zip->addFile($packages->getFontsPath($font->getOTFRelativeUrl()), $font->getOTFFilename());
             }
             // Close and send to users
             $zip->close();
 
-            $filename = StringHandler::slugify($font->getName() . ' ' . $font->getReadableVariant()) . '.zip';
-
-            $response = new Response(
-                file_get_contents($file),
+            $response = new BinaryFileResponse(
+                $file,
                 Response::HTTP_OK,
                 [
                     'content-control' => 'private',
@@ -279,8 +284,6 @@ class FontsController extends RozierApp
                     'content-disposition' => 'attachment; filename=' . $filename,
                 ]
             );
-            unlink($file);
-
             return $response;
         }
 
