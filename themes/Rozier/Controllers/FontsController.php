@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -257,19 +258,19 @@ class FontsController extends RozierApp
             $packages = $this->get('assetPackages');
 
             if ("" != $font->getEOTFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getEOTFilename()), $font->getEOTFilename());
+                $zip->addFile($packages->getFontsPath($font->getEOTRelativeUrl()), $font->getEOTFilename());
             }
             if ("" != $font->getSVGFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getSVGFilename()), $font->getSVGFilename());
+                $zip->addFile($packages->getFontsPath($font->getSVGRelativeUrl()), $font->getSVGFilename());
             }
             if ("" != $font->getWOFFFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getWOFFFilename()), $font->getWOFFFilename());
+                $zip->addFile($packages->getFontsPath($font->getWOFFRelativeUrl()), $font->getWOFFFilename());
             }
             if ("" != $font->getWOFF2Filename()) {
-                $zip->addFile($packages->getFontsPath($font->getWOFF2Filename()), $font->getWOFF2Filename());
+                $zip->addFile($packages->getFontsPath($font->getWOFF2RelativeUrl()), $font->getWOFF2Filename());
             }
             if ("" != $font->getOTFFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getOTFFilename()), $font->getOTFFilename());
+                $zip->addFile($packages->getFontsPath($font->getOTFRelativeUrl()), $font->getOTFFilename());
             }
             // Close and send to users
             $zip->close();
