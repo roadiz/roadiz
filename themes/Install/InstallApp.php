@@ -345,6 +345,7 @@ class InstallApp extends AppController
             ->add('language', 'choice', [
                 'choices' => [
                     'English' => 'en',
+                    'Español' => 'es',
                     'Français' => 'fr',
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
