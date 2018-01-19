@@ -109,7 +109,10 @@
       </trans-unit>
       <trans-unit id="database_fail.message">
         <source>database_fail.message</source>
-        <target xml:lang="tr" state="translated">&lt;p&gt;Aşağıdaki hatalar sebbeiyle veri tabanı kurulumu yapılamıyor. Veri tabanı bilgilerinizi kontrol edin. Veya veri tabanını yeni kurduysanız kontrol edin.&lt;/p&gt;</target>
+        <target xml:lang="tr" state="translated">&lt;p&gt;Aşağıdaki hatalar sebebiyle veri tabanı kurulumu yapılamıyor. Veri tabanı bilgilerinizi kontrol edin. Veya veri tabanını yeni kurduysanız kontrol edin.&lt;/p&gt;</target>
+        <alt-trans>
+          <target xml:lang="tr">&lt;p&gt;Aşağıdaki hatalar sebbeiyle veri tabanı kurulumu yapılamıyor. Veri tabanı bilgilerinizi kontrol edin. Veya veri tabanını yeni kurduysanız kontrol edin.&lt;/p&gt;</target>
+        </alt-trans>
         <alt-trans>
           <target xml:lang="tr">&lt;p&gt;Aşağıdaki hatalar sebeiyle veri tabanı kurulumu yapılamıyor.Veri tabanı bilgilerinizi kontrol edin. Veya veri tabanını yeni kurduysanız kontrol edin.&lt;/p&gt;</target>
         </alt-trans>
@@ -296,8 +299,8 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.locale">
                 <source>cms.locale</source>
-                <target xml:lang="tr" state="translated">CMS yerleri</target>
-            </trans-unit>
+                <target xml:lang="tr" state="translated">CMS dil lokasyonu</target>
+            <alt-trans><target xml:lang="tr">CMS yerleri</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="name">
                 <source>name</source>
                 <target xml:lang="tr" state="translated">İsim</target>
@@ -416,8 +419,8 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.locale.message">
                 <source>error.locale.message</source>
-                <target xml:lang="tr" state="translated">Tema alanı sisteminizde bulunmuyor.</target>
-            </trans-unit>
+                <target xml:lang="tr" state="translated">Tema dil lokasyonu sisteminizde bulunmuyor.</target>
+            <alt-trans><target xml:lang="tr">Tema alanı sisteminizde bulunmuyor.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="error.modal.title">
                 <source>error.modal.title</source>
                 <target xml:lang="tr" state="translated">Lütfen tema kurulumundan önce aşağıdaki sorunları  düzeltin.</target>
