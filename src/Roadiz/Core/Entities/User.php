@@ -27,6 +27,7 @@
  * @file User.php
  * @author Ambroise Maupate
  */
+
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,7 +43,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Table(name="users", indexes={
  *     @ORM\Index(columns={"enabled"}),
  *     @ORM\Index(columns={"expired"}),
- *     @ORM\Index(columns={"expires_at"})
+ *     @ORM\Index(columns={"expires_at"}),
+ *     @ORM\Index(columns={"locale"})
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -60,10 +62,12 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @var bool
      */
     protected $sendCreationConfirmationEmail;
+
     /**
      * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
      */
     protected $facebookName = null;
+
     /**
      * @ORM\Column(type="text", name="picture_url", nullable=true)
      */
@@ -124,6 +128,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Names of current User roles
      * to be compatible with symfony security scheme
+     *
      * @var array
      */
     private $rolesNames = null;
@@ -168,6 +173,12 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @var Node
      */
     private $chroot;
+
+    /**
+     * @var null|string
+     * @ORM\Column(name="locale", type="string", nullable=true, length=7)
+     */
+    private $locale = null;
 
     /**
      * Constructor
@@ -401,7 +412,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function isPasswordRequestNonExpired($ttl)
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
-        $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+            $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
     }
 
     /**
@@ -429,6 +440,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Add a role object to current user.
+     *
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
@@ -444,6 +456,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Get roles entities
+     *
      * @return ArrayCollection
      */
     public function getRolesEntities()
@@ -453,6 +466,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Remove role from current user.
+     *
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
@@ -478,6 +492,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Insert user into group.
+     *
      * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
@@ -501,7 +516,8 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     /**
      * Remove user from group
-     * @param \RZ\Roadiz\Core\Entities\Group  $group
+     *
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
      */
@@ -589,7 +605,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     public function setLocked($locked)
     {
-        $this->locked = (boolean) $locked;
+        $this->locked = (boolean)$locked;
 
         return $this;
     }
@@ -734,7 +750,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     public function setEnabled($enabled)
     {
-        $this->enabled = (boolean) $enabled;
+        $this->enabled = (boolean)$enabled;
 
         return $this;
     }
@@ -785,5 +801,23 @@ class User extends AbstractHuman implements AdvancedUserInterface
         $this->rolesNames = array_unique($this->rolesNames);
 
         return $this->rolesNames;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param null|string $locale
+     * @return User
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+        return $this;
     }
 }

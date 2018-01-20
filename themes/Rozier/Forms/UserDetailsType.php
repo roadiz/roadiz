@@ -32,6 +32,7 @@ namespace Themes\Rozier\Forms;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -89,6 +90,19 @@ class UserDetailsType extends AbstractType
             ->add('pictureUrl', TextType::class, [
                 'label' => 'pictureUrl',
                 'required' => false,
+            ])
+            ->add('locale', ChoiceType::class, [
+                'label' => 'user.backoffice.language',
+                'required' => false,
+                'choices' => [
+                    'English' => 'en',
+                    'Español' => 'es',
+                    'Français' => 'fr',
+                    'Русский язык' => 'ru',
+                    'Türkçe' => 'tr',
+                ],
+                'choices_as_values' => true,
+                'placeholder' => 'use.website.default_language'
             ])
         ;
     }

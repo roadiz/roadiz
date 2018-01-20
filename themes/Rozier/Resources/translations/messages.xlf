@@ -6851,6 +6851,18 @@
             <target></target>
             <note>User detail form field label for user portrait picture.</note>
         </trans-unit>
+        <trans-unit xml:space="preserve" id="user.backoffice.language">
+            <source>user.backoffice.language</source>
+            <target></target>
+            <note>User detail form field label for user backoffice language.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="use.website.default_language">
+            <source>use.website.default_language</source>
+            <target></target>
+            <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+
+
     </body>
   </file>
 </xliff>
