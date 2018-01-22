@@ -6706,6 +6706,16 @@
             <target xml:lang="es-ES" state="translated">URL de foto de perfil</target>
             <note>User detail form field label for user portrait picture.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="user.backoffice.language">
+            <source>user.backoffice.language</source>
+            <target xml:lang="es-ES" state="translated">Lenguaje de back-office</target>
+            <note>User detail form field label for user backoffice language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use.website.default_language">
+            <source>use.website.default_language</source>
+            <target xml:lang="es-ES" state="translated">-- Usar el idioma predeterminado del sitio web --</target>
+            <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

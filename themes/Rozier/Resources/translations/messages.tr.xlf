@@ -3128,7 +3128,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="maintenance_mode.activated">
           <source>maintenance_mode.activated</source>
-          <target xml:lang="tr" state="translated">bakım_mode.aktiftir</target>
+          <target xml:lang="tr" state="needs-translation">maintenance_mode.activated</target>
           <note>Message to notify that site is under maintenance.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="300">
@@ -4572,7 +4572,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="embedId.is_not_valid">
         <source>embedId.is_not_valid</source>
-        <target xml:lang="tr" state="translated">yerleştirme.geçerli_değil</target>
+        <target xml:lang="tr" state="needs-translation">embedId.is_not_valid</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas">
         <source>document.metas</source>
@@ -6503,62 +6503,62 @@
       <!-- New Join node-type-field type -->
       <trans-unit xml:space="preserve" id="join.toggle-explorer">
             <source>join.toggle-explorer</source>
-            <target xml:lang="tr" state="translated">kayıt.geçiş-bulucu</target>
+            <target xml:lang="tr" state="needs-translation">join.toggle-explorer</target>
             <note>Button label for join type explorer</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="many-to-many.type">
             <source>many-to-many.type</source>
-            <target xml:lang="tr" state="translated">birden-çok.tip</target>
+            <target xml:lang="tr" state="needs-translation">many-to-many.type</target>
             <note>Node-type field type for Doctrine Many-to-many relationship</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="many-to-one.type">
             <source>many-to-one.type</source>
-            <target xml:lang="tr" state="translated">çoklu.tip</target>
+            <target xml:lang="tr" state="needs-translation">many-to-one.type</target>
             <note>Node-type field type for Doctrine Many-to-one relationship</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
             <source>default_values_do_not_match_field_type</source>
-            <target xml:lang="tr" state="translated">varsayılan_değerler_alan_türüne_uymuyor</target>
+            <target xml:lang="tr" state="needs-translation">default_values_do_not_match_field_type</target>
             <note>Validator message: when default value is not correct for choosen type</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
             <source>default_values_should_not_be_empty_for_this_type</source>
-            <target xml:lang="tr" state="translated">bu_tür_için_varsayılan_değerler_boş_olmamalı</target>
+            <target xml:lang="tr" state="needs-translation">default_values_should_not_be_empty_for_this_type</target>
             <note>Validator message: when default value is empty and it should not</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
             <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
-            <target xml:lang="tr" state="translated">varsayılan_değerler_yaml_bu_tür_yapılandırma_için_olmalıdır</target>
+            <target xml:lang="tr" state="needs-translation">default_values_should_be_a_yaml_configuration_for_this_type</target>
             <note>Validator message: when default value is not a valid YAML text</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_exist">
             <source>classname_%classname%_does_not_exist</source>
-            <target xml:lang="tr" state="translated">sınıfadı_%sınıfadı%_bulunmamaktadır</target>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_does_not_exist</target>
             <note>Validator message: when provided classname does not exist.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
             <source>classname_%classname%_must_extend_abstract_entity_class</source>
-            <target xml:lang="tr" state="translated">sınıfadı_%sınıfadı%_soyut_varlık_sınıfını_genişletmelidir</target>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_must_extend_abstract_entity_class</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
-            <target xml:lang="tr" state="translated">sınıfadı_%sınıfadı%_yöntemi_yöntemi_bildirmez</target>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_does_not_declare_%method%_method</target>
             <note>Validator message: when provided classname does not declare provided method.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="more.entities">
             <source>more.entities</source>
-            <target xml:lang="tr" state="translated">daha fazla.varlıklar</target>
+            <target xml:lang="tr" state="needs-translation">more.entities</target>
             <note>Explorer more button label for entities.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
             <source>drawer.sortable-not-enable</source>
-            <target xml:lang="tr" state="translated">çekmece.sıralanabilir-etkin-değil</target>
+            <target xml:lang="tr" state="needs-translation">drawer.sortable-not-enable</target>
             <note>Message info when the sortable drawer option is disable.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="explorer.create_tag">
             <source>explorer.create_tag</source>
-            <target xml:lang="tr" state="translated">araştırmacı.etiketi_oluştur</target>
+            <target xml:lang="tr" state="needs-translation">explorer.create_tag</target>
             <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="min">
@@ -6568,100 +6568,97 @@
         </trans-unit>
       <trans-unit xml:space="preserve" id="document.adjust">
             <source>document.adjust</source>
-            <target xml:lang="tr" state="translated">belge.ayarlamak</target>
+            <target xml:lang="tr" state="needs-translation">document.adjust</target>
             <note>Document navbar link text for document adjust page.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor">
             <source>blanchetteEditor</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör</target>
+            <target xml:lang="tr" state="translated">Blanchette Editör</target>
             <note>Blanchette Editorpage title</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.free">
             <source>blanchetteEditor.free</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.ücretsiz</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.free</target>
             <note>Blanchette Editor message button label: free aspect ratio</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.move">
             <source>blanchetteEditor.move</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.hareket</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.move</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
             <source>blanchetteEditor.crop</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.kırpmak</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.crop</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
             <source>blanchetteEditor.zoomIn</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.yakınlaştırmak</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.zoomIn</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
             <source>blanchetteEditor.zoomOut</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.uzaklaştırmak</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.zoomOut</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
             <source>blanchetteEditor.rotateLeft</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.Soladön
-
-
-</target>
+            <target xml:lang="tr" state="translated">Sola Dön</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
             <source>blanchetteEditor.rotateRight</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.Sağadön</target>
+            <target xml:lang="tr" state="translated">Sağadön</target>
             <note>Blanchette Editor message button label</note>
-        </trans-unit>
+        <alt-trans><target xml:lang="tr">blanchetteEditör.Sağadön</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
             <source>blanchetteEditor.flipHorizontal</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.yatayçevir</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.flipHorizontal</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
             <source>blanchetteEditor.flipVertical</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.dikeyçevir</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.flipVertical</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
             <source>blanchetteEditor.applyChange</source>
-            <target xml:lang="tr" state="translated">blanchette.Editör.değişikliğiuygula</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.applyChange</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
             <source>blanchetteEditor.undo</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.gerial</target>
+            <target xml:lang="tr" state="translated">Gerial</target>
             <note>Blanchette Editor message button label</note>
-        </trans-unit>
+        <alt-trans><target xml:lang="tr">blanchetteEditör.gerial</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
             <source>blanchetteEditor.aspectRatio</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.enboyoranı</target>
+            <target xml:lang="tr" state="translated">Enboyoranı</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
             <source>blanchetteEditor.saveAndOverwrite</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.kaydedipüzerineyazma</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.saveAndOverwrite</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.other">
             <source>blanchetteEditor.other</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.diğeri</target>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.other</target>
             <note>Blanchette Editor aspect ratio group name</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
             <source>blanchetteEditor.portrait</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.portre</target>
+            <target xml:lang="tr" state="translated">Portre</target>
             <note>Blanchette Editor aspect ratio group name</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
             <source>blanchetteEditor.landscape</source>
-            <target xml:lang="tr" state="translated">blanchetteEditör.manzara</target>
+            <target xml:lang="tr" state="translated">Manzara</target>
             <note>Blanchette Editor aspect ratio group name</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
             <source>make_this_field_mandatory_for_users</source>
-            <target xml:lang="tr" state="translated">bu_alanı_kullanıcılar_için_zorunlu_kıl</target>
+            <target xml:lang="tr" state="needs-translation">make_this_field_mandatory_for_users</target>
             <note>Form field description for Required switch</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="expanded">
@@ -6671,7 +6668,7 @@
         </trans-unit>
       <trans-unit xml:space="preserve" id="use_checkboxes_or_radio_buttons_instead_of_select_box">
             <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
-            <target xml:lang="tr" state="translated">seçim kutusu_ yerine_ onay _kutular_ı veya_ radyo_ düğmeleri _kullanın</target>
+            <target xml:lang="tr" state="needs-translation">use_checkboxes_or_radio_buttons_instead_of_select_box</target>
             <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="placeholder">
@@ -6681,32 +6678,32 @@
         </trans-unit>
       <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
             <source>label_for_field_with_empty_data</source>
-            <target xml:lang="tr" state="translated">boş_veri_ile_birlikte_alan_için_etiket</target>
+            <target xml:lang="tr" state="needs-translation">label_for_field_with_empty_data</target>
             <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="session.expire.title">
             <source>session.expire.title</source>
-            <target xml:lang="tr" state="translated">oturum.bitmek.başlık</target>
+            <target xml:lang="tr" state="needs-translation">session.expire.title</target>
             <note>Title for login check warning "modal".</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="session.expire.content">
             <source>session.expire.content</source>
-            <target xml:lang="tr" state="translated">oturum.bitmek.içerik</target>
+            <target xml:lang="tr" state="needs-translation">session.expire.content</target>
             <note>Description for login check warning "modal".</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="single-provider.type">
             <source>single-provider.type</source>
-            <target xml:lang="tr" state="translated">tekil-sağlayan.tür</target>
+            <target xml:lang="tr" state="needs-translation">single-provider.type</target>
             <note>Node-type field type for Provider manual many-to-one relationship.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="multiple-provider.type">
             <source>multiple-provider.type</source>
-            <target xml:lang="tr" state="translated">çoğul-sağlayan.tür</target>
+            <target xml:lang="tr" state="needs-translation">multiple-provider.type</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>
-            <target xml:lang="tr" state="translated">resimUrl</target>
+            <target xml:lang="tr" state="translated">Avatar resmi URL</target>
             <note>User detail form field label for user portrait picture.</note>
         </trans-unit>
     </body>

@@ -792,8 +792,10 @@ class User extends AbstractHuman implements AdvancedUserInterface
         }
 
         foreach ($this->getGroups() as $group) {
-            // User roles > Groups roles
-            $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+            if ($group instanceof Group) {
+                // User roles > Groups roles
+                $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+            }
         }
 
         // we need to make sure to have at least one role
