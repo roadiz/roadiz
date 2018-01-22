@@ -35,6 +35,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
@@ -104,10 +105,19 @@ class UserLocaleSubscriber implements EventSubscriberInterface
     {
         /** @var RequestStack $requestStack */
         $requestStack = $this->container['requestStack'];
-        $user = $event->getUser();
 
+        /** @var TokenStorage $tokenStorage */
+        $tokenStorage = $this->container['securityTokenStorage'];
+
+        $user = $event->getUser();
         $request = $requestStack->getMasterRequest();
-        if (null !== $request && null !==  $request->getSession()) {
+
+        if (null !== $request &&
+            null !== $request->getSession() &&
+            null !== $tokenStorage->getToken() &&
+            $tokenStorage->getToken()->getUser() instanceof User &&
+            $tokenStorage->getToken()->getUsername() === $user->getUsername()
+        ) {
             if (null === $user->getLocale()) {
                 $request->getSession()->remove('_locale');
             } else {
