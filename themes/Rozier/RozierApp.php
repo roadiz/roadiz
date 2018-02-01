@@ -31,7 +31,9 @@ namespace Themes\Rozier;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
+use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -102,11 +104,15 @@ class RozierApp extends BackendController
             return new FolderTreeWidget($this->getRequest(), $this);
         };
         $this->themeContainer['maxFilesize'] = function () {
-            return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
+            $requirements = new Requirements($this->get('kernel'));
+            $post_max_size = $requirements->parseSuffixedAmount(ini_get('post_max_size'));
+            $upload_max_filesize = $requirements->parseSuffixedAmount(ini_get('upload_max_filesize'));
+            $maxFileSize = min($post_max_size, $upload_max_filesize);
+            return $maxFileSize;
         };
 
         $this->themeContainer['settingGroups'] = function () {
-            return $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+            return $this->get('em')->getRepository(SettingGroup::class)
                 ->findBy(
                     ['inMenu' => true],
                     ['name' => 'ASC']

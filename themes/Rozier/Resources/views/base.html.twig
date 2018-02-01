@@ -27,6 +27,11 @@
 
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
         {% block customStyles %}{% endblock %}
+        {% if additionnalStylesheets %}
+            {% for additionnalStylesheet in additionnalStylesheets %}
+                <link rel="stylesheet" href="{{ additionnalStylesheet.path }}" />
+            {% endfor %}
+        {% endif %}
         <script src="{{ head.resourcesUrl }}/vendor/modernizr.custom.50380.js"></script>
     </head>
     <body>
@@ -93,7 +98,7 @@
             <modal-container></modal-container>
         </div>
 
-        <script type="text/javascript">
+        <script>
             var temp = {
                 'baseUrl':        '{{ head.baseUrl }}',
                 'resourcesUrl':   '{{ head.resourcesUrl }}',
@@ -239,5 +244,10 @@
         {% include '@Rozier/partials/js-inject.html.twig' %}
 
         {% block customScripts %}{% endblock %}
+        {% if additionnalScripts %}
+            {% for additionnalScript in additionnalScripts %}
+                <script src="{{ additionnalScript.path }}"></script>
+            {% endfor %}
+        {% endif %}
     </body>
 </html>

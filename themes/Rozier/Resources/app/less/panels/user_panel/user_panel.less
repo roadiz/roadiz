@@ -144,7 +144,7 @@
         display: block;
         width: @user-picture-size;
         height: @user-picture-size;
-        .rounded((@user-picture-size / 2)+5px);
+        .rounded(50%);
         border: 3px solid @user-panel-color;
         background: darken(@user-panel-color, 5%);
         overflow: hidden;
@@ -153,11 +153,10 @@
 
         img {
             object-fit: cover;
+            width: 100%;
             height: 100%;
-            max-width: @user-picture-size;
-            max-height: @user-picture-size;
+            .rounded(50%);
             border: 0 none;
-            .rounded(@user-picture-size / 2);
             background-color: #383838;
             .transition(~"width 1s ease, height 1s ease, border 1s ease");
 
@@ -230,13 +229,6 @@
         #user-picture {
             width: @user-picture-size-mini;
             height: @user-picture-size-mini;
-            .rounded((@user-picture-size / 2)+5px);
-
-            img {
-                width: @user-picture-size-mini;
-                height: @user-picture-size-mini;
-                .rounded(@user-picture-size-mini / 2);
-            }
         }
         .uk-icon-button {
             &.uk-icon-rz-flashimage{
