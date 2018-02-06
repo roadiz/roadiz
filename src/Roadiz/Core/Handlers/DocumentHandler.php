@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Handlers;
 use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\FolderRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -73,8 +74,8 @@ class DocumentHandler extends AbstractHandler
      */
     public function makePrivate()
     {
-        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativeUrl());
-        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativeUrl());
+        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativePath());
+        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativePath());
 
         if (!$this->document->isPrivate()) {
             $fs = new Filesystem();
@@ -116,8 +117,8 @@ class DocumentHandler extends AbstractHandler
      */
     public function makePublic()
     {
-        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativeUrl());
-        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativeUrl());
+        $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativePath());
+        $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativePath());
 
         if ($this->document->isPrivate()) {
             $fs = new Filesystem();
@@ -196,7 +197,7 @@ class DocumentHandler extends AbstractHandler
     public function getFolders(Translation $translation = null)
     {
         /** @var FolderRepository $repository */
-        $repository = $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Folder');
+        $repository = $this->objectManager->getRepository(Folder::class);
         if (null !== $translation) {
             return $repository->findByDocumentAndTranslation($this->document, $translation);
         }

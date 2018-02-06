@@ -253,7 +253,7 @@ abstract class Controller implements ContainerAwareInterface
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
         /** @var TranslationRepository $repository */
-        $repository = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Translation');
+        $repository = $this->get('em')->getRepository(Translation::class);
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
@@ -322,12 +322,8 @@ abstract class Controller implements ContainerAwareInterface
                     ['content-type' => 'text/html']
                 );
             }
+            $response->setContent($this->renderView($this->getNamespacedView($view, $namespace), $parameters));
 
-            if ($namespace !== "" && $namespace !== "/") {
-                $view = '@' . $namespace . '/' . $view;
-            }
-
-            $response->setContent($this->renderView($view, $parameters));
             return $response;
         } catch (\Twig_Error_Runtime $e) {
             if ($e->getPrevious() instanceof ForceResponseException) {
@@ -336,6 +332,20 @@ abstract class Controller implements ContainerAwareInterface
                 throw $e;
             }
         }
+    }
+
+    /**
+     * @param string $view
+     * @param string $namespace
+     * @return string
+     */
+    protected function getNamespacedView($view, $namespace = '')
+    {
+        if ($namespace !== "" && $namespace !== "/") {
+            return '@' . $namespace . '/' . $view;
+        }
+
+        return $view;
     }
 
     /**

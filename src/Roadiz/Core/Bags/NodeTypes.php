@@ -62,7 +62,7 @@ class NodeTypes extends ParameterBag
     public function getRepository()
     {
         if (null === $this->repository) {
-            $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeType');
+            $this->repository = $this->entityManager->getRepository(NodeType::class);
         }
         return $this->repository;
     }

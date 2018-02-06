@@ -37,10 +37,8 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 /**
  * Frontend controller to handle a page request.
@@ -123,9 +121,10 @@ abstract class FrontendController extends AppController
      * Default action for default URL (homepage).
      *
      * @param Request $request
-     * @param string|null                              $_locale
+     * @param string|null $_locale
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function homeAction(Request $request, $_locale = null)
     {
@@ -325,9 +324,9 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * Store basic informations for your theme from a Node object.
+     * Store basic information for your theme from a Node object.
      *
-     * @param Node        $node
+     * @param Node $node
      * @param Translation $translation
      *
      * @return void
@@ -349,7 +348,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * Store basic informations for your theme from a NodesSources object.
+     * Store basic information for your theme from a NodesSources object.
      *
      * @param NodesSources $nodeSource
      * @param Translation $translation
@@ -379,7 +378,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * Get SEO informations for current node.
+     * Get SEO information for current node.
      *
      * This method must return a 3-fields array with:
      *
@@ -419,6 +418,7 @@ abstract class FrontendController extends AppController
      * available even when no user has logged in.
      *
      * @param Container $container
+     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {

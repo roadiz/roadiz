@@ -32,6 +32,7 @@ namespace Themes\Rozier\Forms;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,48 +45,67 @@ class UserDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstName', TextType::class, [
-                    'label' => 'firstName',
-                    'required' => false,
-                ])
-                ->add('lastName', TextType::class, [
-                    'label' => 'lastName',
-                    'required' => false,
-                ])
-                ->add('phone', TextType::class, [
-                    'label' => 'phone',
-                    'required' => false,
-                ])
-                ->add('facebookName', TextType::class, [
-                    'label' => 'facebookName',
-                    'required' => false,
-                    'constraints' => [
-                        new ValidFacebookName(),
-                    ],
-                ])
-                ->add('company', TextType::class, [
-                    'label' => 'company',
-                    'required' => false,
-                ])
-                ->add('job', TextType::class, [
-                    'label' => 'job',
-                    'required' => false,
-                ])
-                ->add('birthday', DateType::class, [
-                    'label' => 'birthday',
-                    'placeholder' => [
-                        'year' => 'year',
-                        'month' => 'month',
-                        'day' => 'day'
-                    ],
-                    'required' => false,
-                    'years' => range(1920, date('Y') - 6),
-                    'widget' => 'single_text',
-                    'format' => 'yyyy-MM-dd',
-                    'attr' => [
-                        'class' => 'rz-datetime-field',
-                    ],
-                ]);
+        $builder
+            ->add('firstName', TextType::class, [
+                'label' => 'firstName',
+                'required' => false,
+            ])
+            ->add('lastName', TextType::class, [
+                'label' => 'lastName',
+                'required' => false,
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'phone',
+                'required' => false,
+            ])
+            ->add('facebookName', TextType::class, [
+                'label' => 'facebookName',
+                'required' => false,
+                'constraints' => [
+                    new ValidFacebookName(),
+                ],
+            ])
+            ->add('company', TextType::class, [
+                'label' => 'company',
+                'required' => false,
+            ])
+            ->add('job', TextType::class, [
+                'label' => 'job',
+                'required' => false,
+            ])
+            ->add('birthday', DateType::class, [
+                'label' => 'birthday',
+                'placeholder' => [
+                    'year' => 'year',
+                    'month' => 'month',
+                    'day' => 'day'
+                ],
+                'required' => false,
+                'years' => range(1920, date('Y') - 6),
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr' => [
+                    'class' => 'rz-datetime-field',
+                ],
+            ])
+            ->add('pictureUrl', TextType::class, [
+                'label' => 'pictureUrl',
+                'required' => false,
+            ])
+            ->add('locale', ChoiceType::class, [
+                'label' => 'user.backoffice.language',
+                'required' => false,
+                'choices' => [
+                    'English' => 'en',
+                    'Español' => 'es',
+                    'Français' => 'fr',
+                    'Русский язык' => 'ru',
+                    'Türkçe' => 'tr',
+                ],
+                'choices_as_values' => true,
+                'placeholder' => 'use.website.default_language'
+            ])
+        ;
     }
 
     public function getName()

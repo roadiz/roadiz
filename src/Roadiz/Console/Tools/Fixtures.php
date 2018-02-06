@@ -81,6 +81,7 @@ class Fixtures
 
     /**
      * @return void
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function installFixtures()
     {
@@ -170,8 +171,8 @@ class Fixtures
 
     /**
      * @param array $data
-     *
      * @return boolean
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function createDefaultUser($data)
     {

@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -244,51 +245,40 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         /** @var Font $font */
-        $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+        $font = $this->get('em')->find(Font::class, (int) $fontId);
 
         if ($font !== null) {
             // Prepare File
             $file = tempnam(sys_get_temp_dir(), "font_" . $font->getId());
             $zip = new \ZipArchive();
-            $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+            $zip->open($file, \ZipArchive::CREATE);
 
             /** @var Packages $packages */
             $packages = $this->get('assetPackages');
 
             if ("" != $font->getEOTFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getEOTFilename()), $font->getEOTFilename());
+                $zip->addFile($packages->getFontsPath($font->getEOTRelativeUrl()), $font->getEOTFilename());
             }
             if ("" != $font->getSVGFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getSVGFilename()), $font->getSVGFilename());
+                $zip->addFile($packages->getFontsPath($font->getSVGRelativeUrl()), $font->getSVGFilename());
             }
             if ("" != $font->getWOFFFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getWOFFFilename()), $font->getWOFFFilename());
+                $zip->addFile($packages->getFontsPath($font->getWOFFRelativeUrl()), $font->getWOFFFilename());
             }
             if ("" != $font->getWOFF2Filename()) {
-                $zip->addFile($packages->getFontsPath($font->getWOFF2Filename()), $font->getWOFF2Filename());
+                $zip->addFile($packages->getFontsPath($font->getWOFF2RelativeUrl()), $font->getWOFF2Filename());
             }
             if ("" != $font->getOTFFilename()) {
-                $zip->addFile($packages->getFontsPath($font->getOTFFilename()), $font->getOTFFilename());
+                $zip->addFile($packages->getFontsPath($font->getOTFRelativeUrl()), $font->getOTFFilename());
             }
             // Close and send to users
             $zip->close();
-
             $filename = StringHandler::slugify($font->getName() . ' ' . $font->getReadableVariant()) . '.zip';
 
-            $response = new Response(
-                file_get_contents($file),
-                Response::HTTP_OK,
-                [
-                    'content-control' => 'private',
-                    'content-type' => 'application/zip',
-                    'content-length' => filesize($file),
-                    'content-disposition' => 'attachment; filename=' . $filename,
-                ]
-            );
-            unlink($file);
-
-            return $response;
+            return new BinaryFileResponse($file, Response::HTTP_OK, [
+                'content-type' => 'application/zip',
+                'content-disposition' => 'attachment; filename=' . $filename,
+            ], false);
         }
 
         throw new ResourceNotFoundException();

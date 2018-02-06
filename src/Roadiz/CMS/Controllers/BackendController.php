@@ -47,6 +47,7 @@ abstract class BackendController extends AppController
      * Append objects to global container.
      *
      * @param Container $container
+     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {

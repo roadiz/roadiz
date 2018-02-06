@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
@@ -88,7 +89,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = InstallApp::class;
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.20.12";
+    public static $cmsVersion = "0.21.1";
 
     /**
      * @var Container|null
@@ -269,6 +270,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
         if (!$this->isInstallMode()) {
             $dispatcher->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
+            $dispatcher->addSubscriber(new UserLocaleSubscriber($this->container));
 
             if ($this->isPreview()) {
                 $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));

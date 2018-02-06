@@ -27,6 +27,7 @@
  * @file User.php
  * @author Ambroise Maupate
  */
+
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,7 +43,8 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Table(name="users", indexes={
  *     @ORM\Index(columns={"enabled"}),
  *     @ORM\Index(columns={"expired"}),
- *     @ORM\Index(columns={"expires_at"})
+ *     @ORM\Index(columns={"expires_at"}),
+ *     @ORM\Index(columns={"locale"})
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -62,14 +64,133 @@ class User extends AbstractHuman implements AdvancedUserInterface
     protected $sendCreationConfirmationEmail;
 
     /**
-     * Tells if we need Roadiz to send a default email
-     * when User will be persisted. Default: false.
-     *
-     * @return bool
+     * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
      */
-    public function willSendCreationConfirmationEmail()
+    protected $facebookName = null;
+
+    /**
+     * @ORM\Column(type="text", name="picture_url", nullable=true)
+     */
+    protected $pictureUrl = '';
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     */
+    protected $enabled = true;
+    /**
+     * @ORM\Column(name="confirmation_token", type="string", unique=true, nullable=true)
+     * @var string
+     */
+    protected $confirmationToken;
+    /**
+     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    protected $passwordRequestedAt;
+    /**
+     * @ORM\Column(type="string", unique=true)
+     * @var string
+     */
+    private $username;
+    /**
+     * The salt to use for hashing
+     *
+     * @ORM\Column(name="salt", type="string")
+     * @var string
+     */
+    private $salt;
+    /**
+     * Encrypted password.
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private $password;
+    /**
+     * Plain password. Used for model validation.
+     * **Must not be persisted.**
+     *
+     * @var string
+     */
+    private $plainPassword;
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="last_login", type="datetime", nullable=true)
+     */
+    private $lastLogin;
+    /**
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
+     * @ORM\JoinTable(name="users_roles",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
+     * )
+     */
+    private $roles;
+    /**
+     * Names of current User roles
+     * to be compatible with symfony security scheme
+     *
+     * @var array
+     */
+    private $rolesNames = null;
+    /**
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", inversedBy="users")
+     * @ORM\JoinTable(name="users_groups",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     * @var ArrayCollection
+     */
+    private $groups;
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     */
+    private $expired = false;
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     */
+    private $locked = false;
+    /**
+     * @ORM\Column(name="credentials_expires_at", type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    private $credentialsExpiresAt;
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean", name="credentials_expired", nullable=false, options={"default" = false})
+     */
+    private $credentialsExpired = false;
+    /**
+     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    private $expiresAt;
+    /**
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+     * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @var Node
+     */
+    private $chroot;
+
+    /**
+     * @var null|string
+     * @ORM\Column(name="locale", type="string", nullable=true, length=7)
+     */
+    private $locale = null;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        return $this->sendCreationConfirmationEmail;
+        $this->roles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->sendCreationConfirmationEmail(false);
+
+        $saltGenerator = new SaltGenerator();
+        $this->setSalt($saltGenerator->generateSalt());
     }
 
     /**
@@ -86,29 +207,14 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\Column(type="string", unique=true)
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @return string $username
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * @param string $username
+     * Tells if we need Roadiz to send a default email
+     * when User will be persisted. Default: false.
      *
-     * @return string $username
+     * @return bool
      */
-    public function setUsername($username)
+    public function willSendCreationConfirmationEmail()
     {
-        $this->username = $username;
-
-        return $this;
+        return $this->sendCreationConfirmationEmail;
     }
 
     /**
@@ -129,9 +235,24 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
+     * @return string $username
      */
-    protected $facebookName = null;
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     *
+     * @return string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
 
     /**
      * Get facebook profile name to grab public infos such as picture
@@ -156,11 +277,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\Column(type="text", name="picture_url")
-     */
-    protected $pictureUrl = '';
-
-    /**
      * @return string
      */
     public function getPictureUrl()
@@ -179,14 +295,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         return $this;
     }
-
-    /**
-     * The salt to use for hashing
-     *
-     * @ORM\Column(name="salt", type="string")
-     * @var string
-     */
-    private $salt;
 
     /**
      * @return string
@@ -209,13 +317,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * Encrypted password.
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private $password;
-
-    /**
      * @return string $password
      */
     public function getPassword()
@@ -233,14 +334,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
         $this->password = $password;
         return $this;
     }
-
-    /**
-     * Plain password. Used for model validation.
-     * **Must not be persisted.**
-     *
-     * @var string
-     */
-    private $plainPassword;
 
     /**
      * @return string $plainPassword
@@ -267,45 +360,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @var boolean
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
-     */
-    protected $enabled = true;
-
-    /**
-     * Checks whether the user is enabled.
-     *
-     * Internally, if this method returns false, the authentication system
-     * will throw a DisabledException and prevent login.
-     *
-     * @return bool true if the user is enabled, false otherwise
-     *
-     * @see DisabledException
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * @param boolean $enabled
-     *
-     * @return User
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = (boolean) $enabled;
-
-        return $this;
-    }
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="last_login", type="datetime", nullable=true)
-     */
-    private $lastLogin;
-
-    /**
      * @return \DateTime $lastLogin
      */
     public function getLastLogin()
@@ -324,12 +378,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         return $this;
     }
-
-    /**
-     * @ORM\Column(name="confirmation_token", type="string", unique=true, nullable=true)
-     * @var string
-     */
-    protected $confirmationToken;
 
     /**
      * Get random string sent to the user email address in order to verify it.
@@ -355,10 +403,27 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
-     * @var \DateTime
+     * Check if password reset request has expired.
+     *
+     * @param  int $ttl Password request time to live.
+     *
+     * @return boolean
      */
-    protected $passwordRequestedAt;
+    public function isPasswordRequestNonExpired($ttl)
+    {
+        return $this->getPasswordRequestedAt() instanceof \DateTime &&
+            $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
+    /**
+     * Gets the timestamp that the user requested a password reset.
+     *
+     * @return null|\DateTime
+     */
+    public function getPasswordRequestedAt()
+    {
+        return $this->passwordRequestedAt;
+    }
 
     /**
      * Sets the timestamp that the user requested a password reset.
@@ -372,82 +437,10 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         return $this;
     }
-    /**
-     * Gets the timestamp that the user requested a password reset.
-     *
-     * @return null|\DateTime
-     */
-    public function getPasswordRequestedAt()
-    {
-        return $this->passwordRequestedAt;
-    }
-
-    /**
-     * Check if password reset request has expired.
-     *
-     * @param  int $ttl Password request time to live.
-     *
-     * @return boolean
-     */
-    public function isPasswordRequestNonExpired($ttl)
-    {
-        return $this->getPasswordRequestedAt() instanceof \DateTime &&
-        $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
-    }
-
-    /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
-     * @ORM\JoinTable(name="users_roles",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
-     */
-    private $roles;
-
-    /**
-     * Names of current User roles
-     * to be compatible with symfony security scheme
-     * @var array
-     */
-    private $rolesNames = null;
-
-    /**
-     * Get roles entities
-     * @return ArrayCollection
-     */
-    public function getRolesEntities()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * Get roles names as a simple array, combining groups roles.
-     *
-     * @return array
-     */
-    public function getRoles()
-    {
-        $this->rolesNames = [];
-        foreach ($this->getRolesEntities() as $role) {
-            if (null !== $role) {
-                $this->rolesNames[] = $role->getName();
-            }
-        }
-
-        foreach ($this->getGroups() as $group) {
-            // User roles > Groups roles
-            $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
-        }
-
-        // we need to make sure to have at least one role
-        $this->rolesNames[] = Role::ROLE_DEFAULT;
-        $this->rolesNames = array_unique($this->rolesNames);
-
-        return $this->rolesNames;
-    }
 
     /**
      * Add a role object to current user.
+     *
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
@@ -462,7 +455,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
+     * Get roles entities
+     *
+     * @return ArrayCollection
+     */
+    public function getRolesEntities()
+    {
+        return $this->roles;
+    }
+
+    /**
      * Remove role from current user.
+     *
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
@@ -487,25 +491,8 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     * @var ArrayCollection
-     */
-    private $groups;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
      * Insert user into group.
+     *
      * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
@@ -520,8 +507,17 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
      * Remove user from group
-     * @param \RZ\Roadiz\Core\Entities\Group  $group
+     *
+     * @param \RZ\Roadiz\Core\Entities\Group $group
      *
      * @return $this
      */
@@ -548,12 +544,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         return $names;
     }
-
-    /**
-     * @var boolean
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     */
-    private $expired = false;
 
     /**
      * Return strictly forced expiration status.
@@ -599,12 +589,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @var boolean
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     */
-    private $locked = false;
-
-    /**
      * Checks whether the user is locked.
      *
      * Internally, if this method returns false, the authentication system
@@ -621,7 +605,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
     public function setLocked($locked)
     {
-        $this->locked = (boolean) $locked;
+        $this->locked = (boolean)$locked;
 
         return $this;
     }
@@ -642,10 +626,12 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\Column(name="credentials_expires_at", type="datetime", nullable=true)
-     * @var \DateTime
+     * @return \DateTime
      */
-    private $credentialsExpiresAt;
+    public function getCredentialsExpiresAt()
+    {
+        return $this->credentialsExpiresAt;
+    }
 
     /**
      * @param \DateTime $date
@@ -658,20 +644,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCredentialsExpiresAt()
-    {
-        return $this->credentialsExpiresAt;
-    }
-
-    /**
-     * @var boolean
-     * @ORM\Column(type="boolean", name="credentials_expired", nullable=false, options={"default" = false})
-     */
-    private $credentialsExpired = false;
 
     /**
      * Return strictly forced credentials expiration status.
@@ -690,6 +662,95 @@ class User extends AbstractHuman implements AdvancedUserInterface
     public function setCredentialsExpired($newcredentialsExpired)
     {
         $this->credentialsExpired = $newcredentialsExpired;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return User
+     */
+    public function setExpiresAt(\DateTime $date = null)
+    {
+        $this->expiresAt = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return Node
+     */
+    public function getChroot()
+    {
+        return $this->chroot;
+    }
+
+    /**
+     * @param Node $chroot
+     * @return User
+     */
+    public function setChroot(Node $chroot = null)
+    {
+        $this->chroot = $chroot;
+
+        return $this;
+    }
+
+    /**
+     * Get prototype abstract gravatar url.
+     *
+     * @return string
+     */
+    public function getGravatarUrl()
+    {
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200";
+    }
+
+    /**
+     * @return string $text
+     */
+    public function __toString()
+    {
+        $text = $this->getUsername() . ' <' . $this->getEmail() . '>' . PHP_EOL;
+        $text .= '— Enabled: ' . ($this->isEnabled() ? 'Yes' : 'No') . PHP_EOL;
+        $text .= '— Expired: ' . ($this->isCredentialsNonExpired() ? 'No' : 'Yes') . PHP_EOL;
+        $text .= "— Roles: " . implode(', ', $this->getRoles());
+
+        return $text;
+    }
+
+    /**
+     * Checks whether the user is enabled.
+     *
+     * Internally, if this method returns false, the authentication system
+     * will throw a DisabledException and prevent login.
+     *
+     * @return bool true if the user is enabled, false otherwise
+     *
+     * @see DisabledException
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param boolean $enabled
+     *
+     * @return User
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = (boolean)$enabled;
 
         return $this;
     }
@@ -717,91 +778,48 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
-     * @var \DateTime
+     * Get roles names as a simple array, combining groups roles.
+     *
+     * @return array
      */
-    private $expiresAt;
+    public function getRoles()
+    {
+        $this->rolesNames = [];
+        foreach ($this->getRolesEntities() as $role) {
+            if (null !== $role) {
+                $this->rolesNames[] = $role->getName();
+            }
+        }
+
+        foreach ($this->getGroups() as $group) {
+            if ($group instanceof Group) {
+                // User roles > Groups roles
+                $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+            }
+        }
+
+        // we need to make sure to have at least one role
+        $this->rolesNames[] = Role::ROLE_DEFAULT;
+        $this->rolesNames = array_unique($this->rolesNames);
+
+        return $this->rolesNames;
+    }
 
     /**
-     * @param \DateTime $date
-     *
+     * @return null|string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param null|string $locale
      * @return User
      */
-    public function setExpiresAt(\DateTime $date = null)
+    public function setLocale($locale)
     {
-        $this->expiresAt = $date;
-
+        $this->locale = $locale;
         return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getExpiresAt()
-    {
-        return $this->expiresAt;
-    }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
-     * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @var Node
-     */
-    private $chroot;
-
-    /**
-     * @param Node $chroot
-     * @return User
-     */
-    public function setChroot(Node $chroot = null)
-    {
-        $this->chroot = $chroot;
-
-        return $this;
-    }
-
-    /**
-     * @return Node
-     */
-    public function getChroot()
-    {
-        return $this->chroot;
-    }
-
-    /**
-     * Get prototype abstract gravatar url.
-     *
-     * @return string
-     */
-    public function getGravatarUrl()
-    {
-        return "//www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200";
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->roles = new ArrayCollection();
-        $this->groups = new ArrayCollection();
-        $this->sendCreationConfirmationEmail(false);
-
-        $saltGenerator = new SaltGenerator();
-        $this->setSalt($saltGenerator->generateSalt());
-    }
-
-    /**
-     * @return string $text
-     */
-    public function __toString()
-    {
-        $text = $this->getUsername() . ' <' . $this->getEmail() . '>' . PHP_EOL;
-        $text .= '— Enabled: ' . ($this->isEnabled() ? 'Yes' : 'No') . PHP_EOL;
-        $text .= '— Expired: ' . ($this->isCredentialsNonExpired() ? 'No' : 'Yes') . PHP_EOL;
-        $text .= "— Roles: " . implode(', ', $this->getRoles());
-
-        return $text;
     }
 }

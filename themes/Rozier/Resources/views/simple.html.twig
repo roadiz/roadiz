@@ -26,16 +26,17 @@
         <link rel="icon" type="image/png" href="{{ head.resourcesUrl }}img/favicon-32x32.png" sizes="32x32" />
         <meta name="msapplication-TileImage" content="{{ head.resourcesUrl }}img/mstile-144x144.png" />
 
-        {% for cssMin in themeServices.grunt.staticAssets.global.css %}
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ cssMin }}" />
-        {% endfor %}
+
+        {# CSS scripts inclusions / Using webpack #}
+        {% include '@Rozier/partials/css-inject.html.twig' %}
+
         <style>
             /* Login */
             #login #login-infos #login-logo{
                 background-color:{{ head.mainColor }};
             }
         </style>
-        <script src="{{ head.resourcesUrl }}js/vendor/modernizr.custom.50380.js"></script>
+        <script src="{{ head.resourcesUrl }}vendor/modernizr.custom.50380.js"></script>
     </head>
     <body id="simple-body">
         {% include '@Rozier/includes/messages.html.twig' %}
@@ -49,22 +50,25 @@
             </div>
         </div>
         <!-- ##debug_panel## -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
-        <script src="{{ head.resourcesUrl }}js/vendor/jquery-ui.custom.js"></script>
         <script>
-            var splashRequest = "{{ path('loginImagePage') }}";
+            var temp = {
+                routes: {
+                    splashRequest: "{{ path('loginImagePage') }}"
+                }
+            }
+
+            var RozierRoot = temp;
         </script>
 
-        {# Switch `backDevMode` in RozierApp.php and make sure you run `bower install` #}
-        {% if head.backDevMode %}
-        <script src="{{ head.resourcesUrl }}bower_components/uikit/js/uikit.js"></script>
-        <script src="{{ head.resourcesUrl }}js/login/login.js"></script>
+        {% if head.devMode %}
+            <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
         {% else %}
-        {% for jsMin in themeServices.grunt.staticAssets.simple.js %}
-        <script src="{{ head.resourcesUrl }}public{{ jsMin }}"></script>
-        {% endfor %}
+            <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.js"></script>
         {% endif %}
+
+        {# JS scripts inclusions / Using webpack #}
+        {% include '@Rozier/partials/simple-js-inject.html.twig' %}
+
         {% block customScripts %}{% endblock %}
     </body>
 </html>

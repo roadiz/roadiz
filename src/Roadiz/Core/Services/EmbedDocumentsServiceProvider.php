@@ -31,6 +31,10 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\VimeoEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 
 /**
  * Register Embed documents services for dependency injection container.
@@ -50,12 +54,32 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
     {
         $container['document.platforms'] = function () {
             return [
-                'youtube' =>     '\RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder',
-                'vimeo' =>       '\RZ\Roadiz\Utils\MediaFinders\VimeoEmbedFinder',
-                'dailymotion' => '\RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder',
-                'soundcloud' =>  '\RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder'
+                'youtube' =>     YoutubeEmbedFinder::class,
+                'vimeo' =>       VimeoEmbedFinder::class,
+                'dailymotion' => DailymotionEmbedFinder::class,
+                'soundcloud' =>  SoundcloudEmbedFinder::class
             ];
         };
+
+        $container['embed_finder.youtube'] = $container->factory(function ($c) {
+            $finder = new YoutubeEmbedFinder('', false);
+            $finder->setKey($c['settingsBag']->get('google_server_id'));
+            return $finder;
+        });
+
+        $container['embed_finder.vimeo'] = $container->factory(function () {
+            return new VimeoEmbedFinder('', false);
+        });
+
+        $container['embed_finder.dailymotion'] = $container->factory(function () {
+            return new DailymotionEmbedFinder('', false);
+        });
+
+        $container['embed_finder.soundcloud'] = $container->factory(function ($c) {
+            $finder = new SoundcloudEmbedFinder('', false);
+            $finder->setKey($c['settingsBag']->get('soundcloud_client_id'));
+            return $finder;
+        });
 
         return $container;
     }

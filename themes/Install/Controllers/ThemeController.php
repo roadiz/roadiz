@@ -46,13 +46,14 @@ class ThemeController extends InstallApp
      * Import theme screen.
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function importThemeAction(Request $request, $id)
     {
-        /** @var Theme $result */
+        /** @var Theme|null $result */
         $result = $this->get('em')->find(Theme::class, $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
@@ -96,6 +97,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function themeSummaryAction(Request $request)
     {
@@ -110,6 +112,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function themesAction(Request $request)
     {
@@ -120,7 +123,7 @@ class ThemeController extends InstallApp
 
             if ($infosForm->isValid()) {
                 /*
-                 * Save informations
+                 * Save information
                  */
                 try {
                     /** @var Kernel $kernel */

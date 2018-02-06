@@ -1,6 +1,6 @@
 {
   "name": "install-theme",
-  "version": "0.17.0",
+  "version": "0.21.0",
   "scripts": {
       "build": "NODE_ENV=production grunt",
       "dev": "grunt watch"

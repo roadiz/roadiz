@@ -6701,6 +6701,21 @@
             <target xml:lang="fr" state="translated">Relation multiple via un provider</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target xml:lang="fr" state="translated">Url de l’image d’avatar</target>
+            <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="user.backoffice.language">
+            <source>user.backoffice.language</source>
+            <target xml:lang="fr" state="translated">Langue du back-office</target>
+            <note>User detail form field label for user backoffice language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use.website.default_language">
+            <source>use.website.default_language</source>
+            <target xml:lang="fr" state="translated">-- Utiliser la langue par défaut --</target>
+            <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

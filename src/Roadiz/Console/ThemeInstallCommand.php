@@ -40,7 +40,6 @@ use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,16 +50,12 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Command line utils for managing themes from terminal.
  */
-class ThemeInstallCommand extends Command
+class ThemeInstallCommand extends ThemesCommand
 {
     /**
      * @var string
      */
     private $themeRoot;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
 
     /**
      * @var bool
@@ -127,6 +122,10 @@ class ThemeInstallCommand extends Command
         $output->writeln($text);
     }
 
+    /**
+     * @param string $classname
+     * @param $text
+     */
     protected function importThemeData($classname, &$text)
     {
         $data = $this->getThemeConfig();
@@ -236,6 +235,10 @@ class ThemeInstallCommand extends Command
         return Yaml::parse(file_get_contents($this->themeRoot . "/config.yml"));
     }
 
+    /**
+     * @param string $classname
+     * @param $text
+     */
     protected function importTheme($classname, &$text)
     {
         /** @var Kernel $kernel */

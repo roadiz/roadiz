@@ -63,7 +63,6 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
         $resolver->setAllowedTypes('container', [Container::class]);
     }
 
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options

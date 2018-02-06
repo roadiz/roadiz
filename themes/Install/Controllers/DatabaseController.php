@@ -57,6 +57,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function databaseAction(Request $request)
     {
@@ -129,6 +130,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -178,6 +180,8 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Twig_Error_Runtime
      */
     public function databaseFixturesAction(Request $request)
     {
@@ -249,7 +253,8 @@ class DatabaseController extends InstallApp
                     'pdo_pgsql' => 'pdo_pgsql',
                     'pdo_sqlite' => 'pdo_sqlite',
                 ],
-                'label' => 'driver',
+                'choices_as_values' => true,
+                'label' => $this->getTranslator()->trans('driver'),
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -314,7 +319,8 @@ class DatabaseController extends InstallApp
                     "autocomplete" => "off",
                     'id' => 'dbname',
                 ],
-            ]);
+            ])
+        ;
 
         return $builder->getForm();
     }

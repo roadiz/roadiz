@@ -56,6 +56,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Themes\Install\Forms\UserType;
 
+
 /**
  * Installation application
  */
@@ -355,6 +356,7 @@ class InstallApp extends AppController
                 'choices_as_values' => true,
                 'choices' => [
                     'English' => 'en',
+                    'Español' => 'es',
                     'Français' => 'fr',
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
@@ -426,7 +428,7 @@ class InstallApp extends AppController
             ->add('timezone', ChoiceType::class, [
                 'choices_as_values' => true,
                 'choices' => $timeZoneList,
-                'label' => 'timezone',
+                'label' => $this->getTranslator()->trans('timezone'),
                 'required' => true,
             ])
             ->add('separator_1', SeparatorType::class, [
@@ -437,22 +439,16 @@ class InstallApp extends AppController
                 'label' => $this->getTranslator()->trans('install_theme'),
                 'data' => true,
             ])
-            ->add(
-                'className',
-                ThemesType::class,
-                [
-                    'label' => $this->getTranslator()->trans('theme.selector'),
-                    'required' => true,
-                    'constraints' => [
-                        new NotNull(),
-                        new Type('string'),
-                    ],
-                    'entityManager' => $this->get('em'),
-                ]
-            )
+            ->add('className', ThemesType::class, [
+                'label' => $this->getTranslator()->trans('theme.selector'),
+                'required' => true,
+                'constraints' => [
+                    new NotNull(),
+                    new Type('string'),
+                ],
+                'entityManager' => $this->get('em'),
+            ])
         ;
-
-
         return $builder->getForm();
     }
 
