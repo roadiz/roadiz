@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
+use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -160,9 +161,11 @@ class UsersSecurityController extends RozierApp
         if ($this->isGranted("ROLE_SUPERADMIN")) {
             $n = $user->getChroot();
             $n = ($n !== null) ? [$n] : [];
-            $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n, $this->get('em')), [
+            $builder->add('chroot', NodesType::class, [
                 'label' => 'chroot',
                 'required' => false,
+                'nodes' => $n,
+                'entityManager' => $this->get('em'),
             ]);
         }
 

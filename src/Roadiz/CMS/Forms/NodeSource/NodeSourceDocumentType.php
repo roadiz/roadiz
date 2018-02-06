@@ -127,6 +127,9 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
 
     /**
      * @param FormEvent $event
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function onPostSubmit(FormEvent $event)
     {

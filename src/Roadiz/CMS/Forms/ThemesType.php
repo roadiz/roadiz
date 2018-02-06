@@ -88,7 +88,7 @@ class ThemesType extends AbstractType
                  * Parsed file is not or does not contain any PHP Class
                  * Bad Theme !
                  */
-                if (!in_array($classname, $existingThemes)) {
+                if (!in_array($classname, $existingThemes) && !in_array(substr($classname, 1), $existingThemes)) {
                     $choices[$data['name']] = $classname;
                 }
             }

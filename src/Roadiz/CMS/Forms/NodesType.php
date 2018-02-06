@@ -36,8 +36,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Node selector and uploader form field type.
@@ -50,61 +48,21 @@ class NodesType extends AbstractType
     /**
      * {@inheritdoc}
      *
-     * @param array $nodes Array of Node instances
-     */
-    public function __construct(array $nodes, EntityManager $em)
-    {
-        $this->selectedNodes = $nodes;
-        $this->entityManager = $em;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $callback = function ($object, ExecutionContextInterface $context) {
-
-            if (is_array($object)) {
-                $nodes = $this->entityManager
-                    ->getRepository(Node::class)
-                    ->setDisplayingNotPublishedNodes(true)
-                    ->findBy(['id' => $object]);
-
-                foreach (array_values($object) as $key => $value) {
-                    // Vérifie si le nom est bidon
-                    if (null !== $value &&
-                        isset($nodes[$key]) &&
-                        null === $nodes[$key]) {
-                        $context->buildViolation('Node #{{ value }} does not exists.')
-                            ->atPath(null)
-                            ->setParameter('{{ value }}', $value)
-                            ->addViolation();
-                    }
-                }
-            } else {
-                $node = $this->entityManager->find(Node::class, (int) $object);
-
-                // Vérifie si le nom est bidon
-                if (null !== $object && null === $node) {
-                    $context->buildViolation('Node #{{ value }} does not exists.')
-                        ->atPath(null)
-                        ->setParameter('{{ value }}', $object)
-                        ->addViolation();
-                }
-            }
-        };
-
         $resolver->setDefaults([
             'class' => Node::class,
             'multiple' => true,
             'property' => 'id',
-            'constraints' => [
-                new Callback($callback),
-            ],
+            'nodes' => [],
         ]);
+
+        $resolver->setRequired([
+            'entityManager'
+        ]);
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
     }
 
     /**
@@ -121,7 +79,7 @@ class NodesType extends AbstractType
         /*
          * Inject data as plain nodes entities
          */
-        $view->vars['data'] = $this->selectedNodes;
+        $view->vars['data'] = $options['nodes'];
     }
     /**
      * {@inheritdoc}

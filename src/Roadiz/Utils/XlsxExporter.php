@@ -30,6 +30,10 @@
 namespace RZ\Roadiz\Utils;
 
 use Doctrine\Common\Collections\Collection;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\Translation\Translator;
 
 class XlsxExporter
@@ -52,27 +56,21 @@ class XlsxExporter
      * Export an array of data to XLSX format.
      *
      * @param  \IteratorAggregate|array $data
-     * @param  array  $keys
+     * @param  array $keys
      * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportXlsx($data, $keys = [])
     {
-        // Create new PHPExcel object
-        $objPHPExcel = new \PHPExcel();
+        $spreadsheet = new Spreadsheet();
 
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Roadiz CMS")
+        $spreadsheet->getProperties()->setCreator("Roadiz CMS")
             ->setLastModifiedBy("Roadiz CMS")
             ->setCategory("");
 
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-        $cacheSettings = [
-            'memoryCacheSize' => '8MB',
-        ];
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-
-        $objPHPExcel->setActiveSheetIndex(0);
-        $activeSheet = $objPHPExcel->getActiveSheet();
+        $spreadsheet->setActiveSheetIndex(0);
+        $activeSheet = $spreadsheet->getActiveSheet();
         $activeRow = 1;
         $hasGlobalHeader = false;
 
@@ -91,7 +89,7 @@ class XlsxExporter
          */
         if (count($keys) > 0) {
             foreach ($keys as $key => $value) {
-                $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
+                $columnAlpha = Coordinate::stringFromColumnIndex($key);
                 $activeSheet->getStyle($columnAlpha . ($activeRow))->applyFromArray($headerStyles);
                 $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
             }
@@ -110,7 +108,7 @@ class XlsxExporter
                 $headerkeys != array_keys($answer)) {
                 $headerkeys = array_keys($answer);
                 foreach ($headerkeys as $key => $value) {
-                    $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($key);
+                    $columnAlpha = Coordinate::stringFromColumnIndex($key);
                     $activeSheet->getStyle($columnAlpha . $activeRow)->applyFromArray($headerStyles);
                     $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
                 }
@@ -122,7 +120,7 @@ class XlsxExporter
              */
             $answer = array_values($answer);
             foreach ($answer as $k => $value) {
-                $columnAlpha = \PHPExcel_Cell::stringFromColumnIndex($k);
+                $columnAlpha = Coordinate::stringFromColumnIndex($k);
 
                 if ($value instanceof Collection ||
                     is_array($value)) {
@@ -130,7 +128,7 @@ class XlsxExporter
                 }
 
                 if ($value instanceof \DateTime) {
-                    $value = \PHPExcel_Shared_Date::PHPToExcel($value);
+                    $value = Date::PHPToExcel($value);
                     $activeSheet->getStyle($columnAlpha . ($activeRow))
                         ->getNumberFormat()
                         ->setFormatCode('dd.mm.yyyy hh:MM:ss');
@@ -148,17 +146,17 @@ class XlsxExporter
         /*
          * autosize
          */
-        foreach (range('A', $objPHPExcel->getActiveSheet()->getHighestDataColumn()) as $col) {
-            $objPHPExcel->getActiveSheet()
+        foreach (range('A', $spreadsheet->getActiveSheet()->getHighestDataColumn()) as $col) {
+            $spreadsheet->getActiveSheet()
                     ->getColumnDimension($col)
                     ->setWidth(50);
         }
 
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $writer = new Xlsx($spreadsheet);
         ob_start();
-        $objWriter->save('php://output');
+        $writer->save('php://output');
         return ob_get_clean();
     }
 }

@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -55,15 +56,16 @@ class ThemesController extends RozierApp
      * Import theme screen.
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function importAction(Request $request, $id)
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $result = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+        $result = $this->get('em')->find(Theme::class, $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
@@ -98,6 +100,7 @@ class ThemesController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -280,9 +283,7 @@ class ThemesController extends RozierApp
         /*
          * See if its possible to prepend field instead of adding it
          */
-        $builder->add(
-            'className',
-            ThemesType::class,
+        $builder->add('className', ThemesType::class,
             [
                 'label' => 'themeClass',
                 'required' => true,
@@ -378,9 +379,11 @@ class ThemesController extends RozierApp
 
         $d = ($n !== null) ? [$n] : [];
 
-        $builder->add('homeNode', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->get('em')), [
+        $builder->add('homeNode', NodesType::class, [
             'label' => 'homeNode',
             'required' => false,
+            'entityManager' => $this->get('em'),
+            'nodes' => $d,
             'attr' => [
                 'data-nodetypes' => '',
             ],
@@ -388,9 +391,11 @@ class ThemesController extends RozierApp
 
         $d = ($r !== null) ? [$r] : [];
 
-        $builder->add('root', new \RZ\Roadiz\CMS\Forms\NodesType($d, $this->get('em')), [
+        $builder->add('root', NodesType::class, [
             'label' => 'themeRoot',
             'required' => false,
+            'entityManager' => $this->get('em'),
+            'nodes' => $d,
             'attr' => [
                 'data-nodetypes' => '',
             ],

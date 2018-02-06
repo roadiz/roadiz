@@ -37,8 +37,10 @@ use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -136,7 +138,7 @@ class SearchController extends RozierApp
         if (isset($data["tags"])) {
             $data["tags"] = array_map('trim', explode(',', $data["tags"]));
             foreach ($data["tags"] as $key => $value) {
-                $data["tags"][$key] = $this->get("em")->getRepository('RZ\Roadiz\Core\Entities\Tag')->findByPath($value);
+                $data["tags"][$key] = $this->get("em")->getRepository(Tag::class)->findByPath($value);
             }
             array_filter($data["tags"]);
         }
@@ -222,7 +224,7 @@ class SearchController extends RozierApp
             }
             $data = $this->processCriteria($data);
             $listManager = $this->createEntityListManager(
-                'RZ\Roadiz\Core\Entities\Node',
+                Node::class,
                 $data
             );
             $listManager->setDisplayingNotPublishedNodes(true);
@@ -250,11 +252,11 @@ class SearchController extends RozierApp
      * @param $nodetypeId
      * @return null|\Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Twig_Error_Runtime
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function searchNodeSourceAction(Request $request, $nodetypeId)
     {
-        $nodetype = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', $nodetypeId);
+        $nodetype = $this->get('em')->find(NodeType::class, $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
         $this->extendForm($builder, $nodetype);
@@ -327,7 +329,6 @@ class SearchController extends RozierApp
                 'class' => 'uk-button uk-button-primary',
             ]
         ])->add('export', SubmitType::class, [
-            'disabled' => true,
             'label' => 'export.all.nodesSource',
             'attr' => [
                 'class' => 'uk-button rz-no-ajax',
@@ -362,6 +363,7 @@ class SearchController extends RozierApp
      * @param Form $form
      * @param NodeType $nodetype
      * @return null|Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     protected function handleNodeForm(Form $form, NodeType $nodetype)
     {
@@ -431,10 +433,11 @@ class SearchController extends RozierApp
 
     /**
      * @param NodeType $nodetype
-     * @param array $entities
+     * @param array|\IteratorAggregate $entities
      * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    protected function getXlsxResults(NodeType $nodetype, array $entities = [])
+    protected function getXlsxResults(NodeType $nodetype, $entities)
     {
         $fields = $nodetype->getFields();
         $keys = [];

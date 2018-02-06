@@ -33,7 +33,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -44,20 +43,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class RecaptchaType extends AbstractType
 {
-    /**
-     * @var array
-     */
-    protected $options = array();
-
-    /**
-     * Construct
-     *
-     * @param array $options
-     */
-    public function __construct(array $options = [])
-    {
-        $this->options = $options;
-    }
 
     /**
      * (non-PHPdoc)
@@ -77,19 +62,11 @@ class RecaptchaType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $defaultConfigs = $this->options;
-
         $resolver->setDefaults(array(
-            'configs' => $defaultConfigs,
+            'configs' => [
+                'publicKey' => ''
+            ],
         ));
-
-        $resolver->setNormalizer(
-            'configs',
-            function (Options $options, $value) use ($defaultConfigs) {
-                $configs = array_replace_recursive($defaultConfigs, $value);
-                return $configs;
-            }
-        );
     }
 
     /**

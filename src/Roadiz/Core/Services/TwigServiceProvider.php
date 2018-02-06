@@ -51,8 +51,8 @@ use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
@@ -144,8 +144,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $csrfManager = $c['csrfTokenManager'];
 
             $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
-                TwigRenderer::class => function () use ($formEngine, $csrfManager) {
-                    return new TwigRenderer($formEngine, $csrfManager);
+                FormRenderer::class => function () use ($formEngine, $csrfManager) {
+                    return new FormRenderer($formEngine, $csrfManager);
                 },
             ]));
 

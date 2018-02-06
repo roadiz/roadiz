@@ -209,7 +209,7 @@ class ContactFormManager extends EmailManager
 
         if (!empty($publicKey) &&
             !empty($privateKey)) {
-            $this->formBuilder->add('recaptcha', new RecaptchaType(), [
+            $this->formBuilder->add('recaptcha', RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $publicKey,
@@ -230,6 +230,7 @@ class ContactFormManager extends EmailManager
      * Handle custom form validation and send it as an email.
      *
      * @return Response|null
+     * @throws BadFormRequestException
      */
     public function handle()
     {
