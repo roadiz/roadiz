@@ -84,7 +84,7 @@ $kernel->container['request'] = $request;
 
 $clearers = [
     // PROD
-    new AssetsClearer($kernel->getCacheDir()),
+    new AssetsClearer($kernel->getPublicCachePath()),
     new RoutingCacheClearer($kernel->getCacheDir()),
     new TemplatesCacheClearer($kernel->getCacheDir()),
     new TranslationsCacheClearer($kernel->getCacheDir()),

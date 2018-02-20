@@ -69,10 +69,10 @@ class AjaxNodeTreeController extends AbstractAjaxController
             case 'requestNodeTree':
                 if ($request->get('parentNodeId') > 0) {
                     $node = $this->get('em')
-                                 ->find(
-                                     '\RZ\Roadiz\Core\Entities\Node',
-                                     (int) $request->get('parentNodeId')
-                                 );
+                                ->find(
+                                    '\RZ\Roadiz\Core\Entities\Node',
+                                    (int) $request->get('parentNodeId')
+                                );
                 } elseif (null !== $this->getUser()) {
                     $node = $this->getUser()->getChroot();
                 } else {

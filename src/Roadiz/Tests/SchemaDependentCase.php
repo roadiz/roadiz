@@ -91,7 +91,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
         $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
         $clearers = [
             // PROD
-            new AssetsClearer($kernel->getCacheDir()),
+            new AssetsClearer($kernel->getPublicCachePath()),
             new RoutingCacheClearer($kernel->getCacheDir()),
             new TemplatesCacheClearer($kernel->getCacheDir()),
             new TranslationsCacheClearer($kernel->getCacheDir()),

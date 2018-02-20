@@ -88,7 +88,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = InstallApp::class;
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.21.1";
+    public static $cmsVersion = "0.21.2";
 
     /**
      * @var Container|null
@@ -554,6 +554,22 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function getPublicFilesBasePath()
     {
         return '/files';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPublicCachePath()
+    {
+        return $this->getPublicDir() . $this->getPublicCacheBasePath();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPublicCacheBasePath()
+    {
+        return '/assets';
     }
 
     /**

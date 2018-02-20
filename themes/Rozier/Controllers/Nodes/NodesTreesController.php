@@ -87,10 +87,10 @@ class NodesTreesController extends RozierApp
         if ($request->get('tagId') &&
             $request->get('tagId') > 0) {
             $filterTag = $this->get('em')
-                              ->find(
-                                  '\RZ\Roadiz\Core\Entities\Tag',
-                                  (int) $request->get('tagId')
-                              );
+                            ->find(
+                                '\RZ\Roadiz\Core\Entities\Tag',
+                                (int) $request->get('tagId')
+                            );
 
             $this->assignation['filterTag'] = $filterTag;
 

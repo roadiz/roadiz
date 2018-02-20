@@ -62,10 +62,10 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         if ($request->get('folderId') > 0) {
             $folder = $this->get('em')
-                           ->find(
-                               'RZ\Roadiz\Core\Entities\Folder',
-                               $request->get('folderId')
-                           );
+                        ->find(
+                            'RZ\Roadiz\Core\Entities\Folder',
+                            $request->get('folderId')
+                        );
 
             $arrayFilter['folders'] = [$folder];
         }
