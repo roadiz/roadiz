@@ -83,13 +83,13 @@ class TagTreeWidget extends AbstractWidget
 
         $this->tags = $this->getController()->get('em')
              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
-             ->findBy(
-                 [
+            ->findBy(
+                [
                      'parent' => $this->parentTag,
                      'translation' => $this->translation,
                  ],
-                 $ordering
-             );
+                $ordering
+            );
     }
 
     /**
