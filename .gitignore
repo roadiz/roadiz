@@ -6,6 +6,7 @@
 /install.php
 /clear_cache.php
 /pimple.json
+/assets
 
 # Ignore Google webmaster tool verification
 /google*.html

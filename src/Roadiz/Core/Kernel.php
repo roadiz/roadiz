@@ -557,6 +557,22 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getPublicCachePath()
+    {
+        return $this->getPublicDir() . $this->getPublicCacheBasePath();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPublicCacheBasePath()
+    {
+        return '/assets';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getPrivateFilesPath()

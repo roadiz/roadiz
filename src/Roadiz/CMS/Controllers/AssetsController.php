@@ -68,6 +68,7 @@ class AssetsController extends CmsController
              * Handle short url with Url rewriting
              */
             $expander = new ShortUrlExpander($request);
+            $expander->setIgnorePath($this->get('kernel')->getPublicCacheBasePath());
             $expander->injectParamsToRequest($queryString, $filename);
 
             /*
