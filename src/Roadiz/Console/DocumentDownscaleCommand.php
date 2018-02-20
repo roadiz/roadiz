@@ -110,7 +110,7 @@ class DocumentDownscaleCommand extends Command
                 /*
                  * Clear cache documents
                  */
-                $assetsClearer = new AssetsClearer($kernel->getCacheDir());
+                $assetsClearer = new AssetsClearer($kernel->getPublicCachePath());
                 $assetsClearer->clear();
                 $text .= $assetsClearer->getOutput() . PHP_EOL;
             }

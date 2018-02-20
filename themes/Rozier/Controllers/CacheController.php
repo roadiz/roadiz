@@ -131,7 +131,7 @@ class CacheController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $clearer = new AssetsClearer($this->get('kernel')->getCacheDir());
+            $clearer = new AssetsClearer($this->get('kernel')->getPublicCachePath());
             $clearer->clear();
 
             $msg = $this->getTranslator()->trans('cache.deleted');

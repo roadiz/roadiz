@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use AM\InterventionRequest\InterventionRequest;
+use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Pimple\Container;
@@ -80,7 +81,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
         $container['interventionRequestConfiguration'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            $cacheDir = $kernel->getCacheDir() . '/rendered';
+            $cacheDir = $kernel->getPublicCachePath();
             if (!file_exists($cacheDir)) {
                 mkdir($cacheDir);
             }
@@ -92,6 +93,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
             $conf = new Configuration();
             $conf->setCachePath($cacheDir);
+            $conf->setUsePassThroughCache(true);
             $conf->setImagesPath($kernel->getPublicFilesPath());
             $conf->setDriver($imageDriver);
             $conf->setDefaultQuality($defaultQuality);
