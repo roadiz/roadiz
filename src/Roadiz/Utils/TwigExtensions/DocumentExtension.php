@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
@@ -110,7 +111,9 @@ class DocumentExtension extends \Twig_Extension
      * @param Document|null $document
      * @param array $criteria
      * @return string
+     * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function display(Document $document = null, array $criteria = [])
     {
@@ -176,21 +179,27 @@ class DocumentExtension extends \Twig_Extension
                 ];
             }
         }
-
         if (null !== $document && $document->isImage()) {
-            $manager = new ImageManager();
-            $documentPath = $this->container['assetPackages']->getDocumentFilePath($document);
-            $imageProcess = $manager->make($documentPath);
-            return [
-                'width' => $imageProcess->width(),
-                'height' => $imageProcess->height(),
-            ];
+            try {
+                $manager = new ImageManager();
+                $documentPath = $this->container['assetPackages']->getDocumentFilePath($document);
+                $imageProcess = $manager->make($documentPath);
+                return [
+                    'width' => $imageProcess->width(),
+                    'height' => $imageProcess->height(),
+                ];
+            } catch (NotReadableException $exception) {
+                /*
+                 * Do nothing
+                 * just return 0 width and height
+                 */
+            }
         }
 
-         return [
+        return [
             'width' => 0,
             'height' => 0,
-         ];
+        ];
     }
 
     /**
@@ -210,7 +219,9 @@ class DocumentExtension extends \Twig_Extension
 
         if (null !== $document && $document->isImage()) {
             $size = $this->getImageSize($document);
-            return $size['width']/$size['height'];
+            if ($size['height'] > 0) {
+                return $size['width']/$size['height'];
+            }
         }
 
         return 0.0;
