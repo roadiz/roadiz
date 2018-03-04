@@ -44,7 +44,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  * Command line utils for managing nodes from terminal.
  */
-class SolrReindexCommand extends SolrCommand
+class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterface
 {
     protected $questionHelper;
 
@@ -124,7 +124,7 @@ class SolrReindexCommand extends SolrCommand
 
         // Then index
         $nSources = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->findAll();
@@ -172,7 +172,7 @@ class SolrReindexCommand extends SolrCommand
 
         // Then index
         $docs = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findAll();
 
         $progress = new ProgressBar($output, count($docs));
