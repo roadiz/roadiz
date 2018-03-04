@@ -29,7 +29,10 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Console\SolrReindexCommand;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Schema\SchemaException;
+use RZ\Roadiz\Console\ThemeAwareCommandInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\ConsoleEvents;
@@ -76,11 +79,28 @@ class ThemesSubscriber implements EventSubscriberInterface
      */
     public function onCommand(ConsoleCommandEvent $event)
     {
-        if ($event->getCommand() instanceof SolrReindexCommand) {
-            /** @var Theme $theme */
-            foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
-                $feClass = $theme->getClassName();
-                call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+        /*
+         * Call setupDependencyInjection method on each registered theme when command
+         * is implementing ThemeAwareCommandInterface.
+         *
+         * Warning: This may lead to Doctrine exception if your database is not synced.
+         */
+        if ($event->getCommand() instanceof ThemeAwareCommandInterface) {
+            try {
+                /** @var Theme $theme */
+                foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
+                    $feClass = $theme->getClassName();
+                    call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+                }
+            } catch (ConnectionException $connectionException) {
+                $event->getOutput()->writeln('<error>Database is not reachable.</error> Themes won’t be initialized!');
+                $event->getOutput()->writeln('<error>'.$connectionException->getMessage().'</error>');
+            } catch (SchemaException $schemaException) {
+                $event->getOutput()->writeln('<error>Database synced is not synced.</error> Themes won’t be initialized!');
+                $event->getOutput()->writeln('<error>'.$schemaException->getMessage().'</error>');
+            } catch (TableNotFoundException $tableNotFoundException) {
+                $event->getOutput()->writeln('<error>Database synced is not synced.</error> Themes won’t be initialized!');
+                $event->getOutput()->writeln('<error>'.$tableNotFoundException->getMessage().'</error>');
             }
         }
     }
