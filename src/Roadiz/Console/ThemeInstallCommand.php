@@ -94,7 +94,6 @@ class ThemeInstallCommand extends ThemesCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $text = "";
-        $classname = $input->getArgument('classname');
 
         if ($input->getOption('dry-run')) {
             $this->dryRun = true;
@@ -103,7 +102,7 @@ class ThemeInstallCommand extends ThemesCommand
         /*
          * Replace slash by anti-slashes
          */
-        $classname = str_replace('/', '\\', $classname);
+        $classname = str_replace('/', '\\', $input->getArgument('classname'));
         $reflectionClass = new \ReflectionClass($classname);
         if (!$reflectionClass->isSubclassOf(AppController::class)) {
             throw new RuntimeException('Given theme is not a valid Roadiz theme.');

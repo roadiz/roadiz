@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,31 +23,28 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ThemeAssetsCommand.php
+ * @file ThemeInfoCommand.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
 namespace RZ\Roadiz\Console;
 
-use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ThemeAssetsCommand extends ThemesCommand
+class ThemeInfoCommand extends ThemesCommand
 {
     protected function configure()
     {
-        $this->setName('themes:assets:install')
-            ->setDescription('Install a theme assets folder in public directory.')
+        $this->setName('themes:info')
+            ->setDescription('Get information from a Theme.')
             ->addArgument(
                 'name',
                 InputArgument::REQUIRED,
                 'Theme name (without the "Theme" suffix) or full-qualified ThemeApp class name (you can use / instead of \\).'
             )
-            ->addOption('symlink', null, InputOption::VALUE_NONE, 'Symlinks the theme assets instead of copying it')
-            ->addOption('relative', null, InputOption::VALUE_NONE, 'Make relative symlinks')
         ;
     }
 
@@ -58,30 +55,20 @@ class ThemeAssetsCommand extends ThemesCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Kernel $kernel */
-        $kernel = $this->getHelper('kernel')->getKernel();
         $name = str_replace('/', '\\', $input->getArgument('name'));
         $name = $this->validateThemeName($name);
         $themeName = $this->getThemeName($name);
-        $output->writeln('Theme name is: <info>'. $themeName .'</info>.');
-        $output->writeln('Theme folder name is: <info>'. $this->getThemeFolderName($themeName) .'</info>.');
-        $output->writeln('Theme assets are located in <info>'. $this->getThemePath($themeName) .'/static</info>.');
 
-        if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
-            if ($input->getOption('relative')) {
-                $expectedMethod = self::METHOD_RELATIVE_SYMLINK;
-                $output->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
-            } elseif ($input->getOption('symlink')) {
-                $expectedMethod = self::METHOD_ABSOLUTE_SYMLINK;
-                $output->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
-            } else {
-                $expectedMethod = self::METHOD_COPY;
-                $output->writeln('Installing theme assets as <info>hard copy</info>.');
-            }
-
-            $this->generateThemeSymlink($themeName, $expectedMethod);
-        } else {
-            throw new \RuntimeException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
-        }
+        $table = new Table($output);
+        $table->setHeaders([
+            'Description', 'Value'
+        ]);
+        $table->setRows([
+            ['Given name', $themeName],
+            ['Folder name', $this->getThemeFolderName($themeName)],
+            ['Source path', $this->getThemePath($themeName)],
+            ['Assets path', $this->getThemePath($themeName).'/static'],
+        ]);
+        $table->render();
     }
 }

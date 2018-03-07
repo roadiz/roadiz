@@ -95,7 +95,7 @@ class ThemesCommand extends Command
             if (null !== $reflection = $this->getThemeReflectionClass($name)) {
                 return $reflection->getName();
             }
-            throw new \RuntimeException('Theme class ' . $name . ' does not exists');
+            throw new \RuntimeException('Theme class ' . $name . ' does not exist.');
         }
 
         if (in_array($name, ['Debug', 'Install', 'Rozier'])) {
@@ -205,6 +205,22 @@ class ThemesCommand extends Command
     }
 
     /**
+     * @param $themeName
+     *
+     * @return string
+     */
+    protected function getThemeFolderName($themeName)
+    {
+        if (false !== strpos($themeName, '\\')) {
+            if (null !== $reflection = $this->getThemeReflectionClass($themeName)) {
+                return call_user_func([$reflection->getName(), 'getThemeDir']);
+            }
+        }
+
+        return $themeName;
+    }
+
+    /**
      * @param string $themeName Theme name WITH suffix.
      * @param string $expectedMethod
      * @return string
@@ -214,7 +230,7 @@ class ThemesCommand extends Command
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
-            $publicThemeDir = $kernel->getPublicDir() . '/themes/' . $themeName;
+            $publicThemeDir = $kernel->getPublicDir() . '/themes/' . $this->getThemeFolderName($themeName);
             $targetDir = $publicThemeDir . '/static';
             $originDir = $this->getThemePath($themeName) . '/static';
 

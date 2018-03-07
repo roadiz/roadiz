@@ -166,6 +166,7 @@ class RoadizApplication extends Application
             new ThemeAssetsCommand(),
             new ThemeGenerateCommand(),
             new ThemeInstallCommand(),
+            new ThemeInfoCommand(),
             new InstallCommand(),
             new UsersCommand(),
             new UsersCreationCommand(),
