@@ -27,9 +27,9 @@
 
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
         {% block customStyles %}{% endblock %}
-        {% if additionnalStylesheets %}
-            {% for additionnalStylesheet in additionnalStylesheets %}
-                <link rel="stylesheet" href="{{ additionnalStylesheet.path }}" />
+        {% if additionalStylesheets %}
+            {% for additionalStylesheet in additionalStylesheets %}
+                <link rel="stylesheet" href="{{ additionalStylesheet.path }}" />
             {% endfor %}
         {% endif %}
         <script src="{{ head.resourcesUrl }}/vendor/modernizr.custom.50380.js"></script>
@@ -244,9 +244,9 @@
         {% include '@Rozier/partials/js-inject.html.twig' %}
 
         {% block customScripts %}{% endblock %}
-        {% if additionnalScripts %}
-            {% for additionnalScript in additionnalScripts %}
-                <script src="{{ additionnalScript.path }}"></script>
+        {% if additionalScripts %}
+            {% for additionalScript in additionalScripts %}
+                <script src="{{ additionalScript.path }}"></script>
             {% endfor %}
         {% endif %}
     </body>
