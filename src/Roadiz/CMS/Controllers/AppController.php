@@ -273,6 +273,14 @@ abstract class AppController extends Controller
     /**
      * @return string
      */
+    public static function getPublicFolder()
+    {
+        return static::getThemeFolder() . '/static';
+    }
+
+    /**
+     * @return string
+     */
     public function getStaticResourcesUrl()
     {
         return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/');

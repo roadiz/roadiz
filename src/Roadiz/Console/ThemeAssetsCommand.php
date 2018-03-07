@@ -44,35 +44,11 @@ class ThemeAssetsCommand extends ThemesCommand
             ->addArgument(
                 'name',
                 InputArgument::REQUIRED,
-                'Theme name (without the "Theme" suffix)'
+                'Theme name (without the "Theme" suffix) or full-qualified ThemeApp class name (you can use / instead of \\).'
             )
             ->addOption('symlink', null, InputOption::VALUE_NONE, 'Symlinks the theme assets instead of copying it')
             ->addOption('relative', null, InputOption::VALUE_NONE, 'Make relative symlinks')
         ;
-    }
-
-    /**
-     * @param $name
-     * @return string
-     */
-    public function validateThemeName($name)
-    {
-        if (in_array($name, ['Debug', 'Install', 'Rozier'])) {
-            $this->getThemePath($name);
-            return $name;
-        }
-
-        if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $name)) {
-            throw new \RuntimeException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
-        }
-
-        if (1 === preg_match('#[Tt]heme$#', $name)) {
-            throw new \RuntimeException('Theme name must not contain "Theme" suffix, it will be added automatically.');
-        }
-
-        $this->getThemePath($this->getThemeName($name));
-
-        return $name;
     }
 
     /**
@@ -84,8 +60,10 @@ class ThemeAssetsCommand extends ThemesCommand
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-        $name = $this->validateThemeName($input->getArgument('name'));
+        $name = $classname = str_replace('/', '\\', $input->getArgument('name'));
+        $name = $this->validateThemeName($name);
         $themeName = $this->getThemeName($name);
+        $output->writeln('Theme name is: <info>'. $themeName .'</info>.');
         $output->writeln('Theme assets are located in <info>'. $this->getThemePath($themeName) .'/static</info>.');
 
         if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
