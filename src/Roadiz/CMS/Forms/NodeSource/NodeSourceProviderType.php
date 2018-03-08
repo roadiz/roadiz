@@ -72,7 +72,8 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
         if ($this->nodeTypeField->getType() === NodeTypeField::MULTI_PROVIDER_T ||
             $this->nodeTypeField->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
             $configuration = Yaml::parse($this->nodeTypeField->getDefaultValues());
-            $this->classname = $configuration['classname'];
+            $reflectionClass = new \ReflectionClass($configuration['classname']);
+            $this->classname = $reflectionClass->getName();
             $this->provider = new $configuration['classname'];
             $this->provider->setContainer($container);
         }
