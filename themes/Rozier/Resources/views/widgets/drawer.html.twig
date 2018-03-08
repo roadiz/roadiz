@@ -1,7 +1,15 @@
 {% set entityIds = [] %}
 {% set isSortable = isSortable|default('true') %}
 {% for entity in data %}
-    {% set entityIds = entityIds|merge([entity.id]) %}
+    {% if entity.id is defined %}
+        {% set entityIds = entityIds|merge([entity.id]) %}
+    {% else %}
+        {#
+         # During **Form Errors**, entities are not transformed to ExplorerProviderItem.
+         # We need to use directly data item as string.
+         #}
+        {% set entityIds = entityIds|merge([entity]) %}
+    {% endif %}
 {% endfor %}
 
 {% spaceless %}
