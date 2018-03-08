@@ -56,8 +56,8 @@ class ExplorerProviderItemTransformer implements DataTransformerInterface
     {
         if (!empty($value) && $this->explorerProvider->supports($value)) {
             $item = $this->explorerProvider->toExplorerItem($value);
-            if (null === $item) {
-                throw new TransformationFailedException();
+            if (null === $item || !$item instanceof ExplorerItemInterface) {
+                throw new TransformationFailedException('Cannot transform model to ExplorerItem.');
             }
             return [$item];
         } elseif (!empty($value) && is_array($value)) {
@@ -65,12 +65,12 @@ class ExplorerProviderItemTransformer implements DataTransformerInterface
             foreach ($value as $entity) {
                 if ($this->explorerProvider->supports($entity)) {
                     $item = $this->explorerProvider->toExplorerItem($entity);
-                    if (null === $item) {
-                        throw new TransformationFailedException();
+                    if (null === $item || !$item instanceof ExplorerItemInterface) {
+                        throw new TransformationFailedException('Cannot transform model to ExplorerItem.');
                     }
                     $idArray[] = $item;
                 } else {
-                    throw new TransformationFailedException();
+                    throw new TransformationFailedException('Cannot transform model to ExplorerItem.');
                 }
             }
 
