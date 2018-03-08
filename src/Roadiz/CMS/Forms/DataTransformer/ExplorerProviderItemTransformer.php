@@ -84,13 +84,14 @@ class ExplorerProviderItemTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
+        /** @var ExplorerItemInterface[] $items */
         $items = $this->explorerProvider->getItemsById($value);
         $originals = [];
         /** @var ExplorerItemInterface $item */
         foreach ($items as $item) {
             $originals[] = $item->getOriginal();
         }
-        
+
         return array_filter($originals);
     }
 }

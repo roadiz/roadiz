@@ -31,12 +31,10 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\CMS\Forms\DataTransformer\ExplorerProviderItemTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Themes\Rozier\Explorer\ExplorerItemInterface;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
