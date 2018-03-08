@@ -118,6 +118,10 @@ class AjaxExplorerProviderController extends AbstractAjaxController
             $provider->setContainer($this->getContainer());
             $entitiesArray = [];
             $cleanNodeIds = array_filter($request->query->get('ids'));
+            $cleanNodeIds = array_filter($cleanNodeIds, function ($value) {
+                $nullValues = ['null', null, 0, '0', false, 'false'];
+                return !in_array($value, $nullValues, true);
+            });
 
             if (count($cleanNodeIds) > 0) {
                 $entities = $provider->getItemsById($cleanNodeIds);
