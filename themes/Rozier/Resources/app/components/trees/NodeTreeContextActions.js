@@ -130,7 +130,13 @@ export default class NodeTreeContextActions {
                     })
                 })
                 .fail(data => {
-                    console.log(data)
+                    data = JSON.parse(data.responseText)
+                    window.UIkit.notify({
+                        message: data.error_message,
+                        status: 'danger',
+                        timeout: 3000,
+                        pos: 'top-center'
+                    })
                 })
                 .always(() => {
                     window.Rozier.lazyload.canvasLoader.hide()
@@ -181,17 +187,26 @@ export default class NodeTreeContextActions {
             dataType: 'json',
             data: postData
         })
-            .done(data => {
-                window.Rozier.refreshAllNodeTrees()
-                window.UIkit.notify({
-                    message: data.responseText,
-                    status: data.status,
-                    timeout: 3000,
-                    pos: 'top-center'
-                })
+        .done(data => {
+            window.Rozier.refreshAllNodeTrees()
+            window.UIkit.notify({
+                message: data.responseText,
+                status: data.status,
+                timeout: 3000,
+                pos: 'top-center'
             })
-            .always(() => {
-                window.Rozier.lazyload.canvasLoader.hide()
+        })
+        .fail(data => {
+            data = JSON.parse(data.responseText)
+            window.UIkit.notify({
+                message: data.error_message,
+                status: 'danger',
+                timeout: 3000,
+                pos: 'top-center'
             })
+        })
+        .always(() => {
+            window.Rozier.lazyload.canvasLoader.hide()
+        })
     }
 }

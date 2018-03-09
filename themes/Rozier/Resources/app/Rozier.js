@@ -507,7 +507,13 @@ export default class Rozier {
                 })
             })
             .fail(data => {
-                console.err(data)
+                data = JSON.parse(data.responseText)
+                window.UIkit.notify({
+                    message: data.error_message,
+                    status: 'danger',
+                    timeout: 3000,
+                    pos: 'top-center'
+                })
             })
     }
 
@@ -569,8 +575,6 @@ export default class Rozier {
         } else if (element.prev().length && typeof element.prev().attr('data-tag-id') !== 'undefined') {
             postData.prevTagId = parseInt(element.prev().attr('data-tag-id'))
         }
-
-        console.log(postData)
 
         $.ajax({
             url: this.routes.tagAjaxEdit.replace('%tagId%', tagId),

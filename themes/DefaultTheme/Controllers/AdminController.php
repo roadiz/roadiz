@@ -46,7 +46,6 @@ class AdminController extends RozierApp
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function listAction(
         Request $request

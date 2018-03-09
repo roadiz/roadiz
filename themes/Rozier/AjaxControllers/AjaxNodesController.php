@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Class AjaxNodesController
@@ -58,7 +59,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         $tags = [];
         /** @var Node $node */
-        $node = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         /** @var Tag $tag */
         foreach ($node->getTags() as $tag) {
@@ -95,8 +96,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if ($node !== null) {
             $responseArray = null;
@@ -172,12 +172,15 @@ class AjaxNodesController extends AbstractAjaxController
          */
         $parent = null;
 
+        if ($node->isLocked()) {
+            throw new BadRequestHttpException('Locked node cannot be moved.');
+        }
+
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
 
             /** @var Node $parent */
-            $parent = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['newParent']);
+            $parent = $this->get('em')->find(Node::class, (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $parent->addChild($node);
@@ -195,7 +198,7 @@ class AjaxNodesController extends AbstractAjaxController
 
             /** @var Node $nextNode */
             $nextNode = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['nextNodeId']);
+                ->find(Node::class, (int) $parameters['nextNodeId']);
             if ($nextNode !== null) {
                 $node->setPosition($nextNode->getPosition() - 0.5);
             }
@@ -204,7 +207,7 @@ class AjaxNodesController extends AbstractAjaxController
 
             /** @var Node $prevNode */
             $prevNode = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $parameters['prevNodeId']);
+                ->find(Node::class, (int) $parameters['prevNodeId']);
             if ($prevNode !== null) {
                 $node->setPosition($prevNode->getPosition() + 0.5);
             }
@@ -280,7 +283,7 @@ class AjaxNodesController extends AbstractAjaxController
                 if ($request->get('nodeId') > 0) {
                     /** @var Node $node */
                     $node = $this->get('em')
-                        ->find('RZ\Roadiz\Core\Entities\Node', (int) $request->get('nodeId'));
+                        ->find(Node::class, (int) $request->get('nodeId'));
 
                     if (null !== $node) {
                         /*

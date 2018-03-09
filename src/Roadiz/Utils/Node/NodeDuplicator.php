@@ -74,6 +74,10 @@ class NodeDuplicator
         if (null !== $this->originalNode) {
             $this->em->refresh($this->originalNode);
 
+            if ($this->originalNode->isLocked()) {
+                throw new \RuntimeException('Locked node cannot be duplicated.');
+            }
+
             $parent = $this->originalNode->getParent();
             $node = clone $this->originalNode;
 
