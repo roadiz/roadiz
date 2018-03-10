@@ -89,7 +89,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const INSTALL_CLASSNAME = InstallApp::class;
 
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.21.4";
+    public static $cmsVersion = "0.21.5";
 
     /**
      * @var Container|null

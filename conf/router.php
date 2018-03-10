@@ -46,6 +46,6 @@ $_SERVER['SCRIPT_FILENAME'] = $_SERVER['DOCUMENT_ROOT'].DIRECTORY_SEPARATOR.$scr
 $_SERVER['SCRIPT_NAME'] = DIRECTORY_SEPARATOR.$script;
 $_SERVER['PHP_SELF'] = DIRECTORY_SEPARATOR.$script;
 
-require $script;
+require $_SERVER['DOCUMENT_ROOT'].DIRECTORY_SEPARATOR.$script;
 
 error_log(sprintf('%s:%d [%d]: %s', $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], http_response_code(), $_SERVER['REQUEST_URI']), 4);
