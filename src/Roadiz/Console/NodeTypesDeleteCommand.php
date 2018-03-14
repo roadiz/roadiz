@@ -64,7 +64,7 @@ class NodeTypesDeleteCommand extends Command
 
         /** @var NodeType $nodetype */
         $nodetype = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findOneByName($name);
 
         if ($nodetype !== null) {

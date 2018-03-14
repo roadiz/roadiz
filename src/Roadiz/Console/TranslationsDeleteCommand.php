@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +43,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class TranslationsDeleteCommand extends Command
 {
     private $questionHelper;
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     protected function configure()
@@ -62,10 +67,10 @@ class TranslationsDeleteCommand extends Command
         $locale = $input->getArgument('locale');
 
         $translation = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneByLocale($locale);
         $translationCount = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->countBy([]);
 
         if ($translationCount < 2) {

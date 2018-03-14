@@ -84,7 +84,7 @@ class NodesImporter implements ImporterInterface
         /*
          * Test if node already exists against its nodeName
          */
-        $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+        $existing = $em->getRepository(Node::class)
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneByNodeName($node->getNodeName());
         if (null !== $existing) {
@@ -100,7 +100,7 @@ class NodesImporter implements ImporterInterface
         /** @var NodesSources $nodeSource */
         foreach ($node->getNodeSources() as $nodeSource) {
             /** @var Translation|null $trans */
-            $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            $trans = $em->getRepository(Translation::class)
                         ->findOneByLocale($nodeSource->getTranslation()->getLocale());
 
             if (null === $trans &&

@@ -119,7 +119,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
     public function onPreSetData(FormEvent $event)
     {
         $this->selectedCustomForms = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+            ->getRepository(CustomForm::class)
             ->findByNodeAndFieldName($this->nodeSource->getNode(), $this->nodeTypeField->getName());
         $event->setData($this->selectedCustomForms);
     }
@@ -136,7 +136,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
             foreach ($event->getData() as $customFormId) {
                 /** @var CustomForm|null $tempCForm */
                 $tempCForm = $this->entityManager
-                    ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                    ->find(CustomForm::class, (int) $customFormId);
                 if ($tempCForm !== null) {
                     $this->nodeHandler->addCustomFormForField($tempCForm, $this->nodeTypeField, false, $position);
                     $position++;

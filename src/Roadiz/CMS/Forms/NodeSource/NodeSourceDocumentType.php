@@ -119,7 +119,7 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
     public function onPreSetData(FormEvent $event)
     {
         $this->selectedDocuments = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findByNodeSourceAndFieldName($this->nodeSource, $this->nodeTypeField->getName());
         $event->setData($this->selectedDocuments);
     }
@@ -135,7 +135,7 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
             $position = 0;
             foreach ($event->getData() as $documentId) {
                 $tempDoc = $this->entityManager
-                    ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+                    ->find(Document::class, (int) $documentId);
                 if ($tempDoc !== null) {
                     $this->nodesSourcesHandler->addDocumentForField($tempDoc, $this->nodeTypeField, false, $position);
                     $position++;

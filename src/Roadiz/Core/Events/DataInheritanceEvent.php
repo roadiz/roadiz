@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Events;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Pimple\Container;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
@@ -85,7 +86,7 @@ class DataInheritanceEvent
         // obtained from the $metadata
         $class = $metadata->getReflectionClass();
 
-        if ($class->getName() === 'RZ\Roadiz\Core\Entities\NodesSources') {
+        if ($class->getName() === NodesSources::class) {
             try {
                 // List node types
                 /** @var NodeType[] $nodeTypes */

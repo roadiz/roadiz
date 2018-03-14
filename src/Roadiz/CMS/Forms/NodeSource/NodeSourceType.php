@@ -135,7 +135,7 @@ class NodeSourceType extends AbstractType
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
-        return $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+        return $entityManager->getRepository(NodeTypeField::class)
             ->findBy($criteria, $position);
     }
 
@@ -157,10 +157,10 @@ class NodeSourceType extends AbstractType
     private function hasDefaultTranslation(NodesSources $source, EntityManager $entityManager)
     {
         /** @var Translation $defaultTranslation */
-        $defaultTranslation = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $defaultTranslation = $entityManager->getRepository(Translation::class)
                                             ->findDefault();
 
-        $sourceCount = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+        $sourceCount = $entityManager->getRepository(NodesSources::class)
                                      ->setDisplayingAllNodesStatuses(true)
                                      ->setDisplayingNotPublishedNodes(true)
                                      ->countBy([

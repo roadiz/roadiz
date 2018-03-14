@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -61,8 +62,7 @@ class UniqueEmailValidator extends ConstraintValidator
      */
     protected function emailExists($email, $entityManager)
     {
-        $user = $entityManager->getRepository('RZ\Roadiz\Core\Entities\User')
-                                       ->findOneByEmail($email);
+        $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
         return (null !== $user);
     }
 }

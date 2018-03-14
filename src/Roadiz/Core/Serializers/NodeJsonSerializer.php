@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -110,7 +111,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     protected function hasHome()
     {
         if (null !== $this->em
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->getRepository(Node::class)
                 ->setDisplayingNotPublishedNodes(true)
                 ->findHomeWithDefaultTranslation()) {
             return true;
@@ -128,7 +129,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     protected function makeNodeRec($data)
     {
         /** @var NodeType $nodetype */
-        $nodetype = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+        $nodetype = $this->em->getRepository(NodeType::class)
                          ->findOneByName($data["node_type"]);
 
         /*
@@ -209,7 +210,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (!empty($data['tags'])) {
             foreach ($data["tags"] as $tag) {
-                $tmp = $this->em->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                $tmp = $this->em->getRepository(Tag::class)
                             ->findOneBy(["tagName" => $tag]);
 
                 if (null === $tmp) {

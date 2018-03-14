@@ -281,7 +281,7 @@ class TagHandler extends AbstractHandler
     public function cleanRootTagsPositions($setPositions = true)
     {
         $tags = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->getRepository(Tag::class)
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;

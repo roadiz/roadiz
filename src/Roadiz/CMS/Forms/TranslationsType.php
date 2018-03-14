@@ -58,7 +58,7 @@ class TranslationsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $translations = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')->findAll();
+        $translations = $this->entityManager->getRepository(Translation::class)->findAll();
 
         $choices = [];
         /** @var Translation $translation */

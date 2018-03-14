@@ -68,7 +68,7 @@ class UsersCreationCommand extends UsersCommand
 
         if ($name) {
             $user = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
+                ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if (null === $user) {
@@ -114,14 +114,14 @@ class UsersCreationCommand extends UsersCommand
                     $questionEmail
                 );
             } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
-                $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)
+                $this->entityManager->getRepository(User::class)->emailExists($email)
             );
         } else {
             /*
              * From CLI
              */
             $email = $input->getOption('email');
-            if ($this->entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->emailExists($email)) {
+            if ($this->entityManager->getRepository(User::class)->emailExists($email)) {
                 throw new \InvalidArgumentException('Email already exists.');
             }
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

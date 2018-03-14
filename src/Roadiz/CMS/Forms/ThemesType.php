@@ -56,7 +56,7 @@ class ThemesType extends AbstractType
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $themes = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAll();
+        $themes = $this->entityManager->getRepository(Theme::class)->findAll();
 
         $existingThemes = [Kernel::INSTALL_CLASSNAME];
         /** @var Theme $theme */

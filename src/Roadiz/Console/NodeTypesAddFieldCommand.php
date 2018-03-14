@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,12 +60,12 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
 
         /** @var NodeType $nodetype */
         $nodetype = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findOneBy(['name' => $name]);
 
         if ($nodetype !== null) {
             $latestPosition = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                ->getRepository(NodeTypeField::class)
                 ->findLatestPositionInNodeType($nodetype);
             $this->addNodeTypeField($nodetype, $latestPosition + 1, $input, $output);
             $this->entityManager->flush();

@@ -234,7 +234,7 @@ class FolderRepository extends EntityRepository
          */
         $qb->leftJoin('obj.translatedFolders', 'tf');
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\FolderTranslation');
+        $metadatas = $this->_em->getClassMetadata(FolderTranslation::class);
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);

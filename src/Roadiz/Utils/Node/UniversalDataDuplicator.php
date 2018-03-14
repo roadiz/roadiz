@@ -74,7 +74,7 @@ class UniversalDataDuplicator
             if (count($universalFields) > 0) {
                 /** @var NodesSourcesRepository $repository */
                 $repository = $this->em
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->getRepository(NodesSources::class)
                     ->setDisplayingAllNodesStatuses(true)
                     ->setDisplayingNotPublishedNodes(true)
                 ;
@@ -119,7 +119,7 @@ class UniversalDataDuplicator
         $defaultTranslation = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation')
             ->findDefault();
 
-        $sourceCount = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+        $sourceCount = $this->em->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->countBy([

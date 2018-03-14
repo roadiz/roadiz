@@ -70,7 +70,7 @@ class TranslationHandler extends AbstractHandler
     public function makeDefault()
     {
         $defaults = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findBy(['defaultTranslation'=>true]);
 
         /** @var Translation $default */

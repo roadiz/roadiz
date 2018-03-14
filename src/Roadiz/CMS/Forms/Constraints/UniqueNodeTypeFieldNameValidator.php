@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
 use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -66,7 +67,7 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
      */
     protected function nameExists($name, $nodeType, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+        $entity = $entityManager->getRepository(NodeTypeField::class)
                              ->findOneBy([
                                  'name' => $name,
                                  'nodeType' => $nodeType,

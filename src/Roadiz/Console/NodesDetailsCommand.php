@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Console;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -56,11 +57,11 @@ class NodesDetailsCommand extends Command
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
 
-        $translation = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $translation = $this->entityManager->getRepository(Translation::class)
                                            ->findOneBy(['locale' => $input->getArgument('locale')]);
 
         /** @var Node $node */
-        $node = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        $node = $this->entityManager->getRepository(Node::class)
                                     ->setDisplayingNotPublishedNodes(true)
                                     ->findOneBy([
                                         'nodeName' => $input->getArgument('nodeName'),

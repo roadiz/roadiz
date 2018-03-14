@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -51,7 +52,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $this->stopwatch->stop('findTheme');
         }
 
-        $this->repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Node');
+        $this->repository = $this->em->getRepository(Node::class);
         $decodedUrl = rawurldecode($pathinfo);
 
         /*

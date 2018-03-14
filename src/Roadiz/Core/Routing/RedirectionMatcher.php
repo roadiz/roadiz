@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\CMS\Controllers\RedirectionController;
 use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -88,7 +89,7 @@ class RedirectionMatcher extends UrlMatcher
             $this->stopwatch->start('findRedirection');
         }
 
-        $this->repository = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Redirection');
+        $this->repository = $this->entityManager->getRepository(Redirection::class);
         $decodedUrl = rawurldecode($pathinfo);
 
         /*
@@ -97,7 +98,7 @@ class RedirectionMatcher extends UrlMatcher
         if (null !== $redirection = $this->matchRedirection($decodedUrl)) {
             $this->logger->debug('Matched redirection.', ['query' => $redirection->getQuery()]);
             return [
-                '_controller' => 'RZ\Roadiz\CMS\Controllers\RedirectionController::redirectAction',
+                '_controller' => RedirectionController::class . '::redirectAction',
                 'redirection' => $redirection,
                 '_route' => null,
             ];

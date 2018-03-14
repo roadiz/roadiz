@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Repositories\TagRepository;
 
 /**
@@ -43,7 +44,7 @@ class TagApi extends AbstractApi
      */
     public function getRepository()
     {
-        return $this->container['em']->getRepository('RZ\Roadiz\Core\Entities\Tag');
+        return $this->container['em']->getRepository(Tag::class);
     }
 
     /**

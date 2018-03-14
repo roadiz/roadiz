@@ -54,7 +54,7 @@ class GroupsImporter implements ImporterInterface
         $groups = $serializer->deserialize($serializedData);
         foreach ($groups as $group) {
             /** @var Group $existingGroup */
-            $existingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\Group')
+            $existingGroup = $em->getRepository(Group::class)
                                 ->findOneByName($group->getName());
 
             if (null === $existingGroup) {

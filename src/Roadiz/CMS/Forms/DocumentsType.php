@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -66,7 +67,7 @@ class DocumentsType extends AbstractType
         $callback = function ($object, ExecutionContextInterface $context) {
 
             if (is_array($object)) {
-                $documents = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Document')
+                $documents = $this->entityManager->getRepository(Document::class)
                 ->findBy(['id' => $object]);
 
                 foreach (array_values($object) as $key => $value) {
@@ -81,7 +82,7 @@ class DocumentsType extends AbstractType
                     }
                 }
             } else {
-                $document = $this->entityManager->find('RZ\Roadiz\Core\Entities\Document', (int) $object);
+                $document = $this->entityManager->find(Document::class, (int) $object);
 
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $document) {

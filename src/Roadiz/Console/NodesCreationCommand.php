@@ -77,13 +77,13 @@ class NodesCreationCommand extends Command
         $locale = $input->getArgument('locale');
 
         $existingNode = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findOneByNodeName($nodeName);
 
         if (null === $existingNode) {
             $type = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->getRepository(NodeType::class)
                 ->findOneByName($typeName);
 
             if (null !== $type) {
@@ -91,13 +91,13 @@ class NodesCreationCommand extends Command
 
                 if ($locale) {
                     $translation = $this->entityManager
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                        ->getRepository(Translation::class)
                         ->findOneBy(['locale' => $locale]);
                 }
 
                 if ($translation === null) {
                     $translation = $this->entityManager
-                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                        ->getRepository(Translation::class)
                         ->findDefault();
                 }
 

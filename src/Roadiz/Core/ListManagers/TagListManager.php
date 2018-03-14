@@ -30,6 +30,8 @@
 namespace RZ\Roadiz\Core\ListManagers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\TagTranslation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -45,7 +47,7 @@ class TagListManager extends EntityListManager
      */
     public function __construct(Request $request, EntityManager $_em, $preFilters = [], $preOrdering = [])
     {
-        parent::__construct($request, $_em, 'RZ\Roadiz\Core\Entities\Tag', $preFilters, $preOrdering);
+        parent::__construct($request, $_em, Tag::class, $preFilters, $preOrdering);
     }
 
     /**
@@ -56,7 +58,7 @@ class TagListManager extends EntityListManager
         try {
             if ($this->searchPattern != '') {
                 return $this->_em
-                    ->getRepository('RZ\Roadiz\Core\Entities\TagTranslation')
+                    ->getRepository(TagTranslation::class)
                     ->searchBy($this->searchPattern, $this->filteringArray, $this->orderingArray);
             } else {
                 return $this->paginator->findByAtPage($this->filteringArray, $this->currentPage);

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -61,7 +62,7 @@ class UniqueTranslationLocaleValidator extends ConstraintValidator
      */
     protected function nameExists($name, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $entity = $entityManager->getRepository(Translation::class)
                                 ->findOneBy([
                                     'locale' => $name,
                                 ]);
