@@ -34,6 +34,8 @@ use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
@@ -60,7 +62,11 @@ class PageController extends DefaultThemeApp
         $this->prepareThemeAssignation($node, $translation);
 
         if ($request->query->has('404') && $request->query->get('404') == true) {
-            throw $this->createNotFoundException('This is a 404 page manually triggered.');
+            throw $this->createNotFoundException('This is a 404 page manually triggered via ' . ResourceNotFoundException::class);
+        }
+
+        if ($request->query->has('not-found') && $request->query->get('not-found') == true) {
+            throw new NotFoundHttpException('This is a 404 page manually triggered via '. NotFoundHttpException::class);
         }
 
         /*
