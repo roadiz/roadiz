@@ -59,6 +59,10 @@ class PageController extends DefaultThemeApp
     ) {
         $this->prepareThemeAssignation($node, $translation);
 
+        if ($request->query->has('404') && $request->query->get('404') == true) {
+            throw $this->createNotFoundException('This is a 404 page manually triggered.');
+        }
+
         /*
          * You can add a NodeSourceType form to edit it
          * right into your front page.

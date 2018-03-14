@@ -374,7 +374,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * Returns a NotFoundHttpException.
+     * Returns a ResourceNotFoundException.
      *
      * This will result in a 404 response code. Usage example:
      *
