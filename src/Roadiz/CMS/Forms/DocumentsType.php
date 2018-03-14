@@ -95,7 +95,7 @@ class DocumentsType extends AbstractType
         };
 
         $resolver->setDefaults([
-            'class' => '\RZ\Roadiz\Core\Entities\Document',
+            'class' => Document::class,
             'multiple' => true,
             'property' => 'id',
             'constraints' => [

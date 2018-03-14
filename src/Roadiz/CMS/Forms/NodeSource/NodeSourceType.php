@@ -29,6 +29,8 @@
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
+use Pimple\Container;
+use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
@@ -100,9 +102,9 @@ class NodeSourceType extends AbstractType
             'controller',
             'container',
         ]);
-        $resolver->setAllowedTypes('container', 'Pimple\Container');
-        $resolver->setAllowedTypes('controller', 'RZ\Roadiz\CMS\Controllers\Controller');
-        $resolver->setAllowedTypes('entityManager', 'Doctrine\ORM\EntityManager');
+        $resolver->setAllowedTypes('container', Container::class);
+        $resolver->setAllowedTypes('controller', Controller::class);
+        $resolver->setAllowedTypes('entityManager', EntityManager::class);
         $resolver->setAllowedTypes('withTitle', 'boolean');
         $resolver->setAllowedTypes('withVirtual', 'boolean');
     }

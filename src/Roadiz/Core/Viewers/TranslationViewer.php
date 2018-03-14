@@ -71,11 +71,11 @@ class TranslationViewer
     }
 
     /**
-     * @return TranslationRepository
+     * @return \Doctrine\ORM\EntityRepository|TranslationRepository
      */
     public function getRepository()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation');
+        return $this->entityManager->getRepository(Translation::class);
     }
 
     /**

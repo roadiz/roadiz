@@ -92,7 +92,7 @@ class CustomFormsNodesType extends AbstractType
         };
 
         $resolver->setDefaults([
-            'class' => '\RZ\Roadiz\Core\Entities\CustomForm',
+            'class' => CustomForm::class,
             'multiple' => true,
             'property' => 'id',
             'constraints' => [

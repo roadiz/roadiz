@@ -97,7 +97,7 @@ class NodesType extends AbstractType
         };
 
         $resolver->setDefaults([
-            'class' => '\RZ\Roadiz\Core\Entities\Node',
+            'class' => Node::class,
             'multiple' => true,
             'property' => 'id',
             'constraints' => [

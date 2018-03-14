@@ -31,6 +31,8 @@
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -70,10 +72,10 @@ abstract class NodeNameChecker
         $nodeName = StringHandler::slugify($nodeName);
 
         if (false === (boolean) $entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
+                ->getRepository(UrlAlias::class)
                 ->exists($nodeName) &&
             false === (boolean) $entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->getRepository(Node::class)
                 ->setDisplayingNotPublishedNodes(true)
                 ->exists($nodeName)) {
             return false;

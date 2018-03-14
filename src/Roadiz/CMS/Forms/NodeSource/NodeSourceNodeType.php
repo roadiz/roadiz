@@ -99,7 +99,7 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
             'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
-            'class' => '\RZ\Roadiz\Core\Entities\Node',
+            'class' => Node::class,
             'multiple' => true,
             'property' => 'id',
             'attr' => [

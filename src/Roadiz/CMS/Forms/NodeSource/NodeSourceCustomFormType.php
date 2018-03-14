@@ -99,7 +99,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
             'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
-            'class' => '\RZ\Roadiz\Core\Entities\CustomForm',
+            'class' => CustomForm::class,
             'multiple' => true,
             'property' => 'id',
         ]);
