@@ -61,7 +61,7 @@ class FoldersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Folder'
+            Folder::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -89,7 +89,7 @@ class FoldersController extends RozierApp
 
         if (null !== $parentFolderId) {
             $parentFolder = $this->get('em')
-                                 ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parentFolderId);
+                                 ->find(Folder::class, (int) $parentFolderId);
             if (null !== $parentFolder) {
                 $folder->setParent($parentFolder);
             }
@@ -149,7 +149,7 @@ class FoldersController extends RozierApp
 
         /** @var Folder $folder */
         $folder = $this->get('em')
-                       ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                       ->find(Folder::class, (int) $folderId);
 
         if (null !== $folder) {
             $form = $this->buildDeleteForm($folder);
@@ -202,11 +202,11 @@ class FoldersController extends RozierApp
 
         /** @var Folder $folder */
         $folder = $this->get('em')
-                       ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                       ->find(Folder::class, (int) $folderId);
 
         /** @var Translation $translation */
         $translation = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         if ($folder !== null) {
@@ -262,15 +262,15 @@ class FoldersController extends RozierApp
 
         /** @var Folder $folder */
         $folder = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+            ->find(Folder::class, (int) $folderId);
 
         /** @var Translation $translation */
         $translation = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+            ->find(Translation::class, (int) $translationId);
 
         /** @var FolderTranslation $folderTranslation */
         $folderTranslation = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\FolderTranslation')
+            ->getRepository(FolderTranslation::class)
             ->findOneBy([
                 'folder' => $folder,
                 'translation' => $translation,
@@ -315,7 +315,7 @@ class FoldersController extends RozierApp
             $this->assignation['translation'] = $translation;
             $this->assignation['form'] = $form->createView();
             $this->assignation['available_translations'] = $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->getRepository(Translation::class)
                 ->findAllAvailable();
 
             return $this->render('folders/edit.html.twig', $this->assignation);
@@ -338,7 +338,7 @@ class FoldersController extends RozierApp
 
         /** @var Folder $folder */
         $folder = $this->get('em')
-                       ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                       ->find(Folder::class, (int) $folderId);
 
         if ($folder !== null) {
             // Prepare File
@@ -347,7 +347,7 @@ class FoldersController extends RozierApp
             $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
             $documents = $this->get('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                              ->getRepository(Document::class)
                               ->findBy([
                                   'folders' => [$folder],
                               ]);

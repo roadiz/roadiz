@@ -61,7 +61,7 @@ class GroupsController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Group'
+            Group::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -117,7 +117,7 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
             $form = $this->buildDeleteForm($group);
@@ -158,7 +158,7 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
             $this->assignation['group'] = $group;
@@ -205,7 +205,7 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
             $this->assignation['group'] = $group;
@@ -247,9 +247,9 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
         $role = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
+                     ->find(Role::class, (int) $roleId);
 
         if ($group !== null &&
             $role !== null) {
@@ -292,7 +292,7 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
             $this->assignation['group'] = $group;
@@ -334,9 +334,9 @@ class GroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
 
         if ($group !== null &&
             $user !== null) {
@@ -554,7 +554,7 @@ class GroupsController extends RozierApp
     {
         if (isset($data['name'])) {
             $existing = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Group')
+                             ->getRepository(Group::class)
                              ->findOneBy(['name' => $data['name']]);
 
             if ($existing !== null) {
@@ -583,7 +583,7 @@ class GroupsController extends RozierApp
     {
         if (isset($data['name'])) {
             $existing = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Group')
+                             ->getRepository(Group::class)
                              ->findOneBy(['name' => $data['name']]);
             if ($existing !== null &&
                 $existing->getId() != $group->getId()) {
@@ -619,7 +619,7 @@ class GroupsController extends RozierApp
     {
         if ($data['groupId'] == $group->getId()) {
             $role = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\Role', (int) $data['roleId']);
+                         ->find(Role::class, (int) $data['roleId']);
             if ($role !== null) {
                 $group->addRole($role);
                 $this->get('em')->flush();
@@ -659,7 +659,7 @@ class GroupsController extends RozierApp
     {
         if ($data['groupId'] == $group->getId()) {
             $user = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\User', (int) $data['userId']);
+                         ->find(User::class, (int) $data['userId']);
 
             if ($user !== null) {
                 $user->addGroup($group);

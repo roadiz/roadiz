@@ -33,7 +33,9 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -155,8 +157,8 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = $this->get('settingsBag')->get('main_color');
-        $this->assignation['nodeTypes'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
-        $this->assignation['tags'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+        $this->assignation['nodeTypes'] = $this->get('em')->getRepository(NodeType::class)->findBy([]);
+        $this->assignation['tags'] = $this->get('em')->getRepository(Tag::class)->findBy([
                 'color' => ['!=', '#000000'],
             ]);
 

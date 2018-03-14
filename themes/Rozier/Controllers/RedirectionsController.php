@@ -51,7 +51,7 @@ class RedirectionsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Redirection',
+            Redirection::class,
             [],
             ['query' => 'ASC']
         );
@@ -79,7 +79,7 @@ class RedirectionsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
 
         /** @var Redirection|null $redirection */
-        $redirection = $this->get('em')->find('RZ\Roadiz\Core\Entities\Redirection', $redirectionId);
+        $redirection = $this->get('em')->find(Redirection::class, $redirectionId);
 
         if (null === $redirection) {
             throw new ResourceNotFoundException();
@@ -112,7 +112,7 @@ class RedirectionsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
 
         /** @var Redirection|null $redirection */
-        $redirection = $this->get('em')->find('RZ\Roadiz\Core\Entities\Redirection', $redirectionId);
+        $redirection = $this->get('em')->find(Redirection::class, $redirectionId);
 
         if (null === $redirection) {
             throw new ResourceNotFoundException();

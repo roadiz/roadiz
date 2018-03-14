@@ -84,7 +84,7 @@ class DocumentsController extends RozierApp
 
         /** @var Translation $translation */
         $translation = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         $prefilters = [
@@ -94,7 +94,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find(Folder::class, (int) $folderId);
 
             $prefilters['folders'] = [$folder];
             $this->assignation['folder'] = $folder;
@@ -129,7 +129,7 @@ class DocumentsController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Document',
+            Document::class,
             $prefilters,
             ['createdAt' => 'DESC']
         );
@@ -163,7 +163,7 @@ class DocumentsController extends RozierApp
 
         /** @var Document $document */
         $document = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             // Assign document
@@ -252,7 +252,7 @@ class DocumentsController extends RozierApp
 
         /** @var Document $document */
         $document = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -333,7 +333,7 @@ class DocumentsController extends RozierApp
 
         /** @var Document $document */
         $document = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             /** @var Packages $packages */
@@ -375,7 +375,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $document = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -426,7 +426,7 @@ class DocumentsController extends RozierApp
         $documentsIds = $request->get('documents');
 
         $documents = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findBy([
                 'id' => $documentsIds,
             ]);
@@ -476,7 +476,7 @@ class DocumentsController extends RozierApp
         $documentsIds = $request->get('documents');
 
         $documents = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findBy([
                 'id' => $documentsIds,
             ]);
@@ -525,7 +525,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find(Folder::class, (int) $folderId);
 
             $this->assignation['folder'] = $folder;
         }
@@ -617,7 +617,7 @@ class DocumentsController extends RozierApp
 
         /** @var Document $document */
         $document = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find(Document::class, (int) $documentId);
 
         /** @var DocumentHandler $handler */
         $handler = $this->get('document.handler');
@@ -644,7 +644,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find(Folder::class, (int) $folderId);
 
             $this->assignation['folder'] = $folder;
         }
@@ -734,7 +734,7 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $document = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+            ->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -984,7 +984,7 @@ class DocumentsController extends RozierApp
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->getRepository(Document::class)
                 ->findBy([
                     'id' => $documentsIds,
                 ]);
@@ -995,7 +995,7 @@ class DocumentsController extends RozierApp
             foreach ($folderPaths as $path) {
                 /** @var Folder $folder */
                 $folder = $this->get('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                    ->getRepository(Folder::class)
                     ->findOrCreateByPath($path);
 
                 /*
@@ -1037,7 +1037,7 @@ class DocumentsController extends RozierApp
             $documentsIds = explode(',', $data['documentsId']);
 
             $documents = $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->getRepository(Document::class)
                 ->findBy([
                     'id' => $documentsIds,
                 ]);
@@ -1048,7 +1048,7 @@ class DocumentsController extends RozierApp
             foreach ($folderPaths as $path) {
                 /** @var Folder $folder */
                 $folder = $this->get('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                    ->getRepository(Folder::class)
                     ->findByPath($path);
 
                 if (null !== $folder) {
@@ -1188,7 +1188,7 @@ class DocumentsController extends RozierApp
             $folderId > 0) {
             /** @var Folder $folder */
             $folder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find(Folder::class, (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);
@@ -1289,7 +1289,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId && $folderId > 0) {
             /** @var Folder $folder */
             $folder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+                ->find(Folder::class, (int) $folderId);
         }
 
         if (!empty($data['attachment'])) {
@@ -1320,7 +1320,7 @@ class DocumentsController extends RozierApp
 
         $this->assignation['orphans'] = true;
         $this->assignation['documents'] = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findAllUnused();
         $this->assignation['filters'] = [
             'itemCount' => count($this->assignation['documents']),

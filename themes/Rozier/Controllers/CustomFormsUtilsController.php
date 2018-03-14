@@ -53,7 +53,7 @@ class CustomFormsUtilsController extends RozierApp
     public function exportAction(Request $request, $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->get("em")->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
+        $customForm = $this->get("em")->find(CustomForm::class, $customFormId);
         $answers = $customForm->getCustomFormAnswers();
 
         /**
@@ -109,7 +109,7 @@ class CustomFormsUtilsController extends RozierApp
 
         try {
             $existingCustomForm = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                ->find(CustomForm::class, (int) $customFormId);
 
             $newCustomForm = clone $existingCustomForm;
 

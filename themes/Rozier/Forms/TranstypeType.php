@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -90,8 +91,8 @@ class TranstypeType extends AbstractType
             'currentType',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
-        $resolver->setAllowedTypes('currentType', 'RZ\Roadiz\Core\Entities\NodeType');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
+        $resolver->setAllowedTypes('currentType', NodeType::class);
     }
 
     /**
@@ -103,7 +104,7 @@ class TranstypeType extends AbstractType
     {
         $qb = $em->createQueryBuilder();
         $qb->select('n')
-           ->from('RZ\Roadiz\Core\Entities\NodeType', 'n')
+           ->from(NodeType::class, 'n')
            ->where($qb->expr()->neq('n.id', $currentType->getId()))
            ->orderBy('n.displayName', 'ASC');
 

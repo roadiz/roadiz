@@ -72,11 +72,11 @@ class UrlAliasesController extends RozierApp
             $translation = $this->get('defaultTranslation');
         } else {
             $translation = $this->get('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                                ->find(Translation::class, (int) $translationId);
         }
         /** @var NodesSources $source */
         $source = $this->get('em')
-                       ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                       ->getRepository(NodesSources::class)
                        ->setDisplayingAllNodesStatuses(true)
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
@@ -86,7 +86,7 @@ class UrlAliasesController extends RozierApp
         if ($source !== null &&
             $node !== null) {
             $uas = $this->get('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
+                        ->getRepository(UrlAlias::class)
                         ->findAllFromNode($node->getId());
 
             /** @var NodeHandler $nodeHandler */
@@ -248,11 +248,11 @@ class UrlAliasesController extends RozierApp
         if ($data['nodeId'] == $node->getId()) {
             /** @var Translation $translation */
             $translation = $this->get('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $data['translationId']);
+                                ->find(Translation::class, (int) $data['translationId']);
 
             /** @var NodesSources $nodeSource */
             $nodeSource = $this->get('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                               ->getRepository(NodesSources::class)
                                ->setDisplayingAllNodesStatuses(true)
                                ->setDisplayingNotPublishedNodes(true)
                                ->findOneBy(['node' => $node, 'translation' => $translation]);
@@ -318,7 +318,7 @@ class UrlAliasesController extends RozierApp
     private function urlAliasExists($name)
     {
         return (boolean) $this->get('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')
+                              ->getRepository(UrlAlias::class)
                               ->exists($name);
     }
     /**
@@ -329,7 +329,7 @@ class UrlAliasesController extends RozierApp
     private function nodeNameExists($name)
     {
         return (boolean) $this->get('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                              ->getRepository(Node::class)
                               ->setDisplayingNotPublishedNodes(true)
                               ->exists($name);
     }

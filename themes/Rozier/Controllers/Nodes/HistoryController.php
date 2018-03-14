@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -52,14 +53,14 @@ class HistoryController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
         /** @var Node $node */
         $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find(Node::class, (int) $nodeId);
 
         if (null === $node) {
             throw new ResourceNotFoundException();
         }
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Log',
+            Log::class,
             [
                 'nodeSource' => $node->getNodeSources()->toArray(),
             ],

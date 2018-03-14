@@ -31,6 +31,7 @@ namespace Themes\Rozier\Forms\Node;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,7 +51,7 @@ class TranslateNodeType extends AbstractType
     {
         /** @var ObjectManager $em */
         $em = $options['em'];
-        $translations = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $translations = $em->getRepository(Translation::class)
                            ->findUnavailableTranslationsForNode($options['node']);
 
 
@@ -102,7 +103,7 @@ class TranslateNodeType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('node', 'RZ\Roadiz\Core\Entities\Node');
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('node', Node::class);
+        $resolver->setAllowedTypes('em', ObjectManager::class);
     }
 }

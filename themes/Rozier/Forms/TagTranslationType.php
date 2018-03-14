@@ -29,9 +29,11 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
+use RZ\Roadiz\Core\Entities\TagTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -77,7 +79,7 @@ class TagTranslationType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'tagName' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\TagTranslation',
+            'data_class' => TagTranslation::class,
             'attr' => [
                 'class' => 'uk-form tag-translation-form',
             ],
@@ -87,7 +89,7 @@ class TagTranslationType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('tagName', 'string');
     }
 }

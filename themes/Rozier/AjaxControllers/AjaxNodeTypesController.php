@@ -58,7 +58,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\NodeType',
+            NodeType::class,
             $arrayFilter
         );
         $listManager->setDisplayingNotPublishedNodes(true);
@@ -100,7 +100,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $nodeTypes = $em->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([
+        $nodeTypes = $em->getRepository(NodeType::class)->findBy([
             'name' => $cleanNodeTypesName
         ]);
 

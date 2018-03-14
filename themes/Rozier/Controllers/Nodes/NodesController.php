@@ -116,7 +116,7 @@ class NodesController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Node',
+            Node::class,
             $arrayFilter
         );
         $listManager->setDisplayingNotPublishedNodes(true);
@@ -132,11 +132,11 @@ class NodesController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['translation'] = $translation;
         $this->assignation['availableTranslations'] = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findAllAvailable();
         $this->assignation['nodes'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findBy([
                 'newsletterType' => false,
                 'visible' => true,
@@ -160,7 +160,7 @@ class NodesController extends RozierApp
 
         /** @var Node $node */
         $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
@@ -259,10 +259,10 @@ class NodesController extends RozierApp
 
         /** @var Node $node */
         $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', $nodeId);
+            ->find(Node::class, $nodeId);
         /** @var NodeType $type */
         $type = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\NodeType', $typeId);
+            ->find(NodeType::class, $typeId);
 
         if (null !== $node && null !== $type) {
             $node->removeStackType($type);
@@ -298,14 +298,14 @@ class NodesController extends RozierApp
 
         /** @var NodeType $type */
         $type = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+            ->find(NodeType::class, $nodeTypeId);
 
         /** @var Translation $translation */
         $translation = $this->get('defaultTranslation');
 
         if ($translationId !== null) {
             $translation = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                ->find(Translation::class, (int) $translationId);
         }
 
         if ($type !== null &&
@@ -375,19 +375,19 @@ class NodesController extends RozierApp
         $translation = $this->get('defaultTranslation');
 
         $nodeTypesCount = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->countBy([]);
 
         if (null !== $translationId) {
             /** @var Translation $translation */
             $translation = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                ->find(Translation::class, (int) $translationId);
         }
 
         if ($nodeId > 0) {
             /** @var Node $parentNode */
             $parentNode = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                ->find(Node::class, (int) $nodeId);
         } else {
             $parentNode = null;
         }
@@ -459,7 +459,7 @@ class NodesController extends RozierApp
 
         /** @var Node $node */
         $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find(Node::class, (int) $nodeId);
 
         if (null !== $node &&
             !$node->isDeleted() &&
@@ -538,7 +538,7 @@ class NodesController extends RozierApp
             }
 
             $nodes = $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->getRepository(Node::class)
                 ->setDisplayingAllNodesStatuses(true)
                 ->setDisplayingNotPublishedNodes(true)
                 ->findBy($criteria);
@@ -578,7 +578,7 @@ class NodesController extends RozierApp
 
         /** @var Node $node */
         $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find(Node::class, (int) $nodeId);
 
         if (null !== $node &&
             $node->isDeleted()) {
@@ -656,7 +656,7 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
         /** @var Node $node */
         $node = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
             $form = $this->createFormBuilder()

@@ -62,13 +62,13 @@ class TranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translations = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                             ->getRepository(Translation::class)
                              ->findAll();
 
         $this->assignation['translations'] = [];
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Translation'
+            Translation::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -126,7 +126,7 @@ class TranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find(Translation::class, (int) $translationId);
 
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
@@ -220,7 +220,7 @@ class TranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find(Translation::class, (int) $translationId);
 
         if (null !== $translation) {
             $this->assignation['translation'] = $translation;

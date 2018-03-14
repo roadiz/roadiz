@@ -58,7 +58,7 @@ class AjaxTagsController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tags = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->getRepository(Tag::class)
             ->findBy([
                     'parent' => null,
                 ], [
@@ -95,7 +95,7 @@ class AjaxTagsController extends AbstractAjaxController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $tags = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+        $tags = $em->getRepository(Tag::class)->findBy([
             'id' => $cleanTagIds,
         ]);
 
@@ -127,7 +127,7 @@ class AjaxTagsController extends AbstractAjaxController
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Tag',
+            Tag::class,
             [],
             [
                 'createdAt' => 'DESC'
@@ -202,7 +202,7 @@ class AjaxTagsController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $tag = $this->get('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                    ->find(Tag::class, (int) $tagId);
 
         if ($tag !== null) {
             $responseArray = null;
@@ -258,7 +258,7 @@ class AjaxTagsController extends AbstractAjaxController
             $pattern = strip_tags($request->get('search'));
 
             $tags = $this->get('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                         ->getRepository(Tag::class)
                          ->searchBy($pattern, [], [], 10);
 
             if (0 === count($tags)) {
@@ -267,7 +267,7 @@ class AjaxTagsController extends AbstractAjaxController
                  */
                 $pattern = StringHandler::slugify($pattern);
                 $tags = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                             ->getRepository(Tag::class)
                              ->searchBy($pattern, [], [], 10);
             }
             /** @var Tag $tag */
@@ -296,7 +296,7 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['newParent']) &&
             $parameters['newParent'] > 0) {
             $parent = $this->get('em')
-                           ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['newParent']);
+                           ->find(Tag::class, (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $tag->setParent($parent);
@@ -311,14 +311,14 @@ class AjaxTagsController extends AbstractAjaxController
         if (!empty($parameters['nextTagId']) &&
             $parameters['nextTagId'] > 0) {
             $nextTag = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['nextTagId']);
+                            ->find(Tag::class, (int) $parameters['nextTagId']);
             if ($nextTag !== null) {
                 $tag->setPosition($nextTag->getPosition() - 0.5);
             }
         } elseif (!empty($parameters['prevTagId']) &&
             $parameters['prevTagId'] > 0) {
             $prevTag = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parameters['prevTagId']);
+                            ->find(Tag::class, (int) $parameters['prevTagId']);
             if ($prevTag !== null) {
                 $tag->setPosition($prevTag->getPosition() + 0.5);
             }
@@ -356,7 +356,7 @@ class AjaxTagsController extends AbstractAjaxController
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
-        $tagRepository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag');
+        $tagRepository = $entityManager->getRepository(Tag::class);
 
         /** @var Tag $tag */
         $tag = $tagRepository->findOrCreateByPath($request->get('tagName'));

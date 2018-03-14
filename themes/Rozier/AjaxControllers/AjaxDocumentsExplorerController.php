@@ -32,6 +32,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,7 +64,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         if ($request->get('folderId') > 0) {
             $folder = $this->get('em')
                         ->find(
-                            'RZ\Roadiz\Core\Entities\Folder',
+                            Folder::class,
                             $request->get('folderId')
                         );
 
@@ -73,7 +74,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Document',
+            Document::class,
             $arrayFilter,
             [
                 'createdAt' => 'DESC'
@@ -125,7 +126,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $documents = $em->getRepository('RZ\Roadiz\Core\Entities\Document')->findBy([
+        $documents = $em->getRepository(Document::class)->findBy([
             'id' => $cleanDocumentIds,
             'raw' => false,
         ]);

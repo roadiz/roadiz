@@ -36,6 +36,7 @@ use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -197,7 +198,7 @@ class InstallApp extends AppController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     $user = $this->get('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\User')
+                        ->getRepository(User::class)
                         ->findOneBy(['username' => $userForm->getData()['username']]);
 
                     return $this->redirect($this->generateUrl(
@@ -225,7 +226,7 @@ class InstallApp extends AppController
      */
     public function userSummaryAction(Request $request, $userId)
     {
-        $user = $this->get('em')->find('RZ\Roadiz\Core\Entities\User', $userId);
+        $user = $this->get('em')->find(User::class, $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
         return $this->render('steps/userSummary.html.twig', $this->assignation);

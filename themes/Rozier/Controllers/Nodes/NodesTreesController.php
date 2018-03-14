@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,7 +60,7 @@ class NodesTreesController extends RozierApp
             $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
             /** @var Node $node */
             $node = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+                ->find(Node::class, (int) $nodeId);
 
             if (null === $node) {
                 throw new ResourceNotFoundException();
@@ -75,7 +76,7 @@ class NodesTreesController extends RozierApp
         if (null !== $translationId) {
             /** @var Translation $translation */
             $translation = $this->get('em')
-                                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                ->getRepository(Translation::class)
                                 ->findOneBy(['id' => (int) $translationId]);
         } else {
             /** @var Translation $translation */
@@ -166,7 +167,7 @@ class NodesTreesController extends RozierApp
 
             /** @var Node[] $nodes */
             $nodes = $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->getRepository(Node::class)
                           ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
@@ -219,7 +220,7 @@ class NodesTreesController extends RozierApp
 
             /** @var Node[] $nodes */
             $nodes = $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->getRepository(Node::class)
                           ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
@@ -303,7 +304,7 @@ class NodesTreesController extends RozierApp
             array_filter($nodesIds);
 
             $nodes = $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->getRepository(Node::class)
                           ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
@@ -338,7 +339,7 @@ class NodesTreesController extends RozierApp
 
             /** @var Node[] $nodes */
             $nodes = $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->getRepository(Node::class)
                           ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
@@ -414,7 +415,7 @@ class NodesTreesController extends RozierApp
 
             /** @var Node[] $nodes */
             $nodes = $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->getRepository(Node::class)
                           ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
@@ -425,7 +426,7 @@ class NodesTreesController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->get('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                            ->getRepository(Tag::class)
                             ->findOrCreateByPath($path);
 
                 foreach ($nodes as $node) {
@@ -455,7 +456,7 @@ class NodesTreesController extends RozierApp
 
             /** @var Node[] $nodes */
             $nodes = $this->get('em')
-                          ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                          ->getRepository(Node::class)
                           ->setDisplayingNotPublishedNodes(true)
                           ->findBy([
                               'id' => $nodesIds,
@@ -466,7 +467,7 @@ class NodesTreesController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->get('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                            ->getRepository(Tag::class)
                             ->findByPath($path);
 
                 if (null !== $tag) {

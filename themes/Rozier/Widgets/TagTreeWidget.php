@@ -32,6 +32,7 @@ namespace Themes\Rozier\Widgets;
 
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -58,7 +59,7 @@ class TagTreeWidget extends AbstractWidget
 
         $this->parentTag = $parent;
         $this->translation = $this->getController()->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
         $this->getTagTreeAssignationForParent();
     }
@@ -82,7 +83,7 @@ class TagTreeWidget extends AbstractWidget
         }
 
         $this->tags = $this->getController()->get('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+             ->getRepository(Tag::class)
             ->findBy(
                 [
                      'parent' => $this->parentTag,
@@ -111,7 +112,7 @@ class TagTreeWidget extends AbstractWidget
             }
 
             return $this->tags = $this->getController()->get('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                        ->getRepository(Tag::class)
                         ->findBy([
                             'parent' => $parent,
                             'translation' => $this->translation,

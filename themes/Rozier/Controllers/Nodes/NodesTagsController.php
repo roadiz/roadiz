@@ -181,7 +181,7 @@ class NodesTagsController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->get('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                            ->getRepository(Tag::class)
                             ->findOrCreateByPath($path);
 
                 $node->addTag($tag);

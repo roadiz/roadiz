@@ -56,7 +56,7 @@ class CustomFormsController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\CustomForm'
+            CustomForm::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -80,7 +80,7 @@ class CustomFormsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->get('em')
-                           ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                           ->find(CustomForm::class, (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -185,7 +185,7 @@ class CustomFormsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customForm = $this->get('em')
-                           ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                           ->find(CustomForm::class, (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;

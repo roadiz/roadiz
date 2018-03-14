@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationLocale;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationOverrideLocale;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -105,7 +106,7 @@ class TranslationType extends AbstractType
             'label' => false,
             'locale' => '',
             'overrideLocale' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\Translation',
+            'data_class' => Translation::class,
             'attr' => [
                 'class' => 'uk-form translation-form',
             ],
@@ -115,7 +116,7 @@ class TranslationType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('locale', ['string']);
         $resolver->setAllowedTypes('overrideLocale', ['string', 'null']);
     }

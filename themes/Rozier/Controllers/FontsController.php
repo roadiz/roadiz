@@ -61,7 +61,7 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Font'
+            Font::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -133,7 +133,7 @@ class FontsController extends RozierApp
 
         /** @var Font $font */
         $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+                     ->find(Font::class, (int) $fontId);
 
         if (null !== $font) {
             $form = $this->buildDeleteForm($font);
@@ -182,7 +182,7 @@ class FontsController extends RozierApp
 
         /** @var Font $font */
         $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+                     ->find(Font::class, (int) $fontId);
 
         if ($font !== null) {
             $form = $this->createForm(new FontType(), $font, [
@@ -246,7 +246,7 @@ class FontsController extends RozierApp
 
         /** @var Font $font */
         $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+                     ->find(Font::class, (int) $fontId);
 
         if ($font !== null) {
             // Prepare File
