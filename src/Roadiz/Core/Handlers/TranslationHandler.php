@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\objectManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
@@ -81,7 +81,7 @@ class TranslationHandler extends AbstractHandler
         $this->translation->setDefaultTranslation(true);
         $this->objectManager->flush();
 
-        if ($this->objectManager instanceof objectManagerInterface) {
+        if ($this->objectManager instanceof EntityManagerInterface) {
             $cacheDriver = $this->objectManager->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
                 $cacheDriver->deleteAll();

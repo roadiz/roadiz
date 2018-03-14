@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Yaml\Yaml;
@@ -76,6 +77,7 @@ class ThemesType extends AbstractType
             ->in(ROADIZ_ROOT . '/themes');
 
         // And storing it into an array, used in the form
+        /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
             $data = Yaml::parse(file_get_contents($file->getPathname()));
             $classname = '\Themes\\' . $data['themeDir'] . "\\" . $data['themeDir'] . "App";

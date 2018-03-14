@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Frontend controller to handle a page request.

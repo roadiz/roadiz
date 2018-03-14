@@ -103,7 +103,7 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getChildren($criteria, $order);
     }
 
     /**
@@ -124,7 +124,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getNext($criteria, $order);
     }
 
     /**
@@ -145,7 +145,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getPrevious($criteria, $order);
     }
 
     /**
@@ -166,7 +166,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getLastSibling($criteria, $order);
     }
 
     /**
@@ -187,7 +187,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order);
     }
 
     /**
@@ -227,7 +227,7 @@ class NodesSourcesExtension extends \Twig_Extension
 
         $preview = $preview !== null ? $preview : $this->preview;
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getParents($criteria, $this->securityAuthorizationChecker, $preview);
+        return $this->nodesSourcesHandler->getParents($criteria);
     }
 
     /**

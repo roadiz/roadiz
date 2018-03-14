@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use AM\InterventionRequest\InterventionRequest;
-use AM\InterventionRequest\ShortUrlExpander;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Pimple\Container;
