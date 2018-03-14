@@ -47,6 +47,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -382,11 +383,11 @@ abstract class Controller implements ContainerAwareInterface
      * @param string          $message  A message
      * @param \Exception|null $previous The previous exception
      *
-     * @return NotFoundHttpException
+     * @return ResourceNotFoundException
      */
     protected function createNotFoundException($message = 'Not Found', \Exception $previous = null)
     {
-        return new NotFoundHttpException($message, $previous);
+        return new ResourceNotFoundException($message, $previous);
     }
     /**
      * Returns an AccessDeniedException.
