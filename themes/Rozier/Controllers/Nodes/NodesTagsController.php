@@ -29,7 +29,6 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;

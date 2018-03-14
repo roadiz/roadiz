@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Widgets;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;

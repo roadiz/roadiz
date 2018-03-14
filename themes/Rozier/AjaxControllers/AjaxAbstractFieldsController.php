@@ -31,11 +31,7 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Entities\CustomFormField;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\AbstractHandler;
-use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
-use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

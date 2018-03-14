@@ -227,7 +227,7 @@ class DocumentsController extends RozierApp
 
                 return new JsonResponse([
                     'message' => $msg,
-                    'path' => $this->get('assetPackages')->getUrl($document->getRelativeUrl(), Packages::DOCUMENTS) . '?' . random_int(10, 999)
+                    'path' => $this->get('assetPackages')->getUrl($document->getRelativePath(), Packages::DOCUMENTS) . '?' . random_int(10, 999)
                 ]);
             }
 

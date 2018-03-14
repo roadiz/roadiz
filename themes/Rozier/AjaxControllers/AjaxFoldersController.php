@@ -136,10 +136,7 @@ class AjaxFoldersController extends AbstractAjaxController
                         );
             /** @var Folder $folder */
             foreach ($folders as $folder) {
-                /** @var FolderHandler $handler */
-                $handler = $this->get('folder.handler');
-                $handler->setFolder($folder);
-                $responseArray[] = $handler->getFullPath();
+                $responseArray[] = $folder->getFullPath();
             }
         }
 
