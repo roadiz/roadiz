@@ -70,7 +70,7 @@ class TranslationTransformer implements DataTransformerInterface
         }
 
         $translation = $this->manager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->find($translationId)
         ;
 

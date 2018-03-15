@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Tests;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -93,7 +94,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     protected static function createPageNode($title, Translation $translation, Node $parent = null)
     {
         $nodeType = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findOneByName('Page');
 
         $node = new Node($nodeType);

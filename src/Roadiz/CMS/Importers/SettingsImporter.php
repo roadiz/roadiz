@@ -32,6 +32,7 @@ namespace RZ\Roadiz\CMS\Importers;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
@@ -55,8 +56,8 @@ class SettingsImporter implements ImporterInterface
         /** @var \RZ\Roadiz\Core\Entities\SettingGroup[] $settingGroups */
         $settingGroups = $serializer->deserialize($serializedData);
 
-        $groupsNames = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')->findAllNames();
-        $settingsNames = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')->findAllNames();
+        $groupsNames = $em->getRepository(SettingGroup::class)->findAllNames();
+        $settingsNames = $em->getRepository(Setting::class)->findAllNames();
 
         $newSettings = [];
 
@@ -75,7 +76,7 @@ class SettingsImporter implements ImporterInterface
                     if ($setting->getValue() !== "") {
                         $existingValue = $setting->getValue();
                     }
-                    $setting = $em->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                    $setting = $em->getRepository(Setting::class)
                         ->findOneByName($setting->getName());
 
                     /*
@@ -108,7 +109,7 @@ class SettingsImporter implements ImporterInterface
                 if (!in_array($settingGroup->getName(), $groupsNames)) {
                     $em->persist($settingGroup);
                 } else {
-                    $settingGroup = $em->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+                    $settingGroup = $em->getRepository(SettingGroup::class)
                         ->findOneByName($settingGroup->getName());
                 }
             }

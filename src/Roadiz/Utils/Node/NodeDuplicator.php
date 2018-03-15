@@ -74,6 +74,10 @@ class NodeDuplicator
         if (null !== $this->originalNode) {
             $this->em->refresh($this->originalNode);
 
+            if ($this->originalNode->isLocked()) {
+                throw new \RuntimeException('Locked node cannot be duplicated.');
+            }
+
             $parent = $this->originalNode->getParent();
             $node = clone $this->originalNode;
 
@@ -82,7 +86,7 @@ class NodeDuplicator
             }
 
             if ($parent !== null) {
-                $parent = $this->em->find('RZ\Roadiz\Core\Entities\Node', $parent->getId());
+                $parent = $this->em->find(Node::class, $parent->getId());
                 $node->setParent($parent);
             }
             // Demote cloned node to draft

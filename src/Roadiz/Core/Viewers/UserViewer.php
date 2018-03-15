@@ -35,7 +35,6 @@ namespace RZ\Roadiz\Core\Viewers;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;

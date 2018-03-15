@@ -142,8 +142,8 @@ class FirewallEntry
         $firewallLogout = null,
         $firewallLoginCheck = null,
         $firewallBaseRole = 'ROLE_USER',
-        $authenticationSuccessHandlerClass = 'RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler',
-        $authenticationFailureHandlerClass = 'RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler'
+        $authenticationSuccessHandlerClass = AuthenticationSuccessHandler::class,
+        $authenticationFailureHandlerClass = AuthenticationFailureHandler::class
     ) {
         $this->firewallBasePattern = $firewallBasePattern;
         $this->firewallBasePath = $firewallBasePath;

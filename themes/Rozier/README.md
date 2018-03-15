@@ -1,5 +1,11 @@
 # Rozier backend theme
 
+## Migration to ES6 syntax and Webpack
+### Things to tests
+
+* Map markers (and images)
+* History js (back and forwards not working)
+
 ## Contribute
 
 To enhance Rozier backend theme you must install Grunt and Bower:

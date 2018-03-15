@@ -58,7 +58,7 @@ class NodeTypeFieldsController extends RozierApp
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+                         ->find(NodeType::class, $nodeTypeId);
 
         if ($nodeType !== null) {
             $fields = $nodeType->getFields();
@@ -86,7 +86,7 @@ class NodeTypeFieldsController extends RozierApp
 
         /** @var NodeTypeField $field */
         $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', $nodeTypeFieldId);
+                      ->find(NodeTypeField::class, $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['nodeType'] = $field->getNodeType();
@@ -144,13 +144,13 @@ class NodeTypeFieldsController extends RozierApp
         $field = new NodeTypeField();
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+                         ->find(NodeType::class, $nodeTypeId);
 
 
         if ($nodeType !== null &&
             $field !== null) {
             $latestPosition = $this->get('em')
-                                   ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                                   ->getRepository(NodeTypeField::class)
                                    ->findLatestPositionInNodeType($nodeType);
             $field->setNodeType($nodeType);
             $field->setPosition($latestPosition + 1);
@@ -226,7 +226,7 @@ class NodeTypeFieldsController extends RozierApp
 
         /** @var NodeTypeField $field */
         $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+                      ->find(NodeTypeField::class, (int) $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;
@@ -244,7 +244,7 @@ class NodeTypeFieldsController extends RozierApp
                  */
                 /** @var NodeType $nodeType */
                 $nodeType = $this->get('em')
-                                 ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
+                                 ->find(NodeType::class, (int) $nodeTypeId);
 
                 /** @var NodeTypeHandler $handler */
                 $handler = $this->get('node_type.handler');

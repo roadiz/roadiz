@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -74,6 +75,6 @@ class RoleJsonSerializer extends AbstractJsonSerializer
 
         $serializer = new Serializer([$normalizer], [$encoder]);
 
-        return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\Role', 'json');
+        return $serializer->deserialize($jsonString, Role::class, 'json');
     }
 }

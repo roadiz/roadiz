@@ -43,7 +43,7 @@ trait LoginResetTrait
     public function getUserByToken(EntityManager $entityManager, $token)
     {
         /** @var User $user */
-        return $entityManager->getRepository('RZ\Roadiz\Core\Entities\User')
+        return $entityManager->getRepository(User::class)
             ->findOneByConfirmationToken($token);
     }
 

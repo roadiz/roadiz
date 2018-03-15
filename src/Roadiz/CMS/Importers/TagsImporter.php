@@ -75,7 +75,7 @@ class TagsImporter implements ImporterInterface
              *
              * @var Tag|null $existing
              */
-            $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            $existing = $em->getRepository(Tag::class)
                            ->findOneByTagName($tag->getTagName());
             if (null !== $existing) {
                 return null;
@@ -90,7 +90,7 @@ class TagsImporter implements ImporterInterface
             $tag->getChildren()->clear();
             /** @var TagTranslation $tagTranslation */
             foreach ($tag->getTranslatedTags() as $tagTranslation) {
-                $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                $trans = $em->getRepository(Translation::class)
                     ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
 
                 if (empty($trans)) {

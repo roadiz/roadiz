@@ -1,0 +1,5 @@
+<% var prefix = (htmlWebpackPlugin.options.refreshOnChange) ? '' : '{{ head.resourcesUrl }}' %>
+
+<% for (var index in htmlWebpackPlugin.files.chunks) { %>
+<script src="<%= prefix %><%= htmlWebpackPlugin.files.chunks[index].entry %>" type="text/javascript"></script>
+<% } %>

@@ -64,7 +64,7 @@ class DocumentViewer extends AbstractDocumentViewer
     protected function getDocumentsByFilenames($filenames)
     {
         return $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findBy(["filename" => $filenames]);
     }
 
@@ -74,7 +74,7 @@ class DocumentViewer extends AbstractDocumentViewer
     protected function getOneDocumentByFilenames($filenames)
     {
         return $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findOneBy([
                 "filename" => $filenames,
                 "raw" => false,

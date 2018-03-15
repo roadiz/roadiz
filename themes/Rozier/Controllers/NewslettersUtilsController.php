@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers;
 
 use InlineStyle\InlineStyle;
 use RZ\Roadiz\Core\Entities\Newsletter;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +62,7 @@ class NewslettersUtilsController extends RozierApp
 
         try {
             /** @var Newsletter $existingNewsletter */
-            $existingNewsletter = $this->get('em')->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+            $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
             /** @var NewsletterHandler $handler */
             $handler = $this->get('newsletter.handler');
             $handler->setNewsletter($existingNewsletter);
@@ -106,7 +107,7 @@ class NewslettersUtilsController extends RozierApp
     {
         // get first not static frontend
         $theme = $this->get("em")
-                      ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+                      ->getRepository(Theme::class)
                       ->findFirstAvailableNonStaticFrontend();
 
         $baseNamespace = explode("\\", $theme->getClassName());
@@ -148,7 +149,7 @@ class NewslettersUtilsController extends RozierApp
     public function previewAction(Request $request, $newsletterId)
     {
         $newsletter = $this->get("em")->find(
-            "RZ\Roadiz\Core\Entities\Newsletter",
+            Newsletter::class,
             $newsletterId
         );
 
@@ -171,7 +172,7 @@ class NewslettersUtilsController extends RozierApp
     public function exportAction(Request $request, $newsletterId, $inline)
     {
         $newsletter = $this->get("em")->find(
-            "RZ\Roadiz\Core\Entities\Newsletter",
+            Newsletter::class,
             $newsletterId
         );
 

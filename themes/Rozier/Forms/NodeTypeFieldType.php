@@ -29,10 +29,12 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -160,7 +162,7 @@ class NodeTypeFieldType extends AbstractType
             'label' => false,
             'fieldName' => '',
             'nodeType' => null,
-            'data_class' => 'RZ\Roadiz\Core\Entities\NodeTypeField',
+            'data_class' => NodeTypeField::class,
             'attr' => [
                 'class' => 'uk-form node-type-field-form',
             ],
@@ -173,8 +175,8 @@ class NodeTypeFieldType extends AbstractType
             'nodeType',
             'em',
         ]);
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('fieldName', 'string');
-        $resolver->setAllowedTypes('nodeType', 'RZ\Roadiz\Core\Entities\NodeType');
+        $resolver->setAllowedTypes('nodeType', NodeType::class);
     }
 }

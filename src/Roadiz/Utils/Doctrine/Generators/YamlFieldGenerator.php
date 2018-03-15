@@ -47,7 +47,7 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
      */
     public function '.$this->field->getGetterName().'AsObject()
     {
-        return \Symfony\Component\Yaml\Yaml::parse('.$assignation.');
+        return Yaml::parse('.$assignation.');
     }'.PHP_EOL;
     }
 }

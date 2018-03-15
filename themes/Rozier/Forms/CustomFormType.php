@@ -29,9 +29,11 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
+use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -103,7 +105,7 @@ class CustomFormType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'name' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\CustomForm',
+            'data_class' => CustomForm::class,
             'attr' => [
                 'class' => 'uk-form custom-form-form',
             ],
@@ -112,7 +114,7 @@ class CustomFormType extends AbstractType
         $resolver->setRequired([
             'em',
         ]);
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
     }
 }

@@ -116,13 +116,20 @@ class AjaxExplorerProviderController extends AbstractAjaxController
         $provider = new $providerClass();
         if ($provider instanceof ExplorerProviderInterface) {
             $provider->setContainer($this->getContainer());
-            $cleanNodeIds = array_filter($request->query->get('ids'));
-            $entities = $provider->getItemsById($cleanNodeIds);
-
             $entitiesArray = [];
-            foreach ($entities as $entity) {
-                if ($entity instanceof ExplorerItemInterface) {
-                    $entitiesArray[] = $entity->toArray();
+            $cleanNodeIds = array_filter($request->query->get('ids'));
+            $cleanNodeIds = array_filter($cleanNodeIds, function ($value) {
+                $nullValues = ['null', null, 0, '0', false, 'false'];
+                return !in_array($value, $nullValues, true);
+            });
+
+            if (count($cleanNodeIds) > 0) {
+                $entities = $provider->getItemsById($cleanNodeIds);
+
+                foreach ($entities as $entity) {
+                    if ($entity instanceof ExplorerItemInterface) {
+                        $entitiesArray[] = $entity->toArray();
+                    }
                 }
             }
 

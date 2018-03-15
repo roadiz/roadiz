@@ -59,7 +59,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
          * @return Translation
          */
         $container['defaultTranslation'] = function ($c) {
-            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            return $c['em']->getRepository(Translation::class)
                 ->findDefault();
         };
 
@@ -105,7 +105,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
              * DO NOT wake up entity manager in Install
              */
             if (!$kernel->isInstallMode()) {
-                $availableTranslations = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                $availableTranslations = $c['em']->getRepository(Translation::class)
                                                  ->findAllAvailable();
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {

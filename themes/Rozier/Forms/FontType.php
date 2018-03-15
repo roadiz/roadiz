@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\FontVariantsType;
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;
@@ -156,7 +157,7 @@ class FontType extends AbstractType
             'label' => false,
             'name' => '',
             'variant' => Font::REGULAR,
-            'data_class' => 'RZ\Roadiz\Core\Entities\Font',
+            'data_class' => Font::class,
             'attr' => [
                 'class' => 'uk-form font-form',
             ],
@@ -166,7 +167,7 @@ class FontType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
         $resolver->setAllowedTypes('variant', 'integer');
     }

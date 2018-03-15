@@ -33,6 +33,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Utils\TagApi;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -109,7 +110,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
     {
         $nsDocuments = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+            ->getRepository(NodesSourcesDocuments::class)
             ->findBy(['nodeSource' => $this->nodeSource, 'field' => $field]);
 
         if (count($nsDocuments) > 0) {
@@ -140,7 +141,7 @@ class NodesSourcesHandler extends AbstractHandler
 
         if (null === $position) {
             $latestPosition = $this->objectManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+                ->getRepository(NodesSourcesDocuments::class)
                 ->getLatestPosition($this->nodeSource, $field);
 
             $nsDoc->setPosition($latestPosition + 1);
@@ -165,7 +166,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getDocumentsFromFieldName($fieldName)
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
     }
 
@@ -224,7 +225,7 @@ class NodesSourcesHandler extends AbstractHandler
                     ]
                 );
                 $currentParent = $this->objectManager
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->getRepository(NodesSources::class)
                     ->findOneBy(
                         $criteria,
                         []
@@ -271,7 +272,7 @@ class NodesSourcesHandler extends AbstractHandler
         }
 
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->findBy(
                 $defaultCrit,
                 $defaultOrder,
@@ -313,7 +314,7 @@ class NodesSourcesHandler extends AbstractHandler
         }
 
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->findOneBy(
                 $defaultCrit,
                 $defaultOrder
@@ -352,7 +353,7 @@ class NodesSourcesHandler extends AbstractHandler
         }
 
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->findOneBy(
                 $defaultCrit,
                 $defaultOrder
@@ -450,7 +451,7 @@ class NodesSourcesHandler extends AbstractHandler
 
         /** @var NodesSourcesRepository $repo */
         $repo = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+            ->getRepository(NodesSources::class);
 
         return $repo->findOneBy(
             $defaultCriteria,
@@ -466,7 +467,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @param array|null $criteria
      * @param array|null $order
      *
-     * @return NodesSources|null
+     * @return NodesSources|object|null
      */
     public function getNext(
         array $criteria = null,
@@ -498,7 +499,7 @@ class NodesSourcesHandler extends AbstractHandler
         $order['node.position'] = 'ASC';
 
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->findOneBy(
                 $defaultCrit,
                 $order
@@ -554,7 +555,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getNodesFromFieldName($fieldName)
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->findByNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,
@@ -572,7 +573,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getReverseNodesFromFieldName($fieldName)
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->findByReverseNodeAndFieldNameAndTranslation(
                 $this->nodeSource->getNode(),
                 $fieldName,

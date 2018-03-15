@@ -200,7 +200,7 @@ class CustomFormHelper
     private function getAttribute(CustomFormAnswer $answer, CustomFormField $field)
     {
         /** @var EntityRepository $repo */
-        $repo = $this->em->getRepository('RZ\Roadiz\Core\Entities\CustomFormFieldAttribute');
+        $repo = $this->em->getRepository(CustomFormFieldAttribute::class);
         return $repo->findOneBy([
             'customFormAnswer' => $answer,
             'customFormField' => $field,

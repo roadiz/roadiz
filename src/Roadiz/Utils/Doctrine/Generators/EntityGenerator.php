@@ -122,6 +122,10 @@ class EntityGenerator
      */
     protected function getClassHeader()
     {
+        /*
+         * BE CAREFUL, USE statements are required for field generators which
+         * are using ::class syntax!
+         */
         return '<?php
 /*
  * THIS IS A GENERATED FILE, DO NOT EDIT IT
@@ -132,6 +136,9 @@ namespace '.NodeType::getGeneratedEntitiesNamespace().';
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\CustomForm;
+use RZ\Roadiz\Core\Entities\Document;
+use Symfony\Component\Yaml\Yaml;
 use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     }
 

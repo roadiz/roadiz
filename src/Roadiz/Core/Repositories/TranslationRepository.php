@@ -249,7 +249,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('overrideLocale', $overrideLocale)
             ->setMaxResults(1)
             ->setCacheable(true);
-        
+
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationOneByOverrideAndAvailable-' . $overrideLocale);
 
@@ -269,6 +269,8 @@ class TranslationRepository extends EntityRepository
         $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
         $qb->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq(static::NODESSOURCES_ALIAS . '.node', ':node'))
+            ->addOrderBy('t.defaultTranslation', 'DESC')
+            ->addOrderBy('t.locale', 'ASC')
             ->setParameter('node', $node)
             ->setCacheable(true);
 
@@ -307,6 +309,8 @@ class TranslationRepository extends EntityRepository
         $qb->select(static::TRANSLATION_ALIAS . '.id')
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->andWhere($qb->expr()->eq(static::NODESSOURCES_ALIAS . '.node', ':node'))
+            ->addOrderBy('t.defaultTranslation', 'DESC')
+            ->addOrderBy('t.locale', 'ASC')
             ->setParameter('node', $node)
             ->setCacheable(true);
 

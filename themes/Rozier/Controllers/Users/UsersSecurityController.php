@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +54,7 @@ class UsersSecurityController extends RozierApp
 
         /** @var User $user */
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -176,7 +177,7 @@ class UsersSecurityController extends RozierApp
                     $this->publishErrorMessage($request, $msg);
                 }
                 if ($value !== null) {
-                    $n = $this->get('em')->find('RZ\Roadiz\Core\Entities\Node', $value[0]);
+                    $n = $this->get('em')->find(Node::class, $value[0]);
                     $user->$setter($n);
                 } else {
                     $user->$setter(null);

@@ -88,7 +88,7 @@ class TagTransformer implements DataTransformerInterface
         $tags = [];
         foreach ($ids as $tagId) {
             $tag = $this->manager
-                ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                ->getRepository(Tag::class)
                 ->find($tagId)
             ;
             if (null === $tag) {

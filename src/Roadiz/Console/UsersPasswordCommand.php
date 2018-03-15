@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,7 +61,7 @@ class UsersPasswordCommand extends UsersCommand
 
         if ($name) {
             $user = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
+                ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if (null !== $user) {

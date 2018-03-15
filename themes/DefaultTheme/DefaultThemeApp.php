@@ -112,7 +112,7 @@ class DefaultThemeApp extends FrontendController
     /**
      * Return a Response with default backend 404 error page.
      *
-     * @param string $message Additionnal message to describe 404 error.
+     * @param string $message Additional message to describe 404 error.
      *
      * @return Response
      */

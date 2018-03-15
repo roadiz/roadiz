@@ -63,7 +63,7 @@ class RolesType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $roles = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Role')->findAll();
+        $roles = $this->entityManager->getRepository(Role::class)->findAll();
 
         $choices = [];
 

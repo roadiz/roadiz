@@ -11,7 +11,9 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFolderName;
+use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,7 +53,7 @@ class FolderType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'name' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\Folder',
+            'data_class' => Folder::class,
             'attr' => [
                 'class' => 'uk-form folder-form',
             ],
@@ -60,7 +62,7 @@ class FolderType extends AbstractType
         $resolver->setRequired([
             'em',
         ]);
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
     }
 }

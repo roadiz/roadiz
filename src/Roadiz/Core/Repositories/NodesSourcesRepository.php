@@ -33,6 +33,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -560,8 +561,8 @@ class NodesSourcesRepository extends StatusAwareRepository
     {
         $subQuery = $this->_em->createQueryBuilder();
         $subQuery->select('sns.id')
-                 ->from('RZ\Roadiz\Core\Entities\Log', 'slog')
-                 ->innerJoin('RZ\Roadiz\Core\Entities\NodesSources', 'sns')
+                 ->from(Log::class, 'slog')
+                 ->innerJoin(NodesSources::class, 'sns')
                  ->andWhere($subQuery->expr()->isNotNull('slog.nodeSource'))
                  ->orderBy('slog.datetime', 'DESC');
 

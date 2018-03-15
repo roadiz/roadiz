@@ -31,7 +31,11 @@ namespace Themes\Rozier;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
+use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\SettingGroup;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -102,15 +106,15 @@ class RozierApp extends BackendController
             return new FolderTreeWidget($this->getRequest(), $this);
         };
         $this->themeContainer['maxFilesize'] = function () {
-            return min(intval(ini_get('post_max_size')), intval(ini_get('upload_max_filesize')));
-        };
-
-        $this->themeContainer['grunt'] = function () {
-            return include dirname(__FILE__) . '/static/public/config/assets.config.php';
+            $requirements = new Requirements($this->get('kernel'));
+            $post_max_size = $requirements->parseSuffixedAmount(ini_get('post_max_size'));
+            $upload_max_filesize = $requirements->parseSuffixedAmount(ini_get('upload_max_filesize'));
+            $maxFileSize = min($post_max_size, $upload_max_filesize);
+            return $maxFileSize;
         };
 
         $this->themeContainer['settingGroups'] = function () {
-            return $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+            return $this->get('em')->getRepository(SettingGroup::class)
                 ->findBy(
                     ['inMenu' => true],
                     ['name' => 'ASC']
@@ -153,8 +157,8 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = $this->get('settingsBag')->get('main_color');
-        $this->assignation['nodeTypes'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
-        $this->assignation['tags'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+        $this->assignation['nodeTypes'] = $this->get('em')->getRepository(NodeType::class)->findBy([]);
+        $this->assignation['tags'] = $this->get('em')->getRepository(Tag::class)->findBy([
                 'color' => ['!=', '#000000'],
             ]);
 

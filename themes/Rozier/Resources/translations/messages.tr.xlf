@@ -3126,6 +3126,11 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
+          <source>maintenance_mode.activated</source>
+          <target xml:lang="tr" state="needs-translation">maintenance_mode.activated</target>
+          <note>Message to notify that site is under maintenance.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="300">
         <source>help</source>
         <target xml:lang="tr" state="translated">Yardım</target>
@@ -3458,14 +3463,14 @@
           <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="339">
+      <trans-unit xml:space="preserve" id="339" approved="yes">
         <source>manage.tags</source>
-        <target xml:lang="tr" state="translated">etiketleri yönet</target>
+        <target xml:lang="tr">Etiketleri yönet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/22/15/39876a0e3c465921bc9613dc874f4ffe11abe4ccbbd17e162789d0f1cea8.php</context>
           <context context-type="linenumber">167</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="tr">etiketleri yönet</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="340">
         <source>manage.documents</source>
         <target xml:lang="tr" state="translated">Dokümanları yönet</target>
@@ -4207,8 +4212,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="449">
         <source>document.embedId</source>
-        <target xml:lang="tr" state="translated">Medya platformu bilgileri</target>
-      </trans-unit>
+        <target xml:lang="tr" state="translated">Medya platform kimliği</target>
+      <alt-trans><target xml:lang="tr">Medya platformu bilgileri</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word">
         <source>%field%.is.reserved.word</source>
         <target xml:lang="tr" state="translated">“%field%” ismi ayrı tutulmuş bir kelimedir, lütfen başka bir tane seçin.</target>
@@ -4565,6 +4570,10 @@
         <source>embed.document.already_exists</source>
         <target xml:lang="tr" state="translated">Yerleştirilecek doküman zaten bulunuyor.</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+        <source>embedId.is_not_valid</source>
+        <target xml:lang="tr" state="needs-translation">embedId.is_not_valid</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas">
         <source>document.metas</source>
         <target xml:lang="tr" state="translated">Meta veriler</target>
@@ -4893,8 +4902,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="edit.customFormFields.for.customForm.%name%">
           <source>edit.customFormFields.for.customForm.%name%</source>
-          <target xml:lang="tr" state="translated">%name% e ait alanlar</target>
-      </trans-unit>
+          <target xml:lang="tr" state="translated">%name%’e ait alanlar</target>
+      <alt-trans><target xml:lang="tr">%name% e ait alanlar</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="delete.customForm">
           <source>delete.customForm</source>
           <target xml:lang="tr" state="translated">Özel formu kaldır</target>
@@ -6048,8 +6057,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="force_locale">
           <source>force_locale</source>
-          <target xml:lang="tr" state="translated">URL’de alanı zorla</target>
-      </trans-unit>
+          <target xml:lang="tr" state="translated">URL’de dil alanını zorla</target>
+      <alt-trans><target xml:lang="tr">URL’de alanı zorla</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
           <source>nodeSourcesUrlsCache</source>
           <target xml:lang="tr" state="translated">Düğüm kaynakları URL ön bellekleri</target>
@@ -6214,124 +6223,489 @@
           <target xml:lang="tr" state="translated">Seçili eitketler kaldırıldı</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="tag.childrenOrder">
-            <source>tag.childrenOrder</source>
-            <target xml:lang="tr" state="translated">Alt etiketler şu açıdan sıralandı</target>
-        </trans-unit>
+          <source>tag.childrenOrder</source>
+          <target xml:lang="tr" state="translated">Alt etiketler şu açıdan sıralandı</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
-            <source>tag.childrenOrderDirection</source>
-            <target xml:lang="tr" state="translated">Alt etiketlerin dizilimi</target>
-        </trans-unit>
+          <source>tag.childrenOrderDirection</source>
+          <target xml:lang="tr" state="translated">Alt etiketlerin dizilimi</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%">
-            <source>node.%name%.status_changed_to.%status%</source>
-            <target xml:lang="tr" state="translated">"%name%" düğümü %status% durumuna değiştirildi.</target>
-        </trans-unit>
+          <source>node.%name%.status_changed_to.%status%</source>
+          <target xml:lang="tr" state="translated">"%name%" düğümü %status% durumuna değiştirildi.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
-            <source>node.%name%.visibility_changed_to.%visible%</source>
-            <target xml:lang="tr" state="translated">"%name%" düğümünün görülebilirliği %visible% durumuna değiştirildi.</target>
-        </trans-unit>
+          <source>node.%name%.visibility_changed_to.%visible%</source>
+          <target xml:lang="tr" state="translated">"%name%" düğümünün görülebilirliği %visible% durumuna değiştirildi.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
-            <source>stack_type.%type%.has_been_removed.%name%</source>
-            <target xml:lang="tr" state="translated">"%type%" istif tipi "%name%" düğümünden kaldırıldı.</target>
-        </trans-unit>
+          <source>stack_type.%type%.has_been_removed.%name%</source>
+          <target xml:lang="tr" state="translated">"%type%" istif tipi "%name%" düğümünden kaldırıldı.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
-            <source>form_has_errors.check_you_fields</source>
-            <target xml:lang="tr" state="translated">Formunuzun hataları var, belirtilen alanları kontrol edin.</target>
-        </trans-unit>
+          <source>form_has_errors.check_you_fields</source>
+          <target xml:lang="tr" state="translated">Formunuzun hataları var, belirtilen alanları kontrol edin.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="no_more_translation_available">
-            <source>no_more_translation_available</source>
-            <target xml:lang="tr" state="translated">Geçerli düğüm için daha fazla çeviri kullanılabilir değil.</target>
-        </trans-unit>
+          <source>no_more_translation_available</source>
+          <target xml:lang="tr" state="translated">Geçerli düğüm için daha fazla çeviri kullanılabilir değil.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="translate_offspring">
-            <source>translate_offspring</source>
-            <target xml:lang="tr" state="translated">Düğüm hiyarerşisini çevir.</target>
-        </trans-unit>
+          <source>translate_offspring</source>
+          <target xml:lang="tr" state="translated">Düğüm hiyarerşisini çevir.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.undeleted">
-            <source>node.%name%.undeleted</source>
-            <target xml:lang="tr" state="translated">%name% düğümünun kaldırılması geri alındı</target>
-        </trans-unit>
+          <source>node.%name%.undeleted</source>
+          <target xml:lang="tr" state="translated">%name% düğümünun kaldırılması geri alındı</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="universal">
-            <source>universal</source>
-            <target xml:lang="tr" state="translated">Evrensel</target>
-            <note>Universal node-type fields are common over translations.</note>
-        </trans-unit>
+          <source>universal</source>
+          <target xml:lang="tr" state="translated">Evrensel</target>
+          <note>Universal node-type fields are common over translations.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename">
-            <source>value_is_not_a_valid_filename</source>
-            <target xml:lang="tr" state="translated">Lütfen geçerli dosya ismini geçerli bir uzantıyla girin.</target>
-            <note>In document edit page when you rename your file without file extension.</note>
-        </trans-unit>
+          <source>value_is_not_a_valid_filename</source>
+          <target xml:lang="tr" state="translated">Lütfen geçerli dosya ismini geçerli bir uzantıyla girin.</target>
+          <note>In document edit page when you rename your file without file extension.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="filename.alreadyExists">
-            <source>filename.alreadyExists</source>
-            <target xml:lang="tr" state="translated">Dosya ismi zaten kullanımda.</target>
-            <note>In document edit page when you rename your file but filename already exists in folder.</note>
-        </trans-unit>
+          <source>filename.alreadyExists</source>
+          <target xml:lang="tr" state="translated">Dosya ismi zaten kullanımda.</target>
+          <note>In document edit page when you rename your file but filename already exists in folder.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="classname">
-            <source>classname</source>
-            <target xml:lang="tr" state="translated">Asıl sınıf-class ismi</target>
-            <note>In node-type edit page, label for the current node-type class name..</note>
-        </trans-unit>
+          <source>classname</source>
+          <target xml:lang="tr" state="translated">Asıl sınıf-class ismi</target>
+          <note>In node-type edit page, label for the current node-type class name..</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node-type.parameters">
-            <source>node-type.parameters</source>
-            <target xml:lang="tr" state="translated">Parametreler</target>
-            <note>In node-type section, label for the parameters section.</note>
-        </trans-unit>
+          <source>node-type.parameters</source>
+          <target xml:lang="tr" state="translated">Parametreler</target>
+          <note>In node-type section, label for the parameters section.</note>
+      </trans-unit>
       <!-- Custom form nav bar -->
       <trans-unit xml:space="preserve" id="custom-form.parameters">
-            <source>custom-form.parameters</source>
-            <target xml:lang="tr" state="translated">Parametreler</target>
-            <note>In custom form nav bar.</note>
-        </trans-unit>
+          <source>custom-form.parameters</source>
+          <target xml:lang="tr" state="translated">Parametreler</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="custom-form.fields">
-            <source>custom-form.fields</source>
-            <target xml:lang="tr" state="translated">Sorular</target>
-            <note>In custom form nav bar.</note>
-        </trans-unit>
+          <source>custom-form.fields</source>
+          <target xml:lang="tr" state="translated">Sorular</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="custom-form.answers">
-            <source>custom-form.answers</source>
-            <target xml:lang="tr" state="translated">Cevaplar</target>
-            <note>In custom form nav bar.</note>
-        </trans-unit>
+          <source>custom-form.answers</source>
+          <target xml:lang="tr" state="translated">Cevaplar</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="markdown.preview">
-            <source>markdown.preview</source>
-            <target xml:lang="tr" state="translated">Markdown Önizlemesi</target>
-            <note>For markdown.preview button label</note>
-        </trans-unit>
+          <source>markdown.preview</source>
+          <target xml:lang="tr" state="translated">Markdown Önizlemesi</target>
+          <note>For markdown.preview button label</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.relative_url">
-          <source>document.relative_url</source>
-          <target xml:lang="tr" state="translated">Bağlı URL</target>
-        </trans-unit>
+        <source>document.relative_url</source>
+        <target xml:lang="tr" state="translated">Bağlı URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.absolute_url">
-          <source>document.absolute_url</source>
-          <target xml:lang="tr" state="translated">Kesin URL</target>
-        </trans-unit>
+        <source>document.absolute_url</source>
+        <target xml:lang="tr" state="translated">Kesin URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.unprocessed_url">
-          <source>document.unprocessed_url</source>
-          <target xml:lang="tr" state="translated">İşlenmemiş URL</target>
-        </trans-unit>
+        <source>document.unprocessed_url</source>
+        <target xml:lang="tr" state="translated">İşlenmemiş URL</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.source_url">
-          <source>document.source_url</source>
-          <target xml:lang="tr" state="translated">Kaynak URL’si</target>
-        </trans-unit>
+        <source>document.source_url</source>
+        <target xml:lang="tr" state="translated">Kaynak URL’si</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.width">
-          <source>document.width</source>
-          <target xml:lang="tr" state="translated">Genişlik</target>
-        </trans-unit>
+        <source>document.width</source>
+        <target xml:lang="tr" state="translated">Genişlik</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.height">
-          <source>document.height</source>
-          <target xml:lang="tr" state="translated">Yükseklik</target>
-        </trans-unit>
+        <source>document.height</source>
+        <target xml:lang="tr" state="translated">Yükseklik</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.filesize">
-          <source>document.filesize</source>
-          <target xml:lang="tr" state="translated">Dosya boyutu</target>
-        </trans-unit>
+        <source>document.filesize</source>
+        <target xml:lang="tr" state="translated">Dosya boyutu</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="reachable">
-          <source>reachable</source>
-          <target xml:lang="tr" state="translated">Erişilebilir</target>
-          <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
-        </trans-unit>
+        <source>reachable</source>
+        <target xml:lang="tr" state="translated">Erişilebilir</target>
+        <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="yaml.type">
-            <source>yaml.type</source>
-            <target xml:lang="tr" state="translated">YAML kodu</target>
-          </trans-unit>
+        <source>yaml.type</source>
+        <target xml:lang="tr" state="translated">YAML kodu</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.redirections">
+        <source>manage.redirections</source>
+        <target xml:lang="tr" state="translated">Yönlendirmeler</target>
+        <note>Redirection section button label</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.redirection">
+        <source>delete.redirection</source>
+        <target xml:lang="tr" state="translated">Yönlendirmeyi kaldır</target>
+        <note>Delete redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
+        <source>are_you_sure.delete.redirection</source>
+        <target xml:lang="tr" state="translated">Yönlendirmeyi silmek istediğinizden emin misiniz?</target>
+        <note>Delete redirection page confirmation message</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.redirection">
+        <source>add.a.redirection</source>
+        <target xml:lang="tr" state="translated">Bir yönlendirme ekle</target>
+        <note>Add redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.redirections">
+        <source>back_to.redirections</source>
+        <target xml:lang="tr" state="translated">Yönlendirmelere dön</target>
+        <note>Back button label for redirections</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.redirection">
+        <source>edit.redirection</source>
+        <target xml:lang="tr" state="translated">Yönlendirmeyi düzenle</target>
+        <note>Edit redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.query">
+        <source>redirection.query</source>
+        <target xml:lang="tr" state="translated">Sorgula</target>
+        <note>Redirection field which stands for the query: the URL to listen for a redirection</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.redirect_uri">
+        <source>redirection.redirect_uri</source>
+        <target xml:lang="tr" state="translated">Hedef URI</target>
+        <note>Redirection field which stands for the redirect URI: the destination URI</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.type">
+        <source>redirection.type</source>
+        <target xml:lang="tr" state="translated">Yönlendirme tipi</target>
+        <note>Redirection field which stands for HTTP code: 301 or 302</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_permanently">
+        <source>redirection.moved_permanently</source>
+        <target xml:lang="tr" state="translated">Kalıcı olarak taşındı</target>
+        <note>Redirection type description for 301 Moved Permanently</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_temporarily">
+        <source>redirection.moved_temporarily</source>
+        <target xml:lang="tr" state="translated">Geçici olarak taşındı</target>
+        <note>Redirection type description for 302 Moved Temporarily</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="login_image">
+        <source>login_image</source>
+        <target xml:lang="tr" state="translated">Giriş sayfası arkaplan görseli</target>
+        <note>Global parameter to customize login screen background image</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishedAt">
+        <source>publishedAt</source>
+        <target xml:lang="tr" state="translated">Yayınlanma tarih ve saati</target>
+        <note>Field label for node-source publication date and time.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishable">
+        <source>publishable</source>
+        <target xml:lang="tr" state="translated">Tarih ve zaman yayınlanabirirliği</target>
+        <note>Field label for node-type publishable status.</note>
+      </trans-unit>
+      <!-- Node form help messages -->
+      <trans-unit xml:space="preserve" id="this_node_type_will_be_available_for_creating_root_nodes">
+        <source>this_node_type_will_be_available_for_creating_root_nodes</source>
+        <target xml:lang="tr" state="translated">Bu düğüm tipi kök düğüm tipleri oluşturmak için kullanılabilir.</target>
+        <note>Help message to explain node-type "visible" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="enables_published_at_field_for_time_based_publication">
+        <source>enables_published_at_field_for_time_based_publication</source>
+        <target xml:lang="tr" state="translated">Bu düğüm tipinin yayınlanma tarih ve zamanı var.</target>
+        <note>Help message to explain node-type "publishedAt" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="mark_this_typed_nodes_as_reachable_with_an_url">
+        <source>mark_this_typed_nodes_as_reachable_with_an_url</source>
+        <target xml:lang="tr" state="translated">Bu düğüm tipi herkese açık URL ile ulaşılabilir durumda.</target>
+        <note>Help message to explain node-type "reachable" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="this_node_type_will_hide_all_children_nodes">
+        <source>this_node_type_will_hide_all_children_nodes</source>
+        <target xml:lang="tr" state="translated">Bu düğüm tipi tüm alt düğümleri gizler.</target>
+        <note>Help message to explain node-type "hiding_nodes" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="dynamic_node_name_will_follow_any_title_change_on_default_translation">
+        <source>dynamic_node_name_will_follow_any_title_change_on_default_translation</source>
+        <target xml:lang="tr" state="translated">Bir dinamik düğüm ismi varsayılan çevirinizdeki değişiklikleri takip eder.</target>
+        <note>Help message to explain node dynamic-node-name field.</note>
+      </trans-unit>
+      <!-- Font form help messages -->
+      <trans-unit xml:space="preserve" id="font_name_should_be_the_same_for_all_variants">
+        <source>font_name_should_be_the_same_for_all_variants</source>
+        <target xml:lang="tr" state="translated">Yazı tipi ismi tüm biçimleriçin aynı olmalıdır.</target>
+        <note>Help message to explain font name field should be the same over all variants.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css_font_family_hash_is_automatically_generated_from_font_name">
+        <source>css_font_family_hash_is_automatically_generated_from_font_name</source>
+        <target xml:lang="tr" state="translated">CSS yazıtpi ailesi hash bilgisi otomatik olarak yazı tipi adından oluşturuldu.</target>
+        <note>Help message to explain font css family field will be automatically generated from font name, it should be the same for all variants.</note>
+      </trans-unit>
+      <!-- Node type field form help messages -->
+      <trans-unit xml:space="preserve" id="technical_name_for_database_and_templating">
+        <source>technical_name_for_database_and_templating</source>
+        <target xml:lang="tr" state="translated">Veritabanı ve temalar için teknik isim.</target>
+        <note>Help message to explain node-type-field name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="human_readable_field_name">
+        <source>human_readable_field_name</source>
+        <target xml:lang="tr" state="translated">Kullanıcıalr için okunabilir alan ismi.</target>
+        <note>Help message to explain node-type-field label.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use_the_same_group_names_over_fields_to_gather_them_in_tabs">
+        <source>use_the_same_group_names_over_fields_to_gather_them_in_tabs</source>
+        <target xml:lang="tr" state="translated">Sekmelerde toplamak için düğüm tipleri üzerinde aynı gurup ismini kullanın.</target>
+        <note>Help message to explain node-type-field group name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice">
+        <source>disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice</source>
+        <target xml:lang="tr" state="translated">Roadiz perde arkasında düzenlenebilirliğini istemiyorsanız görünürlüğü devre dışı bırakın.</target>
+        <note>Help message to explain node-type-field visible switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field_should_be_indexed_if_you_plan_to_query_or_order_by_it">
+        <source>field_should_be_indexed_if_you_plan_to_query_or_order_by_it</source>
+        <target xml:lang="tr" state="translated">Alanın temanızda sorgulanmasını veya sıralanabilmesini istiyorsanız indeksleniş olması gerek.</target>
+        <note>Help message to explain node-type-field indexed switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal_fields_will_be_only_editable_from_default_translation">
+        <source>universal_fields_will_be_only_editable_from_default_translation</source>
+        <target xml:lang="tr" state="translated">Evrensel alanlar yalnızca varsayılan çevirinizde düzenlenebilir. Diğer çeviriler çoğaltılmış olacak.</target>
+        <note>Help message to explain node-type-field universal switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="for_children_node_and_node_references_enter_node_type_names_comma_separated">
+        <source>for_children_node_and_node_references_enter_node_type_names_comma_separated</source>
+        <target xml:lang="tr" state="translated">“Alt düğümler” ve “düğüm referansları” tipleri için düğüm tipleri isimlerini virgülle ayırarak girebilirsin.</target>
+        <note>Help message to explain node-type-field default values.</note>
+      </trans-unit>
+      <!-- Explorer and Widget translation -->
+      <trans-unit xml:space="preserve" id="document">
+        <source>document</source>
+        <target xml:lang="tr" state="translated">döküman</target>
+        <note>Document label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item">
+        <source>item</source>
+        <target xml:lang="tr" state="translated">ürün</target>
+        <note>Item label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="items">
+        <source>items</source>
+        <target xml:lang="tr" state="translated">ürünler</target>
+        <note>Items label in explorer panel.</note>
+      </trans-unit>
+      <!-- New Join node-type-field type -->
+      <trans-unit xml:space="preserve" id="join.toggle-explorer">
+            <source>join.toggle-explorer</source>
+            <target xml:lang="tr" state="needs-translation">join.toggle-explorer</target>
+            <note>Button label for join type explorer</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="many-to-many.type">
+            <source>many-to-many.type</source>
+            <target xml:lang="tr" state="needs-translation">many-to-many.type</target>
+            <note>Node-type field type for Doctrine Many-to-many relationship</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="many-to-one.type">
+            <source>many-to-one.type</source>
+            <target xml:lang="tr" state="needs-translation">many-to-one.type</target>
+            <note>Node-type field type for Doctrine Many-to-one relationship</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
+            <source>default_values_do_not_match_field_type</source>
+            <target xml:lang="tr" state="needs-translation">default_values_do_not_match_field_type</target>
+            <note>Validator message: when default value is not correct for choosen type</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
+            <source>default_values_should_not_be_empty_for_this_type</source>
+            <target xml:lang="tr" state="needs-translation">default_values_should_not_be_empty_for_this_type</target>
+            <note>Validator message: when default value is empty and it should not</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
+            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
+            <target xml:lang="tr" state="needs-translation">default_values_should_be_a_yaml_configuration_for_this_type</target>
+            <note>Validator message: when default value is not a valid YAML text</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_does_not_exist">
+            <source>classname_%classname%_does_not_exist</source>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_does_not_exist</target>
+            <note>Validator message: when provided classname does not exist.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
+            <source>classname_%classname%_must_extend_abstract_entity_class</source>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_must_extend_abstract_entity_class</target>
+            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
+            <source>classname_%classname%_does_not_declare_%method%_method</source>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_does_not_declare_%method%_method</target>
+            <note>Validator message: when provided classname does not declare provided method.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target xml:lang="tr" state="needs-translation">more.entities</target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target xml:lang="tr" state="needs-translation">drawer.sortable-not-enable</target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target xml:lang="tr" state="needs-translation">explorer.create_tag</target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="min">
+            <source>min</source>
+            <target xml:lang="tr" state="translated">dk</target>
+            <note>Drawer message: when a minimum length is provided.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.adjust">
+            <source>document.adjust</source>
+            <target xml:lang="tr" state="needs-translation">document.adjust</target>
+            <note>Document navbar link text for document adjust page.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor">
+            <source>blanchetteEditor</source>
+            <target xml:lang="tr" state="translated">Blanchette Editör</target>
+            <note>Blanchette Editorpage title</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.free">
+            <source>blanchetteEditor.free</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.free</target>
+            <note>Blanchette Editor message button label: free aspect ratio</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.move">
+            <source>blanchetteEditor.move</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.move</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
+            <source>blanchetteEditor.crop</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.crop</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
+            <source>blanchetteEditor.zoomIn</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.zoomIn</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
+            <source>blanchetteEditor.zoomOut</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.zoomOut</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
+            <source>blanchetteEditor.rotateLeft</source>
+            <target xml:lang="tr" state="translated">Sola Dön</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
+            <source>blanchetteEditor.rotateRight</source>
+            <target xml:lang="tr" state="translated">Sağadön</target>
+            <note>Blanchette Editor message button label</note>
+        <alt-trans><target xml:lang="tr">blanchetteEditör.Sağadön</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
+            <source>blanchetteEditor.flipHorizontal</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.flipHorizontal</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
+            <source>blanchetteEditor.flipVertical</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.flipVertical</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
+            <source>blanchetteEditor.applyChange</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.applyChange</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
+            <source>blanchetteEditor.undo</source>
+            <target xml:lang="tr" state="translated">Gerial</target>
+            <note>Blanchette Editor message button label</note>
+        <alt-trans><target xml:lang="tr">blanchetteEditör.gerial</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
+            <source>blanchetteEditor.aspectRatio</source>
+            <target xml:lang="tr" state="translated">Enboyoranı</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
+            <source>blanchetteEditor.saveAndOverwrite</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.saveAndOverwrite</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.other">
+            <source>blanchetteEditor.other</source>
+            <target xml:lang="tr" state="needs-translation">blanchetteEditor.other</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
+            <source>blanchetteEditor.portrait</source>
+            <target xml:lang="tr" state="translated">Portre</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
+            <source>blanchetteEditor.landscape</source>
+            <target xml:lang="tr" state="translated">Manzara</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
+            <source>make_this_field_mandatory_for_users</source>
+            <target xml:lang="tr" state="needs-translation">make_this_field_mandatory_for_users</target>
+            <note>Form field description for Required switch</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="expanded">
+            <source>expanded</source>
+            <target xml:lang="tr" state="translated">genişletilmiş</target>
+            <note>Form field label for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use_checkboxes_or_radio_buttons_instead_of_select_box">
+            <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
+            <target xml:lang="tr" state="needs-translation">use_checkboxes_or_radio_buttons_instead_of_select_box</target>
+            <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="placeholder">
+            <source>placeholder</source>
+            <target xml:lang="tr" state="translated">yertutucu</target>
+            <note>Label for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
+            <source>label_for_field_with_empty_data</source>
+            <target xml:lang="tr" state="needs-translation">label_for_field_with_empty_data</target>
+            <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="session.expire.title">
+            <source>session.expire.title</source>
+            <target xml:lang="tr" state="needs-translation">session.expire.title</target>
+            <note>Title for login check warning "modal".</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="session.expire.content">
+            <source>session.expire.content</source>
+            <target xml:lang="tr" state="needs-translation">session.expire.content</target>
+            <note>Description for login check warning "modal".</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="single-provider.type">
+            <source>single-provider.type</source>
+            <target xml:lang="tr" state="needs-translation">single-provider.type</target>
+            <note>Node-type field type for Provider manual many-to-one relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple-provider.type">
+            <source>multiple-provider.type</source>
+            <target xml:lang="tr" state="needs-translation">multiple-provider.type</target>
+            <note>Node-type field type for Provider manual many-to-many relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target xml:lang="tr" state="translated">Avatar resmi URL</target>
+            <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

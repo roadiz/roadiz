@@ -31,6 +31,7 @@
 
 namespace Themes\Rozier\Controllers\Tags;
 
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,7 +57,7 @@ class TagsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $existingTag = $this->get('em')
-                              ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+                              ->find(Tag::class, (int) $tagId);
         $this->get('em')->refresh($existingTag);
 
         $serializer = new TagJsonSerializer();
@@ -94,7 +95,7 @@ class TagsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $existingTags = $this->get('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                              ->getRepository(Tag::class)
                               ->findBy(["parent" => null]);
         foreach ($existingTags as $existingTag) {
             $this->get('em')->refresh($existingTag);

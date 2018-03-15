@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -186,6 +187,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $exception = $event->getException();
 
         if ($exception instanceof ResourceNotFoundException ||
+            $exception instanceof NotFoundHttpException ||
             (null !== $exception->getPrevious() && $exception->getPrevious() instanceof ResourceNotFoundException)
         ) {
             if (null !== $theme = $this->themeResolver->findTheme($event->getRequest()->getHost())) {

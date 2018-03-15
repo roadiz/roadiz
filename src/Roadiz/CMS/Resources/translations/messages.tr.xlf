@@ -148,6 +148,11 @@
                 <source>yaml.is.not.valid.{{ error }}</source>
                 <target xml:lang="tr" state="translated">YAML kodu geçerli değil ({{ error }})</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target xml:lang="tr" state="translated">Bu değer zaten kullanılıyor.</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

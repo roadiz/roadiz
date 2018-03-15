@@ -29,8 +29,10 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -88,7 +90,7 @@ class UserType extends AbstractType
             'label' => false,
             'email' => '',
             'username' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\User',
+            'data_class' => User::class,
             'attr' => [
                 'class' => 'uk-form user-form',
             ],
@@ -98,7 +100,7 @@ class UserType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('email', 'string');
         $resolver->setAllowedTypes('username', 'string');
     }

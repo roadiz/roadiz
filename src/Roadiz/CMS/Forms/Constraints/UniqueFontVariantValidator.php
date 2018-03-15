@@ -64,7 +64,7 @@ class UniqueFontVariantValidator extends ConstraintValidator
      */
     protected function variantExists(Font $font, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Font')
+        $entity = $entityManager->getRepository(Font::class)
                              ->findOneBy([
                                  'name' => $font->getName(),
                                  'variant' => $font->getVariant(),

@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
+use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
@@ -93,9 +93,7 @@ class ThemeInstallCommand extends ThemesCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
-        $classname = $input->getArgument('classname');
 
         if ($input->getOption('dry-run')) {
             $this->dryRun = true;
@@ -104,19 +102,22 @@ class ThemeInstallCommand extends ThemesCommand
         /*
          * Replace slash by anti-slashes
          */
-        $classname = str_replace('/', '\\', $classname);
-        $callable = [$classname, 'getThemeFolder'];
-        if (!is_callable($callable)) {
+        $classname = str_replace('/', '\\', $input->getArgument('classname'));
+        $reflectionClass = new \ReflectionClass($classname);
+        if (!$reflectionClass->isSubclassOf(AppController::class)) {
             throw new RuntimeException('Given theme is not a valid Roadiz theme.');
         }
-        $this->themeRoot = call_user_func($callable);
+        $this->themeRoot = call_user_func([$reflectionClass->getName(), 'getThemeFolder']);
+        $output->writeln('Theme name is: <info>'. $reflectionClass->getName() .'</info>.');
+        $output->writeln('Theme assets are located in <info>'. $this->themeRoot .'/static</info>.');
 
+        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         if ($input->getOption('data')) {
-            $this->importThemeData($classname, $text);
+            $this->importThemeData($reflectionClass->getName(), $text);
         } elseif ($input->getOption('nodes')) {
-            $this->importThemeNodes($classname, $text);
+            $this->importThemeNodes($reflectionClass->getName(), $text);
         } else {
-            $this->importTheme($classname, $text);
+            $this->importTheme($reflectionClass->getName(), $text);
         }
 
         $output->writeln($text);

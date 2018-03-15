@@ -75,13 +75,15 @@ class LocaleSubscriber implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event)
     {
         if ($event->isMasterRequest()) {
+            $request = $event->getRequest();
             /*
              * Set default locale
              */
             $this->stopwatch->start('setRequestLocale');
-            $translation = $this->kernel->container['defaultTranslation'];
-
-            if ($translation !== null) {
+            if ($locale = $request->attributes->get('_locale')) {
+                $event->getRequest()->setLocale($locale);
+                \Locale::setDefault($locale);
+            } elseif (null !== $translation = $this->kernel->container['defaultTranslation']) {
                 $shortLocale = $translation->getLocale();
                 $event->getRequest()->setLocale($shortLocale);
                 \Locale::setDefault($shortLocale);

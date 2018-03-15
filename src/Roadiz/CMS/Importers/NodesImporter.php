@@ -31,7 +31,6 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -84,7 +83,7 @@ class NodesImporter implements ImporterInterface
         /*
          * Test if node already exists against its nodeName
          */
-        $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+        $existing = $em->getRepository(Node::class)
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneByNodeName($node->getNodeName());
         if (null !== $existing) {
@@ -100,7 +99,7 @@ class NodesImporter implements ImporterInterface
         /** @var NodesSources $nodeSource */
         foreach ($node->getNodeSources() as $nodeSource) {
             /** @var Translation|null $trans */
-            $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            $trans = $em->getRepository(Translation::class)
                         ->findOneByLocale($nodeSource->getTranslation()->getLocale());
 
             if (null === $trans &&

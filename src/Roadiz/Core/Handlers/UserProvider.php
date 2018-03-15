@@ -66,7 +66,7 @@ class UserProvider implements UserProviderInterface
     {
         /** @var User|null $user */
         $user = $this->em
-                     ->getRepository('RZ\Roadiz\Core\Entities\User')
+                     ->getRepository(User::class)
                      ->findOneBy(['username' => $username]);
 
         if ($user !== null) {
@@ -92,7 +92,7 @@ class UserProvider implements UserProviderInterface
     {
         if ($user instanceof User) {
             /** @var User|null $refreshUser */
-            $refreshUser = $this->em->find('RZ\Roadiz\Core\Entities\User', (int) $user->getId());
+            $refreshUser = $this->em->find(User::class, (int) $user->getId());
 
             if ($refreshUser !== null) {
                 return $refreshUser;
@@ -111,7 +111,7 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        if ($class == 'RZ\Roadiz\Core\Entities\User') {
+        if ($class == User::class) {
             return true;
         }
 

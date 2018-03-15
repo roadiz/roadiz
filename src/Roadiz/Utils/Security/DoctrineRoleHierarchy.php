@@ -47,7 +47,7 @@ class DoctrineRoleHierarchy extends RoleHierarchy
     {
         if (null !== $em) {
             $hierarchy = [
-                Role::ROLE_SUPERADMIN => $em->getRepository('RZ\Roadiz\Core\Entities\Role')->getAllBasicRoleName(),
+                Role::ROLE_SUPERADMIN => $em->getRepository(Role::class)->getAllBasicRoleName(),
                 Role::ROLE_BACKEND_USER => ['IS_AUTHENTICATED_ANONYMOUSLY'],
                 Role::ROLE_DEFAULT => ['IS_AUTHENTICATED_ANONYMOUSLY'],
             ];

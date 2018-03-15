@@ -35,6 +35,7 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
@@ -1061,7 +1062,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select(static::TRANSLATION_ALIAS)
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
@@ -1084,7 +1085,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select(static::TRANSLATION_ALIAS)
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
@@ -1105,7 +1106,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
@@ -1129,7 +1130,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
@@ -1166,7 +1167,7 @@ class NodeRepository extends StatusAwareRepository
          */
         $qb->innerJoin($alias . '.nodeSources', static::NODESSOURCES_ALIAS);
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
+        $metadatas = $this->_em->getClassMetadata(NodesSources::class);
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);

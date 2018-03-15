@@ -59,7 +59,7 @@ class SettingGroupType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $groups = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')->findAll();
+        $groups = $this->entityManager->getRepository(SettingGroup::class)->findAll();
 
         $choices = [];
 

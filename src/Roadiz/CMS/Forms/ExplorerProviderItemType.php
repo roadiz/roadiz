@@ -29,13 +29,12 @@
 
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\CMS\Forms\DataTransformer\ExplorerProviderItemTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Themes\Rozier\Explorer\ExplorerItemInterface;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
@@ -64,33 +63,7 @@ class ExplorerProviderItemType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) {
-                if (!empty($entitiesToForm) && $this->explorerProvider->supports($entitiesToForm)) {
-                    $item = $this->explorerProvider->toExplorerItem($entitiesToForm);
-                    return [$item];
-                } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
-                    $idArray = [];
-                    foreach ($entitiesToForm as $entity) {
-                        if ($this->explorerProvider->supports($entity)) {
-                            $item = $this->explorerProvider->toExplorerItem($entity);
-                            $idArray[] = $item;
-                        }
-                    }
-                    return $idArray;
-                }
-                return '';
-            },
-            function ($formToEntities) {
-                $items = $this->explorerProvider->getItemsById($formToEntities);
-                $originals = [];
-                /** @var ExplorerItemInterface $item */
-                foreach ($items as $item) {
-                    $originals[] = $item->getOriginal();
-                }
-                return $originals;
-            }
-        ));
+        $builder->addModelTransformer(new ExplorerProviderItemTransformer($this->explorerProvider));
     }
 
     /**

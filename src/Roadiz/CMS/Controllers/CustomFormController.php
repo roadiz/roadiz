@@ -40,7 +40,6 @@ use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Themes\Rozier\RozierApp;
 
 class CustomFormController extends CmsController
 {
@@ -83,7 +82,6 @@ class CustomFormController extends CmsController
                 return $mixed->send();
             } else {
                 $this->assignation = array_merge($this->assignation, $mixed);
-                $this->assignation['grunt'] = include RozierApp::getThemeFolder() . '/static/public/config/assets.config.php';
 
                 return $this->render('forms/customForm.html.twig', $this->assignation);
             }
@@ -106,7 +104,6 @@ class CustomFormController extends CmsController
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
-            $this->assignation['grunt'] = include RozierApp::getThemeFolder() . '/static/public/config/assets.config.php';
 
             return $this->render('forms/customFormSent.html.twig', $this->assignation);
         }

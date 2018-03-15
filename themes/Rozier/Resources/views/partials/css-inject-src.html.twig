@@ -1,0 +1,8 @@
+<% var prefix = (htmlWebpackPlugin.options.refreshOnChange) ? '' : '{{ head.resourcesUrl }}' %>
+
+<% for (var css in htmlWebpackPlugin.files.css) { %>
+<link href="<%= prefix %><%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
+<% } %>
+
+
+

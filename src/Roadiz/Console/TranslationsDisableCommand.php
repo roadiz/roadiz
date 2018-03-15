@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -62,7 +63,7 @@ class TranslationsDisableCommand extends Command
         $locale = $input->getArgument('locale');
 
         $translation = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneByLocale($locale);
 
         if ($translation !== null) {

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,7 +60,7 @@ class UsersEnableCommand extends UsersCommand
 
         if ($name) {
             $user = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
+                ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if (null !== $user) {

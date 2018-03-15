@@ -32,6 +32,7 @@ namespace Themes\Rozier\Events;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -95,7 +96,7 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
                             $this->logger->debug('EXIF information available for document.', ['document' => $document->getFilename()]);
                         }
                         $defaultTranslation = $this->entityManager
-                                                   ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                                   ->getRepository(Translation::class)
                                                    ->findDefault();
 
                         $documentTranslation = new DocumentTranslation();

@@ -29,8 +29,10 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -99,7 +101,7 @@ class TagType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'tagName' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\Tag',
+            'data_class' => Tag::class,
             'attr' => [
                 'class' => 'uk-form tag-form',
             ],
@@ -109,7 +111,7 @@ class TagType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('tagName', 'string');
     }
 }

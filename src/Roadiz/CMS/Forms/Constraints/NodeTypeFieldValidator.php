@@ -32,7 +32,6 @@ namespace RZ\Roadiz\CMS\Forms\Constraints;
 use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
 use RZ\Roadiz\Config\ProviderFieldConfiguration;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

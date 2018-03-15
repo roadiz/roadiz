@@ -106,8 +106,7 @@ class AssetsController extends CmsController
     public function fontFileAction(Request $request, $filename, $variant, $extension)
     {
         /** @var FontRepository $repository */
-        $repository = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $repository = $this->get('em')->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
@@ -187,8 +186,7 @@ class AssetsController extends CmsController
     public function fontFacesAction(Request $request)
     {
         /** @var FontRepository $repository */
-        $repository = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $repository = $this->get('em')->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(

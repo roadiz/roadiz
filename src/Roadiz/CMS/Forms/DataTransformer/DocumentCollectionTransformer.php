@@ -87,7 +87,7 @@ class DocumentCollectionTransformer implements DataTransformerInterface
         $documents = [];
         foreach ($ids as $documentId) {
             $document = $this->manager
-                ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                ->getRepository(Document::class)
                 ->find($documentId)
             ;
             if (null === $document) {

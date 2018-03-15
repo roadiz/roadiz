@@ -33,6 +33,7 @@ namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
@@ -113,7 +114,7 @@ class NodeTreeType extends AbstractType
         }
 
         $nodeTypes = $this->controller->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findBy(
                 ['name' => $defaultValues],
                 ['displayName' => 'ASC']

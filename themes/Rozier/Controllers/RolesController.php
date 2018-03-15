@@ -57,7 +57,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Role',
+            Role::class,
             [],
             ['name' => 'ASC']
         );
@@ -124,7 +124,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $role = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
+                     ->find(Role::class, (int) $roleId);
         if ($role !== null) {
             $form = $this->buildDeleteForm($role);
             $form->handleRequest($request);
@@ -168,7 +168,7 @@ class RolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $role = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
+                     ->find(Role::class, (int) $roleId);
 
         if ($role !== null &&
             !$role->required()) {
@@ -286,7 +286,7 @@ class RolesController extends RozierApp
     {
         if (isset($data['name'])) {
             $existing = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                             ->getRepository(Role::class)
                              ->findOneBy(['name' => $data['name']]);
             if ($existing !== null) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans("role.name.already.exists"), 1);
@@ -324,7 +324,7 @@ class RolesController extends RozierApp
 
         if (isset($data['name'])) {
             $existing = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                             ->getRepository(Role::class)
                              ->findOneBy(['name' => $data['name']]);
             if ($existing !== null &&
                 $existing->getId() != $role->getId()) {

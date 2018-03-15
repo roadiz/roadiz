@@ -31,14 +31,12 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\ThemesType;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -62,7 +60,7 @@ class ThemesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
-        $result = $this->get('em')->find('RZ\Roadiz\Core\Entities\Theme', $id);
+        $result = $this->get('em')->find(Theme::class, $id);
 
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
 
@@ -82,7 +80,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Theme'
+            Theme::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -165,7 +163,7 @@ class ThemesController extends RozierApp
         if ($form->isValid()) {
             try {
                 $data = $form->getData();
-                return $this->addTheme($request, $data, $theme);
+                return $this->addTheme($request, $data);
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
@@ -191,7 +189,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
+            ->find(Theme::class, (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildEditForm($theme);
@@ -236,7 +234,7 @@ class ThemesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_THEMES');
 
         $theme = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Theme', (int) $themeId);
+            ->find(Theme::class, (int) $themeId);
 
         if ($theme !== null) {
             $form = $this->buildDeleteForm($theme);
@@ -438,7 +436,7 @@ class ThemesController extends RozierApp
                     }
                 }
                 if ($value !== null && !empty($value[0])) {
-                    $n = $this->get('em')->find("RZ\Roadiz\Core\Entities\Node", $value[0]);
+                    $n = $this->get('em')->find(Node::class, $value[0]);
                     $theme->$setter($n);
                 } else {
                     $theme->$setter(null);
@@ -459,7 +457,7 @@ class ThemesController extends RozierApp
     private function addTheme(Request $request, array &$data)
     {
         $existing = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Theme')
+            ->getRepository(Theme::class)
             ->findOneBy(['className' => $data["classname"]]);
 
         if ($existing !== null) {
@@ -474,7 +472,7 @@ class ThemesController extends RozierApp
 
         $importFile = ThemeInstaller::install($request, $data["classname"], $this->get("em"));
         $theme = $this->get("em")
-            ->getRepository("RZ\Roadiz\Core\Entities\Theme")
+            ->getRepository(Theme::class)
             ->findOneByClassName($data["classname"]);
         $this->setThemeValue($request, $data, $theme);
 

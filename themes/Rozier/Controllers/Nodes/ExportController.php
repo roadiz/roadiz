@@ -29,6 +29,8 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\NodeSourceXlsxSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,15 +59,15 @@ class ExportController extends RozierApp
          * Get translation
          */
         $translation = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Translation', $translationId);
+            ->find(Translation::class, $translationId);
         if (null === $translation) {
             $translation = $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->getRepository(Translation::class)
                 ->findDefault();
         }
 
         $sources = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->findBy(["translation" => $translation], ['node.nodeType' => 'ASC']);

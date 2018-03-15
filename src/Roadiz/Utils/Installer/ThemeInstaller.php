@@ -75,7 +75,7 @@ class ThemeInstaller
         $data["className"] = $classname;
         $fix->installTheme($data);
 
-        $installedLanguage = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $installedLanguage = $em->getRepository(Translation::class)
             ->findAll();
 
         /**
