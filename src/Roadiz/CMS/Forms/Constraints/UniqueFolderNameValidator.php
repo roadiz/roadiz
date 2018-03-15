@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -61,8 +62,7 @@ class UniqueFolderNameValidator extends ConstraintValidator
      */
     protected function entityExists($name, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Folder')
-                                ->findOneByFolderName($name);
+        $entity = $entityManager->getRepository(Folder::class)->findOneByFolderName($name);
 
         return (null !== $entity);
     }

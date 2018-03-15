@@ -32,6 +32,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
+use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +56,7 @@ class GroupsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->get('em')
-                              ->getRepository('RZ\Roadiz\Core\Entities\Group')
+                              ->getRepository(Group::class)
                               ->findAll();
 
         $serializer = new GroupCollectionJsonSerializer($this->get('em'));
@@ -91,7 +92,7 @@ class GroupsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->get('em')
-                              ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                              ->find(Group::class, (int) $groupId);
 
         $serializer = new GroupCollectionJsonSerializer($this->get('em'));
         $group = $serializer->serialize([$existingGroup]);

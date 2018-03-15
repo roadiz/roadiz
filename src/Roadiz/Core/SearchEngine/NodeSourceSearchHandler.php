@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -238,14 +239,14 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                     if (isset($response["highlighting"])) {
                         return [
                             "nodeSource" => $this->em->find(
-                                'RZ\Roadiz\Core\Entities\NodesSources',
+                                NodesSources::class,
                                 (int) $n[SolariumNodeSource::IDENTIFIER_KEY]
                             ),
                             "highlighting" => $response["highlighting"][$n['id']],
                         ];
                     }
                     return $this->em->find(
-                        'RZ\Roadiz\Core\Entities\NodesSources',
+                        NodesSources::class,
                         $n[SolariumNodeSource::IDENTIFIER_KEY]
                     );
                 },

@@ -59,7 +59,7 @@ class GlobalNodeSourceSearchHandler
     {
         $this->em = $em;
         /** @var NodesSourcesRepository repository */
-        $this->repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources');
+        $this->repository = $this->em->getRepository(NodesSources::class);
     }
 
     /**

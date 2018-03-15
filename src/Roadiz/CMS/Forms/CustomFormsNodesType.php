@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -66,7 +67,7 @@ class CustomFormsNodesType extends AbstractType
         $callback = function ($object, ExecutionContextInterface $context) {
 
             if (is_array($object)) {
-                $customForms = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+                $customForms = $this->entityManager->getRepository(CustomForm::class)
                                                    ->findBy(['id' => $object]);
 
                 foreach (array_values($object) as $key => $value) {
@@ -79,7 +80,7 @@ class CustomFormsNodesType extends AbstractType
                     }
                 }
             } else {
-                $customForm = $this->entityManager->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $object);
+                $customForm = $this->entityManager->find(CustomForm::class, (int) $object);
                 // Vérifie si le nom est bidon
                 if (null !== $object && null === $customForm) {
                     $context->buildViolation('CustomForm #{{ value }} does not exists.')
@@ -91,7 +92,7 @@ class CustomFormsNodesType extends AbstractType
         };
 
         $resolver->setDefaults([
-            'class' => '\RZ\Roadiz\Core\Entities\CustomForm',
+            'class' => CustomForm::class,
             'multiple' => true,
             'property' => 'id',
             'constraints' => [

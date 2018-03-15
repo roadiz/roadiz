@@ -29,11 +29,13 @@
  */
 namespace Themes\Rozier\Forms;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeName;
 use Symfony\Component\Form\AbstractType;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -121,7 +123,7 @@ class NodeTypeType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'name' => '',
-            'data_class' => 'RZ\Roadiz\Core\Entities\NodeType',
+            'data_class' => NodeType::class,
             'attr' => [
                 'class' => 'uk-form node-type-form',
             ],
@@ -130,7 +132,7 @@ class NodeTypeType extends AbstractType
         $resolver->setRequired([
             'em',
         ]);
-        $resolver->setAllowedTypes('em', 'Doctrine\Common\Persistence\ObjectManager');
+        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
     }
 }

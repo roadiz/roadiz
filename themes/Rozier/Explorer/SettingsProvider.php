@@ -72,7 +72,7 @@ class SettingsProvider extends AbstractExplorerProvider
         $listManager = new EntityListManager(
             $this->get('request'),
             $this->get('em'),
-            'RZ\Roadiz\Core\Entities\Setting',
+            Setting::class,
             [],
             ['name' =>'ASC']
         );
@@ -101,7 +101,7 @@ class SettingsProvider extends AbstractExplorerProvider
         $listManager = new EntityListManager(
             $this->get('request'),
             $this->get('em'),
-            'RZ\Roadiz\Core\Entities\Setting',
+            Setting::class,
             [],
             ['name' =>'ASC']
         );
@@ -119,7 +119,7 @@ class SettingsProvider extends AbstractExplorerProvider
     public function getItemsById($ids = [])
     {
         if (count($ids) > 0) {
-            $entities = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Setting')->findBy([
+            $entities = $this->get('em')->getRepository(Setting::class)->findBy([
                 'id' => $ids
             ]);
 

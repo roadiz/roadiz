@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Role;
 
 /**
  * Serialization class for Role.
@@ -84,7 +85,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
         $data = new ArrayCollection();
         foreach ($roles as $role) {
             if (!empty($role['name'])) {
-                $tmp = $this->em->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
+                $tmp = $this->em->getRepository(Role::class)->findOneByName($role['name']);
                 $data[] = $tmp;
             }
         }

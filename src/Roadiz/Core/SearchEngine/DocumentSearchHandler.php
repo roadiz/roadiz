@@ -28,6 +28,7 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
 use Solarium\Core\Query\Helper;
@@ -195,13 +196,13 @@ class DocumentSearchHandler extends AbstractSearchHandler
                     if (isset($response["highlighting"])) {
                         return [
                             "document" => $this->em
-                                        ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                                        ->getRepository(Document::class)
                                         ->findOneByDocumentTranslationId($n[SolariumDocumentTranslation::IDENTIFIER_KEY]),
                             "highlighting" => $response["highlighting"][$n['id']],
                         ];
                     }
                     return $this->em
-                        ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                        ->getRepository(Document::class)
                         ->findOneByDocumentTranslationId($n[SolariumDocumentTranslation::IDENTIFIER_KEY]);
                 },
                 $response['response']['docs']

@@ -66,7 +66,7 @@ class ThemeResolver
         if (!$this->installMode) {
             if (null === $this->backendTheme) {
                 $this->stopwatch->start('getBackendTheme');
-                $this->backendTheme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableBackend();
+                $this->backendTheme = $this->em->getRepository(Theme::class)->findAvailableBackend();
                 $this->stopwatch->stop('getBackendTheme');
             }
             return $this->backendTheme;
@@ -98,7 +98,7 @@ class ThemeResolver
         if (!$this->installMode) {
             if (null === $this->frontendThemes) {
                 $this->stopwatch->start('getFrontendThemes');
-                $this->frontendThemes = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableFrontends();
+                $this->frontendThemes = $this->em->getRepository(Theme::class)->findAvailableFrontends();
 
                 if (count($this->frontendThemes) === 0) {
                     return [];
@@ -125,7 +125,7 @@ class ThemeResolver
             /*
              * First we look for theme according to hostname.
              */
-            $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
+            $theme = $this->em->getRepository(Theme::class)
                 ->findAvailableNonStaticFrontendWithHost($host);
 
             /*
@@ -133,7 +133,7 @@ class ThemeResolver
              * any frontend available theme.
              */
             if (null === $theme) {
-                $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
+                $theme = $this->em->getRepository(Theme::class)
                     ->findFirstAvailableNonStaticFrontend();
             }
 

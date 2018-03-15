@@ -49,7 +49,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         if (null === $this->' . $this->field->getName() . ') {
             if (null !== $this->objectManager) {
                 $this->' . $this->field->getName() . ' = $this->objectManager
-                     ->getRepository(\'RZ\Roadiz\Core\Entities\Node\')
+                     ->getRepository(Node::class)
                      ->findByNodeAndFieldNameAndTranslation(
                          $this->getNode(),
                          "'.$this->field->getName().'",

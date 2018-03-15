@@ -53,7 +53,7 @@ class UsersGroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -101,9 +101,9 @@ class UsersGroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
         $group = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\Group', (int) $groupId);
+                      ->find(Group::class, (int) $groupId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -148,7 +148,7 @@ class UsersGroupsController extends RozierApp
     {
         if ($data['userId'] == $user->getId()) {
             $group = $this->get('em')
-                          ->find('RZ\Roadiz\Core\Entities\Group', $data['group']);
+                          ->find(Group::class, $data['group']);
 
             if ($group !== null) {
                 $user->addGroup($group);
@@ -171,7 +171,7 @@ class UsersGroupsController extends RozierApp
     {
         if ($data['userId'] == $user->getId()) {
             $group = $this->get('em')
-                          ->find('RZ\Roadiz\Core\Entities\Group', $data['groupId']);
+                          ->find(Group::class, $data['groupId']);
 
             if ($group !== null) {
                 $user->removeGroup($group);

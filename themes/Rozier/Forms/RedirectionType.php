@@ -30,6 +30,7 @@ namespace Themes\Rozier\Forms;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
+use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,7 +87,7 @@ class RedirectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'RZ\Roadiz\Core\Entities\Redirection',
+            'data_class' => Redirection::class,
             'attr' => [
                 'class' => 'uk-form redirection-form',
             ],

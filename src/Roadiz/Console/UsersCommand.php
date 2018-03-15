@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -63,7 +64,7 @@ class UsersCommand extends Command
 
         if ($name) {
             $user = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
+                ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if ($user !== null) {
@@ -75,7 +76,7 @@ class UsersCommand extends Command
             $table = new Table($output);
 
             $users = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
+                ->getRepository(User::class)
                 ->findAll();
 
             if (count($users) > 0) {
@@ -113,7 +114,7 @@ class UsersCommand extends Command
     public function getRole($roleName = Role::ROLE_SUPERADMIN)
     {
         $role = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Role')
+            ->getRepository(Role::class)
             ->findOneBy(['name' => $roleName]);
 
         if ($role === null) {

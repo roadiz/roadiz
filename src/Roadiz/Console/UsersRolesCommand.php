@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\Console\Helper\RolesBagHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -75,13 +77,13 @@ class UsersRolesCommand extends UsersCommand
 
         if ($name) {
             $user = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\User')
+                ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if (null !== $user) {
                 if ($input->getOption('add')) {
                     $roles = $this->entityManager
-                        ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                        ->getRepository(Role::class)
                         ->getAllRoleName();
 
                     $question = new Question(

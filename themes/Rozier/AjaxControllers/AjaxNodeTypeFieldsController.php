@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,8 +63,7 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
 
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
-        $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
 
         if (null !== $response = $this->handleFieldActions($request, $field)) {
             return $response;

@@ -33,6 +33,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
@@ -315,7 +316,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['userImplementations'] = function ($c) {
             return [
-                'RZ\Roadiz\Core\Entities\User' => $c['passwordEncoder'],
+                User::class => $c['passwordEncoder'],
             ];
         };
 

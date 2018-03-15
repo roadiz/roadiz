@@ -34,6 +34,7 @@ use RZ\Roadiz\CMS\Forms\SettingGroupType;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -76,7 +77,7 @@ class SettingsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $settingGroup = $this->get('em')
-                             ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
+                             ->find(SettingGroup::class, (int) $settingGroupId);
 
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -101,7 +102,7 @@ class SettingsController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Setting',
+            Setting::class,
             $criteria,
             ['name' => 'ASC']
         );
@@ -167,7 +168,7 @@ class SettingsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $setting = $this->get('em')->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
+        $setting = $this->get('em')->find(Setting::class, (int) $settingId);
 
         if ($setting !== null) {
             $this->assignation['setting'] = $setting;
@@ -256,7 +257,7 @@ class SettingsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $setting = $this->get('em')
-                        ->find('RZ\Roadiz\Core\Entities\Setting', (int) $settingId);
+                        ->find(Setting::class, (int) $settingId);
 
         if (null !== $setting) {
             $this->assignation['setting'] = $setting;
@@ -301,7 +302,7 @@ class SettingsController extends RozierApp
             if (isset($data['name']) &&
                 $data['name'] != $setting->getName() &&
                 $this->get('em')
-                ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                ->getRepository(Setting::class)
                 ->exists($data['name'])) {
                 throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_update.already_exists', ['%name%' => $setting->getName()]), 1);
             }
@@ -314,7 +315,7 @@ class SettingsController extends RozierApp
                         $setting->$setter($value);
                     } else {
                         $group = $this->get('em')
-                                      ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
+                                      ->find(SettingGroup::class, (int) $value);
                         $setting->setSettingGroup($group);
                     }
                 }
@@ -374,7 +375,7 @@ class SettingsController extends RozierApp
     private function addSetting($data, Setting $setting)
     {
         if ($this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+            ->getRepository(Setting::class)
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans('setting.%name%.no_creation.already_exists', ['%name%' => $setting->getName()]), 1);
         }
@@ -388,7 +389,7 @@ class SettingsController extends RozierApp
                     $setting->$setter($value);
                 } else {
                     $group = $this->get('em')
-                                  ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $value);
+                                  ->find(SettingGroup::class, (int) $value);
                     $setting->setSettingGroup($group);
                 }
             }

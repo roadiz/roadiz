@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
+use RZ\Roadiz\Core\Entities\FolderTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -55,7 +56,7 @@ class FolderTranslationType extends AbstractType
     {
         $resolver->setDefaults([
             'label' => false,
-            'data_class' => 'RZ\Roadiz\Core\Entities\FolderTranslation',
+            'data_class' => FolderTranslation::class,
             'attr' => [
                 'class' => 'uk-form folder-form',
             ],

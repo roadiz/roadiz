@@ -32,6 +32,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Importers\RolesImporter;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +56,7 @@ class RolesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->get('em')
-                             ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                             ->getRepository(Role::class)
                              ->findAll();
 
         $serializer = new RoleCollectionJsonSerializer($this->get('em'));
@@ -93,7 +94,7 @@ class RolesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->get('em')
-                             ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
+                             ->find(Role::class, (int) $roleId);
 
         $serializer = new RoleCollectionJsonSerializer($this->get('em'));
         $role = $serializer->serialize([$existingRole]);

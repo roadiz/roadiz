@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Bags\Settings;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
@@ -70,11 +71,11 @@ class TranslationViewer
     }
 
     /**
-     * @return TranslationRepository
+     * @return \Doctrine\ORM\EntityRepository|TranslationRepository
      */
     public function getRepository()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation');
+        return $this->entityManager->getRepository(Translation::class);
     }
 
     /**
@@ -160,7 +161,7 @@ class TranslationViewer
 
             if ($node) {
                 $nodesSources = $this->entityManager
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->getRepository(NodesSources::class)
                     ->findOneBy(["node" => $node, "translation" => $translation]);
                 $url = $this->router->generate(
                     $nodesSources,

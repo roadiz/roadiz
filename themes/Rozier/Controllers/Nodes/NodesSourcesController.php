@@ -69,20 +69,19 @@ class NodesSourcesController extends RozierApp
 
         /** @var Translation $translation */
         $translation = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find(Translation::class, (int) $translationId);
         /*
          * Here we need to directly select nodeSource
          * if not doctrine will grab a cache tag because of NodeTreeWidget
          * that is initialized before calling route method.
          */
         /** @var Node $gnode */
-        $gnode = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $gnode = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if ($translation !== null && $gnode !== null) {
             /** @var NodesSources $source */
             $source = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->getRepository(NodesSources::class)
                            ->setDisplayingAllNodesStatuses(true)
                            ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
@@ -185,7 +184,7 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
-        $ns = $this->get("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
+        $ns = $this->get("em")->find(NodesSources::class, $nodeSourceId);
         if (null === $ns) {
             throw new ResourceNotFoundException();
         }

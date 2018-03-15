@@ -600,7 +600,7 @@ class TagRepository extends EntityRepository
          */
         $qb->leftJoin('obj.translatedTags', 'tt');
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\TagTranslation');
+        $metadatas = $this->_em->getClassMetadata(TagTranslation::class);
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);

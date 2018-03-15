@@ -30,6 +30,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -57,12 +58,12 @@ class CustomFormAnswersController extends RozierApp
          */
 
         $customForm = $this->get('em')->find(
-            'RZ\Roadiz\Core\Entities\CustomForm',
+            CustomForm::class,
             $customFormId
         );
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\CustomFormAnswer',
+            CustomFormAnswer::class,
             ["customForm" => $customForm],
             ["submittedAt" => "DESC"]
         );
@@ -89,7 +90,7 @@ class CustomFormAnswersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customFormAnswer = $this->get('em')
-                                 ->find('RZ\Roadiz\Core\Entities\CustomFormAnswer', (int) $customFormAnswerId);
+                                 ->find(CustomFormAnswer::class, (int) $customFormAnswerId);
 
         if (null !== $customFormAnswer) {
             $this->assignation['customFormAnswer'] = $customFormAnswer;

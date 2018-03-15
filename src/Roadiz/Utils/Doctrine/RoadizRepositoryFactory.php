@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\Doctrine;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Repository\RepositoryFactory;
 use Pimple\Container;
+use RZ\Roadiz\Core\Repositories\EntityRepository;
 
 class RoadizRepositoryFactory implements RepositoryFactory
 {
@@ -91,8 +92,8 @@ class RoadizRepositoryFactory implements RepositoryFactory
         $repositoryClassName = $metadata->customRepositoryClassName
             ?: $entityManager->getConfiguration()->getDefaultRepositoryClassName();
 
-        if (is_subclass_of($repositoryClassName, 'RZ\Roadiz\Core\Repositories\EntityRepository') ||
-            $repositoryClassName == 'RZ\Roadiz\Core\Repositories\EntityRepository') {
+        if (is_subclass_of($repositoryClassName, EntityRepository::class) ||
+            $repositoryClassName == EntityRepository::class) {
             return new $repositoryClassName($entityManager, $metadata, $this->container, $this->isPreview);
         }
 

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
@@ -140,7 +141,7 @@ class Theme extends AbstractEntity
 
         if (class_exists($class)) {
             $reflector = new \ReflectionClass($class);
-            if ($reflector->isSubclassOf('RZ\Roadiz\CMS\Controllers\AppController')) {
+            if ($reflector->isSubclassOf(AppController::class)) {
                 return [
                     'name'=> call_user_func([$class, 'getThemeName']),
                     'author'=> call_user_func([$class, 'getThemeAuthor']),

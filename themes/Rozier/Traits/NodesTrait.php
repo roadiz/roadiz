@@ -56,7 +56,7 @@ trait NodesTrait
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
         /** @var NodeRepository $repository */
-        $repository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node');
+        $repository = $entityManager->getRepository(Node::class);
 
         if (true === $repository->exists($nodeName)) {
             $nodeName .= '-' . uniqid();
@@ -91,8 +91,7 @@ trait NodesTrait
     {
         if ($data['nodeId'] == $node->getId() &&
             !empty($data['nodeTypeId'])) {
-            $nodeType = $this->get('em')
-                             ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
+            $nodeType = $this->get('em')->find(NodeType::class, (int) $data['nodeTypeId']);
 
             if (null !== $nodeType) {
                 $node->addStackType($nodeType);

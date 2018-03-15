@@ -162,7 +162,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
             ];
         }
 
-        return $this->em->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+        return $this->em->getRepository(NodeTypeField::class)
             ->findBy($criteria, ['position' => 'ASC']);
     }
 

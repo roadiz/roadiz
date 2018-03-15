@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\Log;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -50,7 +51,7 @@ class DashboardController extends RozierApp
         $this->assignation['latestLogs'] = [];
 
         $this->assignation['latestLogs'] = $this->get('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\Log')
+             ->getRepository(Log::class)
              ->findLatestByNodesSources(8);
 
 

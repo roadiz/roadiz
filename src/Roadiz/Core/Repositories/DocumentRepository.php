@@ -36,6 +36,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -212,7 +213,7 @@ class DocumentRepository extends EntityRepository
          */
         $qb->leftJoin($alias . '.documentTranslations', 'dt');
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\DocumentTranslation');
+        $metadatas = $this->_em->getClassMetadata(DocumentTranslation::class);
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use RZ\Roadiz\Core\Entities\Setting;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -83,6 +84,6 @@ class SettingJsonSerializer extends AbstractJsonSerializer
 
         $serializer = new Serializer([$normalizer], [$encoder]);
 
-        return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\Setting', 'json');
+        return $serializer->deserialize($jsonString, Setting::class, 'json');
     }
 }

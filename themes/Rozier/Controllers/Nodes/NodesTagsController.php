@@ -29,7 +29,6 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -181,7 +180,7 @@ class NodesTagsController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->get('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                            ->getRepository(Tag::class)
                             ->findOrCreateByPath($path);
 
                 $node->addTag($tag);

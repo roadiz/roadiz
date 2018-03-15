@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +60,7 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Font'
+            Font::class
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();
@@ -133,7 +132,7 @@ class FontsController extends RozierApp
 
         /** @var Font $font */
         $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+                     ->find(Font::class, (int) $fontId);
 
         if (null !== $font) {
             $form = $this->buildDeleteForm($font);
@@ -182,7 +181,7 @@ class FontsController extends RozierApp
 
         /** @var Font $font */
         $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+                     ->find(Font::class, (int) $fontId);
 
         if ($font !== null) {
             $form = $this->createForm(new FontType(), $font, [
@@ -246,7 +245,7 @@ class FontsController extends RozierApp
 
         /** @var Font $font */
         $font = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Font', (int) $fontId);
+                     ->find(Font::class, (int) $fontId);
 
         if ($font !== null) {
             // Prepare File

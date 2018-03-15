@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Console;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -56,13 +57,13 @@ class NodeApplyUniversalFieldsCommand extends Command
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $questionHelper = $this->getHelper('question');
 
-        $translation = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation')
+        $translation = $this->entityManager->getRepository(Translation::class)
                             ->findDefault();
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('ns')
             ->distinct(true)
-            ->from('RZ\Roadiz\Core\Entities\NodesSources', 'ns')
+            ->from(NodesSources::class, 'ns')
             ->innerJoin('ns.node', 'n')
             ->innerJoin('n.nodeType', 'nt')
             ->innerJoin('nt.fields', 'ntf')

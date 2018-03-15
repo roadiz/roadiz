@@ -56,7 +56,7 @@ class SettingGroupsController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\SettingGroup',
+            SettingGroup::class,
             [],
             ['name' => 'ASC']
         );
@@ -82,7 +82,7 @@ class SettingGroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $settingGroup = $this->get('em')
-                             ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
+                             ->find(SettingGroup::class, (int) $settingGroupId);
 
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -177,7 +177,7 @@ class SettingGroupsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $settingGroup = $this->get('em')
-                             ->find('RZ\Roadiz\Core\Entities\SettingGroup', (int) $settingGroupId);
+                             ->find(SettingGroup::class, (int) $settingGroupId);
 
         if (null !== $settingGroup) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -222,7 +222,7 @@ class SettingGroupsController extends RozierApp
         if (isset($data['name']) &&
             $data['name'] != $settingGroup->getName() &&
             $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+            ->getRepository(SettingGroup::class)
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 'settingGroup.%name%.no_update.already_exists',
@@ -256,7 +256,7 @@ class SettingGroupsController extends RozierApp
     private function addSettingGroup($data, SettingGroup $settingGroup)
     {
         if ($this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+            ->getRepository(SettingGroup::class)
             ->exists($data['name'])) {
             throw new EntityAlreadyExistsException($this->getTranslator()->trans(
                 'settingGroup.%name%.no_creation.already_exists',

@@ -72,7 +72,7 @@ class NodesOrphansCommand extends Command
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('n')
-            ->from('RZ\Roadiz\Core\Entities\Node', 'n')
+            ->from(Node::class, 'n')
             ->leftJoin('n.nodeSources', 'ns')
             ->having('COUNT(ns.id) = 0')
             ->groupBy('n');

@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,8 +63,7 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
 
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
-        $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
+        $field = $this->get('em')->find(CustomFormField::class, (int) $customFormFieldId);
 
         if (null !== $response = $this->handleFieldActions($request, $field)) {
             return $response;

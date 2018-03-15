@@ -29,7 +29,9 @@
 
 namespace Themes\Rozier\Forms;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\TagsType;
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -64,8 +66,8 @@ class NodeTagsType extends AbstractType
     public function configureOptions(OptionsResolver $optionsResolver)
     {
         $optionsResolver->setRequired('entityManager');
-        $optionsResolver->setDefault('data_class', 'RZ\Roadiz\Core\Entities\Node');
-        $optionsResolver->setAllowedTypes('entityManager', 'Doctrine\ORM\EntityManager');
+        $optionsResolver->setDefault('data_class', Node::class);
+        $optionsResolver->setAllowedTypes('entityManager', EntityManager::class);
     }
 
     /**

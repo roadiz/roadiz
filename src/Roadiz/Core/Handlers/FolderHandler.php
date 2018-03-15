@@ -200,7 +200,7 @@ class FolderHandler extends AbstractHandler
     {
         /** @var \RZ\Roadiz\Core\Entities\Folder[] $folders */
         $folders = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            ->getRepository(Folder::class)
             ->findBy(['parent' => null], ['position'=>'ASC']);
 
         $i = 1;

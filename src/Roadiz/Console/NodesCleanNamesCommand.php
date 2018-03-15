@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Console\Command\Command;
@@ -60,12 +61,12 @@ class NodesCleanNamesCommand extends Command
         $questionHelper = $this->getHelper('question');
 
         $translation = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         if (null !== $translation) {
             $nodes = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->getRepository(Node::class)
                 ->setDisplayingNotPublishedNodes(true)
                 ->findBy([
                     'dynamicNodeName' => true,

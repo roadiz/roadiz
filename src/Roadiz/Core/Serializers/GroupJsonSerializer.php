@@ -30,6 +30,8 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -92,7 +94,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
-        $group = $serializer->deserialize($string, 'RZ\Roadiz\Core\Entities\Group', 'json');
+        $group = $serializer->deserialize($string, Group::class, 'json');
 
         /*
          * Importing Roles.
@@ -106,7 +108,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
         if (!empty($tempArray['roles'])) {
             foreach ($tempArray['roles'] as $roleAssoc) {
                 $role = $this->roleSerializer->deserialize(json_encode($roleAssoc));
-                $role = $this->em->getRepository('RZ\Roadiz\Core\Entities\Role')
+                $role = $this->em->getRepository(Role::class)
                              ->findOneByName($role->getName());
                 $group->addRole($role);
             }

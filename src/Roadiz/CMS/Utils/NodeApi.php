@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
@@ -44,7 +45,7 @@ class NodeApi extends AbstractApi
     public function getRepository()
     {
         return $this->container['em']
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes(false)
                     ->setDisplayingAllNodesStatuses(false);
     }
