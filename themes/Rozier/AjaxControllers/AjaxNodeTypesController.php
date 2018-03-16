@@ -31,11 +31,11 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Themes\Rozier\Forms\NodeType;
 use Themes\Rozier\Models\NodeTypeModel;
 
 /**
