@@ -31,7 +31,6 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Themes\Rozier\RozierApp;
@@ -42,12 +41,16 @@ use Themes\Rozier\RozierApp;
  */
 abstract class AbstractAjaxController extends RozierApp
 {
-    protected static $validMethods = ['post', 'get'];
+    protected static $validMethods = [
+        Request::METHOD_POST,
+        Request::METHOD_GET,
+    ];
+
     /**
      * @param Request $request
      * @param string  $method
      *
-     * @return boolean | array  Return true if request is valid, else return error array
+     * @return boolean  Return true if request is valid, else throw exception
      */
     protected function validateRequest(Request $request, $method = 'POST', $requestCsrfToken = true)
     {

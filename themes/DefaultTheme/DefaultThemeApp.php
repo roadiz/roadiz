@@ -101,12 +101,6 @@ class DefaultThemeApp extends FrontendController
         $this->assignation['head']['twitterAccount'] = $this->get('settingsBag')->get('twitter_account');
         $this->assignation['head']['mapsStyle'] = $this->get('settingsBag')->get('maps_style');
         $this->assignation['head']['themeName'] = static::$themeName;
-        $this->assignation['head']['themeVersion'] = Kernel::$cmsVersion;
-
-        // Get session messages
-        // Remove FlashBag assignation from here if you handle your forms
-        // in sub-requests block renders.
-        $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
     }
 
     /**

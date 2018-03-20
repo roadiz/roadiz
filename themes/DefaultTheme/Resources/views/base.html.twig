@@ -26,7 +26,7 @@
     <title>{{ pageMetaTitle }}</title>
     <meta name="description" content="{{ pageMetaDescription }}" />
     {% if pageMeta.keywords %}<meta name="keywords" content="{{ pageMeta.keywords }}" />{% endif %}
-    <meta name="generator" content="Roadiz {{ head.cmsVersion }} {{ head.cmsVersionNumber }} - {{ head.themeName }} v{{ head.themeVersion }}" />
+    <meta name="generator" content="Roadiz {{ cms_prefix }} {{ cms_version }} - {{ head.themeName }} v{{ head.themeVersion }}" />
     {#
      # This will enable mobile viewports
      #}
@@ -90,7 +90,7 @@
     {#
      # Roadiz font-face CSS (comment it if no fonts available) -----------------
      #}
-    <link rel="stylesheet" href="{{ path('FontFaceCSS', {"token": head.fontToken}) }}" />
+    <link rel="stylesheet" href="{{ path('FontFaceCSS') }}" />
 </head>
 
 {% set bodyClasses = [] %}
@@ -135,7 +135,6 @@
     temp.devMode = {% if head.devMode %}true{% else %}false{% endif %};
     temp.baseUrl = "{{ head.baseUrl }}";
     temp.resourcesUrl = '{{ head.resourcesUrl }}';
-    temp.ajaxToken = "{{ head.ajaxToken }}";
     temp.googleClientId = '{{ head.googleClientId }}';
     temp.mapsStyle = {% if head.mapsStyle %}JSON.parse('{{ head.mapsStyle|raw }}'){% else %}null{% endif %};
     temp.domain = temp.baseUrl.split('://')[1];

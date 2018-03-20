@@ -354,9 +354,6 @@ abstract class AppController extends Controller
             'request' => $this->getRequest(),
             'head' => [
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
-                'cmsVersion' => Kernel::CMS_VERSION,
-                'cmsVersionNumber' => Kernel::$cmsVersion,
-                'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => $kernel->isDevMode(),
                 'maintenanceMode' => (boolean) $this->get('settingsBag')->get('maintenance_mode'),
                 'useCdn' => (boolean) $this->get('settingsBag')->get('use_cdn'),
@@ -365,8 +362,6 @@ abstract class AppController extends Controller
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'absoluteResourcesUrl' => $this->getAbsoluteStaticResourceUrl(),
-                'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ],
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
@@ -381,10 +376,6 @@ abstract class AppController extends Controller
 
         if ('' != $this->get('settingsBag')->get('static_domain_name')) {
             $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->get('static_domain_name');
-        }
-
-        if ($this->get('securityAuthorizationChecker') !== null) {
-            $this->assignation['authorizationChecker'] = $this->get('securityAuthorizationChecker');
         }
 
         return $this;

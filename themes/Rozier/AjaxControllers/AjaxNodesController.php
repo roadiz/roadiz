@@ -253,8 +253,7 @@ class AjaxNodesController extends AbstractAjaxController
             'sterile' => 'setSterile',
         ];
 
-        if ("nodeChangeStatus" == $request->get('_action') &&
-            "" != $request->get('statusName')) {
+        if ("nodeChangeStatus" == $request->get('_action') && "" != $request->get('statusName')) {
             /*
              * just verify role when updating status
              */
@@ -310,24 +309,26 @@ class AjaxNodesController extends AbstractAjaxController
                                 ]);
                                 $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                                 $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
-                            }
-
-                            if ($request->get('statusName') === 'visible') {
+                            } elseif ($request->get('statusName') === 'visible') {
                                 $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
                                     '%name%' => $node->getNodeName(),
                                     '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
                                 ]);
                                 $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                                 $this->get('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
+                            } else {
+                                $msg = $this->getTranslator()->trans('node.%name%.%field%.updated', [
+                                    '%name%' => $node->getNodeName(),
+                                    '%field%' => $request->get('statusName'),
+                                ]);
+                                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+                                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
                             }
 
                             $responseArray = [
                                 'statusCode' => Response::HTTP_OK,
                                 'status' => 'success',
-                                'responseText' => $this->getTranslator()->trans('node.%name%.%field%.updated', [
-                                    '%name%' => $node->getNodeName(),
-                                    '%field%' => $request->get('statusName'),
-                                ]),
+                                'responseText' => $msg,
                                 'name' => $request->get('statusName'),
                                 'value' => $value,
                             ];

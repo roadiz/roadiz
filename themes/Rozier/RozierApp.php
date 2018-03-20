@@ -90,6 +90,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['mainColor'] = $this->get('settingsBag')->get('main_color');
         $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id') ? $this->get('settingsBag')->get('google_client_id') : "";
         $this->assignation['head']['themeName'] = static::$themeName;
+        $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 
         $this->themeContainer['nodeTree'] = function () {
             if (null !== $this->getUser()) {
