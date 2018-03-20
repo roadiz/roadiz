@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -260,13 +261,7 @@ class AjaxNodesController extends AbstractAjaxController
             if ($request->get('statusName') == 'status' &&
                 $request->get('statusValue') > Node::PENDING &&
                 !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-                $responseArray = [
-                    'statusCode' => Response::HTTP_FORBIDDEN,
-                    'status' => 'danger',
-                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
-                    'action' => $request->get('statusName'),
-                    'status_value' => $request->get('statusValue'),
-                ];
+                throw new AccessDeniedHttpException($this->getTranslator()->trans('role.cannot.update.status'));
             } else {
                 if ($request->get('nodeId') > 0) {
                     /** @var Node $node */
@@ -281,16 +276,7 @@ class AjaxNodesController extends AbstractAjaxController
                         if ($node->getStatus() >= Node::PUBLISHED &&
                             $request->get('statusName') == 'status' &&
                             !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-                            return new JsonResponse(
-                                [
-                                    'statusCode' => Response::HTTP_FORBIDDEN,
-                                    'status' => 'danger',
-                                    'responseText' => $this->getTranslator()->trans('role.cannot.update.status'),
-                                    'action' => $request->get('statusName'),
-                                    'status_value' => $request->get('statusValue'),
-                                ],
-                                Response::HTTP_FORBIDDEN
-                            );
+                            throw new AccessDeniedHttpException($this->getTranslator()->trans('role.cannot.update.status'));
                         }
 
                         /*
@@ -299,15 +285,13 @@ class AjaxNodesController extends AbstractAjaxController
                         if (in_array($request->get('statusName'), array_keys($availableStatuses))) {
                             $setter = $availableStatuses[$request->get('statusName')];
                             $value = $request->get('statusValue');
-
                             $node->$setter($value);
 
                             /*
                              * If set locked to true,
                              * need to disable dynamic nodeName
                              */
-                            if ($request->get('statusName') == 'locked' &&
-                                $value === true) {
+                            if ($request->get('statusName') == 'locked' && $value === true) {
                                 $node->setDynamicNodeName(false);
                             }
 
@@ -319,7 +303,7 @@ class AjaxNodesController extends AbstractAjaxController
                             $event = new FilterNodeEvent($node);
                             $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
 
-                            if ($request->get('statusName') == 'status') {
+                            if ($request->get('statusName') === 'status') {
                                 $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
                                     '%name%' => $node->getNodeName(),
                                     '%status%' => $this->getTranslator()->trans(Node::getStatusLabel($node->getStatus())),
@@ -328,7 +312,7 @@ class AjaxNodesController extends AbstractAjaxController
                                 $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
                             }
 
-                            if ($request->get('statusName') == 'visible') {
+                            if ($request->get('statusName') === 'visible') {
                                 $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
                                     '%name%' => $node->getNodeName(),
                                     '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
@@ -348,39 +332,23 @@ class AjaxNodesController extends AbstractAjaxController
                                 'value' => $value,
                             ];
                         } else {
-                            $responseArray = [
-                                'statusCode' => Response::HTTP_FORBIDDEN,
-                                'status' => 'danger',
-                                'responseText' => $this->getTranslator()->trans('node.has_no.field.%field%', [
-                                    '%field%' => $request->get('statusName'),
-                                ]),
-                            ];
+                            throw new BadRequestHttpException($this->getTranslator()->trans('node.has_no.field.%field%', [
+                                '%field%' => $request->get('statusName'),
+                            ]));
                         }
                     } else {
-                        $responseArray = [
-                            'statusCode' => Response::HTTP_FORBIDDEN,
-                            'status' => 'danger',
-                            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
-                                '%nodeId%' => $request->get('nodeId'),
-                            ]),
-                        ];
+                        throw $this->createNotFoundException($this->getTranslator()->trans('node.%nodeId%.not_exists', [
+                            '%nodeId%' => $request->get('nodeId'),
+                        ]));
                     }
                 } else {
-                    $responseArray = [
-                        'statusCode' => Response::HTTP_FORBIDDEN,
-                        'status' => 'danger',
-                        'responseText' => $this->getTranslator()->trans('node.id.not_specified'),
-                    ];
+                    throw new BadRequestHttpException($this->getTranslator()->trans('node.id.not_specified'));
                 }
             }
         } else {
-            $responseArray = [
-                'statusCode' => Response::HTTP_FORBIDDEN,
-                'status' => 'danger',
-                'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
-                    '%nodeId%' => $request->get('nodeId'),
-                ]),
-            ];
+            throw $this->createNotFoundException($this->getTranslator()->trans('node.%nodeId%.not_exists', [
+                '%nodeId%' => $request->get('nodeId'),
+            ]));
         }
 
         return new JsonResponse(
@@ -427,12 +395,7 @@ class AjaxNodesController extends AbstractAjaxController
         } catch (\Exception $e) {
             $msg = $this->getTranslator()->trans($e->getMessage());
             $this->get('logger')->error($msg);
-
-            $responseArray = [
-                'statusCode' => Response::HTTP_FORBIDDEN,
-                'status' => 'danger',
-                'responseText' => $msg,
-            ];
+            throw new BadRequestHttpException($msg);
         }
 
         return new JsonResponse(
